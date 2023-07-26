@@ -15,7 +15,7 @@ class ExpenseTemplate extends Component {
 		super(props);
 		this.state = {language: window['localStorage'].getItem('language'),};
 	}
-	calculateExpenseAmount = (expenseAmount, expenseVatAmount,exclusiveVat) => {
+	calculateExpenseAmount = (expenseAmount, expenseVatAmount, exclusiveVat) => {
 		if (exclusiveVat) {
 			expenseAmount=expenseAmount+expenseVatAmount;
 		}
@@ -109,56 +109,60 @@ class ExpenseTemplate extends Component {
 							borderColor:'#c8ced3'
 						}}>
 
-<Table  striped>
-<tbody  >
-	<tr>
-		<td className="ml-3" style={{width:'245px'}}><b>{strings.Expense+" "+strings.Number}</b>:</td> 
-	    <td> {expenseData.expenseNumber ?expenseData.expenseNumber :"-" }</td>
-	</tr>
-    <tr> 
-		<td className="ml-3" style={{width:'245px'}}><b>{strings.PaidBy}</b>:</td> 
-	    <td> {expenseData.payee}</td>
-	</tr>
-	<tr>
-		<td className="ml-3" style={{width:'245px'}} >	<b>{strings.ExpenseCategory}</b>:</td>
-	    <td> {expenseData.transactionCategoryName}</td>
-	</tr>
-	<tr>
-		<td className="ml-3" style={{width:'245px'}}>  <b>{strings.ExpenseAmount }</b>:</td> 
-		<td>{expenseAmount? expenseData.currencyName + " " +expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }):expenseData.currencyName + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-		{/* <td>{expenseData.expenseAmount}</td> */}
-    </tr>
-	{/* <tr>
-			<td className="ml-3" style={{width:'245px'}}>  <b>Expense No</b> : </td>  
-			<td>{expenseData.expenseId}</td>
-	</tr> */}
-	<tr>
-		<td className="ml-3" style={{width:'245px'}}>	<b>{strings.VATType }</b>: </td>  
-	    <td>{expenseData.vatCategoryName} </td>
-	</tr>
-	<tr>
-		<td className="ml-3" style={{width:'245px'}}>	<b>{strings.ReferenceNumber }</b>: </td>  
-	    <td>{expenseData.receiptNumber} </td>
-	</tr>
-	<tr>
-		<td className="ml-3" style={{width:'245px'}}>	<b>{strings.Expense+" "+strings.Description }</b>: </td>  
-	    <td>{expenseData.expenseDescription} </td>
-	</tr>
-	{/* <tr>
-			<td className="ml-3" style={{width:'245px'}}>	<b>{strings.Receipt+" "+strings.Description }</b>: </td>  
-	        <td>{expenseData.receiptAttachmentDescription} </td>
-	</tr> */}
-	<tr>
-		<td className="ml-3" style={{width:'245px'}}>	<b>{strings.PostedDate }</b>: </td> 
-	    <td>{expenseData.expenseStatus === "Posted" ? moment(expenseData.lastUpdateDate).format('DD-MM-YYYY') :"-"}</td>
-	</tr> 
-</tbody>
-</Table>
-	{/* <div>
-									<b>Last Updated By</b> : {expenseData.lastUpdatedBy}
-									</div> */}
+						<Table  striped>
+							<tbody  >
+								<tr>
+									<td className="ml-3" style={{width:'245px'}}><b>{strings.Expense+" "+strings.Number}</b>:</td> 
+									<td> {expenseData.expenseNumber ?expenseData.expenseNumber :"-" }</td>
+								</tr>
+								<tr> 
+									<td className="ml-3" style={{width:'245px'}}><b>{strings.PaidBy}</b>:</td> 
+									<td> {expenseData.payee}</td>
+								</tr>
+								<tr>
+									<td className="ml-3" style={{width:'245px'}}><b>{strings.ExpenseCategory}</b>:</td>
+									<td> {expenseData.transactionCategoryName}</td>
+								</tr>
+								<tr>
+									<td className="ml-3" style={{width:'245px'}}><b>{strings.ExpenseAmount }</b>:</td> 
+									<td>{expenseAmount? expenseData.currencyName + " " +expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }):expenseData.currencyName + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+									{/* <td>{expenseData.expenseAmount}</td> */}
+								</tr>
+								{/* <tr>
+										<td className="ml-3" style={{width:'245px'}}><b>Expense No</b> : </td>  
+										<td>{expenseData.expenseId}</td>
+								</tr> */}
+								<tr>
+									<td className="ml-3" style={{width:'245px'}}><b>{strings.PlaceofSupply}</b>: </td>  
+									<td>{expenseData.placeOfSupplyName} </td>
+								</tr>
+								<tr>
+									<td className="ml-3" style={{width:'245px'}}><b>{strings.VATType}</b>: </td>  
+									<td>{expenseData.vatCategoryName} </td>
+								</tr>
+								<tr>
+									<td className="ml-3" style={{width:'245px'}}><b>{strings.ReferenceNumber}</b>: </td>  
+									<td>{expenseData.receiptNumber} </td>
+								</tr>
+								<tr>
+									<td className="ml-3" style={{width:'245px'}}><b>{strings.Expense+" "+strings.Description}</b>: </td>  
+									<td>{expenseData.expenseDescription} </td>
+								</tr>
+								{/* <tr>
+										<td className="ml-3" style={{width:'245px'}}>	<b>{strings.Receipt+" "+strings.Description }</b>: </td>  
+										<td>{expenseData.receiptAttachmentDescription} </td>
+								</tr> */}
+								<tr>
+									<td className="ml-3" style={{width:'245px'}}><b>{strings.PostedDate}</b>: </td> 
+									<td>{expenseData.expenseStatus === "Posted" ? moment(expenseData.lastUpdateDate).format('DD-MM-YYYY') :"-"}</td>
+								</tr> 
+							</tbody>
+						</Table>
+					{/* <div>
+							<b>Last Updated By</b> : {expenseData.lastUpdatedBy}
+					</div> */}
 					</div>	
-					<img className='footer' src={footer} style={{ height: "65px", width: "100%" ,marginBottom:" 1.3rem"}}></img>
+					<img className='footer' src={footer} style={{ height: "65px", width: "100%", marginBottom:" 1.3rem"}}></img>
 					</CardBody>
 				<div style={{ textAlignLast:'center'}}>{strings.PoweredBy+" " } <b>SimpleAccounts</b></div> 
 				</Card>

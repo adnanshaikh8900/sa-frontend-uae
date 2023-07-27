@@ -109,11 +109,6 @@ class TrailBalances extends React.Component {
 					'SBI-Imran khan': 400.0,
 				},
 				totalCreditAmount: 5300.0,
-				totalAssets: 5300.0,
-				totalLiabilities: 5700.0,
-				totalEquities: 9000.0,
-				totalIncome: 6800.0,
-				totalExpense: 7600.0,
 				totalDebitAmount: 12500.0,
 			},
 		};
@@ -487,25 +482,43 @@ class TrailBalances extends React.Component {
 																	{strings.Total + " " + strings.Assets}
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
+																	<Currency
+																		value={this.state.data[
+																			'transactionCategoryMapper'
+																		]['totalAssets'] === 'Debit' ? (
+																			this.state.data['totalAssets']
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																		) : (
+																			''
+																		)}
+																		currencyCode={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																					.currencyIsoCode
+																				: 'AED'
+																		}
+																	/>
 
-																	{this.state.data[
-																		'transactionCategoryMapper'
-																	]['totalAssets'] === 'Debit' ? (
-																		this.state.data['totalAssets']
-																			.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
+
 																</td>
 																<td className="pt-1 pb-1 text-right bld">
-																	{this.state.data[
-																		'transactionCategoryMapper'
-																	]['totalAssets'] === 'Credit' ? (
-																		this.state.data['totalAssets']
-																			.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
+																	<Currency
+																		value={this.state.data[
+																			'transactionCategoryMapper'
+																		]['totalAssets'] === 'Credit' ? (
+																			this.state.data['totalAssets']
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																		) : (
+																			''
+																		)}
+																		currencyCode={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																					.currencyIsoCode
+																				: 'AED'
+																		}
+																	/>
+
 																</td>
 															</tr>
 															<tr>
@@ -584,25 +597,40 @@ class TrailBalances extends React.Component {
 																	{strings.Total + " " + strings.Liabilities}
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
-
-																	{this.state.data[
-																		'transactionCategoryMapper'
-																	]['totalLiabilities'] === 'Debit' ? (
-																		this.state.data['totalLiabilities']
-																			.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
+																	<Currency
+																		value={this.state.data[
+																			'transactionCategoryMapper'
+																		]['totalLiabilities'] === 'Debit' ? (
+																			this.state.data['totalLiabilities']
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																		) : (
+																			''
+																		)}
+																		currencyCode={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																					.currencyIsoCode
+																				: 'AED'
+																		}
+																	/>
 																</td>
 																<td className="pt-1 pb-1 text-right bld">
-																	{this.state.data[
-																		'transactionCategoryMapper'
-																	]['totalLiabilities'] === 'Credit' ? (
-																		this.state.data['totalLiabilities']
-																			.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
+																	<Currency
+																		value={this.state.data[
+																			'transactionCategoryMapper'
+																		]['totalLiabilities'] === 'Credit' ? (
+																			this.state.data['totalLiabilities']
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																		) : (
+																			''
+																		)}
+																		currencyCode={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																					.currencyIsoCode
+																				: 'AED'
+																		}
+																	/>
 																</td>
 															</tr>
 															<tr>
@@ -648,25 +676,42 @@ class TrailBalances extends React.Component {
 																	{strings.Total + " " + strings.Equities}
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
+																	<Currency
+																		value={this.state.data[
+																			'transactionCategoryMapper'
+																		]['totalEquities'] === 'Debit' ? (
+																			this.state.data['totalEquities']
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																		) : (
+																			''
+																		)}
+																		currencyCode={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																					.currencyIsoCode
+																				: 'AED'
+																		}
+																	/>
 
-																	{this.state.data[
-																		'transactionCategoryMapper'
-																	]['totalEquities'] === 'Debit' ? (
-																		this.state.data['totalEquities']
-																			.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
 																</td>
 																<td className="pt-1 pb-1 text-right bld">
-																	{this.state.data[
-																		'transactionCategoryMapper'
-																	]['totalEquities'] === 'Credit' ? (
-																		this.state.data['totalEquities']
-																			.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
+																	<Currency
+																		value={this.state.data[
+																			'transactionCategoryMapper'
+																		]['totalEquities'] === 'Credit' ? (
+																			this.state.data['totalEquities']
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																		) : (
+																			''
+																		)}
+																		currencyCode={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																					.currencyIsoCode
+																				: 'AED'
+																		}
+																	/>
+
 																</td>
 															</tr>
 															<tr>
@@ -713,25 +758,43 @@ class TrailBalances extends React.Component {
 																	{strings.Total + " " + strings.Income}
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
+																	<Currency
+																		value={this.state.data[
+																			'transactionCategoryMapper'
+																		]['totalIncome'] === 'Debit' ? (
+																			this.state.data['totalIncome']
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																		) : (
+																			''
+																		)}
+																		currencyCode={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																					.currencyIsoCode
+																				: 'AED'
+																		}
+																	/>
 
-																	{this.state.data[
-																		'transactionCategoryMapper'
-																	]['totalIncome'] === 'Debit' ? (
-																		this.state.data['totalIncome']
-																			.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
+
 																</td>
 																<td className="pt-1 pb-1 text-right bld">
-																	{this.state.data[
-																		'transactionCategoryMapper'
-																	]['totalIncome'] === 'Credit' ? (
-																		this.state.data['totalIncome']
-																			.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
+																	<Currency
+																		value={this.state.data[
+																			'transactionCategoryMapper'
+																		]['totalIncome'] === 'Credit' ? (
+																			this.state.data['totalIncome']
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																		) : (
+																			''
+																		)}
+																		currencyCode={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																					.currencyIsoCode
+																				: 'AED'
+																		}
+																	/>
+
 																</td>
 															</tr>
 															<tr>
@@ -777,25 +840,41 @@ class TrailBalances extends React.Component {
 																	{strings.Total + " " + strings.Expense}
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
-
-																	{this.state.data[
-																		'transactionCategoryMapper'
-																	]['totalExpense'] === 'Debit' ? (
-																		this.state.data['totalExpense']
-																			.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
+																	<Currency
+																		value={this.state.data[
+																			'transactionCategoryMapper'
+																		]['totalExpense'] === 'Debit' ? (
+																			this.state.data['totalExpense']
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																		) : (
+																			''
+																		)}
+																		currencyCode={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																					.currencyIsoCode
+																				: 'AED'
+																		}
+																	/>
 																</td>
 																<td className="pt-1 pb-1 text-right bld">
-																	{this.state.data[
-																		'transactionCategoryMapper'
-																	]['totalExpense'] === 'Credit' ? (
-																		this.state.data['totalExpense']
-																			.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
+																	<Currency
+																		value={this.state.data[
+																			'transactionCategoryMapper'
+																		]['totalExpense'] === 'Credit' ? (
+																			this.state.data['totalExpense']
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																		) : (
+																			''
+																		)}
+																		currencyCode={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																					.currencyIsoCode
+																				: 'AED'
+																		}
+																	/>
+
 																</td>
 															</tr>
 															<tr>
@@ -855,22 +934,22 @@ class TrailBalances extends React.Component {
 																<td className="text-right pt-1 pb-1 bld">
 																	<Currency
 																		value={this.state.data['totalDebitAmount']}
-																		currencySymbol={
+																		currencyCode={
 																			universal_currency_list[0]
 																				? universal_currency_list[0]
 																					.currencyIsoCode
-																				: 'USD'
+																				: 'AED'
 																		}
 																	/>
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
 																	<Currency
 																		value={this.state.data['totalCreditAmount']}
-																		currencySymbol={
+																		currencyCode={
 																			universal_currency_list[0]
 																				? universal_currency_list[0]
 																					.currencyIsoCode
-																				: 'USD'
+																				: 'AED'
 																		}
 																	/>
 																</td>

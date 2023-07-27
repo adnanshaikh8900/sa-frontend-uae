@@ -82,6 +82,7 @@ export const register = (obj) => {
 
 
 //Test URL: https://strapi-api-test-ae.app.simpleaccounts.io/api/auth/local/register
+//Prod URl : https://strapi-api.ae.simpleaccounts.io/api/auth/local/register
 
 export const registerStrapiUser = (obj, companyobj) => {
 	return (dispatch) => {
@@ -106,6 +107,7 @@ export const registerStrapiUser = (obj, companyobj) => {
 };
 
 //TEst URL = https://strapi-api-test-ae.app.simpleaccounts.io/api/companies
+//Prod URL : https://strapi-api.ae.simpleaccounts.io/api/companies
 
 export const registerStrapiCompany = (apiToken, companyObj) => {
 	//return (dispatch) => {
@@ -250,6 +252,26 @@ export const getTimeZoneList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+//function to get Simpleaccounts release number  
+export const getSimpleAccountsreleasenumber = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/company/getSimpleAccountsreleasenumber',
+		};
+		return api(data)
+			.then((res) => {
+				//console.log("res=",res)
+				if (res.status === 200) {
+					return res.data;
 				}
 			})
 			.catch((err) => {

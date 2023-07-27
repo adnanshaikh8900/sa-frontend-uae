@@ -30,7 +30,10 @@ import logo from 'assets/images/brand/logo.png';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperFirst } from 'lodash-es';
-import PasswordChecklist from "react-password-checklist"
+import PasswordChecklist from "react-password-checklist";
+import configData from '../../constants/config';
+import { version } from 'core-js';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -38,7 +41,7 @@ const mapStateToProps = (state) => {
 		state_list: state.common.state_list,
 		version: state.common.version,
 		universal_currency_list :state.common.universal_currency_list,
-		company_type_list : state.common.company_type_list
+		company_type_list : state.common.company_type_list,
 	};
 };
 const eye = require('assets/images/settings/eye.png');
@@ -54,12 +57,15 @@ const options = [
 	{ value: 'vanilla', label: 'Vanilla' },
 ];
 
+
 let strings = new LocalizedStrings(data);
 class Register extends React.Component {
 	constructor(props) {
 		super(props);
+		//alert("version", this.state.version);
 		this.state = {
 			isPasswordShown: false,
+			sabackend: '',
 			alert: null,
 			currencyList: [],
             country_list:[
@@ -119,9 +125,26 @@ class Register extends React.Component {
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
 
+	
+
 	componentDidMount = () => {
 		this.getInitialData();
+		this.getBackendRelease();
 	};
+	getBackendRelease = () => {
+        return new Promise((resolve, reject) => {
+          this.props.authActions
+            .getSimpleAccountsreleasenumber()
+            .then((backendVersion) => {
+                const backendRelease = backendVersion.simpleVatRelease;
+                this.setState({ sabackend: backendRelease }); // Set the value in the component state
+                resolve(backendRelease);
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        });
+      };
 	getStateList = (countryCode) => {
 		this.props.commonActions.getStateList(229);
 	};
@@ -137,6 +160,7 @@ class Register extends React.Component {
 		// this.props.commonActions.getCountryList();
 		this.props.commonActions.getCompanyTypeListRegister();
 
+		
 		this.props.authActions.getCurrencyList();
 		this.props.authActions.getCompanyCount().then((response) => {
 			if (response.data > 0) {
@@ -167,13 +191,18 @@ class Register extends React.Component {
 			email,
 			password,
 			first_name,
-			lastName
+			lastName,
+			MobileNumber
 		} = datauser;
 	}
+
+	
 		
-
 	handleSubmit = (data, resetForm) => {
-
+		
+		//below code to get backend release number 
+		const { sabackend } = this.state;
+		//end of code block
 		this.setState({ loading: true });
 		const {
 			companyName,
@@ -225,16 +254,16 @@ class Register extends React.Component {
 			IsRegisteredVat:IsRegistered ? IsRegistered : false,
 			TaxRegistrationNumber:TaxRegistrationNumber,
 			vatRegistrationDate:vatRegistrationDate,
-			domainName: companyName,
+			domainName: configData.API_ROOT_URL,
 			companyURL: companyName,
-			frontend: null,
-			backend: null,
+			frontend: configData.FRONTEND_RELEASE,
+			backend: sabackend ,
 			status: "nosub",
 			createdAt: new Date(),
 			updatedAt: new Date(),
 			TimeZonePrefrence: "Asia/Dubai",
-			Emirate: "Select Emirate",
-			//MobileNumber: phoneNumber,
+			Emirate: stateId.label,
+			MobileNumber: phoneNumber,
 			IsVatRegistered: IsRegistered ? IsRegistered : false,
 			CompanyLocatedAt: "Dubai",
 			Currency: "UAE Dirham - AED",
@@ -303,8 +332,10 @@ class Register extends React.Component {
 			email: email,
 			password: password,
 			first_name: firstName,
-			last_name: lastName
+			last_name: lastName,
+			MobileNumber: phoneNumber
 		};
+		
 		this.props.authActions
 			.registerStrapiUser(strapiUserObj, companyStrapiObj)
 		this.props.authActions
@@ -355,8 +386,9 @@ class Register extends React.Component {
 		};
 	
 		const { initValue, currencyList, userDetail, country_list, timezone, loading, loadingMsg, NextloadingMsg} = this.state;
-		const {universal_currency_list,state_list,company_type_list} = this.props;
+		const {universal_currency_list,state_list,company_type_list, version} = this.props;
 		//console.log(company_type_list)
+		
 
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg} NextloadingMsg={NextloadingMsg}/> :

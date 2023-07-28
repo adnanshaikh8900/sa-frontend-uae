@@ -422,6 +422,18 @@ class CreateBankTransaction extends React.Component {
         info ? JSON.stringify([info]) : ""
       );
     }
+    if (coaCategoryId.label === "Corporate Tax Payment" ) {
+    const report =  {
+      ...this.state.corporateTaxList.find((obj, index) => index === this.state.ct_taxPeriod),
+    };
+
+      delete report.taxFiledOn;
+
+      formData.append(
+        "explainedVatPaymentListString",
+        report ? JSON.stringify([report]) : ""
+      );
+    }
     this.props.transactionCreateActions
       .createTransaction(formData)
       .then((res) => {
@@ -1174,7 +1186,8 @@ class CreateBankTransaction extends React.Component {
                             values.coaCategoryId.label !== "Supplier Invoice" &&
                             values.coaCategoryId.label !== "Sales" &&
                             values.coaCategoryId.label !== "VAT Payment" &&
-                            values.coaCategoryId.label !== "VAT Claim"
+                            values.coaCategoryId.label !== "VAT Claim" &&
+                            values.coaCategoryId.label !== "Corporate Tax Payment"
                           ) {
                             if (
                               !values.transactionCategoryId ||

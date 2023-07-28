@@ -1064,6 +1064,9 @@ const en = {
       GrossCashInflow: "Gross Cash Inflow",
       GrossCashOutflow: "Gross Cash Outflow",
       NetCashChange: "Net Cash Change",
+      Cash: "Cash",
+      Accounts: "Accounts",
+      CurrentLiabilities: "Current Liabilities",
 
       //placeholder	
       ReceiptAttachmentDescription: "Receipt Attachment Description",

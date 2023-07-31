@@ -263,7 +263,7 @@ getvalidation=()=>{
 							<Card>
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon icon-briefcase" />
+									<i className="nav-icon fas fa-users" />
 										<span className="ml-2"> {strings.AddNewRole}</span>
 									</div>
 								</CardHeader>

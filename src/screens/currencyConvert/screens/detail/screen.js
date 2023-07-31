@@ -243,7 +243,7 @@ class DetailCurrencyConvert extends React.Component {
               <Card>
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon icon-briefcase" />
+				  <i className="nav-icon fas fa-money" />
                     <span className="ml-2"> {strings.UpdateCurrencyConversion} </span>
                   </div>
                 </CardHeader>
@@ -261,7 +261,17 @@ class DetailCurrencyConvert extends React.Component {
                             validationSchema={Yup.object().shape({
                               exchangeRate: Yup.string().required(
                                 'Exchange rate is required',
-                              ),
+								).test(
+									'exchangeRate',
+									'Exchange rate should be greater than 1',
+									(value) => {
+										if (value > 1) {
+											return true;
+										} else {
+											return false;
+										}
+									},
+								),
 							  currencyCode: Yup.string().required(
 								'Exchange currency is required',
 							),

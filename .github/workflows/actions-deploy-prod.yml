@@ -179,6 +179,28 @@ jobs:
         helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=projetsaviation.app.simpleaccounts.io,simpleVatHost=https://projetsaviation-api.app.simpleaccounts.io,fullnameOverride=projetsaviation-frontend,serviceAccount.name=projetsaviation-deploy-robot-frontend,ingress.hosts[0].host=projetsaviation.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=projetsaviation-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=projetsaviation-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=projetsaviation.app.simpleaccounts.io --wait --namespace projetsaviation --create-namespace projetsaviation-frontend ./simpleaccounts-frontend 
         echo "Application successfully deployed."
 
+  deploy-PROD-teslapower:
+    needs: [build]
+    runs-on: datainn-digitalocean-test-runner-set
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest' # default is latest stable
+      id: install-kubectl
+
+    - uses: azure/setup-helm@v3
+      with:
+        version: 'latest' # default is latest (stable)
+        token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+      id: install-helm
+
     - name: Helm chart PROD Teslapower Deployment
       run: |
         echo "Deploying application to following cluster..."
@@ -187,4 +209,36 @@ jobs:
         helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=teslapower.app.simpleaccounts.io,simpleVatHost=https://teslapower-api.app.simpleaccounts.io,fullnameOverride=teslapower-frontend,serviceAccount.name=teslapower-deploy-robot-frontend,ingress.hosts[0].host=teslapower.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=teslapower-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=teslapower-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=teslapower.app.simpleaccounts.io --wait --dry-run --debug --namespace teslapower --create-namespace teslapower-frontend ./simpleaccounts-frontend 
         echo "Deployment started scripts..."
         helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=teslapower.app.simpleaccounts.io,simpleVatHost=https://teslapower-api.app.simpleaccounts.io,fullnameOverride=teslapower-frontend,serviceAccount.name=teslapower-deploy-robot-frontend,ingress.hosts[0].host=teslapower.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=teslapower-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=teslapower-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=teslapower.app.simpleaccounts.io --wait --namespace teslapower --create-namespace teslapower-frontend ./simpleaccounts-frontend 
+        echo "Application successfully deployed."
+
+  deploy-PROD-fttdubai:
+    needs: [build]
+    runs-on: datainn-digitalocean-test-runner-set
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest' # default is latest stable
+      id: install-kubectl
+
+    - uses: azure/setup-helm@v3
+      with:
+        version: 'latest' # default is latest (stable)
+        token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+      id: install-helm
+
+    - name: Helm chart PROD fttdubai Deployment
+      run: |
+        echo "Deploying application to following cluster..."
+        kubectl cluster-info
+        echo "Test deployment scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=fttdubai.app.simpleaccounts.io,simpleVatHost=https://fttdubai-api.app.simpleaccounts.io,fullnameOverride=fttdubai-frontend,serviceAccount.name=fttdubai-deploy-robot-frontend,ingress.hosts[0].host=fttdubai.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=fttdubai-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=fttdubai-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=fttdubai.app.simpleaccounts.io --wait --dry-run --debug --namespace fttdubai --create-namespace fttdubai-frontend ./simpleaccounts-frontend 
+        echo "Deployment started scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=fttdubai.app.simpleaccounts.io,simpleVatHost=https://fttdubai-api.app.simpleaccounts.io,fullnameOverride=fttdubai-frontend,serviceAccount.name=fttdubai-deploy-robot-frontend,ingress.hosts[0].host=fttdubai.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=fttdubai-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=fttdubai-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=fttdubai.app.simpleaccounts.io --wait --namespace fttdubai --create-namespace fttdubai-frontend ./simpleaccounts-frontend 
         echo "Application successfully deployed."

@@ -261,7 +261,17 @@ class DetailCurrencyConvert extends React.Component {
                             validationSchema={Yup.object().shape({
                               exchangeRate: Yup.string().required(
                                 'Exchange rate is required',
-                              ),
+								).test(
+									'exchangeRate',
+									'Exchange rate should be greater than 1',
+									(value) => {
+										if (value > 1) {
+											return true;
+										} else {
+											return false;
+										}
+									},
+								),
 							  currencyCode: Yup.string().required(
 								'Exchange currency is required',
 							),

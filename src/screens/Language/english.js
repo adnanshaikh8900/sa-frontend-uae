@@ -961,7 +961,7 @@ const en = {
       ProfitandLoss: "Profit & Loss",
       BalanceSheet: "Balance Sheet",
       HorizontalBalanceSheet: "Horizontal Balance Sheet",
-      TrailBalances: "Trial Balances",
+      TrailBalances: "Trial Balance",
       Cashflow: "Cashflow",
       Cash_flow: "Cash Flow",
       CorporateTax: "Corporate Tax",

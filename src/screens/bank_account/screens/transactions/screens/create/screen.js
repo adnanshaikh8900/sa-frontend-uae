@@ -139,14 +139,7 @@ class CreateBankTransaction extends React.Component {
         );
       });
     if (this.props.location.state && this.props.location.state.bankAccountId) {
-      this.setState(
-        {
-          id: this.props.location.state.bankAccountId,
-        },
-        () => {
-          //console.log(this.state.id);
-        }
-      );
+      this.setState({id: this.props.location.state.bankAccountId,});
       this.props.detailBankAccountActions
         .getBankAccountByID(this.props.location.state.bankAccountId)
         .then((res) => {
@@ -208,7 +201,6 @@ class CreateBankTransaction extends React.Component {
   };
   setCTValues = (value) => {
     const { corporateTaxList } = this.state
-    debugger
     const report = corporateTaxList ? corporateTaxList.find((obj, index) => index === value) : '';
     this.formRef.current.setFieldValue("balanceDue", report.balanceDue, true);
     this.formRef.current.setFieldValue("totalAmount", report.taxAmount, true);
@@ -420,6 +412,15 @@ class CreateBankTransaction extends React.Component {
       formData.append(
         "explainedVatPaymentListString",
         info ? JSON.stringify([info]) : ""
+      );
+    }
+    if (coaCategoryId.label === "Corporate Tax Payment" ) {
+    const report =  {
+      ...this.state.corporateTaxList.find((obj, index) => index === this.state.ct_taxPeriod.value),
+    };
+      formData.append(
+        "explainedCorporateTaxListString",
+        report ? JSON.stringify([report]) : ""
       );
     }
     this.props.transactionCreateActions
@@ -938,7 +939,6 @@ class CreateBankTransaction extends React.Component {
         )
         .then((res) => {
           if (res.status === 200) {
-            debugger
             let categoryList = res.data.categoriesList && res.data.categoriesList.map((category) => {
               let newcategory = category.label;
               let newOption = category.options;
@@ -947,8 +947,6 @@ class CreateBankTransaction extends React.Component {
               }
               return { label: newcategory, options: newOption }
             })
-            console.log(res.data, "290912083092");
-
             this.setState(
               {
                 transactionCategoryList: { categoriesList: categoryList, dataList: res.data.dataList },
@@ -1174,7 +1172,8 @@ class CreateBankTransaction extends React.Component {
                             values.coaCategoryId.label !== "Supplier Invoice" &&
                             values.coaCategoryId.label !== "Sales" &&
                             values.coaCategoryId.label !== "VAT Payment" &&
-                            values.coaCategoryId.label !== "VAT Claim"
+                            values.coaCategoryId.label !== "VAT Claim" &&
+                            values.coaCategoryId.label !== "Corporate Tax Payment"
                           ) {
                             if (
                               !values.transactionCategoryId ||
@@ -1301,7 +1300,6 @@ class CreateBankTransaction extends React.Component {
                               errors.transactionAmount = strings.AmountIsRequired;
                             if (!values.ct_taxPeriod)
                               errors.ct_taxPeriod = strings.TaxPeriodIsRequired
-                            console.log(parseFloat(values.balanceDue), parseFloat(values.transactionAmount))
                             if (values.balanceDue && values.transactionAmount && parseFloat(values.balanceDue) < parseFloat(values.transactionAmount))
                               errors.transactionAmount = strings.AmountShouldBeLessThanOrEqualToTheBalanceDue;
                           }
@@ -1376,7 +1374,6 @@ class CreateBankTransaction extends React.Component {
                                     options={categoriesList}
                                     value={props.values.coaCategoryId}
                                     onChange={(option) => {
-                                      console.log(categoriesList, option)
                                       if (option && option.value) {
                                         this.getExchangeRate();
                                         props.handleChange("coaCategoryId")(

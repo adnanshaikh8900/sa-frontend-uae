@@ -774,7 +774,7 @@ class BankTransactions extends React.Component {
               <Row>
                 <Col>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="icon-doc" />
+                  <i className="fas fa-university" />
                     <span className="ml-2">{strings.BankTransactions}</span>
                   </div>
                 </Col>

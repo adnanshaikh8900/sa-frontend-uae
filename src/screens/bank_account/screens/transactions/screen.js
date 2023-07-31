@@ -931,6 +931,7 @@ class BankTransactions extends React.Component {
                                 {strings.EditAccount}
                               </Button>
                             )}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
                             <Button
                               color="info"
                               className="btn-square mr-1"

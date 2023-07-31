@@ -243,7 +243,7 @@ class DetailCurrencyConvert extends React.Component {
               <Card>
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon icon-briefcase" />
+				  <i className="nav-icon fas fa-money" />
                     <span className="ml-2"> {strings.UpdateCurrencyConversion} </span>
                   </div>
                 </CardHeader>

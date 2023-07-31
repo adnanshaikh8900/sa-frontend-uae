@@ -200,7 +200,7 @@ class CreateCurrencyConvert extends React.Component {
 							<Card>
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon icon-briefcase" />
+										<i className="nav-icon nav-icon fas fa-money" />
 										<span className="ml-2"> {strings.NewCurrencyConversion}</span>
 									</div>
 								</CardHeader>

@@ -16,9 +16,7 @@ import {
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import { LeavePage } from 'components';
-import {
-  CommonActions
-} from 'services/global'
+import {CommonActions} from 'services/global'
 import * as SalaryRoleActions from '../../actions';
 import * as EmployeeDesignationCreateActions from './actions';
 import 'react-datepicker/dist/react-datepicker.css'

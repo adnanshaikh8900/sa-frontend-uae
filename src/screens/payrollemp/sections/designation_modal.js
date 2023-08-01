@@ -55,51 +55,18 @@ class DesignationModal extends React.Component {
 		return temp;
 	};
 
-
-
-	// Create or Contact
-	// handleSubmit = (data, resetForm) => {
-
-
-	// 	this.setState({ disabled: true });
-	// 	// const employeeId = data['employeeId'];
-	// 	const firstName = data['firstName'];
-	// 	const lastName = data['lastName'];
-	// 	const middleName = data['middleName'];
-
-	// 	const email = data['email'];
-	// 	const dob = data['dob'];
-
-	// 	const dataNew = {
-	// 		firstName,
-	// 		lastName,
-	// 		middleName,
-	// 		email,
-	// 		dob,
-	// 	};
-	// 	const postData = this.getData(dataNew);
-	// 	this.props
-	// 		.createEmployee(postData)
-	// 		.then((res) => {
-
-	// 			if (res.status === 200) {
-	// 				resetForm();
-	// 				this.props.closeEmployeeModal(true);
-	// 				this.props.getCurrentUser(res);
-	// 			}
-	// 		})
-	// 		.catch((err) => {
-	// 			this.displayMsg(err);
-	// 			this.formikRef.current.setSubmitting(false);
-	// 		});
-	// };
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		const {
-			designationName
+			designationName,
+			designationId
 		} = data;
 		const formData = new FormData();
 
+		formData.append(
+			'designationId',
+			designationId != null ? designationId : '',
+		  )
 		formData.append(
 			'designationName',
 			designationName != null ? designationName : '',
@@ -138,33 +105,13 @@ class DesignationModal extends React.Component {
 		});
 	}
 
-	// getStateList = (countryCode) => {
-	// 	if (countryCode) {
-	// 		this.props.getStateList(countryCode).then((res) => {
-	// 			if (res.status === 200) {
-	// 				this.setState({
-	// 					state_list: res.data,
-	// 				});
-	// 			}
-	// 		});
-	// 	} else {
-	// 		this.setState({
-	// 			state_list: [],
-	// 		});
-	// 	}
-	// };
-	// .contact-modal {
-	// 	max-width: 70% !important;
-	// }
-
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
 			openDesignationModal,
 			closeDesignationModal,
-			// currency_list,
-			// country_list,
 			nameDesigExist,
+			idDesigExist,
 			validateinfo
 		} = this.props;
 		const { initValue } = this.state;
@@ -185,40 +132,11 @@ class DesignationModal extends React.Component {
 
 							designationName: Yup.string().required('Designation Name is required').test('is new',
 								"Designation Name is already exist",
-								() => !nameDesigExist)
+								() => !nameDesigExist),
+								designationId: Yup.string().required('Designation ID is required').test('is new',
+								"Designation ID is already exist",
+								() => !idDesigExist)
 
-							// contactType: Yup.string()
-							// .required("Please Select Contact Type"),
-							//       organization: Yup.string()
-							//       .required("Organization Name is required"),
-							//     poBoxNumber: Yup.number()
-							//       .required("PO Box Number is required"),
-							// email: Yup.string()
-							// 	.required('Email is required')
-							// 	.email('Invalid Email'),
-							// mobileNumber: Yup.string()
-							// 	.required('Mobile Number is required')
-							// 	.test('quantity', 'Invalid Mobile Number', (value) => {
-							// 		if (isValidPhoneNumber(value)) {
-							// 			return true;
-							// 		} else {
-							// 			return false;
-							// 		}
-							// 	}),
-							//     addressLine1: Yup.string()
-							//       .required("Address is required"),
-							//     city: Yup.string()
-							//       .required("City is required"),
-							//     billingEmail: Yup.string()
-							//       .required("Billing Email is required")
-							//       .email('Invalid Email'),
-							//     contractPoNumber: Yup.number()
-							//       .required("Contract PoNumber is required"),
-
-							//       currencyCode: Yup.string()
-							//       .required("Please Select Currency")
-							//       .nullable(),
-							// currencyCode: Yup.string().required('Please Select Currency'),
 						})}
 					>
 						{(props) => {
@@ -241,7 +159,30 @@ class DesignationModal extends React.Component {
 									</CardHeader>
 									<ModalBody>
 										<Row className="row-wrapper">
-											<Col lg={8}>
+										<Col lg={5}>
+												<FormGroup>
+												<Label htmlFor="select"><span className="text-danger">* </span>{strings.DESIGNATIONID}</Label>
+												<Input
+													type="text"
+													id="designationId"
+													name="designationId"
+													maxLength="9"
+													value={props.values.designationId}
+													placeholder={strings.Enter+strings.DESIGNATIONID}
+													onChange={(option) => {
+													if (option.target.value === '' || this.regEx.test(option.target.value)) {
+														props.handleChange('designationId')(option)
+														validateinfo(option.target.value)
+													}
+													}}
+													className={props.errors.designationId && props.touched.designationId ? "is-invalid" : ""}
+												/>
+												{props.errors.designationId && props.touched.designationId && (
+													<div className="invalid-feedback">{props.errors.designationId}</div>
+												)}
+												</FormGroup>
+											</Col>
+											<Col lg={5}>
 												<FormGroup>
 													<Label htmlFor="select"><span className="text-danger">* </span>{strings.DesignationName}</Label>
 													<Input

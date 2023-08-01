@@ -2370,13 +2370,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
                                                                                                         <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span> {strings.ContactNumber1} </Label>
-                                                                                                        <div className={
-                                                                                                            props.errors.mobileNumber &&
-                                                                                                                props.touched.mobileNumber
-                                                                                                                ? ' is-invalidMobile '
-                                                                                                                : ''
-                                                                                                        }>
-
+                                                                                                        <div>
                                                                                                             <PhoneInput
                                                                                                                 id="emergencyContactNumber1"
                                                                                                                 name="emergencyContactNumber1"
@@ -2392,7 +2386,12 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                     );
                                                                                                                     // option.length !==12 ? this.setState({checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
                                                                                                                 }}
-                                                                                                                isValid
+                                                                                                                className={
+                                                                                                                        props.errors.emergencyContactNumber1 &&
+                                                                                                                            props.touched.emergencyContactNumber1
+                                                                                                                            ? 'text-danger'
+                                                                                                                            : ''
+                                                                                                                    }
                                                                                                             /></div>
                                                                                                         {props.errors.emergencyContactNumber1 &&
                                                                                                             props.touched.emergencyContactNumber1 && (

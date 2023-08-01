@@ -27,13 +27,10 @@ class DesignationModal extends React.Component {
 			showDetails: false,
 			loading: false,
 			initValue: {
-				firstName: '',
-				lastName: '',
-				middleName: '',
-				email: '',
-				disabled: false,
-				dob: new Date(),
-			},
+				designationName:'',
+				designationId:''
+			  },
+			idExist:false,
 			state_list: [],
 		};
 		this.formikRef = React.createRef();
@@ -127,13 +124,30 @@ class DesignationModal extends React.Component {
 						onSubmit={(values, { resetForm, setSubmitting }) => {
 							this.handleSubmit(values, resetForm);
 						}}
+						
+						validate={(values) => {
+							let errors = {};
+						  
+						   if(this.state.idExist==true){
+							  errors.designationId=
+							   "Designation ID already exist";
+						   }
+  
+						   if(this.state.nameExist==true){
+							errors.designationName=
+							 "Designation name already exist";
+						}
+							// return errors;
+						   
+							return errors;
+						  }}
 						validationSchema={Yup.object().shape({
 							//	firstName: Yup.string().required('First Name is required'),
 
 							designationName: Yup.string().required('Designation Name is required').test('is new',
 								"Designation Name is already exist",
 								() => !nameDesigExist),
-								designationId: Yup.string().required('Designation ID is required').test('is new',
+							designationId: Yup.string().required('Designation ID is required').test('is new',
 								"Designation ID is already exist",
 								() => !idDesigExist)
 

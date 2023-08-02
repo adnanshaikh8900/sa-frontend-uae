@@ -757,9 +757,9 @@ class CreatePayrollList extends React.Component {
 																		.required("Payroll subject is required"),
 																	payrollDate: Yup.string()
 																		.required("Payroll date is required"),
-																	payrollApprover: Yup.object()
+																	payrollApprover: Yup.string()
 																	// selectedRows: Yup.string()
-																	//     .required("At least selection of one employee is required for create payroll"),
+																	     .required("At least selection of one employee is required for create payroll"),
 																})}
 																validate={(values) => {
 																	// let status = false
@@ -898,7 +898,7 @@ class CreatePayrollList extends React.Component {
 
 
 																			<Col >	<Label htmlFor="due_date">
-																				{/* <span className="text-danger">* </span> */}
+																				<span className="text-danger">* </span>
 																				{strings.payroll_approver}
 																			</Label>
 																				<FormGroup>

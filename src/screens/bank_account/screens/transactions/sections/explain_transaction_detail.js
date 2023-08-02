@@ -1054,6 +1054,16 @@ class ExplainTrasactionDetail extends React.Component {
         <FormGroup className="mb-3">
           <Label htmlFor="payrollListIds">Payolls</Label>
           <Select
+            isDisabled={
+              this.state.initValue
+                .explinationStatusEnum ===
+              "PARTIAL" ||
+              this.state.initValue
+                .explinationStatusEnum === "FULL" ||
+              this.state.initValue
+                .explinationStatusEnum ===
+              "RECONCILED"
+            }
             styles={customStyles}
             isMulti
             value={props.values.payrollListIds}

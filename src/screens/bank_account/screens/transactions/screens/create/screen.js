@@ -1323,6 +1323,14 @@ class CreateBankTransaction extends React.Component {
                               })
                             }
                           }
+                          if (
+                            date1 < date2 ||
+                            date1 < new Date(this.state.payrollDate)
+                          )
+                           {
+                            errors.transactionDate =
+                              "Transaction Date cannot be earlier than the payroll approval date.";
+                          }
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({

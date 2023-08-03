@@ -1220,7 +1220,7 @@ class CreateEmployeePayroll extends React.Component {
                                 <Row>
                                     <Col lg={12}>
                                         <div className="h4 mb-0 d-flex align-items-center">
-                                            <i className="nav-icon fas fa-user-tie" />
+                                            <i className="nav-icon fas fa-user-plus" />
                                             <span className="ml-2">{strings.CreateEmployee}</span>
                                         </div>
                                     </Col>

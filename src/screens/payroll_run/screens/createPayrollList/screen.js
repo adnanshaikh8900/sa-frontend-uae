@@ -106,6 +106,7 @@ class CreatePayrollList extends React.Component {
 			currencyIsoCode: "AED",
 			loadingMsg: "Loading...",
 			disableLeavePage: false,
+			isPayrollSubjectNameExist:false,
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -307,6 +308,25 @@ class CreatePayrollList extends React.Component {
 				})
 			}
 		})
+	}
+
+	validatePayrollSubjectName = (value) => {
+		const data = {
+			moduleType: 27,
+			name: value,
+		};
+		this.props.commonActions.checkValidation(data).then((response) => {
+			if (response.data === 'Payroll Subject already exists') {
+				this.setState({
+					isPayrollSubjectNameExist: true,
+
+				})
+			} else {
+				this.setState({
+					isPayrollSubjectNameExist: false,
+				});
+			}
+		}); 
 	}
 
 
@@ -771,6 +791,9 @@ class CreatePayrollList extends React.Component {
 																	if (!values.payrollDate) {
 																		errors.payrollDate = 'Payroll date is required';
 																	}
+																	if(this.state.isPayrollSubjectNameExist === true){
+																		errors.payrollSubject= "Payroll Subject Already Exists"
+																	}
 																	// if(this.state.selectedRows && this.state.selectedRows.length===0)
 																	// {
 																	// 	errors.selectedRows = 'At least selection of one employee  is required for create payroll';
@@ -805,8 +828,11 @@ class CreatePayrollList extends React.Component {
 																						value={props.values.payrollSubject}
 																						maxLength="100"
 																						placeholder={strings.Enter + strings.pay_subject}
-																						onChange={(value) => {
-																							props.handleChange('payrollSubject')(value);
+																						onChange={(option) => {
+																							console.log(option.target.value);
+																							props.handleChange('payrollSubject')(option.target.value);
+																							this.validatePayrollSubjectName(option.target.value)
+
 																						}}
 																						className={
 																							props.errors.payrollSubject && 

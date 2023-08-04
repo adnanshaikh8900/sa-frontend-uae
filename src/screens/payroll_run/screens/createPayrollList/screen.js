@@ -798,8 +798,15 @@ class CreatePayrollList extends React.Component {
 																	// {
 																	// 	errors.selectedRows = 'At least selection of one employee  is required for create payroll';
 																	// }
+																	let DOJ = this.state.selectedRows1.map((i) => moment(i.joiningDate).format('DD-MM-YYYY'))
+																	DOJ.forEach((dateString) => {
+																		let mStart = moment(this.state.startDate).format('DD-MM-YYYY')
+																		if (mStart < dateString) {
+																			errors.startDate = 'Pay-Period should start after the date of joining';
+																		}
+																	});
 																	if (!this.state.startDate && !this.state.endDate) {
-																		errors.startDate = 'Start and end date is required';
+																		errors.startDate = 'Start date and end date is required';
 																	} else
 																		if (!this.state.startDate) {
 																			errors.startDate = 'Start date is required';
@@ -904,16 +911,16 @@ class CreatePayrollList extends React.Component {
 																						onFocusChange={this.handleFocusChange}
 																						startDate={this.state.startDate}
 																						startDateId="startDate"
-																						className={`form-control ${props.errors.payrollDate &&
-																							props.touched.payrollDate
+																						className={`form-control ${props.errors.startDate &&
+																							props.touched.startDate
 																							? 'is-invalid'
 																							: ''
 																							}`}
 																					/>
-																					{props.errors.payrollDate &&
-																						props.touched.payrollDate && (
+																					{props.errors.startDate &&
+																						props.touched.startDate && (
 																						<div className="invalid-feedback">
-																							{props.errors.payrollDate}
+																							{props.errors.startDate}
 																						</div>
 																					)}
 																				</FormGroup>

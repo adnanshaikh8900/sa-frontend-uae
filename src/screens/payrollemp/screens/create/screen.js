@@ -123,6 +123,7 @@ class CreateEmployeePayroll extends React.Component {
             isDisabled: false,
             createMore: false,
             nameDesigExist: false,
+            idDesigExist: false,
             initValue: {
                 designationName: '',
                 firstName: '',
@@ -295,6 +296,7 @@ class CreateEmployeePayroll extends React.Component {
             name: value,
         };
         this.props.commonActions.checkValidation(data).then((response) => {
+            console.log(response);
             if (response.data === 'Designation name already exists') {
                 this.setState({
                     nameDesigExist: true,
@@ -302,6 +304,24 @@ class CreateEmployeePayroll extends React.Component {
             } else {
                 this.setState({
                     nameDesigExist: false,
+                });
+            }
+        });
+    };
+    designationIdvalidationCheck = (value) => {
+        const data = {
+            moduleType: 25,
+            name: value,
+        };
+        this.props.commonActions.checkValidation(data).then((response) => {
+            console.log(response);
+            if (response.data === 'Designation ID already exists') {
+                this.setState({
+                    idDesigExist: true,
+                });
+            } else {
+                this.setState({
+                    idDesigExist: false,
                 });
             }
         });
@@ -3877,6 +3897,8 @@ class CreateEmployeePayroll extends React.Component {
                             this.closeDesignationModal(e);
                         }}
                         nameDesigExist={this?.state?.nameDesigExist}
+                        idDesigExist={this?.state?.idDesigExist}
+                        validateid={this.designationIdvalidationCheck}
                         validateinfo={this.designationNamevalidationCheck}
                         getCurrentUser={(e) => this.getCurrentUser(e)}
                         createDesignation={this.props.createPayrollEmployeeActions.createEmployeeDesignation}

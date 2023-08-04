@@ -109,7 +109,8 @@ class DesignationModal extends React.Component {
 			closeDesignationModal,
 			nameDesigExist,
 			idDesigExist,
-			validateinfo
+			validateinfo,
+			validateid,
 		} = this.props;
 		const { initValue } = this.state;
 		return (
@@ -128,12 +129,17 @@ class DesignationModal extends React.Component {
 						validate={(values) => {
 							let errors = {};
 						  
-						   if(this.state.idExist==true){
+						   if(values.designationId === '0'){
+							  errors.designationId=
+							   "Designation ID should be greater than 0";
+						   }
+
+						   if(this.state.idDesigExist==true){
 							  errors.designationId=
 							   "Designation ID already exist";
 						   }
   
-						   if(this.state.nameExist==true){
+						   if(this.state.nameDesigExist==true){
 							errors.designationName=
 							 "Designation name already exist";
 						}
@@ -145,10 +151,10 @@ class DesignationModal extends React.Component {
 							//	firstName: Yup.string().required('First Name is required'),
 
 							designationName: Yup.string().required('Designation Name is required').test('is new',
-								"Designation Name is already exist",
+								"Designation Name already exist",
 								() => !nameDesigExist),
 							designationId: Yup.string().required('Designation ID is required').test('is new',
-								"Designation ID is already exist",
+								"Designation ID already exist",
 								() => !idDesigExist)
 
 						})}
@@ -186,7 +192,7 @@ class DesignationModal extends React.Component {
 													onChange={(option) => {
 													if (option.target.value === '' || this.regEx.test(option.target.value)) {
 														props.handleChange('designationId')(option)
-														validateinfo(option.target.value)
+														validateid(option.target.value)
 													}
 													}}
 													className={props.errors.designationId && props.touched.designationId ? "is-invalid" : ""}

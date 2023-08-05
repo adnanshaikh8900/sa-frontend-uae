@@ -249,6 +249,9 @@ class CreatePayrollList extends React.Component {
 		if (payrollApprover === undefined) { formData.append('approverId', this.state.payrollApprover?.value ? this.state.payrollApprover.value : null) }
 		else if (payrollApprover !== "") { formData.append('approverId', parseInt(payrollApprover?.value)) }
 
+		this.state.selectedRows1.forEach(i => {
+			delete i.joiningDate;
+		})
 		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
 		formData.append('salaryDate', payrollDate)
 		//Payroll total  amount

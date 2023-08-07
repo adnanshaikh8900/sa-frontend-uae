@@ -207,8 +207,8 @@ class ExplainTrasactionDetail extends React.Component {
             reference: res.data.reference ? res.data.reference : "",
             exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : "",
             //currencyName: res.data.currencyName ? res.data.currencyName : '',
-            coaCategoryId: res.data.coaCategoryId
-              ? parseInt(res.data.coaCategoryId)
+            coaCategoryId: res.data.coaCategoryId ? res.data.coaCategoryId === 18 ? {'label' : 'Corporate Tax Payment' , 'value' : 18} : 
+              parseInt(res.data.coaCategoryId)
               : "",
             invoiceIdList:
               res.data.explainParamList && res.data.explainedInvoiceList
@@ -1749,6 +1749,7 @@ class ExplainTrasactionDetail extends React.Component {
                           {(props) => (
                             <Form onSubmit={props.handleSubmit}>
                               <Row>
+                                {console.log(props.values.coaCategoryId)}
                                 <Col lg={3}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="chartOfAccountId">

@@ -839,7 +839,6 @@ class CreatePayrollList extends React.Component {
 																						maxLength="100"
 																						placeholder={strings.Enter + strings.pay_subject}
 																						onChange={(option) => {
-																							console.log(option.target.value);
 																							props.handleChange('payrollSubject')(option.target.value);
 																							this.validatePayrollSubjectName(option.target.value)
 

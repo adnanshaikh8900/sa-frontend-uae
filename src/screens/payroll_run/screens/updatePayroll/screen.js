@@ -108,7 +108,8 @@ class UpdatePayroll extends React.Component {
 			 count:0,
 			 paidDays:30,
 			 checkForLopSetting:false,
-			 disableLeavePage:false
+			 disableLeavePage:false,
+			 isPayrollSubjectNameExist:false,
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -423,6 +424,27 @@ class UpdatePayroll extends React.Component {
 			}
 		})
 	}
+
+	
+	validatePayrollSubjectName = (value) => {
+		const data = {
+			moduleType: 27,
+			name: value,
+		};
+		this.props.commonActions.checkValidation(data).then((response) => {
+			if (response.data === 'Payroll Subject already exists') {
+				this.setState({
+					isPayrollSubjectNameExist: true,
+
+				})
+			} else {
+				this.setState({
+					isPayrollSubjectNameExist: false,
+				});
+			}
+		}); 
+	}
+
 	updateAmounts=(row,value)=>{
 		let newData = [...this.state.allPayrollEmployee]
 			newData = newData.map((data) => {
@@ -990,6 +1012,9 @@ class UpdatePayroll extends React.Component {
 															  if (!values.payrollDate) {
 																  errors.payrollDate = 'Payroll date is required';
 															  }
+															  if(this.state.isPayrollSubjectNameExist === true){
+																errors.payrollSubject= "Payroll Subject Already Exists"
+															}
 															//   if(this.state.selectedRows && this.state.selectedRows.length===0)
 															//   {
 															// 	  errors.selectedRows = 'At least selection of one employee is required for create payroll';
@@ -1024,6 +1049,7 @@ class UpdatePayroll extends React.Component {
 																				placeholder={strings.Enter + " Payroll Subject"}
 																				onChange={(value) => {
 																					props.handleChange('payrollSubject')(value);
+																					this.validatePayrollSubjectName(value.target.value)
 																					this.setState({payrollSubject:value.target.value})
 																				}}
 																				className={props.errors.payrollSubject ? "is-invalid" : ""}

@@ -597,6 +597,11 @@ const adminRoutes = [
 		name: 'Approve Payroll',
 		component: PayrollApproverScreen.screen,
 	},
+	Config.PAYROLL_MODULE && {
+		path: '/admin/payroll/ViewPayroll',
+		name: 'View Payroll',
+		component: PayrollApproverScreen.screen,
+	},
 	Config.PAYROLL_PC && {
 		path: '/admin/payroll/config/createSalaryRoles',
 		name: 'Create Salary Role',

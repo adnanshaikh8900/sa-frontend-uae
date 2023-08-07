@@ -200,7 +200,7 @@ class CreateCurrencyConvert extends React.Component {
 							<Card>
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon icon-briefcase" />
+										<i className="nav-icon nav-icon fas fa-money" />
 										<span className="ml-2"> {strings.NewCurrencyConversion}</span>
 									</div>
 								</CardHeader>
@@ -237,9 +237,9 @@ class CreateCurrencyConvert extends React.Component {
 															strings.ExchangeRateRequired)
 														.test(
 														'exchangeRate',
-														'Exchange rate should not be equal to 1',
+															'Exchange rate should be greater than 1',
 														(value) => {
-															if (value != 1) {
+															if (value > 1) {
 																return true;
 															} else {
 																return false;

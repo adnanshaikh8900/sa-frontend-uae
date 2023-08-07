@@ -16,9 +16,7 @@ import {
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import { LeavePage } from 'components';
-import {
-  CommonActions
-} from 'services/global'
+import {CommonActions} from 'services/global'
 import * as SalaryRoleActions from '../../actions';
 import * as EmployeeDesignationCreateActions from './actions';
 import 'react-datepicker/dist/react-datepicker.css'
@@ -83,16 +81,34 @@ class CreateDesignation extends React.Component {
   initializeData = () => {
 
   };
-  designationIdvalidationCheck = (value) => {
+  designationNamevalidationCheck = (value) => {
+    const data = {
+        moduleType: 26,
+        name: value,
+    };
+    this.props.commonActions.checkValidation(data).then((response) => {
+        console.log(response);
+        if (response.data === 'Designation name already exists') {
+            this.setState({
+              nameExist: true,
+            });
+        } else {
+            this.setState({
+              nameExist: false,
+            });
+        }
+    });
+};
+designationIdvalidationCheck = (value) => {
     const data = {
         moduleType: 25,
         name: value,
     };
     this.props.commonActions.checkValidation(data).then((response) => {
-      console.log(response.data);
+        console.log(response);
         if (response.data === 'Designation ID already exists') {
             this.setState({
-                idExist: true,
+              idExist: true,
             });
         } else {
             this.setState({
@@ -100,24 +116,6 @@ class CreateDesignation extends React.Component {
             });
         }
     });
-};
-
-designationNamevalidationCheck = (value) => {
-  const data = {
-      moduleType: 26,
-      name: value,
-  };
-  this.props.commonActions.checkValidation(data).then((response) => {
-      if (response.data === 'Designation name already exists') {
-          this.setState({
-              nameExist: true,
-          });
-      } else {
-          this.setState({
-              nameExist: false,
-          });
-      }
-  });
 };
 
   handleSubmit = (data, resetForm) => {
@@ -129,11 +127,11 @@ designationNamevalidationCheck = (value) => {
 
 		const formData = new FormData();
 
-    if(!this.state.idExist){
+    // if(!this.state.idExist && !this.state.nameExist){
     formData.append(
       'designationId',
       designationId != null ? designationId : '',
-    )}
+    )
     formData.append(
       'designationName',
       designationName != null ? designationName : '',
@@ -198,16 +196,20 @@ designationNamevalidationCheck = (value) => {
                          }}
                          validate={(values) => {
                           let errors = {};
-                        
-                         if(this.state.idExist==true){
+                                  
+                        if(values.designationId === '0'){
+                          errors.designationId=
+                          "Designation ID should be greater than 0";
+                        }
+                         if(this.state.idExist===true){
                             errors.designationId=
                              "Designation ID already exist";
                          }
 
-                         if(this.state.nameExist==true){
+                         if(this.state.nameExist===true){
                           errors.designationName=
                            "Designation name already exist";
-                      }
+                        }
                           // return errors;
                          
                           return errors;
@@ -215,9 +217,13 @@ designationNamevalidationCheck = (value) => {
                         
                         validationSchema={Yup.object().shape({
                           designationName: Yup.string()
-                            .required("Designation name is required"),  
+                            .required("Designation name is required").test('is new',
+                            "Designation Name already exist",
+                            () => !this.state.nameExist),  
                             designationId: Yup.string()
-                            .required("Designation id is required"),                  
+                            .required("Designation id is required").test('is new',
+                            "Designation ID already exist",
+                            () => !this.state.idExist)                  
                         })}
                       >
                         {(props) => (

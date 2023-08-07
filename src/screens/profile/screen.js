@@ -1510,6 +1510,16 @@ class Profile extends React.Component {
 																),
 																companyRegistrationNumber: Yup.string().required(
 																	'Company registration number is required',
+																).test(
+																	'companyRegistrationNumber',
+																	'Company registration number should be greater than 1',
+																	(value) => {
+																		if (value > 1) {
+																			return true;
+																		} else {
+																			return false;
+																		}
+																	},
 																),
 																vatRegistrationNumber:Yup.string().when(
 																	'isRegisteredVat',

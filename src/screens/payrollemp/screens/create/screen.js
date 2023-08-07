@@ -123,6 +123,7 @@ class CreateEmployeePayroll extends React.Component {
             isDisabled: false,
             createMore: false,
             nameDesigExist: false,
+            idDesigExist: false,
             initValue: {
                 designationName: '',
                 firstName: '',
@@ -295,6 +296,7 @@ class CreateEmployeePayroll extends React.Component {
             name: value,
         };
         this.props.commonActions.checkValidation(data).then((response) => {
+            console.log(response);
             if (response.data === 'Designation name already exists') {
                 this.setState({
                     nameDesigExist: true,
@@ -302,6 +304,24 @@ class CreateEmployeePayroll extends React.Component {
             } else {
                 this.setState({
                     nameDesigExist: false,
+                });
+            }
+        });
+    };
+    designationIdvalidationCheck = (value) => {
+        const data = {
+            moduleType: 25,
+            name: value,
+        };
+        this.props.commonActions.checkValidation(data).then((response) => {
+            console.log(response);
+            if (response.data === 'Designation ID already exists') {
+                this.setState({
+                    idDesigExist: true,
+                });
+            } else {
+                this.setState({
+                    idDesigExist: false,
                 });
             }
         });
@@ -1220,7 +1240,7 @@ class CreateEmployeePayroll extends React.Component {
                                 <Row>
                                     <Col lg={12}>
                                         <div className="h4 mb-0 d-flex align-items-center">
-                                            <i className="nav-icon fas fa-user-tie" />
+                                            <i className="nav-icon fas fa-user-plus" />
                                             <span className="ml-2">{strings.CreateEmployee}</span>
                                         </div>
                                     </Col>
@@ -2370,13 +2390,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
                                                                                                         <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span> {strings.ContactNumber1} </Label>
-                                                                                                        <div className={
-                                                                                                            props.errors.mobileNumber &&
-                                                                                                                props.touched.mobileNumber
-                                                                                                                ? ' is-invalidMobile '
-                                                                                                                : ''
-                                                                                                        }>
-
+                                                                                                        <div>
                                                                                                             <PhoneInput
                                                                                                                 id="emergencyContactNumber1"
                                                                                                                 name="emergencyContactNumber1"
@@ -2392,7 +2406,12 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                     );
                                                                                                                     // option.length !==12 ? this.setState({checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
                                                                                                                 }}
-                                                                                                                isValid
+                                                                                                                className={
+                                                                                                                        props.errors.emergencyContactNumber1 &&
+                                                                                                                            props.touched.emergencyContactNumber1
+                                                                                                                            ? 'text-danger'
+                                                                                                                            : ''
+                                                                                                                    }
                                                                                                             /></div>
                                                                                                         {props.errors.emergencyContactNumber1 &&
                                                                                                             props.touched.emergencyContactNumber1 && (
@@ -3878,6 +3897,8 @@ class CreateEmployeePayroll extends React.Component {
                             this.closeDesignationModal(e);
                         }}
                         nameDesigExist={this?.state?.nameDesigExist}
+                        idDesigExist={this?.state?.idDesigExist}
+                        validateid={this.designationIdvalidationCheck}
                         validateinfo={this.designationNamevalidationCheck}
                         getCurrentUser={(e) => this.getCurrentUser(e)}
                         createDesignation={this.props.createPayrollEmployeeActions.createEmployeeDesignation}

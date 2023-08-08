@@ -2184,13 +2184,10 @@ class CreateBankTransaction extends React.Component {
                                 </Row>
                               )}
                             {transactionCategoryList.categoriesList &&
-                              props.values.coaCategoryId?.label !==
-                              "VAT Payment" &&
-                              props.values.coaCategoryId?.label !==
-                              "VAT Claim" &&
+                              props.values.coaCategoryId?.label !== "VAT Payment" &&
+                              props.values.coaCategoryId?.label !== "VAT Claim" &&
                               props.values.coaCategoryId?.label !== "Expense" &&
-                              props.values.coaCategoryId?.label !==
-                              "Supplier Invoice" &&
+                              props.values.coaCategoryId?.label !== "Supplier Invoice" &&
                               props.values.coaCategoryId?.label !== "Sales" && (
                                 <Row>
                                   <Col lg={3}>
@@ -2227,19 +2224,14 @@ class CreateBankTransaction extends React.Component {
                                             )("");
                                           }
                                           if (
-                                            option.label !==
-                                            "Salaries and Employee Wages" &&
+                                            option.label !== "Salaries and Employee Wages" &&
                                             option.label !== "Owners Drawing" &&
                                             option.label !== "Dividend" &&
-                                            option.label !==
-                                            "Owners Current Account" &&
+                                            option.label !== "Owners Current Account" &&
                                             option.label !== "Share Premium" &&
-                                            option.label !==
-                                            "Employee Advance" &&
-                                            option.label !==
-                                            "Employee Reimbursements" &&
-                                            option.label !==
-                                            "Director Loan Account" &&
+                                            option.label !== "Employee Advance" &&
+                                            option.label !== "Employee Reimbursements" &&
+                                            option.label !== "Director Loan Account" &&
                                             option.label !== "Owners Equity"
                                           ) {
                                           }

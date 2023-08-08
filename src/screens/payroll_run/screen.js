@@ -189,14 +189,17 @@ class PayrollRun extends React.Component {
 				this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 			}
 			else
-			if ( userLabel === "Admin" && (row.status==="Draft" || row.status==="Rejected")) {
+			if ( userLabel === "Admin" && (row.status==="Draft")) {
 				this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 			}
 			else
 			
-				if ( userLabel === "Admin" && (row.status==="Submitted" || row.status==="Partially Paid" || row.status==="Approved" || row.status==="Paid"|| row.status==="Voided")) {
+				if ( userLabel === "Admin" && (row.status==="Submitted")) {
 					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 				}else
+					if (userLabel === "Admin" && (row.status === "Approved" || row.status === "Partially Paid" || row.status === " Paid" || row.status === "Voided" || row.status === "Rejected")) {
+						this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
+					} else
 				// if ( userLabel === "Admin" && row.status==="Approved") {
 				// 	this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 				// }

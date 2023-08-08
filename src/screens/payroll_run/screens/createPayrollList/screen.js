@@ -146,7 +146,7 @@ class CreatePayrollList extends React.Component {
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
 		this.setState({ paidDays: diffDays });
-		this.getAllPayrollEmployee(endDate)
+		this.getAllPayrollEmployee(startDate)
 		console.log(diffTime + " milliseconds");
 		console.log(diffDays + " days");
 		console.log(this.state.paidDays, "paid-Days", diffDays)
@@ -333,9 +333,9 @@ class CreatePayrollList extends React.Component {
 	}
 
 
-	getAllPayrollEmployee = (endDate) => {
+	getAllPayrollEmployee = (startDate) => {
 		//maintaining new state
-		let date = endDate ? endDate : this.state.endDate;
+		let date = startDate ? startDate : this.state.startDate;
 		let month = moment(date).format("MMMM");
 		this.props.createPayrollActions.getAllPayrollEmployee(moment(date).format("DD/MM/YYYY")).then((res) => {
 			if (res.status === 200) {
@@ -801,13 +801,13 @@ class CreatePayrollList extends React.Component {
 																	// {
 																	// 	errors.selectedRows = 'At least selection of one employee  is required for create payroll';
 																	// }
-																	let DOJ = this.state.selectedRows1.map((i) => moment(i.joiningDate).format('DD-MM-YYYY'))
-																	DOJ.forEach((dateString) => {
-																		let mStart = moment(this.state.startDate).format('DD-MM-YYYY')
-																		if (mStart < dateString) {
-																			errors.startDate = 'Pay-Period should start after the date of joining';
-																		}
-																	});
+																	// let DOJ = this.state.selectedRows1.map((i) => moment(i.joiningDate).format('DD-MM-YYYY'))
+																	// DOJ.forEach((dateString) => {
+																	// 	let mStart = moment(this.state.startDate).format('DD-MM-YYYY')
+																	// 	if (mStart < dateString) {
+																	// 		errors.startDate = 'Pay-Period should start after the date of joining';
+																	// 	}
+																	// });
 																	if (!this.state.startDate && !this.state.endDate) {
 																		errors.startDate = 'Start date and end date is required';
 																	} else

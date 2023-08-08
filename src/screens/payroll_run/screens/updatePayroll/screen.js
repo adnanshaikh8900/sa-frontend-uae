@@ -157,7 +157,7 @@ class UpdatePayroll extends React.Component {
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1; 
 		
 		this.setState({paidDays:diffDays});
-		this.getAllPayrollEmployee(endDate);
+		this.getAllPayrollEmployee(startDate);
 		console.log(diffTime + " milliseconds");
 		console.log(diffDays + " days");
 		console.log(this.state.paidDays,"paid-Days",diffDays)
@@ -489,9 +489,9 @@ class UpdatePayroll extends React.Component {
 													});
 	}
 
-	getAllPayrollEmployee = (endDate) => {
+	getAllPayrollEmployee = (startDate) => {
 		if(this.state.payrollId){
-			let date=endDate ?endDate :this.state.endDate;
+			let date=startDate ?startDate :this.state.startDate;
 			let month=moment(date).format("MMMM");
 		this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payrollId,moment(date).format("DD/MM/YYYY")).then((res) => {
 			if (res.status === 200) {

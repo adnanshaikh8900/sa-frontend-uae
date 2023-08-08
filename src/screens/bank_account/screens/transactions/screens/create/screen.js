@@ -1315,12 +1315,13 @@ class CreateBankTransaction extends React.Component {
                           }
                           if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
                             if(values.expenseCategory && values.expenseCategory.value === 34) {
-                              values.payrollListIds.map((i)=>{
-                                let num =parseFloat(i.label.match(/\d+\.\d+/)[0]);
-                                if (values.transactionAmount > num) {
-                                  errors.transactionAmount = 'Transaction amount cannot be greater than payroll amount.'
-                                }
-                              })
+                              const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
+                                let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
+                                return sum + num;
+                              }, 0);
+                              if (values.transactionAmount > sumOfPayrollAmounts) {
+                                errors.transactionAmount = 'Transaction amount cannot be greater than payroll amount.';
+                              }
                             }
                           }
                           if (

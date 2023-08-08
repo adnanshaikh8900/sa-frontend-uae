@@ -701,7 +701,8 @@ class UpdatePayroll extends React.Component {
 										return (
 											<Input
 												type="number"
-												min={0}
+												min={0}	
+												step="0.5"
 												max={this.state.paidDays}
 												id="lopDay"
 												name="lopDay"
@@ -709,7 +710,7 @@ class UpdatePayroll extends React.Component {
 												disabled={this.disableForAddButton() ? true : false}
 												onChange={(evt) => {
 
-													let value = parseInt(evt.target.value ==="" ? "0":evt.target.value) ;
+													let value = parseFloat(evt.target.value ==="" ? "0":evt.target.value) ;
 
 													if (value > 30 || value < 0) {
 														return;

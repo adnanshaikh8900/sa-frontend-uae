@@ -474,9 +474,9 @@ class CreatePayrollList extends React.Component {
 											<Input
 												className="spinboxDisable"
 												type="number"
-												min={0}
+												min={30 - this.state.paidDays}
 												step="0.5"
-												max={this.state.paidDays}
+												max={30}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}

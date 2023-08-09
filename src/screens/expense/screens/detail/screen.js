@@ -223,7 +223,6 @@ class DetailExpense extends React.Component {
 							vatCategoryId.label="N/A";
 							vatCategoryId.value="10";
 						}
-						console.log("data=", res.data)
 						this.setState(
 							{
 								loading: false,
@@ -264,7 +263,7 @@ class DetailExpense extends React.Component {
 								payee: res.data.payee ? res.data.payee : '',
 								expenseType: res.data.expenseType ? true : false,
 								isVatClaimable: res.data.expenseType ? res.data.expenseType : false,
-								showPlacelist:res.data.taxTreatmentId !== 8 ? true : false,
+								showPlacelist:res.data.taxTreatmentId !== 8 || !res.data.taxTreatmentId ? true : false,
 								lockPlacelist:res.data.taxTreatmentId === 7 ? true : false,
 								taxTreatmentId:res.data.taxTreatmentId ? res.data.taxTreatmentId : '',
 								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
@@ -328,8 +327,6 @@ class DetailExpense extends React.Component {
 			taxTreatmentId,
 			notes
 		} = data;
-		const exclusiveVat = this.state.selectedStatus;
-		const expenseType = this.state.selectedStatus;
 		let formData = new FormData();
 		formData.append('expenseType',  this.state.expenseType);
 		formData.append('isVatClaimable',  this.state.isVatClaimable);
@@ -376,8 +373,8 @@ class DetailExpense extends React.Component {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);
 		}
 		
-		if (taxTreatmentId && taxTreatmentId.value) {
-			formData.append('taxTreatmentId', taxTreatmentId.value);
+		if (taxTreatmentId) {
+			formData.append('taxTreatmentId', taxTreatmentId.value ? taxTreatmentId.value : taxTreatmentId);
 		}
 		formData.append("isReverseChargeEnabled",this.state.isReverseChargeEnabled)
 		this.setState({ loading:true, loadingMsg:"Updating Expense..."});
@@ -1154,8 +1151,7 @@ class DetailExpense extends React.Component {
 																</Col>
 														</Row>
 															<Row>
-															{this.state.isRegisteredVat && props.values.expenseCategory &&
-																	props.values.expenseCategory.value !== 34 && (
+															{this.state.isRegisteredVat && (props.values?.expenseCategory?.value ? props.values?.expenseCategory?.value !== 34 : props.values?.expenseCategory !== 34) && (
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="taxTreatmentId">
@@ -1287,8 +1283,7 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>)}
-															{this.state.isRegisteredVat && props.values.expenseCategory &&
-																props.values.expenseCategory.value !== 34 && (
+															{this.state.isRegisteredVat && (props.values?.expenseCategory?.value ? props.values?.expenseCategory?.value !== 34 : props.values?.expenseCategory !== 34) && (
 															<Col className='mb-2' lg={3}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div style={{display:"flex"}}>
@@ -1429,8 +1424,7 @@ class DetailExpense extends React.Component {
 																	</FormGroup>
 																</Col>
 																
-																{this.state.isRegisteredVat && props.values.expenseCategory &&
-																			props.values.expenseCategory.value !== 34 && (this.renderVat(props))}
+																{this.state.isRegisteredVat && (props.values?.expenseCategory?.value ? props.values?.expenseCategory?.value !== 34 : props.values?.expenseCategory !== 34) && (this.renderVat(props))}
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="currency">
@@ -1707,8 +1701,7 @@ class DetailExpense extends React.Component {
 																</Row>
 																)}
 																<Row>
-																{(this.state.isRegisteredVat && props.values.expenseCategory &&
-																			props.values.expenseCategory.value !== 34) && (((this.state.isDesignatedZone && (this.state.taxTreatmentId === 5 || this.state.taxTreatmentId === 6 || this.state.taxTreatmentId === 7))
+																{(this.state.isRegisteredVat && (this.state.taxTreatmentId) && (props.values?.expenseCategory?.value ? props.values?.expenseCategory?.value !== 34 : props.values?.expenseCategory !== 34)) && (((this.state.isDesignatedZone && (this.state.taxTreatmentId === 5 || this.state.taxTreatmentId === 6 || this.state.taxTreatmentId === 7))
 																			|| (!this.state.isDesignatedZone && (this.state.taxTreatmentId !== 3 && this.state.taxTreatmentId !== 8))
 																		)) && (
 																	<Col>

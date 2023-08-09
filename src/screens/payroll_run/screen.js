@@ -177,9 +177,13 @@ class PayrollRun extends React.Component {
 		// if(row.status=="Voided")
 		// toast.success("Unable to View Void Payroll !")
 		// else
-		if (userValue.toString() === row.generatedBy && userLabel === "Payroll Generator") {
-			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
+		// if (userValue.toString() === row.generatedBy && userLabel === "Payroll Generator") {
+		// 	this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
+		// }
+		if (userLabel === "Payroll Generator" && (row.status === "Approved" || row.status === "Partially Paid" || row.status === " Paid" || row.status === "Voided" || row.status === "Submitted")) {
+			this.props.history.push('/admin/payroll/payrollrun/ViewPayroll', { id: row.id })
 		}
+
 		else
 			if (userValue === row.payrollApprover && userLabel === "Payroll Approver" && row.status!=="Draft") {
 				this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })

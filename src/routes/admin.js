@@ -602,7 +602,7 @@ const adminRoutes = [
 		name: 'Approve Payroll',
 		component: PayrollApproverScreen.screen,
 	},
-	Config.PAYROLL_MODULE && {
+	Config.PAYROLL_PR && {
 		path: '/admin/payroll/ViewPayroll',
 		name: 'View Payroll',
 		component: PayrollApproverScreen.screen,

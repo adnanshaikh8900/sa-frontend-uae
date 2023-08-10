@@ -64,6 +64,7 @@ class CreateOpeningBalance extends React.Component {
 			disableLeavePage:false, 
 			openingbalancelist:"",
 		};
+		this.regEx = /^[0-9\d]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -339,6 +340,12 @@ class CreateOpeningBalance extends React.Component {
 																				: ''
 																		}
 																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regEx.test(
+																					option.target.value,
+																				)
+																			)
 																			props.handleChange('openingBalance')(
 																				option,
 																			);

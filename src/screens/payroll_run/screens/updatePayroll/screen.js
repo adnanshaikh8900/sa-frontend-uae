@@ -33,7 +33,7 @@ import './style.scss'
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import moment from 'moment';
-import { DateRangePicker,isInclusivelyBeforeDay } from 'react-dates';
+import { DateRangePicker, isInclusivelyBeforeDay } from 'react-dates';
 import { toast } from 'react-toastify';
 
 const mapStateToProps = (state) => {
@@ -92,24 +92,24 @@ class UpdatePayroll extends React.Component {
 			// 	onSelect: this.onRowSelect,
 			// 	onSelectAll: this.onSelectAll,
 			// },
-			 payrollDate: new Date(),
-			payrollSubject:undefined,
+			payrollDate: new Date(),
+			payrollSubject: undefined,
 			//  startDate: new Date(date.getFullYear(), date.getMonth(), 1),
 			//  endDate:  new Date(date.getFullYear(), date.getMonth() + 1, 0),
 			startDate: '',
 			endDate: '',
-			 payPeriod : '',
-			 apiSelector:'',
-			 focusedInput:null,
-			 submitButton:true,
-			 payrollApprover:'',
-			 dialog: null,
-			 currencyIsoCode:"AED",
-			 count:0,
-			 paidDays:30,
-			 checkForLopSetting:false,
-			 disableLeavePage:false,
-			 isPayrollSubjectNameExist:false,
+			payPeriod: '',
+			apiSelector: '',
+			focusedInput: null,
+			submitButton: true,
+			payrollApprover: '',
+			dialog: null,
+			currencyIsoCode: "AED",
+			count: 0,
+			paidDays: 30,
+			checkForLopSetting: false,
+			disableLeavePage: false,
+			isPayrollSubjectNameExist: false,
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -126,7 +126,7 @@ class UpdatePayroll extends React.Component {
 			sortName: '',
 			sortOrder: '',
 			onSortChange: this.sortColumn,
-			
+
 		}
 
 	}
@@ -147,32 +147,32 @@ class UpdatePayroll extends React.Component {
 			this.proceed(payroll_id);
 		}
 		this.tableApiCallsOnStatus();
-		this.calculatePayperioad(this.state.startDate ,this.state.endDate);
+		this.calculatePayperioad(this.state.startDate, this.state.endDate);
 
 	};
-	calculatePayperioad=(startDate,endDate)=>{
+	calculatePayperioad = (startDate, endDate) => {
 
 		// let diffDays=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1
-		const diffTime = Math.abs(startDate-endDate);
-		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1; 
-		
-		this.setState({paidDays:diffDays});
+		const diffTime = Math.abs(startDate - endDate);
+		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+		this.setState({ paidDays: diffDays });
 		this.getAllPayrollEmployee(startDate);
 		console.log(diffTime + " milliseconds");
 		console.log(diffDays + " days");
-		console.log(this.state.paidDays,"paid-Days",diffDays)
+		console.log(this.state.paidDays, "paid-Days", diffDays)
 	}
 	proceed = (payroll_id) => {
-		
+
 		this.props.createPayrollActions.getPayrollById(payroll_id).then((res) => {
 			if (res.status === 200) {
 				//	 
-				let payPeriodString=res.data.payPeriod;
-				let dateArray=payPeriodString.split('-')
-			
+				let payPeriodString = res.data.payPeriod;
+				let dateArray = payPeriodString.split('-')
+
 				this.setState({
 					loading: false,
-					
+
 					payrollId: res.data.id ? res.data.id : '',
 					approvedBy: res.data.approvedBy ? res.data.approvedBy : '',
 					comment: res.data.comment ? res.data.comment : '',
@@ -183,15 +183,15 @@ class UpdatePayroll extends React.Component {
 					isActive: res.data.isActive ? res.data.isActive : '',
 					payPeriod: res.data.payPeriod ? res.data.payPeriod : '',
 					payrollApprover: res.data.payrollApprover ? res.data.payrollApprover : '',
-					submitButton: res.data.payrollApprover ===null ? true : false,
+					submitButton: res.data.payrollApprover === null ? true : false,
 					payrollDate: res.data.payrollDate
 						? new Date(res.data.payrollDate)
 						: '',
 					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
 					runDate: res.data.runDate ? res.data.runDate : '',
 					status: res.data.status ? res.data.status : '',
-					currencyIsoCode:res.data.currencyIsoCode ? res.data.currencyIsoCode : 'AED',
-					selected:res.data.existEmpList ?res.data.existEmpList :[],
+					currencyIsoCode: res.data.currencyIsoCode ? res.data.currencyIsoCode : 'AED',
+					selected: res.data.existEmpList ? res.data.existEmpList : [],
 					// selectRowProp: {
 					// 	mode: 'checkbox',
 					//     selected:res.data.existEmpList ?res.data.existEmpList :[],
@@ -201,13 +201,13 @@ class UpdatePayroll extends React.Component {
 					// 	onSelectAll: this.onSelectAll,
 					// },
 					startDate: moment(dateArray[0]),
-					endDate:moment(dateArray[1])
+					endDate: moment(dateArray[1])
 
 				}
 				)
 				this.tableApiCallsOnStatus();
-				this.calculatePayperioad(this.state.startDate ,this.state.endDate);
-			
+				this.calculatePayperioad(this.state.startDate, this.state.endDate);
+
 			}
 		}).catch((err) => {
 			this.setState({ loading: false })
@@ -273,7 +273,7 @@ class UpdatePayroll extends React.Component {
 			return true;
 		}
 		else
-			if (this.state.status === "Submitted" || this.state.status==="Approved" || this.state.status==="Partially Paid"|| this.state.status==="Paid"||this.state.status==="Voided") {
+			if (this.state.status === "Submitted" || this.state.status === "Approved" || this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Voided") {
 				return true;
 			} else {
 				return false;
@@ -292,7 +292,7 @@ class UpdatePayroll extends React.Component {
 			}
 	};
 	disableForAddButton = () => {
-		if (this.state.status === "Submitted" || this.state.status==="Approved"|| this.state.status==="Partially Paid"|| this.state.status==="Paid"||this.state.status==="Voided") {
+		if (this.state.status === "Submitted" || this.state.status === "Approved" || this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Voided") {
 			return true;
 		} else {
 			return false;
@@ -325,7 +325,7 @@ class UpdatePayroll extends React.Component {
 	}
 
 	handleSubmit = (data, resetForm) => {
-		
+
 		this.setState({ disabled: true, disableLeavePage: true });
 		const {
 			payrollSubject,
@@ -334,77 +334,74 @@ class UpdatePayroll extends React.Component {
 			startDate,
 			endDate
 		} = data;
-		let employeeListIds=this.state.selectedRows ? this.state.selectedRows :'';
-		
-		let diff=	Math.abs(parseInt((startDate - endDate) / (1000 * 60 * 60 * 24), 10))+1	
-		let string =moment(this.state.startDate).format('MM/DD/YYYY')+'-'+moment(this.state.endDate).format('MM/DD/YYYY')
+		let employeeListIds = this.state.selectedRows ? this.state.selectedRows : '';
+
+		let diff = Math.abs(parseInt((startDate - endDate) / (1000 * 60 * 60 * 24), 10)) + 1
+		let string = moment(this.state.startDate).format('MM/DD/YYYY') + '-' + moment(this.state.endDate).format('MM/DD/YYYY')
 		// this.setState({payPeriod:diff});
-		this.setState({payPeriod:string});
+		this.setState({ payPeriod: string });
 		const formData = new FormData();
-		
-		formData.append('payrollId',this.state.payrollId ? this.state.payrollId :'')
+
+		formData.append('payrollId', this.state.payrollId ? this.state.payrollId : '')
 
 		formData.append('payPeriod', this.state.payPeriod)
 		formData.append('employeeListIds', employeeListIds)
-		if(payrollSubject === undefined)
-		{formData.append('payrollSubject', this.state.payrollSubject ? this.state.payrollSubject :null)}
-		else 
-		{formData.append('payrollSubject', payrollSubject)}
+		if (payrollSubject === undefined) { formData.append('payrollSubject', this.state.payrollSubject ? this.state.payrollSubject : null) }
+		else { formData.append('payrollSubject', payrollSubject) }
 
-		if(this.state.payrollApprover !=="")
-		{
-			formData.append('approverId', this.state.payrollApprover ?this.state.payrollApprover :null)}
-		else if(payrollApprover!=="")
-		{formData.append('approverId',  parseInt(payrollApprover) )}
-		
-		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
-		 formData.append('salaryDate',this.state.payrollDate)
-
-			//Payroll total  amount
-			let totalAmountPayroll=0;
-			this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.netPay)})
-			formData.append('totalAmountPayroll', totalAmountPayroll);
-	 
-		if(this.state.apiSelector ==="createPayroll"){
-			this.setState({ loading:true, loadingMsg:"Updating Payroll..."});
-		this.props.createPayrollActions
-			 .updatePayroll(formData)
-			// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', 'Payroll updated Successfully')				
-					this.tableApiCallsOnStatus()
-					this.props.history.push(`/admin/payroll/payrollrun`);
-					// resetForm(this.state.initValue)
-					this.setState({ loading:false,});
-				}
-			}).catch((err) => {
-				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-			})
-	}else {
-		if(this.state.apiSelector==="createAndSubmitPayroll"){
-			this.setState({ loading:true,loadingMsg:"Submitting Payroll..."});
-			this.props.createPayrollActions
-			 .updateAndSubmitPayroll(formData)
-			// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', 'Payroll updated And Submitted Successfully')				
-					this.tableApiCallsOnStatus()
-					this.props.history.push(`/admin/payroll/payrollrun`);
-					// resetForm(this.state.initValue)
-					this.setState({ loading:false,});
-				}
-			}).catch((err) => {
-				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-			})
+		if (this.state.payrollApprover !== "") {
+			formData.append('approverId', this.state.payrollApprover ? this.state.payrollApprover : null)
 		}
-	}	
+		else if (payrollApprover !== "") { formData.append('approverId', parseInt(payrollApprover)) }
+
+		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
+		formData.append('salaryDate', this.state.payrollDate)
+
+		//Payroll total  amount
+		let totalAmountPayroll = 0;
+		this.state.selectedRows1.map((row) => { totalAmountPayroll += parseFloat(row.netPay) })
+		formData.append('totalAmountPayroll', totalAmountPayroll);
+
+		if (this.state.apiSelector === "createPayroll") {
+			this.setState({ loading: true, loadingMsg: "Updating Payroll..." });
+			this.props.createPayrollActions
+				.updatePayroll(formData)
+				// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
+				.then((res) => {
+					if (res.status === 200) {
+						this.props.commonActions.tostifyAlert('success', 'Payroll updated Successfully')
+						this.tableApiCallsOnStatus()
+						this.props.history.push(`/admin/payroll/payrollrun`);
+						// resetForm(this.state.initValue)
+						this.setState({ loading: false, });
+					}
+				}).catch((err) => {
+					this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+				})
+		} else {
+			if (this.state.apiSelector === "createAndSubmitPayroll") {
+				this.setState({ loading: true, loadingMsg: "Submitting Payroll..." });
+				this.props.createPayrollActions
+					.updateAndSubmitPayroll(formData)
+					// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
+					.then((res) => {
+						if (res.status === 200) {
+							this.props.commonActions.tostifyAlert('success', 'Payroll updated And Submitted Successfully')
+							this.tableApiCallsOnStatus()
+							this.props.history.push(`/admin/payroll/payrollrun`);
+							// resetForm(this.state.initValue)
+							this.setState({ loading: false, });
+						}
+					}).catch((err) => {
+						this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+					})
+			}
+		}
 	}
 	handleDatesChange = ({ startDate, endDate }) => {
-		this.setState({startDate:startDate,endDate:endDate,checkForLopSetting:true})
+		this.setState({ startDate: startDate, endDate: endDate, checkForLopSetting: true })
 		this.calculatePayperioad(startDate, endDate)
-		  };
+	};
 	setDate = (props, value) => {
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
@@ -425,7 +422,7 @@ class UpdatePayroll extends React.Component {
 		})
 	}
 
-	
+
 	validatePayrollSubjectName = (value) => {
 		const data = {
 			moduleType: 27,
@@ -442,167 +439,190 @@ class UpdatePayroll extends React.Component {
 					isPayrollSubjectNameExist: false,
 				});
 			}
-		}); 
+		});
 	}
 
-	updateAmounts=(row,value)=>{
+	updateAmounts = (row, value) => {
 		let newData = [...this.state.allPayrollEmployee]
-			newData = newData.map((data) => {
-														if (row.id === data.id) {
-															data.lopDay = value;
-															data.noOfDays = 30 - value
-														
-															data.deduction=	((data.originalDeduction/30) * data.noOfDays).toFixed(2)
-															let deduction=data.noOfDays==0 ? 0:data.deduction;
+		newData = newData.map((data) => {
+			if (row.id === data.id) {
+				data.lopDay = value;
+				data.noOfDays = 30 - value
 
-															data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-															data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (deduction || 0)
-															
-														}
-														data.payrollId = this.state.payroll_id
-														data.salaryDate = this.state.payrollDate
-														return data
+				data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2)
+				let deduction = data.noOfDays == 0 ? 0 : data.deduction;
 
-													})
-													console.log(newData)
+				data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+				data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (deduction || 0)
 
-													this.setState({
-														allPayrollEmployee: newData
-													})
-													
-													let tempList1 = [];
-
-													this.state.allPayrollEmployee.map((row)=>{
-														
-														for(let i=0;i<this.state.selected.length;i++){
-															if(row.empId==this.state.selected[i]){		
-																tempList1.push(row);					
-															}//if
-														}
-													})
-													
-													//
-													this.setState({
-													
-														selectedRows1: tempList1,
-														
-													});
-	}
-
-	getAllPayrollEmployee = (startDate) => {
-		if(this.state.payrollId){
-			let date=startDate ?startDate :this.state.startDate;
-			let month=moment(date).format("MMMM");
-		this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payrollId,moment(date).format("DD/MM/YYYY")).then((res) => {
-			if (res.status === 200) {
-
-				if(res.data.length===0){
-					this.props.createPayrollActions.getAllPayrollEmployee(this.state.payrollId,date).then((res) => {
-						if (res.status === 200) {
-
-								this.setState({
-									allPayrollEmployee: res.data
-								})
-							
-						}
-					})	
-					}else{
-						this.setState({
-							allPayrollEmployee: res.data
-						})
-					}
-					let newData = [...this.state.allPayrollEmployee]
-					newData = newData.map((data) => {					
-							// data.noOfDays =this.state.paidDays
-							// data.originalGrossPay=data.grossPay		
-					        // data.perDaySal=data.originalGrossPay / data.noOfDays			
-							let tmpPaidDay=this.state.paidDays > 30 ?30	:
-										( this.state.paidDays==28 && month=="February" ? 30 :this.state.paidDays	)		
-							if(this.state.checkForLopSetting===true)		data.noOfDays =tmpPaidDay
-
-							data.originalDeduction=data.deduction
-							data.deduction=	((data.originalDeduction/30) * data.noOfDays).toFixed(2)
-							data.originalNoOfDays =tmpPaidDay
-							data.originalGrossPay=data.grossPay		
-							data.perDaySal=data.originalGrossPay / 30	
-
-							if(this.state.checkForLopSetting===true)		data.lopDay = 30-tmpPaidDay;
-							data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-							data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)		
-						return data
-					})
-					console.log(newData)
-	
-					this.setState({
-						allPayrollEmployee: newData
-					})
-
-					if(this.state.status && this.state.status==="Submitted"){
-
-						this.props.createPayrollActions.getAllPayrollEmployeeForApprover(this.state.payrollId).then((res) => {
-							if (res.status === 200) {
-								
-									this.setState({
-										allPayrollEmployee: res.data
-									})
-								
-							}
-						})	
-					}
 			}
+			data.payrollId = this.state.payroll_id
+			data.salaryDate = this.state.payrollDate
+			return data
+
 		})
-	}
-	}
-	defaultSelect=()=>{
-		if(this.state.count===0 && this.state.allPayrollEmployee){
-		let tempList = [];
+		console.log(newData)
+
+		this.setState({
+			allPayrollEmployee: newData
+		})
+
 		let tempList1 = [];
 
-		 this.state.allPayrollEmployee.map((row)=>{
-			 
-			for(let i=0;i<this.state.selected.length;i++){
-				if(row.empId==this.state.selected[i]){		
-					tempList1.push(row);					
+		this.state.allPayrollEmployee.map((row) => {
+
+			for (let i = 0; i < this.state.selected.length; i++) {
+				if (row.empId == this.state.selected[i]) {
+					tempList1.push(row);
 				}//if
 			}
 		})
-		
+
 		//
 		this.setState({
-			selectedRows: this.state.selected,
+
 			selectedRows1: tempList1,
-			count:1
+
 		});
-		console.log(this.state.selectedRows,"LIST")
 	}
-	let data =this.state.allPayrollEmployee || []
+
+	getAllPayrollEmployee = (startDate) => {
+		if (this.state.payrollId) {
+		var activeEmployee = [];
+		var employeePayPeriodlList = [];
+			this.props.employeeActions.getEmployeeListWithDetails().then((response) => {
+				if (response.status === 200) {
+					employeePayPeriodlList = response.data;
+					let date = startDate ? startDate : this.state.startDate;
+					let month = moment(date).format("MMMM");
+					this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payrollId, moment(date).format("DD/MM/YYYY")).then((res) => {
+						if (res.status === 200) {
+							if (res.data.length === 0) {
+								this.props.createPayrollActions.getAllPayrollEmployee(this.state.payrollId, date).then((res) => {
+									if (res.status === 200) {
+
+										this.setState({
+											allPayrollEmployee: res.data
+										})
+
+									}
+								})
+							} else {
+								this.setState({
+									allPayrollEmployee: res.data
+								})
+							}
+							let newData = [...this.state.allPayrollEmployee]
+							newData = newData.map((data) => {
+								// data.noOfDays =this.state.paidDays
+								// data.originalGrossPay=data.grossPay		
+								// data.perDaySal=data.originalGrossPay / data.noOfDays			
+								let tmpPaidDay = this.state.paidDays > 30 ? 30 :
+									(this.state.paidDays == 28 && month == "February" ? 30 : this.state.paidDays)
+								if (this.state.checkForLopSetting === true) data.noOfDays = tmpPaidDay
+
+								data.originalDeduction = data.deduction
+								data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2)
+								data.originalNoOfDays = tmpPaidDay
+								data.originalGrossPay = data.grossPay
+								data.perDaySal = data.originalGrossPay / 30
+
+								if (this.state.checkForLopSetting === true) data.lopDay = 30 - tmpPaidDay;
+								data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+								data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+
+								const empList = employeePayPeriodlList.filter(obj => obj.employeeId === data.id)
+								if (empList && empList?.length > 0) {
+									let flag = true;
+									empList.map(obj => {
+										if (obj.payPeriod.includes(moment(date).format("MM/DD/YYYY"))) {
+											flag = false;
+										}
+									})
+									if (flag) {
+										activeEmployee.push(data)
+									}
+								} else {
+									activeEmployee.push(data)
+								}
+
+
+								return data
+							})
+							console.log(newData)
+
+							this.setState({
+								allPayrollEmployee: activeEmployee
+							})
+
+							if (this.state.status && this.state.status === "Submitted") {
+
+								this.props.createPayrollActions.getAllPayrollEmployeeForApprover(this.state.payrollId).then((res) => {
+									if (res.status === 200) {
+
+										this.setState({
+											allPayrollEmployee: res.data
+										})
+
+									}
+								})
+							}
+						}
+					})
+				}
+			})
+		}
+	}
+	defaultSelect = () => {
+		if (this.state.count === 0 && this.state.allPayrollEmployee) {
+			let tempList = [];
+			let tempList1 = [];
+
+			this.state.allPayrollEmployee.map((row) => {
+
+				for (let i = 0; i < this.state.selected.length; i++) {
+					if (row.empId == this.state.selected[i]) {
+						tempList1.push(row);
+					}//if
+				}
+			})
+
+			//
+			this.setState({
+				selectedRows: this.state.selected,
+				selectedRows1: tempList1,
+				count: 1
+			});
+			console.log(this.state.selectedRows, "LIST")
+		}
+		let data = this.state.allPayrollEmployee || []
 		return data
-		
+
 	}
 
 	renderStatus = (status) => {
 		let classname = '';
-		
+
 		if (status === 'Approved') {
 			classname = 'label-success';
-		}if (status === 'Paid') {
+		} if (status === 'Paid') {
 			classname = 'label-sent';
-		 } else
-		 if (status === 'UnPaid') {
-			classname = 'label-closed';
-		 } else  if (status === 'Draft') {
-			classname = 'label-currency';
-		} else if (status === 'Paid') {
-			classname = 'label-approved';
-		}else if (status === 'Rejected') {
-			classname = 'label-due';
-		}  if (status === 'Submitted') {
-			classname = 'label-sent';
-		}else if (status === 'Partially Paid') {
-			classname = 'label-PartiallyPaid';
-		}else if (status === "Voided") {
-			classname = 'label-closed';
-		}
+		} else
+			if (status === 'UnPaid') {
+				classname = 'label-closed';
+			} else if (status === 'Draft') {
+				classname = 'label-currency';
+			} else if (status === 'Paid') {
+				classname = 'label-approved';
+			} else if (status === 'Rejected') {
+				classname = 'label-due';
+			} if (status === 'Submitted') {
+				classname = 'label-sent';
+			} else if (status === 'Partially Paid') {
+				classname = 'label-PartiallyPaid';
+			} else if (status === "Voided") {
+				classname = 'label-closed';
+			}
 		// else {
 		// 	classname = 'label-overdue';
 		// }
@@ -613,16 +633,16 @@ class UpdatePayroll extends React.Component {
 		);
 	};
 	getPayrollEmployeeList = () => {
-		const 	selectRowProp= {
+		const selectRowProp = {
 			mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
-			selected:this.state.selected,
+			selected: this.state.selected,
 			clickToSelect: false,
 			onSelect: this.onRowSelect,
 			onSelectAll: this.onSelectAll,
 		}
-		
-		
+
+
 		const cols = [
 			{
 				label: 'Employee No',
@@ -710,65 +730,67 @@ class UpdatePayroll extends React.Component {
 												disabled={this.disableForAddButton() ? true : false}
 												onChange={(evt) => {
 
-													let value = parseFloat(evt.target.value ==="" ? "0":evt.target.value) ;
+													let value = parseFloat(evt.target.value === "" ? "0" : evt.target.value);
 
 													if (value > 30 || value < 0) {
 														return;
 													}
 
-													this.updateAmounts(row,value)
-												
+													this.updateAmounts(row, value)
+
 												}}
 											/>
 
 										);
 
-									}else if(col.key === 'grossPay'){
-										let grossPay=parseFloat(cell)
-										return  (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+grossPay.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
-					                	}
-									 else
-									 if(col.key === 'netPay'){
-										return	(<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
-								 }
-								 
-								  else if(col.key === 'deduction'){
-									return (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
-							 } else {
-										return (
-											<div>{cell}</div>
-										)
+									} else if (col.key === 'grossPay') {
+										let grossPay = parseFloat(cell)
+										return (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" " + grossPay.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
 									}
+									else
+										if (col.key === 'netPay') {
+											return (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" " + cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
+										}
+
+										else if (col.key === 'deduction') {
+											return (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" " + cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
+										} else {
+											return (
+												<div>{cell}</div>
+											)
+										}
 								}
 
-								if(col.key === 'netPay' || col.key === 'deduction' || col.key === 'grossPay'){
+								if (col.key === 'netPay' || col.key === 'deduction' || col.key === 'grossPay') {
 									return (
-									<TableHeaderColumn
-										key={index}
-										dataFormat={format}
-										dataField={col.key}
-										dataAlign="right"
-										className="table-header-bg"
-										dataSort={col.dataSort}
-										width={col.width}>
-										{col.label}
-									</TableHeaderColumn>
-								
-								)}
-								else
-																{return (
-																	<TableHeaderColumn
-																		key={index}
-																		dataFormat={format}
-																		dataField={col.key}
-																		dataAlign="center"
-																		className="table-header-bg"
-																		dataSort={col.dataSort}
-																		width={col.width}>
-																		{col.label}
-																	</TableHeaderColumn>
-								
-																)}
+										<TableHeaderColumn
+											key={index}
+											dataFormat={format}
+											dataField={col.key}
+											dataAlign="right"
+											className="table-header-bg"
+											dataSort={col.dataSort}
+											width={col.width}>
+											{col.label}
+										</TableHeaderColumn>
+
+									)
+								}
+								else {
+									return (
+										<TableHeaderColumn
+											key={index}
+											dataFormat={format}
+											dataField={col.key}
+											dataAlign="center"
+											className="table-header-bg"
+											dataSort={col.dataSort}
+											width={col.width}>
+											{col.label}
+										</TableHeaderColumn>
+
+									)
+								}
 							})
 						}
 
@@ -840,28 +862,27 @@ class UpdatePayroll extends React.Component {
 			tempList1.push(row);
 			this.setState(() => ({
 				selected: [...this.state.selected, row.empId]
-			  }));
-		} else
-		{
+			}));
+		} else {
 			this.state.selectedRows1.map((item) => {
 				if (item.empId !== row.empId) {
 					tempList.push(item.empId);
 					tempList1.push(item);
 				}
 				this.setState(() => ({
-								selected: this.state.selected.filter(x => x !== row.empId)
-							  }));
+					selected: this.state.selected.filter(x => x !== row.empId)
+				}));
 				return item;
 			});
 		}
-		
+
 
 		this.setState({
 			selectedRows: tempList,
 			selectedRows1: tempList1,
 		});
-		
-		console.log(this.state.selectedRows,"this.state.selectedRows")
+
+		console.log(this.state.selectedRows, "this.state.selectedRows")
 	};
 	onSelectAll = (isSelected, rows) => {
 
@@ -872,13 +893,13 @@ class UpdatePayroll extends React.Component {
 				tempList.push(item.empId);
 				tempList1.push(item);
 				return item;
-			});   
+			});
 			this.setState(() => ({
 				selected: tempList
-			  }));
+			}));
 		} else {
 			this.setState(() => ({
-			  selected: []
+				selected: []
 			}));
 		}
 		this.setState({
@@ -912,7 +933,7 @@ class UpdatePayroll extends React.Component {
 		this.setState({ disabled1: true, disableLeavePage: true });
 		const { current_user_id } = this.state;
 		this.props.createPayrollActions
-			.deletePayroll(this.state.payrollId ? this.state.payrollId :0)
+			.deletePayroll(this.state.payrollId ? this.state.payrollId : 0)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
@@ -940,261 +961,261 @@ class UpdatePayroll extends React.Component {
 		strings.setLanguage(this.state.language);
 
 		const { employee_list, approver_dropdown_list } = this.props
-		const { loading, initValue,	dialog } = this.state
-	    const 	selectRowProp= {
-					mode: 'checkbox',
-					bgColor: 'rgba(0,0,0, 0.05)',
-					selected:this.state.selected,
-					clickToSelect: true,
-					onSelect: this.onRowSelect,
-					onSelectAll: this.onSelectAll,
-				}
+		const { loading, initValue, dialog } = this.state
+		const selectRowProp = {
+			mode: 'checkbox',
+			bgColor: 'rgba(0,0,0, 0.05)',
+			selected: this.state.selected,
+			clickToSelect: true,
+			onSelect: this.onRowSelect,
+			onSelectAll: this.onSelectAll,
+		}
 		var today = new Date();
 		return (
-			loading ==true? <Loader/> :
-<div>
-			<div className="create-employee-screen">
-				<div className="animated fadeIn">
-					<Row>
-						<Col lg={12} className="mx-auto">
-							<Card>
-								<CardHeader>
-									<Row>
-										<Col lg={12}>
-											<div className="h4 mb-0 d-flex align-items-center">
-												<i className="nav-icon fas fa-user-tie" />
-												<span className="ml-2">Update Payroll</span>
-											</div>
-										</Col>
-									</Row>
-								</CardHeader>
-								<CardBody>
-								{dialog}
-									{loading ? (
-										<Row>
-											<Col lg={12}>
-												<Loader />
-											</Col>
-										</Row>
-									) : (
-										<Row>
-											<Col lg={12}>
-												<div className="d-flex justify-content-end">
-													<ButtonGroup size="sm">
+			loading == true ? <Loader /> :
+				<div>
+					<div className="create-employee-screen">
+						<div className="animated fadeIn">
+							<Row>
+								<Col lg={12} className="mx-auto">
+									<Card>
+										<CardHeader>
+											<Row>
+												<Col lg={12}>
+													<div className="h4 mb-0 d-flex align-items-center">
+														<i className="nav-icon fas fa-user-tie" />
+														<span className="ml-2">Update Payroll</span>
+													</div>
+												</Col>
+											</Row>
+										</CardHeader>
+										<CardBody>
+											{dialog}
+											{loading ? (
+												<Row>
+													<Col lg={12}>
+														<Loader />
+													</Col>
+												</Row>
+											) : (
+												<Row>
+													<Col lg={12}>
+														<div className="d-flex justify-content-end">
+															<ButtonGroup size="sm">
 
-													</ButtonGroup>
-												</div>
+															</ButtonGroup>
+														</div>
 
-												<div>
-													<Formik
+														<div>
+															<Formik
 
-														initialValues={this.state}
-														onSubmit={(values, { resetForm }) => {
-															if(this.state.selectedRows){
-																this.handleSubmit(values)
-															}
-														
-														}}
-														validationSchema={Yup.object().shape({
-															// payrollSubject: Yup.string()
-															//   .required("Payroll Subject is required"),
-															payrollDate: Yup.string()
-															  .required("Payroll date is required"),
-														  // selectedRows: Yup.string()
-														  //     .required("At least selection of one employee is required for create payroll"),
-														  })}
-														  validate={(values) => {
-															 
-															  let errors = {};
-															  
-															  if (!this.state.payrollSubject) {
-																  errors.payrollSubject = 'Payroll subject is required';
-															  }
-															  if (!values.payrollDate) {
-																  errors.payrollDate = 'Payroll date is required';
-															  }
-															  if(this.state.isPayrollSubjectNameExist === true){
-																errors.payrollSubject= "Payroll Subject Already Exists"
-															}
-															//   if(this.state.selectedRows && this.state.selectedRows.length===0)
-															//   {
-															// 	  errors.selectedRows = 'At least selection of one employee is required for create payroll';
-															//   }
-															if (!this.state.startDate && !this.state.endDate) {
-																errors.startDate = 'Start and end date is required';
-															}else
-															if (!this.state.startDate) {
-																errors.startDate = 'Start date is required';
-															}else
-															if (!this.state.endDate) {
-																errors.startDate = 'End date is required';
-															}
-														  
-															  return errors;
-														  }}
-													>
-														{(props) => (
+																initialValues={this.state}
+																onSubmit={(values, { resetForm }) => {
+																	if (this.state.selectedRows) {
+																		this.handleSubmit(values)
+																	}
+
+																}}
+																validationSchema={Yup.object().shape({
+																	// payrollSubject: Yup.string()
+																	//   .required("Payroll Subject is required"),
+																	payrollDate: Yup.string()
+																		.required("Payroll date is required"),
+																	// selectedRows: Yup.string()
+																	//     .required("At least selection of one employee is required for create payroll"),
+																})}
+																validate={(values) => {
+
+																	let errors = {};
+
+																	if (!this.state.payrollSubject) {
+																		errors.payrollSubject = 'Payroll subject is required';
+																	}
+																	if (!values.payrollDate) {
+																		errors.payrollDate = 'Payroll date is required';
+																	}
+																	if (this.state.isPayrollSubjectNameExist === true) {
+																		errors.payrollSubject = "Payroll Subject Already Exists"
+																	}
+																	//   if(this.state.selectedRows && this.state.selectedRows.length===0)
+																	//   {
+																	// 	  errors.selectedRows = 'At least selection of one employee is required for create payroll';
+																	//   }
+																	if (!this.state.startDate && !this.state.endDate) {
+																		errors.startDate = 'Start and end date is required';
+																	} else
+																		if (!this.state.startDate) {
+																			errors.startDate = 'Start date is required';
+																		} else
+																			if (!this.state.endDate) {
+																				errors.startDate = 'End date is required';
+																			}
+
+																	return errors;
+																}}
+															>
+																{(props) => (
 
 
-															<Form onSubmit={props.handleSubmit}>
-																<Row>
-																	<Col >
-																		<FormGroup>
-																			<Label htmlFor="payrollSubject">	<span className="text-danger">* </span> Payroll Subject</Label>
-																			<Input
-																				type="text"
-																				id="payrollSubject"
-																				name="payrollSubject"
-																				value={this.state.payrollSubject}
-																				disabled={this.disableForAddButton() ? true : false}
-																				placeholder={strings.Enter + " Payroll Subject"}
-																				onChange={(value) => {
-																					props.handleChange('payrollSubject')(value);
-																					this.validatePayrollSubjectName(value.target.value)
-																					this.setState({payrollSubject:value.target.value})
-																				}}
-																				className={props.errors.payrollSubject ? "is-invalid" : ""}
-																			/>
-																			{props.errors.payrollSubject  && (
-																				<div className="invalid-feedback">
-																					{props.errors.payrollSubject}
+																	<Form onSubmit={props.handleSubmit}>
+																		<Row>
+																			<Col >
+																				<FormGroup>
+																					<Label htmlFor="payrollSubject">	<span className="text-danger">* </span> Payroll Subject</Label>
+																					<Input
+																						type="text"
+																						id="payrollSubject"
+																						name="payrollSubject"
+																						value={this.state.payrollSubject}
+																						disabled={this.disableForAddButton() ? true : false}
+																						placeholder={strings.Enter + " Payroll Subject"}
+																						onChange={(value) => {
+																							props.handleChange('payrollSubject')(value);
+																							this.validatePayrollSubjectName(value.target.value)
+																							this.setState({ payrollSubject: value.target.value })
+																						}}
+																						className={props.errors.payrollSubject ? "is-invalid" : ""}
+																					/>
+																					{props.errors.payrollSubject && (
+																						<div className="invalid-feedback">
+																							{props.errors.payrollSubject}
+																						</div>
+																					)}
+
+																				</FormGroup>
+																			</Col>
+																			<Col >
+																				<FormGroup>
+																					<Label htmlFor="date">
+																						<span className="text-danger">* </span>
+																						Payroll Date
+																					</Label>
+																					<DatePicker
+																						id="payrollDate"
+																						name="payrollDate"
+																						placeholderText="Select Payroll Date"
+																						showMonthDropdown
+																						showYearDropdown
+																						dateFormat="dd-MM-yyyy"
+																						dropdownMode="select"
+																						selected={this.state.payrollDate}
+																						onChange={(value) => {
+																							props.handleChange('payrollDate')(value);
+																							this.setState({ payrollDate: value })
+																						}}
+																						disabled={this.disableForAddButton() ? true : false}
+																						className={`form-control ${props.errors.payrollDate
+																							? 'is-invalid'
+																							: ''
+																							}`}
+																					/>
+																					{props.errors.payrollDate && (
+																						<div className="invalid-feedback">
+																							{props.errors.payrollDate}
+																						</div>
+																					)}
+																				</FormGroup>
+																			</Col>
+
+
+																			<Col  >
+																				<Label htmlFor="date">
+																					<span className="text-danger">* </span>
+																					{strings.pay_period}
+																				</Label>
+																				<div style={{ display: "flex" }}>
+																					{/* <FormGroup className="mt-2"><i class="far fa-calendar-alt mt-1"></i>&nbsp;</FormGroup> */}
+																					<FormGroup >
+																						<DateRangePicker
+																							displayFormat="DD-MM-YYYY"
+																							startDate={this.state.startDate}
+																							startDateId="tata-start-date"
+																							endDate={this.state.endDate}
+																							endDateId="tata-end-date"
+																							onDatesChange={this.handleDatesChange}
+																							focusedInput={this.state.focusedInput}
+																							disabled={this.disableForAddButton() ? true : false}
+																							onFocusChange={(option) => { this.setState({ focusedInput: option }) }}
+																							isOutsideRange={
+																								() => null
+																								// day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+																							}
+																						/>
+
+																						{props.errors.startDate && (
+																							<div className="invalid-feedback">
+																								{props.errors.startDate}
+																							</div>
+																						)}
+																					</FormGroup>
+
 																				</div>
-																			)}
 
-																		</FormGroup>
-																	</Col>
-																	<Col >
-																		<FormGroup>
-																			<Label htmlFor="date">
-																				<span className="text-danger">* </span>
-																				Payroll Date
-																			</Label>
-																			<DatePicker
-																				id="payrollDate"
-																				name="payrollDate"
-																				placeholderText="Select Payroll Date"
-																				showMonthDropdown
-																				showYearDropdown
-																				dateFormat="dd-MM-yyyy"
-																				dropdownMode="select"
-																				selected={this.state.payrollDate}
-																				onChange={(value) => {
-																					props.handleChange('payrollDate')(value);
-																					this.setState({payrollDate:value})
-																				}}
-																				disabled={this.disableForAddButton() ? true : false}
-																				className={`form-control ${props.errors.payrollDate 
-																					? 'is-invalid'
-																					: ''
-																					}`}
-																			/>
-																			{props.errors.payrollDate  && (
-																					<div className="invalid-feedback">
-																						{props.errors.payrollDate}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-															
+																			</Col>
 
-																	<Col  >
-																	<Label htmlFor="date">
-																				<span className="text-danger">* </span>
-																				{strings.pay_period}
-																			</Label>
-																	<div style={{display: "flex"}}>
-																	{/* <FormGroup className="mt-2"><i class="far fa-calendar-alt mt-1"></i>&nbsp;</FormGroup> */}
-																	<FormGroup >
-																				<DateRangePicker
-																				displayFormat="DD-MM-YYYY"
-																					startDate={this.state.startDate}
-																					startDateId="tata-start-date"
-																					endDate={this.state.endDate}
-																					endDateId="tata-end-date"
-																					onDatesChange={this.handleDatesChange}
-																					focusedInput={this.state.focusedInput}
-																					disabled={this.disableForAddButton() ? true : false}
-																					onFocusChange={(option)=>{this.setState({focusedInput:option})}}
-																					isOutsideRange={
-																						 () => null
-																						// day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
-																					}
-																				/>																							
-																	
-																			{props.errors.startDate && (
-																					<div className="invalid-feedback">
-																						{props.errors.startDate}
-																					</div>
-																				)}
-																		</FormGroup>
 
-																	</div>
-																		
-																	</Col>
-
-																	
-																	<Col >	<Label htmlFor="due_date">
+																			<Col >	<Label htmlFor="due_date">
 																				{/* <span className="text-danger">* </span> */}
 																				Payroll Approver
 																			</Label>
-																		<FormGroup>
-																			
-																			<Select
-																				isDisabled={this.disable() ? true : false}
-																				styles={customStyles}
-																				id="userId"
-																				name="userId"
-																				value={
-																					approver_dropdown_list.data &&
-																					selectOptionsFactory
-																						.renderOptions(
-																							'name',
-																							'userId',
-																							approver_dropdown_list.data,
-																							'Approver',
-																						)
-																						.find(
-																							(option) =>
-																								option.value ===
-																								this.state.payrollApprover,
-																						)
-																				}
-																				placeholder={"Select Approver"}
-																				options={
-																					approver_dropdown_list.data
-																						? selectOptionsFactory.renderOptions(
-																							'name',
-																							'userId',
-																							approver_dropdown_list.data,
-																							'Approver',
-																						)
-																						: []
-																				}
+																				<FormGroup>
 
-																				onChange={(option) => {
-																					if (option && option.value) {
-																						this.setState({ userId: option.value,payrollApprover:option.value ,	submitButton:false})
-																						
-																					}else
-																					this.setState({ userId: "",payrollApprover:"" ,	submitButton:true})
-																						
-																				}}
-																			/>
+																					<Select
+																						isDisabled={this.disable() ? true : false}
+																						styles={customStyles}
+																						id="userId"
+																						name="userId"
+																						value={
+																							approver_dropdown_list.data &&
+																							selectOptionsFactory
+																								.renderOptions(
+																									'name',
+																									'userId',
+																									approver_dropdown_list.data,
+																									'Approver',
+																								)
+																								.find(
+																									(option) =>
+																										option.value ===
+																										this.state.payrollApprover,
+																								)
+																						}
+																						placeholder={"Select Approver"}
+																						options={
+																							approver_dropdown_list.data
+																								? selectOptionsFactory.renderOptions(
+																									'name',
+																									'userId',
+																									approver_dropdown_list.data,
+																									'Approver',
+																								)
+																								: []
+																						}
 
-																		</FormGroup>
-																	</Col>
-																</Row>
-																<Row>
-																	<Col>		
-																				<Label> Status : <span style={{fontSize: "larger"}}>  {this.renderStatus(this.state.status)}</span></Label>					
-																	</Col>
-																</Row>
-																<hr/>
-																<Row>
+																						onChange={(option) => {
+																							if (option && option.value) {
+																								this.setState({ userId: option.value, payrollApprover: option.value, submitButton: false })
 
-																	<FormGroup className="pull-left mt-3">
-																		 {/* add and remove */}
-																		{/* <Button type="button" color="primary" className="btn-square ml-3 mr-1 "
+																							} else
+																								this.setState({ userId: "", payrollApprover: "", submitButton: true })
+
+																						}}
+																					/>
+
+																				</FormGroup>
+																			</Col>
+																		</Row>
+																		<Row>
+																			<Col>
+																				<Label> Status : <span style={{ fontSize: "larger" }}>  {this.renderStatus(this.state.status)}</span></Label>
+																			</Col>
+																		</Row>
+																		<hr />
+																		<Row>
+
+																			<FormGroup className="pull-left mt-3">
+																				{/* add and remove */}
+																				{/* <Button type="button" color="primary" className="btn-square ml-3 mr-1 "
 																			// disabled={this.disableForAddButton() ? true : false}
 																			onClick={() => {
 																				// this.setState(() => {
@@ -1215,7 +1236,7 @@ class UpdatePayroll extends React.Component {
 																			}}>
 																			<i className="fa fa-dot-circle-o"></i> Add All Employees
 																		</Button> */}
-																		{/* <Button
+																				{/* <Button
 																			color="primary"
 																			className="btn-square ml-3 "
 																			onClick={() => {
@@ -1227,147 +1248,149 @@ class UpdatePayroll extends React.Component {
 																			<i class="far fa-trash-alt mr-1"></i>
 																			Remove Employees
 																		</Button> */}
-																	</FormGroup>
+																			</FormGroup>
 
-																	<Col></Col>
-																	<Col></Col>
-																	<Col lg={3} className="pull-right mt-3">
-																	
-																	</Col>
-																</Row>
+																			<Col></Col>
+																			<Col></Col>
+																			<Col lg={3} className="pull-right mt-3">
 
-													
-												{this.getPayrollEmployeeList()}
-												<Row><Col>
-														{this.state.selectedRows && (
-																					<div className="text-danger">
-																						{props.errors.selectedRows}
+																			</Col>
+																		</Row>
+
+
+																		{this.getPayrollEmployeeList()}
+																		<Row><Col>
+																			{this.state.selectedRows && (
+																				<div className="text-danger">
+																					{props.errors.selectedRows}
+																				</div>
+																			)}
+																		</Col></Row>
+																		<Row>
+																			{this.state.status && (this.state.status === "Rejected" || this.state.status === "Voided") ?
+																				(
+																					<div className='ml-3' style={{ width: "50%" }}>
+
+																						<Label htmlFor="payrollSubject">
+																							{this.state.status == "Approved" || this.state.status == "Voided" ?
+																								"Reason for voiding the payroll" :
+																								"Reason for  rejecting the payroll"}
+																						</Label>
+																						<Input
+																							id="comment"
+																							name="comment"
+																							value={this.state.comment}
+																							disabled={true}
+																							placeholder={strings.Enter + " reason "}
+																							onChange={(event) => { this.setState({ comment: event.target.value }); }}
+																						/>
 																					</div>
-																				)}
-												</Col></Row>
-												<Row>
-												{this.state.status && (this.state.status === "Rejected" || this.state.status === "Voided") ?
-																					 (
-																						<div className='ml-3' style={{width:"50%"}}>
 
-																							<Label htmlFor="payrollSubject">
-																								{this.state.status == "Approved" ||this.state.status == "Voided"  ?
-																									"Reason for voiding the payroll" :
-																									"Reason for  rejecting the payroll"}
-																							</Label>
-																							<Input
-																								id="comment"
-																								name="comment"
-																								value={this.state.comment}
-																								disabled={true}
-																								placeholder={strings.Enter + " reason "}
-																								onChange={(event) => {this.setState({comment: event.target.value}); }}
-																								/>
-																						</div>
-
-																					):""
-																				}
-												</Row>
-															<Row className="mt-4 ">
+																				) : ""
+																			}
+																		</Row>
+																		<Row className="mt-4 ">
 
 
-																<Col>
-																{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved"||this.state.status=="Partially Paid"|| this.state.status==="Paid"||this.state.status==="Voided")?(""):(<>
-																	<Button
-																			type="button"
-																			color="danger"
-																			className="btn-square"
-																				disabled1={this.state.disabled1}
-																			onClick={this.deletePayroll}
-																		>
-																			<i className="fa fa-trash"></i> {this.state.disabled1
-																			? 'Deleting...'
-																			: strings.Delete }
-																		</Button>
-																</>)}
-																		
-																	
-																	<Button
-																		color="secondary"
-																		className="btn-square pull-right"
-																		onClick={() => {
-																			this.props.history.push('/admin/payroll/payrollrun')
-																		}}
-																	>
-																		<i className="fa fa-ban"></i> {strings.Cancel}
-																	</Button>
-																	{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved" || this.state.status==="Partially Paid"|| this.state.status==="Paid"||this.state.status==="Voided") ?(""):
-																	(		<>
-																	
-																	<Button
-																		color="primary"
-																		className="btn-square pull-right"
-																		// onClick={}
-																		onClick={() => {
-																			if(this.state.submitButton)
-																			toast.error(`Please select approver for payroll submission!`)
-																			else
-																			if(!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0)
-																	     	{	this.setState({apiSelector:"createAndSubmitPayroll"})
-																				props.handleSubmit()}
-																			else
-																			toast.error(`Please select at least one employee for payroll update !`)
-																								}}
-																		// disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
-																		title={
-																			this.state.submitButton
-																				? `Please select approver for payroll submission!`
-																				: ''
-																		}
-														
-																	>
+																			<Col>
+																				{this.state.status && (this.state.status === "Submitted" || this.state.status === "Approved" || this.state.status == "Partially Paid" || this.state.status === "Paid" || this.state.status === "Voided") ? ("") : (<>
+																					<Button
+																						type="button"
+																						color="danger"
+																						className="btn-square"
+																						disabled1={this.state.disabled1}
+																						onClick={this.deletePayroll}
+																					>
+																						<i className="fa fa-trash"></i> {this.state.disabled1
+																							? 'Deleting...'
+																							: strings.Delete}
+																					</Button>
+																				</>)}
 
-																		<i class="fas fa-check-double  mr-1"></i>Update and Submit
-																	
 
-																	</Button>
-																	<Button type="button" color="primary" className="btn-square pull-right "
-																
-																	onClick={() => {
-																		if(this.state.selectedRows && this.state.selectedRows.length !=0){
-																		this.setState({apiSelector:"createPayroll"})
-																			props.handleSubmit()}
-																			else
-																			toast.error(`Please select at least one employee for payroll update !`)
+																				<Button
+																					color="secondary"
+																					className="btn-square pull-right"
+																					onClick={() => {
+																						this.props.history.push('/admin/payroll/payrollrun')
+																					}}
+																				>
+																					<i className="fa fa-ban"></i> {strings.Cancel}
+																				</Button>
+																				{this.state.status && (this.state.status === "Submitted" || this.state.status === "Approved" || this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Voided") ? ("") :
+																					(<>
+
+																						<Button
+																							color="primary"
+																							className="btn-square pull-right"
+																							// onClick={}
+																							onClick={() => {
+																								if (this.state.submitButton)
+																									toast.error(`Please select approver for payroll submission!`)
+																								else
+																									if (!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length != 0) {
+																										this.setState({ apiSelector: "createAndSubmitPayroll" })
+																										props.handleSubmit()
+																									}
+																									else
+																										toast.error(`Please select at least one employee for payroll update !`)
 																							}}
-																		// disabled={this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
+																							// disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																							title={
-																								this.state.selectedRows && this.state.selectedRows.length !=0
-																								? ''
-																								: `Please select at least one employee for payroll update !`
-																						}
-																	>
-																		<i className="fa fa-dot-circle-o  mr-1"></i> Update
-																	</Button>
-																	</>
+																								this.state.submitButton
+																									? `Please select approver for payroll submission!`
+																									: ''
+																							}
+
+																						>
+
+																							<i class="fas fa-check-double  mr-1"></i>Update and Submit
 
 
-																	)
-																	}
+																						</Button>
+																						<Button type="button" color="primary" className="btn-square pull-right "
 
-																</Col>
-															</Row>
-														</Form>
-														)
-														}
-													</Formik>
+																							onClick={() => {
+																								if (this.state.selectedRows && this.state.selectedRows.length != 0) {
+																									this.setState({ apiSelector: "createPayroll" })
+																									props.handleSubmit()
+																								}
+																								else
+																									toast.error(`Please select at least one employee for payroll update !`)
+																							}}
+																							// disabled={this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
+																							title={
+																								this.state.selectedRows && this.state.selectedRows.length != 0
+																									? ''
+																									: `Please select at least one employee for payroll update !`
+																							}
+																						>
+																							<i className="fa fa-dot-circle-o  mr-1"></i> Update
+																						</Button>
+																					</>
 
 
-												</div>
-											</Col>
-										</Row>
-									)}
-								</CardBody>
-							</Card>
-						</Col>
-					</Row>
-				</div>
-				{/* <AddEmployeesModal
+																					)
+																				}
+
+																			</Col>
+																		</Row>
+																	</Form>
+																)
+																}
+															</Formik>
+
+
+														</div>
+													</Col>
+												</Row>
+											)}
+										</CardBody>
+									</Card>
+								</Col>
+							</Row>
+						</div>
+						{/* <AddEmployeesModal
 					openModal={this.state.openModal}
 					closeModal={(e) => {
 						this.closeModal(e);
@@ -1375,9 +1398,9 @@ class UpdatePayroll extends React.Component {
 
 				// employee_list={employee_list.data}				
 				/> */}
-			</div>
-			{this.state.disableLeavePage ?"":<LeavePage/>}
-			</div>
+					</div>
+					{this.state.disableLeavePage ? "" : <LeavePage />}
+				</div>
 		)
 	}
 }

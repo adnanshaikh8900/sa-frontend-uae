@@ -197,7 +197,7 @@ class PayrollRun extends React.Component {
 			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 		} else if (userLabel === "Admin" && row.status === "Approved") {
 			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-		} else if (userLabel === "Admin" && row.status === "Paid") {
+		} else if (userLabel === "Admin" && (row.status === "Paid"||row.status === "Voided")) {
 			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 		} else if (userLabel === "Admin" && row.status === "Partially Paid") {
 			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })

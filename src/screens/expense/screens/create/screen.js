@@ -88,7 +88,7 @@ class CreateExpense extends React.Component {
 			createMore: false,
 			disabled: false,
 			initValue: {
-				payee: '',
+				payee: { label: 'Company Expense', value: 'Company Expense' },
 				placeOfSupplyId: '',
 				expenseDate: new Date(),
 				currency: '',
@@ -103,7 +103,7 @@ class CreateExpense extends React.Component {
 				receiptAttachmentDescription: '',
 				notes: '',
 				vatCategoryId: '',
-				payMode: '',
+				payMode: { label: 'Petty Cash', value: 'CASH' },
 				bankAccountId: '',
 				exclusiveVat: true,
 				exist: false,
@@ -1200,11 +1200,7 @@ class CreateExpense extends React.Component {
 																						if (option && option.value) {
 																							props.handleChange('expenseCategory')(option,);
 																							if (option.value === 34) {
-																								props.handleChange('taxTreatmentId')(8);
-																								props.handleChange('vatCategoryId')(10);
-																							} else {
-																								props.handleChange('taxTreatmentId')('');
-																								props.handleChange('vatCategoryId')('');
+																								props.handleChange('payee')({ label: 'Company Expense', value: 'Company Expense' });
 																							}
 																						} else {
 																							props.handleChange('expenseCategory')('');
@@ -1427,6 +1423,7 @@ class CreateExpense extends React.Component {
 																					<span className="text-danger">* </span>{strings.PaidBy}
 																				</Label>
 																				<Select
+																					isDisabled={props.values?.expenseCategory?.value === 34 || props.values?.expenseCategory === 34}
 																					options={
 																						pay_to_list
 																							? selectOptionsFactory.renderOptions(
@@ -1440,12 +1437,8 @@ class CreateExpense extends React.Component {
 																					value={props.values.payee}
 																					onChange={(option) => {
 																						if (option && option.value) {
-																							props.handleChange('payee')(
-																								option,
-																							);
-																							this.setState({
-																								payee: option ? option : option.value
-																							})
+																							props.handleChange('payee')(option,);
+																							this.setState({payee: option ? option : option.value})
 																						} else {
 																							props.handleChange('payee')('');
 																						}
@@ -1613,48 +1606,48 @@ class CreateExpense extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		{/* {this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ?  */}
-																		<Col lg={3}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
-																				<Select
-																					options={
-																						pay_mode_list
-																							? selectOptionsFactory.renderOptions(
-																								'label',
-																								'value',
-																								pay_mode_list,
-																								'Pay Through',
-																							)
-																							: []
-																					}
-																					value={props.values.payMode}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('payMode')(option,);
-																						} else {
-																							props.handleChange('payMode')('');
+																		{(props.values?.payee?.value === 'Company Expense' || props.values?.payee === 'Company Expense') &&
+																			<Col lg={3}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
+																					<Select
+																						options={
+																							pay_mode_list
+																								? selectOptionsFactory.renderOptions(
+																									'label',
+																									'value',
+																									pay_mode_list,
+																									'Pay Through',
+																								)
+																								: []
 																						}
-																					}}
-																					placeholder={strings.Select + strings.PayThrough}
-																					id="payMode"
-																					name="payMode"
-																					className={
-																						props.errors.payMode &&
-																							props.touched.payMode
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.payMode &&
-																					props.touched.payMode && (
-																						<div className="invalid-feedback">
-																							{props.errors.payMode}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		{/* :''} */}
+																						value={props.values.payMode}
+																						onChange={(option) => {
+																							if (option && option.value) {
+																								props.handleChange('payMode')(option,);
+																							} else {
+																								props.handleChange('payMode')('');
+																							}
+																						}}
+																						placeholder={strings.Select + strings.PayThrough}
+																						id="payMode"
+																						name="payMode"
+																						className={
+																							props.errors.payMode &&
+																								props.touched.payMode
+																								? 'is-invalid'
+																								: ''
+																						}
+																					/>
+																					{props.errors.payMode &&
+																						props.touched.payMode && (
+																							<div className="invalid-feedback">
+																								{props.errors.payMode}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>
+																		}
 																	</Row>
 																	{/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
 														(

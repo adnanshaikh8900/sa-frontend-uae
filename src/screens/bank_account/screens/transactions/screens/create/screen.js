@@ -1324,12 +1324,14 @@ class CreateBankTransaction extends React.Component {
                               }
                             }
                           }
+                          if(!values.transactionDate){
+                            errors.transactionDate = "Transaction Date is Required";
+                          }
                           if (
-                            date1 < date2 ||
-                            date1 < new Date(this.state.payrollDate)
-                          )
+                            date1 < date2                      
+                                )
                            {
-                            errors.transactionDate =
+                           errors.transactionDate =
                               "Transaction Date cannot be earlier than the payroll approval date.";
                           }
                           return errors;

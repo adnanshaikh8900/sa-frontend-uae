@@ -484,18 +484,18 @@ try {
 												validate={(values) => {
 													let errors = {};
 													if (!values.productName) {
-														errors.productName = 'Product name required';
+														errors.productName = 'Product name is required';
 													}
 													if (this.state.exist === true) {
 														errors.productName =
-															'Product name already exist';
+															'Product name already exists';
 													}
 													if (this.state.ProductExist === true) {
 														errors.productCode =
 															'Product code already exist';
 													}
 													if (values.productName==='') {
-														errors.productName = strings.ProductCategoryNameRequired
+														errors.productName = 'Product name is required'
 													}
 													if (values.productCode==='') {
 														errors.productCode = 'Product code is required';

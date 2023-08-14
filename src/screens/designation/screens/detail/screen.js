@@ -253,30 +253,39 @@ class DetailDesignation extends React.Component {
                             <Formik
                               initialValues={initValue}
                               onSubmit={(values, { resetForm }) => {
-                                this.handleSubmit(values)
-                                // resetForm(this.state.initValue)
+                                this.handleSubmit(values, resetForm)
+
                               }}
 
                               validate={(values) => {
                                 let errors = {};
-
-                                if (this.state.nameExist == true) {
-                                  errors.designationName =
-                                    "Designation Name is already exist";
+                                console.log(values)
+                                if (values.designationId === '0') {
+                                  errors.designationId =
+                                    "Designation ID should be greater than 0";
+                                }
+                                if (this.state.idExist === true) {
+                                  errors.designationId =
+                                    "Designation ID already exist";
                                 }
 
-                                if (this.state.idExist == true)
-                                  errors.designationId = "Designation ID is already exist";
-
+                                if (this.state.nameExist === true) {
+                                  errors.designationName =
+                                    "Designation name already exist";
+                                }
                                 return errors;
                               }}
                               validationSchema={Yup.object().shape({
-                                designationId: Yup.string()
-                                  .required("Designation ID is required"),
                                 designationName: Yup.string()
-                                  .required("Designation Name is required"),
+                                  .required("Designation name is required").test('is new',
+                                    "Designation Name already exist",
+                                    () => !this.state.nameExist),
                                 designationType: Yup.string()
                                   .required(strings.DesignationTypeIsRequired),
+                                designationId: Yup.string()
+                                  .required("Designation id is required").test('is new',
+                                    "Designation ID already exist",
+                                    () => !this.state.idExist)
 
                               })}
                             >
@@ -304,7 +313,6 @@ class DetailDesignation extends React.Component {
                                               onChange={(option) => {
                                                 if (option.target.value === '' || this.regEx.test(option.target.value)) {
                                                   props.handleChange('designationId')(option)
-
                                                   if (initValue.designationId.toString() !== option.target.value)
                                                     this.designationIdvalidationCheck(option.target.value)
                                                 }

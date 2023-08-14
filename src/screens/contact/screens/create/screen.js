@@ -432,12 +432,12 @@ class CreateContact extends React.Component {
 																		errors.billingStateProvince ='Emirate is required';
 																} else {
 																	if (values.billingPostZipCode == '')
-																		errors.billingPostZipCode = strings.PostalCodeRequired
+																		errors.billingPostZipCode = "Postal / Zip code is required"
 																	else
 																		if (values.billingPostZipCode.length != 6)
 																			errors.billingPostZipCode = "Please enter 6 digit postal zip code"
 																	if(values.billingStateProvince =="")  
-																		errors.billingStateProvince =strings.StateIsRequired
+																		errors.billingStateProvince = "State / Provinces is required";
 
 																}
 																if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
@@ -450,12 +450,12 @@ class CreateContact extends React.Component {
 																		errors.shippingStateId ='Emirate is required';
 																} else {
 																		if (values.shippingPostZipCode == '')
-																			errors.shippingPostZipCode = strings.PostalCodeRequired
+																			errors.shippingPostZipCode = "Postal / Zip code is required"
 																	else
 																		if (values.shippingPostZipCode.length != 6)
 																			errors.shippingPostZipCode = "Please enter 6 digit Postal Zip Code"
 																	if(values.shippingStateId =="")  
-																		errors.shippingStateId =strings.StateIsRequired
+																		errors.shippingStateId = "State / Provinces is required";
 
 																}
 																if (this.state.showbillingFaxErrorMsg == true)

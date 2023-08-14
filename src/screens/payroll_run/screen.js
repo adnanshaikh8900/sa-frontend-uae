@@ -168,41 +168,22 @@ class PayrollRun extends React.Component {
 		debugger
 		// this.renderActionForState(row.employeeId);
 		const { user_approver_generater_dropdown_list } = this.props;
-
 		var userValue = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].value : '';
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
-		// if(row.status=="Voided")
-		// toast.success("Unable to View Void Payroll !")
-		// else
-		// if (userValue.toString() === row.generatedBy && userLabel === "Payroll Generator") {
-		// 	this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
-		// }
-		if (userLabel === "Payroll Generator" && (row.status === "Approved" || row.status === "Partially Paid" || row.status === "Voided" || row.status === "Submitted")) {
-			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-		} else if ((userValue === row.payrollApprover && userLabel === "Payroll Approver") && row.status !== "Draft") {
-			this.props.history.push('/admin/payroll/updatePayroll', { id: row.id })
-		} else if ((userValue === row.payrollApprover && userLabel === "Payroll Approver") && (row.status === "Approved" || row.status === "Partially Paid" || row.status === "Voided" || row.status === "Rejected")) {
-			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-		} else if (userLabel === "Payroll Approver" && (row.status === "Paid")) {
-			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-		} else if (userValue === row.payrollApprover && userLabel === "Accountant" && row.status !== "Draft") {
-			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-		} else if ((userLabel === "Admin" || userLabel === "Payroll Generator") && (row.status === "Draft" || row.status === "Rejected")) {
+		console.log(userLabel, userValue, parseInt(row.payrollApprover))
+		if ((userLabel === "Payroll Generator" && userValue === parseInt(row.generatedBy)) && (row.status !== "Draft" && row.status !== "Rejected")) {
+			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
+		} else if ((userLabel === "Payroll Generator" && userValue === parseInt(row.generatedBy)) && (row.status === "Draft" || row.status === "Rejected")) {
 			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
-		} else if (userLabel === "Admin" && (row.status === "Submitted")) {
+		} else if ((userValue === row.payrollApprover && userLabel === "Payroll Approver") && (row.status !== "Draft" && row.status !== "Rejected")) {
+			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
+		}else if (userValue === row.payrollApprover && userLabel === "Accountant" && (row.status !== "Draft" && row.status !== "Rejected")) {
+			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
+		} else if (userLabel === "Admin" && (row.status !== "Draft" && row.status !== "Rejected")) {
 			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-		} else if (userLabel === "Admin" && row.status === "Approved") {
-			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-		} else if (userLabel === "Admin" && (row.status === "Paid" || row.status === "Voided")) {
-			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-		} else if (userLabel === "Admin" && row.status === "Partially Paid") {
-			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-		} else
-		// if ( userLabel === "Admin" && ") {
-		// 	this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
-		// }
-		// else
-		{
+		} else if (userLabel === "Admin" && (row.status === "Draft" || row.status === "Rejected")) {
+			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
+		} else {
 			let list = [...this.state.payroll_employee_list1.data];
 			list = list.map((data) => {
 				if (data.id === row.id) {

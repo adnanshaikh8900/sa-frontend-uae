@@ -608,7 +608,7 @@ class DetailUser extends React.Component {
 																					showYearDropdown
 																					dateFormat="dd-MM-yyyy"
 																					dropdownMode="select"
-																					maxDate={new Date()}
+																					maxDate={moment().subtract(18, "years").toDate()}
 																					autoComplete="off"
 																					placeholderText={strings.Enter+strings.DateOfBirth}
 																					// selected={props.values.dob}

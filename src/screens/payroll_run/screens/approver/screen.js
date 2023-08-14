@@ -18,7 +18,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import { ConfirmDeleteModal, LeavePage, Loader } from 'components';
-import {CommonActions} from 'services/global'
+import { CommonActions } from 'services/global'
 import * as EmployeeActions from '../../actions';
 import * as CreatePayrollActions from './actions';
 import * as CreatePayrollEmployeeActions from '../../../payrollemp/screens/create/actions';
@@ -89,7 +89,7 @@ class PayrollApproverScreen extends React.Component {
 				onSelectAll: this.onSelectAll,
 			},
 			currencyIsoCode: "AED",
-			disableLeavePage:false
+			disableLeavePage: false
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -239,7 +239,7 @@ class PayrollApproverScreen extends React.Component {
 			})
 	}
 	approveAndRunPayroll = () => {
-		this.setState({disableLeavePage:true})
+		this.setState({ disableLeavePage: true })
 		this.props.createPayrollActions
 			.approveAndRunPayroll(this.state.payroll_id)
 			.then((res) => {
@@ -300,7 +300,7 @@ class PayrollApproverScreen extends React.Component {
 			})
 	}
 	voidPayrollApi = () => {
-		this.setState({  disableLeavePage:true });
+		this.setState({ disableLeavePage: true });
 		let formData = {
 			postingRefId: this.state.payroll_id,
 			postingRefType: "PAYROLL",
@@ -316,7 +316,7 @@ class PayrollApproverScreen extends React.Component {
 		})
 	}
 	handleSubmit = (data, resetForm) => {
-		this.setState({ disabled: true, disableLeavePage:true });
+		this.setState({ disabled: true, disableLeavePage: true });
 		const {
 			type,
 			name
@@ -782,7 +782,7 @@ class PayrollApproverScreen extends React.Component {
 		});
 	};
 	rejectPayroll1 = () => {
-		this.setState({  disableLeavePage:true });
+		this.setState({ disableLeavePage: true });
 		this.props.createPayrollActions
 			.rejectPayroll(this.state.payroll_id, this.state.comment)
 			.then((res) => {
@@ -798,7 +798,7 @@ class PayrollApproverScreen extends React.Component {
 
 	}
 	rejectPayroll = () => {
-		this.setState({ disableLeavePage:true });
+		this.setState({ disableLeavePage: true });
 		const message1 =
 			<text>
 				<b>Would you like to reject this payroll ?</b>
@@ -1095,7 +1095,7 @@ class PayrollApproverScreen extends React.Component {
 																						<div>
 
 																							<Label htmlFor="payrollSubject">
-																								{this.state.status == "Approved" ||this.state.status == "Voided"  ?
+																								{this.state.status == "Approved" || this.state.status == "Voided" ?
 																									"Reason for voiding the payroll" :
 																									"Reason for  rejecting the payroll"}
 																							</Label>
@@ -1106,7 +1106,7 @@ class PayrollApproverScreen extends React.Component {
 																								id="comment"
 																								name="comment"
 																								value={this.state.comment}
-																								disabled={this.state.status == "Voided"?true :false }
+																								disabled={this.state.status == "Voided" ? true : false}
 																								placeholder={strings.Enter + " reason "}
 																								onChange={(event) => {
 																									this.setState({
@@ -1231,7 +1231,7 @@ class PayrollApproverScreen extends React.Component {
 						// employee_list={employee_list.data}				
 						/>
 					</div>
-			{this.state.disableLeavePage ?"":<LeavePage/>}
+					{this.state.disableLeavePage ? "" : <LeavePage />}
 				</div>
 		)
 	}

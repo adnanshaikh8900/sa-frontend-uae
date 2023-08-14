@@ -933,6 +933,8 @@ const en = {
       NewDesignation: "New Designation",
       UpdateDesignation: "Update Designation",
       DesignationName: "Designation Name",
+      DesignationType: "Designation Type",
+      DesignationTypeIsRequired: "Designation Type is required",
       GeneratePayroll: "Generate Payroll",
       GenerateSalary: "Generate Salary",
       PAYDAYS: "PAY DAYS",

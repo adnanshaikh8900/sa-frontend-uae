@@ -118,9 +118,6 @@ class PayrollRun extends React.Component {
 
 	componentWillReceiveProps = (nextProps) => {
 		this.setState({ payroll_employee_list1: nextProps.payroll_employee_list })
-		console.log(nextProps.payroll_employee_list, "nextProps")
-
-
 	}
 	componentDidMount = () => {
 
@@ -131,7 +128,6 @@ class PayrollRun extends React.Component {
 	toggle = (tabPane, tab) => {
 		const newArray = this.state.activeTab.slice();
 		newArray[parseInt(tabPane, 10)] = tab;
-		console.log(tab);
 		this.setState({
 			activeTab: newArray,
 		});
@@ -182,13 +178,13 @@ class PayrollRun extends React.Component {
 		// 	this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 		// }
 		if (userLabel === "Payroll Generator" && (row.status === "Approved" || row.status === "Partially Paid" || row.status === "Voided" || row.status === "Submitted")) {
-			this.props.history.push('/admin/payroll/payrollrun/ViewPayroll', { id: row.id })
-		} else if (userValue === row.payrollApprover && userLabel === "Payroll Approver" && row.status !== "Draft") {
 			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-		} else if (userLabel === "Payroll Approver" && (row.status === "Approved" || row.status === "Partially Paid" || row.status === "Voided" || row.status === "Rejected")) {
-			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
+		} else if ((userValue === row.payrollApprover && userLabel === "Payroll Approver") && row.status !== "Draft") {
+			this.props.history.push('/admin/payroll/updatePayroll', { id: row.id })
+		} else if ((userValue === row.payrollApprover && userLabel === "Payroll Approver") && (row.status === "Approved" || row.status === "Partially Paid" || row.status === "Voided" || row.status === "Rejected")) {
+			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 		} else if (userLabel === "Payroll Approver" && (row.status === "Paid")) {
-			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
+			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 		} else if (userValue === row.payrollApprover && userLabel === "Accountant" && row.status !== "Draft") {
 			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 		} else if ((userLabel === "Admin" || userLabel === "Payroll Generator") && (row.status === "Draft" || row.status === "Rejected")) {
@@ -197,7 +193,7 @@ class PayrollRun extends React.Component {
 			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 		} else if (userLabel === "Admin" && row.status === "Approved") {
 			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-		} else if (userLabel === "Admin" && (row.status === "Paid"||row.status === "Voided")) {
+		} else if (userLabel === "Admin" && (row.status === "Paid" || row.status === "Voided")) {
 			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 		} else if (userLabel === "Admin" && row.status === "Partially Paid") {
 			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
@@ -214,7 +210,6 @@ class PayrollRun extends React.Component {
 				}
 				return data;
 			});
-			console.log(list, "list")
 			this.setState({
 				payroll_employee_list1: {
 					...this.state.payroll_employee_list1, ...{
@@ -534,8 +529,6 @@ class PayrollRun extends React.Component {
 	};
 	updateParentLop = (lop, noOfDays) => {
 		this.setState({ lop: lop, noOfDays })
-		console.log(lop, "00000000")
-		console.log(noOfDays, "noOfDays")
 	};
 	renderActionForState = (employeeId) => {
 		this.props.payRollActions.getSalaryDetailByEmployeeIdNoOfDays(employeeId).then((res) => {
@@ -548,10 +541,8 @@ class PayrollRun extends React.Component {
 				noOfDays: res.data.noOfDays,
 				lop: 30 - res.data.noOfDays,
 				salaryDetailAsNoOfDaysMap: res.data.salaryDetailAsNoOfDaysMap,
-
 				loading: false,
 			})
-			console.log(this.state.lop, " saigisagfgbaskf")
 		});
 	}
 
@@ -703,8 +694,6 @@ class PayrollRun extends React.Component {
 		} = this.props;
 
 		const userForCheckApprover = user_approver_generater_dropdown_list && user_approver_generater_dropdown_list.length !== 0 ? user_approver_generater_dropdown_list[0].label : '';
-
-		console.log(user_approver_generater_dropdown_list, "user_approver_generater_dropdown_list")
 		return (
 			loading == true ? <Loader /> :
 				<div>

@@ -1227,7 +1227,7 @@ class DetailExpense extends React.Component {
 																							)}
 																					</FormGroup>
 																				</Col>)}
-																			{this.state.showPlacelist == true && (
+																			{this.state.showPlacelist == true && props.values.expenseCategory && (props.values?.expenseCategory?.value ? props.values?.expenseCategory?.value !== 34 : props.values?.expenseCategory !== 34) && (
 																				<Col lg={3}>
 																					<FormGroup className="mb-3">
 																						<Label htmlFor="placeOfSupplyId">

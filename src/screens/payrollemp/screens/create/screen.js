@@ -1640,7 +1640,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                             placeholderText={strings.Select + strings.DateOfBirth}
                                                                                                             showMonthDropdown
                                                                                                             showYearDropdown
-                                                                                                            maxDate={new Date()}
+                                                                                                            maxDate={moment().subtract(18, "years").toDate()}
                                                                                                             autoComplete={"off"}
                                                                                                             dateFormat="yyyy-MM-dd"
                                                                                                             dropdownMode="select"

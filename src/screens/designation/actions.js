@@ -50,3 +50,18 @@ export const getParentDesignationList = (obj) => {
     })
   }
 };
+
+export const getEmployeeCountForDesignation = (id) => {
+
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/employeeDesignation/getEmployeeDesignationCount?id=${id}`
+    }
+    return authApi(data).then((res) => {
+      return res;
+    }).catch((err) => {
+      throw err
+    })
+  }
+};

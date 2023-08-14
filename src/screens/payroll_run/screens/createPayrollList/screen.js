@@ -327,8 +327,6 @@ class CreatePayrollList extends React.Component {
 			}
 		});
 	}
-
-
 	getAllPayrollEmployee = (startDate) => {
 		var employeePayPeriodlList = [];
 		var activeEmployee = [];

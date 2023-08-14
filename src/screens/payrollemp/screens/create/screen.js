@@ -43,6 +43,7 @@ import LocalizedStrings from 'react-localization';
 import * as DetailEmployeePersonalAction from '../update_emp_personal/actions';
 import * as DetailEmployeeEmployementAction from '../update_emp_employemet/actions';
 import * as DetailEmployeeBankAction from '../update_emp_bank/actions';
+import * as DesignationActions from '../../../designation/actions'
 
 const mapStateToProps = (state) => {
     return ({
@@ -55,6 +56,7 @@ const mapStateToProps = (state) => {
         salary_component_fixed_dropdown: state.payrollEmployee.salary_component_fixed_dropdown,
         salary_component_varaible_dropdown: state.payrollEmployee.salary_component_varaible_dropdown,
         salary_component_deduction_dropdown: state.payrollEmployee.salary_component_deduction_dropdown,
+        designationType_list: state.employeeDesignation.designationType_list,
     })
 };
 const mapDispatchToProps = (dispatch) => {
@@ -66,6 +68,7 @@ const mapDispatchToProps = (dispatch) => {
         createPayrollEmployeeActions: bindActionCreators(CreatePayrollEmployeeActions, dispatch),
         payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
         commonActions: bindActionCreators(CommonActions, dispatch),
+        designationActions: bindActionCreators(DesignationActions, dispatch),
     };
 };
 let strings = new LocalizedStrings(data);
@@ -283,6 +286,7 @@ class CreateEmployeePayroll extends React.Component {
     };
 
     initializeData = () => {
+        this.props.designationActions.getParentDesignationList();
         this.getEmployeeCode();
         this.getStateList(this.state.initValue.countryId.value ? this.state.initValue.countryId.value : '');
         // this.props.createPayrollEmployeeActions.getInvoicePrefix().then((response) => {
@@ -536,7 +540,7 @@ class CreateEmployeePayroll extends React.Component {
         )
         formData.append(
             'iban',
-            iban != null ? "AE"+iban : '',
+            iban != null ? "AE" + iban : '',
         )
         formData.append(
             'swiftCode',
@@ -2073,7 +2077,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                 maxLength="6"
                                                                                                                 id="poBoxNumber"
                                                                                                                 name="poBoxNumber"
-                                                                                                               
+
                                                                                                                 placeholder={strings.Enter + strings.POBoxNumber}
                                                                                                                 onChange={(option) => {
                                                                                                                     if (
@@ -2407,11 +2411,11 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                     // option.length !==12 ? this.setState({checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
                                                                                                                 }}
                                                                                                                 className={
-                                                                                                                        props.errors.emergencyContactNumber1 &&
-                                                                                                                            props.touched.emergencyContactNumber1
-                                                                                                                            ? 'text-danger'
-                                                                                                                            : ''
-                                                                                                                    }
+                                                                                                                    props.errors.emergencyContactNumber1 &&
+                                                                                                                        props.touched.emergencyContactNumber1
+                                                                                                                        ? 'text-danger'
+                                                                                                                        : ''
+                                                                                                                }
                                                                                                             /></div>
                                                                                                         {props.errors.emergencyContactNumber1 &&
                                                                                                             props.touched.emergencyContactNumber1 && (
@@ -3199,31 +3203,31 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
                                                                                                         <Label htmlFor="select"><span className="text-danger">* </span>{strings.IBANNumber}</Label>
-                                                                                                        <div style={{display:"flex"}}>
+                                                                                                        <div style={{ display: "flex" }}>
                                                                                                             <Input
-                                                                                                            disabled
-                                                                                                            style={{width:"25%"}}
-                                                                                                            value="AE"
+                                                                                                                disabled
+                                                                                                                style={{ width: "25%" }}
+                                                                                                                value="AE"
                                                                                                             />
-                                                                                                        <Input
-                                                                                                            type="text"
-                                                                                                            id="iban"
-                                                                                                            name="iban"
-                                                                                                            maxLength="21"
-                                                                                                            value={props.values.iban}
-                                                                                                            placeholder={strings.Enter + strings.IBANNumber}
-                                                                                                            onChange={(option) => {
-                                                                                                                if (
-                                                                                                                    option.target.value === '' ||
-                                                                                                                    this.regEx.test(option.target.value)
-                                                                                                                ) {
-                                                                                                                    props.handleChange('iban')(
-                                                                                                                        option,
-                                                                                                                    );
-                                                                                                                }
-                                                                                                            }}
-                                                                                                            className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
-                                                                                                        />
+                                                                                                            <Input
+                                                                                                                type="text"
+                                                                                                                id="iban"
+                                                                                                                name="iban"
+                                                                                                                maxLength="21"
+                                                                                                                value={props.values.iban}
+                                                                                                                placeholder={strings.Enter + strings.IBANNumber}
+                                                                                                                onChange={(option) => {
+                                                                                                                    if (
+                                                                                                                        option.target.value === '' ||
+                                                                                                                        this.regEx.test(option.target.value)
+                                                                                                                    ) {
+                                                                                                                        props.handleChange('iban')(
+                                                                                                                            option,
+                                                                                                                        );
+                                                                                                                    }
+                                                                                                                }}
+                                                                                                                className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
+                                                                                                            />
                                                                                                         </div>
                                                                                                         {props.errors.iban && props.touched.iban && (
                                                                                                             <div className="invalid-feedback d-block">{props.errors.iban}</div>
@@ -3900,6 +3904,7 @@ class CreateEmployeePayroll extends React.Component {
                         validateinfo={this.designationNamevalidationCheck}
                         getCurrentUser={(e) => this.getCurrentUser(e)}
                         createDesignation={this.props.createPayrollEmployeeActions.createEmployeeDesignation}
+                        designationType_list={this.props.designationType_list}
                     // currency_list={this.props.currency_convert_list}
                     // currency={this.state.currency}
                     // country_list={this.props.country_list}

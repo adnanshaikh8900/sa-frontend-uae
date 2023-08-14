@@ -11,8 +11,11 @@ import {
   Form,
   FormGroup,
   Input,
-  Label
+  Label,
+  UncontrolledTooltip,
 } from 'reactstrap'
+import Select from 'react-select';
+import { selectOptionsFactory } from 'utils';
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import { Loader, LeavePage, ConfirmDeleteModal } from 'components'
@@ -26,7 +29,8 @@ import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
   return ({
-    currency_list: state.employee.currency_list
+    currency_list: state.employee.currency_list,
+    designationType_list: state.employeeDesignation.designationType_list,
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -98,6 +102,7 @@ class DetailDesignation extends React.Component {
   };
 
   initializeData = () => {
+    this.props.employeeActions.getParentDesignationList();
     if (this.props.location.state && this.props.location.state.id) {
       this.props.designationDetailActions.getEmployeeDesignationById
         (this.props.location.state.id).then((res) => {
@@ -106,7 +111,7 @@ class DetailDesignation extends React.Component {
               current_salary_role_id: this.props.location.state.id,
               initValue: {
                 designationId: res.data.designationId ? res.data.designationId : '',
-
+                designationType: res.data.parentId ? res.data.parentId : '',
                 designationName: res.data.designationName ? res.data.designationName : '',
               },
               loading: false,
@@ -139,12 +144,13 @@ class DetailDesignation extends React.Component {
     const { current_salary_role_id } = this.state;
     const {
       designationName,
-      designationId
+      designationId,
+      designationType,
     } = data;
 
     let formData = new FormData();
     formData.append('id', current_salary_role_id);
-
+    formData.append('parentId', designationType ? designationType.value ? designationType.value : designationType : '');
     formData.append('designationId', designationId ? designationId : '');
     formData.append('designationName', designationName ? designationName : '');
     this.props.designationDetailActions
@@ -214,7 +220,7 @@ class DetailDesignation extends React.Component {
 
   render() {
     strings.setLanguage(this.state.language);
-    const { currency_list } = this.props
+    const { currency_list, designationType_list } = this.props
     const { dialog, loading, initValue } = this.state
     return (
       loading == true ? <Loader /> :
@@ -269,6 +275,8 @@ class DetailDesignation extends React.Component {
                                     .required("Designation ID is required"),
                                   designationName: Yup.string()
                                     .required("Designation Name is required"),
+                                  designationType: Yup.string()
+                                    .required(strings.DesignationTypeIsRequired),
 
                                 })}
                               >
@@ -332,10 +340,78 @@ class DetailDesignation extends React.Component {
                                               )}
                                             </FormGroup>
                                           </Col>
+                                          <Col lg={4}>
+                                            <FormGroup className="mb-3">
+                                              <Label htmlFor="designationType">
+                                                <span className="text-danger">* </span>
+                                                {strings.DesignationType}
+                                                <i
+                                                  id="designationTypeTooltip"
+                                                  className="fa fa-question-circle ml-1"
+                                                ></i>
+                                                <UncontrolledTooltip
+                                                  placement="right"
+                                                  target="designationTypeTooltip"
+                                                >
+                                                  Based on the designation type selected, the chart of accounts will be created for the employee. This field will be locked once the designation has been assigned to an employee.
+                                                </UncontrolledTooltip>
+                                              </Label>
+                                              <Select
+                                                options={
+                                                  designationType_list
+                                                    ? selectOptionsFactory.renderOptions(
+                                                      'label',
+                                                      'value',
+                                                      designationType_list,
+                                                      strings.DesignationType,
+                                                    )
+                                                    : []
+                                                }
+                                                value={props.values.designationType?.value ? props.values.designationType :
+                                                  designationType_list && selectOptionsFactory.renderOptions(
+                                                    'label',
+                                                    'value',
+                                                    designationType_list,
+                                                    strings.DesignationType,
+                                                  ).find(obj => obj.value === props.values.designationType)
+                                                }
+                                                onChange={(option) => {
+                                                  if (option && option.value) {
+                                                    props.handleChange('designationType')(
+                                                      option,
+                                                    );
+                                                  } else {
+                                                    props.handleChange('designationType')('');
+                                                  }
+                                                }}
 
+                                                placeholder={strings.Select + strings.DesignationType}
+                                                id="designationType"
+                                                name="designationType"
+                                                className={
+                                                  props.errors.designationType &&
+                                                    props.touched.designationType
+                                                    ? 'is-invalid'
+                                                    : ''
+                                                }
+                                              />
+                                              {props.errors.designationType &&
+                                                props.touched.designationType && (
+                                                  <div className="invalid-feedback">
+                                                    {props.errors.designationType}
+                                                  </div>
+                                                )}
+
+                                            </FormGroup>
+                                          </Col>
                                         </Row>
 
                                         <hr />
+                                        <Row>
+                                          <Col>
+                                            <p><strong>Note:</strong> If the designation is assigned to an employee, it cannot be deleted.</p>
+                                          </Col>
+                                        </Row>
 
                                       </Col>
                                     </Row>

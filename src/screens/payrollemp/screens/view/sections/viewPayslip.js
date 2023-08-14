@@ -64,18 +64,12 @@ class PaySlipModal extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
-
 		};
-
-
-
 	}
-
-
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		if (prevState.selectedData !== nextProps.selectedData) {
-			console.log('getDerivedStateFromProps state changed', nextProps.selectedData);
+			// console.log('getDerivedStateFromProps state changed', nextProps);
 			return {
 				prefixData: nextProps.prefixData,
 				selectedData: nextProps.selectedData,
@@ -83,7 +77,7 @@ class PaySlipModal extends React.Component {
 				FixedAllowance:nextProps.FixedAllowance,
 				Deduction:nextProps.Deduction,
 				Variable:nextProps.Variable,
-
+				transactionList:nextProps.transactionList
 			};
 		}
 		// else if(prevState.totalAmount !== nextProps.totalAmount)
@@ -137,8 +131,7 @@ class PaySlipModal extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal, id, companyData,empData ,bankDetails,salaryDate,currencyData} = this.props;
-
+		const { openModal, closeModal, id, companyData,empData ,bankDetails,salaryDate,currencyData, transactionList} = this.props;
 		return (
 			<div className="contact-modal-screen">
 				<Modal isOpen={openModal} className="modal-success contact-modal">
@@ -498,7 +491,7 @@ class PaySlipModal extends React.Component {
 															backgroundColor: "#e4f8ff"
 														}}
 													>
-														<h5> {strings.TotalNet+" "+strings.Payable} <b>
+														<h5> {strings.Salary+" "+strings.Payable+" (A):"} <b>
 														<Currency
 																				value={this.state.selectedData.netPay}
 																				currencySymbol={
@@ -512,6 +505,80 @@ class PaySlipModal extends React.Component {
 														 {/* {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay))).replace("POINT","AND")) : " -" } */}
 														</h5>
 													</div>
+
+													{/* Transaction Table start */}
+													<div className='mt-3'>
+													<Table >
+														<thead className="table-header-bg table-bordered">
+															<tr>
+																<th style={{ padding: '0.5rem' }}>{strings.TransactionDate} </th>
+																<th style={{ padding: '0.5rem' }}>{strings.TransactionType}</th>
+																<th style={{ padding: '0.5rem' }}>{strings.Category}</th>
+																<th style={{ padding: '0.5rem' }}>{strings.Amount}</th>
+															</tr>
+														</thead>
+														<tbody className=" table-bordered table-hover">
+														{ this.props.transactionList ? (
+																		Object.values(
+																			this.props.transactionList
+																		).map((item, index) => (
+																			item.amount === 0 ? "" :
+																			<tr key={index}>
+																				<td>{item.transactionDate}</td>
+																				<td>{item.transactionType}</td>
+																				<td>{item.category}</td>
+																				<td className='text-right'><Currency
+																				value={item.amount ? item.amount : 0}
+																				currencySymbol={
+																					'AED'
+																			   }
+																				/></td>
+																			</tr>
+														))) : ''}
+															<tr>
+																<td className='p-3'></td>
+																<td className='p-3'></td>
+																<td className='p-3'></td>
+																<td className='p-3'></td>
+															</tr>
+															<tr>
+																<td className='table-header-bg text-right' colSpan={3}><b>{strings.Total + ' (B):'}</b></td>
+																<td className='text-right'><Currency
+																	value={0}
+																	currencySymbol={
+																		'AED'
+																		}
+																	/>
+																</td>
+															</tr>
+														</tbody>
+													</Table>
+													<div className="text-center"
+														style={{
+															width: '100%',
+
+															border: 'solid 1px', borderColor: '#c8ced3',
+															fontSize: "12px",
+															backgroundColor: "#e4f8ff"
+														}}
+													>
+														<h5> {strings.TotalNet+" "+strings.Payable+" (A+B):"} <b>
+														<Currency
+																				value={this.state.selectedData.netPay}
+																				currencySymbol={
+																					'AED'
+																			   }
+																				/>
+															</b>
+														</h5>
+														<h5>	
+															 {/* (	{	upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} ) */}
+														 {/* {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay))).replace("POINT","AND")) : " -" } */}
+														</h5>
+													</div>
+													</div>
+													{/* Transaction Table end */}
+													
 												</CardBody>
 												<div className="text-center" style={{color:"#979b9f",    margin: "20px"}}>{strings.PayslipNote}</div>
 											</PDFExport>

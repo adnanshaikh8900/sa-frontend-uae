@@ -259,12 +259,11 @@ class DetailDesignation extends React.Component {
 
                               validate={(values) => {
                                 let errors = {};
-                                console.log(values)
                                 if (values.designationId === '0') {
                                   errors.designationId =
-                                    "Designation ID should be greater than 0";
+                                  "Enter valid designation ID";
                                 }
-                                if (this.state.idExist === true) {
+                                if (this.state.idExist === true || values.designationId === '1' || values.designationId === '2' || values.designationId === '3' || values.designationId === '4') {
                                   errors.designationId =
                                     "Designation ID already exist";
                                 }

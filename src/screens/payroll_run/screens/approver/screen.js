@@ -851,7 +851,6 @@ class PayrollApproverScreen extends React.Component {
 
 		const { employee_list, approver_dropdown_list } = this.props
 		const { loading, initValue, dialog } = this.state
-		console.log(approver_dropdown_list, "approver_dropdown_list")
 		return (
 			loading == true ? <Loader /> :
 				<div>

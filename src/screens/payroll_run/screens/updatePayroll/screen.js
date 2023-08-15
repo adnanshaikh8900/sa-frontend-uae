@@ -158,9 +158,6 @@ class UpdatePayroll extends React.Component {
 
 		this.setState({ paidDays: diffDays });
 		this.getAllPayrollEmployee(startDate);
-		console.log(diffTime + " milliseconds");
-		console.log(diffDays + " days");
-		console.log(this.state.paidDays, "paid-Days", diffDays)
 	}
 	proceed = (payroll_id) => {
 
@@ -461,8 +458,6 @@ class UpdatePayroll extends React.Component {
 			return data
 
 		})
-		console.log(newData)
-
 		this.setState({
 			allPayrollEmployee: newData
 		})
@@ -549,8 +544,6 @@ class UpdatePayroll extends React.Component {
 
 								return data
 							})
-							console.log(newData)
-
 							this.setState({
 								allPayrollEmployee: activeEmployee
 							})
@@ -593,7 +586,6 @@ class UpdatePayroll extends React.Component {
 				selectedRows1: tempList1,
 				count: 1
 			});
-			console.log(this.state.selectedRows, "LIST")
 		}
 		let data = this.state.allPayrollEmployee || []
 		return data
@@ -881,8 +873,6 @@ class UpdatePayroll extends React.Component {
 			selectedRows: tempList,
 			selectedRows1: tempList1,
 		});
-
-		console.log(this.state.selectedRows, "this.state.selectedRows")
 	};
 	onSelectAll = (isSelected, rows) => {
 

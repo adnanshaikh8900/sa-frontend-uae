@@ -69,7 +69,6 @@ class PaySlipModal extends React.Component {
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		if (prevState.selectedData !== nextProps.selectedData) {
-			// console.log('getDerivedStateFromProps state changed', nextProps);
 			return {
 				prefixData: nextProps.prefixData,
 				selectedData: nextProps.selectedData,
@@ -511,10 +510,11 @@ class PaySlipModal extends React.Component {
 													<Table >
 														<thead className="table-header-bg table-bordered">
 															<tr>
-																<th style={{ padding: '0.5rem' }}>{strings.TransactionDate} </th>
-																<th style={{ padding: '0.5rem' }}>{strings.TransactionType}</th>
-																<th style={{ padding: '0.5rem' }}>{strings.Category}</th>
-																<th style={{ padding: '0.5rem' }}>{strings.Amount}</th>
+																<th style={{ padding: '0.5rem' }} className='text-center'>#</th>
+																<th style={{ padding: '0.5rem' }} className='text-center'>{strings.TransactionDate}</th>
+																<th style={{ padding: '0.5rem' }} className='text-center'>{strings.TransactionType}</th>
+																<th style={{ padding: '0.5rem' }} className='text-center'>{strings.Category}</th>
+																<th style={{ padding: '0.5rem' }} className='text-center'>{strings.Amount}</th>
 															</tr>
 														</thead>
 														<tbody className=" table-bordered table-hover">
@@ -524,9 +524,10 @@ class PaySlipModal extends React.Component {
 																		).map((item, index) => (
 																			item.amount === 0 ? "" :
 																			<tr key={index}>
-																				<td>{item.transactionDate}</td>
+																				<td className='text-center'>{index + 1}</td>
+																				<td>{moment(item.transactionDate).format('DD-MM-YYYY')}</td>
 																				<td>{item.transactionType}</td>
-																				<td>{item.category}</td>
+																				<td>{item.category ? item.category.split('-')[0] : ''}</td>
 																				<td className='text-right'><Currency
 																				value={item.amount ? item.amount : 0}
 																				currencySymbol={
@@ -540,15 +541,19 @@ class PaySlipModal extends React.Component {
 																<td className='p-3'></td>
 																<td className='p-3'></td>
 																<td className='p-3'></td>
+																<td className='p-3'></td>
 															</tr>
 															<tr>
-																<td className='table-header-bg text-right' colSpan={3}><b>{strings.Total + ' (B):'}</b></td>
-																<td className='text-right'><Currency
-																	value={0}
+																<td className='table-header-bg text-right' colSpan={4}><b>{strings.Total + ' (B):'}</b></td>
+																<td className='table-header-bg text-right'><b><Currency
+																	value={Object.values(this.props.transactionList).reduce(
+																		(sum, item) => sum + (item.amount || 0),
+																		0
+																	)}
 																	currencySymbol={
 																		'AED'
 																		}
-																	/>
+																	/></b>
 																</td>
 															</tr>
 														</tbody>
@@ -564,11 +569,14 @@ class PaySlipModal extends React.Component {
 													>
 														<h5> {strings.TotalNet+" "+strings.Payable+" (A+B):"} <b>
 														<Currency
-																				value={this.state.selectedData.netPay}
-																				currencySymbol={
-																					'AED'
-																			   }
-																				/>
+															value={this.state.selectedData.netPay + Object.values(this.props.transactionList).reduce(
+																(sum, item) => sum + (item.amount || 0),
+																0
+															)}
+															currencySymbol={
+																'AED'
+															}
+														/>
 															</b>
 														</h5>
 														<h5>	

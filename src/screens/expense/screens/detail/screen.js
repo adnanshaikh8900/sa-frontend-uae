@@ -1297,7 +1297,7 @@ class DetailExpense extends React.Component {
 																							)}
 																					</FormGroup>
 																				</Col>)}
-																			{this.state.isRegisteredVat && (props.values?.expenseCategory?.value ? props.values?.expenseCategory?.value !== 34 : props.values?.expenseCategory !== 34) && (
+																				{this.state.isRegisteredVat && props.values.expenseCategory && (props.values?.expenseCategory?.value ? props.values?.expenseCategory?.value !== 34 : props.values?.expenseCategory !== 34) && (
 																				<Col className='mb-2' lg={3}>
 																					<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																					<div style={{ display: "flex" }}>

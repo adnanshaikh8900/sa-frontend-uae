@@ -1201,6 +1201,10 @@ class CreateExpense extends React.Component {
 																							props.handleChange('expenseCategory')(option,);
 																							if (option.value === 34) {
 																								props.handleChange('payee')({ label: 'Company Expense', value: 'Company Expense' });
+																								props.handleChange('taxTreatmentId')('');
+																								props.handleChange('vatCategoryId')('');
+																								props.handleChange('placeOfSupplyId')('');
+																								this.setState({showPlacelist:false})
 																							}
 																						} else {
 																							props.handleChange('expenseCategory')('');
@@ -1677,7 +1681,7 @@ class CreateExpense extends React.Component {
 																	</FormGroup></Col></Row>
 														)
 														} */}
-																	{props.values.vatCategoryId !== '' && props.values.vatCategoryId.label !== 'Select VAT' &&
+																	{props.values.vatCategoryId !== '' && props.values.vatCategoryId.label !== 'Select VAT' && props.values.expenseCategory && (props.values?.expenseCategory?.value ? props.values?.expenseCategory?.value !== 34 : props.values?.expenseCategory !== 34) &&
 																		props.values.vatCategoryId.value === 1 &&
 																		// props.values.vatCategoryId.value !==4 && 
 																		// props.values.vatCategoryId.value !==10 &&

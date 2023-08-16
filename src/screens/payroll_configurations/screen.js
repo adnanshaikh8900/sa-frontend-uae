@@ -82,6 +82,16 @@ class PayrollConfigurations extends React.Component {
 		};
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
+		this.designationoptions = {
+			paginationPosition: 'bottom',
+			page: 1,
+			sizePerPage: 10,
+			onSizePerPageList: this.designationonSizePerPageList,
+			onPageChange: this.designationonPageChange,
+			sortName: '',
+			sortOrder: '',
+			onSortChange: this.sortColumn
+		}
 		this.options = {
 			onRowClick: this.goToDetail,
 			paginationPosition: 'top',
@@ -93,7 +103,6 @@ class PayrollConfigurations extends React.Component {
 			sortOrder: '',
 			onSortChange: this.sortColumn
 		}
-
 		this.selectRowProp = {
 			bgColor: 'rgba(0,0,0, 0.05)',
 			clickToSelect: false,
@@ -364,6 +373,20 @@ class PayrollConfigurations extends React.Component {
 		if (this.options.page !== page) {
 			this.options.page = page
 			this.initializeData()
+		}
+	}
+
+	designationonSizePerPageList = (sizePerPage) => {
+		if (this.options.sizePerPage !== sizePerPage) {
+			this.options.sizePerPage = sizePerPage
+			this.initializeDataForDesignations()
+		}
+	}
+
+	designationonPageChange = (page, sizePerPage) => {
+		if (this.options.page !== page) {
+			this.options.page = page
+			this.initializeDataForDesignations()
 		}
 	}
 
@@ -913,49 +936,54 @@ class PayrollConfigurations extends React.Component {
 																			</ButtonGroup>
 																		</div>
 
-																		<div>
-																			<BootstrapTable
-																				selectRow={this.selectRowProp}
-																				search={false}
-																				options={this.options}
-																				data={designation_list && designation_list.data ? designation_list.data : []}
-																				version="4"
-																				hover
-																				// pagination={designation_list && designation_list.data && designation_list.data.length > 0 ? true : false}
-																				keyField="id"
-																				remote
-																				fetchInfo={{ dataTotalSize: designation_list.count ? designation_list.count : 0 }}
-																				className="employee-table"
-																				trClassName="cursor-pointer"
-																				csvFileName="designation_list.csv"
-																				ref={(node) => this.table = node}
+																		<BootstrapTable
+																			selectRow={this.selectRowProp}
+																			search={false}
+																			options={this.designationoptions}
+																			data={designation_list && designation_list.data ? designation_list.data : []}
+																			version="4"
+																			hover
+																			pagination={designation_list && designation_list.count > 0 ? true : false}
+																			keyField="id"
+																			remote
+
+																			fetchInfo={{ dataTotalSize: designation_list.count ? designation_list.count : 0 }}
+																			className="designation-list-table"
+																			trClassName="cursor-pointer"
+																			csvFileName="designation_list.csv"
+																			ref={(node) => this.table = node}
+																		// pagination={
+																		// 	designation_list &&
+																		// 	designation_list.count > 0
+																		// 		? true
+																		// 		: false
+																		// }
+																		>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="designationId"
+																				dataFormat={this.renderForId}
 																			>
-																				<TableHeaderColumn
-																					className="table-header-bg"
-																					dataField="designationId"
-																					dataFormat={this.renderForId}
-																				>
-																					{strings.DESIGNATIONID}
-																				</TableHeaderColumn>
-																				<TableHeaderColumn
-																					className="table-header-bg"
-																					dataField="designationName"
+																				{strings.DESIGNATIONID}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="designationName"
 
-																				// dataFormat={this.vatCategoryFormatter}
-																				>
-																					{strings.DESIGNATIONNAME}
-																				</TableHeaderColumn>
-																				<TableHeaderColumn
-																					className="table-header-bg"
-																					dataField="designationName"
+																			// dataFormat={this.vatCategoryFormatter}
+																			>
+																				{strings.DESIGNATIONNAME}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="designationName"
 
-																					dataFormat={this.goToDetailForDesignations}
-																				>
+																				dataFormat={this.goToDetailForDesignations}
+																			>
 
-																				</TableHeaderColumn>
+																			</TableHeaderColumn>
 
-																			</BootstrapTable>
-																		</div>
+																		</BootstrapTable>
 																	</Col>
 																</Row>
 														}

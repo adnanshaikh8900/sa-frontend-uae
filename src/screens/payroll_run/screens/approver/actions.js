@@ -128,12 +128,14 @@ export const generatePayroll = (payrollId,string,date) => {
 	  })
 	}
   }
-  export const approveAndRunPayroll = (payrollId) => {
-	
+  export const approveAndRunPayroll = (postObj) => {
+	let payrollId= postObj.payrollId
+	let startDate= postObj.startDate
+	let endDate= postObj.endDate
 	return (dispatch) => {
 	  let data = {
 		method: 'post',
-		url: `/rest/payroll/approveRunPayroll?payrollId=${payrollId}`,
+		url: `/rest/payroll/approveRunPayroll?payrollId=${payrollId}&startDate=${startDate}&endDate=${endDate}`,
 		// data: obj
 	  }
 	  return authApi(data).then((res) => {

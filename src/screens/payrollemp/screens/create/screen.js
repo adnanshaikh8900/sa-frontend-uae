@@ -43,6 +43,7 @@ import LocalizedStrings from 'react-localization';
 import * as DetailEmployeePersonalAction from '../update_emp_personal/actions';
 import * as DetailEmployeeEmployementAction from '../update_emp_employemet/actions';
 import * as DetailEmployeeBankAction from '../update_emp_bank/actions';
+import * as DesignationActions from '../../../designation/actions'
 
 const mapStateToProps = (state) => {
     return ({
@@ -55,6 +56,7 @@ const mapStateToProps = (state) => {
         salary_component_fixed_dropdown: state.payrollEmployee.salary_component_fixed_dropdown,
         salary_component_varaible_dropdown: state.payrollEmployee.salary_component_varaible_dropdown,
         salary_component_deduction_dropdown: state.payrollEmployee.salary_component_deduction_dropdown,
+        designationType_list: state.employeeDesignation.designationType_list,
     })
 };
 const mapDispatchToProps = (dispatch) => {
@@ -66,6 +68,7 @@ const mapDispatchToProps = (dispatch) => {
         createPayrollEmployeeActions: bindActionCreators(CreatePayrollEmployeeActions, dispatch),
         payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
         commonActions: bindActionCreators(CommonActions, dispatch),
+        designationActions: bindActionCreators(DesignationActions, dispatch),
     };
 };
 let strings = new LocalizedStrings(data);
@@ -123,6 +126,7 @@ class CreateEmployeePayroll extends React.Component {
             isDisabled: false,
             createMore: false,
             nameDesigExist: false,
+            idDesigExist: false,
             initValue: {
                 designationName: '',
                 firstName: '',
@@ -282,6 +286,7 @@ class CreateEmployeePayroll extends React.Component {
     };
 
     initializeData = () => {
+        this.props.designationActions.getParentDesignationList();
         this.getEmployeeCode();
         this.getStateList(this.state.initValue.countryId.value ? this.state.initValue.countryId.value : '');
         // this.props.createPayrollEmployeeActions.getInvoicePrefix().then((response) => {
@@ -295,6 +300,7 @@ class CreateEmployeePayroll extends React.Component {
             name: value,
         };
         this.props.commonActions.checkValidation(data).then((response) => {
+            console.log(response);
             if (response.data === 'Designation name already exists') {
                 this.setState({
                     nameDesigExist: true,
@@ -302,6 +308,24 @@ class CreateEmployeePayroll extends React.Component {
             } else {
                 this.setState({
                     nameDesigExist: false,
+                });
+            }
+        });
+    };
+    designationIdvalidationCheck = (value) => {
+        const data = {
+            moduleType: 25,
+            name: value,
+        };
+        this.props.commonActions.checkValidation(data).then((response) => {
+            console.log(response);
+            if (response.data === 'Designation ID already exists') {
+                this.setState({
+                    idDesigExist: true,
+                });
+            } else {
+                this.setState({
+                    idDesigExist: false,
                 });
             }
         });
@@ -516,7 +540,7 @@ class CreateEmployeePayroll extends React.Component {
         )
         formData.append(
             'iban',
-            iban != null ? "AE"+iban : '',
+            iban != null ? "AE" + iban : '',
         )
         formData.append(
             'swiftCode',
@@ -1220,7 +1244,7 @@ class CreateEmployeePayroll extends React.Component {
                                 <Row>
                                     <Col lg={12}>
                                         <div className="h4 mb-0 d-flex align-items-center">
-                                            <i className="nav-icon fas fa-user-tie" />
+                                            <i className="nav-icon fas fa-user-plus" />
                                             <span className="ml-2">{strings.CreateEmployee}</span>
                                         </div>
                                     </Col>
@@ -1616,7 +1640,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                             placeholderText={strings.Select + strings.DateOfBirth}
                                                                                                             showMonthDropdown
                                                                                                             showYearDropdown
-                                                                                                            maxDate={new Date()}
+                                                                                                            maxDate={moment().subtract(18, "years").toDate()}
                                                                                                             autoComplete={"off"}
                                                                                                             dateFormat="yyyy-MM-dd"
                                                                                                             dropdownMode="select"
@@ -2053,7 +2077,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                 maxLength="6"
                                                                                                                 id="poBoxNumber"
                                                                                                                 name="poBoxNumber"
-                                                                                                               
+
                                                                                                                 placeholder={strings.Enter + strings.POBoxNumber}
                                                                                                                 onChange={(option) => {
                                                                                                                     if (
@@ -2370,13 +2394,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
                                                                                                         <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span> {strings.ContactNumber1} </Label>
-                                                                                                        <div className={
-                                                                                                            props.errors.mobileNumber &&
-                                                                                                                props.touched.mobileNumber
-                                                                                                                ? ' is-invalidMobile '
-                                                                                                                : ''
-                                                                                                        }>
-
+                                                                                                        <div>
                                                                                                             <PhoneInput
                                                                                                                 id="emergencyContactNumber1"
                                                                                                                 name="emergencyContactNumber1"
@@ -2392,7 +2410,12 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                     );
                                                                                                                     // option.length !==12 ? this.setState({checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
                                                                                                                 }}
-                                                                                                                isValid
+                                                                                                                className={
+                                                                                                                    props.errors.emergencyContactNumber1 &&
+                                                                                                                        props.touched.emergencyContactNumber1
+                                                                                                                        ? 'text-danger'
+                                                                                                                        : ''
+                                                                                                                }
                                                                                                             /></div>
                                                                                                         {props.errors.emergencyContactNumber1 &&
                                                                                                             props.touched.emergencyContactNumber1 && (
@@ -2985,27 +3008,25 @@ class CreateEmployeePayroll extends React.Component {
                                                                                     errors.accountNumber =
                                                                                         'Account number already exists';
                                                                                 }
+                                                                                if (!values.accountNumber) {
+                                                                                    errors.accountNumber = "Account number is required"
+                                                                                } else if (/^0+$/.test(values.accountNumber)) {
+                                                                                    errors.accountNumber = "Please enter a valid Account number"
+                                                                                }
+                                                                                if (!values.iban) {
+                                                                                    errors.iban = "IBAN is required"
+                                                                                } else if (/^0+$/.test(values.iban)) {
+                                                                                    errors.iban = "Please enter a valid IBAN Number"
+                                                                                }
                                                                                 return errors;
                                                                             }}
                                                                             validationSchema={Yup.object().shape({
                                                                                 accountHolderName: Yup.string()
                                                                                     .required("Account holder name is required"),
                                                                                 accountNumber: Yup.string()
-                                                                                    .required("Account number is required").test('test zero',
-                                                                                        "Please Enter A valid Account Number"
-                                                                                        , (value) => {
-                                                                                            const rri = /^0+$/
-                                                                                            debugger
-                                                                                            return !value.match(rri)
-                                                                                        }),
+                                                                                    .required("Account number is required"),
                                                                                 iban: Yup.string()
-                                                                                    .required("IBAN is required").test('test zero',
-                                                                                        "Please Enter A valid IBAN Number"
-                                                                                        , (value) => {
-                                                                                            const rri = /^0+$/
-                                                                                            debugger
-                                                                                            return !value.match(rri)
-                                                                                        }),
+                                                                                    .required("IBAN is required"),
                                                                                 // bankName: Yup.string()
                                                                                 // .required("Bank Name is required"),
                                                                                 bankId: Yup.string()
@@ -3013,7 +3034,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 branch: Yup.string()
                                                                                     .required("Branch is required"),
                                                                                 agentId: Yup.string()
-                                                                                    .required("Agent id is required"),
+                                                                                    .required("Agent ID is required"),
                                                                                 //     salaryRoleId: Yup.string()
                                                                                 // .required("salary Role is required"),
                                                                                 // swiftCode: Yup.string()
@@ -3182,34 +3203,34 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
                                                                                                         <Label htmlFor="select"><span className="text-danger">* </span>{strings.IBANNumber}</Label>
-                                                                                                        <div style={{display:"flex"}}>
+                                                                                                        <div style={{ display: "flex" }}>
                                                                                                             <Input
-                                                                                                            disabled
-                                                                                                            style={{width:"25%"}}
-                                                                                                            value="AE"
+                                                                                                                disabled
+                                                                                                                style={{ width: "25%" }}
+                                                                                                                value="AE"
                                                                                                             />
-                                                                                                        <Input
-                                                                                                            type="text"
-                                                                                                            id="iban"
-                                                                                                            name="iban"
-                                                                                                            maxLength="21"
-                                                                                                            value={props.values.iban}
-                                                                                                            placeholder={strings.Enter + strings.IBANNumber}
-                                                                                                            onChange={(option) => {
-                                                                                                                if (
-                                                                                                                    option.target.value === '' ||
-                                                                                                                    this.regEx.test(option.target.value)
-                                                                                                                ) {
-                                                                                                                    props.handleChange('iban')(
-                                                                                                                        option,
-                                                                                                                    );
-                                                                                                                }
-                                                                                                            }}
-                                                                                                            className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
-                                                                                                        />
+                                                                                                            <Input
+                                                                                                                type="text"
+                                                                                                                id="iban"
+                                                                                                                name="iban"
+                                                                                                                maxLength="21"
+                                                                                                                value={props.values.iban}
+                                                                                                                placeholder={strings.Enter + strings.IBANNumber}
+                                                                                                                onChange={(option) => {
+                                                                                                                    if (
+                                                                                                                        option.target.value === '' ||
+                                                                                                                        this.regEx.test(option.target.value)
+                                                                                                                    ) {
+                                                                                                                        props.handleChange('iban')(
+                                                                                                                            option,
+                                                                                                                        );
+                                                                                                                    }
+                                                                                                                }}
+                                                                                                                className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
+                                                                                                            />
                                                                                                         </div>
                                                                                                         {props.errors.iban && props.touched.iban && (
-                                                                                                            <div className="invalid-feedback">{props.errors.iban}</div>
+                                                                                                            <div className="invalid-feedback d-block">{props.errors.iban}</div>
                                                                                                         )}
                                                                                                     </FormGroup>
                                                                                                 </Col>
@@ -3878,9 +3899,12 @@ class CreateEmployeePayroll extends React.Component {
                             this.closeDesignationModal(e);
                         }}
                         nameDesigExist={this?.state?.nameDesigExist}
+                        idDesigExist={this?.state?.idDesigExist}
+                        validateid={this.designationIdvalidationCheck}
                         validateinfo={this.designationNamevalidationCheck}
                         getCurrentUser={(e) => this.getCurrentUser(e)}
                         createDesignation={this.props.createPayrollEmployeeActions.createEmployeeDesignation}
+                        designationType_list={this.props.designationType_list}
                     // currency_list={this.props.currency_convert_list}
                     // currency={this.state.currency}
                     // country_list={this.props.country_list}

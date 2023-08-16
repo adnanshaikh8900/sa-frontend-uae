@@ -857,7 +857,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             placeholderText={strings.Select + strings.DateOfBirth}
                                                                                             showMonthDropdown
                                                                                             showYearDropdown
-                                                                                            maxDate={new Date()}
+                                                                                            maxDate={moment().subtract(18, "years").toDate()}
                                                                                             autoComplete={"off"}
                                                                                             dateFormat="dd-MM-yyyy"
                                                                                             dropdownMode="select"

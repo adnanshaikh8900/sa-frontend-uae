@@ -28,7 +28,7 @@ import { CSVLink } from "react-csv";
 
 
 import './style.scss'
-import {data}  from '../Language/index'
+import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
@@ -156,11 +156,11 @@ class Designation extends React.Component {
     const {
       selectedRows
     } = this.state
-      if (selectedRows.length > 0) {
+    if (selectedRows.length > 0) {
       const message1 =
-      <text>
-      <b>Delete Employee?</b>
-      </text>
+        <text>
+          <b>Delete Employee?</b>
+        </text>
       const message = 'This Employee will be deleted permanently and cannot be recovered. ';
       this.setState({
         dialog: <ConfirmDeleteModal
@@ -256,47 +256,45 @@ class Designation extends React.Component {
         id: '',
         salaryRoleName: ''
       },
-    },() => { this.initializeData() })
+    }, () => { this.initializeData() })
   }
 
   render() {
     strings.setLanguage(this.state.language);
     const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
     const { designation_list } = this.props
-console.log("designation_list",designation_list)
-
     return (
-      loading ==true? <Loader/> :
-<div>
-      <div className="employee-screen">
-        <div className="animated fadeIn">
-          {dialog}
-          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-          <Card>
-            <CardHeader>
-              <Row>
-                <Col lg={12}>
-                  <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="fas fa-object-group" />
-                    <span className="ml-2">{strings.Designations}</span>
-                  </div>
-                </Col>
-              </Row>
-            </CardHeader>
-            <CardBody>
-              {
-                loading ?
+      loading == true ? <Loader /> :
+        <div>
+          <div className="employee-screen">
+            <div className="animated fadeIn">
+              {dialog}
+              {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+              <Card>
+                <CardHeader>
                   <Row>
                     <Col lg={12}>
-                      <Loader />
+                      <div className="h4 mb-0 d-flex align-items-center">
+                        <i className="fas fa-object-group" />
+                        <span className="ml-2">{strings.Designations}</span>
+                      </div>
                     </Col>
                   </Row>
-                  :
-                  <Row>
-                    <Col lg={12}>
-                      <div className="d-flex justify-content-end">
-                        <ButtonGroup size="sm">
-                          {/* <Button
+                </CardHeader>
+                <CardBody>
+                  {
+                    loading ?
+                      <Row>
+                        <Col lg={12}>
+                          <Loader />
+                        </Col>
+                      </Row>
+                      :
+                      <Row>
+                        <Col lg={12}>
+                          <div className="d-flex justify-content-end">
+                            <ButtonGroup size="sm">
+                              {/* <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
@@ -310,20 +308,20 @@ console.log("designation_list",designation_list)
                             ref={this.csvLink}
                             target="_blank"
                           />} */}
-                         
-                          <div style={{ width: "1650px" }}>
-                                                            <Button
-                                                                color="primary"
-                                                                className="btn-square pull-right mb-2 mr-2"
-                                                                style={{ marginBottom: '10px' }}
-                                                                onClick={() => this.props.history.push(`/admin/payroll/config/createEmployeeDesignation`)}
 
-                                                            >
-                                                                <i className="fas fa-plus mr-1" />
-                                                                {strings.NewDesignation}
-									</Button>
-                                    </div>
-                          {/* <Button
+                              <div style={{ width: "1650px" }}>
+                                <Button
+                                  color="primary"
+                                  className="btn-square pull-right mb-2 mr-2"
+                                  style={{ marginBottom: '10px' }}
+                                  onClick={() => this.props.history.push(`/admin/payroll/config/createEmployeeDesignation`)}
+
+                                >
+                                  <i className="fas fa-plus mr-1" />
+                                  {strings.NewDesignation}
+                                </Button>
+                              </div>
+                              {/* <Button
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
@@ -332,52 +330,52 @@ console.log("designation_list",designation_list)
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
                           </Button> */}
-                        </ButtonGroup>
-                      </div>
-                     
-                      <div>
-                        <BootstrapTable
-                          selectRow={this.selectRowProp}
-                          search={false}
-                          options={this.options}
-                          data={designation_list && designation_list.data ? designation_list.data : []}
-                          version="4"
-                          hover
-                          pagination={designation_list && designation_list.data && designation_list.data.length > 0 ? true : false}
-                           keyField="id"
-                          remote
-                          fetchInfo={{ dataTotalSize: designation_list.count ? designation_list.count : 0 }}
-                          className="employee-table"
-                          trClassName="cursor-pointer"
-                          csvFileName="designation_list.csv"
-                          ref={(node) => this.table = node}
-                        >
-                          <TableHeaderColumn
-                            className="table-header-bg"
-                            dataField="id"
-                            dataSort
-                          >
-                             {strings.DESIGNATIONID}
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            className="table-header-bg"
-                            dataField="designationName"
-                            dataSort
-                          // dataFormat={this.vatCategoryFormatter}
-                          >
-                         {strings.DESIGNATIONNAME}
-                          </TableHeaderColumn>
-                        
-                        </BootstrapTable>
-                      </div>
-                    </Col>
-                  </Row>
-              }
-            </CardBody>
-          </Card>
+                            </ButtonGroup>
+                          </div>
+
+                          <div>
+                            <BootstrapTable
+                              selectRow={this.selectRowProp}
+                              search={false}
+                              options={this.options}
+                              data={designation_list && designation_list.data ? designation_list.data : []}
+                              version="4"
+                              hover
+                              pagination={designation_list && designation_list.data && designation_list.data.length > 0 ? true : false}
+                              keyField="id"
+                              remote
+                              fetchInfo={{ dataTotalSize: designation_list.count ? designation_list.count : 0 }}
+                              className="employee-table"
+                              trClassName="cursor-pointer"
+                              csvFileName="designation_list.csv"
+                              ref={(node) => this.table = node}
+                            >
+                              <TableHeaderColumn
+                                className="table-header-bg"
+                                dataField="designationId"
+                                dataSort
+                              >
+                                {strings.DESIGNATIONID}
+                              </TableHeaderColumn>
+                              <TableHeaderColumn
+                                className="table-header-bg"
+                                dataField="designationName"
+                                dataSort
+                              // dataFormat={this.vatCategoryFormatter}
+                              >
+                                {strings.DESIGNATIONNAME}
+                              </TableHeaderColumn>
+
+                            </BootstrapTable>
+                          </div>
+                        </Col>
+                      </Row>
+                  }
+                </CardBody>
+              </Card>
+            </div>
+          </div>
         </div>
-      </div>
-      </div>
     )
   }
 }

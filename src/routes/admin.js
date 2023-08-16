@@ -592,9 +592,19 @@ const adminRoutes = [
 		name: 'Generate Payroll',
 		component: CreatePayroll.screen,
 	},
+	Config.PAYROLL_PR && {
+		path: '/admin/payroll/payrollrun/ViewPayroll',
+		name: 'View Payroll',
+		component: UpdatePayroll.screen,
+	},
 	Config.PAYROLL_MODULE && {
 		path: '/admin/payroll/payrollApproverScreen',
 		name: 'Approve Payroll',
+		component: PayrollApproverScreen.screen,
+	},
+	Config.PAYROLL_PR && {
+		path: '/admin/payroll/ViewPayroll',
+		name: 'View Payroll',
 		component: PayrollApproverScreen.screen,
 	},
 	Config.PAYROLL_PC && {

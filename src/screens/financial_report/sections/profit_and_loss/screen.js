@@ -396,6 +396,9 @@ class ProfitAndLossReport extends React.Component {
 															{Object.keys(
 																this.state.data['nonOperatingIncome'],
 															).map((item) => (
+																(this.state.data[
+																	'nonOperatingIncome'
+																][`${item}`] === 0 ) ? '' :
 																<tr>
 																	<td className="pt-0 pb-0">{item}</td>
 																	<td className="pt-0 pb-0 text-right">
@@ -416,6 +419,9 @@ class ProfitAndLossReport extends React.Component {
 															{Object.keys(
 																this.state.data['operatingIncome'],
 															).map((item) => (
+																(this.state.data[
+																	'operatingIncome'
+																][`${item}`] === 0 ) ? '' :
 																<tr>
 																	<td className="pt-0 pb-0">{item}</td>
 																	<td className="pt-0 pb-0 text-right">
@@ -479,6 +485,9 @@ class ProfitAndLossReport extends React.Component {
 															{Object.keys(
 																this.state.data['costOfGoodsSold'],
 															).map((item) => (
+																(this.state.data[
+																	'costOfGoodsSold'
+																][`${item}`] === 0 ) ? '' :
 																<tr>
 																	<td className="pt-0 pb-0">{item}</td>
 																	<td className="pt-0 pb-0 text-right">
@@ -571,6 +580,9 @@ class ProfitAndLossReport extends React.Component {
 															{Object.keys(
 																this.state.data['operatingExpense'],
 															).map((item) => (
+																(this.state.data[
+																	'operatingExpense'
+																][`${item}`] === 0 ) ? '' :
 																<tr>
 																	<td className="pt-0 pb-0">{item}</td>
 																	{/* <td className="pt-0 pb-0"></td> */}

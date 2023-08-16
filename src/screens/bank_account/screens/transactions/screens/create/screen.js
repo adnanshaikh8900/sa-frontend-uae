@@ -31,10 +31,6 @@ import { selectOptionsFactory, selectCurrencyFactory } from "utils";
 import Switch from "react-switch";
 import { LeavePage, Loader } from "components";
 import { Checkbox } from "@material-ui/core";
-import {
-  createTransValidation,
-  createTranYupSchema,
-} from "./helpers/customvalidation";
 import { defaultState } from "./helpers/defaultstate";
 import { calculateVAT } from "./helpers/calculateVat";
 import { amountFormat } from "./helpers/amountformater";
@@ -620,25 +616,33 @@ class CreateBankTransaction extends React.Component {
     return (
       <Col lg={3}>
         <FormGroup className="mb-3">
-          <Label htmlFor="payrollListIds">Payrolls</Label>
+          <Label htmlFor="payrollListIds"><span className="text-danger">* </span>{strings.Payroll}</Label>
           <Select
             style={customStyles}
             isMulti
-            className="select-default-width"
             options={
               UnPaidPayrolls_List && UnPaidPayrolls_List
                 ? UnPaidPayrolls_List
                 : []
             }
-            // options={
-            //     invoice_list ? invoice_list.data : []
-            // }
             id="payrollListIds"
             onChange={(option) => {
               props.handleChange("payrollListIds")(option);
               this.payrollList(option);
             }}
+            className={
+              props.errors.vatId &&
+                props.touched.vatId
+                ? "is-invalid"
+                : ""
+            }
           />
+          {props.errors.vatId &&
+            props.touched.vatId && (
+              <div className="invalid-feedback">
+                {props.errors.vatId}
+              </div>
+            )}
         </FormGroup>
       </Col>
     );
@@ -1204,7 +1208,13 @@ class CreateBankTransaction extends React.Component {
                           ) {
                             errors.vatId = "Please select Vat";
                           }
-
+                          if (
+                            values.payrollListIds === "" &&
+                            values.coaCategoryId.label === "Expense" &&
+                            values.expenseCategory.value == 34
+                          ) {
+                            errors.vatId = "Please select Payroll";
+                          }
                           if (
                             values.coaCategoryId.value === 2 ||
                             values.coaCategoryId.value === 100
@@ -1303,7 +1313,27 @@ class CreateBankTransaction extends React.Component {
                             if (values.balanceDue && values.transactionAmount && parseFloat(values.balanceDue) < parseFloat(values.transactionAmount))
                               errors.transactionAmount = strings.AmountShouldBeLessThanOrEqualToTheBalanceDue;
                           }
-
+                          if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
+                            if(values.expenseCategory && values.expenseCategory.value === 34) {
+                              const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
+                                let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
+                                return sum + num;
+                              }, 0);
+                              if (values.transactionAmount > sumOfPayrollAmounts) {
+                                errors.transactionAmount = 'Transaction amount cannot be greater than payroll amount.';
+                              }
+                            }
+                          }
+                          if(!values.transactionDate){
+                            errors.transactionDate = "Transaction Date is Required";
+                          }
+                          if (
+                            date1 < date2                      
+                                )
+                           {
+                           errors.transactionDate =
+                              "Transaction Date cannot be earlier than the payroll approval date.";
+                          }
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({
@@ -2157,13 +2187,10 @@ class CreateBankTransaction extends React.Component {
                                 </Row>
                               )}
                             {transactionCategoryList.categoriesList &&
-                              props.values.coaCategoryId?.label !==
-                              "VAT Payment" &&
-                              props.values.coaCategoryId?.label !==
-                              "VAT Claim" &&
+                              props.values.coaCategoryId?.label !== "VAT Payment" &&
+                              props.values.coaCategoryId?.label !== "VAT Claim" &&
                               props.values.coaCategoryId?.label !== "Expense" &&
-                              props.values.coaCategoryId?.label !==
-                              "Supplier Invoice" &&
+                              props.values.coaCategoryId?.label !== "Supplier Invoice" &&
                               props.values.coaCategoryId?.label !== "Sales" && (
                                 <Row>
                                   <Col lg={3}>
@@ -2200,19 +2227,14 @@ class CreateBankTransaction extends React.Component {
                                             )("");
                                           }
                                           if (
-                                            option.label !==
-                                            "Salaries and Employee Wages" &&
+                                            option.label !== "Salaries and Employee Wages" &&
                                             option.label !== "Owners Drawing" &&
                                             option.label !== "Dividend" &&
-                                            option.label !==
-                                            "Owners Current Account" &&
+                                            option.label !== "Owners Current Account" &&
                                             option.label !== "Share Premium" &&
-                                            option.label !==
-                                            "Employee Advance" &&
-                                            option.label !==
-                                            "Employee Reimbursements" &&
-                                            option.label !==
-                                            "Director Loan Account" &&
+                                            option.label !== "Employee Advance" &&
+                                            option.label !== "Employee Reimbursements" &&
+                                            option.label !== "Director Loan Account" &&
                                             option.label !== "Owners Equity"
                                           ) {
                                           }

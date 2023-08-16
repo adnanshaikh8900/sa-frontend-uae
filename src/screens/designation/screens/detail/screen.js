@@ -11,8 +11,11 @@ import {
   Form,
   FormGroup,
   Input,
-  Label
+  Label,
+  UncontrolledTooltip,
 } from 'reactstrap'
+import Select from 'react-select';
+import { selectOptionsFactory } from 'utils';
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import { Loader, LeavePage, ConfirmDeleteModal } from 'components'
@@ -26,7 +29,8 @@ import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
   return ({
-    currency_list: state.employee.currency_list
+    currency_list: state.employee.currency_list,
+    designationType_list: state.employeeDesignation.designationType_list,
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -49,7 +53,8 @@ class DetailDesignation extends React.Component {
       current_salary_role_id: null,
       dialog: false,
       idExist: false,
-      nameExist: false
+      nameExist: false,
+      enableDelete: true,
     }
 
     this.regEx = /^[0-9\d]+$/;
@@ -98,23 +103,28 @@ class DetailDesignation extends React.Component {
   };
 
   initializeData = () => {
+    this.props.employeeActions.getParentDesignationList();
     if (this.props.location.state && this.props.location.state.id) {
-      this.props.designationDetailActions.getEmployeeDesignationById
-        (this.props.location.state.id).then((res) => {
-          if (res.status === 200) {
-            this.setState({
-              current_salary_role_id: this.props.location.state.id,
-              initValue: {
-                designationId: res.data.designationId ? res.data.designationId : '',
-
-                designationName: res.data.designationName ? res.data.designationName : '',
-              },
-              loading: false,
-            })
-          }
-        }).catch((err) => {
-          this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-        })
+      this.props.employeeActions.getEmployeeCountForDesignation(this.props.location.state.id).then(res => {
+        if (res.status === 200) {
+          this.setState({ enableDelete: res.data && res.data > 0 ? false : true })
+        }
+      })
+      this.props.designationDetailActions.getEmployeeDesignationById(this.props.location.state.id).then((res) => {
+        if (res.status === 200) {
+          this.setState({
+            current_salary_role_id: this.props.location.state.id,
+            initValue: {
+              designationId: res.data.designationId ? res.data.designationId : '',
+              designationType: res.data.parentId ? res.data.parentId : '',
+              designationName: res.data.designationName ? res.data.designationName : '',
+            },
+            loading: false,
+          })
+        }
+      }).catch((err) => {
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+      })
     } else {
       this.props.history.push('/admin/payroll/config')
     }
@@ -139,12 +149,13 @@ class DetailDesignation extends React.Component {
     const { current_salary_role_id } = this.state;
     const {
       designationName,
-      designationId
+      designationId,
+      designationType,
     } = data;
 
     let formData = new FormData();
     formData.append('id', current_salary_role_id);
-
+    formData.append('parentId', designationType ? designationType.value ? designationType.value : designationType : '');
     formData.append('designationId', designationId ? designationId : '');
     formData.append('designationName', designationName ? designationName : '');
     this.props.designationDetailActions
@@ -214,8 +225,8 @@ class DetailDesignation extends React.Component {
 
   render() {
     strings.setLanguage(this.state.language);
-    const { currency_list } = this.props
-    const { dialog, loading, initValue } = this.state
+    const { currency_list, designationType_list } = this.props
+    const { dialog, loading, initValue, enableDelete } = this.state
     return (
       loading == true ? <Loader /> :
         <div>
@@ -236,142 +247,215 @@ class DetailDesignation extends React.Component {
                     </CardHeader>
                     <CardBody>
                       {dialog}
-                      {loading ?
-                        (
-                          <Loader />
-                        )
-                        :
-                        (
-                          <Row>
-                            <Col lg={12}>
-                              <Formik
-                                initialValues={initValue}
-                                onSubmit={(values, { resetForm }) => {
-                                  this.handleSubmit(values)
-                                  // resetForm(this.state.initValue)
-                                }}
+                      {loading ? (<Loader />) : (
+                        <Row>
+                          <Col lg={12}>
+                            <Formik
+                              initialValues={initValue}
+                              onSubmit={(values, { resetForm }) => {
+                                this.handleSubmit(values, resetForm)
 
-                                validate={(values) => {
-                                  let errors = {};
+                              }}
 
-                                  if (this.state.nameExist == true) {
-                                    errors.designationName =
-                                      "Designation Name is already exist";
-                                  }
-
-                                  if (this.state.idExist == true)
-                                    errors.designationId = "Designation ID is already exist";
-
-                                  return errors;
-                                }}
-                                validationSchema={Yup.object().shape({
-                                  designationId: Yup.string()
-                                    .required("Designation ID is required"),
-                                  designationName: Yup.string()
-                                    .required("Designation Name is required"),
-
-                                })}
-                              >
-                                {(props) => (
-
-                                  <Form onSubmit={(values, { resetForm }) => {
-                                    this.handleSubmit(values, resetForm)
-                                    // resetForm(this.state.initValue)
-
-                                  }}>
-
-                                    <Row>
-                                      <Col lg={10}>
-                                        <Row className="row-wrapper">
-                                          <Col lg={4}>
-                                            <FormGroup>
-                                              <Label htmlFor="select"><span className="text-danger">* </span>{strings.DESIGNATIONID}</Label>
-                                              <Input
-                                                type="text"
-                                                id="designationId"
-                                                name="designationId"
-                                                maxLength="9"
-                                                value={props.values.designationId}
-                                                placeholder={strings.Enter + strings.DESIGNATIONID}
-                                                onChange={(option) => {
-                                                  if (option.target.value === '' || this.regEx.test(option.target.value)) {
-                                                    props.handleChange('designationId')(option)
-
-                                                    if (initValue.designationId.toString() !== option.target.value)
-                                                      this.designationIdvalidationCheck(option.target.value)
-                                                  }
-                                                }}
-                                                className={props.errors.designationId && props.touched.designationId ? "is-invalid" : ""}
-                                              />
-                                              {props.errors.designationId && props.touched.designationId && (
-                                                <div className="invalid-feedback">{props.errors.designationId}</div>
-                                              )}
-                                            </FormGroup>
-                                          </Col>
-                                          <Col lg={4}>
-                                            <FormGroup>
-                                              <Label htmlFor="select"><span className="text-danger">* </span>{strings.DesignationName}</Label>
-                                              <Input
-                                                type="text"
-                                                id="designationName"
-                                                name="designationName"
-                                                maxLength="30"
-                                                value={props.values.designationName}
-                                                placeholder="Enter Designation Name"
-                                                onChange={(option) => {
-                                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {
-                                                    props.handleChange('designationName')(option)
-                                                    if (initValue.designationName !== option.target.value)
-                                                      this.designationNamevalidationCheck(option.target.value)
-                                                  }
-                                                }}
-                                                className={props.errors.designationName && props.touched.designationName ? "is-invalid" : ""}
-                                              />
-                                              {props.errors.designationName && props.touched.designationName && (
-                                                <div className="invalid-feedback">{props.errors.designationName}</div>
-                                              )}
-                                            </FormGroup>
-                                          </Col>
-
-                                        </Row>
-
-                                        <hr />
-
-                                      </Col>
-                                    </Row>
-                                    <Row>
-                                      <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
-                                        <FormGroup>
-                                          <Button type="button" name="button" color="danger" className="btn-square"
-                                            onClick={this.delete}
-                                          >
-                                            <i className="fa fa-trash"></i> {strings.Delete}
-                                          </Button>
-                                        </FormGroup>
-                                        <FormGroup className="text-right">
-                                          <Button type="button" color="primary" className="btn-square mr-3"
-                                            disabled={!props.dirty}
-                                            onClick={() => {
-                                              this.setState({ createMore: false }, () => {
-                                                props.handleSubmit()
-                                              })
-                                            }}>
-                                            <i className="fa fa-dot-circle-o"></i> {strings.Update}
-                                          </Button>
-                                          <Button type="button" color="secondary" className="btn-square"
-                                            onClick={() => { this.props.history.push('/admin/payroll/config', { tabNo: '3' }) }}>
-                                            <i className="fa fa-ban"></i> {strings.Cancel}
-                                          </Button>
-                                        </FormGroup>
-                                      </Col>
-                                    </Row>
-                                  </Form>
-                                )
+                              validate={(values) => {
+                                let errors = {};
+                                if (values.designationId === '0') {
+                                  errors.designationId =
+                                  "Enter valid designation ID";
                                 }
-                              </Formik>
-                            </Col>
-                          </Row>
-                        )}
+                                if (this.state.idExist === true || values.designationId === '1' || values.designationId === '2' || values.designationId === '3' || values.designationId === '4') {
+                                  errors.designationId =
+                                    "Designation ID already exist";
+                                }
+
+                                if (this.state.nameExist === true) {
+                                  errors.designationName =
+                                    "Designation name already exist";
+                                }
+                                return errors;
+                              }}
+                              validationSchema={Yup.object().shape({
+                                designationName: Yup.string()
+                                  .required("Designation name is required").test('is new',
+                                    "Designation Name already exist",
+                                    () => !this.state.nameExist),
+                                designationType: Yup.string()
+                                  .required(strings.DesignationTypeIsRequired),
+                                designationId: Yup.string()
+                                  .required("Designation id is required").test('is new',
+                                    "Designation ID already exist",
+                                    () => !this.state.idExist)
+
+                              })}
+                            >
+                              {(props) => (
+
+                                <Form onSubmit={(values, { resetForm }) => {
+                                  this.handleSubmit(values, resetForm)
+                                  // resetForm(this.state.initValue)
+
+                                }}>
+
+                                  <Row>
+                                    <Col lg={10}>
+                                      <Row className="row-wrapper">
+                                        <Col lg={4}>
+                                          <FormGroup>
+                                            <Label htmlFor="select"><span className="text-danger">* </span>{strings.DESIGNATIONID}</Label>
+                                            <Input
+                                              type="text"
+                                              id="designationId"
+                                              name="designationId"
+                                              maxLength="9"
+                                              value={props.values.designationId}
+                                              placeholder={strings.Enter + strings.DESIGNATIONID}
+                                              onChange={(option) => {
+                                                if (option.target.value === '' || this.regEx.test(option.target.value)) {
+                                                  props.handleChange('designationId')(option)
+                                                  if (initValue.designationId.toString() !== option.target.value)
+                                                    this.designationIdvalidationCheck(option.target.value)
+                                                }
+                                              }}
+                                              className={props.errors.designationId && props.touched.designationId ? "is-invalid" : ""}
+                                            />
+                                            {props.errors.designationId && props.touched.designationId && (
+                                              <div className="invalid-feedback">{props.errors.designationId}</div>
+                                            )}
+                                          </FormGroup>
+                                        </Col>
+                                        <Col lg={4}>
+                                          <FormGroup>
+                                            <Label htmlFor="select"><span className="text-danger">* </span>{strings.DesignationName}</Label>
+                                            <Input
+                                              type="text"
+                                              id="designationName"
+                                              name="designationName"
+                                              maxLength="30"
+                                              value={props.values.designationName}
+                                              placeholder="Enter Designation Name"
+                                              onChange={(option) => {
+                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {
+                                                  props.handleChange('designationName')(option)
+                                                  if (initValue.designationName !== option.target.value)
+                                                    this.designationNamevalidationCheck(option.target.value)
+                                                }
+                                              }}
+                                              className={props.errors.designationName && props.touched.designationName ? "is-invalid" : ""}
+                                            />
+                                            {props.errors.designationName && props.touched.designationName && (
+                                              <div className="invalid-feedback">{props.errors.designationName}</div>
+                                            )}
+                                          </FormGroup>
+                                        </Col>
+                                        <Col lg={4}>
+                                          <FormGroup className="mb-3">
+                                            <Label htmlFor="designationType">
+                                              <span className="text-danger">* </span>
+                                              {strings.DesignationType}
+                                              <i
+                                                id="designationTypeTooltip"
+                                                className="fa fa-question-circle ml-1"
+                                              ></i>
+                                              <UncontrolledTooltip
+                                                placement="right"
+                                                target="designationTypeTooltip"
+                                              >
+                                                Based on the designation type selected, the chart of accounts will be created for the employee. This field will be locked once the designation has been assigned to an employee.
+                                              </UncontrolledTooltip>
+                                            </Label>
+                                            <Select
+                                              isDisabled={!enableDelete}
+                                              options={
+                                                designationType_list
+                                                  ? selectOptionsFactory.renderOptions(
+                                                    'label',
+                                                    'value',
+                                                    designationType_list,
+                                                    strings.DesignationType,
+                                                  )
+                                                  : []
+                                              }
+                                              value={props.values.designationType?.value ? props.values.designationType :
+                                                designationType_list && selectOptionsFactory.renderOptions(
+                                                  'label',
+                                                  'value',
+                                                  designationType_list,
+                                                  strings.DesignationType,
+                                                ).find(obj => obj.value === props.values.designationType)
+                                              }
+                                              onChange={(option) => {
+                                                if (option && option.value) {
+                                                  props.handleChange('designationType')(
+                                                    option,
+                                                  );
+                                                } else {
+                                                  props.handleChange('designationType')('');
+                                                }
+                                              }}
+
+                                              placeholder={strings.Select + strings.DesignationType}
+                                              id="designationType"
+                                              name="designationType"
+                                              className={
+                                                props.errors.designationType &&
+                                                  props.touched.designationType
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.designationType &&
+                                              props.touched.designationType && (
+                                                <div className="invalid-feedback">
+                                                  {props.errors.designationType}
+                                                </div>
+                                              )}
+
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+
+                                      <hr />
+                                      <Row>
+                                        <Col>
+                                          <p><strong>Note:</strong> If the designation is assigned to an employee, it cannot be deleted.</p>
+                                        </Col>
+                                      </Row>
+
+                                    </Col>
+                                  </Row>
+                                  <Row>
+                                    <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                                      <FormGroup>
+                                        {enableDelete && <Button type="button" name="button" color="danger" className="btn-square"
+                                          onClick={this.delete}
+                                        >
+                                          <i className="fa fa-trash"></i> {strings.Delete}
+                                        </Button>}
+                                      </FormGroup>
+                                      <FormGroup className="text-right">
+                                        <Button type="button" color="primary" className="btn-square mr-3"
+                                          disabled={!props.dirty}
+                                          onClick={() => {
+                                            this.setState({ createMore: false }, () => {
+                                              props.handleSubmit()
+                                            })
+                                          }}>
+                                          <i className="fa fa-dot-circle-o"></i> {strings.Update}
+                                        </Button>
+                                        <Button type="button" color="secondary" className="btn-square"
+                                          onClick={() => { this.props.history.push('/admin/payroll/config', { tabNo: '3' }) }}>
+                                          <i className="fa fa-ban"></i> {strings.Cancel}
+                                        </Button>
+                                      </FormGroup>
+                                    </Col>
+                                  </Row>
+                                </Form>
+                              )
+                              }
+                            </Formik>
+                          </Col>
+                        </Row>
+                      )}
                     </CardBody>
                   </Card>
                 </Col>

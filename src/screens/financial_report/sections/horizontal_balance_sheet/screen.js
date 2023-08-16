@@ -1066,7 +1066,7 @@ class HorizontalBalanceSheet extends React.Component {
 																	{strings.Total+" "+strings.Other+" "+strings.Liabilities}
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
-																	{/* {this.state.data['totalOtherLiabilities'] ? (
+																	{this.state.data['totalOtherLiabilities'] ? (
 																		<Currency
 																			value={this.state.data[
 																				'totalOtherLiabilities'
@@ -1088,7 +1088,7 @@ class HorizontalBalanceSheet extends React.Component {
 																					: 'USD'
 																			}
 																		/>
-																	)} */}
+																	)}
 																</td>
 															</tr>
 															<tr>

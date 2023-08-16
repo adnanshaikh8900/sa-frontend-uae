@@ -98,3 +98,21 @@ import {
 	  })
 	}
   }
+
+  export const getEmployeeTransactions = (postObj) => {
+	return (dispatch) => {
+		let employeeId= postObj.employeeId
+		let startDate= postObj.startDate
+		let endDate= postObj.endDate
+
+	  let data = {
+		method: 'GET',
+		url: `/rest/Salary/getEmployeeTc?employeeId=${employeeId}&startDate=${startDate}&endDate=${endDate}`
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

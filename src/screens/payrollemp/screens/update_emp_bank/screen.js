@@ -274,19 +274,23 @@ class UpdateEmployeeBank extends React.Component {
                                                                     errors.accountNumber =
                                                                         'Account number already Exists';
                                                                 }
+                                                                if (!values.accountNumber) {
+                                                                    errors.accountNumber = "Account number is required"
+                                                                } else if (/^0+$/.test(values.accountNumber)) {
+                                                                    errors.accountNumber = "Please enter a valid Account number"
+                                                                }
+                                                                if (!values.iban) {
+                                                                    errors.iban = "IBAN is required"
+                                                                } else if (/^0+$/.test(values.iban)) {
+                                                                    errors.iban = "Please enter a valid IBAN Number"
+                                                                }
                                                                 return errors;
                                                             }}
                                                             validationSchema={Yup.object().shape({
                                                                 accountHolderName: Yup.string()
                                                                     .required("Account holder name is required"),
                                                                 accountNumber: Yup.string()
-                                                                    .required("Account number is required").test('test zaro',
-                                                                        "Please Enter A valid Account Number"
-                                                                        , (value) => {
-                                                                            const rri = /^0+$/
-                                                                            debugger
-                                                                            return !value.match(rri)
-                                                                        }),
+                                                                    .required("Account number is required"),
                                                                 // bankName: Yup.string()
                                                                 // .required("Bank name is required"),
                                                                 bankId: Yup.string()
@@ -296,15 +300,9 @@ class UpdateEmployeeBank extends React.Component {
                                                                 branch: Yup.string()
                                                                     .required("Branch is required"),
                                                                 iban: Yup.string()
-                                                                    .required("IBAN is required").test('test zero',
-                                                                        "Please Enter A valid IBAN Number"
-                                                                        , (value) => {
-                                                                            const rri = /^0+$/
-                                                                            debugger
-                                                                            return !value.match(rri)
-                                                                        }),
+                                                                    .required("IBAN is required"),
                                                                 agentId: Yup.string()
-                                                                    .required("Agent id is required"),
+                                                                    .required("Agent ID is required"),
 
                                                             })}
 
@@ -503,7 +501,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                             className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
                                                                                         /></div>
                                                                                         {props.errors.iban && props.touched.iban && (
-                                                                                            <div className="invalid-feedback">{props.errors.iban}</div>
+                                                                                            <div className="invalid-feedback d-block">{props.errors.iban}</div>
                                                                                         )}
                                                                                     </FormGroup>
                                                                                 </Col>

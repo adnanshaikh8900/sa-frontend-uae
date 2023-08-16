@@ -29,7 +29,7 @@ export default {
   INCOME_CI: true,
   INCOME_IR: true,
   INCOME_Q: true,
-  INCOME_TCN: false,
+  INCOME_TCN: true,
 
   BANKING_BA: true,
 

@@ -34,7 +34,7 @@ import LocalizedStrings from 'react-localization';
 
 import { toast } from 'react-toastify';
 import { Table } from '@material-ui/core';
-import {CreateCompanyDetails  } from './sections';
+import { CreateCompanyDetails } from './sections';
 const mapStateToProps = (state) => {
 
 	return {
@@ -90,8 +90,8 @@ class PayrollRun extends React.Component {
 			selectedData: '',
 			current_employee: '',
 			lop: '',
-			disableCreating:true,
-			disableCreatePayroll:false
+			disableCreating: true,
+			disableCreatePayroll: false
 		};
 
 		this.options = {
@@ -118,9 +118,6 @@ class PayrollRun extends React.Component {
 
 	componentWillReceiveProps = (nextProps) => {
 		this.setState({ payroll_employee_list1: nextProps.payroll_employee_list })
-		console.log(nextProps.payroll_employee_list, "nextProps")
-
-
 	}
 	componentDidMount = () => {
 
@@ -131,7 +128,6 @@ class PayrollRun extends React.Component {
 	toggle = (tabPane, tab) => {
 		const newArray = this.state.activeTab.slice();
 		newArray[parseInt(tabPane, 10)] = tab;
-		console.log(tab);
 		this.setState({
 			activeTab: newArray,
 		});
@@ -139,16 +135,16 @@ class PayrollRun extends React.Component {
 
 	initializeData = (search) => {
 
-			let { filterData } = this.state;
-			const paginationData = {
-				pageNo: this.options.page ? this.options.page - 1 : 0,
-				pageSize: this.options.sizePerPage,
-			};
-			const sortingData = {
-				order: this.options.sortOrder ? this.options.sortOrder : '',
-				sortingCol: this.options.sortName ? this.options.sortName : '',
-			};
-			const postData = { ...filterData, ...paginationData, ...sortingData };
+		let { filterData } = this.state;
+		const paginationData = {
+			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageSize: this.options.sizePerPage,
+		};
+		const sortingData = {
+			order: this.options.sortOrder ? this.options.sortOrder : '',
+			sortingCol: this.options.sortName ? this.options.sortName : '',
+		};
+		const postData = { ...filterData, ...paginationData, ...sortingData };
 
 		this.props.payRollActions
 			.getPayrollList(postData)
@@ -169,66 +165,43 @@ class PayrollRun extends React.Component {
 	};
 
 	goToDetail = (row) => {
+		debugger
 		// this.renderActionForState(row.employeeId);
 		const { user_approver_generater_dropdown_list } = this.props;
-		 
 		var userValue = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].value : '';
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
-		// if(row.status=="Voided")
-		// toast.success("Unable to View Void Payroll !")
-		// else
-		if (userValue.toString() === row.generatedBy && userLabel === "Payroll Generator") {
+		console.log(userLabel, userValue, parseInt(row.payrollApprover))
+		if ((userLabel === "Payroll Generator" && userValue === parseInt(row.generatedBy)) && (row.status !== "Draft" && row.status !== "Rejected")) {
+			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
+		} else if ((userLabel === "Payroll Generator" && userValue === parseInt(row.generatedBy)) && (row.status === "Draft" || row.status === "Rejected")) {
 			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
-		}
-		else
-			if (userValue === row.payrollApprover && userLabel === "Payroll Approver" && row.status!=="Draft") {
-				this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-			}
-			else
-			if (userValue === row.payrollApprover && userLabel === "Accountant" && row.status!=="Draft") {
-				this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-			}
-			else
-			if ( userLabel === "Admin" && (row.status==="Draft" || row.status==="Rejected")) {
-				this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
-			}
-			else
-			
-				if ( userLabel === "Admin" && (row.status==="Submitted" || row.status==="Partially Paid" || row.status==="Approved" || row.status==="Paid"|| row.status==="Voided")) {
-					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-				}else
-				// if ( userLabel === "Admin" && row.status==="Approved") {
-				// 	this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-				// }
-				// else
-				// if ( userLabel === "Admin" && row.status==="Paid") {
-				// 	this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-				// }
-				// else
-				// if ( userLabel === "Admin" && row.status==="Partially Paid") {
-				// 	this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-				// }
-				// else
-				// if ( userLabel === "Admin" && row.status==="Rejected") {
-				// 	this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
-				// }
-				// else
-				{
-				let list = [...this.state.payroll_employee_list1.data];
-				list = list.map((data) => {
-					if (data.id === row.id) {
-						data.hover = true;
+		} else if ((userValue === row.payrollApprover && userLabel === "Payroll Approver") && (row.status !== "Draft" && row.status !== "Rejected")) {
+			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
+		}else if (userValue === row.payrollApprover && userLabel === "Accountant" && (row.status !== "Draft" && row.status !== "Rejected")) {
+			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
+		} else if (userLabel === "Admin" && (row.status !== "Draft" && row.status !== "Rejected")) {
+			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+		} else if (userLabel === "Admin" && (row.status === "Draft" || row.status === "Rejected")) {
+			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
+		} else {
+			let list = [...this.state.payroll_employee_list1.data];
+			list = list.map((data) => {
+				if (data.id === row.id) {
+					data.hover = true;
+				}
+				return data;
+			});
+			this.setState({
+				payroll_employee_list1: {
+					...this.state.payroll_employee_list1, ...{
+						data: list
 					}
-					return data;
-				});
-				console.log(list, "list")
-				this.setState({ payroll_employee_list1:{...this.state.payroll_employee_list1,...{
-					data:list
-				}} })
+				}
+			})
 
-				toast.success("Access Denied! This payroll is created by another user.")
-			}			
-			
+			toast.success("Access Denied! This payroll is created by another user.")
+		}
+
 	};
 
 	renderMode = (cell, row) => {
@@ -311,68 +284,69 @@ class PayrollRun extends React.Component {
 	renderRunDate = (cell, row) => {
 		return row.runDate ? moment(row.runDate).format('DD-MM-YYYY') : '-';
 	};
-	renderPayrolltotalAmount= (cell, row) => {
+	renderPayrolltotalAmount = (cell, row) => {
 		return (
-			<div style={{fontSize:"11px"}}>
-			{row.totalAmountPayroll !=null && 	(<div>
-					<label className="font-weight-bold mr-2 ">{strings.Payroll +" "+strings.Amount}: </label>
+			<div style={{ fontSize: "11px" }}>
+				{row.totalAmountPayroll != null && (<div>
+					<label className="font-weight-bold mr-2 ">{strings.Payroll + " " + strings.Amount}: </label>
 					<label>
-						{ row.totalAmountPayroll === 0 ?  "AED "+ row.totalAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): "AED "+ row.totalAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-					
+						{row.totalAmountPayroll === 0 ? "AED " + row.totalAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : "AED " + row.totalAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+
 					</label>
 				</div>)}
-				
-			{	row.dueAmountPayroll!=null && (<div style={{ display: row.dueAmountPayroll === 0 ? 'none' : '' }}>
+
+				{row.dueAmountPayroll != null && (<div style={{ display: row.dueAmountPayroll === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
-					<label>{row.dueAmountPayroll === 0 ? row.dueAmountPayroll +" "+ row.dueAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : "AED "+ row.dueAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.dueAmountPayroll === 0 ? row.dueAmountPayroll + " " + row.dueAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : "AED " + row.dueAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
 				</div>)}
 
 			</div>);
 	};
 	renderEmployeeCount = (cell, row) => {
-		let employeeCount= row.employeeCount ? row.employeeCount : '-'
+		let employeeCount = row.employeeCount ? row.employeeCount : '-'
 		return (<div className="text-center">{employeeCount}</div>);
 	};
 	renderPayperiod = (cell, row) => {
-		let dateArr=row.payPeriod ? row.payPeriod.split("-"):[];
+		let dateArr = row.payPeriod ? row.payPeriod.split("-") : [];
 
-				let  startDate= moment(dateArr[0]).format('DD-MM-YYYY')
-				let	 endDate=moment(dateArr[1]).format('DD-MM-YYYY')
-		
-		return(<Table>
+		let startDate = moment(dateArr[0]).format('DD-MM-YYYY')
+		let endDate = moment(dateArr[1]).format('DD-MM-YYYY')
+
+		return (<Table>
 			<Row><Col className="pull-right"><b>Start-Date</b></Col><Col>: {startDate}</Col></Row>
 			<Row><Col className="pull-right"><b>End-Date</b></Col><Col>: {endDate}</Col></Row>
-			 </Table>  
-			) ;
+		</Table>
+		);
 	};
 	renderPayrollApprover = (cell, row) => {
 		return row.payrollApproverName ? row.payrollApproverName : '-';
 	};
-	renderGeneratedBy= (cell, row) => {
+	renderGeneratedBy = (cell, row) => {
 		return row.generatedByName ? row.generatedByName : '-';
 	};
 	renderComment = (cell, row) => {
 
-		if(row.comment !==null)
-		{return( <label
-			className="mb-0 label-bank"
-			id="UnitPriceTooltip1"
-			style={{
-				cursor: 'pointer',
-				// backgroundColor: "yellow !important"
-			}}
-		>
-			{/* <UncontrolledTooltip
+		if (row.comment !== null) {
+			return (<label
+				className="mb-0 label-bank"
+				id="UnitPriceTooltip1"
+				style={{
+					cursor: 'pointer',
+					// backgroundColor: "yellow !important"
+				}}
+			>
+				{/* <UncontrolledTooltip
 				placement="right"
 				target="UnitPriceTooltip1"
 				key={row.id}
 			>
 				{row.comment ? row.comment:''}
 			</UncontrolledTooltip> */}
-			Read Here..
-		</label>);}
-		else{
-			return("-");
+				Read Here..
+			</label>);
+		}
+		else {
+			return ("-");
 		}
 	};
 	onSelectAll = (isSelected, rows) => {
@@ -400,27 +374,27 @@ class PayrollRun extends React.Component {
 
 	renderStatus = (cell, row) => {
 		let classname = '';
-		
+
 		if (row.status === 'Approved') {
 			classname = 'label-success';
-		}if (row.status === 'Paid') {
+		} if (row.status === 'Paid') {
 			classname = 'label-sent';
-		 } else
-		 if (row.status === 'UnPaid') {
-			classname = 'label-closed';
-		 } else  if (row.status === 'Draft') {
-			classname = 'label-currency';
-		} else if (row.status === 'Paid') {
-			classname = 'label-approved';
-		}else if (row.status === 'Rejected') {
-			classname = 'label-due';
-		}  if (row.status === 'Submitted') {
-			classname = 'label-sent';
-		}else if (row.status === 'Partially Paid') {
-			classname = 'label-PartiallyPaid';
-		}else if (row.status === "Voided") {
-			classname = 'label-closed';
-		}
+		} else
+			if (row.status === 'UnPaid') {
+				classname = 'label-closed';
+			} else if (row.status === 'Draft') {
+				classname = 'label-currency';
+			} else if (row.status === 'Paid') {
+				classname = 'label-approved';
+			} else if (row.status === 'Rejected') {
+				classname = 'label-due';
+			} if (row.status === 'Submitted') {
+				classname = 'label-sent';
+			} else if (row.status === 'Partially Paid') {
+				classname = 'label-PartiallyPaid';
+			} else if (row.status === "Voided") {
+				classname = 'label-closed';
+			}
 		// else {
 		// 	classname = 'label-overdue';
 		// }
@@ -536,8 +510,6 @@ class PayrollRun extends React.Component {
 	};
 	updateParentLop = (lop, noOfDays) => {
 		this.setState({ lop: lop, noOfDays })
-		console.log(lop, "00000000")
-		console.log(noOfDays, "noOfDays")
 	};
 	renderActionForState = (employeeId) => {
 		this.props.payRollActions.getSalaryDetailByEmployeeIdNoOfDays(employeeId).then((res) => {
@@ -550,10 +522,8 @@ class PayrollRun extends React.Component {
 				noOfDays: res.data.noOfDays,
 				lop: 30 - res.data.noOfDays,
 				salaryDetailAsNoOfDaysMap: res.data.salaryDetailAsNoOfDaysMap,
-
 				loading: false,
 			})
-			console.log(this.state.lop, " saigisagfgbaskf")
 		});
 	}
 
@@ -573,10 +543,10 @@ class PayrollRun extends React.Component {
 			},
 		);
 	};
-	 columnHover = (cell, row, enumObject, rowIndex) => {
+	columnHover = (cell, row, enumObject, rowIndex) => {
 
 		return cell
-	  }
+	}
 	toggleActionButton = (index) => {
 		let temp = Object.assign({}, this.state.actionButtons);
 		if (temp[parseInt(index, 10)]) {
@@ -590,7 +560,7 @@ class PayrollRun extends React.Component {
 	};
 	renderSubject = (cell, row) => {
 		if (row.hover) {
-			 
+
 			return (
 
 				<label
@@ -649,7 +619,7 @@ class PayrollRun extends React.Component {
 	openModal = (props) => {
 		this.setState({ openModal: true });
 	};
-	closeModal  = (res) => {
+	closeModal = (res) => {
 		this.setState({ openModal: false });
 		this.initializeData();
 		this.disableCreatePayroll();
@@ -667,22 +637,22 @@ class PayrollRun extends React.Component {
 		return row.earnings ? row.earnings.toLocaleString() : row.earnings.toLocaleString();
 	}
 
-	disableCreatePayroll=()=>{
-		
-			this.props.payRollActions.getCompanyDetails().then((res)=>{			
-			if(res.status==200){
-				
-					let	companyNumber=res.data.companyNumber?res.data.companyNumber:"";
-					let	companyBankCode=res.data.companyBankCode?res.data.companyBankCode:"";
-	
-					if(companyNumber=="" || companyBankCode=="")
-					this.setState({disableCreatePayroll:true}) ;
-					else 
-					this.setState({disableCreatePayroll:false}) ;
+	disableCreatePayroll = () => {
+
+		this.props.payRollActions.getCompanyDetails().then((res) => {
+			if (res.status == 200) {
+
+				let companyNumber = res.data.companyNumber ? res.data.companyNumber : "";
+				let companyBankCode = res.data.companyBankCode ? res.data.companyBankCode : "";
+
+				if (companyNumber == "" || companyBankCode == "")
+					this.setState({ disableCreatePayroll: true });
+				else
+					this.setState({ disableCreatePayroll: false });
 			}
 		});
-	
-		
+
+
 	}
 
 	render() {
@@ -705,75 +675,71 @@ class PayrollRun extends React.Component {
 		} = this.props;
 
 		const userForCheckApprover = user_approver_generater_dropdown_list && user_approver_generater_dropdown_list.length !== 0 ? user_approver_generater_dropdown_list[0].label : '';
-
-		console.log(user_approver_generater_dropdown_list, "user_approver_generater_dropdown_list")
 		return (
-			loading ==true? <Loader/> :
-<div>
-			<div className="receipt-screen">
-				<div className="animated fadeIn">
-					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-					{dialog}
-					<Card>
-						<CardHeader>
-							<Row>
-								<Col lg={12}>
-									<div className="h4 mb-0 d-flex align-items-center">
-										<i class="fas fa-money-check-alt"></i>
-										<span className="ml-2">{strings.payrolls}</span>
-									</div>
-								</Col>
-							</Row>
-						</CardHeader>
-						<CardBody>
+			loading == true ? <Loader /> :
+				<div>
+					<div className="receipt-screen">
+						<div className="animated fadeIn">
+							{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+							{dialog}
+							<Card>
+								<CardHeader>
+									<Row>
+										<Col lg={12}>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<i class="fas fa-money-check-alt"></i>
+												<span className="ml-2">{strings.payrolls}</span>
+											</div>
+										</Col>
+									</Row>
+								</CardHeader>
+								<CardBody>
 
 
-							<div className="employee-screen">
-								<div className="animated fadeIn">
-									{dialog}
+									<div className="employee-screen">
+										<div className="animated fadeIn">
+											{dialog}
 
 
-									{loading ? (
-										<Row>
-											<Col lg={12}>
-												<Loader />
-											</Col>
-										</Row>
-									) : (
-										<Row>
-											<Col lg={12}>
-												<div className="d-flex justify-content-end">
-													<ButtonGroup size="sm">
+											{loading ? (
+												<Row>
+													<Col lg={12}>
+														<Loader />
+													</Col>
+												</Row>
+											) : (
+												<Row>
+													<Col lg={12}>
+														<div className="d-flex justify-content-end">
+															<ButtonGroup size="sm">
 
-													</ButtonGroup>
-												</div>
-												<Row className="mb-4 ">
-											
-													{userForCheckApprover === "Payroll Approver" || userForCheckApprover === "Accountant"? ""
-														: <Col>
-														
-															<Button
-																color="primary"
-																// disabled={this.state.disableCreatePayroll==true?true:false}
-																title={this.state.disableCreatePayroll==true?"Please Create Company Details":""}
-																className="btn-square mt-2 pull-right"
-																onClick={() =>
-																	{
-																		if(this.state.disableCreatePayroll==true)
-																     	{	
-																		  toast.success("Please Create Company Details From Payroll-config");
-																          this.props.history.push('/admin/payroll/config',{tabNo:"4"})
+															</ButtonGroup>
+														</div>
+														<Row className="mb-4 ">
+
+															{userForCheckApprover === "Payroll Approver" || userForCheckApprover === "Accountant" ? ""
+																: <Col>
+
+																	<Button
+																		color="primary"
+																		// disabled={this.state.disableCreatePayroll==true?true:false}
+																		title={this.state.disableCreatePayroll == true ? "Please Create Company Details" : ""}
+																		className="btn-square mt-2 pull-right"
+																		onClick={() => {
+																			if (this.state.disableCreatePayroll == true) {
+																				toast.success("Please Create Company Details From Payroll-config");
+																				this.props.history.push('/admin/payroll/config', { tabNo: "4" })
+																			}
+																			else
+																				this.props.history.push('/admin/payroll/payrollrun/createPayrollList')
 																		}
-																		else
-																		this.props.history.push('/admin/payroll/payrollrun/createPayrollList')
-																	}
-																}
-															>
-																<i className="fas fa-plus mr-1" />
+																		}
+																	>
+																		<i className="fas fa-plus mr-1" />
 
-																{strings.create_pay_roll}
-															</Button>
-															{/* <Button
+																		{strings.create_pay_roll}
+																	</Button>
+																	{/* <Button
 																color="primary"
 																className="btn-square mt-2 pull-right"
 																// onClick={}
@@ -788,155 +754,157 @@ class PayrollRun extends React.Component {
 
 																{strings.create_company_details}
 															</Button> */}
-														</Col>
-													}
+																</Col>
+															}
+
+														</Row>
+														<div >
+															<BootstrapTable
+
+																//  selectRow={this.selectRowProp}
+																search={false}
+																options={this.options}
+																data={this.state.payroll_employee_list1 &&
+																	this.state.payroll_employee_list1.data ? this.state.payroll_employee_list1.data : []}
+																version="4"
+																hover
+																keyField="employeeId"
+																remote
+																pagination={
+																	this.state.payroll_employee_list1 &&
+																		this.state.payroll_employee_list1.data &&
+																		this.state.payroll_employee_list1.data.length > 0
+																		? true
+																		: false
+																}
+																fetchInfo={{
+																	dataTotalSize: this.state.payroll_employee_list1 &&
+																		this.state.payroll_employee_list1.count ? this.state.payroll_employee_list1.count : 0
+																}}
+																// className="employee-table mt-4"
+																trClassName="cursor-pointer"
+																csvFileName="payroll_employee_list.csv"
+																ref={(node) => this.table = node}
+															>
+																<TableHeaderColumn
+																	className="table-header-bg"
+																	dataField="payrollDate"
+																	dataFormat={this.renderDate}
+																	dataSort
+																	width="10%"
+																	tdStyle={{ whiteSpace: "normal" }}
+																	thStyle={{ whiteSpace: "normal" }}
+																>
+																	{strings.pay_date}
+																</TableHeaderColumn>
+																<TableHeaderColumn
+																	className="table-header-bg"
+																	dataField="payrollSubject"
+																	dataFormat={this.renderSubject}
+																	dataSort
+																	tdStyle={{ whiteSpace: "normal" }}
+																	thStyle={{ whiteSpace: "normal" }}
+																>
+																	{strings.pay_subject}
+																</TableHeaderColumn>
+																<TableHeaderColumn
+																	className="table-header-bg"
+																	dataField="payPeriod"
+																	dataFormat={this.renderPayperiod}
+																	width='15%'
+																	dataSort
+																	// tdStyle={{whiteSpace:"normal"}}
+																	thStyle={{ whiteSpace: "normal" }}
+																>
+																	{strings.pay_period}
+																</TableHeaderColumn>
+																<TableHeaderColumn
+																	className="table-header-bg"
+																	dataField="employeeCount"
+																	dataSort
+																	dataFormat={this.renderEmployeeCount}
+																	tdStyle={{ whiteSpace: "normal" }}
+																	thStyle={{ whiteSpace: "normal" }}
+																>
+																	{strings.emp_count}
+																</TableHeaderColumn>
+																<TableHeaderColumn
+																	className="table-header-bg"
+																	dataField="generatedBy"
+																	dataSort
+																	dataFormat={this.renderGeneratedBy}
+																	tdStyle={{ whiteSpace: "normal" }}
+																	thStyle={{ whiteSpace: "normal" }}
+																>
+																	{strings.generated_by}
+																</TableHeaderColumn>
+																<TableHeaderColumn
+																	className="table-header-bg"
+																	dataField="payrollApprover"
+																	dataSort
+																	dataFormat={this.renderPayrollApprover}
+																	tdStyle={{ whiteSpace: "normal" }}
+																	thStyle={{ whiteSpace: "normal" }}
+																>
+																	{strings.approver}
+																</TableHeaderColumn>
+																<TableHeaderColumn
+																	className="table-header-bg"
+																	dataField="status"
+																	dataSort
+																	dataFormat={this.renderStatus}
+																>
+																	{strings.STATUS}
+																</TableHeaderColumn>
+																<TableHeaderColumn
+																	className="table-header-bg"
+																	dataField="runDate"
+																	dataSort
+																	width="10%"
+																	dataFormat={this.renderRunDate}
+																	tdStyle={{ whiteSpace: "normal" }}
+																	thStyle={{ whiteSpace: "normal" }}
+																>
+																	{strings.run_date}
+																</TableHeaderColumn>
+																<TableHeaderColumn
+																	dataAlign="right"
+																	className="table-header-bg"
+																	dataField="totalAmountPayroll"
+																	dataSort
+																	width="15%"
+																	dataFormat={this.renderPayrolltotalAmount}
+																	tdStyle={{ whiteSpace: "normal" }}
+																	thStyle={{ whiteSpace: "normal" }}
+																>
+																	{strings.am}
+																</TableHeaderColumn>
+																<TableHeaderColumn
+																	className="table-header-bg"
+																	dataField="comment"
+																	dataSort
+																	columnTitle={this.columnHover}
+																	dataFormat={this.renderComment}
+
+																>
+																	{strings.reason}
+																</TableHeaderColumn>
+
+
+															</BootstrapTable>
+														</div>
+
+													</Col>
 
 												</Row>
-												<div >
-													<BootstrapTable
-													
-														//  selectRow={this.selectRowProp}
-														search={false}
-														options={this.options}
-														data={this.state.payroll_employee_list1 &&
-															this.state.payroll_employee_list1.data ? this.state.payroll_employee_list1.data : []}
-														version="4"
-														hover
-														keyField="employeeId"
-														remote
-														pagination={
-															this.state.payroll_employee_list1 &&
-															this.state.payroll_employee_list1.data &&
-															this.state.payroll_employee_list1.data.length > 0 
-																? true
-																: false
-														}
-														fetchInfo={{ dataTotalSize: this.state.payroll_employee_list1 &&
-															this.state.payroll_employee_list1.count ? this.state.payroll_employee_list1.count : 0 }}
-														// className="employee-table mt-4"
-														trClassName="cursor-pointer"
-														csvFileName="payroll_employee_list.csv"
-														ref={(node) => this.table = node}
-													>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="payrollDate"
-															dataFormat={this.renderDate}
-															dataSort
-															width="10%"
-															tdStyle={{whiteSpace:"normal"}}
-															thStyle={{whiteSpace:"normal"}}
-														>
-															{strings.pay_date}
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="payrollSubject"
-															dataFormat={this.renderSubject}
-															dataSort
-															tdStyle={{whiteSpace:"normal"}}
-															thStyle={{whiteSpace:"normal"}}
-														>
-															{strings.pay_subject}
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="payPeriod"
-															dataFormat={this.renderPayperiod}
-															width='15%'
-															dataSort
-															// tdStyle={{whiteSpace:"normal"}}
-															thStyle={{whiteSpace:"normal"}}
-														>
-															{strings.pay_period}
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="employeeCount"
-															dataSort
-															dataFormat={this.renderEmployeeCount}
-															tdStyle={{whiteSpace:"normal"}}
-															thStyle={{whiteSpace:"normal"}}
-														>
-															{strings.emp_count}
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="generatedBy"
-															dataSort
-															dataFormat={this.renderGeneratedBy}
-															tdStyle={{whiteSpace:"normal"}}
-															thStyle={{whiteSpace:"normal"}}
-														>
-															{strings.generated_by}
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="payrollApprover"
-															dataSort
-															dataFormat={this.renderPayrollApprover}
-															tdStyle={{whiteSpace:"normal"}}
-															thStyle={{whiteSpace:"normal"}}
-														>
-															{strings.approver}
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="status"
-															dataSort
-															dataFormat={this.renderStatus}
-														>
-															{strings.STATUS}
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="runDate"
-															dataSort
-															width="10%"
-															dataFormat={this.renderRunDate}
-															tdStyle={{whiteSpace:"normal"}}
-															thStyle={{whiteSpace:"normal"}}
-														>
-															{strings.run_date}
-														</TableHeaderColumn>
-														<TableHeaderColumn
-													    	dataAlign="right"
-															className="table-header-bg"
-															dataField="totalAmountPayroll"
-															dataSort
-															width="15%"
-															dataFormat={this.renderPayrolltotalAmount}
-															tdStyle={{whiteSpace:"normal"}}
-															thStyle={{whiteSpace:"normal"}}
-														>
-															{strings.am}
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="comment"
-															dataSort
-															columnTitle={this.columnHover}
-															 dataFormat={this.renderComment}
-															
-														>
-														{strings.reason}
-														</TableHeaderColumn>
+											)}
 
-
-													</BootstrapTable>
-												</div>
-
-											</Col>
-
-										</Row>
-									)}
-
-								</div>
-							</div>
-						</CardBody>
-					</Card>
-				</div>
-				{/* <PayrollModal
+										</div>
+									</div>
+								</CardBody>
+							</Card>
+						</div>
+						{/* <PayrollModal
 					openPayrollModal={this.state.openPayrollModal}
 					closePayrollModal={(e) => {
 						this.closePayrollModal(e);
@@ -955,14 +923,14 @@ class PayrollRun extends React.Component {
 
 
 				/> */}
-				<CreateCompanyDetails
-				openModal={this.state.openModal}
-				closeModal ={(e) => {
-					this.closeModal (e);
-				}}
-				/>
-			</div>
-			</div>
+						<CreateCompanyDetails
+							openModal={this.state.openModal}
+							closeModal={(e) => {
+								this.closeModal(e);
+							}}
+						/>
+					</div>
+				</div>
 		);
 	}
 }

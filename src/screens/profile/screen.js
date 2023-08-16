@@ -1100,7 +1100,7 @@ class Profile extends React.Component {
 																								dateFormat="dd-MM-yyyy"
 																								dropdownMode="select"
 																								placeholderText={strings.Enter+strings.DateOfBirth}
-																								maxDate={new Date()}
+																								maxDate={moment().subtract(18, "years").toDate()}
 																								autoComplete="off"
 																								// selected={props.values.dob}
 																								value={
@@ -1510,6 +1510,16 @@ class Profile extends React.Component {
 																),
 																companyRegistrationNumber: Yup.string().required(
 																	'Company registration number is required',
+																).test(
+																	'companyRegistrationNumber',
+																	'Company registration number should be greater than 1',
+																	(value) => {
+																		if (value > 1) {
+																			return true;
+																		} else {
+																			return false;
+																		}
+																	},
 																),
 																vatRegistrationNumber:Yup.string().when(
 																	'isRegisteredVat',

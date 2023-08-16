@@ -541,7 +541,7 @@ class CreateUser extends React.Component {
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				placeholderText={strings.Enter+strings.DateOfBirth}
-																				maxDate={new Date()}
+																				maxDate={moment().subtract(18, "years").toDate()}
 																				selected={props.values.dob}
 																				//value={props.values.dob}
 																				onChange={(value) => {

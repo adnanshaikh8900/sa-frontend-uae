@@ -65,6 +65,7 @@ class ViewEmployee extends React.Component {
 			FixedAllowance: [],
 			CTC: '',
 			current_employee_id: '',
+			transactionList: []
 		};
 
 
@@ -78,7 +79,6 @@ class ViewEmployee extends React.Component {
 	toggle = (tabPane, tab) => {
 		const newArray = this.state.activeTab.slice();
 		newArray[parseInt(tabPane, 10)] = tab;
-		console.log(tab);
 		this.setState({
 			activeTab: newArray,
 		});
@@ -160,13 +160,35 @@ class ViewEmployee extends React.Component {
 										Variable: res.data.salarySlipResult.Variable,
 										Deduction: res.data.salarySlipResult.Deduction,
 									});
-
 								}
+							let payPeriod = this.state.selectedData.payPeriod
+							const [startDateString, endDateString] = payPeriod.split("-");
+							const startDate = startDateString.trim();
+							const endDate = endDateString.trim();
+							const postData = {
+								employeeId: this.props.location.state.id,
+								startDate: moment(startDate).format('DD/MM/YYYY'),
+								endDate: moment(endDate).format('DD/MM/YYYY'),
+							};
+							this.props.employeeViewActions
+								.getEmployeeTransactions(postData)
+								.then((res) => {
+									if (res.status === 200) {
+										this.setState({
+											transactionList: res.data,
+										});
+									}
+								})
+								.catch((err) => {
+									this.props.commonActions.tostifyAlert(
+										'error',
+										err && err.data ? err.data.message : 'Something Went Wrong',
+									);
+								})
 							})
 							.catch((err) => {
 								this.props.commonActions.tostifyAlert(
 									'error',
-
 									err && err.data ? err.data.message : 'Something Went Wrong',
 								);
 							});
@@ -295,7 +317,6 @@ class ViewEmployee extends React.Component {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		console.log(this.state.Fixed)
 		const { profile } = this.props;
 		return (
 			<div className="financial-report-screen">
@@ -744,6 +765,7 @@ class ViewEmployee extends React.Component {
 					companyData={profile}
 					salaryDate={this.state.salaryDate}
 					empData={this.state.EmployeeDetails}
+					transactionList={this.state.transactionList}
 				/>
 			</div>
 		);

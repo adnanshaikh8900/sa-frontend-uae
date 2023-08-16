@@ -385,7 +385,7 @@ class CreateChartAccount extends React.Component {
 																			: strings.CreateandMore }
 															</Button>
 															<Button
-																type="submit"
+																type="button"
 																color="secondary"
 																className="btn-square"
 																onClick={() => {

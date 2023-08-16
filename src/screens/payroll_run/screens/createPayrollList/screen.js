@@ -55,7 +55,6 @@ const mapDispatchToProps = (dispatch) => {
 		createPayrollActions: bindActionCreators(CreatePayrollActions, dispatch),
 		createPayrollEmployeeActions: bindActionCreators(CreatePayrollEmployeeActions, dispatch),
 		payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
-
 	})
 }
 const customStyles = {
@@ -106,6 +105,7 @@ class CreatePayrollList extends React.Component {
 			currencyIsoCode: "AED",
 			loadingMsg: "Loading...",
 			disableLeavePage: false,
+			isPayrollSubjectNameExist: false,
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -138,17 +138,14 @@ class CreatePayrollList extends React.Component {
 
 		this.tableApiCallsOnStatus();
 		this.calculatePayperioad(this.state.startDate, this.state.endDate);
+
 	};
 	calculatePayperioad = (startDate, endDate) => {
 		// let diffDays=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1
 		const diffTime = Math.abs(startDate - endDate);
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-
 		this.setState({ paidDays: diffDays });
-		this.getAllPayrollEmployee(endDate)
-		console.log(diffTime + " milliseconds");
-		console.log(diffDays + " days");
-		console.log(this.state.paidDays, "paid-Days", diffDays)
+		this.getAllPayrollEmployee(startDate)
 	}
 
 	tableApiCallsOnStatus = () => {
@@ -248,6 +245,9 @@ class CreatePayrollList extends React.Component {
 		if (payrollApprover === undefined) { formData.append('approverId', this.state.payrollApprover?.value ? this.state.payrollApprover.value : null) }
 		else if (payrollApprover !== "") { formData.append('approverId', parseInt(payrollApprover?.value)) }
 
+		this.state.selectedRows1.forEach(i => {
+			delete i.joiningDate;
+		})
 		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
 		formData.append('salaryDate', payrollDate)
 		//Payroll total  amount
@@ -309,50 +309,87 @@ class CreatePayrollList extends React.Component {
 		})
 	}
 
-
-	getAllPayrollEmployee = (endDate) => {
-		//maintaining new state
-		let date = endDate ? endDate : this.state.endDate;
-		let month = moment(date).format("MMMM");
-		this.props.createPayrollActions.getAllPayrollEmployee(moment(date).format("DD/MM/YYYY")).then((res) => {
-			if (res.status === 200) {
-
+	validatePayrollSubjectName = (value) => {
+		const data = {
+			moduleType: 27,
+			name: value,
+		};
+		this.props.commonActions.checkValidation(data).then((response) => {
+			if (response.data === 'Payroll Subject already exists') {
 				this.setState({
-					allPayrollEmployee: res.data
+					isPayrollSubjectNameExist: true,
+
 				})
-
-				let newData = [...this.state.allPayrollEmployee]
-				newData = newData.map((data) => {
-					/** if month is of 31 days and 28days so its will be treated as 30 days only , 
-					* need to handle this in future release */
-					//for  month wise case handling ,need to add switch in future 
-					let tmpPaidDay = this.state.paidDays > 30 ? 30 :
-						(this.state.paidDays == 28 && month == "February" ? 30 : this.state.paidDays)
-					data.noOfDays = tmpPaidDay
-					data.originalNoOfDays = tmpPaidDay
-					data.originalGrossPay = data.grossPay
-					data.originalDeduction = data.deduction
-					data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2)
-					data.perDaySal = data.originalGrossPay / 30
-
-					data.lopDay = 30 - tmpPaidDay;
-					data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-					data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-
-					return data
-				})
-				console.log(newData)
-
+			} else {
 				this.setState({
-					allPayrollEmployee: newData
+					isPayrollSubjectNameExist: false,
+				});
+			}
+		});
+	}
+	getAllPayrollEmployee = (startDate) => {
+		var employeePayPeriodlList = [];
+		var activeEmployee = [];
+		this.props.employeeActions.getEmployeeListWithDetails().then((response) => {
+			if (response.status === 200) {
+				employeePayPeriodlList = response.data;
+				//maintaining new state
+				let date = startDate ? startDate : this.state.startDate;
+				let month = moment(date).format("MMMM");
+				this.props.createPayrollActions.getAllPayrollEmployee(moment(date).format("DD/MM/YYYY")).then((res) => {
+					if (res.status === 200) {
+						this.setState({
+							allPayrollEmployee: res.data
+						})
+
+						let newData = [...this.state.allPayrollEmployee]
+						newData = newData.map((data) => {
+
+
+							/** if month is of 31 days and 28days so its will be treated as 30 days only , 
+							* need to handle this in future release */
+							//for  month wise case handling ,need to add switch in future 
+							let tmpPaidDay = this.state.paidDays > 30 ? 30 :
+								(this.state.paidDays == 28 && month == "February" ? 30 : this.state.paidDays)
+							data.noOfDays = tmpPaidDay
+							data.originalNoOfDays = tmpPaidDay
+							data.originalGrossPay = data.grossPay
+							data.originalDeduction = data.deduction
+							data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2)
+							data.perDaySal = data.originalGrossPay / 30
+
+							data.lopDay = 30 - tmpPaidDay;
+							data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+							data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+
+							
+							const empList = employeePayPeriodlList.filter(obj => obj.employeeId === data.id)
+							if (empList && empList?.length > 0) {
+								let flag = true;
+								empList.map(obj => {
+									if (obj.payPeriod.includes(moment(date).format("MM/DD/YYYY"))) {
+										flag = false;
+									}
+								})
+								if (flag) {
+									activeEmployee.push(data)
+								}
+							} else {
+								activeEmployee.push(data)
+							}
+							return data
+						})
+						this.setState({
+							allPayrollEmployee: activeEmployee
+						})
+					}
 				})
+
 			}
 		})
 	}
 
 	getPayrollEmployeeList = () => {
-
-
 		const cols = [
 			{
 				label: 'Employee No',
@@ -385,7 +422,6 @@ class CreatePayrollList extends React.Component {
 				width: '',
 				key: 'grossPay'
 			},
-
 			{
 				label: 'Deductions',
 				// dataSort: true,
@@ -436,9 +472,9 @@ class CreatePayrollList extends React.Component {
 											<Input
 												className="spinboxDisable"
 												type="number"
-												min={0}
+												min={30 - this.state.paidDays}
 												step="0.5"
-												max={this.state.paidDays}
+												max={30}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}
@@ -704,7 +740,6 @@ class CreatePayrollList extends React.Component {
 
 		const { employee_list, approver_dropdown_list } = this.props
 		const { loading, initValue, loadingMsg } = this.state
-		console.log(employee_list.data, "employee_list.data")
 		var today = new Date();
 		return (
 			loading == true ? <Loader loadingMsg={loadingMsg} /> :
@@ -757,9 +792,9 @@ class CreatePayrollList extends React.Component {
 																		.required("Payroll subject is required"),
 																	payrollDate: Yup.string()
 																		.required("Payroll date is required"),
-																	payrollApprover: Yup.object()
-																	// selectedRows: Yup.string()
-																	//     .required("At least selection of one employee is required for create payroll"),
+																	payrollApprover: Yup.string()
+																		// selectedRows: Yup.string()
+																		.required("At least selection of one employee is required for create payroll"),
 																})}
 																validate={(values) => {
 																	// let status = false
@@ -771,12 +806,22 @@ class CreatePayrollList extends React.Component {
 																	if (!values.payrollDate) {
 																		errors.payrollDate = 'Payroll date is required';
 																	}
+																	if (this.state.isPayrollSubjectNameExist === true) {
+																		errors.payrollSubject = "Payroll Subject Already Exists"
+																	}
 																	// if(this.state.selectedRows && this.state.selectedRows.length===0)
 																	// {
 																	// 	errors.selectedRows = 'At least selection of one employee  is required for create payroll';
 																	// }
+																	// let DOJ = this.state.selectedRows1.map((i) => moment(i.joiningDate).format('DD-MM-YYYY'))
+																	// DOJ.forEach((dateString) => {
+																	// 	let mStart = moment(this.state.startDate).format('DD-MM-YYYY')
+																	// 	if (mStart < dateString) {
+																	// 		errors.startDate = 'Pay-Period should start after the date of joining';
+																	// 	}
+																	// });
 																	if (!this.state.startDate && !this.state.endDate) {
-																		errors.startDate = 'Start and end date is required';
+																		errors.startDate = 'Start date and end date is required';
 																	} else
 																		if (!this.state.startDate) {
 																			errors.startDate = 'Start date is required';
@@ -796,7 +841,7 @@ class CreatePayrollList extends React.Component {
 																			<Col >
 																				<FormGroup>
 																					<Label htmlFor="payrollSubject">
-																						<span className="text-danger">* </span> 
+																						<span className="text-danger">* </span>
 																						{strings.payroll_subject}</Label>
 																					<Input
 																						type="text"
@@ -805,22 +850,30 @@ class CreatePayrollList extends React.Component {
 																						value={props.values.payrollSubject}
 																						maxLength="100"
 																						placeholder={strings.Enter + strings.pay_subject}
-																						onChange={(value) => {
-																							props.handleChange('payrollSubject')(value);
+																						onChange={(option) => {
+																							if (
+																								option.target.value === '' ||
+																								this.regExBoth.test(
+																									option.target.value,
+																								)
+																							) 
+																							props.handleChange('payrollSubject')(option.target.value);
+																							this.validatePayrollSubjectName(option.target.value)
+
 																						}}
 																						className={
-																							props.errors.payrollSubject && 
-																								props.touched.payrollSubject 
+																							props.errors.payrollSubject &&
+																								props.touched.payrollSubject
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
 																					{props.errors.payrollSubject &&
 																						props.touched.payrollSubject && (
-																						<div className="invalid-feedback">
-																							{props.errors.payrollSubject}
-																						</div>
-																					)}
+																							<div className="invalid-feedback">
+																								{props.errors.payrollSubject}
+																							</div>
+																						)}
 																				</FormGroup>
 																			</Col>
 																			<Col>
@@ -850,10 +903,10 @@ class CreatePayrollList extends React.Component {
 																					/>
 																					{props.errors.payrollDate &&
 																						props.touched.payrollDate && (
-																						<div className="invalid-feedback">
-																							{props.errors.payrollDate}
-																						</div>
-																					)}
+																							<div className="invalid-feedback">
+																								{props.errors.payrollDate}
+																							</div>
+																						)}
 																				</FormGroup>
 																			</Col>
 
@@ -878,18 +931,18 @@ class CreatePayrollList extends React.Component {
 																						onFocusChange={this.handleFocusChange}
 																						startDate={this.state.startDate}
 																						startDateId="startDate"
-																						className={`form-control ${props.errors.payrollDate &&
-																							props.touched.payrollDate
+																						className={`form-control ${props.errors.startDate &&
+																							props.touched.startDate
 																							? 'is-invalid'
 																							: ''
 																							}`}
 																					/>
-																					{props.errors.payrollDate &&
-																						props.touched.payrollDate && (
-																						<div className="invalid-feedback">
-																							{props.errors.payrollDate}
-																						</div>
-																					)}
+																					{props.errors.startDate &&
+																						props.touched.startDate && (
+																							<div className="invalid-feedback">
+																								{props.errors.startDate}
+																							</div>
+																						)}
 																				</FormGroup>
 
 																			</Col>
@@ -898,7 +951,7 @@ class CreatePayrollList extends React.Component {
 
 
 																			<Col >	<Label htmlFor="due_date">
-																				{/* <span className="text-danger">* </span> */}
+																				<span className="text-danger">* </span>
 																				{strings.payroll_approver}
 																			</Label>
 																				<FormGroup>

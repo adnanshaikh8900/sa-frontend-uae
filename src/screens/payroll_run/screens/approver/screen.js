@@ -240,8 +240,17 @@ class PayrollApproverScreen extends React.Component {
 	}
 	approveAndRunPayroll = () => {
 		this.setState({ disableLeavePage: true })
+		let payPeriod = this.state.payPeriod
+		const [startDateString, endDateString] = payPeriod.split("-");
+		const startDate = startDateString.trim();
+		const endDate = endDateString.trim();
+		const postData = {
+			payrollId: this.state.payroll_id,
+			startDate: moment(startDate).format('DD/MM/YYYY'),
+			endDate: moment(endDate).format('DD/MM/YYYY'),
+		};
 		this.props.createPayrollActions
-			.approveAndRunPayroll(this.state.payroll_id)
+			.approveAndRunPayroll(postData)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert('success', 'Payroll Approved Successfully. Payslip sent to employees Successfully')
@@ -945,6 +954,7 @@ class PayrollApproverScreen extends React.Component {
 																						id="payrollSubject"
 																						name="payrollSubject"
 																						disabled={true}
+																						maxLength="100"
 																						value={this.state.payrollSubject}
 																						placeholder={strings.Enter + " Payroll Subject"}
 																						onChange={(value) => {

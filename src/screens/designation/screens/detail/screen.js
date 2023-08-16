@@ -261,7 +261,7 @@ class DetailDesignation extends React.Component {
                                 let errors = {};
                                 if (values.designationId === '0') {
                                   errors.designationId =
-                                  "Enter valid designation ID";
+                                    "Enter valid designation ID";
                                 }
                                 if (this.state.idExist === true || values.designationId === '1' || values.designationId === '2' || values.designationId === '3' || values.designationId === '4') {
                                   errors.designationId =
@@ -336,8 +336,11 @@ class DetailDesignation extends React.Component {
                                               onChange={(option) => {
                                                 if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {
                                                   props.handleChange('designationName')(option)
-                                                  if (initValue.designationName !== option.target.value)
-                                                    this.designationNamevalidationCheck(option.target.value)
+                                                  console.log(initValue.designationName)
+                                                  this.setState({ nameExist: false, }, () => {
+                                                    if (initValue.designationName !== option.target.value)
+                                                      this.designationNamevalidationCheck(option.target.value)
+                                                  })
                                                 }
                                               }}
                                               className={props.errors.designationName && props.touched.designationName ? "is-invalid" : ""}
@@ -434,7 +437,7 @@ class DetailDesignation extends React.Component {
                                       </FormGroup>
                                       <FormGroup className="text-right">
                                         <Button type="button" color="primary" className="btn-square mr-3"
-                                          disabled={!props.dirty}
+                                          //disabled={!props.dirty}
                                           onClick={() => {
                                             this.setState({ createMore: false }, () => {
                                               props.handleSubmit()

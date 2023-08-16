@@ -38,6 +38,7 @@ const en = {
       Payroll: "Payroll",
       Employee: "Employee",
       PayrollRun: "Payroll Run",
+      Salary: "Salary",
       SalaryRoles: "Salary Roles",
       SalaryTemplates: "Salary Templates",
       SalaryStructure: "Salary Structures",

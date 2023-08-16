@@ -1602,7 +1602,7 @@ class DetailExpense extends React.Component {
 																		</Col>
 																	)} */}
 																		</Row>
-																		{props.values.vatCategoryId !== '' && props.values.vatCategoryId.label !== 'Select VAT' &&
+																		{props.values.vatCategoryId !== '' && props.values.vatCategoryId.label !== 'Select VAT' && props.values.expenseCategory && (props.values?.expenseCategory?.value ? props.values?.expenseCategory?.value !== 34 : props.values?.expenseCategory !== 34) &&
 																			props.values.vatCategoryId.value === 1 &&
 																			// props.values.vatCategoryId.value !==4 && 
 																			// props.values.vatCategoryId.value !==10 &&

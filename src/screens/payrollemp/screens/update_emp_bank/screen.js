@@ -62,6 +62,7 @@ class UpdateEmployeeBank extends React.Component {
         this.regEx = /^[0-9\d]+$/;
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
+        this.regExNum = /^[0-9]+$/;
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
         this.regexIban=/^AE\d{2}\s?\d{3}\d{16}$/;
 
@@ -280,7 +281,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                     errors.accountNumber = "Please enter a valid Account number"
                                                                 }
                                                                 if (!values.iban) {
-                                                                    errors.iban = "IBAN is required"
+                                                                    errors.iban = "IBAN Number is required"
                                                                 } else if (/^0+$/.test(values.iban)) {
                                                                     errors.iban = "Please enter a valid IBAN Number"
                                                                 }
@@ -300,7 +301,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                 branch: Yup.string()
                                                                     .required("Branch is required"),
                                                                 iban: Yup.string()
-                                                                    .required("IBAN is required"),
+                                                                    .required("IBAN Number is required"),
                                                                 agentId: Yup.string()
                                                                     .required("Agent ID is required"),
 
@@ -327,9 +328,11 @@ class UpdateEmployeeBank extends React.Component {
                                                                                             name="accountHolderName"
                                                                                             value={props.values.accountHolderName}
                                                                                             placeholder={strings.Enter + strings.AccountHolderName}
-                                                                                            onChange={(value) => {
-                                                                                                props.handleChange('accountHolderName')(value);
-
+                                                                                            onChange={(event) => {
+                                                                                                const inputValue = event.target.value;
+                                                                                                if (/^[A-Za-z\s]+$/.test(inputValue)) {
+                                                                                                props.handleChange('accountHolderName')(inputValue);
+                                                                                                }
                                                                                             }}
                                                                                             className={props.errors.accountHolderName && props.touched.accountHolderName ? "is-invalid" : ""}
                                                                                         />
@@ -351,11 +354,12 @@ class UpdateEmployeeBank extends React.Component {
                                                                                             onChange={(option) => {
                                                                                                 if (
                                                                                                     option.target.value === '' ||
-                                                                                                    this.regExBoth.test(option.target.value)
+                                                                                                    this.regExNum.test(option.target.value)
                                                                                                 ) {
-                                                                                                    props.handleChange('accountNumber')(
-                                                                                                        option,
-                                                                                                    );
+                                                                                                    const inputValue = option.target.value;
+                                                                                                    if (/^[0-9]+$/.test(inputValue)) {
+                                                                                                    props.handleChange('accountNumber')(inputValue);
+                                                                                                    }
                                                                                                     this.existForAccountNumber(option.target.value);
                                                                                                 }
                                                                                             }}

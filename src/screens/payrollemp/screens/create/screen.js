@@ -219,7 +219,7 @@ class CreateEmployeePayroll extends React.Component {
         this.formRef = React.createRef();
         this.regEx = /^[0-9\d]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
-        this.regExAlpha = /^[a-zA-Z ]+$/;
+        this.regExAlpha = /^[a-zA-Z]+$/;
         this.regExAddress = /^[a-zA-Z0-9\s\D,'-/ ]+$/;
         this.regExQualification = /^[a-zA-Z,-/ ]+$/;
         this.regExQualificationYear = /^[0-9,'-]+$/;
@@ -1617,7 +1617,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                             id="email"
                                                                                                             name="email"
                                                                                                             value={props.values.email}
-                                                                                                            placeholder={strings.Enter + strings.EmailAddress}
+                                                                                                            placeholder={strings.Enter + strings.EmailAddres}
                                                                                                             onChange={(option) => {
                                                                                                                 props.handleChange('email')(option);
                                                                                                                 this.emailvalidationCheck(option.target.value);
@@ -2394,7 +2394,12 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
                                                                                                         <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span> {strings.ContactNumber1} </Label>
-                                                                                                        <div>
+                                                                                                        <div className={
+                                                                                                            props.errors.emergencyContactNumber1 &&
+                                                                                                                props.touched.emergencyContactNumber1
+                                                                                                                ? ' is-invalidMobile '
+                                                                                                                : ''
+                                                                                                        }>
                                                                                                             <PhoneInput
                                                                                                                 id="emergencyContactNumber1"
                                                                                                                 name="emergencyContactNumber1"
@@ -2402,7 +2407,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                 enableSearch={true}
                                                                                                                 international
                                                                                                                 value={props.values.emergencyContactNumber1}
-                                                                                                                placeholder={strings.Enter + strings.emergencyContactNumber1}
+                                                                                                                placeholder={strings.Enter + strings.ContactNumber1}
                                                                                                                 onBlur={props.handleBlur('emergencyContactNumber1')}
                                                                                                                 onChange={(option) => {
                                                                                                                     props.handleChange('emergencyContactNumber1')(
@@ -3014,7 +3019,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                     errors.accountNumber = "Please enter a valid Account number"
                                                                                 }
                                                                                 if (!values.iban) {
-                                                                                    errors.iban = "IBAN is required"
+                                                                                    errors.iban = "IBAN Number is required"
                                                                                 } else if (/^0+$/.test(values.iban)) {
                                                                                     errors.iban = "Please enter a valid IBAN Number"
                                                                                 }
@@ -3026,7 +3031,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 accountNumber: Yup.string()
                                                                                     .required("Account number is required"),
                                                                                 iban: Yup.string()
-                                                                                    .required("IBAN is required"),
+                                                                                    .required("IBAN Number is required"),
                                                                                 // bankName: Yup.string()
                                                                                 // .required("Bank Name is required"),
                                                                                 bankId: Yup.string()

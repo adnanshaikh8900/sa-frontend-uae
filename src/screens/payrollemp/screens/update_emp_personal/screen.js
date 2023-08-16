@@ -792,7 +792,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             id="email"
                                                                                             name="email"
                                                                                             value={props.values.email}
-                                                                                            placeholder={strings.Enter + strings.EmailAddress}
+                                                                                            placeholder={strings.Enter + strings.EmailAddres}
                                                                                             onChange={(option) => {
                                                                                                 props.handleChange('email')(option);
                                                                                                 this.emailvalidationCheck(option.target.value);

@@ -734,6 +734,7 @@ const en = {
       CompanyBusinessType: "Company / Business Type",
       Website: "Company Website",
       EmailAddress: "Company Email Address",
+      EmailAddres: "Email Address",
       CompanyCost: "Company Cost",
       ExpenseBudget: "Expense Budget",
       RevenueBudget: "Revenue Budget",

@@ -1057,6 +1057,7 @@ class UpdatePayroll extends React.Component {
 																						id="payrollSubject"
 																						name="payrollSubject"
 																						value={this.state.payrollSubject}
+																						maxLength="100"
 																						disabled={this.disableForAddButton() ? true : false}
 																						placeholder={strings.Enter + " Payroll Subject"}
 																						onChange={(value) => {

@@ -911,10 +911,18 @@ class DetailExpense extends React.Component {
 																	) {
 																		errors.bankAccountId = 'Bank account is required';
 																	}
-
-																	// if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
-																	// 	errors.placeOfSupplyId="Place of supply is required"
-																	// }
+																	if (this.state.isRegisteredVat && !values.vatCategoryId &&
+																		values.expenseCategory && values.expenseCategory.value !== 34) {
+																		errors.vatCategoryId = strings.VATIsRequired;
+																	}
+																	if (this.state.showPlacelist === true && (values.placeOfSupplyId === '' || values.placeOfSupplyId.value === '') &&
+																		values.expenseCategory && values.expenseCategory.value !== 34) {
+																		errors.placeOfSupplyId = "Place of supply is required"
+																	}
+																	if (this.state.isRegisteredVat && !values.taxTreatmentId &&
+																		values.expenseCategory && values.expenseCategory.value !== 34) {
+																		errors.taxTreatmentId = strings.TaxTreatmentRequired;
+																	}
 																	return errors;
 																}}
 																validationSchema={Yup.object().shape({
@@ -939,9 +947,9 @@ class DetailExpense extends React.Component {
 																	payee: Yup.string().required(
 																		'Paid by is required',
 																	),
-																	vatCategoryId: Yup.string().required(
-																		'VAT is required',
-																	),
+																	// vatCategoryId: Yup.string().required(
+																	// 	'VAT is required',
+																	// ),
 																	expenseAmount: Yup.string()
 																		.required('Amount is required')
 																		.matches(
@@ -1097,6 +1105,10 @@ class DetailExpense extends React.Component {
 																								props.handleChange('expenseCategory')(option,);
 																								if (option.value === 34) {
 																									props.handleChange('payee')({ label: 'Company Expense', value: 'Company Expense' });
+																									props.handleChange('taxTreatmentId')('');
+																									props.handleChange('vatCategoryId')('');
+																									props.handleChange('placeOfSupplyId')('');
+																									this.setState({ showPlacelist: false })
 																								}
 																							} else {
 																								props.handleChange('expenseCategory')('');
@@ -1122,9 +1134,9 @@ class DetailExpense extends React.Component {
 																						id="date"
 																						name="expenseDate"
 																						className={`form-control ${props.errors.expenseDate &&
-																								props.touched.expenseDate
-																								? 'is-invalid'
-																								: ''
+																							props.touched.expenseDate
+																							? 'is-invalid'
+																							: ''
 																							}`}
 																						placeholderText={strings.ExpenseDate}
 																						value={moment(
@@ -1342,7 +1354,7 @@ class DetailExpense extends React.Component {
 																								: []
 																						}
 																						// value={props.values.payee}
-																						value={ props.values.payee?.value ? props.values.payee :
+																						value={props.values.payee?.value ? props.values.payee :
 																							pay_to_list &&
 																							selectOptionsFactory
 																								.renderOptions(
@@ -1977,6 +1989,7 @@ class DetailExpense extends React.Component {
 																						className="btn-square mr-3"
 																						disabled={this.state.disabled}
 																						onClick={() => {
+																							console.log(props.errors)
 																							//	added validation popup	msg
 																							props.handleBlur();
 																							if (props.errors && Object.keys(props.errors).length != 0)

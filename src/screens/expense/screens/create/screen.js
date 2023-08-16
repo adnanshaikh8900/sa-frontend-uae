@@ -1201,6 +1201,10 @@ class CreateExpense extends React.Component {
 																							props.handleChange('expenseCategory')(option,);
 																							if (option.value === 34) {
 																								props.handleChange('payee')({ label: 'Company Expense', value: 'Company Expense' });
+																								props.handleChange('taxTreatmentId')('');
+																								props.handleChange('vatCategoryId')('');
+																								props.handleChange('placeOfSupplyId')('');
+																								this.setState({showPlacelist:false})
 																							}
 																						} else {
 																							props.handleChange('expenseCategory')('');

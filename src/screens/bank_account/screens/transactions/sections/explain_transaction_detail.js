@@ -1718,7 +1718,6 @@ class ExplainTrasactionDetail extends React.Component {
                             }
                             if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
                               if(values.expenseCategory && (values.expenseCategory.value === 34 || values.expenseCategory === 34)) {
-                                debugger
                                 const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
                                   let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
                                   return sum + num;

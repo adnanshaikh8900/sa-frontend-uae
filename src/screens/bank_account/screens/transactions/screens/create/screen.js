@@ -135,7 +135,7 @@ class CreateBankTransaction extends React.Component {
         );
       });
     if (this.props.location.state && this.props.location.state.bankAccountId) {
-      this.setState({id: this.props.location.state.bankAccountId,});
+      this.setState({ id: this.props.location.state.bankAccountId, });
       this.props.detailBankAccountActions
         .getBankAccountByID(this.props.location.state.bankAccountId)
         .then((res) => {
@@ -232,16 +232,13 @@ class CreateBankTransaction extends React.Component {
       exchangeRateFromList,
     } = data;
     let formData = new FormData();
-    if (
-      coaCategoryId &&
-      (coaCategoryId.value === 10 || coaCategoryId.label === "Expense")
-    ) {
-      transactionAmount = calculateVAT(
-        transactionAmount,
-        vatId.value,
-        exclusiveVat,
-        this.setState
-      );
+    if (coaCategoryId && (coaCategoryId.value === 10 || coaCategoryId.label === "Expense")) {
+      const list = calculateVAT(transactionAmount, vatId.value, exclusiveVat);
+      transactionAmount = list.transactionAmount
+      this.setState({
+        transactionVatAmount: list.transactionVatAmount,
+        transactionExpenseAmount: list.transactionExpenseAmount,
+      })
     }
     if (
       coaCategoryId.label === "Sales" ||
@@ -410,15 +407,16 @@ class CreateBankTransaction extends React.Component {
         info ? JSON.stringify([info]) : ""
       );
     }
-    if (coaCategoryId.label === "Corporate Tax Payment" ) {
-    const report =  {
-      ...this.state.corporateTaxList.find((obj, index) => index === this.state.ct_taxPeriod.value),
-    };
+    if (coaCategoryId.label === "Corporate Tax Payment") {
+      const report = {
+        ...this.state.corporateTaxList.find((obj, index) => index === this.state.ct_taxPeriod.value),
+      };
       formData.append(
         "explainedCorporateTaxListString",
         report ? JSON.stringify([report]) : ""
       );
     }
+    debugger
     this.props.transactionCreateActions
       .createTransaction(formData)
       .then((res) => {
@@ -1314,7 +1312,7 @@ class CreateBankTransaction extends React.Component {
                               errors.transactionAmount = strings.AmountShouldBeLessThanOrEqualToTheBalanceDue;
                           }
                           if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
-                            if(values.expenseCategory && values.expenseCategory.value === 34) {
+                            if (values.expenseCategory && values.expenseCategory.value === 34) {
                               const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
                                 let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
                                 return sum + num;
@@ -1324,14 +1322,13 @@ class CreateBankTransaction extends React.Component {
                               }
                             }
                           }
-                          if(!values.transactionDate){
+                          if (!values.transactionDate) {
                             errors.transactionDate = "Transaction Date is Required";
                           }
                           if (
-                            date1 < date2                      
-                                )
-                           {
-                           errors.transactionDate =
+                            date1 < date2
+                          ) {
+                            errors.transactionDate =
                               "Transaction Date cannot be earlier than the payroll approval date.";
                           }
                           return errors;

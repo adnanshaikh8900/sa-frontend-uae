@@ -794,7 +794,7 @@ class CreatePayrollList extends React.Component {
 																		.required("Payroll date is required"),
 																	payrollApprover: Yup.string()
 																		// selectedRows: Yup.string()
-																		.required("At least selection of one employee is required for create payroll"),
+																		.required("Payroll Approver is required"),
 																})}
 																validate={(values) => {
 																	// let status = false
@@ -868,8 +868,7 @@ class CreatePayrollList extends React.Component {
 																								: ''
 																						}
 																					/>
-																					{props.errors.payrollSubject &&
-																						props.touched.payrollSubject && (
+																					{props.errors.payrollSubject &&(
 																							<div className="invalid-feedback">
 																								{props.errors.payrollSubject}
 																							</div>
@@ -947,9 +946,6 @@ class CreatePayrollList extends React.Component {
 
 																			</Col>
 
-
-
-
 																			<Col >	<Label htmlFor="due_date">
 																				<span className="text-danger">* </span>
 																				{strings.payroll_approver}
@@ -957,10 +953,7 @@ class CreatePayrollList extends React.Component {
 																				<FormGroup>
 
 																					<Select
-
-
 																						id="userId"
-
 																						name="userId"
 																						placeholder={strings.select_approver}
 																						value={props.values.payrollApprover}
@@ -974,7 +967,6 @@ class CreatePayrollList extends React.Component {
 																								)
 																								: []
 																						}
-
 																						onChange={(option) => {
 																							if (option && option.value) {
 																								props.handleChange('payrollApprover')(option);
@@ -998,11 +990,10 @@ class CreatePayrollList extends React.Component {
 																								: ''
 																						}
 																					/>
-																					{props.errors.payrollApprover &&
-																						(
-																							<div className="invalid-feedback">
-																								{props.errors.payrollApprover}
-																							</div>
+																					{props.errors.payrollApprover &&(
+																						<div className="invalid-feedback">
+																							{props.errors.payrollApprover}
+																						</div>
 																						)}
 																				</FormGroup>
 																			</Col>

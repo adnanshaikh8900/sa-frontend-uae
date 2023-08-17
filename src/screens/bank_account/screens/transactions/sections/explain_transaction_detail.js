@@ -1716,7 +1716,6 @@ class ExplainTrasactionDetail extends React.Component {
                             ) {
                               errors.employeeId = "User is Required";
                             }
-                            console.log(values)
                             if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
                               if(values.expenseCategory && (values.expenseCategory.value === 34 || values.expenseCategory === 34)) {
                                 debugger
@@ -1791,7 +1790,6 @@ class ExplainTrasactionDetail extends React.Component {
                           {(props) => (
                             <Form onSubmit={props.handleSubmit}>
                               <Row>
-                                {console.log(props.values.coaCategoryId)}
                                 <Col lg={3}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="chartOfAccountId">

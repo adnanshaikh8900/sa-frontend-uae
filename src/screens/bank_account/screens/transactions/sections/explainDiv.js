@@ -79,7 +79,6 @@ class explainDiv extends React.Component {
 			.getTransactionCategoryListForExplain(type)
 			.then((res) => {
 				if (res.status === 200) {
-					console.log(res.data);
 					this.setState(
 						{
 							transactionCategoryList: res.data,
@@ -132,7 +131,6 @@ class explainDiv extends React.Component {
 	};
 
 	handleChange = (val, name, row) => {
-		console.log(row);
 		let data = [...this.state.explainList];
 		data.map((item, index) => {
 			if (item.id === row.id) {
@@ -145,7 +143,6 @@ class explainDiv extends React.Component {
 				explainList: data,
 			},
 			() => {
-				console.log(this.state.explainList);
 				this.calculateCurrentBalance();
 			},
 		);
@@ -230,7 +227,6 @@ class explainDiv extends React.Component {
 		const postData = {
 			transactionCategory: selectedTransactionCategoryType.value,
 		};
-		//console.log(postData);
 		this.setState(
 			{
 				submitBtnClick: true,

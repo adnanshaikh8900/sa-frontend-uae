@@ -554,7 +554,7 @@ class User extends React.Component {
 													this.table = node;
 												}}
 											>
-												<TableHeaderColumn dataField="firstName"       className="table-header-bg" dataSort>
+												<TableHeaderColumn dataField="fullName"       className="table-header-bg" dataSort>
 													  {strings.UserName}
 												</TableHeaderColumn>
 												<TableHeaderColumn

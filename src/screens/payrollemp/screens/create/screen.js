@@ -1903,7 +1903,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                     }
                                                                                                                     id="employeeDesignationId"
                                                                                                                     name="employeeDesignationId"
-                                                                                                                    placeholder={strings.Designation}
+                                                                                                                    placeholder={strings.Select + strings.Designation}
                                                                                                                     value={this.state.salaryDesignation}
                                                                                                                     onChange={(value) => {
                                                                                                                         props.handleChange('employeeDesignationId')(value);

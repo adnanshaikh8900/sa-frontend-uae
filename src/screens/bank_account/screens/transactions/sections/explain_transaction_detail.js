@@ -1716,6 +1716,19 @@ class ExplainTrasactionDetail extends React.Component {
                             ) {
                               errors.employeeId = "User is Required";
                             }
+                            console.log(values)
+                            if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
+                              if(values.expenseCategory && (values.expenseCategory.value === 34 || values.expenseCategory === 34)) {
+                                debugger
+                                const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
+                                  let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
+                                  return sum + num;
+                                }, 0);
+                                if (values.payrollListIds && values.payrollListIds.length > 0 && values.amount > sumOfPayrollAmounts) {
+                                  errors.amount = 'Transaction amount cannot be greater than payroll amount.';
+                                }
+                              }
+                            }
                             return errors;
                           }}
                           validationSchema={Yup.object().shape({
@@ -1978,8 +1991,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       }}
                                       value={props.values.amount}
                                       className={
-                                        props.errors.amount &&
-                                        props.touched.amount
+                                        props.errors.amount
                                           ? "is-invalid"
                                           : ""
                                       }
@@ -1991,7 +2003,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       }
                                     />
                                     {props.errors.amount &&
-                                      props.touched.amount && (
+                                      (
                                         <div className="invalid-feedback">
                                           {props.errors.amount}
                                         </div>

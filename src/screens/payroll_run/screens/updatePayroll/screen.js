@@ -20,7 +20,7 @@ import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import { ConfirmDeleteModal, LeavePage, Loader } from 'components';
-import {CommonActions} from 'services/global'
+import { CommonActions } from 'services/global'
 import { selectOptionsFactory } from 'utils'
 import * as EmployeeActions from '../../actions';
 import * as CreatePayrollActions from './actions';
@@ -481,8 +481,8 @@ class UpdatePayroll extends React.Component {
 
 	getAllPayrollEmployee = (startDate) => {
 		if (this.state.payrollId) {
-		var activeEmployee = [];
-		var employeePayPeriodlList = [];
+			var activeEmployee = [];
+			var employeePayPeriodlList = [];
 			this.props.employeeActions.getEmployeeListWithDetails().then((response) => {
 				if (response.status === 200) {
 					employeePayPeriodlList = response.data;
@@ -1009,9 +1009,7 @@ class UpdatePayroll extends React.Component {
 																	//   .required("Payroll Subject is required"),
 																	payrollDate: Yup.string()
 																		.required("Payroll date is required"),
-																		payrollApprover: Yup.string()
-																			// selectedRows: Yup.string()
-																			.required("Payroll Approver is required"),
+																	
 																	// selectedRows: Yup.string()
 																	//     .required("At least selection of one employee is required for create payroll"),
 																})}
@@ -1027,6 +1025,9 @@ class UpdatePayroll extends React.Component {
 																	}
 																	if (this.state.isPayrollSubjectNameExist === true) {
 																		errors.payrollSubject = "Payroll Subject Already Exists"
+																	}
+																	if(!this.state.payrollApprover){
+																		errors.payrollApprover = "Payroll Approver is required"
 																	}
 																	//   if(this.state.selectedRows && this.state.selectedRows.length===0)
 																	//   {
@@ -1052,7 +1053,7 @@ class UpdatePayroll extends React.Component {
 																		<Row>
 																			<Col >
 																				<FormGroup>
-																					<Label htmlFor="payrollSubject">	
+																					<Label htmlFor="payrollSubject">
 																						<span className="text-danger">* </span>
 																						{strings.payroll_subject}
 																					</Label>
@@ -1198,11 +1199,11 @@ class UpdatePayroll extends React.Component {
 																								: ''
 																						}
 																					/>
-																					{props.errors.payrollApprover &&(
+																					{props.errors.payrollApprover && (
 																						<div className="invalid-feedback">
 																							{props.errors.payrollApprover}
 																						</div>
-																						)}
+																					)}
 																				</FormGroup>
 																			</Col>
 																		</Row>

@@ -172,7 +172,7 @@ class PayrollRun extends React.Component {
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
 		console.log(userLabel, userValue, parseInt(row.payrollApprover))
 		if ((userLabel === "Payroll Generator" && userValue === parseInt(row.generatedBy)) && (row.status !== "Draft" && row.status !== "Rejected")) {
-			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
+			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id , user:'Generator' })
 		} else if ((userLabel === "Payroll Generator" && userValue === parseInt(row.generatedBy)) && (row.status === "Draft" || row.status === "Rejected")) {
 			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 		} else if ((userValue === row.payrollApprover && userLabel === "Payroll Approver") && (row.status !== "Draft" && row.status !== "Rejected")) {

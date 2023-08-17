@@ -1136,31 +1136,28 @@ class PayrollApproverScreen extends React.Component {
 																						{props.errors.comment}
 																					</div>
 																				)}
-																				{this.state.status && (this.state.status === "Approved" || this.state.status === "Rejected" || this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Draft" || this.state.status === "Voided") ?
-																					'' :
-																					(
-																						<Button
-																							color="primary"
-																							className="btn-square mt-4 "
-																							onClick={() => {
-																								if (this.state.comment == "")
-																									toast.error("Please Enter Reason")
-																								else
-																									this.rejectPayroll()
-																							}
-																							}
-																							title={
-																								this.state.comment == "" ? "Please Enter Reason" : ""
-																							}
-																						>
-																							<i class="fas fa-user-times mr-1"></i>
+																				{this.state.status && this.state.status === "Submitted" && this.props.location?.state?.user !== 'Generator' &&
+																					<Button
+																						color="primary"
+																						className="btn-square mt-4 "
+																						onClick={() => {
+																							if (this.state.comment == "")
+																								toast.error("Please Enter Reason")
+																							else
+																								this.rejectPayroll()
+																						}
+																						}
+																						title={
+																							this.state.comment == "" ? "Please Enter Reason" : ""
+																						}
+																					>
+																						<i class="fas fa-user-times mr-1"></i>
 
-																							Reject Payroll
-																						</Button>
-																					)
+																						Reject Payroll
+																					</Button>
 																				}
 
-																				{this.state.status === "Approved" && (
+																				{this.state.status === "Approved" && this.props.location?.state?.user !== 'Generator' && (
 
 																					<Button
 																						color="primary"
@@ -1185,23 +1182,18 @@ class PayrollApproverScreen extends React.Component {
 
 																		<Col>
 																			<ButtonGroup className="mt-5 pull-right ">
-																				{this.state.status && (this.state.status === "Approved" || this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Rejected" || this.state.status === "Draft" || this.state.status === "Voided") ?
-																					"" :
-																					(
-																						<Button
-																							type="button"
-																							color="primary"
-																							className="btn-square mt-5 pull-right "
-																							onClick={() =>
-																								this.approveAndRunPayroll()
-																							}
-																						>
-																							<i class="fas fa-bullseye mr-1"></i>
-																							Approve & Run Payroll
-																						</Button>
-																					)
-
-
+																				{this.state.status && this.state.status === "Submitted" && this.props.location?.state?.user !== 'Generator' &&
+																					<Button
+																						type="button"
+																						color="primary"
+																						className="btn-square mt-5 pull-right "
+																						onClick={() =>
+																							this.approveAndRunPayroll()
+																						}
+																					>
+																						<i class="fas fa-bullseye mr-1"></i>
+																						Approve & Run Payroll
+																					</Button>
 																				}
 																				<Button
 																					color="secondary"

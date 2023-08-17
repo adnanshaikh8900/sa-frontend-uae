@@ -20,9 +20,7 @@ import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import { ConfirmDeleteModal, LeavePage, Loader } from 'components';
-import {
-	CommonActions
-} from 'services/global'
+import {CommonActions} from 'services/global'
 import { selectOptionsFactory } from 'utils'
 import * as EmployeeActions from '../../actions';
 import * as CreatePayrollActions from './actions';
@@ -1011,6 +1009,9 @@ class UpdatePayroll extends React.Component {
 																	//   .required("Payroll Subject is required"),
 																	payrollDate: Yup.string()
 																		.required("Payroll date is required"),
+																		payrollApprover: Yup.string()
+																			// selectedRows: Yup.string()
+																			.required("Payroll Approver is required"),
 																	// selectedRows: Yup.string()
 																	//     .required("At least selection of one employee is required for create payroll"),
 																})}
@@ -1051,7 +1052,10 @@ class UpdatePayroll extends React.Component {
 																		<Row>
 																			<Col >
 																				<FormGroup>
-																					<Label htmlFor="payrollSubject">	<span className="text-danger">* </span> Payroll Subject</Label>
+																					<Label htmlFor="payrollSubject">	
+																						<span className="text-danger">* </span>
+																						{strings.payroll_subject}
+																					</Label>
 																					<Input
 																						type="text"
 																						id="payrollSubject"
@@ -1079,7 +1083,7 @@ class UpdatePayroll extends React.Component {
 																				<FormGroup>
 																					<Label htmlFor="date">
 																						<span className="text-danger">* </span>
-																						Payroll Date
+																						{strings.payroll_date}
 																					</Label>
 																					<DatePicker
 																						id="payrollDate"
@@ -1144,16 +1148,15 @@ class UpdatePayroll extends React.Component {
 
 																			</Col>
 
-
 																			<Col >	<Label htmlFor="due_date">
-																				{/* <span className="text-danger">* </span> */}
-																				Payroll Approver
+																				<span className="text-danger">* </span>
+																				{strings.payroll_approver}
 																			</Label>
 																				<FormGroup>
 
 																					<Select
 																						isDisabled={this.disable() ? true : false}
-																						styles={customStyles}
+																						// styles={customStyles}
 																						id="userId"
 																						name="userId"
 																						value={
@@ -1171,7 +1174,7 @@ class UpdatePayroll extends React.Component {
 																										this.state.payrollApprover,
 																								)
 																						}
-																						placeholder={"Select Approver"}
+																						placeholder={strings.select_approver}
 																						options={
 																							approver_dropdown_list.data
 																								? selectOptionsFactory.renderOptions(
@@ -1182,17 +1185,24 @@ class UpdatePayroll extends React.Component {
 																								)
 																								: []
 																						}
-
 																						onChange={(option) => {
 																							if (option && option.value) {
 																								this.setState({ userId: option.value, payrollApprover: option.value, submitButton: false })
-
 																							} else
 																								this.setState({ userId: "", payrollApprover: "", submitButton: true })
-
 																						}}
+																						className={
+																							props.errors.payrollApprover &&
+																								props.touched.payrollApprover
+																								? 'is-invalid'
+																								: ''
+																						}
 																					/>
-
+																					{props.errors.payrollApprover &&(
+																						<div className="invalid-feedback">
+																							{props.errors.payrollApprover}
+																						</div>
+																						)}
 																				</FormGroup>
 																			</Col>
 																		</Row>

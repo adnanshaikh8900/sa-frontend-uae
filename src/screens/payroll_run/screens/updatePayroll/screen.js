@@ -1183,7 +1183,7 @@ class UpdatePayroll extends React.Component {
 																									'userId',
 																									approver_dropdown_list.data,
 																									'Approver',
-																								)
+																								).slice(1)
 																								: []
 																						}
 																						onChange={(option) => {

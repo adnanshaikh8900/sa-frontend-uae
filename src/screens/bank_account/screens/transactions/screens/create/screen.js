@@ -22,6 +22,7 @@ import moment from "moment";
 import * as transactionCreateActions from "./actions";
 import * as transactionActions from "../../actions";
 import * as detailBankAccountActions from "../../../detail/actions";
+import * as AllPayrollActions from "../../../../../payroll_run/actions";
 import * as CurrencyConvertActions from "../../../../../currencyConvert/actions";
 import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
@@ -54,6 +55,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     transactionActions: bindActionCreators(transactionActions, dispatch),
+    allPayrollActions: bindActionCreators(AllPayrollActions, dispatch),
     transactionCreateActions: bindActionCreators(
       transactionCreateActions,
       dispatch
@@ -134,6 +136,28 @@ class CreateBankTransaction extends React.Component {
           true
         );
       });
+    
+      const paginationData = {
+        pageNo: '',
+        pageSize: '',
+        paginationDisable: true,
+      };
+      const sortingData = {
+        order: '',
+        sortingCol: '',
+      };
+      const postData = { ...paginationData, ...sortingData };
+    
+    this.props.transactionCreateActions.getAllPayrollList(postData)
+    .then((res) => {
+        this.setState(
+          {
+            payrolldata: res.data
+          },
+          () => {}
+        );
+    })
+
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.setState({ id: this.props.location.state.bankAccountId, });
       this.props.detailBankAccountActions
@@ -625,8 +649,24 @@ class CreateBankTransaction extends React.Component {
             }
             id="payrollListIds"
             onChange={(option) => {
+              this.state.selectedPayrollListBank = []
               props.handleChange("payrollListIds")(option);
               this.payrollList(option);
+              // let selectedPayroll1 = []
+              if (option) {
+                option.map((i) => {
+                  const selectedPayroll = this.state.payrolldata.find((el) => el.id === i.value)
+                  this.state.selectedPayrollListBank.push(selectedPayroll)
+                  const uniqueArray = [];
+                  const seenIds = new Set();
+                  for (const obj of this.state.selectedPayrollListBank) {
+                    if (!seenIds.has(obj.id)) {
+                      uniqueArray.push(obj);
+                      seenIds.add(obj.id);
+                    }
+                  }
+                })
+              }
             }}
             className={
               props.errors.vatId &&
@@ -1325,12 +1365,18 @@ class CreateBankTransaction extends React.Component {
                           if (!values.transactionDate) {
                             errors.transactionDate = "Transaction Date is Required";
                           }
-                          if (
-                            date1 < date2
-                          ) {
-                            errors.transactionDate =
-                              "Transaction Date cannot be earlier than the payroll approval date.";
-                          }
+                          if (values.transactionDate)
+                            {
+                              this.state.selectedPayrollListBank.map((i) => {
+                                const dateObject = new Date(i.runDate);
+                                let payrollDate1 = moment(dateObject).format('DD-MM-YYYY')
+                                if (moment(values.transactionDate).format('DD-MM-YYYY') < payrollDate1)
+                                {
+                                  errors.transactionDate =
+                                    "Transaction Date cannot be earlier than the payroll approval date.";
+                                }
+                              })
+                            }
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({

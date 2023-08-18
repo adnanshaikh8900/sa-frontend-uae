@@ -1095,7 +1095,7 @@ class BankTransactions extends React.Component {
                         }
                         columns={columns}
                         expandRow={expandRow}
-                        noDataIndication="There is no data to display"
+                        noDataIndication="There are no records to display."
                         remote
                         fetchInfo={{
                           dataTotalSize: bank_transaction_list.count

@@ -660,7 +660,7 @@ const en = {
       CreditAmount: "Credit Amount",
       CreditNotes: " Tax Credit Notes",
       CREDITNOTE: "TAX CREDIT NOTE NUMBER",
-      AddCreditNote: "Add New Tax Credit Note",
+      AddCreditNote: "Add New Credit Note",
       CreateCreditNote: "Create Tax Credit Note",
       CreditNoteNumber: "Tax Credit Note Number",
       CreditNoteDate: "Tax Credit Note Date",

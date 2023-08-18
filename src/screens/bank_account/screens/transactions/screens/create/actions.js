@@ -55,3 +55,29 @@ export const getVatReportListForBank=(id)=>{
 			});
 	};
 }
+
+export const getAllPayrollList = (postObj) => {
+	let pageNo = postObj?.pageNo ? postObj.pageNo : '';
+	let pageSize = postObj?.pageSize ? postObj.pageSize : '';
+	let order = postObj?.order ? postObj.order : '';
+	let sortingCol = postObj?.sortingCol ? postObj.sortingCol : '';
+	let paginationDisable = postObj?.paginationDisable
+			? postObj.paginationDisable
+			: false;
+
+	let url = `/rest/payroll/getList?pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
+
+	return (dispatch) => {
+			let data = {
+					method: 'get',
+					url,
+			};
+			return authApi(data)
+					.then((res) => {
+						return res.data
+					})
+					.catch((err) => {
+							throw err;
+					});
+	};
+};

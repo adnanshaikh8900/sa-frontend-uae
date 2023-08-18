@@ -833,6 +833,7 @@ const en = {
       CreateCN: "Create CN",
 
       //Payroll 
+      Addpayroll: "Add New Payroll",
       PayrollConfigurations: "Payroll Config",
       Employees: "Employees",
       NewEmployee: "Add New Employee",

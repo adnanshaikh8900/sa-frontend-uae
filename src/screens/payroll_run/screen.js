@@ -736,7 +736,7 @@ class PayrollRun extends React.Component {
 																	>
 																		<i className="fas fa-plus mr-1" />
 
-																		{strings.create_pay_roll}
+																		{strings.Addpayroll}
 																	</Button>
 																	{/* <Button
 																color="primary"

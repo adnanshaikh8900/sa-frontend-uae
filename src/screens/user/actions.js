@@ -61,6 +61,22 @@ export const getRoleList = (obj) => {
 	};
 };
 
+export const getPayrollCount = (userId) => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/payroll/getPayrollCountByUserId?userId=${userId}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const getEmployeesNotInUserForDropdown = (obj) => {
 	return (dispatch) => {
 		let data = {

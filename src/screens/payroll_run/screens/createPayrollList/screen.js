@@ -106,6 +106,7 @@ class CreatePayrollList extends React.Component {
 			loadingMsg: "Loading...",
 			disableLeavePage: false,
 			isPayrollSubjectNameExist: false,
+			payrollApproverRequired: false,
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -362,7 +363,7 @@ class CreatePayrollList extends React.Component {
 							data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
 							data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
 
-							
+
 							const empList = employeePayPeriodlList.filter(obj => obj.employeeId === data.id)
 							if (empList && empList?.length > 0) {
 								let flag = true;
@@ -792,17 +793,15 @@ class CreatePayrollList extends React.Component {
 																		.required("Payroll subject is required"),
 																	payrollDate: Yup.string()
 																		.required("Payroll date is required"),
-																	payrollApprover: Yup.string()
-																		// selectedRows: Yup.string()
-																		.required("Payroll Approver is required"),
+																	// payrollApprover: Yup.string()
+																	// 	.required("Payroll Approver is required"),
 																})}
 																validate={(values) => {
 																	// let status = false
 																	let errors = {};
-
-																	// if (!values.payrollSubject) {
-																	// 	errors.payrollSubject = 'Payroll subject is required';
-																	// }
+																	if (this.state.payrollApproverRequired && !values.payrollApprover) {
+																		errors.payrollApprover = 'Payroll Approver is required';
+																	}
 																	if (!values.payrollDate) {
 																		errors.payrollDate = 'Payroll date is required';
 																	}
@@ -856,23 +855,22 @@ class CreatePayrollList extends React.Component {
 																								this.regExBoth.test(
 																									option.target.value,
 																								)
-																							) 
-																							props.handleChange('payrollSubject')(option.target.value);
+																							)
+																								props.handleChange('payrollSubject')(option.target.value);
 																							this.validatePayrollSubjectName(option.target.value)
 
 																						}}
 																						className={
-																							props.errors.payrollSubject &&
-																								props.touched.payrollSubject
+																							props.errors.payrollSubject
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																					{props.errors.payrollSubject &&(
-																							<div className="invalid-feedback">
-																								{props.errors.payrollSubject}
-																							</div>
-																						)}
+																					{props.errors.payrollSubject && (
+																						<div className="invalid-feedback">
+																							{props.errors.payrollSubject}
+																						</div>
+																					)}
 																				</FormGroup>
 																			</Col>
 																			<Col>
@@ -968,33 +966,34 @@ class CreatePayrollList extends React.Component {
 																								: []
 																						}
 																						onChange={(option) => {
-																							if (option && option.value) {
-																								props.handleChange('payrollApprover')(option);
-																								this.setState({
-																									userId: option.value,
-																									submitButton: false
-																								})
-																							}
-																							else {
-																								props.handleChange('payrollApprover')('');
-																								this.setState({
-																									userId: '',
-																									submitButton: true
-																								})
-																							}
+																							this.setState({ payrollApproverRequired: false }, () => {
+																								if (option && option.value) {
+																									props.handleChange('payrollApprover')(option);
+																									this.setState({
+																										userId: option.value,
+																										submitButton: false
+																									})
+																								}
+																								else {
+																									props.handleChange('payrollApprover')('');
+																									this.setState({
+																										userId: '',
+																										submitButton: true
+																									})
+																								}
+																							})
 																						}}
 																						className={
-																							props.errors.payrollApprover &&
-																								props.touched.payrollApprover
+																							props.errors.payrollApprover
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																					{props.errors.payrollApprover &&(
+																					{props.errors.payrollApprover && (
 																						<div className="invalid-feedback">
 																							{props.errors.payrollApprover}
 																						</div>
-																						)}
+																					)}
 																				</FormGroup>
 																			</Col>
 
@@ -1078,20 +1077,23 @@ class CreatePayrollList extends React.Component {
 																					color="primary"
 																					className="btn-square pull-right"
 																					onClick={() => {
-																						//  added validation popup  msg                                                                
-																						props.handleBlur();
-																						if (props.errors && Object.keys(props.errors).length != 0)
-																							this.props.commonActions.fillManDatoryDetails();
+																						this.setState({ payrollApproverRequired: true }, () => {
+																							//  added validation popup  msg                                                                
+																							props.handleBlur();
+																							if (props.errors && Object.keys(props.errors).length != 0)
+																								this.props.commonActions.fillManDatoryDetails();
 
-																						if (this.state.submitButton)
-																							toast.error(` Please select approver for payroll submission !`)
-																						else
-																							if (!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length != 0) {
-																								this.setState({ apiSelector: "createAndSubmitPayroll" })
-																								props.handleSubmit()
-																							}
+																							if (this.state.submitButton)
+																								toast.error(` Please select approver for payroll submission !`)
 																							else
-																								toast.error(` Please select at least one employee for payroll creation !`)
+																								if (!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length != 0) {
+																									this.setState({ apiSelector: "createAndSubmitPayroll" })
+																									props.handleSubmit()
+																								}
+																								else
+																									toast.error(` Please select at least one employee for payroll creation !`)
+																						})
+
 																					}}
 
 																					// disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
@@ -1108,16 +1110,18 @@ class CreatePayrollList extends React.Component {
 																				<Button type="button" color="primary" className="btn-square pull-right "
 																					onClick={
 																						() => {
-																							//  added validation popup  msg                                                                
-																							props.handleBlur();
-																							if (props.errors && Object.keys(props.errors).length != 0)
-																								this.props.commonActions.fillManDatoryDetails();
-																							if (this.state.selectedRows && this.state.selectedRows.length != 0) {
-																								this.setState({ apiSelector: "createPayroll" })
-																								props.handleSubmit()
-																							}
-																							else
-																								toast.error(` Please select at least one employee for payroll creation !`)
+																							this.setState({ payrollApproverRequired: false }, () => {
+																								//  added validation popup  msg                                                                
+																								props.handleBlur();
+																								if (props.errors && Object.keys(props.errors).length != 0)
+																									this.props.commonActions.fillManDatoryDetails();
+																								if (this.state.selectedRows && this.state.selectedRows.length != 0) {
+																									this.setState({ apiSelector: "createPayroll" })
+																									props.handleSubmit()
+																								}
+																								else
+																									toast.error(` Please select at least one employee for payroll creation !`)
+																							})
 
 																						}
 																					}

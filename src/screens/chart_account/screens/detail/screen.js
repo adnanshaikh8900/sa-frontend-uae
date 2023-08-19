@@ -253,6 +253,7 @@ class DetailChartAccount extends React.Component {
 			transactionCategoryName: data.transactionCategoryName,
 			chartOfAccount: data.chartOfAccount.value,
 			transactionCategoryId: id,
+			transactionCategoryDescription:data.chartOfAccount.label,
 		};
 		this.setState({ loading:true, loadingMsg:"Updating Chart Of Account..."});
 		this.props.detailChartOfAccontActions

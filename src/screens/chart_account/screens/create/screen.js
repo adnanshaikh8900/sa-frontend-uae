@@ -129,6 +129,8 @@ class CreateChartAccount extends React.Component {
 		const postData = {
 			transactionCategoryName: data.transactionCategoryName,
 			chartOfAccount: data.chartOfAccount.value,
+			//transactionCategoryId:data.chartOfAccount.value,
+			transactionCategoryDescription:data.chartOfAccount.label,
 		};
 		this.setState({ loading:true, loadingMsg:"Creating Chart Of Account ..."});
 		this.props.createChartOfAccontActions

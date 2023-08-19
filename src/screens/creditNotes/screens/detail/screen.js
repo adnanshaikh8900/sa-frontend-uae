@@ -1592,25 +1592,25 @@ class DetailCreditNote extends React.Component {
 														creditNoteDate: Yup.string().required(
 															'Tax credit note date is required',
 														),
-														// lineItemsString: Yup.array()
-														// 	.required(
-														// 		'Atleast one Tax Credit Note sub detail is mandatory',
-														// 	)
-														// 	.of(
-														// 		Yup.object().shape({
-														// 			quantity: Yup.string()
-														// 				.required('Value is required')
-														// 				.test(
-														// 					'quantity',
-														// 					'Quantity should be greater than 0',
-														// 					(value) => {
-														// 						if (value > 0) {
-														// 							return true;
-														// 						} else {
-														// 							return false;
-														// 						}
-														// 					},
-														// 				),
+														lineItemsString: Yup.array()
+															.required(
+																'Atleast one Tax Credit Note sub detail is mandatory',
+															)
+															.of(
+																Yup.object().shape({
+																	quantity: Yup.string()
+																		.required('Value is required')
+																		.test(
+																			'quantity',
+																			'Quantity should be greater than 0',
+																			(value) => {
+																				if (value > 0) {
+																					return true;
+																				} else {
+																					return false;
+																				}
+																			},
+																		),
 														// 			unitPrice: Yup.string()
 														// 				.required('Value is required')
 														// 				.test(
@@ -1630,8 +1630,8 @@ class DetailCreditNote extends React.Component {
 														// 			productId: Yup.string().required(
 														// 				'Product is required',
 														// 			),
-														// 		}),
-														// 	),
+																}),
+															),
 														attachmentFile: Yup.mixed()
 															.test(
 																'fileType',

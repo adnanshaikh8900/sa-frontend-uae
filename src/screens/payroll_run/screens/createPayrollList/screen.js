@@ -147,6 +147,7 @@ class CreatePayrollList extends React.Component {
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 		this.setState({ paidDays: diffDays });
 		this.getAllPayrollEmployee(startDate)
+		console.log(diffDays)
 	}
 
 	tableApiCallsOnStatus = () => {
@@ -475,7 +476,7 @@ class CreatePayrollList extends React.Component {
 												type="number"
 												min={30 - this.state.paidDays}
 												step="0.5"
-												max={30}
+												max={this.state.paidDays}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}
@@ -484,7 +485,7 @@ class CreatePayrollList extends React.Component {
 
 													let value = parseFloat(evt.target.value === "" ? "0" : evt.target.value);
 
-													if (value > 30 || value < 0) {
+													if (value > this.state.paidDays || value < 0) {
 														return;
 													}
 													this.updateAmounts(row, value);

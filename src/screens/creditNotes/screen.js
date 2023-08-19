@@ -743,10 +743,9 @@ class CreditNotes extends React.Component {
 			customer_invoice_list,
 			universal_currency_list,
 		} = this.props;
-		
 		const customer_invoice_data =
-		this.props.customer_invoice_list
-			? this.props.customer_invoice_list.map((customer) => ({
+		this.props.customer_invoice_list.data
+			? this.props.customer_invoice_list.data.map((customer) => ({
 						id: customer.id,
 						status: customer.status,
 						statusEnum: customer.statusEnum,
@@ -1076,7 +1075,6 @@ class CreditNotes extends React.Component {
 										<i className="fas fa-plus mr-1" />
 									        {strings.AddCreditNote}
 									</Button></div></Row>
-								{console.log("Asdasdas",customer_invoice_data)}
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}

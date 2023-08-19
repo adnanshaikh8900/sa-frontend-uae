@@ -89,7 +89,8 @@ class PayrollApproverScreen extends React.Component {
 				onSelectAll: this.onSelectAll,
 			},
 			currencyIsoCode: "AED",
-			disableLeavePage: false
+			disableLeavePage: false,
+			currentTime: ''
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -296,8 +297,14 @@ class PayrollApproverScreen extends React.Component {
 		);
 	};
 	generateSifFile = () => {
+		const now = new Date();
+		const hours = now.getHours();
+		const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+		const minutes = now.getMinutes().toString().padStart(2, '0');
+		const seconds = now.getSeconds().toString().padStart(2, '0');
+		const currentTimeNow = `${formattedHours}:${minutes}:${seconds}`;
 		this.props.createPayrollActions
-			.generateSifFile(this.state.payroll_id, this.state.existEmpList)
+			.generateSifFile(this.state.payroll_id, this.state.existEmpList, currentTimeNow)
 			.then((res) => {
 				if (res.status === 200) {
 					const blob = new Blob([res.data[1]], { type: 'application/sif' });

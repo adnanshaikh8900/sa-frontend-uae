@@ -160,12 +160,12 @@ export const generatePayroll = (payrollId,string,date) => {
 	}
   }
 
-  export const generateSifFile = (payrollId,ids) => {
+  export const generateSifFile = (payrollId,ids,time) => {
 	
 	return (dispatch) => {
 	  let data = {
 		method: 'get',
-		url: `/rest/payroll/generteSifFile?payrollId=${payrollId}&id=${ids}`,
+		url: `/rest/payroll/generteSifFile?payrollId=${payrollId}&id=${ids}&currentTime=${time}`,
 		// data: obj
 	  }
 	  return authApi(data).then((res) => {

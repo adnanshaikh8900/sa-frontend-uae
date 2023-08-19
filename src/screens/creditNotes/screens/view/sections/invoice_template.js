@@ -175,7 +175,7 @@ class InvoiceTemplate extends Component {
 									<div className="mb-1 ml-2">
 									{invoiceData && contactData && (
 											contactData.countryId==229 ?
-											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
+											contactData.poBoxNumber ?(strings.POBox +": " +contactData.poBoxNumber ): ""
 											:contactData.postZipCode ? contactData.postZipCode : ""
 											)},&nbsp;
 									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + ", " : "")}

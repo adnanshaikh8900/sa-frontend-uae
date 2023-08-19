@@ -54,10 +54,12 @@ import {
 		let id=obj.id;
 		let salaryDate=obj.salaryDate;
 		let sendMail=obj.sendMail?obj.sendMail:false;
+		let startDate=obj.startDate;
+		let endDate=obj.endDate;
 	  let data = {
 		method: 'GET',
 		// url: `/rest/Salary/getSalariesByEmployeeId?id=${id}&salaryDate=${salaryDate}`
-		url: `/rest/Salary/getSalariesByEmployeeId?id=${id}&salaryDate=${salaryDate}&sendMail=${sendMail}`
+		url: `/rest/Salary/getSalariesByEmployeeId?id=${id}&salaryDate=${salaryDate}&sendMail=${sendMail}&startDate=${startDate}&endDate=${endDate}`
 		
 	  }
   

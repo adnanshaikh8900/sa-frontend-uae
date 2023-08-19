@@ -144,9 +144,15 @@ class ViewEmployee extends React.Component {
 					style={{ padding: '0px' }}
 					color="link"
 					onClick={() => {
-
+						const postData = {
+							id: this.props.location.state.id,
+							salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'),
+							sendMail: true,
+							startDate: '',
+							endDate: '',
+						};
 						this.props.employeeViewActions
-							.getSalarySlip({ id: this.props.location.state.id, salaryDate: moment(row.salaryDate).format('DD/MM/YYYY') })
+							.getSalarySlip(postData)
 							.then((res) => {
 								if (res.status === 200) {
 									// this.initializeData();
@@ -206,20 +212,31 @@ class ViewEmployee extends React.Component {
 					style={{ padding: '0px' }}
 					color="link"
 					onClick={() => {
+						let payPeriod = row.payPeriod
+						const [startDateString, endDateString] = payPeriod.split("-");
+						const startDate = startDateString.trim();
+						const endDate = endDateString.trim();
+						const postData = {
+							id: this.props.location.state.id,
+							salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'),
+							sendMail: true,
+							startDate: moment(startDate).format('DD-MM-YYYY'),
+							endDate: moment(endDate).format('DD-MM-YYYY'),
+						};
 						this.props.employeeViewActions
-							.getSalarySlip({ id: this.props.location.state.id, salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'), sendMail: true })
+							.getSalarySlip(postData)
 							.then((res) => {
 								if (res.status === 200) {
-									let payPeriod = res.data.payPeriod
-									const [startDateString, endDateString] = payPeriod.split("-");
-									const startDate = startDateString.trim();
-									const endDate = endDateString.trim();
-									const postData = {
-										employeeId: this.props.location.state.id,
-										startDate: moment(startDate).format('DD/MM/YYYY'),
-										endDate: moment(endDate).format('DD/MM/YYYY'),
-									};
-									console.log(postData);
+									// let payPeriod = res.data.payPeriod
+									// const [startDateString, endDateString] = payPeriod.split("-");
+									// const startDate = startDateString.trim();
+									// const endDate = endDateString.trim();
+									// const postData = {
+									// 	employeeId: this.props.location.state.id,
+									// 	startDate: moment(startDate).format('DD/MM/YYYY'),
+									// 	endDate: moment(endDate).format('DD/MM/YYYY'),
+									// };
+									// console.log(postData);
 									toast.success("Payslip Sent Successfully")
 								}
 							})

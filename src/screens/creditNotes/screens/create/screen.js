@@ -212,6 +212,7 @@ class CreateCreditNote extends React.Component {
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExCNNum = /[a-zA-Z0-9-/]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regDecimalP = /(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/;
 	}
@@ -1964,10 +1965,19 @@ if (invoiceNumber && invoiceNumber.value) {
 																		value={props.values.creditNoteNumber}
 																		onBlur={props.handleBlur('creditNoteNumber')}
 																		onChange={(option) => {
-																			props.handleChange('creditNoteNumber')(
-																				option,
+																			if (
+																				option.target.value === '' ||
+																				this.regExCNNum.test(
+																					option.target.value,
+																				)
+																			) {
+																				props.handleChange('creditNoteNumber')(
+																					option,
+																				);
+																			}
+																			this.validationCheck(
+																				option.target.value
 																			);
-																			this.validationCheck(option.target.value);
 																		}}
 																		className={
 																			props.errors.creditNoteNumber &&

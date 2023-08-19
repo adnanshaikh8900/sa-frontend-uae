@@ -544,7 +544,7 @@ discountType = (row) =>
 
 	validationCheck = (value) => {
 		const data = {
-			moduleType: 6,
+			moduleType: 28,
 			name: value,
 		};
 		this.props.creditNotesCreateActions

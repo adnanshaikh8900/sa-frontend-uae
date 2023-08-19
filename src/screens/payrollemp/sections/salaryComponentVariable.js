@@ -225,7 +225,7 @@ class SalaryComponentVariable extends React.Component {
 									if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount==""){
 										errors.flatAmount="Flat amount is required"
 									}else
-									if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount === 0){
+									if(values.flatAmount == 0){
 										errors.flatAmount="Flat Amount should be greater than zero"
 									}
 						}

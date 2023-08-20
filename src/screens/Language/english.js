@@ -681,6 +681,11 @@ const en = {
       Saving: "Saving",
       RemainingCredits: "Remaining Credits",
       BankClosingDate: "Bank Closing Date",
+      AmounttoRefund: "Amount to Refund",
+      RefundDate: "Refund Date",
+      RefundMode: "Refund Mode",
+      RefundFrom: "Refund From",
+      RefundNotes: "Notes",
 
       //ImportStatement
       ImportStatement: "Import Statement",

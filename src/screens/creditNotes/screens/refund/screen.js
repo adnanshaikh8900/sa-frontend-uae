@@ -104,6 +104,7 @@ class Refund extends React.Component {
 			disabled: false,
 			invoiceNumber:"-",
 			showInvoiceNumber:false,
+			receiptNumber:'',
 			loadingMsg:"Loading..."
 		};
 
@@ -166,7 +167,7 @@ class Refund extends React.Component {
 			this.props.cnActions.getCustomerList(this.state.contactType),
 		]);
 		this.getReceiptNo();
-		//INV number
+		//INV number & cn number
 		this.props.cnActions
 			.getInvoicesForCNById(this.props.location.state.id.id)
 			.then((res) => {
@@ -176,6 +177,7 @@ class Refund extends React.Component {
 					this.setState(
 						{
 							invoiceNumber: res.data[0].invoiceNumber,
+							receiptNumber:res.data[0].creditNoteNumber,
 							showInvoiceNumber:true
 						},
 						() => {	},
@@ -183,6 +185,7 @@ class Refund extends React.Component {
 				}
 			})
 	};
+	
 
 	getReceiptNo = () => {
 		this.props.CustomerRecordPaymentActions.getReceiptNo(
@@ -266,6 +269,7 @@ class Refund extends React.Component {
 			</Col>)
 		)
 	}
+	
 	handleSubmit = (data) => {
 		this.setState({ disabled: true });
 		const { invoiceId } = this.state;
@@ -438,6 +442,7 @@ class Refund extends React.Component {
 	};
 
 	render() {
+		
 		strings.setLanguage(this.state.language);
 		const { initValue, loading, dialog ,loadingMsg} = this.state;
 		const { pay_mode, customer_list, deposit_list } = this.props;
@@ -619,7 +624,7 @@ class Refund extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
 																			<span className="text-danger">* </span>{' '}
-																			 {strings.AmountPaid}
+																			 {strings.AmounttoRefund}
 																		</Label>
 																		<Input
 																			type="text"
@@ -637,7 +642,7 @@ class Refund extends React.Component {
 																					props.handleChange('amount')(option);
 																				}
 																			}}
-																			placeholder={strings.AmountPaid}
+																			placeholder={strings.AmounttoRefund}
 																			className={
 																				props.errors.amount &&
 																				props.touched.amount
@@ -661,12 +666,12 @@ class Refund extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">* </span>
-																			{strings.PaymentDate}
+																			{strings.RefundDate}
 																		</Label>
 																		<DatePicker
 																			id="receiptDate"
 																			name="receiptDate"
-																			placeholderText={strings.PaymentDate}
+																			placeholderText={strings.RefundDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
@@ -699,7 +704,7 @@ class Refund extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode">
 																			<span className="text-danger">* </span>{' '}
-																			 {strings.PaymentMode}
+																			 {strings.RefundMode}
 																		</Label>
 																		<Select
 																			options={
@@ -720,7 +725,7 @@ class Refund extends React.Component {
 																					props.handleChange('payMode')('');
 																				}
 																			}}
-																			placeholder={strings.Select+strings.PaymentMode}
+																			placeholder={strings.Select+strings.RefundMode}
 																			id="payMode"
 																			name="payMode"
 																			className={
@@ -742,7 +747,7 @@ class Refund extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="depositeTo">
 																			<span className="text-danger">* </span>{' '}
-																		      {strings.DepositFrom}
+																		      {strings.RefundFrom}
 																		</Label>
 																		<Select
 																			options={deposit_list}
@@ -756,7 +761,7 @@ class Refund extends React.Component {
 																					props.handleChange('depositeTo')('');
 																				}
 																			}}
-																			placeholder={strings.Select+strings.DepositFrom}
+																			placeholder={strings.Select+strings.RefundFrom}
 																			id="depositeTo"
 																			name="depositeTo"
 																			className={
@@ -780,7 +785,7 @@ class Refund extends React.Component {
 																<Row>
 																<Col lg={8}>
 																<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<Label htmlFor="notes">{strings.RefundNotes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "870px"}}
@@ -789,7 +794,7 @@ class Refund extends React.Component {
 																			name="notes"
 																			id="notes"
 																			rows="2"
-																			placeholder={strings.DeliveryNotes}
+																			placeholder={strings.RefundNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -807,7 +812,7 @@ class Refund extends React.Component {
 																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					value={props.values.receiptNumber}
+																					value={this.state.receiptNumber}
 																					placeholder={strings.ReceiptNumber}
 																					onChange={(value) => {
 																						props.handleChange('receiptNumber')(value);
@@ -910,7 +915,7 @@ class Refund extends React.Component {
 																	lg={12}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 															>
-																{console.log( this.props.location.state.id.dueAmount,this.state.amount,props.values.amount,props.errors)}
+																
 																<FormGroup className="text-right w-100">
 																		<Button
 																			type="submit"

@@ -714,6 +714,12 @@ const fr = {
       RECONCILEDURATION:"DURÉE DE RÉCONCILIATION",
       CLOSINGBALANCE:"Solde de clôture",
       RemainingCredits:"Crédits Restants",
+      BankClosingDate: "Bank Closing Date",
+      AmounttoRefund: "Montant à rembourser",
+      RefundDate: "Date de remboursement",
+      RefundMode: "Mode remboursement",
+      RefundFrom: "Remboursement De",
+      RefundNotes: "Remarques",
 
 //ImportStatement
       ImportStatement:"Déclaration d’importation",	       

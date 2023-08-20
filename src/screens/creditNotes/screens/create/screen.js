@@ -1958,7 +1958,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																		type="text"
 																		id="creditNoteNumber"
 																		name="creditNoteNumber"
-																		placeholder={strings.CreditNoteNumber}
+																		placeholder={strings.Enter+strings.CreditNoteNumber}
 																		value={props.values.creditNoteNumber}
 																		onBlur={props.handleBlur('creditNoteNumber')}
 																		onChange={(option) => {
@@ -2051,7 +2051,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																		styles={customStyles}
 																		id="taxTreatmentid"
 																		name="taxTreatmentid"
-																		placeholder='Tax Treatment'
+																		placeholder={strings.Select+strings.TaxTreatment}
 																		value={
 																		this.state.customer_taxTreatment_des
 																	 	
@@ -2236,7 +2236,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																	<DatePicker
 																		id="creditNoteDate"
 																		name="creditNoteDate"
-																		placeholderText={strings.CreditNoteDate}
+																		placeholderText={strings.Select+strings.CreditNoteDate}
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd-MM-yyyy"

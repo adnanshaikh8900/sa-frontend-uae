@@ -53,7 +53,6 @@ class SupplierModal extends React.Component {
 			// currency_list,
 			// country_list,
 		} = this.props;
-		console.log("inventoryList", inventory_list)
 		const { initValue } = this.state;
 		return (
 			<div className="contact-modal-screen">

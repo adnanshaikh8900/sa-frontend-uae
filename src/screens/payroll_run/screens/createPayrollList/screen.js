@@ -893,29 +893,28 @@ class CreatePayrollList extends React.Component {
 																							props.handleChange('payrollDate')(value);
 
 																						}}
-																						className={`form-control ${props.errors.payrollDate &&
-																							props.touched.payrollDate
+																						className={`form-control ${props.errors.payrollDate
 																							? 'is-invalid'
 																							: ''
 																							}`}
 																					/>
-																					{props.errors.payrollDate &&
-																						props.touched.payrollDate && (
-																							<div className="invalid-feedback">
-																								{props.errors.payrollDate}
-																							</div>
-																						)}
+																					{props.errors.payrollDate && (
+																						<div className="invalid-feedback">
+																							{props.errors.payrollDate}
+																						</div>
+																					)}
 																				</FormGroup>
 																			</Col>
 
 
 																			<Col  >
-																				<Label htmlFor="date">
-																					<span className="text-danger">* </span>
-																					{strings.pay_period}
-																				</Label>
+
 
 																				<FormGroup className="mb-3">
+																					<Label htmlFor="startDate">
+																						<span className="text-danger">* </span>
+																						{strings.pay_period}
+																					</Label>
 																					<DateRangePicker
 																						displayFormat="DD-MM-YYYY"
 																						endDate={this.state.endDate}
@@ -929,31 +928,29 @@ class CreatePayrollList extends React.Component {
 																						onFocusChange={this.handleFocusChange}
 																						startDate={this.state.startDate}
 																						startDateId="startDate"
-																						className={`form-control ${props.errors.startDate &&
-																							props.touched.startDate
+																						className={`form-control ${props.errors.startDate
 																							? 'is-invalid'
 																							: ''
 																							}`}
 																					/>
-																					{props.errors.startDate &&
-																						props.touched.startDate && (
-																							<div className="invalid-feedback">
-																								{props.errors.startDate}
-																							</div>
-																						)}
+																					{props.errors.startDate && (
+																						<div className="invalid-feedback">
+																							{props.errors.startDate}
+																						</div>
+																					)}
 																				</FormGroup>
 
 																			</Col>
 
-																			<Col >	<Label htmlFor="due_date">
-																				<span className="text-danger">* </span>
-																				{strings.payroll_approver}
-																			</Label>
+																			<Col >
 																				<FormGroup>
-
+																					<Label htmlFor="payrollApprover">
+																						<span className="text-danger">* </span>
+																						{strings.payroll_approver}
+																					</Label>
 																					<Select
-																						id="userId"
-																						name="userId"
+																						id="payrollApprover"
+																						name="payrollApprover"
 																						placeholder={strings.select_approver}
 																						value={props.values.payrollApprover}
 																						options={

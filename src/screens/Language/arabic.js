@@ -630,8 +630,13 @@ const ar = {
       Save:"حفظ",
       Saving:"إنقاذ",
       RemainingCredits:"الاعتمادات المتبقية",
-
-//ImportStatement
+      AmounttoRefund: "مبلغ الاسترداد",
+      RefundDate: "تاريخ الاسترداد",
+      RefundMode: "وضع رد الأموال",
+      RefundFrom: "رد من",
+      RefundNotes: "ملحوظات",
+      
+      //ImportStatement
       ImportStatement:"بيان الاستيراد",	       
       SelectFileToUpload:"حدد ملف للتحميل",	
       ParsingTemplate:"تحليل قالب",	

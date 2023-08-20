@@ -154,14 +154,7 @@ class DetailCreditNote extends React.Component {
 				.getTransactionCategoryListForSalesProduct('2')
 				.then((res) => {
 					if (res.status === 200) {
-						this.setState(
-							{
-								salesCategory: res.data,
-							},
-							() => {
-								console.log(this.state.salesCategory);
-							},
-						);
+						this.setState({salesCategory: res.data,});
 					}
 				});
 		} catch (err) {
@@ -220,7 +213,8 @@ class DetailCreditNote extends React.Component {
 										? res.data.contactPoNumber
 										: '',
 
-									currency: res.data.currencyCode ? res.data.currencyCode : '',
+										currency: res.data.currencyCode ? res.data.currencyCode : '',
+										currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 									exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName: res.data.currencyName ? res.data.currencyName : '',
 									// invoiceDueDate: res.data.invoiceDueDate
@@ -1163,65 +1157,35 @@ class DetailCreditNote extends React.Component {
 
 	handleSubmit = (data) => {
 
-		this.setState({ disabled: true });
+		this.setState({ disabled: true ,disableLeavePage: true});
 		const { current_customer_id, term } = this.state;
 		const {
 			receiptAttachmentDescription,
 			receiptNumber,
 			contact_po_number,
 			currency,
-			// invoiceDueDate,
 			invoiceDate,
 			contactId,
-			// project,
-			// placeOfSupplyId,
-			// exchangeRate,
 			invoice_number,
 			notes,
 			creditAmount,
-			discount,
-			discountType,
-			discountPercentage,
-			vatCategoryId
+			email,
+			exchangeRate,
 		} = data;
 
 		let formData = new FormData();
+		formData.append('email',email ? email : '',);
+
 		formData.append('type', 7);
 		formData.append('creditNoteId', current_customer_id);
-		formData.append(
-			'creditNoteNumber',
-			invoice_number !== null ? invoice_number : '',
-		);
-		formData.append(
-			'creditNoteDate',
-			typeof invoiceDate === 'string'
-				? moment(invoiceDate, 'DD-MM-YYYY').toDate()
-				: invoiceDate,
-		);
-		// formData.append(
-		// 	'invoiceDueDate',
-		// 	typeof invoiceDueDate === 'string'
-		// 		? moment(invoiceDueDate, 'DD-MM-YYYY').toDate()
-		// 		: invoiceDueDate,
-		// );
+		formData.append('creditNoteNumber',invoice_number !== null ? invoice_number : '',);
+		formData.append('creditNoteDate', typeof invoiceDate === 'string'? moment(invoiceDate, 'DD-MM-YYYY').toDate(): invoiceDate,);
 		formData.append('vatCategoryId', 2);
-		formData.append('exchangeRate', this.state.initValue.exchangeRate);
-
-		formData.append(
-			'receiptNumber',
-			receiptNumber !== null ? receiptNumber : '',
-		);
-		formData.append(
-			'contactPoNumber',
-			contact_po_number !== null ? contact_po_number : '',
-		);
-		formData.append(
-			'receiptAttachmentDescription',
-			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
-		);
+		formData.append('exchangeRate', exchangeRate);
+		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '',);
+		formData.append('contactPoNumber',contact_po_number !== null ? contact_po_number : '',);
+		formData.append('receiptAttachmentDescription',receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('notes', notes !== null ? notes : '');
-
-
 		formData.append('isCreatedWithoutInvoice', this.props.location.state.isCNWithoutProduct == true ? true : false);
 		if (this.props.location.state.isCNWithoutProduct == true)
 			formData.append('totalAmount', creditAmount);
@@ -1233,29 +1197,12 @@ class DetailCreditNote extends React.Component {
 			formData.append('discount', this.state.initValue.discount);
 			formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
 		}
-		// formData.append('exciseType', this.state.checked);
-		// formData.append('discountType', discountType);
-		// formData.append('term', term);
-		//formData.append('placeOfSupplyId',placeOfSupplyId.value);
-		// if (discountType === 'PERCENTAGE') {
-		// 	formData.append('discountPercentage', discountPercentage);
-		// }
 		if (contactId) {
-			formData.append('contactId', contactId);
+			formData.append('contactId', contactId ? contactId.value ? contactId.value : contactId : '');
 		}
 		if (currency && currency.value) {
 			formData.append('currencyCode', currency.value);
 		}
-		// if (placeOfSupplyId && placeOfSupplyId.value) {
-		// 	formData.append('placeOfSupplyId', placeOfSupplyId.value);
-		// }
-		// if (project) {
-		// 	formData.append('projectId', project);
-		// }
-		// if (this.uploadFile?.files?.[0]) {
-		// 	formData.append('attachmentFile', this.uploadFile?.files?.[0]);
-		// }
-
 		this.setState({ loading: true, loadingMsg: "Updating Credit Note..." });
 		this.props.creditNotesDetailActions
 			.UpdateCreditNotes(formData)
@@ -1269,10 +1216,10 @@ class DetailCreditNote extends React.Component {
 				this.setState({ loading: false, });
 			})
 			.catch((err) => {
-				this.setState({ disabled: false, disableLeavePage: true });
+				this.setState({loading: false, disabled: false, disableLeavePage: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Credit Note Updated Unsuccessfully'
+					err.data ? err.data?.message : 'Credit Note Updated Unsuccessfully'
 
 				);
 			});
@@ -1390,10 +1337,11 @@ class DetailCreditNote extends React.Component {
 	};
 
 	setExchange = (value) => {
+		debugger
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		this.formRef.current.setFieldValue('exchangeRate', result && result.length>0 ? result[0].exchangeRate : '', true);
 	};
 
 	deleteInvoice = () => {
@@ -1565,7 +1513,7 @@ class DetailCreditNote extends React.Component {
 															// invoiceNumber: Yup.string().required(
 															// 	'Invoice Number is required',
 															// ),
-															creditNoteNumber: Yup.string().required(
+															invoice_number: Yup.string().required(
 																'Tax credit note number is required',
 															),
 															contactId: Yup.string().required(
@@ -1579,7 +1527,7 @@ class DetailCreditNote extends React.Component {
 															// currency: Yup.string().required(
 															// 	'Currency is required',
 															// ),
-															creditNoteDate: Yup.string().required(
+															invoiceDate: Yup.string().required(
 																'Tax credit note date is required',
 															),
 															lineItemsString: Yup.array()
@@ -1717,6 +1665,7 @@ class DetailCreditNote extends React.Component {
 																						: []
 																				}
 																				value={
+																					props.values.contactId?.value ? props.values.contactId :
 																					tmpCustomer_list &&
 																					tmpCustomer_list.find(
 																						(option) =>
@@ -2033,12 +1982,7 @@ class DetailCreditNote extends React.Component {
 																							'currencyCode',
 																							currency_convert_list,
 																							'Currency',
-																						)
-																						.find(
-																							(option) =>
-																								option.value ===
-																								(this.state.currency ? +this.state.currency : +props.values.currency),
-																						)
+																						).find((option) =>option.value === +props.values.currencyCode,)
 																				}
 																				onChange={(option) =>
 																					props.handleChange('currencyCode')(
@@ -2815,11 +2759,10 @@ min="0"
 																				disabled={this.state.disabled}
 																				onClick={() => {
 																					//	added validation popup	msg
+																					console.log(props.errors, "ERROR")
 																					props.handleBlur();
 																					if (props.errors && Object.keys(props.errors).length != 0)
 																						this.props.commonActions.fillManDatoryDetails();
-
-
 																				}}
 																			>
 																				<i className="fa fa-dot-circle-o"></i> {this.state.disabled

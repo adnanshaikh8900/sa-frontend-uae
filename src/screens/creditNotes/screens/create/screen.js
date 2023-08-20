@@ -1113,9 +1113,7 @@ class CreateCreditNote extends React.Component {
 		const discountamount = (a) => {
 			discount = discount + a
 		}
-		console.log("119378127387192")
 		data.map((obj) => {
-		console.log(obj)
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
@@ -1232,48 +1230,14 @@ class CreateCreditNote extends React.Component {
 		const formData = new FormData();
 
 		formData.append('isCreatedWithoutInvoice', this.state.isCreatedWIWP);
+		formData.append('creditNoteNumber',creditNoteNumber ? this.state.prefix + creditNoteNumber : '',);
+		formData.append('email',email ? email : '',);
+		formData.append('creditNoteDate',creditNoteDate?moment(creditNoteDate, 'DD-MM-YYYY').toDate(): null,);
+		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '',);
 
-
-
-		// formData.append('invoiceNumber',this.state.referenceNumber !== null ? this.state.selectedData.referenceNumber : '');
-
-		formData.append(
-			'creditNoteNumber',
-			creditNoteNumber ? this.state.prefix + creditNoteNumber : '',
-		);
-		formData.append(
-			'email',
-			email ? email : '',
-		);
-		// formData.append(
-		// 	'invoiceDueDate',
-		// 	invoiceDueDate ? moment(invoiceDueDate, 'DD-MM-YYYY').toDate() : null,
-		// );
-		formData.append(
-			'creditNoteDate',
-			creditNoteDate
-				?
-				moment(creditNoteDate, 'DD-MM-YYYY')
-					.toDate()
-				: null,
-		);
-		formData.append(
-			'receiptNumber',
-			receiptNumber !== null ? receiptNumber : '',
-		);
-
-		formData.append(
-			'exchangeRate',
-			exchangeRate ? exchangeRate : '',
-		);
-		formData.append(
-			'contactPoNumber',
-			contact_po_number !== null ? contact_po_number : '',
-		);
-		formData.append(
-			'receiptAttachmentDescription',
-			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
-		);
+		formData.append('exchangeRate',exchangeRate ? exchangeRate : '',);
+		formData.append('contactPoNumber',contact_po_number !== null ? contact_po_number : '',);
+		formData.append('receiptAttachmentDescription',receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append('type', 7);
 		if (this.state.isCreatedWIWP === true)
@@ -1294,26 +1258,15 @@ class CreateCreditNote extends React.Component {
 
 			formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
 		}
-		// if (term && term.value) {
-		// 	formData.append('term', term.value);
-		// }
-
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
 		}
-		// if (placeOfSupplyId && placeOfSupplyId.value) {
-		// 	formData.append('placeOfSupplyId', placeOfSupplyId.value);
-		// }
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.customer_currency);
 		}
-		// if (project !== null && project.value) {
-		// 	formData.append('projectId', project.value);
-		// }
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile?.files?.[0]) {
 			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
-
 		this.setState({ loading: true, loadingMsg: "Creating Credit Note..." });
 		this.props.creditNotesCreateActions
 			.createCreditNote(formData)

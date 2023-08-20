@@ -503,6 +503,7 @@ class DetailCreditNote extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+						<div class="input-group">
 						<Input
 							type="text"
 							min="0"
@@ -534,7 +535,9 @@ class DetailCreditNote extends React.Component {
 									? 'is-invalid'
 									: ''
 								}`}
-						/>
+						/>{row['productId'] != '' ?
+						<Input value={row['unitType']} disabled /> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -1879,31 +1882,31 @@ class DetailCreditNote extends React.Component {
 																				{strings.CreditNoteDate}
 																			</Label>
 																			<DatePicker
-																				id="invoiceDate"
-																				name="invoiceDate"
-																				placeholderText={strings.InvoiceDate}
+																				id="creditNoteDate"
+																				name="creditNoteDate"
+																				placeholderText={strings.Select+strings.CreditNoteDate}
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				minDate={new Date()}
 																				dropdownMode="select"
-																				value={props.values.invoiceDate}
+																				value={props.values.creditNoteDate}
 																				onChange={(value) => {
-																					props.handleChange('invoiceDate')(
+																					props.handleChange('creditNoteDate')(
 																						moment(value).format('DD-MM-YYYY'),
 																					);
 																					this.setDate(props, value);
 																				}}
-																				className={`form-control ${props.errors.invoiceDate &&
-																					props.touched.invoiceDate
+																				className={`form-control ${props.errors.creditNoteDate &&
+																					props.touched.creditNoteDate
 																					? 'is-invalid'
 																					: ''
 																					}`}
 																			/>
-																			{props.errors.invoiceDate &&
-																				props.touched.invoiceDate && (
+																			{props.errors.creditNoteDate &&
+																				props.touched.creditNoteDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.invoiceDate}
+																						{props.errors.creditNoteDate}
 																					</div>
 																				)}
 																		</FormGroup>
@@ -2220,7 +2223,7 @@ min="0"
 																			>
 																				{strings.QUANTITY}
 																			</TableHeaderColumn>
-																			<TableHeaderColumn
+																			{/* <TableHeaderColumn
 																				width="5%"
 																				dataField="unitType"
 																			>{strings.Unit}	<i
@@ -2234,7 +2237,7 @@ min="0"
 																				>
 																					Units / Measurements
 																				</UncontrolledTooltip>
-																			</TableHeaderColumn>
+																			</TableHeaderColumn> */}
 																			<TableHeaderColumn
 																				dataField="unitPrice"
 																				dataFormat={(cell, rows) =>

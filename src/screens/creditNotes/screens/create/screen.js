@@ -550,7 +550,7 @@ discountType = (row) =>
 		this.props.creditNotesCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number Already Exists') {
+				if (response.data === 'Credit Note Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1745,7 +1745,7 @@ if (invoiceNumber && invoiceNumber.value) {
 													 
 													if (exist === true) 
 													{
-														errors.creditNoteNumber ='Tax credit note number cannot be same';
+														errors.creditNoteNumber ='Tax Credit Note already exists';
 													}	
 													
 													if(this.state.isCreatedWIWP==false && !values.invoiceNumber)

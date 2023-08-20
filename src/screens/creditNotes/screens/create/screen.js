@@ -1113,15 +1113,16 @@ class CreateCreditNote extends React.Component {
 		const discountamount = (a) => {
 			discount = discount + a
 		}
+		console.log("119378127387192")
 		data.map((obj) => {
-
+		console.log(obj)
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
+			const vat = index !== '' && index >= 0 && vat_list[`${index}`] ? vat_list[`${index}`].vat : 0;
 
-			if (obj.taxType) {
+			if (!obj.isExciseTaxExclusive) {
 				const totalwithouttax = parseFloat(obj.unitPrice) * parseInt(obj.quantity)
 				const discounvalue = obj.discountType === 'PERCENTAGE' ?
 					(totalwithouttax * obj.discount) / 100 :
@@ -1744,7 +1745,6 @@ class CreateCreditNote extends React.Component {
 															if (this.state.isCreatedWIWP == false && !values.invoiceNumber) {
 																errors.invoiceNumber = 'Invoice number is required';
 															}
-															console.log(this.state.isCreatedWIWP, this.state.invoiceSelected, values.creditAmount)
 															if ((this.state.isCreatedWIWP && !this.state.invoiceSelected) && (!values.creditAmount || values.creditAmount < 1)) {
 																errors.creditAmount = 'Credit amount is required';
 															}

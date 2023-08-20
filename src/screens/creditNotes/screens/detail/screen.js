@@ -2010,6 +2010,7 @@ class DetailCreditNote extends React.Component {
 																				name="creditAmount"
 																				placeholder={strings.Enter + " Credit Amount"}
 																				value={props.values.creditAmount}
+																				disabled={true}
 																				// onBlur={props.handleBlur('currencyCode')}
 																				onChange={(value) => {
 																					props.handleChange('creditAmount')(

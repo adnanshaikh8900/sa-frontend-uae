@@ -538,7 +538,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
 						)} */}
-							 {(row.statusEnum === 'Paid'  && row.remainingInvoiceAmount !==true && config.INCOME_TCN)&& ( 
+							 {(!row.cnCreatedOnPaidInvoice && row.statusEnum === 'Paid'  && row.remainingInvoiceAmount !==true && config.INCOME_TCN)&& ( 
 							<DropdownItem
 							onClick={() => {
 							this.renderActionForState(row.id);

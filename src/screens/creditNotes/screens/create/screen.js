@@ -1304,6 +1304,7 @@ class CreateCreditNote extends React.Component {
 									discountType: '',
 									discount: 0,
 									discountPercentage: '',
+									total_excise:0,
 								},
 							},
 						},
@@ -1720,14 +1721,6 @@ class CreateCreditNote extends React.Component {
 															contactId: Yup.string().required(
 																'Customer name is required',
 															),
-															// contactId: Yup.string().required(
-															// 	'Customer is required',
-															// ),
-															// placeOfSupplyId: Yup.string().required('Place of supply is required'),
-															// term: Yup.string().required('Term is required'),
-															// currency: Yup.string().required(
-															// 	'Currency is required',
-															// ),
 															creditNoteDate: Yup.string().required(
 																'Tax credit note date is required',
 															),
@@ -3045,6 +3038,7 @@ min="0"
 																				disabled={this.state.disabled || (initValue.totalAmount > this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
 																				onClick={() => {
 																					//	added validation popup	msg
+																					console.log(props.errors)
 																					props.handleBlur();
 																					if (props.errors && Object.keys(props.errors).length != 0)
 																						this.props.commonActions.fillManDatoryDetails();

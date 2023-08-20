@@ -154,7 +154,7 @@ class DetailCreditNote extends React.Component {
 				.getTransactionCategoryListForSalesProduct('2')
 				.then((res) => {
 					if (res.status === 200) {
-						this.setState({salesCategory: res.data,});
+						this.setState({ salesCategory: res.data, });
 					}
 				});
 		} catch (err) {
@@ -213,8 +213,8 @@ class DetailCreditNote extends React.Component {
 										? res.data.contactPoNumber
 										: '',
 
-										currency: res.data.currencyCode ? res.data.currencyCode : '',
-										currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+									currency: res.data.currencyCode ? res.data.currencyCode : '',
+									currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 									exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName: res.data.currencyName ? res.data.currencyName : '',
 									// invoiceDueDate: res.data.invoiceDueDate
@@ -401,8 +401,7 @@ class DetailCreditNote extends React.Component {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
 						placeholder={strings.Description}
-						className={`form-control 
-            ${props.errors.lineItemsString &&
+						className={`form-control  ${props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].description &&
 								Object.keys(props.touched).length > 0 &&
@@ -1157,7 +1156,7 @@ class DetailCreditNote extends React.Component {
 
 	handleSubmit = (data) => {
 
-		this.setState({ disabled: true ,disableLeavePage: true});
+		this.setState({ disabled: true, disableLeavePage: true });
 		const { current_customer_id, term } = this.state;
 		const {
 			receiptAttachmentDescription,
@@ -1174,17 +1173,17 @@ class DetailCreditNote extends React.Component {
 		} = data;
 
 		let formData = new FormData();
-		formData.append('email',email ? email : '',);
+		formData.append('email', email ? email : '',);
 
 		formData.append('type', 7);
 		formData.append('creditNoteId', current_customer_id);
-		formData.append('creditNoteNumber',invoice_number !== null ? invoice_number : '',);
-		formData.append('creditNoteDate', typeof invoiceDate === 'string'? moment(invoiceDate, 'DD-MM-YYYY').toDate(): invoiceDate,);
+		formData.append('creditNoteNumber', invoice_number !== null ? invoice_number : '',);
+		formData.append('creditNoteDate', typeof invoiceDate === 'string' ? moment(invoiceDate, 'DD-MM-YYYY').toDate() : invoiceDate,);
 		formData.append('vatCategoryId', 2);
 		formData.append('exchangeRate', exchangeRate);
-		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '',);
-		formData.append('contactPoNumber',contact_po_number !== null ? contact_po_number : '',);
-		formData.append('receiptAttachmentDescription',receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
+		formData.append('receiptNumber', receiptNumber !== null ? receiptNumber : '',);
+		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
+		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append('isCreatedWithoutInvoice', this.props.location.state.isCNWithoutProduct == true ? true : false);
 		if (this.props.location.state.isCNWithoutProduct == true)
@@ -1216,7 +1215,7 @@ class DetailCreditNote extends React.Component {
 				this.setState({ loading: false, });
 			})
 			.catch((err) => {
-				this.setState({loading: false, disabled: false, disableLeavePage: false });
+				this.setState({ loading: false, disabled: false, disableLeavePage: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data?.message : 'Credit Note Updated Unsuccessfully'
@@ -1337,11 +1336,10 @@ class DetailCreditNote extends React.Component {
 	};
 
 	setExchange = (value) => {
-		debugger
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-		this.formRef.current.setFieldValue('exchangeRate', result && result.length>0 ? result[0].exchangeRate : '', true);
+		this.formRef.current.setFieldValue('exchangeRate', result && result.length > 0 ? result[0].exchangeRate : '', true);
 	};
 
 	deleteInvoice = () => {
@@ -1497,8 +1495,7 @@ class DetailCreditNote extends React.Component {
 															if (this.state.isCreatedWIWP == false && !values.invoiceNumber) {
 																errors.invoiceNumber = 'Invoice number is required';
 															}
-
-															if ((this.state.isCreatedWIWP && !this.state.invoiceSelected) && values.creditAmount < 1) {
+															if (values.creditAmount < 1 || !values.creditAmount) {
 																errors.creditAmount = 'Credit amount is required';
 															}
 															if (this.state.invoiceSelected && !this.state.isCreatedWIWP && this.state.initValue.totalAmount > this.state.remainingInvoiceAmount) {
@@ -1530,11 +1527,7 @@ class DetailCreditNote extends React.Component {
 															invoiceDate: Yup.string().required(
 																'Tax credit note date is required',
 															),
-															lineItemsString: Yup.array()
-																.required(
-																	'Atleast one Tax Credit Note sub detail is mandatory',
-																)
-																.of(
+															lineItemsString: Yup.array().of(
 																	Yup.object().shape({
 																		quantity: Yup.string()
 																			.required('Value is required')
@@ -1666,12 +1659,12 @@ class DetailCreditNote extends React.Component {
 																				}
 																				value={
 																					props.values.contactId?.value ? props.values.contactId :
-																					tmpCustomer_list &&
-																					tmpCustomer_list.find(
-																						(option) =>
-																							option.value ===
-																							+props.values.contactId,
-																					)
+																						tmpCustomer_list &&
+																						tmpCustomer_list.find(
+																							(option) =>
+																								option.value ===
+																								+props.values.contactId,
+																						)
 																				}
 																				onChange={(option) => {
 																					if (option && option.value) {
@@ -1982,7 +1975,7 @@ class DetailCreditNote extends React.Component {
 																							'currencyCode',
 																							currency_convert_list,
 																							'Currency',
-																						).find((option) =>option.value === +props.values.currencyCode,)
+																						).find((option) => option.value === +props.values.currencyCode,)
 																				}
 																				onChange={(option) =>
 																					props.handleChange('currencyCode')(
@@ -2160,7 +2153,7 @@ min="0"
 																</Col>
 															</Row> */}
 
-																{this.props.location.state.isCNWithoutProduct != true && (<Row>
+																{this.props.location.state.isCNWithoutProduct !== true && (<Row>
 																	{props.errors.lineItemsString &&
 																		typeof props.errors.lineItemsString ===
 																		'string' && (

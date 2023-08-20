@@ -1150,17 +1150,18 @@ class UpdatePayroll extends React.Component {
 
 																			</Col>
 
-																			<Col >	<Label htmlFor="due_date">
-																				<span className="text-danger">* </span>
-																				{strings.payroll_approver}
-																			</Label>
-																				<FormGroup>
+																			<Col >
 
+																				<FormGroup>
+																					<Label htmlFor="payrollApprover">
+																						<span className="text-danger">* </span>
+																						{strings.payroll_approver}
+																					</Label>
 																					<Select
 																						isDisabled={this.disable() ? true : false}
 																						// styles={customStyles}
-																						id="userId"
-																						name="userId"
+																						id="payrollApprover"
+																						name="payrollApprover"
 																						value={
 																							approver_dropdown_list.data &&
 																							selectOptionsFactory
@@ -1188,12 +1189,13 @@ class UpdatePayroll extends React.Component {
 																								: []
 																						}
 																						onChange={(option) => {
-																							this.setState({ payrollApproverRequired: false }, () => {
-																								if (option && option.value) {
-																									this.setState({ userId: option.value, payrollApprover: option.value, submitButton: false })
-																								} else
-																									this.setState({ userId: "", payrollApprover: "", submitButton: true })
-																							})
+																							debugger
+																							if (option && option.value) {
+																								this.setState({ payrollApproverRequired: false, userId: option.value, payrollApprover: option.value, submitButton: false })
+																							} else
+																								this.setState({ payrollApproverRequired: false, userId: "", payrollApprover: "", submitButton: true })
+
+																							props.handleChange('payrollApprover')(option);
 																						}}
 																						className={
 																							props.errors.payrollApprover &&
@@ -1202,11 +1204,12 @@ class UpdatePayroll extends React.Component {
 																								: ''
 																						}
 																					/>
-																					{props.errors.payrollApprover && (
-																						<div className="invalid-feedback">
-																							{props.errors.payrollApprover}
-																						</div>
-																					)}
+																					{props.errors.payrollApprover &&
+																						props.touched.payrollApprover && (
+																							<div className="invalid-feedback">
+																								{props.errors.payrollApprover}
+																							</div>
+																						)}
 																				</FormGroup>
 																			</Col>
 																		</Row>

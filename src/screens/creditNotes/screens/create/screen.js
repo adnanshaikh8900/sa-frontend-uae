@@ -237,43 +237,43 @@ class CreateCreditNote extends React.Component {
 		);
 	};
 
-	renderDescription = (cell, row, props) => {
-		let idx;
-		this.state.data.map((obj, index) => {
-			if (obj.id === row.id) {
-				idx = index;
-			}
-			return obj;
-		});
+	// renderDescription = (cell, row, props) => {
+	// 	let idx;
+	// 	this.state.data.map((obj, index) => {
+	// 		if (obj.id === row.id) {
+	// 			idx = index;
+	// 		}
+	// 		return obj;
+	// 	});
 
-		return (
-			<Field
-				name={`lineItemsString.${idx}.description`}
-				render={({ field, form }) => (
-					<Input
-						disabled
-						type="text"
-						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
-						onChange={(e) => {
-							this.selectItem(e.target.value, row, 'description', form, field);
-						}}
-						placeholder={strings.Description}
-						className={`form-control ${props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].description &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].description
-							? 'is-invalid'
-							: ''
-							}`}
-					/>
-				)}
-			/>
-		);
-	};
+	// 	return (
+	// 		<Field
+	// 			name={`lineItemsString.${idx}.description`}
+	// 			render={({ field, form }) => (
+	// 				<Input
+	// 					disabled
+	// 					type="text"
+	// 					maxLength="250"
+	// 					value={row['description'] !== '' ? row['description'] : ''}
+	// 					onChange={(e) => {
+	// 						this.selectItem(e.target.value, row, 'description', form, field);
+	// 					}}
+	// 					placeholder={strings.Description}
+	// 					className={`form-control ${props.errors.lineItemsString &&
+	// 						props.errors.lineItemsString[parseInt(idx, 10)] &&
+	// 						props.errors.lineItemsString[parseInt(idx, 10)].description &&
+	// 						Object.keys(props.touched).length > 0 &&
+	// 						props.touched.lineItemsString &&
+	// 						props.touched.lineItemsString[parseInt(idx, 10)] &&
+	// 						props.touched.lineItemsString[parseInt(idx, 10)].description
+	// 						? 'is-invalid'
+	// 						: ''
+	// 						}`}
+	// 				/>
+	// 			)}
+	// 		/>
+	// 	);
+	// };
 
 	renderQuantity = (cell, row, props) => {
 		let idx;
@@ -931,86 +931,112 @@ class CreateCreditNote extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
-					<Select
-						isDisabled
-						styles={customStyles}
-						options={
-							product_list
-								? selectOptionsFactory.renderOptions(
-									'name',
-									'id',
-									product_list,
-									'Product',
-								)
-								: []
-						}
-						id="productId"
-						placeholder={strings.Select + strings.Product}
-						onChange={(e) => {
-							if (e && e.label !== 'Select Product') {
-								this.selectItem(
-									e.value,
-									row,
-									'productId',
-									form,
-									field,
-									props,
-								);
-								this.prductValue(
-									e.value,
-									row,
-									'productId',
-									form,
-									field,
-									props,
-								);
-								// this.props.creditNotesActions.getInventoryByProductId(e.value).then((response) => {
-								// 	this.setState({
-								// 		inventoryList: response.data
-								// 	});
-								// 	if (response.data.length !== 0 && response.data.length !== 1) {
-								// 		this.openMultiSupplierProductModal(response);
-								// 	}
-								// });
-							} else {
-								form.setFieldValue(
-									`lineItemsString.${idx}.productId`,
-									e.value,
-									true,
-								);
-								this.setState({
-									data: [
-										{
-											id: 0,
-											description: '',
-											quantity: 1,
-											unitPrice: '',
-											vatCategoryId: '',
-											subTotal: 0,
-											productId: '',
-										},
-									],
-								});
+					<>
+						<Select
+							isDisabled
+							styles={customStyles}
+							options={
+								product_list
+									? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										product_list,
+										'Product',
+									)
+									: []
 							}
-						}}
-						value={
-							product_list && row.productId
-								? selectOptionsFactory
-									.renderOptions('name', 'id', product_list, 'Product')
-									.find((option) => option.value === +row.productId)
-								: []
-						}
-						className={`${props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].productId
-							? 'is-invalid'
-							: ''
-							}`}
-					/>
+							id="productId"
+							placeholder={strings.Select + strings.Product}
+							onChange={(e) => {
+								if (e && e.label !== 'Select Product') {
+									this.selectItem(
+										e.value,
+										row,
+										'productId',
+										form,
+										field,
+										props,
+									);
+									this.prductValue(
+										e.value,
+										row,
+										'productId',
+										form,
+										field,
+										props,
+									);
+									// this.props.creditNotesActions.getInventoryByProductId(e.value).then((response) => {
+									// 	this.setState({
+									// 		inventoryList: response.data
+									// 	});
+									// 	if (response.data.length !== 0 && response.data.length !== 1) {
+									// 		this.openMultiSupplierProductModal(response);
+									// 	}
+									// });
+								} else {
+									form.setFieldValue(
+										`lineItemsString.${idx}.productId`,
+										e.value,
+										true,
+									);
+									this.setState({
+										data: [
+											{
+												id: 0,
+												description: '',
+												quantity: 1,
+												unitPrice: '',
+												vatCategoryId: '',
+												subTotal: 0,
+												productId: '',
+											},
+										],
+									});
+								}
+							}}
+							value={
+								product_list && row.productId
+									? selectOptionsFactory
+										.renderOptions('name', 'id', product_list, 'Product')
+										.find((option) => option.value === +row.productId)
+									: []
+							}
+							className={`${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].productId
+								? 'is-invalid'
+								: ''
+								}`}
+
+						/>
+						<div className='mt-1'>
+							<Input
+								disabled
+								type="text"
+								maxLength="250"
+								value={row['description'] !== '' ? row['description'] : ''}
+								onChange={(e) => {
+									this.selectItem(e.target.value, row, 'description', form, field);
+								}}
+								placeholder={strings.Description}
+								className={`form-control ${props.errors.lineItemsString &&
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)].description &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)].description
+									? 'is-invalid'
+									: ''
+									}`}
+							/>
+						</div>
+
+					</>
 				)}
 			/>
 		);
@@ -1662,7 +1688,7 @@ class CreateCreditNote extends React.Component {
 										<Row>
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
-												<i className="nav-icon fas fa-donate" />
+													<i className="nav-icon fas fa-donate" />
 													<span className="ml-2">{strings.CreateCreditNote}</span>
 												</div>
 											</Col>
@@ -2524,20 +2550,20 @@ min="0"
 																				{strings.PRODUCT}
 																			</TableHeaderColumn>
 																			{/* <TableHeaderColumn
-																		width="55"
-																		dataAlign="center"
-																		dataFormat={(cell, rows) =>
-																			this.renderAddProduct(cell, rows, props)
-																		}
-																	></TableHeaderColumn> */}
-																			<TableHeaderColumn
+																				width="55"
+																				dataAlign="center"
+																				dataFormat={(cell, rows) =>
+																					this.renderAddProduct(cell, rows, props)
+																				}
+																			></TableHeaderColumn> */}
+																			{/* <TableHeaderColumn
 																				dataField="description"
 																				dataFormat={(cell, rows) =>
 																					this.renderDescription(cell, rows, props)
 																				}
 																			>
 																				{strings.DESCRIPTION}
-																			</TableHeaderColumn>
+																			</TableHeaderColumn> */}
 																			<TableHeaderColumn
 																				dataField="quantity"
 																				dataFormat={(cell, rows) =>

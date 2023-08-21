@@ -379,43 +379,43 @@ class DetailCreditNote extends React.Component {
 		});
 	};
 
-	renderDescription = (cell, row, props) => {
-		let idx;
-		this.state.data.map((obj, index) => {
-			if (obj.id === row.id) {
-				idx = index;
-			}
-			return obj;
-		});
+	// renderDescription = (cell, row, props) => {
+	// 	let idx;
+	// 	this.state.data.map((obj, index) => {
+	// 		if (obj.id === row.id) {
+	// 			idx = index;
+	// 		}
+	// 		return obj;
+	// 	});
 
-		return (
-			<Field
-				name={`lineItemsString.${idx}.description`}
-				render={({ field, form }) => (
-					<Input
-						disabled
-						type="text"
-						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
-						onChange={(e) => {
-							this.selectItem(e.target.value, row, 'description', form, field);
-						}}
-						placeholder={strings.Description}
-						className={`form-control  ${props.errors.lineItemsString &&
-								props.errors.lineItemsString[parseInt(idx, 10)] &&
-								props.errors.lineItemsString[parseInt(idx, 10)].description &&
-								Object.keys(props.touched).length > 0 &&
-								props.touched.lineItemsString &&
-								props.touched.lineItemsString[parseInt(idx, 10)] &&
-								props.touched.lineItemsString[parseInt(idx, 10)].description
-								? 'is-invalid'
-								: ''
-							}`}
-					/>
-				)}
-			/>
-		);
-	};
+	// 	return (
+	// 		<Field
+	// 			name={`lineItemsString.${idx}.description`}
+	// 			render={({ field, form }) => (
+	// 				<Input
+	// 					disabled
+	// 					type="text"
+	// 					maxLength="250"
+	// 					value={row['description'] !== '' ? row['description'] : ''}
+	// 					onChange={(e) => {
+	// 						this.selectItem(e.target.value, row, 'description', form, field);
+	// 					}}
+	// 					placeholder={strings.Description}
+	// 					className={`form-control  ${props.errors.lineItemsString &&
+	// 							props.errors.lineItemsString[parseInt(idx, 10)] &&
+	// 							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+	// 							Object.keys(props.touched).length > 0 &&
+	// 							props.touched.lineItemsString &&
+	// 							props.touched.lineItemsString[parseInt(idx, 10)] &&
+	// 							props.touched.lineItemsString[parseInt(idx, 10)].description
+	// 							? 'is-invalid'
+	// 							: ''
+	// 						}`}
+	// 				/>
+	// 			)}
+	// 		/>
+	// 	);
+	// };
 
 	renderExcise = (cell, row, props) => {
 		const { excise_list } = this.props;
@@ -504,39 +504,39 @@ class DetailCreditNote extends React.Component {
 				render={({ field, form }) => (
 					<div>
 						<div class="input-group">
-						<Input
-							type="text"
-							min="0"
-							maxLength="10"
-							value={row['quantity'] !== 0 ? row['quantity'] : 0}
-							onChange={(e) => {
-								if (e.target.value === '' || this.regEx.test(e.target.value)) {
-									this.selectItem(
-										e.target.value,
-										row,
-										'quantity',
-										form,
-										field,
-										props,
-									);
-								}
-							}}
-							placeholder={strings.Quantity}
-							className={`form-control 
+							<Input
+								type="text"
+								min="0"
+								maxLength="10"
+								value={row['quantity'] !== 0 ? row['quantity'] : 0}
+								onChange={(e) => {
+									if (e.target.value === '' || this.regEx.test(e.target.value)) {
+										this.selectItem(
+											e.target.value,
+											row,
+											'quantity',
+											form,
+											field,
+											props,
+										);
+									}
+								}}
+								placeholder={strings.Quantity}
+								className={`form-control 
            						${props.errors.lineItemsString &&
-									props.errors.lineItemsString[parseInt(idx, 10)] &&
-									props.errors.lineItemsString[parseInt(idx, 10)]
-										.quantity &&
-									Object.keys(props.touched).length > 0 &&
-									props.touched.lineItemsString &&
-									props.touched.lineItemsString[parseInt(idx, 10)] &&
-									props.touched.lineItemsString[parseInt(idx, 10)]
-										.quantity
-									? 'is-invalid'
-									: ''
-								}`}
-						/>{row['productId'] != '' ?
-						<Input value={row['unitType']} disabled /> : ''}
+										props.errors.lineItemsString[parseInt(idx, 10)] &&
+										props.errors.lineItemsString[parseInt(idx, 10)]
+											.quantity &&
+										Object.keys(props.touched).length > 0 &&
+										props.touched.lineItemsString &&
+										props.touched.lineItemsString[parseInt(idx, 10)] &&
+										props.touched.lineItemsString[parseInt(idx, 10)]
+											.quantity
+										? 'is-invalid'
+										: ''
+									}`}
+							/>{row['productId'] != '' ?
+								<Input value={row['unitType']} disabled /> : ''}
 						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -942,43 +942,67 @@ class DetailCreditNote extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
-					<Select
-						styles={customStyles}
-						isDisabled
-						options={
-							product_list
-								? selectOptionsFactory.renderOptions(
-									'name',
-									'id',
-									product_list,
-									'Product',
-								)
-								: []
-						}
-						value={
-							product_list &&
-							selectOptionsFactory
-								.renderOptions('name', 'id', product_list, 'Product')
-								.find((option) => option.value === +row.productId)
-						}
-						id="productId"
-						onChange={(e) => {
-							if (e && e.label !== 'Select Product') {
-								this.selectItem(e.value, row, 'productId', form, field, props);
-								this.prductValue(e.value, row, 'productId', form, field, props);
+					<>
+						<Select
+							styles={customStyles}
+							isDisabled
+							options={
+								product_list
+									? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										product_list,
+										'Product',
+									)
+									: []
 							}
-						}}
-						className={`${props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].productId
-							? 'is-invalid'
-							: ''
-							}`}
-					/>
+							value={
+								product_list &&
+								selectOptionsFactory
+									.renderOptions('name', 'id', product_list, 'Product')
+									.find((option) => option.value === +row.productId)
+							}
+							id="productId"
+							onChange={(e) => {
+								if (e && e.label !== 'Select Product') {
+									this.selectItem(e.value, row, 'productId', form, field, props);
+									this.prductValue(e.value, row, 'productId', form, field, props);
+								}
+							}}
+							className={`${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].productId
+								? 'is-invalid'
+								: ''
+								}`}
+						/>
+						<div className='mt-1'>
+							<Input
+								disabled
+								type="text"
+								maxLength="250"
+								value={row['description'] !== '' ? row['description'] : ''}
+								onChange={(e) => {
+									this.selectItem(e.target.value, row, 'description', form, field);
+								}}
+								placeholder={strings.Description}
+								className={`form-control  ${props.errors.lineItemsString &&
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)].description &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)].description
+									? 'is-invalid'
+									: ''
+									}`}
+							/>
+						</div>
+					</>
 				)}
 			/>
 		);
@@ -1530,41 +1554,41 @@ class DetailCreditNote extends React.Component {
 																'Tax credit note date is required',
 															),
 															lineItemsString: Yup.array().of(
-																	Yup.object().shape({
-																		quantity: Yup.string()
-																			.required('Value is required')
-																			.test(
-																				'quantity',
-																				'Quantity should be greater than 0',
-																				(value) => {
-																					if (value > 0) {
-																						return true;
-																					} else {
-																						return false;
-																					}
-																				},
-																			),
-																		// 			unitPrice: Yup.string()
-																		// 				.required('Value is required')
-																		// 				.test(
-																		// 					'Unit Price',
-																		// 					'Unit Price Should be Greater than 1',
-																		// 					(value) => {
-																		// 						if (value > 0) {
-																		// 							return true;
-																		// 						} else {
-																		// 							return false;
-																		// 						}
-																		// 					},
-																		// 				),
-																		// 			vatCategoryId: Yup.string().required(
-																		// 				'Value is required',
-																		// 			),
-																		// 			productId: Yup.string().required(
-																		// 				'Product is required',
-																		// 			),
-																	}),
-																),
+																Yup.object().shape({
+																	quantity: Yup.string()
+																		.required('Value is required')
+																		.test(
+																			'quantity',
+																			'Quantity should be greater than 0',
+																			(value) => {
+																				if (value > 0) {
+																					return true;
+																				} else {
+																					return false;
+																				}
+																			},
+																		),
+																	// 			unitPrice: Yup.string()
+																	// 				.required('Value is required')
+																	// 				.test(
+																	// 					'Unit Price',
+																	// 					'Unit Price Should be Greater than 1',
+																	// 					(value) => {
+																	// 						if (value > 0) {
+																	// 							return true;
+																	// 						} else {
+																	// 							return false;
+																	// 						}
+																	// 					},
+																	// 				),
+																	// 			vatCategoryId: Yup.string().required(
+																	// 				'Value is required',
+																	// 			),
+																	// 			productId: Yup.string().required(
+																	// 				'Product is required',
+																	// 			),
+																}),
+															),
 															attachmentFile: Yup.mixed()
 																.test(
 																	'fileType',
@@ -1883,7 +1907,7 @@ class DetailCreditNote extends React.Component {
 																			<DatePicker
 																				id="invoiceDate"
 																				name="invoiceDate"
-																				placeholderText={strings.Select+strings.CreditNoteDate}
+																				placeholderText={strings.Select + strings.CreditNoteDate}
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
@@ -2197,13 +2221,13 @@ min="0"
 																				{strings.PRODUCT}
 																			</TableHeaderColumn>
 																			{/* <TableHeaderColumn
-																		width="55"
-																		dataAlign="center"
-																		dataFormat={(cell, rows) =>
-																			this.renderAddProduct(cell, rows, props)
-																		}
-																	></TableHeaderColumn> */}
-																			<TableHeaderColumn
+																				width="55"
+																				dataAlign="center"
+																				dataFormat={(cell, rows) =>
+																					this.renderAddProduct(cell, rows, props)
+																				}
+																			></TableHeaderColumn> */}
+																			{/* <TableHeaderColumn
 																				dataField="description"
 																				dataFormat={(cell, rows) =>
 																					this.renderDescription(
@@ -2214,7 +2238,7 @@ min="0"
 																				}
 																			>
 																				{strings.DESCRIPTION}
-																			</TableHeaderColumn>
+																			</TableHeaderColumn> */}
 																			<TableHeaderColumn
 																				dataField="quantity"
 																				dataFormat={(cell, rows) =>

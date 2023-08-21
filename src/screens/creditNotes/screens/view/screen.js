@@ -274,14 +274,7 @@ class ViewCreditNote extends React.Component {
 														}
 													/> : 0}</td>
 
-													<td align="right">{item.totalVatAmount ? <Currency
-														value={item.totalVatAmount}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/> : 0}</td>
+													<td align="right">{currencyData?.currencyIsoCode} AED {item.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
 
 												</tr>
 											);

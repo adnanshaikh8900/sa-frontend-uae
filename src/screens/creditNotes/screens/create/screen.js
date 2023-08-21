@@ -442,7 +442,7 @@ class CreateCreditNote extends React.Component {
 								}}
 								placeholder={strings.discount}
 								className={`form-control 
-	   ${props.errors.lineItemsString &&
+	  									${props.errors.lineItemsString &&
 										props.errors.lineItemsString[parseInt(idx, 10)] &&
 										props.errors.lineItemsString[parseInt(idx, 10)].discount &&
 										Object.keys(props.touched).length > 0 &&
@@ -1137,50 +1137,58 @@ class CreateCreditNote extends React.Component {
 			discount = discount + a
 		}
 		data.map((obj) => {
-
+			let unitprice = parseFloat(obj.unitPrice);
+			var net_value = 0;
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' && index >= 0 && vat_list[`${index}`] ? vat_list[`${index}`].vat : 0;
+
+			const vat = index > -1 ? vat_list[`${index}`]?.vat : 0;
+
 			if (!obj.isExciseTaxExclusive) {
-				const totalwithouttax = parseFloat(obj.unitPrice) * parseInt(obj.quantity)
-				const discounvalue = obj.discountType === 'PERCENTAGE' ?
-					(totalwithouttax * obj.discount) / 100 :
-					obj.discountType === 'FIXED' && obj.discount
-				const totalAfterdiscount = totalwithouttax - discounvalue
+				if (obj.discountType === 'PERCENTAGE')
+					net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
+				else
+					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
 
-				const excisevalue = obj.exciseTaxId === 1 ? totalAfterdiscount / 2 : obj.exciseTaxId === 2 ? totalAfterdiscount : 0
-				const totalwithexcise = excisevalue + totalAfterdiscount
-				const vatvalue = (totalwithexcise * vat) / 100
+				const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
 
-				const finaltotalamount = totalwithexcise + vatvalue
-				totalnetamount(totalwithouttax)
+				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
+				net_value = parseFloat(net_value) + parseFloat(excisevalue);
+				const vat_amount = vat === 0 ? 0 : ((+net_value * vat) / 100);
+
+				totalnetamount(net_value-excisevalue)
 				totalexcise(excisevalue)
-				totalvalt(vatvalue)
-				totalamount(finaltotalamount)
-				discountamount(discounvalue)
-				obj.subTotal = totalwithouttax + vatvalue + excisevalue - discounvalue
-				obj.vatAmount = vatvalue
+				totalvalt(vat_amount)
+				totalamount(vat_amount + net_value)
+				discountamount(discount)
+				obj.subTotal = net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+				obj.vatAmount = vat_amount
 				obj.exciseAmount = excisevalue
 			} else {
-				const totalwithtaxandexcise = parseFloat(obj.unitPrice) * parseInt(obj.quantity)
-				const discounvalue = obj.discountType === 'PERCENTAGE' ?
-					(totalwithtaxandexcise * obj.discount) / 100 :
-					obj.discountType === 'FIXED' && obj.discount
-				const totalwitoutdiscount = totalwithtaxandexcise - discounvalue
-				const vatvalue = (totalwitoutdiscount * vat) / (100 + vat)
-				const totalwithoutvat = totalwitoutdiscount - vatvalue
-				const excisevalue = obj.exciseTaxId === 1 ? totalwithoutvat / 3 : obj.exciseTaxId === 2 ? totalwithoutvat / 2 : 0
-				const finaltotalamount = totalwithoutvat - excisevalue
-				totalnetamount(totalwithtaxandexcise - (discounvalue + excisevalue + vatvalue))
+				if (obj.discountType === 'PERCENTAGE')
+					net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
+				else
+					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
 
+				const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
+				//vat amount
+				const vat_amount =
+					(vat === 0 ? 0 :
+						((+net_value * (vat / (100 + vat) * 100)) / 100));
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount		
+				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
+
+				totalnetamount(net_value-excisevalue)
 				totalexcise(excisevalue)
-				totalvalt(vatvalue)
-				totalamount(totalwitoutdiscount)
-				discountamount(discounvalue)
-				obj.subTotal = totalwitoutdiscount
-				obj.vatAmount = vatvalue
+				totalvalt(vat_amount)
+				totalamount(vat_amount + net_value)
+				discountamount(discount)
+				obj.subTotal = net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+				obj.vatAmount = vat_amount
 				obj.exciseAmount = excisevalue
 			}
 
@@ -1724,7 +1732,7 @@ class CreateCreditNote extends React.Component {
 															if ((this.state.isCreatedWIWP) && (!values.creditAmount || values.creditAmount < 1)) {
 																errors.creditAmount = 'Credit amount is required';
 															}
-															if (this.state.invoiceSelected && !this.state.isCreatedWIWP && this.state.initValue.totalAmount > this.state.remainingInvoiceAmount) {
+															if (this.state.invoiceSelected && !this.state.isCreatedWIWP && parseFloat(parseFloat(this.state.initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount) {
 																errors.remainingInvoiceAmount = 'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
 															}
 															if (this.state.invoiceSelected && this.state.isCreatedWIWP && values.creditAmount > this.state.remainingInvoiceAmount) {
@@ -3064,7 +3072,7 @@ min="0"
 																				type="button"
 																				color="primary"
 																				className="btn-square mr-3"
-																				disabled={this.state.disabled || (initValue.totalAmount > this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
+																				disabled={this.state.disabled ||(parseFloat(parseFloat(initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
 																				onClick={() => {
 																					//	added validation popup	msg
 																					props.handleBlur();
@@ -3090,7 +3098,7 @@ min="0"
 																				color="primary"
 																				className="btn-square mr-3"
 
-																				disabled={this.state.disabled || (initValue.totalAmount > this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
+																				disabled={this.state.disabled || (parseFloat(parseFloat(initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
 																				onClick={() => {
 																					//	added validation popup	msg
 																					props.handleBlur();
@@ -3128,7 +3136,7 @@ min="0"
 																	</Col>
 																</Row>
 
-																{(initValue.totalAmount > this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP) && <div style={{ color: 'red' }}>Remaining Invoice Amount cananot less than Total Amount sdgsdg{this.state.isCreatedWithoutInvoice}</div>}
+																{(parseFloat(parseFloat(initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP) && <div style={{ color: 'red' }}>Remaining Invoice Amount cananot less than Total Amount sdgsdg{this.state.isCreatedWithoutInvoice}</div>}
 															</Form>
 														)}
 													</Formik>

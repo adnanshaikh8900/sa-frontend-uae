@@ -194,7 +194,7 @@ class DetailProduct extends React.Component {
 							loading: false,
 							current_product_id: this.props.location.state.id,
 							initValue: {
-								isInventoryEnabled : res.data.isInventoryEnabled ? res.data.isInventoryEnabled : '',
+								isInventoryEnabled : res.data.isInventoryEnabled ? res.data.isInventoryEnabled : false,
 								productName: res.data.productName ? res.data.productName : '',
 								productCode: res.data.productCode,
 								vatCategoryId: res.data.vatCategoryId
@@ -253,7 +253,7 @@ class DetailProduct extends React.Component {
 							exciseTaxCheck:res.data.exciseTaxId ?true :false,
 							// exciseType:res.data.exciseType ?true :false,
 							count:initCount,
-							isInventoryEnabled: res.data.isInventoryEnabled ? res.data.isInventoryEnabled : '',
+							isInventoryEnabled: res.data.isInventoryEnabled ? res.data.isInventoryEnabled : false,
 							selectedStatus: res.data.isActive ? true : false,
 							salesProductCheck:res.data.productType=="SERVICE" ? true : false,
 						},
@@ -317,10 +317,7 @@ renderName=(cell,row)=>{
 						this.setState(
 							{
 								salesCategory: res.data,
-							},
-							() => {
-								//console.log(this.state.salesCategory);
-							},
+							}
 						);
 					}
 				});
@@ -406,12 +403,11 @@ renderName=(cell,row)=>{
 		const inventoryQty = data['inventoryQty'];
 		const inventoryReorderLevel = data['inventoryReorderLevel'];
 		const contactId = data['contactId'];
-		const isInventoryEnabled = this.state.isInventoryEnabled ? this.state.isInventoryEnabled  : '';
+		const isInventoryEnabled = this.state.isInventoryEnabled ? this.state.isInventoryEnabled  : false;
 		const transactionCategoryId = this.state.inventoryAccount ? this.state.inventoryAccount[0].value : '';
 		const inventoryId = this.state.inventoryId;
 		const isActive = this.state.selectedStatus;
 		const productCategoryId = data['productCategoryId'].value ? data['productCategoryId'].value : data['productCategoryId'];
-		console.log(productCategoryId,"PRoductCategory ID");
 		// const exciseType = this.state.exciseType;
 		const unitTypeId=data["unitTypeId"];
 		let productPriceType;

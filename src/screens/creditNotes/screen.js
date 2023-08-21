@@ -403,6 +403,13 @@ class CreditNotes extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
+					{row.statusEnum === 'Open' && <DropdownItem
+							onClick={() =>
+								this.unPostInvoice(row)
+							}
+						>
+							<i className="fas fa-file" />  {strings.Draft}
+						</DropdownItem>}
 						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid'   && (
 							<DropdownItem>
 								<div
@@ -416,23 +423,7 @@ class CreditNotes extends React.Component {
 									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
-						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true  &&   (
-							<DropdownItem>
-								<div
-									onClick={() => {
-										
-										this.props.history.push(
-											'/admin/income/credit-notes/applyToInvoice',
-											{ contactId: row.contactId , creditNoteId: row.id ,
-											  referenceNumber:row.invoiceNumber,
-											  creditAmount:row.dueAmount},
-										);
-									}}
-								>
-									<i class="fas fa-file-invoice"></i>{strings.ApplyToInvoice}
-								</div>
-							</DropdownItem>
-						)}
+						)}	
 						{row.statusEnum == 'Draft'&& (
 							<DropdownItem
 								onClick={() => {
@@ -465,6 +456,24 @@ class CreditNotes extends React.Component {
 							</DropdownItem>
 									)}
 
+{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true  &&   (
+							<DropdownItem>
+								<div
+									onClick={() => {
+										
+										this.props.history.push(
+											'/admin/income/credit-notes/applyToInvoice',
+											{ contactId: row.contactId , creditNoteId: row.id ,
+											  referenceNumber:row.invoiceNumber,
+											  creditAmount:row.dueAmount},
+										);
+									}}
+								>
+									<i class="fas fa-file-invoice"></i>{strings.ApplyToInvoice}
+								</div>
+							</DropdownItem>
+						)}
+
 						<DropdownItem
 							onClick={() =>
 								this.props.history.push('/admin/income/credit-notes/view', {
@@ -474,13 +483,7 @@ class CreditNotes extends React.Component {
 						>
 							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
-						{row.statusEnum === 'Open' && <DropdownItem
-							onClick={() =>
-								this.unPostInvoice(row)
-							}
-						>
-							<i className="fas fa-file" />  {strings.Draft}
-						</DropdownItem>}
+						
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>

@@ -2255,6 +2255,7 @@ min="0"
 																			>
 																				{strings.UNITPRICE}
 																			</TableHeaderColumn>
+																			{props.values.lineItemsString.map(i => ( i.exciseAmount != 0 ? (
 																			<TableHeaderColumn
 																				width="10%"
 																				dataField="exciseTaxId"
@@ -2274,6 +2275,9 @@ min="0"
 																					Excise dropdown will be enabled only for the excise products
 																				</UncontrolledTooltip>
 																			</TableHeaderColumn>
+																			) : null))
+																		}
+																		{props.values.lineItemsString.map(i => ( i.discount != 0 ? (
 																			<TableHeaderColumn
 																				width="12%"
 																				dataField="discount"
@@ -2283,6 +2287,8 @@ min="0"
 																			>
 																				{strings.DisCount}
 																			</TableHeaderColumn>
+																			) : null))
+																		}
 																			<TableHeaderColumn
 																				dataField="vat"
 																				dataFormat={(cell, rows) =>
@@ -2463,6 +2469,7 @@ min="0"
 																			</FormGroup>
 																		</Col>
 																		<Col lg={4}>
+																		{initValue.total_excise == 0 ? null : (
 																			<div className="total-item p-2" >
 																				<Row>
 																					<Col lg={6}>
@@ -2479,6 +2486,7 @@ min="0"
 																					</Col>
 																				</Row>
 																			</div>
+																		)}
 																			<div className="">
 																				{/* <div className="total-item p-2">
 																				<Row>
@@ -2625,6 +2633,7 @@ min="0"
 																					</Col>
 																				</Row>
 																			</div> */}
+																			{initValue.discount == 0 ? null : (
 																				<div className="total-item p-2">
 																					<Row>
 																						<Col lg={6}>
@@ -2642,6 +2651,7 @@ min="0"
 																						</Col>
 																					</Row>
 																				</div>
+																			)}
 
 																				<div className="total-item p-2">
 																					<Row>
@@ -2741,7 +2751,7 @@ min="0"
 																	<Row>
 																		<Col lg={8}>
 																			<FormGroup className="py-2">
-																				<Label htmlFor="notes">{strings.Notes}</Label><br />
+																				<Label htmlFor="notes">{strings.RefundNotes}</Label><br />
 																				<TextareaAutosize
 																					type="textarea"
 																					style={{ width: "700px" }}

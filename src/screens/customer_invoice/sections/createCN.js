@@ -97,7 +97,7 @@ class CreateCreditNoteModal extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					exciseTaxId:'',
-					exciseAmount:'',
+					totalExciseAmount:0,
 					vatCategoryId: '',
 					subTotal: 0,
 					vatAmount:0,
@@ -121,6 +121,8 @@ class CreateCreditNoteModal extends React.Component {
 					{
 						id: 0,
 						description: '',
+						exciseAmount: 0,
+						discount: 0,
 						quantity: 1,
 						unitPrice: '',
 						vatCategoryId: '',
@@ -1717,37 +1719,41 @@ class CreateCreditNoteModal extends React.Component {
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
-
-																	<TableHeaderColumn
-																		width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																	>
-																{strings.DisCount}
-																	</TableHeaderColumn>
-
-																	{selectedData.total_excise != 0 &&
-																	<TableHeaderColumn
-																	width="10%"
-																		dataField="exciseTaxId"
-																		dataFormat={(cell, rows) =>
-																			this.renderExcise(cell, rows, props)
-																		}
-																	>
-																	{strings.Excises}
-																	<i
-																			id="ExiseTooltip"
-																			className="fa fa-question-circle ml-1"
-																		></i>
-																		<UncontrolledTooltip
-																			placement="right"
-																			target="ExiseTooltip"
+																	{this.state.selectedData.invoiceLineItems.map(i => ( i.discount != 0 ? (
+																		<TableHeaderColumn
+																			width="12%"
+																			dataField="discount"
+																			dataFormat={(cell, rows) =>
+																				this.renderDiscount(cell, rows, props)
+																			}
 																		>
-																			Excise dropdown will be enabled only for the excise products
-																		</UncontrolledTooltip>
-																	</TableHeaderColumn> }
+																		{strings.DisCount}
+																		</TableHeaderColumn>
+																		) : null))
+																	}
+																	{console.log(this.state.selectedData.invoiceLineItems)}
+																	{this.state.selectedData.invoiceLineItems.map(i => ( i.exciseAmount != 0 ? (
+																		<TableHeaderColumn
+																		width="10%"
+																			dataField="exciseTaxId"
+																			dataFormat={(cell, rows) =>
+																				this.renderExcise(cell, rows, props)
+																			}
+																		>
+																		{strings.Excises}
+																		<i
+																				id="ExiseTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="ExiseTooltip"
+																			>
+																				Excise dropdown will be enabled only for the excise products
+																			</UncontrolledTooltip>
+																		</TableHeaderColumn>
+																		) : null))
+																	}
 																	
 																	<TableHeaderColumn
 																		dataField="vat"
@@ -1951,7 +1957,7 @@ class CreateCreditNoteModal extends React.Component {
 																
 																<Col lg={4}>
 																		<div className="">
-																		{ totalExciseAmount>0 ?(<div className="total-item p-2" >
+																		{ this.state.selectedData.totalExciseAmount>0 ?(<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -1968,7 +1974,7 @@ class CreateCreditNoteModal extends React.Component {
 																			</Row>
 																		</div>): ''}
 																		
-																		{ discount>0 &&( <div className="total-item p-2">
+																		{ this.state.selectedData.discount!=0 &&( <div className="total-item p-2">
 																				<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">

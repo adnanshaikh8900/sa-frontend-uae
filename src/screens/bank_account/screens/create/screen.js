@@ -525,7 +525,7 @@ class CreateBankAccount extends React.Component {
 																				enabled: false,
 																			},
 																		}}
-																		placeholderText={strings.OpeningDate}
+																		placeholderText={strings.Select+strings.OpeningDate}
 																		selected={props.values.openingDate}
 																		showMonthDropdown
 																		showYearDropdown

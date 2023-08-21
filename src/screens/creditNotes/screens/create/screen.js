@@ -1708,8 +1708,7 @@ class CreateCreditNote extends React.Component {
 															if (this.state.isCreatedWIWP == false && !values.invoiceNumber) {
 																errors.invoiceNumber = 'Invoice number is required';
 															}
-
-															if ((this.state.isCreatedWIWP && !this.state.invoiceSelected) && (!values.creditAmount || values.creditAmount < 1)) {
+															if ((this.state.isCreatedWIWP) && (!values.creditAmount || values.creditAmount < 1)) {
 																errors.creditAmount = 'Credit amount is required';
 															}
 															if (this.state.invoiceSelected && !this.state.isCreatedWIWP && this.state.initValue.totalAmount > this.state.remainingInvoiceAmount) {

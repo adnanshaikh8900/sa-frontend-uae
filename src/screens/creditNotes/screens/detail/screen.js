@@ -2010,6 +2010,7 @@ class DetailCreditNote extends React.Component {
 																				name="creditAmount"
 																				placeholder={strings.Enter + " Credit Amount"}
 																				value={props.values.creditAmount}
+																				disabled={true}
 																				// onBlur={props.handleBlur('currencyCode')}
 																				onChange={(value) => {
 																					props.handleChange('creditAmount')(
@@ -2304,7 +2305,7 @@ min="0"
 																		</BootstrapTable>
 																	</Col>
 																</Row>)}
-																{data.length > 0 && (
+																{data.length > 0 ? (
 																	<Row>
 																		<Col lg={8}>
 																			<FormGroup className="py-2">
@@ -2726,6 +2727,28 @@ min="0"
 																					</Row>
 																				</div>
 																			</div>
+																		</Col>
+																	</Row>
+																) : (
+																	<Row>
+																		<Col lg={8}>
+																			<FormGroup className="py-2">
+																				<Label htmlFor="notes">{strings.Notes}</Label><br />
+																				<TextareaAutosize
+																					type="textarea"
+																					style={{ width: "700px" }}
+																					className="textarea form-control"
+																					maxLength="255"
+																					name="notes"
+																					id="notes"
+																					rows="2"
+																					placeholder={strings.DeliveryNotes}
+																					onChange={(option) =>
+																						props.handleChange('notes')(option)
+																					}
+																					value={props.values.notes}
+																				/>
+																			</FormGroup>
 																		</Col>
 																	</Row>
 																)}

@@ -1174,7 +1174,7 @@ class DetailCreditNote extends React.Component {
 			email,
 			exchangeRate,
 		} = data;
-
+		console.log(data);
 		let formData = new FormData();
 		formData.append('email', email ? email : '',);
 
@@ -1450,7 +1450,6 @@ class DetailCreditNote extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
-
 		const { project_list, currency_list, currency_convert_list, customer_list, universal_currency_list, vat_list } = this.props;
 		const { loadingMsg } = this.state
 		let tmpCustomer_list = []
@@ -1882,31 +1881,31 @@ class DetailCreditNote extends React.Component {
 																				{strings.CreditNoteDate}
 																			</Label>
 																			<DatePicker
-																				id="creditNoteDate"
-																				name="creditNoteDate"
+																				id="invoiceDate"
+																				name="invoiceDate"
 																				placeholderText={strings.Select+strings.CreditNoteDate}
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				minDate={new Date()}
 																				dropdownMode="select"
-																				value={props.values.creditNoteDate}
+																				value={props.values.invoiceDate}
 																				onChange={(value) => {
-																					props.handleChange('creditNoteDate')(
+																					props.handleChange('invoiceDate')(
 																						moment(value).format('DD-MM-YYYY'),
 																					);
 																					this.setDate(props, value);
 																				}}
-																				className={`form-control ${props.errors.creditNoteDate &&
-																					props.touched.creditNoteDate
+																				className={`form-control ${props.errors.invoiceDate &&
+																					props.touched.invoiceDate
 																					? 'is-invalid'
 																					: ''
 																					}`}
 																			/>
-																			{props.errors.creditNoteDate &&
-																				props.touched.creditNoteDate && (
+																			{props.errors.invoiceDate &&
+																				props.touched.invoiceDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.creditNoteDate}
+																						{props.errors.invoiceDate}
 																					</div>
 																				)}
 																		</FormGroup>

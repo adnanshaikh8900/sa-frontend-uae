@@ -1039,7 +1039,6 @@ class DetailCreditNote extends React.Component {
 		let discount = 0;
 
 		const totalnetamount = (a) => {
-			debugger
 			total_net = total_net + a
 		}
 		const totalexcise = (a) => {

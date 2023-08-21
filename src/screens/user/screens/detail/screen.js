@@ -30,6 +30,7 @@ import './style.scss';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { toast } from 'react-toastify';
+import { upperCase, upperFirst } from 'lodash';
 
 const eye = require('assets/images/settings/eye.png');
 const mapStateToProps = (state) => {
@@ -489,6 +490,7 @@ class DetailUser extends React.Component {
 																							type="text"
 																							id="firstName"
 																							name="firstName"
+																							autoComplete='off'
 																							placeholder={strings.Enter + strings.FirstName}
 																							onChange={(option) => {
 																								if (
@@ -497,6 +499,7 @@ class DetailUser extends React.Component {
 																										option.target.value,
 																									)
 																								) {
+																									option = upperFirst(option.target.value)
 																									props.handleChange('firstName')(
 																										option,
 																									);
@@ -528,6 +531,7 @@ class DetailUser extends React.Component {
 																							type="text"
 																							id="lastName"
 																							name="lastName"
+																							autoComplete='off'
 																							placeholder={strings.Enter + strings.LastName}
 																							onChange={(option) => {
 																								if (
@@ -536,6 +540,7 @@ class DetailUser extends React.Component {
 																										option.target.value,
 																									)
 																								) {
+																									option = upperFirst(option.target.value)
 																									props.handleChange('lastName')(
 																										option,
 																									);

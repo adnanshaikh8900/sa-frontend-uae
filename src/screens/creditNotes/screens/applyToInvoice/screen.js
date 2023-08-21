@@ -1008,18 +1008,16 @@ min="0"
 
 handleSubmit=(data)=>{
 	this.setState({ disabled: true });
-	const { payroll_employee_list } = this.props;
-	const {
-		invoiceIds,
-		creditNoteId
-	} = data;
+	// const { payroll_employee_list } = this.props;
+	// const {
+	// 	invoiceIds,
+	// 	creditNoteId
+	// } = data;
 
 	const formData = new FormData();
-	formData.append('invoiceIds',(this.state.selectedRows))
+	const ids = this.state.selectedRows.map((i) => i.id)
+	formData.append('invoiceIds',ids)
 	formData.append('creditNoteId', this.state.creditNoteId)
-
-   
-
 	this.props.customerInvoiceDetailActions
 		.refundAgainstInvoices(formData)
 		.then((res) => {
@@ -1218,8 +1216,6 @@ handleSubmit=(data)=>{
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list } = this.props;
-console.log(this.state.invoice_list ,"this.state.invoice_list")
-console.log(this.state.selectedRows)
 		let tmpCustomer_list = []
 
 		customer_list.map(item => {
@@ -1443,7 +1439,7 @@ console.log(this.state.selectedRows)
 																			type="submit"
 																			color="primary"
 																			className="btn-square mr-3"
-																			disabled={this.state.disabled ||this.state.cannotsave}
+																			disabled={this.state.selectedRows.length < 1 || !this.state.selectedRows || (this.state.disabled || this.state.cannotsave)}
 																			onClick={this.handleSubmit}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}

@@ -29,6 +29,7 @@ import * as Yup from 'yup';
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { upperFirst } from 'lodash';
 
 const eye = require('assets/images/settings/eye.png');
 const mapStateToProps = (state) => {
@@ -422,6 +423,7 @@ class CreateUser extends React.Component {
 																				maxLength="100"
 																				id="firstName"
 																				name="firstName"
+																				autoComplete='off'
 																				value={props.values.firstName}
 																				placeholder={strings.FirstName}
 																				onChange={(option) => {
@@ -431,8 +433,9 @@ class CreateUser extends React.Component {
 																							option.target.value,
 																						)
 																					) {
+																						let option1 = upperFirst(option.target.value)
 																						props.handleChange('firstName')(
-																							option,
+																							option1,
 																						);
 																					}
 																				}}
@@ -462,6 +465,7 @@ class CreateUser extends React.Component {
 																				maxLength="100"
 																				id="lastName"
 																				name="lastName"
+																				autoComplete='off'
 																				placeholder={strings.LastName}
 																				value={props.values.lastName}
 																				onChange={(option) => {
@@ -471,6 +475,7 @@ class CreateUser extends React.Component {
 																							option.target.value,
 																						)
 																					) {
+																						option = upperFirst(option.target.value)
 																						props.handleChange('lastName')(
 																							option,
 																						);

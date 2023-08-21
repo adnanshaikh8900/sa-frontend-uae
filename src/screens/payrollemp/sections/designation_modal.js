@@ -131,11 +131,9 @@ class DesignationModal extends React.Component {
 						validate={(values) => {
 							let errors = {};
 
-							if (values.designationId === '0') {
-								errors.designationId =
-								"Enter valid designation ID";
-							}
-							if (this.props.idDesigExist === true || values.designationId === '1' || values.designationId === '2' || values.designationId === '3' || values.designationId === '4') {
+							if (parseInt(values.designationId) === 0) {
+								errors.designationId = "Enter valid designation ID";
+							}else if (this.props.idDesigExist === true || values.designationId === '1' || values.designationId === '2' || values.designationId === '3' || values.designationId === '4') {
 								errors.designationId =
 									"Designation ID already exist";
 							}

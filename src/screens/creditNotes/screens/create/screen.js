@@ -1254,22 +1254,12 @@ class CreateCreditNote extends React.Component {
 
 			formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
 		}
-		// if (term && term.value) {
-		// 	formData.append('term', term.value);
-		// }
-
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
 		}
-		// if (placeOfSupplyId && placeOfSupplyId.value) {
-		// 	formData.append('placeOfSupplyId', placeOfSupplyId.value);
-		// }
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.customer_currency);
 		}
-		// if (project !== null && project.value) {
-		// 	formData.append('projectId', project.value);
-		// }
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile?.files?.[0]) {
 			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
@@ -1285,6 +1275,7 @@ class CreateCreditNote extends React.Component {
 					res.data ? res.data.message : 'New Tax Credit Note Created Successfully.'
 				);
 				if (this.state.createMore) {
+					this.props.creditNotesActions.getInvoiceListForDropdown();
 					this.setState(
 						{
 							createMore: false,
@@ -1704,8 +1695,7 @@ class CreateCreditNote extends React.Component {
 															if (this.state.isCreatedWIWP == false && !values.invoiceNumber) {
 																errors.invoiceNumber = 'Invoice number is required';
 															}
-
-															if ((this.state.isCreatedWIWP && !this.state.invoiceSelected) && (!values.creditAmount || values.creditAmount < 1)) {
+															if ((this.state.isCreatedWIWP) && (!values.creditAmount || values.creditAmount < 1)) {
 																errors.creditAmount = 'Credit amount is required';
 															}
 															if (this.state.invoiceSelected && !this.state.isCreatedWIWP && this.state.initValue.totalAmount > this.state.remainingInvoiceAmount) {

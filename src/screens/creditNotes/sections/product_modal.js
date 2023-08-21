@@ -108,9 +108,7 @@ class ProductModal extends React.Component {
 				);
 			}
 		});
-	
-	console.log(this.state.employeeCode)
-	}
+		}
 
 	componentDidMount = () => {
 		this.initializeData();
@@ -934,7 +932,6 @@ min="0"
 																	const nextValue = props.values.productPriceType.concat(
 																		'PURCHASE',
 																	);
-																	console.log(nextValue);
 																	props.setFieldValue(
 																		'productPriceType',
 																		nextValue,

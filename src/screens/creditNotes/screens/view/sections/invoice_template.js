@@ -474,7 +474,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													 { totalNet ? (
 														<Currency
-															value={totalNet-invoiceData.totalVatAmount}
+															value={totalNet-invoiceData.totalVatAmount-invoiceData.totalExciseTaxAmount}
 															currencySymbol={
 																	currencyData[0]
 																	? currencyData[0].currencyIsoCode

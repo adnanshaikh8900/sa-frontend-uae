@@ -785,11 +785,13 @@ class CreditNotes extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<img
+									<i class="nav-icon fas fa-donate" />
+
+										{/* <img
 											alt="invoiceimage"
 											src={invoiceimage}
 											style={{ width: '40px' }}
-										/>
+										/> */}
 										<span className="ml-2"> {strings.CreditNotes}</span>
 									</div>
 								</Col>

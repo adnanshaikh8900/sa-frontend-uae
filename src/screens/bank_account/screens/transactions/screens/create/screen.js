@@ -3371,7 +3371,7 @@ class CreateBankTransaction extends React.Component {
                                       );
                                     }}
                                   >
-                                    <i className="fa fa-repeat"></i>{" "}
+                                    <i className="fa fa-refresh"></i>{" "}
                                     {this.state.disabled
                                       ? "Creating..."
                                       : strings.CreateandMore}

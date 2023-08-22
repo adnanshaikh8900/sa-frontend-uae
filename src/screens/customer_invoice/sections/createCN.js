@@ -1486,7 +1486,7 @@ class CreateCreditNoteModal extends React.Component {
 																		id="currencyCode"
 																		name="currencyCode"
 																		disabled={true}
-																		value={this.state.selectedData.currencyName}
+																		value={this.state.selectedData.currencyName+" - "+this.state.selectedData.currencyIsoCode}
 																		// onBlur={props.handleBlur('currencyCode')}
 																		// onChange={(value) => {
 																		// 	props.handleChange('currencyCode')(

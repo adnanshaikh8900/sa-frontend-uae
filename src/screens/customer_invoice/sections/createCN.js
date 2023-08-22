@@ -790,6 +790,7 @@ class CreateCreditNoteModal extends React.Component {
 						   <Input
 						type="text"
 						maxLength="250"
+						disabled
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);

@@ -23,7 +23,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import EmailModal from './sections/email_template';
 
 import * as CreditNotesActions from './actions';
 import { CommonActions } from 'services/global';
@@ -75,7 +74,6 @@ class DebitNotes extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dialog: false,
-			openEmailModal: false,
 			actionButtons: {},
 			filterData: {
 				customerId: '',
@@ -460,7 +458,6 @@ class DebitNotes extends React.Component {
 						'success',
 						res.data ? res.data.message : 'Email Send Successfully',
 					);
-					this.setState({ openEmailModal: false });
 				}
 			})
 			.catch((err) => {
@@ -619,15 +616,6 @@ class DebitNotes extends React.Component {
 			});
 		}
 	};
-
-	sendCustomEmail = (id) => {
-		this.setState({ openEmailModal: true, rowId: id });
-	};
-
-	closeEmailModal = (res) => {
-		this.setState({ openEmailModal: false });
-	};
-
 	removeInvoice = (id) => {
 		this.removeDialog();
 		this.props.customerInvoiceActions
@@ -893,18 +881,6 @@ class DebitNotes extends React.Component {
 								</CardBody>
 							</Card>
 						</div>
-
-						<EmailModal
-							openEmailModal={this.state.openEmailModal}
-							closeEmailModal={(e) => {
-								this.closeEmailModal(e);
-							}}
-							sendEmail={(e) => {
-								this.sendMail(this.state.rowId);
-							}}
-							id={this.state.rowId}
-						/>
-
 					</div>
 				</div>
 		);

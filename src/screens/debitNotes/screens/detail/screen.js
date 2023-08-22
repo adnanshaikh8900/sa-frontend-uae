@@ -26,7 +26,6 @@ import * as ProductActions from '../../../product/actions';
 import * as CreditNotesActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
-import { CustomerModal, ProductModal } from '../../sections';
 import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -882,19 +881,6 @@ class DetailDebitNote extends React.Component {
 		// );
 		this.updateAmount(data, props);
 	};
-	renderAddProduct = (cell, rows, props) => {
-		return (
-			<Button
-				color="primary"
-				className="btn-twitter btn-brand icon"
-				onClick={(e, props) => {
-					this.openProductModal(props);
-				}}
-			>
-				<i className="fas fa-plus"></i>
-			</Button>
-		);
-	};
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
 		let productList = product_list.length
@@ -1248,14 +1234,6 @@ class DetailDebitNote extends React.Component {
 			});
 	};
 
-	openCustomerModal = (e) => {
-		e.preventDefault();
-		this.setState({ openCustomerModal: true });
-	};
-	openProductModal = (props) => {
-		this.setState({ openProductModal: true });
-	};
-
 	getCurrentUser = (data) => {
 		let option;
 		if (data.label || data.value) {
@@ -1270,17 +1248,6 @@ class DetailDebitNote extends React.Component {
 		//   selectedContact: option
 		// })
 		this.formRef.current.setFieldValue('contactId', option.value, true);
-	};
-
-	closeCustomerModal = (res) => {
-		if (res) {
-			this.props.creditNotesActions.getCustomerList(this.state.contactType);
-		}
-		this.setState({ openCustomerModal: false });
-	};
-
-	closeProductModal = (res) => {
-		this.setState({ openProductModal: false });
 	};
 
 	getCurrentProduct = () => {
@@ -2125,29 +2092,7 @@ class DetailDebitNote extends React.Component {
 								</Col>
 							</Row>
 						</div>
-						<CustomerModal
-							openCustomerModal={this.state.openCustomerModal}
-							closeCustomerModal={(e) => {
-								this.closeCustomerModal(e);
-							}}
-							getCurrentUser={(e) => this.getCurrentUser(e)}
-							createCustomer={this.props.creditNotesActions.createCustomer}
-							currency_list={this.props.currency_list}
-							country_list={this.props.country_list}
-							getStateList={this.props.creditNotesActions.getStateList}
-						/>
-						<ProductModal
-							openProductModal={this.state.openProductModal}
-							closeProductModal={(e) => {
-								this.closeProductModal(e);
-							}}
-							// getCurrentProduct={(e) => this.getCurrentProduct(e)}
-							createProduct={this.props.productActions.createAndSaveProduct}
-							vat_list={this.props.vat_list}
-							product_category_list={this.props.product_category_list}
-							salesCategory={this.state.salesCategory}
-							purchaseCategory={this.state.purchaseCategory}
-						/>
+						
 					</div>
 				</div>
 		);

@@ -532,7 +532,7 @@ class User extends React.Component {
 											}
 										>
 											<i className="fas fa-plus mr-1" />
-											 {strings.NewUsers}
+											 {strings.AddNewUsers}
 										</Button>  
 										<div>
 											<BootstrapTable

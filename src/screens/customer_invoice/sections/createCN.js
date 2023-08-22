@@ -1415,7 +1415,7 @@ class CreateCreditNoteModal extends React.Component {
 																		// 		  )
 																		// 		: []
 																		// }
-																		value={this.state.selectedData.name}
+																		value={this.state.selectedData.organisationName ? this.state.selectedData.organisationName : this.state.selectedData.name}
 																		// onChange={(option) => {
 																		// 	if (option && option.value) {
 																		// 		this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);

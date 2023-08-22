@@ -52,14 +52,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
-		creditNotesActions: bindActionCreators(
-			CreditNotesActions,
-			dispatch,
-		),
-		creditNotesDetailActions: bindActionCreators(
-			CreditNotesDetailActions,
-			dispatch,
-		),
+		creditNotesActions: bindActionCreators(CreditNotesActions, dispatch),
+		creditNotesDetailActions: bindActionCreators(CreditNotesDetailActions, dispatch),
 		productActions: bindActionCreators(ProductActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
@@ -295,24 +289,23 @@ class DetailCreditNote extends React.Component {
 						if (res.data.invoiceId) {
 
 							this.props.creditNotesDetailActions
-								.getInvoiceById(res.data.invoiceId).then((response) => {
+								.getCreditNoteById(this.props.location.state.id, false).then((response) => {
+									console.log("cn resp=", response)
 									const customerdetails = {
-										label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
+										label: response.data.contactName === '' ? response.data.organisationName : response.data.contactName,
 										value: response.data.contactId
 									}
 
 									this.setState(
 										{
 											option: {
-												label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
+												label: response.data.contactName === '' ? response.data.organisationName : response.data.contactName,
 												value: response.data.contactId,
 											},
 											data: response.data.invoiceLineItems,
 											totalAmount: response.data.totalAmount,
 											customer_currency: response.data.currencyCode,
 											remainingInvoiceAmount: response.data.remainingInvoiceAmount,
-
-
 
 											//	data1:response.data.supplierId,
 										}, () => {
@@ -345,7 +338,6 @@ class DetailCreditNote extends React.Component {
 									this.setExchange(this.getCurrency(customerdetails.value));
 									this.formRef.current.setFieldValue('contactId', this.state.option, true);
 									this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
-
 									this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
 									this.getTaxTreatment(this.state.option.value)
 
@@ -424,7 +416,6 @@ class DetailCreditNote extends React.Component {
 								: []
 						}
 						value={
-
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
@@ -464,10 +455,6 @@ class DetailCreditNote extends React.Component {
 		);
 	};
 
-
-
-
-
 	renderQuantity = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -501,7 +488,7 @@ class DetailCreditNote extends React.Component {
 									}
 								}}
 								placeholder={strings.Quantity}
-								className={`form-control 
+								className={`form-control
            						${props.errors.lineItemsString &&
 										props.errors.lineItemsString[parseInt(idx, 10)] &&
 										props.errors.lineItemsString[parseInt(idx, 10)]
@@ -782,8 +769,7 @@ class DetailCreditNote extends React.Component {
 
 								}}
 								placeholder={strings.discount}
-								className={`form-control 
-		   ${props.errors.lineItemsString &&
+								className={`form-control    ${props.errors.lineItemsString &&
 										props.errors.lineItemsString[parseInt(idx, 10)] &&
 										props.errors.lineItemsString[parseInt(idx, 10)].discount &&
 										Object.keys(props.touched).length > 0 &&
@@ -1096,7 +1082,7 @@ class DetailCreditNote extends React.Component {
 						((+net_value * (vat / (100 + vat) * 100)) / 100));
 
 				//net value after removing vat for inclusive
-				net_value = net_value - vat_amount		
+				net_value = net_value - vat_amount
 				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
 
 				totalnetamount(net_value-excisevalue)
@@ -1108,8 +1094,6 @@ class DetailCreditNote extends React.Component {
 				obj.vatAmount = vat_amount
 				obj.exciseAmount = excisevalue
 			}
-
-
 
 			return obj;
 		});
@@ -1130,8 +1114,6 @@ class DetailCreditNote extends React.Component {
 						totalAmount: total,
 						total_excise: total_excise,
 						discount
-
-
 					},
 
 				},
@@ -1502,18 +1484,17 @@ class DetailCreditNote extends React.Component {
 
 															let errors = {};
 
-
 															if (this.state.isCreatedWIWP == false && !values.invoiceNumber) {
 																errors.invoiceNumber = 'Invoice number is required';
 															}
-															if (values.creditAmount < 1 || !values.creditAmount) {
+															if ((this.state.isCreatedWIWP && !this.state.invoiceSelected) && (!values.creditAmount || values.creditAmount < 1)) {
 																errors.creditAmount = 'Credit amount is required';
 															}
-															if (this.state.invoiceSelected && !this.state.isCreatedWIWP && this.state.initValue.totalAmount > this.state.remainingInvoiceAmount) {
-																errors.remainingInvoiceAmount = 'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
+															if (this.state.initValue.totalAmount > this.state.remainingInvoiceAmount) {
+																errors.remainingInvoiceAmount = 'The amount of the credit note cannot exceed the amount of the invoice';
 															}
-															if (this.state.invoiceSelected && this.state.isCreatedWIWP && values.creditAmount > this.state.remainingInvoiceAmount) {
-																errors.remainingInvoiceAmount = 'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
+															if (values.totalamount > this.state.remainingInvoiceAmount) {
+																errors.remainingInvoiceAmount = 'The amount of the credit note cannot exceed the amount of the invoice';
 															}
 															return errors;
 														}}
@@ -2016,7 +1997,7 @@ class DetailCreditNote extends React.Component {
 																				type="text"
 																				id="creditAmount"
 																				name="creditAmount"
-																				placeholder={strings.Enter + " Credit Amount"}
+																				placeholder={strings.Enter + strings.CreditAmount}
 																				value={props.values.creditAmount}
 																				disabled={true}
 																				// onBlur={props.handleBlur('currencyCode')}

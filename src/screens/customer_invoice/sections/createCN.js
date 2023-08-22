@@ -362,6 +362,8 @@ class CreateCreditNoteModal extends React.Component {
 						<Input
 							type="number"
 							// disabled
+							min="0"
+							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								

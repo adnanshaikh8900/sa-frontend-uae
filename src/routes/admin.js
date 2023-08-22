@@ -514,7 +514,7 @@ const adminRoutes = [
 	},
 	Config.EXPENSE_DB &&{
 		path: '/admin/expense/debit-notes',
-		name: 'ViewDebitNotes',
+		name: 'Debit Note',
 		component: DebitNotes.screen,
 	},
 	Config.EXPENSE_DB &&{

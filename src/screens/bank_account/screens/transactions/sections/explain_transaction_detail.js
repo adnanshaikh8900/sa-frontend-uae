@@ -2169,6 +2169,10 @@ class ExplainTrasactionDetail extends React.Component {
                                               "expenseCategory"
                                             )(option.value);
                                           }}
+                                          placeholder={
+                                            strings.Select +
+                                            strings.ExpenseCategory
+                                          }
                                           id="expenseCategory"
                                           name="expenseCategory"
                                           className={

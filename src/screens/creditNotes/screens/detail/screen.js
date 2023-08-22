@@ -1995,6 +1995,7 @@ class DetailCreditNote extends React.Component {
 																			</Label>
 																			<Input
 																				type="text"
+																				maxLength="14,2"
 																				id="creditAmount"
 																				name="creditAmount"
 																				placeholder={strings.Enter + strings.CreditAmount}

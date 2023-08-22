@@ -312,7 +312,7 @@ class CreditNotes extends React.Component {
 		}
 		return (
 			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
-				{row.status}
+				{row.status === 'Partially Paid' ? 'Partially Credited' : row.status}
 			</span>
 		);
 	};

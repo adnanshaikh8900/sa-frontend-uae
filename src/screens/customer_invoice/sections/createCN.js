@@ -1984,7 +1984,7 @@ class CreateCreditNoteModal extends React.Component {
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 																					{this.state.selectedData.currencyIsoCode} &nbsp;
-																							{discount!=0 && (discount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
+																							{this.state.selectedData.discount!=0 && (this.state.selectedData.discount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
 																					</label>
 																				</Col>
 																			</Row>

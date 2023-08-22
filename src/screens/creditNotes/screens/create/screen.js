@@ -2615,7 +2615,18 @@ min="0"
 																					service
 																				</UncontrolledTooltip>
 																			</TableHeaderColumn>
-																			{console.log(props.values.lineItemsString)}
+																			{props.values.lineItemsString.map(i => ( i.discount != 0 ? (
+																			<TableHeaderColumn
+																				width="12%"
+																				dataField="discount"
+																				dataFormat={(cell, rows) =>
+																					this.renderDiscount(cell, rows, props)
+																				}
+																			>
+																				{strings.DisCount}
+																			</TableHeaderColumn>
+																			) : null))
+																			}
 																			{props.values.lineItemsString.map(i => ( i.exciseAmount != 0 ? (
 																			<TableHeaderColumn
 																				width="10%"
@@ -2635,18 +2646,6 @@ min="0"
 																				>
 																					Excise dropdown will be enabled only for the excise products
 																				</UncontrolledTooltip>
-																			</TableHeaderColumn>
-																			) : null))
-																			}
-																			{props.values.lineItemsString.map(i => ( i.discount != 0 ? (
-																			<TableHeaderColumn
-																				width="12%"
-																				dataField="discount"
-																				dataFormat={(cell, rows) =>
-																					this.renderDiscount(cell, rows, props)
-																				}
-																			>
-																				{strings.DisCount}
 																			</TableHeaderColumn>
 																			) : null))
 																			}

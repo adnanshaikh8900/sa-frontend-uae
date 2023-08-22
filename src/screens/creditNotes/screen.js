@@ -452,7 +452,7 @@ class CreditNotes extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-university" /> {strings.Refund}
+								<i className="fas fa-university" /> {strings.RefundPayment}
 							</DropdownItem>
 									)}
 

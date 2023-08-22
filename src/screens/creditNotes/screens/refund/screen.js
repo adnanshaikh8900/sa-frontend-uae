@@ -933,7 +933,7 @@ class Refund extends React.Component {
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
 																			? 'Refunding...'
-																			: strings.Refund }
+																			: strings.RefundPayment}
 																		</Button>
 																		<Button
 																			color="secondary"

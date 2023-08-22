@@ -49,20 +49,20 @@ export const deleteInvoice = (id) => {
 }
 
 export const getInvoicesListForCN = (id) => {
-	return (dispatch) => {
-		let data = {
-			method: 'GET',
-			url: `/rest/invoice/getDueInvoices?id=${id}&type=SUPPLIER`,
-		};
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/invoice/getDueInvoices?id=${id}&type=SUPPLIER`,
+    };
 
-		return authApi(data)
-			.then((res) => {
-				return res;
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
+    return authApi(data)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
 };
 
 export const refundAgainstInvoices = (obj) => {

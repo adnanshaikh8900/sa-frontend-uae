@@ -32,7 +32,7 @@ import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import moment from 'moment';
 import API_ROOT_URL from '../../../../constants/config';
-import {data}  from '../../../Language/index'
+import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
@@ -91,7 +91,7 @@ class RefundDebitNote extends React.Component {
 				depositeTo: '',
 				referenceCode: '',
 				attachmentFile: '',
-				invoiceData:'',
+				invoiceData: '',
 				paidInvoiceListStr: [],
 			},
 			amount: this.props.location.state.id.dueAmount,
@@ -106,9 +106,9 @@ class RefundDebitNote extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
-			invoiceNumber:"-",
-			showInvoiceNumber:false,
-			loadingMsg:"Loading..."
+			invoiceNumber: "-",
+			showInvoiceNumber: false,
+			loadingMsg: "Loading..."
 		};
 
 		// this.options = {
@@ -173,17 +173,17 @@ class RefundDebitNote extends React.Component {
 		this.props.cnActions
 			.getInvoicesForCNById(this.props.location.state.id.id)
 			.then((res) => {
-				
+
 				if (res.status === 200) {
-					if(res.data.length && res.data.length !=0 )
-					this.setState(
-						{
-							invoiceData:res.data[0],
-							invoiceNumber: res.data[0].invoiceNumber,
-							showInvoiceNumber:true
-						},
-						() => {	},
-					);
+					if (res.data.length && res.data.length != 0)
+						this.setState(
+							{
+								invoiceData: res.data[0],
+								invoiceNumber: res.data[0].invoiceNumber,
+								showInvoiceNumber: true
+							},
+							() => { },
+						);
 				}
 			})
 	};
@@ -248,34 +248,34 @@ class RefundDebitNote extends React.Component {
 		let reader = new FileReader();
 		let file = e.target.files[0];
 		if (file) {
-			reader.onloadend = () => {};
+			reader.onloadend = () => { };
 			reader.readAsDataURL(file);
 			props.setFieldValue('attachmentFile', file, true);
 		}
 	};
-	showInvoiceNumber=()=>{
+	showInvoiceNumber = () => {
 
-		return(
-			this.state.showInvoiceNumber &&(
-			<Col lg={4}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="project">
-																			
-																			 {strings.InvoiceNumber}
-																		</Label>
-																		<Input
-																			
-																			disabled
-																			id="invoiceNumber"
-																			name="invoiceNumber"
-																			value={this.state.invoiceNumber}
-																		/>
-																	</FormGroup>
-																</Col>)
+		return (
+			this.state.showInvoiceNumber && (
+				<Col lg={4}>
+					<FormGroup className="mb-3">
+						<Label htmlFor="project">
+
+							{strings.InvoiceNumber}
+						</Label>
+						<Input
+
+							disabled
+							id="invoiceNumber"
+							name="invoiceNumber"
+							value={this.state.invoiceNumber}
+						/>
+					</FormGroup>
+				</Col>)
 		)
 	}
 	handleSubmit = (data) => {
-		this.setState({ disabled: true,loading:true ,loadingMsg:"Refunding Payment..."});
+		this.setState({ disabled: true, loading: true, loadingMsg: "Refunding Payment..." });
 		const { invoiceId } = this.state;
 		const {
 			receiptNo,
@@ -289,7 +289,7 @@ class RefundDebitNote extends React.Component {
 		} = data;
 
 		let formData = new FormData();
-		formData.append('type',"Debit Note");
+		formData.append('type', "Debit Note");
 		formData.append('isCNWithoutProduct', this.state.isCNWithoutProduct);
 		formData.append('creditNoteId', this.props.location.state.id.id);
 		formData.append('amountReceived', amount !== null ? amount : '');
@@ -301,21 +301,21 @@ class RefundDebitNote extends React.Component {
 			formData.append('contactId', contactId);
 		}
 		formData.append('invoiceId', this.state.invoiceData.invoiceId);
-		
+
 		formData.append(
 			'paymentDate',
 			typeof receiptDate === 'string'
 				? moment(receiptDate, 'DD/MM/YYYY').toDate()
 				: receiptDate,
 		);
-		
+
 		this.props.CustomerRecordPaymentActions.recordPayment(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Debit Refund Successfully',
 				);
-				this.setState({ loading:false});
+				this.setState({ loading: false });
 				this.props.history.push('/admin/expense/debit-notes');
 			})
 			.catch((err) => {
@@ -324,56 +324,56 @@ class RefundDebitNote extends React.Component {
 					err && err.data ? err.data.message : 'Debit Refund Unsuccessfully.',
 				);
 			});
-		
-	// else
-	// {	formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
-	// 	formData.append(
-	// 		'receiptDate',
-	// 		typeof receiptDate === 'string'
-	// 			? moment(receiptDate, 'DD-MM-YYYY').toDate()
-	// 			: receiptDate,
-	// 	);
-	// 	formData.append(
-	// 		'paidInvoiceListStr',
-	// 		JSON.stringify(this.state.initValue.paidInvoiceListStr),
-	// 	);
-	// 	formData.append('amount', amount !== null ? amount : '');
-	// 	formData.append('notes', notes !== null ? notes : '');
-	// 	formData.append(
-	// 		'referenceCode',
-	// 		referenceCode !== null ? referenceCode : '',
-	// 	);
-	// 	formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
-	// 	formData.append('payMode', payMode !== null ? payMode.value : '');
-	// 	if (contactId) {
-	// 		formData.append('contactId', contactId);
-	// 	}
-	// 	if (this.uploadFile.files[0]) {
-	// 		formData.append('attachmentFile', this.uploadFile.files[0]);
-	// 	}
-	// 	formData.append(
-	// 		'invoiceNumber',
-	// 		this.props.location.state.id.invoiceNumber?this.props.location.state.id.invoiceNumber :"Invoice-00000",
-	// 	);
-	// 	formData.append(
-	// 		'invoiceAmount',
-	// 		this.props.location.state.id.invoiceAmount ?this.props.location.state.id.invoiceAmount :"00000",
-	// 	);
-	// 	this.props.CustomerRecordPaymentActions.recordPayment(formData)
-	// 		.then((res) => {
-	// 			this.props.commonActions.tostifyAlert(
-	// 				'success',
-	// 				res.data ? res.data.message : 'Debit Refund Successfully',
-	// 			);
-	// 			this.props.history.push('/admin/expense/debit-notes');
-	// 		})
-	// 		.catch((err) => {
-	// 			this.props.commonActions.tostifyAlert(
-	// 				'error',
-	// 				err && err.data ? err.data.message : 'Debit Refund Unsuccessfully.',
-	// 			);
-	// 		});
-	// 	}//
+
+		// else
+		// {	formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
+		// 	formData.append(
+		// 		'receiptDate',
+		// 		typeof receiptDate === 'string'
+		// 			? moment(receiptDate, 'DD-MM-YYYY').toDate()
+		// 			: receiptDate,
+		// 	);
+		// 	formData.append(
+		// 		'paidInvoiceListStr',
+		// 		JSON.stringify(this.state.initValue.paidInvoiceListStr),
+		// 	);
+		// 	formData.append('amount', amount !== null ? amount : '');
+		// 	formData.append('notes', notes !== null ? notes : '');
+		// 	formData.append(
+		// 		'referenceCode',
+		// 		referenceCode !== null ? referenceCode : '',
+		// 	);
+		// 	formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
+		// 	formData.append('payMode', payMode !== null ? payMode.value : '');
+		// 	if (contactId) {
+		// 		formData.append('contactId', contactId);
+		// 	}
+		// 	if (this.uploadFile.files[0]) {
+		// 		formData.append('attachmentFile', this.uploadFile.files[0]);
+		// 	}
+		// 	formData.append(
+		// 		'invoiceNumber',
+		// 		this.props.location.state.id.invoiceNumber?this.props.location.state.id.invoiceNumber :"Invoice-00000",
+		// 	);
+		// 	formData.append(
+		// 		'invoiceAmount',
+		// 		this.props.location.state.id.invoiceAmount ?this.props.location.state.id.invoiceAmount :"00000",
+		// 	);
+		// 	this.props.CustomerRecordPaymentActions.recordPayment(formData)
+		// 		.then((res) => {
+		// 			this.props.commonActions.tostifyAlert(
+		// 				'success',
+		// 				res.data ? res.data.message : 'Debit Refund Successfully',
+		// 			);
+		// 			this.props.history.push('/admin/expense/debit-notes');
+		// 		})
+		// 		.catch((err) => {
+		// 			this.props.commonActions.tostifyAlert(
+		// 				'error',
+		// 				err && err.data ? err.data.message : 'Debit Refund Unsuccessfully.',
+		// 			);
+		// 		});
+		// 	}//
 	};
 
 	openCustomerModal = (e) => {
@@ -406,9 +406,9 @@ class RefundDebitNote extends React.Component {
 
 	deleteInvoice = () => {
 		const message1 =
-		<text>
-		<b>Delete Customer Invoice?</b>
-		</text>
+			<text>
+				<b>Delete Customer Invoice?</b>
+			</text>
 		const message = 'This Customer Invoice will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
@@ -431,7 +431,7 @@ class RefundDebitNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message :'Invoice Deleted Successfully',
+						res.data ? res.data.message : 'Invoice Deleted Successfully',
 					);
 					this.props.history.push('/admin/expense/debit-notes');
 				}
@@ -452,13 +452,13 @@ class RefundDebitNote extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, loading, dialog,loadingMsg } = this.state;
+		const { initValue, loading, dialog, loadingMsg } = this.state;
 		const { pay_mode, customer_list, deposit_list } = this.props;
 
 		let tmpcustomer_list = []
 
 		customer_list.map(item => {
-			let obj = {label: item.label.contactName, value: item.value}
+			let obj = { label: item.label.contactName, value: item.value }
 			tmpcustomer_list.push(obj)
 		})
 
@@ -474,7 +474,7 @@ class RefundDebitNote extends React.Component {
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
 												<span className="ml-2">
-												Refund For Debit Note
+													Refund For Debit Note
 												</span>
 											</div>
 										</Col>
@@ -482,102 +482,102 @@ class RefundDebitNote extends React.Component {
 								</CardHeader>
 								<CardBody>
 									{dialog}
-								     
-										<Row>
-											<Col lg={12}>
-												<Formik
-													initialValues={initValue}
-													ref={this.formRef}
-													onSubmit={(values, { resetForm }) => {
-														this.handleSubmit(values);
-													}}
-													validationSchema={Yup.object().shape({
-														depositeTo: Yup.string().required(
-															'Deposit To is Required',
+
+									<Row>
+										<Col lg={12}>
+											<Formik
+												initialValues={initValue}
+												ref={this.formRef}
+												onSubmit={(values, { resetForm }) => {
+													this.handleSubmit(values);
+												}}
+												validationSchema={Yup.object().shape({
+													depositeTo: Yup.string().required(
+														'Deposit To is Required',
+													),
+													payMode: Yup.string().required(
+														'Payment mode is Required',
+													),
+													attachmentFile: Yup.mixed()
+														.test(
+															'fileType',
+															'*Unsupported File Format',
+															(value) => {
+																value &&
+																	this.setState({
+																		fileName: value.name,
+																	});
+																if (
+																	!value ||
+																	(value &&
+																		this.supported_format.includes(
+																			value.type,
+																		))
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														)
+														.test(
+															'fileSize',
+															'*File Size is too large',
+															(value) => {
+																if (
+																	!value ||
+																	(value && value.size <= this.file_size)
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
 														),
-														payMode: Yup.string().required(
-															'Payment mode is Required',
-														),
-														attachmentFile: Yup.mixed()
-															.test(
-																'fileType',
-																'*Unsupported File Format',
-																(value) => {
-																	value &&
-																		this.setState({
-																			fileName: value.name,
-																		});
-																	if (
-																		!value ||
-																		(value &&
-																			this.supported_format.includes(
-																				value.type,
-																			))
-																	) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																},
-															)
-															.test(
-																'fileSize',
-																'*File Size is too large',
-																(value) => {
-																	if (
-																		!value ||
-																		(value && value.size <= this.file_size)
-																	) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																},
-															),
-													})}
-												>
-													{(props) =>	loading==true ? <div className="m11"> <Loader  loadingMsg={loadingMsg}/></div>	: 
-														<Form onSubmit={props.handleSubmit}>
-															<Row>
-																<Col lg={4}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="contactId">
-																			<span className="text-danger">* </span>
-																			 {strings.CustomerName}
-																		</Label>
-																		<Select
-																			styles={customStyles}
-																			id="contactId"
-																			name="contactId"
-																			isDisabled
-																			value={
-																				tmpcustomer_list &&
-																				tmpcustomer_list.find(
-																					(option) =>
-																						option.value ===
-																						+this.props.location.state.id
-																							.contactId,
-																				)
-																			}
-																			className={
-																				props.errors.contactId &&
+												})}
+											>
+												{(props) => loading == true ? <div className="m11"> <Loader loadingMsg={loadingMsg} /></div> :
+													<Form onSubmit={props.handleSubmit}>
+														<Row>
+															<Col lg={4}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="contactId">
+																		<span className="text-danger">* </span>
+																		{strings.CustomerName}
+																	</Label>
+																	<Select
+																		styles={customStyles}
+																		id="contactId"
+																		name="contactId"
+																		isDisabled
+																		value={
+																			tmpcustomer_list &&
+																			tmpcustomer_list.find(
+																				(option) =>
+																					option.value ===
+																					+this.props.location.state.id
+																						.contactId,
+																			)
+																		}
+																		className={
+																			props.errors.contactId &&
 																				props.touched.contactId
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.contactId &&
-																			props.touched.contactId && (
-																				<div className="invalid-feedback">
-																					{props.errors.contactId}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																{
-																this.state.isCNWithoutProduct !=true &&
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.contactId &&
+																		props.touched.contactId && (
+																			<div className="invalid-feedback">
+																				{props.errors.contactId}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+															{
+																this.state.isCNWithoutProduct != true &&
 																(this.showInvoiceNumber())}
-																{/* <Col lg={4}>
+															{/* <Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
 																			<span className="text-danger">* </span>{' '}
@@ -608,339 +608,338 @@ class RefundDebitNote extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col> */}
-															</Row>
-															<hr />
-															<Row>
-																<Col lg={4}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="project">
-																			<span className="text-danger">* </span>{' '}
-																			 {strings.AmountPaid}
-																		</Label>
-																		<Input
-																			type="number"
-																			max={this.state.amount}
-																			id="amount"
-																			name="amount"
-																			value={props.values.amount}
-																			onChange={(option) => {
-																				if (
-																					option.target.value === '' ||
-																					this.regDecimal.test(option.target.value)
-																				) {
-																					props.handleChange('amount')(option);
-																				}
-																			}}
-																			className={
-																				props.errors.amount &&
+														</Row>
+														<hr />
+														<Row>
+															<Col lg={4}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="project">
+																		<span className="text-danger">* </span>{' '}
+																		{strings.AmountPaid}
+																	</Label>
+																	<Input
+																		type="number"
+																		max={this.state.amount}
+																		id="amount"
+																		name="amount"
+																		value={props.values.amount}
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regDecimal.test(option.target.value)
+																			) {
+																				props.handleChange('amount')(option);
+																			}
+																		}}
+																		className={
+																			props.errors.amount &&
 																				props.touched.amount
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.amount &&
-																			props.touched.amount && (
-																				<div className="invalid-feedback">
-																					{props.errors.amount}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-															</Row>
-															<hr />
-															<Row>
-																<Col lg={4}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="date">
-																			<span className="text-danger">* </span>
-																			{strings.PaymentDate}
-																		</Label>
-																		<DatePicker
-																			id="receiptDate"
-																			name="receiptDate"
-																			placeholderText={strings.PaymentDate}
-																			showMonthDropdown
-																			showYearDropdown
-																			dateFormat="dd-MM-yyyy"
-																			dropdownMode="select"
-																			value={props.values.receiptDate}
-																			selected={props.values.receiptDate}
-																			onChange={(value) => {
-																				props.handleChange('receiptDate')(
-																					value,
-																				);
-																			}}
-																			className={`form-control ${
-																				props.errors.receiptDate &&
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.amount &&
+																		props.touched.amount && (
+																			<div className="invalid-feedback">
+																				{props.errors.amount}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+														</Row>
+														<hr />
+														<Row>
+															<Col lg={4}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="date">
+																		<span className="text-danger">* </span>
+																		{strings.PaymentDate}
+																	</Label>
+																	<DatePicker
+																		id="receiptDate"
+																		name="receiptDate"
+																		placeholderText={strings.PaymentDate}
+																		showMonthDropdown
+																		showYearDropdown
+																		dateFormat="dd-MM-yyyy"
+																		dropdownMode="select"
+																		value={props.values.receiptDate}
+																		selected={props.values.receiptDate}
+																		onChange={(value) => {
+																			props.handleChange('receiptDate')(
+																				value,
+																			);
+																		}}
+																		className={`form-control ${props.errors.receiptDate &&
 																				props.touched.receiptDate
-																					? 'is-invalid'
-																					: ''
+																				? 'is-invalid'
+																				: ''
 																			}`}
-																		/>
-																		{props.errors.receiptDate &&
-																			props.touched.receiptDate && (
-																				<div className="invalid-feedback">
-																					{props.errors.receiptDate}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-															</Row>
-															<Row>
-																<Col lg={4}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="payMode">
-																			<span className="text-danger">* </span>{' '}
-																			 {strings.PaymentMode}
-																		</Label>
-																		<Select
-																			styles={customStyles}
-																			options={
-																				pay_mode
-																					? selectOptionsFactory.renderOptions(
-																							'label',
-																							'value',
-																							pay_mode,
-																							'Mode',
-																					  )
-																					: []
+																	/>
+																	{props.errors.receiptDate &&
+																		props.touched.receiptDate && (
+																			<div className="invalid-feedback">
+																				{props.errors.receiptDate}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+														</Row>
+														<Row>
+															<Col lg={4}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="payMode">
+																		<span className="text-danger">* </span>{' '}
+																		{strings.PaymentMode}
+																	</Label>
+																	<Select
+																		styles={customStyles}
+																		options={
+																			pay_mode
+																				? selectOptionsFactory.renderOptions(
+																					'label',
+																					'value',
+																					pay_mode,
+																					'Mode',
+																				)
+																				: []
+																		}
+																		value={props.values.payMode}
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				props.handleChange('payMode')(option);
+																			} else {
+																				props.handleChange('payMode')('');
 																			}
-																			value={props.values.payMode}
-																			onChange={(option) => {
-																				if (option && option.value) {
-																					props.handleChange('payMode')(option);
-																				} else {
-																					props.handleChange('payMode')('');
-																				}
-																			}}
-																			placeholder={strings.Select+strings.PaymentMode}
-																			id="payMode"
-																			name="payMode"
-																			className={
-																				props.errors.payMode &&
+																		}}
+																		placeholder={strings.Select + strings.PaymentMode}
+																		id="payMode"
+																		name="payMode"
+																		className={
+																			props.errors.payMode &&
 																				props.touched.payMode
-																					? 'is-invalid'
-																					: ''
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.payMode &&
+																		props.touched.payMode && (
+																			<div className="invalid-feedback">
+																				{props.errors.payMode}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>{' '}
+															<Col lg={4}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="depositeTo">
+																		<span className="text-danger">* </span>{' '}
+																		{strings.DepositFrom}
+																	</Label>
+																	<Select
+																		styles={customStyles}
+																		options={deposit_list}
+																		value={props.values.depositeFrom}
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				props.handleChange('depositeTo')(
+																					option,
+																				);
+																			} else {
+																				props.handleChange('depositeTo')('');
 																			}
-																		/>
-																		{props.errors.payMode &&
-																			props.touched.payMode && (
-																				<div className="invalid-feedback">
-																					{props.errors.payMode}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>{' '}
-																<Col lg={4}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="depositeTo">
-																			<span className="text-danger">* </span>{' '}
-																		      {strings.DepositFrom}
-																		</Label>
-																		<Select
-																			styles={customStyles}
-																			options={deposit_list}
-																			value={props.values.depositeFrom}
-																			onChange={(option) => {
-																				if (option && option.value) {
-																					props.handleChange('depositeTo')(
-																						option,
-																					);
-																				} else {
-																					props.handleChange('depositeTo')('');
-																				}
-																			}}
-																			placeholder={strings.Select+strings.DepositFrom}
-																			id="depositeTo"
-																			name="depositeTo"
-																			className={
-																				props.errors.depositeTo &&
+																		}}
+																		placeholder={strings.Select + strings.DepositFrom}
+																		id="depositeTo"
+																		name="depositeTo"
+																		className={
+																			props.errors.depositeTo &&
 																				props.touched.depositeTo
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.depositeTo &&
-																			props.touched.depositeTo && (
-																				<div className="invalid-feedback">
-																					{props.errors.depositeTo}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>{' '}
-															</Row>
-															<hr />
-															<Row>
-																<Col lg={8}>
-																	<Row>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="referenceCode">
-																					 {strings.ReceiptNumber}
-																				</Label>
-																				<Input
-																					type="text"
-																					id="referenceCode"
-																					name="referenceCode"
-																					placeholder={strings.Enter+strings.ReceiptNumber}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExBoth.test(
-																								option.target.value,
-																							)
-																						) {
-																							props.handleChange(
-																								'referenceCode',
-																							)(option);
-																						}
-																					}}
-																					value={props.values.referenceCode}
-																				/>
-																			</FormGroup>
-																		</Col>
-																	</Row>
-																	<Row>
-																		<Col lg={12}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="notes">{strings.Notes}</Label>
-																				<Input
-																					type="textarea"
-																					name="notes"
-																					id="notes"
-																					rows="5"
-																					placeholder={strings.Notes}
-																					onChange={(option) =>
-																						props.handleChange('notes')(option)
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.depositeTo &&
+																		props.touched.depositeTo && (
+																			<div className="invalid-feedback">
+																				{props.errors.depositeTo}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>{' '}
+														</Row>
+														<hr />
+														<Row>
+															<Col lg={8}>
+																<Row>
+																	<Col lg={6}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="referenceCode">
+																				{strings.ReceiptNumber}
+																			</Label>
+																			<Input
+																				type="text"
+																				id="referenceCode"
+																				name="referenceCode"
+																				placeholder={strings.Enter + strings.ReceiptNumber}
+																				onChange={(option) => {
+																					if (
+																						option.target.value === '' ||
+																						this.regExBoth.test(
+																							option.target.value,
+																						)
+																					) {
+																						props.handleChange(
+																							'referenceCode',
+																						)(option);
 																					}
-																					defaultValue={props.values.notes}
-																				/>
-																			</FormGroup>
-																		</Col>
-																	</Row>
-																</Col>
-																<Col lg={4}>
-																	<Row>
-																		<Col lg={12}>
-																			<FormGroup className="mb-3">
-																				<Field
-																					name="attachmentFile"
-																					render={({ field, form }) => (
-																						<div>
-																							<Label>{strings.Attachment}</Label> <br />
-																							<div className="file-upload-cont">
-																								<Button
-																									color="primary"
-																									onClick={() => {
-																										document
-																											.getElementById(
-																												'fileInput',
-																											)
-																											.click();
+																				}}
+																				value={props.values.referenceCode}
+																			/>
+																		</FormGroup>
+																	</Col>
+																</Row>
+																<Row>
+																	<Col lg={12}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="notes">{strings.Notes}</Label>
+																			<Input
+																				type="textarea"
+																				name="notes"
+																				id="notes"
+																				rows="5"
+																				placeholder={strings.Notes}
+																				onChange={(option) =>
+																					props.handleChange('notes')(option)
+																				}
+																				defaultValue={props.values.notes}
+																			/>
+																		</FormGroup>
+																	</Col>
+																</Row>
+															</Col>
+															<Col lg={4}>
+																<Row>
+																	<Col lg={12}>
+																		<FormGroup className="mb-3">
+																			<Field
+																				name="attachmentFile"
+																				render={({ field, form }) => (
+																					<div>
+																						<Label>{strings.Attachment}</Label> <br />
+																						<div className="file-upload-cont">
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById(
+																											'fileInput',
+																										)
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								{strings.upload}
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																							{this.state.fileName ? (
+																								this.state.fileName
+																							) : (
+																								<NavLink
+																									href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`}
+																									download={
+																										this.state.initValue
+																											.fileName
+																									}
+																									style={{
+																										fontSize: '0.875rem',
 																									}}
-																									className="btn-square mr-3"
+																									target="_blank"
 																								>
-																									<i className="fa fa-upload"></i>{' '}
-																									 {strings.upload}
-																								</Button>
-																								<input
-																									id="fileInput"
-																									ref={(ref) => {
-																										this.uploadFile = ref;
-																									}}
-																									type="file"
-																									style={{ display: 'none' }}
-																									onChange={(e) => {
-																										this.handleFileChange(
-																											e,
-																											props,
-																										);
-																									}}
-																								/>
-																								{this.state.fileName && (
-																									<div>
-																										<i
-																											className="fa fa-close"
-																											onClick={() =>
-																												this.setState({
-																													fileName: '',
-																												})
-																											}
-																										></i>{' '}
-																										{this.state.fileName}
-																									</div>
-																								)}
-																								{this.state.fileName ? (
-																									this.state.fileName
-																								) : (
-																									<NavLink
-																										href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`}
-																										download={
-																											this.state.initValue
-																												.fileName
-																										}
-																										style={{
-																											fontSize: '0.875rem',
-																										}}
-																										target="_blank"
-																									>
-																										{
-																											this.state.initValue
-																												.fileName
-																										}
-																									</NavLink>
-																								)}
-																							</div>
+																									{
+																										this.state.initValue
+																											.fileName
+																									}
+																								</NavLink>
+																							)}
 																						</div>
-																					)}
-																				/>
-																				{props.errors.attachmentFile && (
-																					<div className="invalid-file">
-																						{props.errors.attachmentFile}
 																					</div>
 																				)}
-																			</FormGroup>
-																		</Col>
-																	</Row>
-																</Col>
-															</Row>
-															<Row>
-																<Col
-																	lg={12}
-																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
+																			/>
+																			{props.errors.attachmentFile && (
+																				<div className="invalid-file">
+																					{props.errors.attachmentFile}
+																				</div>
+																			)}
+																		</FormGroup>
+																	</Col>
+																</Row>
+															</Col>
+														</Row>
+														<Row>
+															<Col
+																lg={12}
+																className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 															>
 																<FormGroup className="text-right w-100">
-																		<Button
-																			type="submit"
-																			color="primary"
-																			className="btn-square mr-3"
-																			disabled={this.state.disabled}
-																		>
-																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			{this.state.disabled
+																	<Button
+																		type="submit"
+																		color="primary"
+																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
+																	>
+																		<i className="fa fa-dot-circle-o"></i>{' '}
+																		{this.state.disabled
 																			? 'Refunding...'
-																			: strings.Refund }
-																		</Button>
-																		<Button
-																			color="secondary"
-																			className="btn-square"
-																			onClick={() => {
-																				this.props.history.push(
-																					'/admin/expense/debit-notes',
-																				);
-																			}}
-																		>
-																			<i className="fa fa-ban"></i>  {strings.Cancel}
-																		</Button>
-																	</FormGroup>
-																</Col>
-															</Row>
-														</Form>
-													}
-												</Formik>
-											</Col>
-										</Row>
-									
+																			: strings.Refund}
+																	</Button>
+																	<Button
+																		color="secondary"
+																		className="btn-square"
+																		onClick={() => {
+																			this.props.history.push(
+																				'/admin/expense/debit-notes',
+																			);
+																		}}
+																	>
+																		<i className="fa fa-ban"></i>  {strings.Cancel}
+																	</Button>
+																</FormGroup>
+															</Col>
+														</Row>
+													</Form>
+												}
+											</Formik>
+										</Col>
+									</Row>
+
 								</CardBody>
 							</Card>
 						</Col>

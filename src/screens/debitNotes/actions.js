@@ -38,7 +38,7 @@ export const getCreditNoteList = (postObj) => {
 						});
 						return res;
 					}
-					
+
 				}
 			})
 			.catch((err) => {
@@ -110,7 +110,7 @@ export const getCustomerList = (nameCode) => {
 					});
 					return res;
 				}
-				
+
 			})
 			.catch((err) => {
 				throw err;
@@ -522,19 +522,19 @@ export const getInvoicePrefix = () => {
 
 export const updateInvoicePrefix = (obj) => {
 	return (dispatch) => {
-	  let data = {
-		method: 'post',
-		url: '/rest/customizeinvoiceprefixsuffix/update',
-		data: obj
-	  }
-	  return authApi(data).then((res) => {
-		return res
-	  }).catch((err) => {
-		throw err
-	  })
+		let data = {
+			method: 'post',
+			url: '/rest/customizeinvoiceprefixsuffix/update',
+			data: obj
+		}
+		return authApi(data).then((res) => {
+			return res
+		}).catch((err) => {
+			throw err
+		})
 	}
-  }
-  export const getInventoryByProductId = (productId) => {
+}
+export const getInventoryByProductId = (productId) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
@@ -576,18 +576,18 @@ export const getInvoiceListForDropdown = (id) => {
 
 export const getInvoicesForCNById = (_id) => {
 	return (dispatch) => {
-	  let data = {
-		method: 'GET',
-		url: `/rest/creditNote/getInvoiceByCreditNoteId?id=${_id}`
-	  }
-	  return authApi(data).then((res) => {
-		return res
-	  }).catch((err) => {
-		throw err
-	  })
+		let data = {
+			method: 'GET',
+			url: `/rest/creditNote/getInvoiceByCreditNoteId?id=${_id}`
+		}
+		return authApi(data).then((res) => {
+			return res
+		}).catch((err) => {
+			throw err
+		})
 	}
-  };
-  
+};
+
 export const getProductListById = (id) => {
 	return (dispatch) => {
 		let data = {

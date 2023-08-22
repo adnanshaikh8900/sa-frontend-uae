@@ -61,7 +61,7 @@ export const deleteCN = (id) => {
     })
   }
 }
-export const getCreditNoteById = (_id,isCNWithoutProduct) => {
+export const getCreditNoteById = (_id, isCNWithoutProduct) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
@@ -89,18 +89,18 @@ export const UpdateCreditNotes = (obj) => {
   }
 }
 export const createCreditNote = (obj) => {
-	return (dispatch) => {
-		let data = {
-			method: 'post',
-			url: '/rest/creditNote/save',
-			data: obj,
-		};
-		return authFileUploadApi(data)
-			.then((res) => {
-				return res;
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/creditNote/save',
+      data: obj,
+    };
+    return authFileUploadApi(data)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
 };

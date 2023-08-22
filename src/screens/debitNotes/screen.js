@@ -30,7 +30,7 @@ import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 
 import './style.scss';
-import {data}  from '../Language/index'
+import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperCase } from 'lodash';
 
@@ -38,12 +38,12 @@ const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
-	//   currency: true,
-	  ignoreDecimal: false,
-	  ignoreZeroCurrency: false,
-	  doNotAddOnly: false,
+		//   currency: true,
+		ignoreDecimal: false,
+		ignoreZeroCurrency: false,
+		doNotAddOnly: false,
 	}
-  });
+});
 const mapStateToProps = (state) => {
 	return {
 		customer_invoice_list: state.customer_invoice.customer_invoice_list,
@@ -68,7 +68,7 @@ const overduemonthly = require('assets/images/invoice/month.png');
 const overdue = require('assets/images/invoice/due1.png');
 
 let strings = new LocalizedStrings(data);
-class DeditNotes extends React.Component {
+class DebitNotes extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -96,7 +96,7 @@ class DeditNotes extends React.Component {
 				overDueAmountWeekly: '',
 				overDueAmountMonthly: '',
 			},
-			cN_list:[],
+			cN_list: [],
 			rowId: '',
 		};
 
@@ -163,7 +163,7 @@ class DeditNotes extends React.Component {
 			.getCreditNoteList(postData)
 			.then((res) => {
 				if (res.status === 200) {
-					this.setState({ loading: false ,cN_list:res.data}, () => {});
+					this.setState({ loading: false, cN_list: res.data }, () => { });
 				}
 			})
 			.catch((err) => {
@@ -209,11 +209,11 @@ class DeditNotes extends React.Component {
 			amount: row.amount,
 			postingRefId: row.id,
 			postingRefType: 'CREDIT_NOTE',
-			isCNWithoutProduct :row.isCNWithoutProduct==true?true:false ,
-			amountInWords:upperCase(row.currencyCode + " " +(toWords.convert(row.amount))+" ONLY" ).replace("POINT","AND"),
-			vatInWords:row.totalVatAmount ? upperCase(row.currencyCode + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-"
+			isCNWithoutProduct: row.isCNWithoutProduct == true ? true : false,
+			amountInWords: upperCase(row.currencyCode + " " + (toWords.convert(row.amount)) + " ONLY").replace("POINT", "AND"),
+			vatInWords: row.totalVatAmount ? upperCase(row.currencyCode + " " + (toWords.convert(row.totalVatAmount)) + " ONLY").replace("POINT", "AND") : "-"
 		};
-		 
+
 		this.props.creditNotesActions
 			.creditNoteposting(postingRequestModel)
 			.then((res) => {
@@ -284,26 +284,27 @@ class DeditNotes extends React.Component {
 		);
 	};
 
-	
+
 	renderInvoiceStatus = (cell, row) => {
 		let classname = '';
-		if(row.status)
-	{	if (row.status === 'Closed') {
-			classname = 'label-closed';
-		} else if (row.status === 'Draft') {
-			classname = 'label-draft';
-		} else if (row.status === 'Partially Paid') {
-			classname = 'label-PartiallyPaid';
-		}else if (row.status === 'Open') {
-			classname = 'label-posted';
-		} else {
-			classname = 'label-overdue';
+		if (row.status) {
+			if (row.status === 'Closed') {
+				classname = 'label-closed';
+			} else if (row.status === 'Draft') {
+				classname = 'label-draft';
+			} else if (row.status === 'Partially Paid') {
+				classname = 'label-PartiallyPaid';
+			} else if (row.status === 'Open') {
+				classname = 'label-posted';
+			} else {
+				classname = 'label-overdue';
+			}
+			return (
+				<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+					{row.status}
+				</span>
+			);
 		}
-		return (
-			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
-				{row.status}
-			</span>
-		);}
 	};
 
 	toggleActionButton = (index) => {
@@ -319,28 +320,28 @@ class DeditNotes extends React.Component {
 	};
 
 	renderamount = (cell, row, extraData) => {
-	return(
-		<div>
-		   <div>
+		return (
+			<div>
+				<div>
 					<label className="font-weight-bold mr-2 ">{strings.Amount}: </label>
 					<label>
-					{row.amount === 0  ? row.currencyCode +" "+ row.amount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode+" "+ row.amount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+						{row.amount === 0 ? row.currencyCode + " " + row.amount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + " " + row.amount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 					</label>
 				</div>
 				<div>
 					<label className="font-weight-bold mr-2 ">Remaining Debits </label>
 					<label>
-					{row.dueAmount === 0  ? row.currencyCode+" " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode+" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+						{row.dueAmount === 0 ? row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 					</label>
 				</div>
-			
-			
+
+
 				{/* <div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">Due Amount : </label>
 					<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
 				</div> */}
-				
-		</div>);
+
+			</div>);
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyCode) {
@@ -360,17 +361,17 @@ class DeditNotes extends React.Component {
 
 
 
-	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencyCode +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+	renderDueAmount = (cell, row, extraData) => {
+		return row.dueAmount === 0 ? row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	}
 	renderActions = (cell, row) => {
 		return (
 			<div>
-				<ButtonDropdown 
+				<ButtonDropdown
 					isOpen={this.state.actionButtons[row.id]}
 					toggle={() => this.toggleActionButton(row.id)}
 				>
-	
+
 					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
 						{this.state.actionButtons[row.id] === true ? (
 							<i className="fas fa-chevron-up" />
@@ -379,29 +380,31 @@ class DeditNotes extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.status !== 'Closed' && row.status !== 'Open' && row.status !== 'Partially Paid'   && (
+						{row.status !== 'Closed' && row.status !== 'Open' && row.status !== 'Partially Paid' && (
 							<DropdownItem>
 								<div
 									onClick={() => {
 										this.props.history.push(
 											'/admin/expense/debit-notes/update',
-											{ id: row.id ,isCNWithoutProduct:row.isCNWithoutProduct},
+											{ id: row.id, isCNWithoutProduct: row.isCNWithoutProduct },
 										);
 									}}
 								>
 									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
-						)}	{row.status !== 'Closed' && row.status !== 'Draft' && row.cnCreatedOnPaidInvoice !==true && row.isCNWithoutProduct !==true &&   (
+						)}	{row.status !== 'Closed' && row.status !== 'Draft' && row.cnCreatedOnPaidInvoice !== true && row.isCNWithoutProduct !== true && (
 							<DropdownItem>
 								<div
 									onClick={() => {
-										
+
 										this.props.history.push(
 											'/admin/expense/debit-notes/applyToInvoice',
-											{ contactId: row.contactId , creditNoteId: row.id ,
-											  referenceNumber:row.creditNoteNumber,
-											  creditAmount:row.dueAmount},
+											{
+												contactId: row.contactId, creditNoteId: row.id,
+												referenceNumber: row.creditNoteNumber,
+												creditAmount: row.dueAmount
+											},
 										);
 									}}
 								>
@@ -409,8 +412,8 @@ class DeditNotes extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
-							
-						{row.status !== 'Closed' && row.status !== 'Open' && row.status !== 'Partially Paid' &&(
+
+						{row.status !== 'Closed' && row.status !== 'Open' && row.status !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
 									this.creditNoteposting(row);
@@ -420,7 +423,7 @@ class DeditNotes extends React.Component {
 							</DropdownItem>
 						)}
 
-									{row.status !== 'Closed' && row.status !== 'Draft'  && (
+						{row.status !== 'Closed' && row.status !== 'Draft' && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -431,12 +434,12 @@ class DeditNotes extends React.Component {
 							>
 								<i className="fas fa-university" /> {strings.Refund}
 							</DropdownItem>
-									)}
+						)}
 
 						<DropdownItem
 							onClick={() =>
 								this.props.history.push('/admin/expense/debit-notes/view', {
-									id: row.id,status:row.status,isCNWithoutProduct:row.isCNWithoutProduct
+									id: row.id, status: row.status, isCNWithoutProduct: row.isCNWithoutProduct
 								})
 							}
 						>
@@ -708,205 +711,204 @@ class DeditNotes extends React.Component {
 
 
 		return (
-			loading ==true? <Loader /> :
-<div>
-			<div className="customer-invoice-screen">
-				<div className="animated fadeIn">
-					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-					<Card>
-						<CardHeader>
-							<Row>
-								<Col lg={12}>
-									<div className="h4 mb-0 d-flex align-items-center">
-										<img
-											alt="invoiceimage"
-											src={invoiceimage}
-											style={{ width: '40px' }}
-										/>
-										<span className="ml-2"> Debit Notes</span>
-									</div>
-								</Col>
-							</Row>
-						</CardHeader>
-						<CardBody>
-							{dialog}
-							{loading && (
-								<Row>
-									<Col lg={12} className="rounded-loader">
-										<div>
-											<Loader />
-										</div>
-									</Col>
-								</Row>
-							)}
-							<Row>
-								<Col lg={12}>
-								
-									<div className="d-flex justify-content-end">
-										<ButtonGroup size="sm">
-									
-										</ButtonGroup>
-									</div>
-									<div className="py-3">
-										<h5>{strings.Filter} : </h5>
-										<Row>
-										
-										
-
-											<Col lg={2} className="mb-1">
-												<Input
-												maxLength="14,2"
-													type="number"
-													min="0"
-													value={filterData.amount}
-													placeholder={strings.Amount}
-													onChange={(e) => {
-														this.handleChange(e.target.value, 'amount');
-													}}
+			loading == true ? <Loader /> :
+				<div>
+					<div className="customer-invoice-screen">
+						<div className="animated fadeIn">
+							{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+							<Card>
+								<CardHeader>
+									<Row>
+										<Col lg={12}>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<img
+													alt="invoiceimage"
+													src={invoiceimage}
+													style={{ width: '40px' }}
 												/>
-											</Col>
-									
-											<Col lg={2} className="pl-0 pr-0">
-												<Button
-													type="button"
-													color="primary"
-													className="btn-square mr-1"
-													onClick={this.handleSearch}
-												>
-													<i className="fa fa-search"></i>
-												</Button>
-												<Button
-													type="button"
-													color="primary"
-													className="btn-square"
-													onClick={this.clearAll}
-												>
-													<i className="fa fa-refresh"></i>
-												</Button>
+												<span className="ml-2"> Debit Notes</span>
+											</div>
+										</Col>
+									</Row>
+								</CardHeader>
+								<CardBody>
+									{dialog}
+									{loading && (
+										<Row>
+											<Col lg={12} className="rounded-loader">
+												<div>
+													<Loader />
+												</div>
 											</Col>
 										</Row>
-									</div>
+									)}
 									<Row>
-									<div style={{width:"1650px"}}>
-									<Button
-										color="primary"
-										className="btn-square pull-right mb-2"
-										style={{ marginBottom: '10px' }}
-										onClick={() =>
-											this.props.history.push(
-												'/admin/expense/debit-notes/create',
-											)
-										}
-									>
-										<i className="fas fa-plus mr-1" />
-									        Add New Debit-Note
-									</Button></div></Row>
-								
-										<BootstrapTable
-											selectRow={this.selectRowProp}
-											search={false}
-											options={this.options}
-											data={cN_list ? cN_list : []}
-											version="4"
-											hover
-											responsive
-											currencyList
-											keyField="id"
-											remote
-											pagination={
-												cN_list &&
-												cN_list.length > 0
-													? true
-													: false
-											}
-											fetchInfo={{
-												dataTotalSize: cN_list.count
-													? cN_list.count
-													: 0,
-											}}
-											className="customer-invoice-table"
-											csvFileName="Customer_Invoice.csv"
-											ref={(node) => {
-												this.table = node;
-											}}
-										>
-												<TableHeaderColumn
-												dataField="creditNoteNumber"
-												dataSort
-											//	width="7%"
-												className="table-header-bg"
-											>
-													
-													Debit Note Number
-											</TableHeaderColumn>
-											<TableHeaderColumn 
-												width="20%"
-												dataField="contactName" 
-											//	dataSort width="10%"
-												className="table-header-bg"
-											>
-												{strings.SUPPLIERNAME}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												//width="9%"
-												dataField="status"
-												dataFormat={this.renderInvoiceStatus}
-												dataSort
-												className="table-header-bg"
-											>
-												 {strings.STATUS}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="creditNoteDate"
-												dataSort
-												//width="6%"
-												dataFormat={this.debitNoteDate}
-												className="table-header-bg"
-											>
-											 {strings.DATE}
-											</TableHeaderColumn>
-										
-											<TableHeaderColumn
-												dataAlign="right"
-												dataField="totalAmount"
-												dataSort
-												width="20%"
-												dataFormat={this.renderamount}
-												formatExtraData={universal_currency_list}
-												className="table-header-bg"
-											>
-												 {strings.AMOUNT}
-											</TableHeaderColumn>
-					
-											<TableHeaderColumn
-												className="text-right"
-												columnClassName="text-right"
-											//	width="5%"
-												dataFormat={this.renderActions}
-												className="table-header-bg"
-											></TableHeaderColumn>
-										</BootstrapTable>
-								</Col>
-							</Row>
-						</CardBody>
-					</Card>
-				</div>
+										<Col lg={12}>
 
-				<EmailModal
-					openEmailModal={this.state.openEmailModal}
-					closeEmailModal={(e) => {
-						this.closeEmailModal(e);
-					}}
-					sendEmail={(e) => {
-						this.sendMail(this.state.rowId);
-					}}
-					id={this.state.rowId}
-				/>
-				
-			</div>
-			</div>
+											<div className="d-flex justify-content-end">
+												<ButtonGroup size="sm">
+
+												</ButtonGroup>
+											</div>
+											<div className="py-3">
+												<h5>{strings.Filter} : </h5>
+												<Row>
+
+
+
+													<Col lg={2} className="mb-1">
+														<Input
+															maxLength="14,2"
+															type="number"
+															min="0"
+															value={filterData.amount}
+															placeholder={strings.Amount}
+															onChange={(e) => {
+																this.handleChange(e.target.value, 'amount');
+															}}
+														/>
+													</Col>
+
+													<Col lg={2} className="pl-0 pr-0">
+														<Button
+															type="button"
+															color="primary"
+															className="btn-square mr-1"
+															onClick={this.handleSearch}
+														>
+															<i className="fa fa-search"></i>
+														</Button>
+														<Button
+															type="button"
+															color="primary"
+															className="btn-square"
+															onClick={this.clearAll}
+														>
+															<i className="fa fa-refresh"></i>
+														</Button>
+													</Col>
+												</Row>
+											</div>
+											<Row>
+												<div style={{ width: "1650px" }}>
+													<Button
+														color="primary"
+														className="btn-square pull-right mb-2"
+														style={{ marginBottom: '10px' }}
+														onClick={() =>
+															this.props.history.push(
+																'/admin/expense/debit-notes/create',
+															)
+														}
+													>
+														<i className="fas fa-plus mr-1" />
+														Add New Debit-Note
+													</Button></div></Row>
+
+											<BootstrapTable
+												selectRow={this.selectRowProp}
+												search={false}
+												options={this.options}
+												data={cN_list ? cN_list : []}
+												version="4"
+												hover
+												responsive
+												currencyList
+												keyField="id"
+												remote
+												pagination={
+													cN_list &&
+														cN_list.length > 0
+														? true
+														: false
+												}
+												fetchInfo={{
+													dataTotalSize: cN_list.count
+														? cN_list.count
+														: 0,
+												}}
+												className="customer-invoice-table"
+												csvFileName="Customer_Invoice.csv"
+												ref={(node) => {
+													this.table = node;
+												}}
+											>
+												<TableHeaderColumn
+													dataField="creditNoteNumber"
+													dataSort
+													//	width="7%"
+													className="table-header-bg"
+												>
+
+													Debit Note Number
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													width="20%"
+													dataField="contactName"
+													//	dataSort width="10%"
+													className="table-header-bg"
+												>
+													{strings.SUPPLIERNAME}
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													//width="9%"
+													dataField="status"
+													dataFormat={this.renderInvoiceStatus}
+													dataSort
+													className="table-header-bg"
+												>
+													{strings.STATUS}
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													dataField="creditNoteDate"
+													dataSort
+													//width="6%"
+													dataFormat={this.debitNoteDate}
+													className="table-header-bg"
+												>
+													{strings.DATE}
+												</TableHeaderColumn>
+
+												<TableHeaderColumn
+													dataAlign="right"
+													dataField="totalAmount"
+													dataSort
+													width="20%"
+													dataFormat={this.renderamount}
+													formatExtraData={universal_currency_list}
+													className="table-header-bg"
+												>
+													{strings.AMOUNT}
+												</TableHeaderColumn>
+
+												<TableHeaderColumn
+													className="table-header-bg text-right"
+													columnClassName="text-right"
+													//	width="5%"
+													dataFormat={this.renderActions}
+												></TableHeaderColumn>
+											</BootstrapTable>
+										</Col>
+									</Row>
+								</CardBody>
+							</Card>
+						</div>
+
+						<EmailModal
+							openEmailModal={this.state.openEmailModal}
+							closeEmailModal={(e) => {
+								this.closeEmailModal(e);
+							}}
+							sendEmail={(e) => {
+								this.sendMail(this.state.rowId);
+							}}
+							id={this.state.rowId}
+						/>
+
+					</div>
+				</div>
 		);
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeditNotes);
+export default connect(mapStateToProps, mapDispatchToProps)(DebitNotes);

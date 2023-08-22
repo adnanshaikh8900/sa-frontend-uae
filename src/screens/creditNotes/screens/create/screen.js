@@ -2361,9 +2361,10 @@ class CreateCreditNote extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
+																					maxLength="14,2"
 																					id="creditAmount"
 																					name="creditAmount"
-																					placeholder={strings.Enter + " Credit Amount"}
+																					placeholder={strings.Enter + strings.CreditAmount}
 																					value={this.state.creditAmount}
 																					// onBlur={props.handleBlur('currencyCode')}
 																					onChange={(value) => {

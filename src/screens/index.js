@@ -56,6 +56,13 @@ import CreateGoodsReceivedNote from './goods_received_note/screens/create';
 import DetailGoodsReceivedNote from './goods_received_note/screens/detail';
 import ViewGoodsReceivedNote from './goods_received_note/screens/view';
 
+import CreateDebitNote from './debitNotes/screens/create'
+import DebitNotes from './debitNotes'
+import DetailDebitNote  from './debitNotes/screens/detail'
+import RefundDebitNote from './debitNotes/screens/refund'
+import ApplyToSupplierInvoice from './debitNotes/screens/applyToInvoice'
+import ViewDebitNote from './debitNotes/screens/view'
+
 import Quotation from './quotation';
 import CreateQuotation from './quotation/screens/create';
 import DetailQuotation from './quotation/screens/detail';
@@ -388,5 +395,11 @@ export {
 	ViewFtaExciseAuditReport,
 	ARAgingReport,
 	SubReports,
-	NotesSettings
+	NotesSettings,
+	DebitNotes,
+	CreateDebitNote,
+	DetailDebitNote,
+	RefundDebitNote,
+	ApplyToSupplierInvoice,
+	ViewDebitNote,
 };

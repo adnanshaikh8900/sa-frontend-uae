@@ -356,6 +356,9 @@ const en = {
       GRNREMARKS: "GRN Remarks",
       AddNewGoodsReceivedNotes: "Add New Goods Received Note",
 
+      //Debit Notes
+      DebitNotes:"Debit Notes",
+      
       //AddGoodsReceiveNotes
       CreateGoodsReceivedNote: "Create Goods Received Note",
       GRNNumber: "GRN Number",

@@ -362,6 +362,8 @@ class CreateCreditNoteModal extends React.Component {
 						<Input
 							type="number"
 							// disabled
+							min="0"
+							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								
@@ -788,6 +790,7 @@ class CreateCreditNoteModal extends React.Component {
 						   <Input
 						type="text"
 						maxLength="250"
+						disabled
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);

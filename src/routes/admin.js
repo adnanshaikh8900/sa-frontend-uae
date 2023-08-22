@@ -76,6 +76,14 @@ import {
 	CreatePayment,
 	DetailPayment,
 
+	//Debit Notes Screens
+	DebitNotes,
+	CreateDebitNote,
+	DetailDebitNote,
+	RefundDebitNote,
+	ApplyToSupplierInvoice,
+	ViewDebitNote,
+
 	// Vat Screens
 	VatTransactions,
 	ReportsFiling,
@@ -503,6 +511,36 @@ const adminRoutes = [
 		path: '/admin/expense/supplier-invoice',
 		name: 'Supplier Invoices',
 		component: SupplierInvoice.screen,
+	},
+	Config.EXPENSE_DB &&{
+		path: '/admin/expense/debit-notes',
+		name: 'Debit Note',
+		component: DebitNotes.screen,
+	},
+	Config.EXPENSE_DB &&{
+		path: '/admin/expense/debit-notes/create',
+		name: 'AddDebitNotes',
+		component: CreateDebitNote.screen,
+	},
+	Config.EXPENSE_DB &&{
+		path: '/admin/expense/debit-notes/update',
+		name: 'UpdateDebitNotes',
+		component: DetailDebitNote.screen,
+	},	
+	Config.EXPENSE_DB &&{
+		path: '/admin/expense/debit-notes/refund',
+		name: 'Refund',
+		component: RefundDebitNote.screen,
+	},
+	Config.EXPENSE_DB &&{
+		path: '/admin/expense/debit-notes/applyToInvoice',
+		name: 'Apply To Invoice',
+		component: ApplyToSupplierInvoice.screen,
+	},
+	Config.EXPENSE_DB &&{
+		path: '/admin/expense/debit-notes/view',
+		name: 'ViewDebitNotes',
+		component: ViewDebitNote.screen,
 	},
 	Config.EXPENSE_EXPENSES && {
 		path: '/admin/expense/expense/create',

@@ -25,6 +25,7 @@ export default {
   EXPENSE_RFQ: false,
   EXPENSE_PO: false,
   EXPENSE_GRN: false,
+  EXPENSE_DB: true,
 
   INCOME_CI: true,
   INCOME_IR: true,

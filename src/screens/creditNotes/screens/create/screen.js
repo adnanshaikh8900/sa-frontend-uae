@@ -102,7 +102,7 @@ class CreateCreditNote extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					exciseTaxId: '',
-					exciseAmount: '',
+					exciseAmount: 0,
 					subTotal: 0,
 					vatAmount: 0,
 					productId: '',
@@ -132,6 +132,8 @@ class CreateCreditNote extends React.Component {
 						id: 0,
 						description: '',
 						quantity: 1,
+						exciseAmount: 0,
+						discount: 0,
 						unitPrice: '',
 						vatCategoryId: '',
 						productId: '',
@@ -2613,6 +2615,8 @@ min="0"
 																					service
 																				</UncontrolledTooltip>
 																			</TableHeaderColumn>
+																			{console.log(props.values.lineItemsString)}
+																			{props.values.lineItemsString.map(i => ( i.exciseAmount != 0 ? (
 																			<TableHeaderColumn
 																				width="10%"
 																				dataField="exciseTaxId"
@@ -2632,6 +2636,9 @@ min="0"
 																					Excise dropdown will be enabled only for the excise products
 																				</UncontrolledTooltip>
 																			</TableHeaderColumn>
+																			) : null))
+																			}
+																			{props.values.lineItemsString.map(i => ( i.discount != 0 ? (
 																			<TableHeaderColumn
 																				width="12%"
 																				dataField="discount"
@@ -2641,6 +2648,17 @@ min="0"
 																			>
 																				{strings.DisCount}
 																			</TableHeaderColumn>
+																			) : null))
+																			}
+																			{/* <TableHeaderColumn
+																				width="12%"
+																				dataField="discount"
+																				dataFormat={(cell, rows) =>
+																					this.renderDiscount(cell, rows, props)
+																				}
+																			>
+																				{strings.DisCount}
+																			</TableHeaderColumn> */}
 																			<TableHeaderColumn
 																				dataField="vat"
 																				dataFormat={(cell, rows) =>
@@ -2671,7 +2689,7 @@ min="0"
 																		</BootstrapTable>
 																	</Col>
 																</Row>)}
-																{this.state.data.length > 0 ? (
+																{this.state.data[0].id != 0 ? (
 																	<Row>
 																		<Col lg={8}>
 																			<FormGroup className="py-2">
@@ -2963,6 +2981,7 @@ min="0"
 																				</Col>
 																			</Row> */}
 																				</div>
+																				{initValue.total_excise == 0 ? null : (
 																				<div className="total-item p-2" >
 																					<Row>
 																						<Col lg={6}>
@@ -2979,7 +2998,9 @@ min="0"
 																						</Col>
 																					</Row>
 																				</div>
-																				<div className="total-item p-2">
+																				)}
+																				{initValue.discount == 0 ? null : (
+																					<div className="total-item p-2">
 																					<Row>
 																						<Col lg={6}>
 																							<h5 className="mb-0 text-right">
@@ -2996,6 +3017,7 @@ min="0"
 																						</Col>
 																					</Row>
 																				</div>
+																				)}
 
 																				<div className="total-item p-2">
 																					<Row>
@@ -3062,7 +3084,29 @@ min="0"
 																			</div>)}
 																		</Col>
 																	</Row>
-																) : null}
+																) : (
+																	<Row>
+																		<Col lg={8}>
+																			<FormGroup className="py-2">
+																				<Label htmlFor="notes">{strings.RefundNotes}</Label><br />
+																				<TextareaAutosize
+																					type="textarea"
+																					style={{ width: "700px" }}
+																					className="textarea form-control"
+																					maxLength="255"
+																					name="notes"
+																					id="notes"
+																					rows="2"
+																					placeholder={strings.DeliveryNotes}
+																					onChange={(option) =>
+																						props.handleChange('notes')(option)
+																					}
+																					value={props.values.notes}
+																				/>
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																)}
 																<Row>
 																	<Col
 																		lg={12}

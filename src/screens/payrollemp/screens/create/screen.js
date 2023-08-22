@@ -44,6 +44,7 @@ import * as DetailEmployeePersonalAction from '../update_emp_personal/actions';
 import * as DetailEmployeeEmployementAction from '../update_emp_employemet/actions';
 import * as DetailEmployeeBankAction from '../update_emp_bank/actions';
 import * as DesignationActions from '../../../designation/actions'
+import { upperFirst } from 'lodash-es';
 
 const mapStateToProps = (state) => {
     return ({
@@ -219,7 +220,7 @@ class CreateEmployeePayroll extends React.Component {
         this.formRef = React.createRef();
         this.regEx = /^[0-9\d]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
-        this.regExAlpha = /^[a-zA-Z]+$/;
+        this.regExAlpha =/^[A-Za-z\s]+$/;
         this.regExAddress = /^[a-zA-Z0-9\s\D,'-/ ]+$/;
         this.regExQualification = /^[a-zA-Z,-/ ]+$/;
         this.regExQualificationYear = /^[0-9,'-]+$/;
@@ -1556,7 +1557,9 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                             placeholder={strings.Enter + strings.FirstName}
 
                                                                                                             onChange={(option) => {
-                                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
+                                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value))
+                                                                                                                option = upperFirst(option.target.value)
+                                                                                                                 { props.handleChange('firstName')(option) }
                                                                                                             }}
                                                                                                             className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
                                                                                                         />
@@ -1576,7 +1579,9 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                             value={props.values.middleName}
                                                                                                             placeholder={strings.Enter + strings.MiddleName}
                                                                                                             onChange={(option) => {
-                                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) }
+                                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value)) 
+                                                                                                                option = upperFirst(option.target.value)
+                                                                                                                { props.handleChange('middleName')(option) }
                                                                                                             }}
                                                                                                             className={props.errors.middleName && props.touched.middleName ? "is-invalid" : ""}
                                                                                                         />
@@ -1596,7 +1601,9 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                             value={props.values.lastName}
                                                                                                             placeholder={strings.Enter + strings.LastName}
                                                                                                             onChange={(option) => {
-                                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
+                                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value))
+                                                                                                                option = upperFirst(option.target.value)
+                                                                                                                 { props.handleChange('lastName')(option) }
                                                                                                             }}
                                                                                                             className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
                                                                                                         />

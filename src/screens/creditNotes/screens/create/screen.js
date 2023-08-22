@@ -1312,6 +1312,7 @@ class CreateCreditNote extends React.Component {
 					this.props.creditNotesActions.getInvoiceListForDropdown();
 					this.setState(
 						{
+							remainingInvoiceAmount:'',
 							createMore: false,
 							selectedContact: '',
 							term: '',

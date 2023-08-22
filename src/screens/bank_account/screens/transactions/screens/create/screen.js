@@ -647,6 +647,7 @@ class CreateBankTransaction extends React.Component {
                 ? UnPaidPayrolls_List
                 : []
             }
+            placeholder={strings.Select+strings.Payroll}
             id="payrollListIds"
             onChange={(option) => {
               this.state.selectedPayrollListBank = []

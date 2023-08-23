@@ -326,7 +326,7 @@ class CreateCreditNote extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback display-d">
+								<div className="invalid-feedback d-block">
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}

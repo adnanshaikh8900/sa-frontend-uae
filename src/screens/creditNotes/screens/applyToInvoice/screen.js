@@ -201,6 +201,7 @@ class ApplyToInvoice extends React.Component {
 								invoice_list: res.data,
 								invoice_number: this.props.location.state.referenceNumber,
 								creditNoteId: this.props.location.state.creditNoteId,
+								creditNoteNumber: this.props.location.state.creditNoteNumber,
 								
 								discountAmount: res.data.discount ? res.data.discount : 0,
 								discountPercentage: res.data.discountPercentage
@@ -1236,7 +1237,7 @@ handleSubmit=(data)=>{
 												<i className="fas fa-address-book" />
 	<span className="ml-2">
 		{/* Apply To Invoice  */}
-	{strings.Applycreditsfrom} <u>{this.state.invoice_number}</u></span>
+	{strings.Applycreditsfrom} <u>{this.state.creditNoteNumber}</u></span>
 											</div>
 										</Col>
 									</Row>

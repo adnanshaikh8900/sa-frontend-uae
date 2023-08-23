@@ -24,8 +24,6 @@ import * as CreditNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { LeavePage, Loader } from 'components';
-import { CustomerModal, ProductModal } from '../../sections';
-import { MultiSupplierProductModal } from '../../sections';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -157,10 +155,6 @@ class CreateCreditNote extends React.Component {
 			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
 			currentData: {},
 			contactType: 2,
-			openMultiSupplierProductModal: false,
-			openCustomerModal: false,
-			openProductModal: false,
-			openInvoiceNumberModel: false,
 			selectedContact: '',
 			createMore: false,
 			fileName: '',
@@ -181,7 +175,8 @@ class CreateCreditNote extends React.Component {
 			quantityExceeded: '',
 			isCreatedWithoutInvoice: false,
 			loadingMsg: "Loading",
-			disableLeavePage: false
+			disableLeavePage: false,
+			lockInvoiceDetail: false
 		};
 
 		this.formRef = React.createRef();
@@ -331,7 +326,7 @@ class CreateCreditNote extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback">
+								<div className="invalid-feedback display-d">
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
@@ -609,6 +604,11 @@ class CreateCreditNote extends React.Component {
 		this.getCompanyCurrency();
 		this.salesCategory();
 		this.purchaseCategory();
+		if (this.props.location?.state?.invoiceID) {
+			this.getInvoiceDetails(this.props.location?.state?.invoiceID)
+			this.formRef.current.setFieldValue('invoiceNumber', this.props.location?.state?.invoiceID, true);
+			this.setState({ invoiceSelected: true, lockInvoiceDetail: true })
+		}
 	};
 
 	getCompanyCurrency = (basecurrency) => {
@@ -1160,7 +1160,7 @@ class CreateCreditNote extends React.Component {
 				net_value = parseFloat(net_value) + parseFloat(excisevalue);
 				const vat_amount = vat === 0 ? 0 : ((+net_value * vat) / 100);
 
-				totalnetamount(net_value-excisevalue)
+				totalnetamount(net_value - excisevalue)
 				totalexcise(excisevalue)
 				totalvalt(vat_amount)
 				totalamount(vat_amount + net_value)
@@ -1181,10 +1181,10 @@ class CreateCreditNote extends React.Component {
 						((+net_value * (vat / (100 + vat) * 100)) / 100));
 
 				//net value after removing vat for inclusive
-				net_value = net_value - vat_amount		
+				net_value = net_value - vat_amount
 				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
 
-				totalnetamount(net_value-excisevalue)
+				totalnetamount(net_value - excisevalue)
 				totalexcise(excisevalue)
 				totalvalt(vat_amount)
 				totalamount(vat_amount + net_value)
@@ -1262,7 +1262,7 @@ class CreateCreditNote extends React.Component {
 		const { term } = this.state;
 		const formData = new FormData();
 
-		formData.append('isCreatedWithoutInvoice', this.state.isCreatedWIWP);
+		formData.append('isCreatedWithoutInvoice', this.state.isCreatedWithoutInvoice);
 		formData.append('creditNoteNumber', creditNoteNumber ? this.state.prefix + creditNoteNumber : '',);
 		formData.append('email', email ? email : '',);
 		formData.append('creditNoteDate', creditNoteDate ? moment(creditNoteDate, 'DD-MM-YYYY').toDate() : null,);
@@ -1314,7 +1314,7 @@ class CreateCreditNote extends React.Component {
 					this.props.creditNotesActions.getInvoiceListForDropdown();
 					this.setState(
 						{
-							remainingInvoiceAmount:'',
+							remainingInvoiceAmount: '',
 							createMore: false,
 							selectedContact: '',
 							term: '',
@@ -1367,71 +1367,6 @@ class CreateCreditNote extends React.Component {
 				);
 			});
 	};
-	openInvoiceNumberModel = (props) => {
-		this.setState({ openInvoiceNumberModel: true });
-	};
-	openCustomerModal = (props) => {
-		this.setState({ openCustomerModal: true });
-	};
-	openProductModal = (props) => {
-		this.setState({ openProductModal: true });
-	};
-	openMultiSupplierProductModal = (props) => {
-		this.setState({ openMultiSupplierProductModal: true });
-	};
-	closeMultiSupplierProductModal = (props) => {
-		this.setState({ openMultiSupplierProductModal: false });
-	};
-
-	openInvoicePreviewModal = (props) => {
-		this.setState({ openInvoicePreviewModal: true });
-	};
-
-	// getCurrentUser = (data) => {
-	// 	let option;
-	// 	console.log('data', data)
-	// 	if (data.label || data.value) {
-	// 		option = data;
-	// 	} else {
-	// 		option = {
-	// 			label: `${data.fullName}`,
-	// 			value: data.id,
-	// 		};
-	// 	}
-	// 	this.formRef.current.setFieldValue('contactId', option, true);
-	// };
-
-	getCurrentUser = (data) => {
-		let option;
-
-		if (data.label || data.value) {
-			option = data;
-		} else {
-			option = {
-				label: `${data.fullName}`,
-				value: data.id,
-			};
-		}
-
-		let result = this.props.currency_convert_list.filter((obj) => {
-			return obj.currencyCode === data.currencyCode;
-		});
-
-		this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
-		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-
-		this.setState({
-			customer_currency: data.currencyCode,
-			customer_currency_des: result[0].currencyName,
-		})
-
-		// this.setState({
-		//   selectedContact: option
-		// })
-
-		this.formRef.current.setFieldValue('contactId', option, true);
-	};
-
 	getCurrentNumber = (data) => {
 		this.getInvoiceNo();
 	};
@@ -1501,21 +1436,6 @@ class CreateCreditNote extends React.Component {
 			);
 		});
 	};
-
-	closeCustomerModal = (res) => {
-		this.setState({ openCustomerModal: false });
-	};
-	closeInvoiceNumberModel = (res) => {
-		this.setState({ openInvoiceNumberModel: false });
-	};
-	closeProductModal = (res) => {
-		this.setState({ openProductModal: false });
-	};
-
-	closeInvoicePreviewModal = (res) => {
-		this.setState({ openInvoicePreviewModal: false });
-	};
-
 	getInvoiceNo = () => {
 		this.props.creditNotesCreateActions.getInvoiceNo().then((res) => {
 			if (res.status === 200) {
@@ -1568,91 +1488,37 @@ class CreateCreditNote extends React.Component {
 		return customer_taxTreatmentId;
 	}
 
-	invoiceValue = (e, row, name, form, field, props) => {
-		const { invoice_list } = this.props;
-		let data = this.state.data;
-		const result = invoice_list.data.find((item) => item.id === parseInt(e));
-		let idx;
-		data.map((obj, index) => {
-			if (obj.id === row.id) {
-
-				obj['unitPrice'] = result.unitPrice;
-				obj['vatCategoryId'] = result.vatCategoryId;
-				obj['description'] = result.description;
-				idx = index;
-			}
-			return obj;
-		});
-
-		this.updateAmount(data, props);
-	};
-
-	getInvoiceDetails = (e, row, props, form, field) => {
-		let option;
-		const { invoice_list, selectedData } = this.props;
-		let idx;
-		this.state.data.map((obj, index) => {
-			if (obj.id === row.id) {
-				idx = index;
-			}
-			return obj;
-		});
-		if (e && e.label !== 'Select Invoice Number') {
-
-			this.invoiceValue(
-				e.value,
-				row,
-				'invoiceNumber',
-				form,
-				field,
-				props,
-			);
+	getInvoiceDetails = (value) => {
+		if (value) {
 			this.props.creditNotesCreateActions
-				.getInvoiceById(e.value).then((response) => {
+				.getInvoiceById(value).then((response) => {
 					const customerdetails = {
 						label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
 						value: response.data.contactId
 					}
 
-					this.setState(
-						{
-							option: {
-								label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
-								value: response.data.contactId,
-							},
-							data: response.data.invoiceLineItems,
-							totalAmount: response.data.totalAmount,
-							customer_currency: response.data.currencyCode,
-							remainingInvoiceAmount: response.data.remainingInvoiceAmount,
-
-
-
-							//	data1:response.data.supplierId,
-						}, () => {
-							this.formRef.current.setFieldValue(
-								'lineItemsString',
-								this.state.data,
-								true,
-							);
-							this.formRef.current.setFieldTouched(
-								`lineItemsString[${this.state.data.length - 1}]`,
-								false,
-								true,
-							);
-							this.updateAmount(this.state.data)
-							// this.formRef.current.setFieldValue(
-
-							// 	totalAmount,
-							// 	true,
-							// );
+					this.setState({
+						option: {
+							label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
+							value: response.data.contactId,
 						},
-						// () => {
-						// 	this.formRef.current.setFieldValue('supplierId',
-						// 	this.state.option.value,
-						// 	true,)
-						// },
-
-					);
+						data: response.data.invoiceLineItems,
+						totalAmount: response.data.totalAmount,
+						customer_currency: response.data.currencyCode,
+						remainingInvoiceAmount: response.data.remainingInvoiceAmount,
+					}, () => {
+						this.formRef.current.setFieldValue(
+							'lineItemsString',
+							this.state.data,
+							true,
+						);
+						this.formRef.current.setFieldTouched(
+							`lineItemsString[${this.state.data.length - 1}]`,
+							false,
+							true,
+						);
+						this.updateAmount(this.state.data)
+					},);
 					this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
 					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
 					this.setExchange(this.getCurrency(customerdetails.value));
@@ -1671,7 +1537,7 @@ class CreateCreditNote extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, loadingMsg } = this.state
-		const { data, discountOptions, initValue, exist, prefix } = this.state;
+		const { data, discountOptions, initValue, exist, lockInvoiceDetail } = this.state;
 		const {
 			customer_list,
 			invoice_list,
@@ -1842,30 +1708,30 @@ class CreateCreditNote extends React.Component {
 													>
 														{(props) => (
 															<Form onSubmit={props.handleSubmit}>
-
-																<Row style={{ display: this.state.invoiceSelected === true ? '' : 'none' }}>
-																	<Col lg={4}>
-																		<Checkbox
-																			checked={this.state.isCreatedWIWP}
-																			onChange={(check) => {
-																				this.setState({ isCreatedWIWP: !this.state.isCreatedWIWP })
-																			}}
-																		/>	{strings.CreateCreditNoteWithoutProduct}
-																	</Col>
-																</Row>
-																{this.state.invoiceSelected == false && (<Row  >
-																	<Col lg={4}>
-																		<Checkbox
-																			checked={this.state.isCreatedWithoutInvoice}
-																			onChange={(check) => {
-																				this.setState({ isCreatedWithoutInvoice: !this.state.isCreatedWithoutInvoice })
-																				this.setState({ isCreatedWIWP: !this.state.isCreatedWIWP })
-																			}}
-																		/>	{strings.CreateCreditNoteWithoutInvoice}
-																	</Col>
-																</Row>)}
-																<hr />
-
+																{!lockInvoiceDetail && <div>
+																	<Row style={{ display: this.state.invoiceSelected === true ? '' : 'none' }}>
+																		<Col lg={4}>
+																			<Checkbox
+																				checked={this.state.isCreatedWIWP}
+																				onChange={(check) => {
+																					this.setState({ isCreatedWIWP: !this.state.isCreatedWIWP })
+																				}}
+																			/>	{strings.CreateCreditNoteWithoutProduct}
+																		</Col>
+																	</Row>
+																	{this.state.invoiceSelected == false && (<Row  >
+																		<Col lg={4}>
+																			<Checkbox
+																				checked={this.state.isCreatedWithoutInvoice}
+																				onChange={(check) => {
+																					this.setState({ isCreatedWithoutInvoice: !this.state.isCreatedWithoutInvoice })
+																					this.setState({ isCreatedWIWP: !this.state.isCreatedWIWP })
+																				}}
+																			/>	{strings.CreateCreditNoteWithoutInvoice}
+																		</Col>
+																	</Row>)}
+																	<hr />
+																</div>}
 																<Row>
 																	{!this.state.isCreatedWithoutInvoice && (<Col lg={3}>
 																		<FormGroup className="mb-3">
@@ -1873,6 +1739,7 @@ class CreateCreditNote extends React.Component {
 																				{strings.InvoiceNumber}
 																			</Label>
 																			<Select
+																				isDisabled={lockInvoiceDetail}
 																				id="invoiceNumber"
 																				name="invoiceNumber"
 																				placeholder={strings.Select + strings.InvoiceNumber}
@@ -1886,18 +1753,26 @@ class CreateCreditNote extends React.Component {
 																						)
 																						: []
 																				}
-																				value={props.values.invoiceNumber}
+																				value={props.values.invoiceNumber?.value ? props.values.invoiceNumber :
+																					invoice_list.data
+																					&& selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						invoice_list.data,
+																						'Invoice Number',
+																					).find(obj => obj.value === props.values.invoiceNumber)}
 
 																				onChange={(option) => {
 																					if (option && option.value) {
 
-																						this.getInvoiceDetails(option, option.value, props)
+																						this.getInvoiceDetails(option.value)
 																						props.handleChange('invoiceNumber')(option);
 																						this.setState({ invoiceSelected: true })
 
 																					} else {
 																						this.setState({ invoiceSelected: false })
 																						props.handleChange('invoiceNumber')('');
+																						this.setState({ invoiceSelected: false })
 																					}
 
 																					// if(!this.state.data1){
@@ -2057,157 +1932,9 @@ class CreateCreditNote extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-
-																	{/* <Col>
-																<Label
-																	htmlFor="contactId"
-																	style={{ display: 'block' }}
-																>
-																	 {strings.AddNewCustomer}
-																</Label>
-																<Button
-																	type="button"
-																	color="primary"
-																	className="btn-square mr-3 mb-3"
-																	onClick={(e, props) => {
-																		this.openCustomerModal(props);
-																	}}
-																>
-																	<i className="fa fa-plus"></i> {strings.AddACustomer}
-																</Button>
-															</Col> */}
-																	{/* <Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">* </span>
-																		Place of Supply
-																	</Label>
-																	<Select
-																		styles={customStyles}
-																		id="placeOfSupplyId"
-																		name="placeOfSupplyId"
-																		placeholder="Select Place of Supply"
-																		options={
-																			this.placelist
-																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						this.placelist,
-																						'Place of Supply',
-																						
-																				  )
-																				: []
-																		}
-																		value={this.state.placelist}
-																		className={
-																			props.errors.placeOfSupplyId &&
-																			props.touched.placeOfSupplyId
-																				? 'is-invalid'
-																				: ''
-																		}
-																		onChange={(option) =>
-																			props.handleChange('placeOfSupplyId')(
-																				option,
-																			)
-																		}
-																	/>
-																	{props.errors.placeOfSupplyId &&
-																		props.touched.placeOfSupplyId && (
-																			<div className="invalid-feedback">
-																				{props.errors.placeOfSupplyId}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col> */}
 																</Row>
 																<hr />
 																<Row>
-																	{/* <Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="term">
-																		<span className="text-danger">* </span>Terms{' '}
-																		<i
-																			id="UncontrolledTooltipExample"
-																			className="fa fa-question-circle ml-1"
-																		></i>
-																		<UncontrolledTooltip
-																			placement="right"
-																			target="UncontrolledTooltipExample"
-																		>
-																			<p>
-																				{' '}
-																				Terms- The duration given to a buyer for
-																				payment.
-																			</p>
-
-																			<p>
-																				Net 7 – payment due in 7 days from
-																				invoice date{' '}
-																			</p>
-
-																			<p>
-																				{' '}
-																				Net 10 – payment due in 10 days from
-																				invoice date{' '}
-																			</p>
-
-																			<p>
-																				{' '}
-																				Net 30 – payment due in 30 days from
-																				invoice date{' '}
-																			</p>
-																		</UncontrolledTooltip>
-																	</Label>
-																	<Select
-																		styles={customStyles}
-																		options={
-																			this.termList
-																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						this.termList,
-																						'Terms',
-																				  )
-																				: []
-																		}
-																		id="term"
-																		name="term"
-																		placeholder="Select Terms "
-																		value={this.state.term}
-																		onChange={(option) => {
-																			props.handleChange('term')(option);
-																			if (option.value === '') {
-																				this.setState({
-																					term: option,
-																				});
-																				props.setFieldValue(
-																					'invoiceDueDate',
-																					'',
-																				);
-																			} else {
-																				this.setState(
-																					{
-																						term: option,
-																					},
-																					() => {
-																						this.setDate(props, '');
-																					},
-																				);
-																			}
-																		}}
-																		className={`${
-																			props.errors.term && props.touched.term
-																				? 'is-invalid'
-																				: ''
-																		}`}
-																	/>
-																	{props.errors.term && props.touched.term && (
-																		<div className="invalid-feedback">
-																			{props.errors.term}
-																		</div>
-																	)}
-																</FormGroup>
-															</Col> */}
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="date">
@@ -2616,38 +2343,38 @@ min="0"
 																					service
 																				</UncontrolledTooltip>
 																			</TableHeaderColumn>
-																			{props.values.lineItemsString.map(i => ( i.discount != 0 ? (
-																			<TableHeaderColumn
-																				width="12%"
-																				dataField="discount"
-																				dataFormat={(cell, rows) =>
-																					this.renderDiscount(cell, rows, props)
-																				}
-																			>
-																				{strings.DisCount}
-																			</TableHeaderColumn>
+																			{props.values.lineItemsString.map(i => (i.discount != 0 ? (
+																				<TableHeaderColumn
+																					width="12%"
+																					dataField="discount"
+																					dataFormat={(cell, rows) =>
+																						this.renderDiscount(cell, rows, props)
+																					}
+																				>
+																					{strings.DisCount}
+																				</TableHeaderColumn>
 																			) : null))
 																			}
-																			{props.values.lineItemsString.map(i => ( i.exciseAmount != 0 ? (
-																			<TableHeaderColumn
-																				width="10%"
-																				dataField="exciseTaxId"
-																				dataFormat={(cell, rows) =>
-																					this.renderExcise(cell, rows, props)
-																				}
-																			>
-																				{strings.Excises}
-																				<i
-																					id="ExiseTooltip"
-																					className="fa fa-question-circle ml-1"
-																				></i>
-																				<UncontrolledTooltip
-																					placement="right"
-																					target="ExiseTooltip"
+																			{props.values.lineItemsString.map(i => (i.exciseAmount != 0 ? (
+																				<TableHeaderColumn
+																					width="10%"
+																					dataField="exciseTaxId"
+																					dataFormat={(cell, rows) =>
+																						this.renderExcise(cell, rows, props)
+																					}
 																				>
-																					Excise dropdown will be enabled only for the excise products
-																				</UncontrolledTooltip>
-																			</TableHeaderColumn>
+																					{strings.Excises}
+																					<i
+																						id="ExiseTooltip"
+																						className="fa fa-question-circle ml-1"
+																					></i>
+																					<UncontrolledTooltip
+																						placement="right"
+																						target="ExiseTooltip"
+																					>
+																						Excise dropdown will be enabled only for the excise products
+																					</UncontrolledTooltip>
+																				</TableHeaderColumn>
 																			) : null))
 																			}
 																			{/* <TableHeaderColumn
@@ -2982,41 +2709,41 @@ min="0"
 																			</Row> */}
 																				</div>
 																				{initValue.total_excise == 0 ? null : (
-																				<div className="total-item p-2" >
-																					<Row>
-																						<Col lg={6}>
-																							<h5 className="mb-0 text-right">
-																								{strings.TotalExcise}
-																							</h5>
-																						</Col>
-																						<Col lg={6} className="text-right">
-																							<label className="mb-0">
+																					<div className="total-item p-2" >
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">
+																									{strings.TotalExcise}
+																								</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">
 
-																								{this.state.customer_currency_symbol} &nbsp;
-																								{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																							</label>
-																						</Col>
-																					</Row>
-																				</div>
+																									{this.state.customer_currency_symbol} &nbsp;
+																									{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																								</label>
+																							</Col>
+																						</Row>
+																					</div>
 																				)}
 																				{initValue.discount == 0 ? null : (
 																					<div className="total-item p-2">
-																					<Row>
-																						<Col lg={6}>
-																							<h5 className="mb-0 text-right">
-																								{strings.Discount}
-																							</h5>
-																						</Col>
-																						<Col lg={6} className="text-right">
-																							<label className="mb-0">
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">
+																									{strings.Discount}
+																								</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">
 
-																								{this.state.customer_currency_symbol} &nbsp;
-																								{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																									{this.state.customer_currency_symbol} &nbsp;
+																									{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 
-																							</label>
-																						</Col>
-																					</Row>
-																				</div>
+																								</label>
+																							</Col>
+																						</Row>
+																					</div>
 																				)}
 
 																				<div className="total-item p-2">
@@ -3117,7 +2844,7 @@ min="0"
 																				type="button"
 																				color="primary"
 																				className="btn-square mr-3"
-																				disabled={this.state.disabled ||(parseFloat(parseFloat(initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
+																				disabled={this.state.disabled || (parseFloat(parseFloat(initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
 																				onClick={() => {
 																					//	added validation popup	msg
 																					props.handleBlur();
@@ -3193,48 +2920,6 @@ min="0"
 							</Col>
 						</Row>
 					</div>
-					<CustomerModal
-						openCustomerModal={this.state.openCustomerModal}
-						closeCustomerModal={(e) => {
-							this.closeCustomerModal(e);
-						}}
-						getCurrentUser={(e) => this.getCurrentUser(e)}
-						createCustomer={this.props.creditNotesActions.createCustomer}
-						currency_list={this.props.currency_convert_list}
-						currency={this.state.currency}
-						country_list={this.props.country_list}
-						getStateList={this.props.creditNotesActions.getStateList}
-					/>
-					<ProductModal
-						openProductModal={this.state.openProductModal}
-						closeProductModal={(e) => {
-							this.closeProductModal(e);
-						}}
-						getCurrentProduct={(e) => this.getCurrentProduct(e)}
-						createProduct={this.props.productActions.createAndSaveProduct}
-						vat_list={this.props.vat_list}
-						product_category_list={this.props.product_category_list}
-						salesCategory={this.state.salesCategory}
-						purchaseCategory={this.state.purchaseCategory}
-					/>
-					{
-						<MultiSupplierProductModal
-							openMultiSupplierProductModal={this.state.openMultiSupplierProductModal}
-							closeMultiSupplierProductModal={(e) => {
-								this.closeMultiSupplierProductModal(e);
-							}}
-							inventory_list={this.state.inventoryList}
-						/>}
-					{/* <InvoiceNumberModel
-					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
-					closeInvoiceNumberModel={(e) => {
-						this.closeInvoiceNumberModel(e);
-					}}
-					getCurrentNumber={(e) => this.getCurrentNumber(e)}
-						prefix ={this.state.prefixData}
-						updatePrefix={this.props.creditNotesActions.updateInvoicePrefix}
-					
-				/> */}
 				</div>
 				{this.state.disableLeavePage ? "" : <LeavePage />}
 			</div>

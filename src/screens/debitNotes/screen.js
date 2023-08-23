@@ -616,6 +616,7 @@ class DebitNotes extends React.Component {
 			});
 		}
 	};
+
 	removeInvoice = (id) => {
 		this.removeDialog();
 		this.props.customerInvoiceActions

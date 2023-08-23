@@ -767,7 +767,7 @@ class BankAccount extends React.Component {
 											</Row>
 										</div> */}
 										<Row>
-											<div style={{width:"1650px"}}>
+											<div style={{width:"1650px", padding: "15px"}}>
 										<Button
 											color="primary"
 											className="btn-square pull-right"

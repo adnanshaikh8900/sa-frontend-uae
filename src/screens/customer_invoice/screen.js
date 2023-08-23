@@ -1130,43 +1130,43 @@ class CustomerInvoice extends React.Component {
 													placeholder={strings.Status}
 												/>
 											</Col> */}
-												<Col lg={2} className="pl-0 pr-0">
-													<Button
-														type="button"
-														color="primary"
-														className="btn-square mr-1"
-														onClick={this.handleSearch}
-													>
-														<i className="fa fa-search"></i>
-													</Button>
-													<Button
-														type="button"
-														color="primary"
-														className="btn-square"
-														onClick={this.clearAll}
-													>
-														<i className="fa fa-refresh"></i>
-													</Button>
-												</Col>
-											</Row>
-										</div>
-										<Row>
-											<div style={{ width: "1650px" }}>
+											<Col lg={2} className="pl-0 pr-0">
 												<Button
+													type="button"
 													color="primary"
-													className="btn-square pull-right mb-2"
-													style={{ marginBottom: '10px' }}
-													onClick={() =>
-														this.props.history.push(
-															`/admin/income/customer-invoice/create`,
-														)
-													}
+													className="btn-square mr-1"
+													onClick={this.handleSearch}
 												>
-													<i className="fas fa-plus mr-1" />
-													{strings.AddNewInvoice}
+													<i className="fa fa-search"></i>
 												</Button>
-											</div>
+												<Button
+													type="button"
+													color="primary"
+													className="btn-square"
+													onClick={this.clearAll}
+												>
+													<i className="fa fa-refresh"></i>
+												</Button>
+											</Col>
 										</Row>
+									</div>
+									<Row>
+										<div style={{ width: "1650px" , padding: "15px"}}>
+											<Button
+												color="primary"
+												className="btn-square pull-right mb-2"
+												style={{ marginBottom: '10px' }}
+												onClick={() =>
+													this.props.history.push(
+														`/admin/income/customer-invoice/create`,
+													)
+												}
+											>
+												<i className="fas fa-plus mr-1" />
+												{strings.AddNewInvoice}
+											</Button>
+										</div>
+									</Row>
 
 										<BootstrapTable
 											selectRow={this.selectRowProp}

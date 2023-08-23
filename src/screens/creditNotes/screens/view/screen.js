@@ -154,6 +154,8 @@ class ViewCreditNote extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { invoiceData, currencyData, InvoiceDataList, contactData } = this.state;
 		const { profile } = this.props;
+		const uniqueInvoiceData = {};
+		const filteredInvoiceData = [];
 		return (
 			<div className="view-invoice-screen">
 				<div className="animated fadeIn">
@@ -251,8 +253,14 @@ class ViewCreditNote extends React.Component {
 								</thead>
 								<tbody className=" table-bordered table-hover">
 									{InvoiceDataList &&
-										InvoiceDataList.length &&
-										InvoiceDataList.map((item, index) => {
+										(InvoiceDataList.length ? (
+											InvoiceDataList.map((item) => {
+												if (!uniqueInvoiceData[item.invoiceNumber]) {
+													uniqueInvoiceData[item.invoiceNumber] = item;
+													filteredInvoiceData.push(item);
+												}
+											}),
+											filteredInvoiceData.map((item, index) => {
 											return (
 												<tr key={index}>
 													<td className="center">{index + 1}</td>
@@ -278,7 +286,7 @@ class ViewCreditNote extends React.Component {
 
 												</tr>
 											);
-										})}
+										})) : null )}
 								</tbody>
 							</Table>
 						</div>

@@ -351,7 +351,7 @@ class Refund extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Credit Refund Successfully',
+					res.data ? 'Refund Recorded Successfully!' : res.data.message ,
 				);
 				this.props.history.push('/admin/income/credit-notes');
 				this.setState({ loading:false,});

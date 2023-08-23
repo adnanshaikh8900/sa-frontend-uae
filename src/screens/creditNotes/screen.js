@@ -464,6 +464,7 @@ class CreditNotes extends React.Component {
 										this.props.history.push(
 											'/admin/income/credit-notes/applyToInvoice',
 											{ contactId: row.contactId , creditNoteId: row.id ,
+												creditNoteNumber:row.creditNoteNumber,
 											  referenceNumber:row.invoiceNumber,
 											  creditAmount:row.dueAmount},
 										);

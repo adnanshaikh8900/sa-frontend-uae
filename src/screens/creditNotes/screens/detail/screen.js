@@ -309,17 +309,19 @@ class DetailCreditNote extends React.Component {
 
 											//	data1:response.data.supplierId,
 										}, () => {
-											this.formRef.current.setFieldValue(
-												'lineItemsString',
-												this.state.data,
-												true,
-											);
-											this.formRef.current.setFieldTouched(
-												`lineItemsString[${this.state.data.length - 1}]`,
-												false,
-												true,
-											);
-											this.updateAmount(this.state.data)
+											if (this.state.data && this.state.data.length > 1) {
+												this.formRef.current.setFieldValue(
+													'lineItemsString',
+													this.state.data,
+													true,
+												);
+												this.formRef.current.setFieldTouched(
+													`lineItemsString[${this.state.data.length - 1}]`,
+													false,
+													true,
+												);
+												this.updateAmount(this.state.data)
+											}
 											// this.formRef.current.setFieldValue(
 
 											// 	totalAmount,
@@ -770,14 +772,14 @@ class DetailCreditNote extends React.Component {
 								}}
 								placeholder={strings.discount}
 								className={`form-control    ${props.errors.lineItemsString &&
-										props.errors.lineItemsString[parseInt(idx, 10)] &&
-										props.errors.lineItemsString[parseInt(idx, 10)].discount &&
-										Object.keys(props.touched).length > 0 &&
-										props.touched.lineItemsString &&
-										props.touched.lineItemsString[parseInt(idx, 10)] &&
-										props.touched.lineItemsString[parseInt(idx, 10)].discount
-										? 'is-invalid'
-										: ''
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)].discount
+									? 'is-invalid'
+									: ''
 									}`}
 
 							/>
@@ -1061,7 +1063,7 @@ class DetailCreditNote extends React.Component {
 				net_value = parseFloat(net_value) + parseFloat(excisevalue);
 				const vat_amount = vat === 0 ? 0 : ((+net_value * vat) / 100);
 
-				totalnetamount(net_value-excisevalue)
+				totalnetamount(net_value - excisevalue)
 				totalexcise(excisevalue)
 				totalvalt(vat_amount)
 				totalamount(vat_amount + net_value)
@@ -1085,7 +1087,7 @@ class DetailCreditNote extends React.Component {
 				net_value = net_value - vat_amount
 				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
 
-				totalnetamount(net_value-excisevalue)
+				totalnetamount(net_value - excisevalue)
 				totalexcise(excisevalue)
 				totalvalt(vat_amount)
 				totalamount(vat_amount + net_value)
@@ -2253,40 +2255,40 @@ min="0"
 																			>
 																				{strings.UNITPRICE}
 																			</TableHeaderColumn>
-																			{props.values.lineItemsString.map(i => ( i.discount != 0 ? (
-																			<TableHeaderColumn
-																				width="12%"
-																				dataField="discount"
-																				dataFormat={(cell, rows) =>
-																					this.renderDiscount(cell, rows, props)
-																				}
-																			>
-																				{strings.DisCount}
-																			</TableHeaderColumn>
-																			) : null))
-																		}
-																			{props.values.lineItemsString.map(i => ( i.exciseAmount != 0 ? (
-																			<TableHeaderColumn
-																				width="10%"
-																				dataField="exciseTaxId"
-																				dataFormat={(cell, rows) =>
-																					this.renderExcise(cell, rows, props)
-																				}
-																			>
-																				{strings.Excises}
-																				<i
-																					id="ExiseTooltip"
-																					className="fa fa-question-circle ml-1"
-																				></i>
-																				<UncontrolledTooltip
-																					placement="right"
-																					target="ExiseTooltip"
+																			{props.values.lineItemsString.map(i => (i.discount != 0 ? (
+																				<TableHeaderColumn
+																					width="12%"
+																					dataField="discount"
+																					dataFormat={(cell, rows) =>
+																						this.renderDiscount(cell, rows, props)
+																					}
 																				>
-																					Excise dropdown will be enabled only for the excise products
-																				</UncontrolledTooltip>
-																			</TableHeaderColumn>
+																					{strings.DisCount}
+																				</TableHeaderColumn>
 																			) : null))
-																		}
+																			}
+																			{props.values.lineItemsString.map(i => (i.exciseAmount != 0 ? (
+																				<TableHeaderColumn
+																					width="10%"
+																					dataField="exciseTaxId"
+																					dataFormat={(cell, rows) =>
+																						this.renderExcise(cell, rows, props)
+																					}
+																				>
+																					{strings.Excises}
+																					<i
+																						id="ExiseTooltip"
+																						className="fa fa-question-circle ml-1"
+																					></i>
+																					<UncontrolledTooltip
+																						placement="right"
+																						target="ExiseTooltip"
+																					>
+																						Excise dropdown will be enabled only for the excise products
+																					</UncontrolledTooltip>
+																				</TableHeaderColumn>
+																			) : null))
+																			}
 																			<TableHeaderColumn
 																				dataField="vat"
 																				dataFormat={(cell, rows) =>
@@ -2467,24 +2469,24 @@ min="0"
 																			</FormGroup>
 																		</Col>
 																		<Col lg={4}>
-																		{initValue.total_excise == 0 ? null : (
-																			<div className="total-item p-2" >
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.TotalExcise}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
+																			{initValue.total_excise == 0 ? null : (
+																				<div className="total-item p-2" >
+																					<Row>
+																						<Col lg={6}>
+																							<h5 className="mb-0 text-right">
+																								{strings.TotalExcise}
+																							</h5>
+																						</Col>
+																						<Col lg={6} className="text-right">
+																							<label className="mb-0">
 
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																		)}
+																								{this.state.customer_currency_symbol} &nbsp;
+																								{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							</label>
+																						</Col>
+																					</Row>
+																				</div>
+																			)}
 																			<div className="">
 																				{/* <div className="total-item p-2">
 																				<Row>
@@ -2631,25 +2633,25 @@ min="0"
 																					</Col>
 																				</Row>
 																			</div> */}
-																			{initValue.discount == 0 ? null : (
-																				<div className="total-item p-2">
-																					<Row>
-																						<Col lg={6}>
-																							<h5 className="mb-0 text-right">
-																								{strings.Discount}
-																							</h5>
-																						</Col>
-																						<Col lg={6} className="text-right">
-																							<label className="mb-0">
+																				{initValue.discount == 0 ? null : (
+																					<div className="total-item p-2">
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">
+																									{strings.Discount}
+																								</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">
 
-																								{this.state.customer_currency_symbol} &nbsp;
-																								{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																									{this.state.customer_currency_symbol} &nbsp;
+																									{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 
-																							</label>
-																						</Col>
-																					</Row>
-																				</div>
-																			)}
+																								</label>
+																							</Col>
+																						</Row>
+																					</div>
+																				)}
 
 																				<div className="total-item p-2">
 																					<Row>

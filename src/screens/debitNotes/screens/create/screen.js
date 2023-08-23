@@ -23,8 +23,6 @@ import * as CreditNotesCreateActions from './actions';
 import * as CreditNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { CustomerModal, ProductModal, InvoiceNumberModel } from '../../sections';
-import { MultiSupplierProductModal } from '../../sections';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -169,10 +167,6 @@ class CreateDebitNote extends React.Component {
 			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
 			currentData: {},
 			contactType: 2,
-			openMultiSupplierProductModal: false,
-			openCustomerModal: false,
-			openProductModal: false,
-			openInvoiceNumberModel: false,
 			selectedContact: '',
 			createMore: false,
 			fileName: '',
@@ -938,14 +932,6 @@ class CreateDebitNote extends React.Component {
 									field,
 									props,
 								);
-								// this.props.creditNotesActions.getInventoryByProductId(e.value).then((response) => {
-								// 	this.setState({
-								// 		inventoryList: response.data
-								// 	});
-								// 	if (response.data.length !== 0 && response.data.length !== 1) {
-								// 		this.openMultiSupplierProductModal(response);
-								// 	}
-								// });
 							} else {
 								form.setFieldValue(
 									`lineItemsString.${idx}.productId`,
@@ -988,20 +974,6 @@ class CreateDebitNote extends React.Component {
 				)}
 			/>
 		);
-		// } else {
-		// 	return (
-		// 		<Button
-		// 			type="button"
-		// 			color="primary"
-		// 			className="btn-square mr-3 mb-3"
-		// 			onClick={(e, props) => {
-		// 				this.openProductModal(props);
-		// 			}}
-		// 		>
-		// 			<i className="fa fa-plus"></i> Add a Product
-		// 		</Button>
-		// 	);
-		// }
 	};
 
 	deleteRow = (e, row, props) => {
@@ -1025,20 +997,6 @@ class CreateDebitNote extends React.Component {
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
-	};
-
-	renderAddProduct = (cell, rows, props) => {
-		return (
-			<Button
-				color="primary"
-				className="btn-twitter btn-brand icon"
-				onClick={(e, props) => {
-					this.openProductModal(props);
-				}}
-			>
-				<i className="fas fa-plus"></i>
 			</Button>
 		);
 	};
@@ -1350,25 +1308,6 @@ class CreateDebitNote extends React.Component {
 				);
 			});
 	};
-	openInvoiceNumberModel = (props) => {
-		this.setState({ openInvoiceNumberModel: true });
-	};
-	openCustomerModal = (props) => {
-		this.setState({ openCustomerModal: true });
-	};
-	openProductModal = (props) => {
-		this.setState({ openProductModal: true });
-	};
-	openMultiSupplierProductModal = (props) => {
-		this.setState({ openMultiSupplierProductModal: true });
-	};
-	closeMultiSupplierProductModal = (props) => {
-		this.setState({ openMultiSupplierProductModal: false });
-	};
-
-	openInvoicePreviewModal = (props) => {
-		this.setState({ openInvoicePreviewModal: true });
-	};
 
 	getCurrentUser = (data) => {
 		let option;
@@ -1460,21 +1399,6 @@ class CreateDebitNote extends React.Component {
 			);
 		});
 	};
-
-	closeCustomerModal = (res) => {
-		this.setState({ openCustomerModal: false });
-	};
-	closeInvoiceNumberModel = (res) => {
-		this.setState({ openInvoiceNumberModel: false });
-	};
-	closeProductModal = (res) => {
-		this.setState({ openProductModal: false });
-	};
-
-	closeInvoicePreviewModal = (res) => {
-		this.setState({ openInvoicePreviewModal: false });
-	};
-
 	getInvoiceNo = () => {
 		this.props.creditNotesCreateActions.getInvoiceNo().then((res) => {
 			if (res.status === 200) {
@@ -2511,39 +2435,6 @@ class CreateDebitNote extends React.Component {
 						</Col>
 					</Row>
 				</div>
-				<CustomerModal
-					openCustomerModal={this.state.openCustomerModal}
-					closeCustomerModal={(e) => {
-						this.closeCustomerModal(e);
-					}}
-					getCurrentUser={(e) => this.getCurrentUser(e)}
-					createCustomer={this.props.creditNotesActions.createCustomer}
-					currency_list={this.props.currency_convert_list}
-					currency={this.state.currency}
-					country_list={this.props.country_list}
-					getStateList={this.props.creditNotesActions.getStateList}
-				/>
-				<ProductModal
-					openProductModal={this.state.openProductModal}
-					closeProductModal={(e) => {
-						this.closeProductModal(e);
-					}}
-					// getCurrentProduct={(e) => this.getCurrentProduct(e)}
-					createProduct={this.props.productActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
-					product_category_list={this.props.product_category_list}
-					salesCategory={this.state.salesCategory}
-					purchaseCategory={this.state.purchaseCategory}
-				/>
-				{
-					<MultiSupplierProductModal
-						openMultiSupplierProductModal={this.state.openMultiSupplierProductModal}
-						closeMultiSupplierProductModal={(e) => {
-							this.closeMultiSupplierProductModal(e);
-						}}
-						inventory_list={this.state.inventoryList}
-					/>}
-
 			</div>
 		);
 	}

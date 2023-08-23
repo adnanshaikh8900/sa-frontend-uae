@@ -1277,8 +1277,8 @@ class CreateCreditNote extends React.Component {
 
 		formData.append('vatCategoryId', 2);
 
-		if (invoiceNumber && invoiceNumber.value) {
-			formData.append('invoiceId', invoiceNumber.value);
+		if (invoiceNumber) {
+			formData.append('invoiceId', invoiceNumber.value?invoiceNumber.value:invoiceNumber);
 			formData.append('cnCreatedOnPaidInvoice', '1');
 		}
 		if (!this.state.isCreatedWIWP) {

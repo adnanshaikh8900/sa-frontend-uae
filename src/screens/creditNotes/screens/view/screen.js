@@ -146,7 +146,16 @@ class ViewCreditNote extends React.Component {
 
 		}
 	};
-
+	redirectToCustmerIncoive = (invoice) => {
+		this.props.history.push('/admin/income/customer-invoice/view', {
+			id: invoice.invoiceId,
+			status: invoice.status,
+			contactId: invoice.contactId,
+			TCN_Id:this.props.location.state.id,
+			TCN_WithoutPRoduct:this.props.location.state.isCNWithoutProduct ,
+			TCN_Status:this.props.location.state.status,
+		});
+	}
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
@@ -262,17 +271,13 @@ class ViewCreditNote extends React.Component {
 											}),
 											filteredInvoiceData.map((item, index) => {
 											return (
-												<tr key={index}>
+												<tr key={index} onClick={() => {
+													this.redirectToCustmerIncoive(item);
+												}}>
 													<td className="center">{index + 1}</td>
 													<td>{item.invoiceNumber}</td>
 													<td>{item.contactName}</td>
-													{/* 										
-												<td>{moment(item.poApproveDate).format(
-									'DD MMM YYYY',
-								)}</td>
-									<td>{moment(item.poReceiveDate).format(
-									'DD MMM YYYY',
-								)}</td> */}
+													
 													<td align="right">{item.totalAmount ? <Currency
 														value={item.totalAmount}
 														currencySymbol={

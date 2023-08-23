@@ -1487,8 +1487,11 @@ class DetailCreditNote extends React.Component {
 															if (this.state.isCreatedWIWP == false && !values.invoiceNumber) {
 																errors.invoiceNumber = 'Invoice number is required';
 															}
-															if ((this.state.isCreatedWIWP && !this.state.invoiceSelected) && (!values.creditAmount || values.creditAmount < 1)) {
-																errors.creditAmount = 'Credit amount is required';
+															// if ((this.state.isCreatedWIWP && !this.state.invoiceSelected) && (!values.creditAmount || values.creditAmount < 1)) {
+															// 	errors.creditAmount = 'Credit amount is required';
+															// }
+															if ((this.state.isCreatedWIWP) && (values.creditAmount== '')) {
+																errors.creditAmount = "Credit Amount is required";
 															}
 															if (this.state.initValue.totalAmount > this.state.remainingInvoiceAmount) {
 																errors.remainingInvoiceAmount = 'The amount of the credit note cannot exceed the amount of the invoice';
@@ -1519,6 +1522,19 @@ class DetailCreditNote extends React.Component {
 															invoiceDate: Yup.string().required(
 																'Tax credit note date is required',
 															),
+															creditAmount: Yup.string().required(
+																strings.AmountIsRequired
+															).test(
+																	'Credit Amount',
+																	'Credit amount should be greater than 0',
+																	(value) => {
+																		if (value > 0) {
+																			return true;
+																		} else {
+																			return false;
+																		}
+																	},
+																),
 															lineItemsString: Yup.array().of(
 																Yup.object().shape({
 																	quantity: Yup.string()

@@ -39,7 +39,7 @@ class SalaryComponentDeduction extends React.Component {
 				employeeId:'',
 				salaryStructure: 1,
 				type: {value:1},
-				flatAmount: '',
+				flatAmount: 1,
 				email: '',
 				dob: new Date(),
 				description: '',
@@ -219,6 +219,8 @@ class SalaryComponentDeduction extends React.Component {
 									}
 									if (values.flatAmount=="") {
 										errors.flatAmount = 'Flat amount is required';
+									}else if (values.flatAmount==0) {
+										errors.flatAmount="Flat Amount should be greater than zero"
 									}
 
 									// if(values.type.label && values.type.label ==="% of Basic" && values.formula==""){

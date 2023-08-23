@@ -367,7 +367,6 @@ class CreateCustomerInvoice extends React.Component {
 										? 'is-invalid'
 										: ''
 									}`}
-
 							/>
 							{row['productId'] != '' ?
 								<Input value={row['unitType']} disabled /> : ''}
@@ -387,7 +386,6 @@ class CreateCustomerInvoice extends React.Component {
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
-
 					</div>
 				)}
 			/>

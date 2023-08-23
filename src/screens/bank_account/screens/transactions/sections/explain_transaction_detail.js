@@ -1716,6 +1716,17 @@ class ExplainTrasactionDetail extends React.Component {
                             ) {
                               errors.employeeId = "User is Required";
                             }
+                            if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
+                              if(values.expenseCategory && (values.expenseCategory.value === 34 || values.expenseCategory === 34)) {
+                                const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
+                                  let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
+                                  return sum + num;
+                                }, 0);
+                                if (values.payrollListIds && values.payrollListIds.length > 0 && values.amount > sumOfPayrollAmounts) {
+                                  errors.amount = 'Transaction amount cannot be greater than payroll amount.';
+                                }
+                              }
+                            }
                             return errors;
                           }}
                           validationSchema={Yup.object().shape({
@@ -1778,7 +1789,6 @@ class ExplainTrasactionDetail extends React.Component {
                           {(props) => (
                             <Form onSubmit={props.handleSubmit}>
                               <Row>
-                                {console.log(props.values.coaCategoryId)}
                                 <Col lg={3}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="chartOfAccountId">
@@ -1978,8 +1988,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       }}
                                       value={props.values.amount}
                                       className={
-                                        props.errors.amount &&
-                                        props.touched.amount
+                                        props.errors.amount
                                           ? "is-invalid"
                                           : ""
                                       }
@@ -1991,7 +2000,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       }
                                     />
                                     {props.errors.amount &&
-                                      props.touched.amount && (
+                                      (
                                         <div className="invalid-feedback">
                                           {props.errors.amount}
                                         </div>
@@ -2160,6 +2169,10 @@ class ExplainTrasactionDetail extends React.Component {
                                               "expenseCategory"
                                             )(option.value);
                                           }}
+                                          placeholder={
+                                            strings.Select +
+                                            strings.ExpenseCategory
+                                          }
                                           id="expenseCategory"
                                           name="expenseCategory"
                                           className={

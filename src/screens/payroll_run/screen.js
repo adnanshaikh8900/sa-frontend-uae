@@ -165,19 +165,18 @@ class PayrollRun extends React.Component {
 	};
 
 	goToDetail = (row) => {
-		debugger
 		// this.renderActionForState(row.employeeId);
 		const { user_approver_generater_dropdown_list } = this.props;
 		var userValue = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].value : '';
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
 		console.log(userLabel, userValue, parseInt(row.payrollApprover))
 		if ((userLabel === "Payroll Generator" && userValue === parseInt(row.generatedBy)) && (row.status !== "Draft" && row.status !== "Rejected")) {
-			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
+			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id , user:'Generator' })
 		} else if ((userLabel === "Payroll Generator" && userValue === parseInt(row.generatedBy)) && (row.status === "Draft" || row.status === "Rejected")) {
 			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
-		} else if ((userValue === row.payrollApprover && userLabel === "Payroll Approver") && (row.status !== "Draft" && row.status !== "Rejected")) {
+		} else if ((userValue === row.payrollApprover && userLabel === "Payroll Approver") && (row.status !== "Draft")) {
 			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
-		}else if (userValue === row.payrollApprover && userLabel === "Accountant" && (row.status !== "Draft" && row.status !== "Rejected")) {
+		} else if (userValue === row.payrollApprover && userLabel === "Accountant" && (row.status !== "Draft" && row.status !== "Rejected")) {
 			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id })
 		} else if (userLabel === "Admin" && (row.status !== "Draft" && row.status !== "Rejected")) {
 			this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
@@ -737,7 +736,7 @@ class PayrollRun extends React.Component {
 																	>
 																		<i className="fas fa-plus mr-1" />
 
-																		{strings.create_pay_roll}
+																		{strings.Addpayroll}
 																	</Button>
 																	{/* <Button
 																color="primary"

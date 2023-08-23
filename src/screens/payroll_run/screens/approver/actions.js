@@ -128,12 +128,14 @@ export const generatePayroll = (payrollId,string,date) => {
 	  })
 	}
   }
-  export const approveAndRunPayroll = (payrollId) => {
-	
+  export const approveAndRunPayroll = (postObj) => {
+	let payrollId= postObj.payrollId
+	let startDate= postObj.startDate
+	let endDate= postObj.endDate
 	return (dispatch) => {
 	  let data = {
 		method: 'post',
-		url: `/rest/payroll/approveRunPayroll?payrollId=${payrollId}`,
+		url: `/rest/payroll/approveRunPayroll?payrollId=${payrollId}&startDate=${startDate}&endDate=${endDate}`,
 		// data: obj
 	  }
 	  return authApi(data).then((res) => {
@@ -158,12 +160,12 @@ export const generatePayroll = (payrollId,string,date) => {
 	}
   }
 
-  export const generateSifFile = (payrollId,ids) => {
+  export const generateSifFile = (payrollId,ids,time) => {
 	
 	return (dispatch) => {
 	  let data = {
 		method: 'get',
-		url: `/rest/payroll/generteSifFile?payrollId=${payrollId}&id=${ids}`,
+		url: `/rest/payroll/generteSifFile?payrollId=${payrollId}&id=${ids}&currentTime=${time}`,
 		// data: obj
 	  }
 	  return authApi(data).then((res) => {

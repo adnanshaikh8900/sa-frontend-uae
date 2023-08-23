@@ -20,9 +20,7 @@ import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import { ConfirmDeleteModal, LeavePage, Loader } from 'components';
-import {
-	CommonActions
-} from 'services/global'
+import { CommonActions } from 'services/global'
 import { selectOptionsFactory } from 'utils'
 import * as EmployeeActions from '../../actions';
 import * as CreatePayrollActions from './actions';
@@ -109,6 +107,7 @@ class UpdatePayroll extends React.Component {
 			paidDays: 30,
 			checkForLopSetting: false,
 			disableLeavePage: false,
+			payrollApproverRequired: false,
 			isPayrollSubjectNameExist: false,
 		}
 
@@ -483,8 +482,8 @@ class UpdatePayroll extends React.Component {
 
 	getAllPayrollEmployee = (startDate) => {
 		if (this.state.payrollId) {
-		var activeEmployee = [];
-		var employeePayPeriodlList = [];
+			var activeEmployee = [];
+			var employeePayPeriodlList = [];
 			this.props.employeeActions.getEmployeeListWithDetails().then((response) => {
 				if (response.status === 200) {
 					employeePayPeriodlList = response.data;
@@ -724,7 +723,7 @@ class UpdatePayroll extends React.Component {
 
 													let value = parseFloat(evt.target.value === "" ? "0" : evt.target.value);
 
-													if (value > 30 || value < 0) {
+													if (value > this.state.paidDays || value < 0) {
 														return;
 													}
 
@@ -1011,13 +1010,16 @@ class UpdatePayroll extends React.Component {
 																	//   .required("Payroll Subject is required"),
 																	payrollDate: Yup.string()
 																		.required("Payroll date is required"),
+
 																	// selectedRows: Yup.string()
 																	//     .required("At least selection of one employee is required for create payroll"),
 																})}
 																validate={(values) => {
 
 																	let errors = {};
-
+																	if (this.state.payrollApproverRequired && !this.state.payrollApprover) {
+																		errors.payrollApprover = 'Payroll Approver is required';
+																	}
 																	if (!this.state.payrollSubject) {
 																		errors.payrollSubject = 'Payroll subject is required';
 																	}
@@ -1027,6 +1029,7 @@ class UpdatePayroll extends React.Component {
 																	if (this.state.isPayrollSubjectNameExist === true) {
 																		errors.payrollSubject = "Payroll Subject Already Exists"
 																	}
+
 																	//   if(this.state.selectedRows && this.state.selectedRows.length===0)
 																	//   {
 																	// 	  errors.selectedRows = 'At least selection of one employee is required for create payroll';
@@ -1051,12 +1054,16 @@ class UpdatePayroll extends React.Component {
 																		<Row>
 																			<Col >
 																				<FormGroup>
-																					<Label htmlFor="payrollSubject">	<span className="text-danger">* </span> Payroll Subject</Label>
+																					<Label htmlFor="payrollSubject">
+																						<span className="text-danger">* </span>
+																						{strings.payroll_subject}
+																					</Label>
 																					<Input
 																						type="text"
 																						id="payrollSubject"
 																						name="payrollSubject"
 																						value={this.state.payrollSubject}
+																						maxLength="100"
 																						disabled={this.disableForAddButton() ? true : false}
 																						placeholder={strings.Enter + " Payroll Subject"}
 																						onChange={(value) => {
@@ -1078,7 +1085,7 @@ class UpdatePayroll extends React.Component {
 																				<FormGroup>
 																					<Label htmlFor="date">
 																						<span className="text-danger">* </span>
-																						Payroll Date
+																						{strings.payroll_date}
 																					</Label>
 																					<DatePicker
 																						id="payrollDate"
@@ -1143,18 +1150,18 @@ class UpdatePayroll extends React.Component {
 
 																			</Col>
 
+																			<Col >
 
-																			<Col >	<Label htmlFor="due_date">
-																				{/* <span className="text-danger">* </span> */}
-																				Payroll Approver
-																			</Label>
 																				<FormGroup>
-
+																					<Label htmlFor="payrollApprover">
+																						<span className="text-danger">* </span>
+																						{strings.payroll_approver}
+																					</Label>
 																					<Select
 																						isDisabled={this.disable() ? true : false}
-																						styles={customStyles}
-																						id="userId"
-																						name="userId"
+																						// styles={customStyles}
+																						id="payrollApprover"
+																						name="payrollApprover"
 																						value={
 																							approver_dropdown_list.data &&
 																							selectOptionsFactory
@@ -1170,7 +1177,7 @@ class UpdatePayroll extends React.Component {
 																										this.state.payrollApprover,
 																								)
 																						}
-																						placeholder={"Select Approver"}
+																						placeholder={strings.select_approver}
 																						options={
 																							approver_dropdown_list.data
 																								? selectOptionsFactory.renderOptions(
@@ -1178,20 +1185,31 @@ class UpdatePayroll extends React.Component {
 																									'userId',
 																									approver_dropdown_list.data,
 																									'Approver',
-																								)
+																								).slice(1)
 																								: []
 																						}
-
 																						onChange={(option) => {
+																							debugger
 																							if (option && option.value) {
-																								this.setState({ userId: option.value, payrollApprover: option.value, submitButton: false })
-
+																								this.setState({ payrollApproverRequired: false, userId: option.value, payrollApprover: option.value, submitButton: false })
 																							} else
-																								this.setState({ userId: "", payrollApprover: "", submitButton: true })
+																								this.setState({ payrollApproverRequired: false, userId: "", payrollApprover: "", submitButton: true })
 
+																							props.handleChange('payrollApprover')(option);
 																						}}
+																						className={
+																							props.errors.payrollApprover &&
+																								props.touched.payrollApprover
+																								? 'is-invalid'
+																								: ''
+																						}
 																					/>
-
+																					{props.errors.payrollApprover &&
+																						props.touched.payrollApprover && (
+																							<div className="invalid-feedback">
+																								{props.errors.payrollApprover}
+																							</div>
+																						)}
 																				</FormGroup>
 																			</Col>
 																		</Row>
@@ -1315,15 +1333,17 @@ class UpdatePayroll extends React.Component {
 																							className="btn-square pull-right"
 																							// onClick={}
 																							onClick={() => {
-																								if (this.state.submitButton)
-																									toast.error(`Please select approver for payroll submission!`)
-																								else
-																									if (!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length != 0) {
+																								this.setState({ payrollApproverRequired: true }, () => {
+																									// if (this.state.submitButton)
+																									// 	toast.error(`Please select approver for payroll submission!`)
+																									// else
+																									if (this.state.selectedRows && this.state.selectedRows.length != 0) {
 																										this.setState({ apiSelector: "createAndSubmitPayroll" })
 																										props.handleSubmit()
 																									}
 																									else
 																										toast.error(`Please select at least one employee for payroll update !`)
+																								})
 																							}}
 																							// disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																							title={
@@ -1341,12 +1361,14 @@ class UpdatePayroll extends React.Component {
 																						<Button type="button" color="primary" className="btn-square pull-right "
 
 																							onClick={() => {
-																								if (this.state.selectedRows && this.state.selectedRows.length != 0) {
-																									this.setState({ apiSelector: "createPayroll" })
-																									props.handleSubmit()
-																								}
-																								else
-																									toast.error(`Please select at least one employee for payroll update !`)
+																								this.setState({ payrollApproverRequired: false }, () => {
+																									if (this.state.selectedRows && this.state.selectedRows.length != 0) {
+																										this.setState({ apiSelector: "createPayroll" })
+																										props.handleSubmit()
+																									}
+																									else
+																										toast.error(`Please select at least one employee for payroll update !`)
+																								})
 																							}}
 																							// disabled={this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																							title={

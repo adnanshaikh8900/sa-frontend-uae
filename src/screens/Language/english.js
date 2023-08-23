@@ -356,6 +356,9 @@ const en = {
       GRNREMARKS: "GRN Remarks",
       AddNewGoodsReceivedNotes: "Add New Goods Received Note",
 
+      //Debit Notes
+      DebitNotes:"Debit Notes",
+      
       //AddGoodsReceiveNotes
       CreateGoodsReceivedNote: "Create Goods Received Note",
       GRNNumber: "GRN Number",
@@ -660,7 +663,7 @@ const en = {
       CreditAmount: "Credit Amount",
       CreditNotes: " Tax Credit Notes",
       CREDITNOTE: "TAX CREDIT NOTE NUMBER",
-      AddCreditNote: "Add New Tax Credit Note",
+      AddCreditNote: "Add New Credit Notes",
       CreateCreditNote: "Create Tax Credit Note",
       CreditNoteNumber: "Tax Credit Note Number",
       CreditNoteDate: "Tax Credit Note Date",
@@ -681,6 +684,11 @@ const en = {
       Saving: "Saving",
       RemainingCredits: "Remaining Credits",
       BankClosingDate: "Bank Closing Date",
+      AmounttoRefund: "Amount to Refund",
+      RefundDate: "Refund Date",
+      RefundMode: "Refund Mode",
+      RefundFrom: "Refund From",
+      RefundNotes: "Notes",
 
       //ImportStatement
       ImportStatement: "Import Statement",
@@ -734,6 +742,7 @@ const en = {
       CompanyBusinessType: "Company / Business Type",
       Website: "Company Website",
       EmailAddress: "Company Email Address",
+      EmailAddres: "Email Address",
       CompanyCost: "Company Cost",
       ExpenseBudget: "Expense Budget",
       RevenueBudget: "Revenue Budget",
@@ -774,7 +783,7 @@ const en = {
       Position: "Position",
       No: "No",
       note: "Note: Please select atleast 1 module",
-      NewUsers: "New Users",
+      AddNewUsers: "Add New Users",
       UserName: "User Name",
       DOB: "DOB",
       RoleName: "Role Name",
@@ -810,7 +819,7 @@ const en = {
       d: "Delete",
       pf: "Preview Files",
       ca: "Chart Of Accounts",
-      datadd: "There is no data to display",
+      datadd: "There are no records to display.",
       sa: "Simple-Accounts",
       accCode: "AccountCode",
       accName: "AccountName",
@@ -832,6 +841,7 @@ const en = {
       CreateCN: "Create CN",
 
       //Payroll 
+      Addpayroll: "Add New Payroll",
       PayrollConfigurations: "Payroll Config",
       Employees: "Employees",
       NewEmployee: "Add New Employee",
@@ -1024,7 +1034,7 @@ const en = {
       Liability: "Liability",
       CurrentLiability: "Current Liability",
       AccountsPayable: "Accounts Payable",
-      Thereisnodatatodisplay: "There is no data to display",
+      Thereisnodatatodisplay: "There are no records to display.",
       Other: "Other",
       ARAgingReport: "AR Aging Report",
       RunReport: "Run Report",

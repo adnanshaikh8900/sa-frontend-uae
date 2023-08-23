@@ -195,12 +195,10 @@ class CreateDesignation extends React.Component {
                         }}
                         validate={(values) => {
                           let errors = {};
-
-                          if (values.designationId === '0') {
+                          if (parseInt(values.designationId) === 0) {
                             errors.designationId =
                               "Enter valid designation ID";
-                          }
-                          if (this.state.idExist === true || values.designationId === '1' || values.designationId === '2' || values.designationId === '3' || values.designationId === '4') {
+                          }else if (this.state.idExist === true || values.designationId === '1' || values.designationId === '2' || values.designationId === '3' || values.designationId === '4') {
                             errors.designationId =
                               "Designation ID already exist";
                           }

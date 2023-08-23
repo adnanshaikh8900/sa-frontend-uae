@@ -194,6 +194,12 @@ class ViewCustomerInvoice extends React.Component {
 													endDate:this.props.location.state.endDate,
 													placeOfSupplyId:this.props.location.state.placeOfSupplyId
 												});
+												if(this.props.location.state.TCN_Id)
+												this.props.history.push('/admin/income/credit-notes/view', {
+													id : this.props.location.state.TCN_Id,
+													status:this.props.location.state.TCN_Status,
+													isCNWithoutProduct:this.props.location.state.TCN_WithoutPRoduct
+												})
 												else
 												this.props.history.push('/admin/income/customer-invoice');
 

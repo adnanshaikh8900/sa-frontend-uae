@@ -22,6 +22,7 @@ import moment from "moment";
 import * as transactionCreateActions from "./actions";
 import * as transactionActions from "../../actions";
 import * as detailBankAccountActions from "../../../detail/actions";
+import * as AllPayrollActions from "../../../../../payroll_run/actions";
 import * as CurrencyConvertActions from "../../../../../currencyConvert/actions";
 import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
@@ -54,6 +55,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     transactionActions: bindActionCreators(transactionActions, dispatch),
+    allPayrollActions: bindActionCreators(AllPayrollActions, dispatch),
     transactionCreateActions: bindActionCreators(
       transactionCreateActions,
       dispatch
@@ -134,8 +136,30 @@ class CreateBankTransaction extends React.Component {
           true
         );
       });
+    
+      const paginationData = {
+        pageNo: '',
+        pageSize: '',
+        paginationDisable: true,
+      };
+      const sortingData = {
+        order: '',
+        sortingCol: '',
+      };
+      const postData = { ...paginationData, ...sortingData };
+    
+    this.props.transactionCreateActions.getAllPayrollList(postData)
+    .then((res) => {
+        this.setState(
+          {
+            payrolldata: res.data
+          },
+          () => {}
+        );
+    })
+
     if (this.props.location.state && this.props.location.state.bankAccountId) {
-      this.setState({id: this.props.location.state.bankAccountId,});
+      this.setState({ id: this.props.location.state.bankAccountId, });
       this.props.detailBankAccountActions
         .getBankAccountByID(this.props.location.state.bankAccountId)
         .then((res) => {
@@ -232,16 +256,13 @@ class CreateBankTransaction extends React.Component {
       exchangeRateFromList,
     } = data;
     let formData = new FormData();
-    if (
-      coaCategoryId &&
-      (coaCategoryId.value === 10 || coaCategoryId.label === "Expense")
-    ) {
-      transactionAmount = calculateVAT(
-        transactionAmount,
-        vatId.value,
-        exclusiveVat,
-        this.setState
-      );
+    if (coaCategoryId && (coaCategoryId.value === 10 || coaCategoryId.label === "Expense")) {
+      const list = calculateVAT(transactionAmount, vatId.value, exclusiveVat);
+      transactionAmount = list.transactionAmount
+      this.setState({
+        transactionVatAmount: list.transactionVatAmount,
+        transactionExpenseAmount: list.transactionExpenseAmount,
+      })
     }
     if (
       coaCategoryId.label === "Sales" ||
@@ -410,15 +431,16 @@ class CreateBankTransaction extends React.Component {
         info ? JSON.stringify([info]) : ""
       );
     }
-    if (coaCategoryId.label === "Corporate Tax Payment" ) {
-    const report =  {
-      ...this.state.corporateTaxList.find((obj, index) => index === this.state.ct_taxPeriod.value),
-    };
+    if (coaCategoryId.label === "Corporate Tax Payment") {
+      const report = {
+        ...this.state.corporateTaxList.find((obj, index) => index === this.state.ct_taxPeriod.value),
+      };
       formData.append(
         "explainedCorporateTaxListString",
         report ? JSON.stringify([report]) : ""
       );
     }
+    debugger
     this.props.transactionCreateActions
       .createTransaction(formData)
       .then((res) => {
@@ -625,10 +647,27 @@ class CreateBankTransaction extends React.Component {
                 ? UnPaidPayrolls_List
                 : []
             }
+            placeholder={strings.Select+strings.Payroll}
             id="payrollListIds"
             onChange={(option) => {
+              this.state.selectedPayrollListBank = []
               props.handleChange("payrollListIds")(option);
               this.payrollList(option);
+              // let selectedPayroll1 = []
+              if (option) {
+                option.map((i) => {
+                  const selectedPayroll = this.state.payrolldata.find((el) => el.id === i.value)
+                  this.state.selectedPayrollListBank.push(selectedPayroll)
+                  const uniqueArray = [];
+                  const seenIds = new Set();
+                  for (const obj of this.state.selectedPayrollListBank) {
+                    if (!seenIds.has(obj.id)) {
+                      uniqueArray.push(obj);
+                      seenIds.add(obj.id);
+                    }
+                  }
+                })
+              }
             }}
             className={
               props.errors.vatId &&
@@ -1314,7 +1353,7 @@ class CreateBankTransaction extends React.Component {
                               errors.transactionAmount = strings.AmountShouldBeLessThanOrEqualToTheBalanceDue;
                           }
                           if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
-                            if(values.expenseCategory && values.expenseCategory.value === 34) {
+                            if (values.expenseCategory && values.expenseCategory.value === 34) {
                               const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
                                 let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
                                 return sum + num;
@@ -1324,16 +1363,21 @@ class CreateBankTransaction extends React.Component {
                               }
                             }
                           }
-                          if(!values.transactionDate){
+                          if (!values.transactionDate) {
                             errors.transactionDate = "Transaction Date is Required";
                           }
-                          if (
-                            date1 < date2                      
-                                )
-                           {
-                           errors.transactionDate =
-                              "Transaction Date cannot be earlier than the payroll approval date.";
-                          }
+                          if (values.transactionDate)
+                            {
+                              this.state.selectedPayrollListBank.map((i) => {
+                                const dateObject = new Date(i.runDate);
+                                let payrollDate1 = moment(dateObject).format('DD-MM-YYYY')
+                                if (moment(values.transactionDate).format('DD-MM-YYYY') < payrollDate1)
+                                {
+                                  errors.transactionDate =
+                                    "Transaction Date cannot be earlier than the payroll approval date.";
+                                }
+                              })
+                            }
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({
@@ -3328,7 +3372,7 @@ class CreateBankTransaction extends React.Component {
                                       );
                                     }}
                                   >
-                                    <i className="fa fa-repeat"></i>{" "}
+                                    <i className="fa fa-refresh"></i>{" "}
                                     {this.state.disabled
                                       ? "Creating..."
                                       : strings.CreateandMore}

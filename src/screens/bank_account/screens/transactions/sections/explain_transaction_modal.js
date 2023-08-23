@@ -59,7 +59,6 @@ class ExplainTransactionModal extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		console.log(prevProps);
 		if (this.props.selectedData !== prevProps.selectedData) {
 			const { selectedData } = this.props;
 			let transactionAmount = selectedData.withdrawalAmount

@@ -175,7 +175,7 @@ class InvoiceTemplate extends Component {
 									<div className="mb-1 ml-2">
 									{invoiceData && contactData && (
 											contactData.countryId==229 ?
-											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
+											contactData.poBoxNumber ?(strings.POBox +": " +contactData.poBoxNumber ): ""
 											:contactData.postZipCode ? contactData.postZipCode : ""
 											)},&nbsp;
 									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + ", " : "")}
@@ -189,8 +189,9 @@ class InvoiceTemplate extends Component {
 								<div style={{ width: '27%' }}>
 									<br/>
 								<div className="mb-1 ml-2"><b>{strings.CreditNote}: </b> # {invoiceData.creditNoteNumber}</div>
-								<div className="mb-1 ml-2"><b>{strings.TaxCreditDate}: </b>{' '}
-										{moment(invoiceData.invoiceDate).format('DD MMM YYYY')}</div>
+								<div className="mb-1 ml-2"><b>{strings.TaxCreditDate}: </b>
+										{moment(invoiceData.creditNoteDate,'YYYY-MM-DD').format('DD MMM YYYY')}
+										</div>
 											<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderInvoiceStatus(status)}</div>
 								</div>
 								</div>
@@ -474,7 +475,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													 { totalNet ? (
 														<Currency
-															value={totalNet-invoiceData.totalVatAmount}
+															value={totalNet-invoiceData.totalVatAmount-invoiceData.totalExciseTaxAmount}
 															currencySymbol={
 																	currencyData[0]
 																	? currencyData[0].currencyIsoCode

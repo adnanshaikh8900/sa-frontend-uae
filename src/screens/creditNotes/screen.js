@@ -312,7 +312,7 @@ class CreditNotes extends React.Component {
 		}
 		return (
 			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
-				{row.status}
+				{row.status === 'Partially Paid' ? 'Partially Credited' : row.status}
 			</span>
 		);
 	};
@@ -403,6 +403,13 @@ class CreditNotes extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
+					{row.statusEnum === 'Open' && <DropdownItem
+							onClick={() =>
+								this.unPostInvoice(row)
+							}
+						>
+							<i className="fas fa-file" />  {strings.Draft}
+						</DropdownItem>}
 						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid'   && (
 							<DropdownItem>
 								<div
@@ -416,23 +423,7 @@ class CreditNotes extends React.Component {
 									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
-						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true  &&   (
-							<DropdownItem>
-								<div
-									onClick={() => {
-										
-										this.props.history.push(
-											'/admin/income/credit-notes/applyToInvoice',
-											{ contactId: row.contactId , creditNoteId: row.id ,
-											  referenceNumber:row.invoiceNumber,
-											  creditAmount:row.dueAmount},
-										);
-									}}
-								>
-									<i class="fas fa-file-invoice"></i>{strings.ApplyToInvoice}
-								</div>
-							</DropdownItem>
-						)}
+						)}	
 						{row.statusEnum == 'Draft'&& (
 							<DropdownItem
 								onClick={() => {
@@ -461,9 +452,28 @@ class CreditNotes extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-university" /> {strings.Refund}
+								<i className="fas fa-university" /> {strings.RefundPayment}
 							</DropdownItem>
 									)}
+
+{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true  &&   (
+							<DropdownItem>
+								<div
+									onClick={() => {
+										
+										this.props.history.push(
+											'/admin/income/credit-notes/applyToInvoice',
+											{ contactId: row.contactId , creditNoteId: row.id ,
+												creditNoteNumber:row.creditNoteNumber,
+											  referenceNumber:row.invoiceNumber,
+											  creditAmount:row.dueAmount},
+										);
+									}}
+								>
+									<i class="fas fa-file-invoice"></i>{strings.ApplyToInvoice}
+								</div>
+							</DropdownItem>
+						)}
 
 						<DropdownItem
 							onClick={() =>
@@ -474,13 +484,7 @@ class CreditNotes extends React.Component {
 						>
 							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
-						{row.statusEnum === 'Open' && <DropdownItem
-							onClick={() =>
-								this.unPostInvoice(row)
-							}
-						>
-							<i className="fas fa-file" />  {strings.Draft}
-						</DropdownItem>}
+						
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -743,10 +747,9 @@ class CreditNotes extends React.Component {
 			customer_invoice_list,
 			universal_currency_list,
 		} = this.props;
-		
 		const customer_invoice_data =
-		this.props.customer_invoice_list
-			? this.props.customer_invoice_list.map((customer) => ({
+		this.props.customer_invoice_list.data
+			? this.props.customer_invoice_list.data.map((customer) => ({
 						id: customer.id,
 						status: customer.status,
 						statusEnum: customer.statusEnum,
@@ -786,11 +789,13 @@ class CreditNotes extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<img
+									<i class="nav-icon fas fa-donate" />
+
+										{/* <img
 											alt="invoiceimage"
 											src={invoiceimage}
 											style={{ width: '40px' }}
-										/>
+										/> */}
 										<span className="ml-2"> {strings.CreditNotes}</span>
 									</div>
 								</Col>
@@ -1062,7 +1067,7 @@ class CreditNotes extends React.Component {
 										</Row>
 									</div>
 									<Row>
-									<div style={{width:"1650px"}}>
+									<div style={{width:"1650px", padding: "15px"}}>
 									<Button
 										color="primary"
 										className="btn-square pull-right mb-2"
@@ -1076,7 +1081,6 @@ class CreditNotes extends React.Component {
 										<i className="fas fa-plus mr-1" />
 									        {strings.AddCreditNote}
 									</Button></div></Row>
-								{console.log("Asdasdas",customer_invoice_data)}
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
@@ -1204,11 +1208,10 @@ class CreditNotes extends React.Component {
 												Due Amount
 											</TableHeaderColumn> */}
 											<TableHeaderColumn
-												className="text-right"
+												className="text-right table-header-bg"
 												columnClassName="text-right"
 											//	width="5%"
 												dataFormat={this.renderActions}
-												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
 								</Col>

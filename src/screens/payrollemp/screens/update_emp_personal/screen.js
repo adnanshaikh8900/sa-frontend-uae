@@ -28,6 +28,9 @@ import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import { selectOptionsFactory } from 'utils'
 import moment from 'moment'
+import { DesignationModal } from 'screens/payrollemp/sections';
+import * as DesignationActions from '../../../designation/actions'
+import { upperFirst } from 'lodash-es';
 
 const mapStateToProps = (state) => {
     return ({
@@ -36,13 +39,15 @@ const mapStateToProps = (state) => {
         state_list: state.payrollEmployee.state_list,
         country_list: state.payrollEmployee.country_list,
         salary_role_dropdown: state.payrollEmployee.salary_role_dropdown,
+        designationType_list: state.employeeDesignation.designationType_list,
     })
 }
 const mapDispatchToProps = (dispatch) => {
     return ({
         commonActions: bindActionCreators(CommonActions, dispatch),
         detailEmployeePersonalAction: bindActionCreators(DetailEmployeePersonalAction, dispatch),
-        createPayrollEmployeeActions: bindActionCreators(CreatePayrollEmployeeActions, dispatch)
+        createPayrollEmployeeActions: bindActionCreators(CreatePayrollEmployeeActions, dispatch),
+        designationActions: bindActionCreators(DesignationActions, dispatch),
     })
 }
 let strings = new LocalizedStrings(data);
@@ -68,7 +73,8 @@ class UpdateEmployeePersonal extends React.Component {
             checkmobileNumberParam2: false,
             loadingMsg: "Loading....",
             disableLeavePage: false,
-            emailExist: false
+            emailExist: false,
+            openDesignationModal: false
         }
 
         this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -126,6 +132,7 @@ class UpdateEmployeePersonal extends React.Component {
                 this.props.createPayrollEmployeeActions.getEmployeeDesignationForDropdown();
                 this.props.createPayrollEmployeeActions.getEmployeesForDropdown();
                 this.props.createPayrollEmployeeActions.getSalaryRolesForDropdown();
+                this.props.designationActions.getParentDesignationList();
                 if (res.status === 200) {
 
                     this.setState({
@@ -273,9 +280,64 @@ class UpdateEmployeePersonal extends React.Component {
         }
     }
 
+    designationNamevalidationCheck = (value) => {
+        const data = {
+            moduleType: 26,
+            name: value,
+        };
+        this.props.commonActions.checkValidation(data).then((response) => {
+            console.log(response);
+            if (response.data === 'Designation name already exists') {
+                this.setState({
+                    nameDesigExist: true,
+                });
+            } else {
+                this.setState({
+                    nameDesigExist: false,
+                });
+            }
+        });
+    };
+    designationIdvalidationCheck = (value) => {
+        const data = {
+            moduleType: 25,
+            name: value,
+        };
+        this.props.commonActions.checkValidation(data).then((response) => {
+            console.log(response);
+            if (response.data === 'Designation ID already exists') {
+                this.setState({
+                    idDesigExist: true,
+                });
+            } else {
+                this.setState({
+                    idDesigExist: false,
+                });
+            }
+        });
+    };
 
     getStateList = (countryCode) => {
         this.props.createPayrollEmployeeActions.getStateList(countryCode);
+    };
+    openDesignationModal = (props) => {
+        this.setState({ openDesignationModal: true });
+    };
+    closeDesignationModal = (res) => {
+        this.setState({ openDesignationModal: false });
+    };
+
+    getCurrentUser = (data) => {
+        this.props.createPayrollEmployeeActions.getEmployeeDesignationForDropdown().then((res) => {
+            if (res.status === 200) {
+                this.setState({
+                    initValue: {
+                        ...this.state.initValue,
+                        ...{ employeeDesignationId: res.data.designationName },
+                    },
+                });
+            }
+        });
     };
 
     // Create or Edit 
@@ -301,7 +363,6 @@ class UpdateEmployeePersonal extends React.Component {
             presentAddress,
             employeeDesignationId,
             salaryRoleId,
-
             university,
             qualification,
             qualificationYearOfCompletionDate,
@@ -600,7 +661,6 @@ class UpdateEmployeePersonal extends React.Component {
                                                                 emergencyContactNumber1: Yup.string()
                                                                     .required("Contact number is required").test('not smame', 'Please Enter Another Mobile Number', (value) => {
                                                                         console.log(value !== this.state.masterPhoneNumber)
-                                                                        debugger
                                                                         return value !== this.state.masterPhoneNumber
                                                                     }),
                                                                 emergencyContactRelationship1: Yup.string()
@@ -734,7 +794,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             value={props.values.firstName}
                                                                                             placeholder={strings.Enter + strings.FirstName}
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
+                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value))
+                                                                                                option = upperFirst(option.target.value)
+                                                                                                 { props.handleChange('firstName')(option) }
                                                                                             }}
                                                                                             className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
                                                                                         />
@@ -753,7 +815,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             value={props.values.middleName}
                                                                                             placeholder={strings.Enter + strings.MiddleName}
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) }
+                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value)) 
+                                                                                                option = upperFirst(option.target.value)
+                                                                                                { props.handleChange('middleName')(option) }
                                                                                             }}
                                                                                             className={props.errors.middleName && props.touched.middleName ? "is-invalid" : ""}
                                                                                         />
@@ -772,7 +836,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             value={props.values.lastName}
                                                                                             placeholder={strings.Enter + strings.LastName}
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
+                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value))
+                                                                                                option = upperFirst(option.target.value)
+                                                                                                 { props.handleChange('lastName')(option) }
                                                                                             }}
                                                                                             className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
                                                                                         />
@@ -792,7 +858,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             id="email"
                                                                                             name="email"
                                                                                             value={props.values.email}
-                                                                                            placeholder={strings.Enter + strings.EmailAddress}
+                                                                                            placeholder={strings.Enter + strings.EmailAddres}
                                                                                             onChange={(option) => {
                                                                                                 props.handleChange('email')(option);
                                                                                                 this.emailvalidationCheck(option.target.value);
@@ -1074,7 +1140,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             }
                                                                                             id="employeeDesignationId"
                                                                                             name="employeeDesignationId"
-                                                                                            placeholder={strings.Select + strings.Designation}
+                                                                                            placeholder={strings.Designation}
                                                                                             value={designation_dropdown
                                                                                                 && selectOptionsFactory.renderOptions(
                                                                                                     'label',
@@ -1086,9 +1152,13 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                         option.value ===
                                                                                                         +props.values.employeeDesignationId,
                                                                                                 )}
+                                                                                            // onChange={(value) => {
+                                                                                            //     props.handleChange('employeeDesignationId')(value);
+                                                                                            // }}
+                                                                                            // value={this.state.salaryDesignation}
                                                                                             onChange={(value) => {
                                                                                                 props.handleChange('employeeDesignationId')(value);
-
+                                                                                                props.handleChange('salaryRoleId')(1);
                                                                                             }}
                                                                                             className={`${props.errors.employeeDesignationId && props.touched.employeeDesignationId
                                                                                                 ? 'is-invalid'
@@ -1102,7 +1172,24 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                         )}
                                                                                     </FormGroup>
                                                                                 </Col>
+                                                                                <Col>
+                                                                            <Label
+                                                                                htmlFor="employeeDesignationId"
+                                                                                style={{ display: 'block' }}
+                                                                            >
 
+                                                                            </Label>
+                                                                            <Button
+                                                                                type="button"
+                                                                                color="primary"
+                                                                                className="btn-square mr-3 mb-3 mt-4"
+                                                                                onClick={(e, props) => {
+                                                                                    this.openDesignationModal(props);
+                                                                                }}
+                                                                            >
+                                                                                <i className="fa fa-plus"></i> {strings.AddDesignation}
+															                </Button>
+                                                                        </Col>
                                                                             </Row>
                                                                             <Row>
                                                                                 {/* <Col md="4">
@@ -1161,29 +1248,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                             </FormGroup>
                                                                         </Col>
                                                                         */}
-
-
-                                                                                {/* <Col>
-                                                                            <Label
-                                                                                htmlFor="employeeDesignationId"
-                                                                                style={{ display: 'block' }}
-                                                                            >
-
-                                                                            </Label>
-                                                                            <Button
-                                                                                type="button"
-                                                                                color="primary"
-                                                                                className="btn-square mr-3 mb-3 mt-4"
-                                                                                onClick={(e, props) => {
-                                                                                    this.openDesignationModal(props);
-                                                                                }}
-                                                                            >
-                                                                                <i className="fa fa-plus"></i> Add Designation
-															                            	</Button>
-                                                                        </Col> */}
-
-
-                                                                            </Row>
+                                                                        </Row>
                                                                             <Row className="row-wrapper">
                                                                                 <Col md="8">
                                                                                     <FormGroup>
@@ -1762,6 +1827,23 @@ class UpdateEmployeePersonal extends React.Component {
                             </Row>
                         </div>
                     </div>
+                    <DesignationModal
+                        openDesignationModal={this.state.openDesignationModal}
+                        closeDesignationModal={(e) => {
+                            this.closeDesignationModal(e);
+                        }}
+                        nameDesigExist={this?.state?.nameDesigExist}
+                        idDesigExist={this?.state?.idDesigExist}
+                        validateid={this.designationIdvalidationCheck}
+                        validateinfo={this.designationNamevalidationCheck}
+                        getCurrentUser={(e) => this.getCurrentUser(e)}
+                        createDesignation={this.props.createPayrollEmployeeActions.createEmployeeDesignation}
+                        designationType_list={this.props.designationType_list}
+                    // currency_list={this.props.currency_convert_list}
+                    // currency={this.state.currency}
+                    // country_list={this.props.country_list}
+                    // getStateList={this.props.customerInvoiceActions.getStateList}
+                    />
                     {this.state.disableLeavePage ? "" : <LeavePage />}
                 </div>
         )

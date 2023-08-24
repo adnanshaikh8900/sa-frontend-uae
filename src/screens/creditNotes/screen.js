@@ -167,6 +167,7 @@ class CreditNotes extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',

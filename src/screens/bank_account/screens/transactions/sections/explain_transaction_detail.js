@@ -4280,6 +4280,7 @@ class ExplainTrasactionDetail extends React.Component {
                                             type="button"
                                             color="primary"
                                             className="btn-square mr-3"
+                                            disabled={this.props.data.isCTNCreated}
                                             onClick={() =>
                                               this.UnexplainTransaction(
                                                 this.state.initValue

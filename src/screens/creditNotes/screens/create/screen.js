@@ -23,7 +23,7 @@ import * as CreditNotesCreateActions from './actions';
 import * as CreditNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { LeavePage, Loader } from 'components';
+import { LeavePage, Loader, InvoivingTableCalculation } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -1113,117 +1113,21 @@ class CreateCreditNote extends React.Component {
 
 
 	updateAmount = (data, props) => {
-		const { vat_list, excise_list } = this.props;
-		const { discountPercentage, discountAmount } = this.state;
-
-		let total_net = 0;
-		let total_excise = 0;
-		let total = 0;
-		let total_vat = 0;
-		let net_value = 0;
-		let discount = 0;
-
-		const totalnetamount = (a) => {
-			total_net = total_net + a
-		}
-		const totalexcise = (a) => {
-			total_excise = total_excise + a
-		}
-		const totalvalt = (a) => {
-			total_vat = total_vat + a
-		}
-		const totalamount = (a) => {
-			total = total + a
-		}
-		const discountamount = (a) => {
-			discount = discount + a
-		}
-		data.map((obj) => {
-			let unitprice = parseFloat(obj.unitPrice);
-			var net_value = 0;
-			const index =
-				obj.vatCategoryId !== ''
-					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
-					: '';
-
-			const vat = index > -1 ? vat_list[`${index}`]?.vat : 0;
-
-			if (!obj.isExciseTaxExclusive) {
-				if (obj.discountType === 'PERCENTAGE')
-					net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
-				else
-					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
-
-				const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
-
-				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
-				net_value = parseFloat(net_value) + parseFloat(excisevalue);
-				const vat_amount = vat === 0 ? 0 : ((+net_value * vat) / 100);
-
-				totalnetamount(net_value - excisevalue)
-				totalexcise(excisevalue)
-				totalvalt(vat_amount)
-				totalamount(vat_amount + net_value)
-				discountamount(discount)
-				obj.subTotal = net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-				obj.vatAmount = vat_amount
-				obj.exciseAmount = excisevalue
-			} else {
-				if (obj.discountType === 'PERCENTAGE')
-					net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
-				else
-					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
-
-				const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
-				//vat amount
-				const vat_amount =
-					(vat === 0 ? 0 :
-						((+net_value * (vat / (100 + vat) * 100)) / 100));
-
-				//net value after removing vat for inclusive
-				net_value = net_value - vat_amount
-				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
-
-				totalnetamount(net_value - excisevalue)
-				totalexcise(excisevalue)
-				totalvalt(vat_amount)
-				totalamount(vat_amount + net_value)
-				discountamount(discount)
-				obj.subTotal = net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-				obj.vatAmount = vat_amount
-				obj.exciseAmount = excisevalue
-			}
-
-
-
-			return obj;
-		});
-
-		// const discount =
-		// 	props.values.discountType.value === 'PERCENTAGE'
-		// 		? +((total_net * discountPercentage) / 100)
-		// 		: discountAmount;
-
-		this.setState(
-			{
-				data,
-				initValue: {
-					...this.state.initValue,
-					...{
-						total_net: total_net,
-						totalVatAmount: total_vat,
-						totalAmount: total,
-						total_excise: total_excise,
-						discount
-
-
-					},
-
+		const { vat_list} = this.props;
+		const calculation_list = InvoivingTableCalculation.updateAmount(data, vat_list)
+		this.setState({
+			data: calculation_list.data,
+			initValue: {
+				...this.state.initValue,
+				...{
+					total_net: calculation_list.total_net,
+					totalVatAmount: calculation_list.total_vat,
+					totalAmount: calculation_list.total,
+					total_excise: calculation_list.total_excise,
+					discount: calculation_list.discount,
 				},
 			},
-
-		);
-
+		},);
 	};
 
 	handleFileChange = (e, props) => {

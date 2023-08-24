@@ -185,7 +185,6 @@ class DetailCreditNote extends React.Component {
 			this.props.creditNotesActions
 				.getInvoicesForCNById(this.props.location.state.id)
 				.then((res) => {
-
 					if (res.status === 200) {
 						if (res.data.length && res.data.length != 0)
 							this.setState(
@@ -228,7 +227,6 @@ class DetailCreditNote extends React.Component {
 									contact_po_number: res.data.contactPoNumber
 										? res.data.contactPoNumber
 										: '',
-
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
 									currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 									exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
@@ -810,7 +808,6 @@ class DetailCreditNote extends React.Component {
 								<div style={{ width: '100px' }}>
 									<Select
 										isDisabled
-
 										options={discountOptions}
 										id="discountType"
 										name="discountType"
@@ -839,16 +836,12 @@ class DetailCreditNote extends React.Component {
 							</div>
 						</div>
 					</div>
-
 				)}
-
 			/>
 		);
 	}
 
-
 	discountType = (row) => {
-
 
 		return this.state.discountOptions &&
 			selectOptionsFactory
@@ -901,6 +894,7 @@ class DetailCreditNote extends React.Component {
 		);
 		this.updateAmount(data, props);
 	};
+
 	renderAddProduct = (cell, rows, props) => {
 		return (
 			<Button
@@ -914,6 +908,7 @@ class DetailCreditNote extends React.Component {
 			</Button>
 		);
 	};
+
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
 		let productList = product_list.length
@@ -1038,7 +1033,6 @@ class DetailCreditNote extends React.Component {
 
 	updateAmount = (data, props) => {
 		const { vat_list, excise_list } = this.props;
-
 		const { discountPercentage, discountAmount } = this.state;
 
 		let total_net = 0;
@@ -1080,7 +1074,6 @@ class DetailCreditNote extends React.Component {
 					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
 
 				const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
-
 				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
 				net_value = parseFloat(net_value) + parseFloat(excisevalue);
 				const vat_amount = vat === 0 ? 0 : ((+net_value * vat) / 100);
@@ -1191,7 +1184,6 @@ class DetailCreditNote extends React.Component {
 		} = data;
 		let formData = new FormData();
 		formData.append('email', email ? email : '',);
-
 		formData.append('type', 7);
 		formData.append('creditNoteId', current_customer_id);
 		formData.append('creditNoteNumber', invoice_number !== null ? invoice_number : '',);
@@ -1776,10 +1768,7 @@ class DetailCreditNote extends React.Component {
 																				styles={customStyles}
 																				id="taxTreatmentid"
 																				name="taxTreatmentid"
-																				value={
-																					this.state.customer_taxTreatment_des
-
-																				}
+																				value={	this.state.customer_taxTreatment_des }
 																				className={
 																					props.errors.taxTreatmentid &&
 																						props.touched.taxTreatmentid
@@ -1788,7 +1777,6 @@ class DetailCreditNote extends React.Component {
 																				}
 																				onChange={(option) => {
 																					props.handleChange('taxTreatmentid')(option);
-
 																				}}
 
 																			/> */}
@@ -2081,12 +2069,12 @@ class DetailCreditNote extends React.Component {
 																				name="creditAmount"
 																				placeholder={strings.Enter + strings.CreditAmount}
 																				value={props.values.creditAmount}
-																				disabled={true}
+																				// disabled={true}
 																				// onBlur={props.handleBlur('currencyCode')}
 																				onChange={(value) => {
-																					props.handleChange('creditAmount')(
-																						value,
-																					);
+																					if (((this.regDecimal.test(value.target.value)) && (parseFloat(value.target.value) >= 1)) || (value.target.value === '')) {
+																						props.handleChange('creditAmount')(value,);
+																					}
 																				}}
 																				className={
 																					props.errors.creditAmount &&
@@ -2108,7 +2096,6 @@ class DetailCreditNote extends React.Component {
 																	{(!this.state.isCreatedWithoutInvoice && this.state.invoiceNumber) && (<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="remainingInvoiceAmount">
-
 																				{strings.RemainingInvoiceAmount}
 																			</Label>
 																			<Input
@@ -2205,7 +2192,6 @@ class DetailCreditNote extends React.Component {
 																				id="unitTooltip"
 																				className="fa fa-question-circle ml-1"
 																			></i>
-
 																				<UncontrolledTooltip
 																					placement="right"
 																					target="unitTooltip"
@@ -2320,7 +2306,6 @@ class DetailCreditNote extends React.Component {
 																							placeholder={strings.ReceiptNumber}
 																							onChange={(value) => {
 																								props.handleChange('receiptNumber')(value);
-
 																							}}
 																							className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : " "}
 																						/>
@@ -2382,7 +2367,6 @@ class DetailCreditNote extends React.Component {
 																												props,
 																											);
 																										}}
-
 																									/>
 																									{this.state.fileName && (
 																										<div>

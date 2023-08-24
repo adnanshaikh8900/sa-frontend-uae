@@ -1283,6 +1283,7 @@ class CreateCreditNote extends React.Component {
 		const formData = new FormData();
 
 		formData.append('isCreatedWithoutInvoice', this.state.isCreatedWithoutInvoice);
+		formData.append('isCreatedWIWP', this.state.isCreatedWIWP);
 		formData.append('creditNoteNumber', creditNoteNumber ? this.state.prefix + creditNoteNumber : '',);
 		formData.append('email', email ? email : '',);
 		formData.append('creditNoteDate', creditNoteDate ? moment(creditNoteDate, 'DD-MM-YYYY').toDate() : null,);
@@ -1302,12 +1303,10 @@ class CreateCreditNote extends React.Component {
 			formData.append('cnCreatedOnPaidInvoice', '1');
 		}
 		if (!this.state.isCreatedWIWP) {
-
 			formData.append('lineItemsString', JSON.stringify(this.state.data));
 			formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 			formData.append('totalAmount', this.state.initValue.totalAmount);
 			formData.append('discount', this.state.initValue.discount);
-
 			formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
 		}
 		if (contactId) {
@@ -1544,7 +1543,6 @@ class CreateCreditNote extends React.Component {
 					this.setExchange(this.getCurrency(customerdetails.value));
 					this.formRef.current.setFieldValue('contactId', response.data.contactId, true);
 					this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
-
 					this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
 					this.getCurrency(this.state.option.value)
 					this.getTaxTreatment(this.state.option.value)
@@ -1784,14 +1782,11 @@ class CreateCreditNote extends React.Component {
 																						invoice_list.data,
 																						'Invoice Number',
 																					).find(obj => obj.value === props.values.invoiceNumber)}
-
 																				onChange={(option) => {
 																					if (option && option.value) {
-
 																						this.getInvoiceDetails(option.value)
 																						props.handleChange('invoiceNumber')(option);
 																						this.setState({ invoiceSelected: true })
-
 																					} else {
 																						this.setState({ invoiceSelected: false })
 																						props.handleChange('invoiceNumber')('');
@@ -2097,7 +2092,6 @@ class CreateCreditNote extends React.Component {
 																					// this.setExchange(option.value);
 																					this.setCurrency(option.value)
 																				}}
-
 																			/>
 																			{props.errors.currency &&
 																				props.touched.currency && (
@@ -2146,7 +2140,7 @@ class CreateCreditNote extends React.Component {
 																					value={props.values.creditAmount}
 																					// onBlur={props.handleBlur('currencyCode')}
 																					onChange={(value) => {
-																						if (((this.regEx.test(value.target.value)) && (parseFloat(value.target.value) >= 1)) || (value.target.value === '')) {
+																						if (((this.regDecimal.test(value.target.value)) && (parseFloat(value.target.value) >= 1)) || (value.target.value === '')) {
 																							props.handleChange('creditAmount')(value,);
 																						}
 																					}}
@@ -2224,7 +2218,6 @@ class CreateCreditNote extends React.Component {
 																			className="form-control"
 																			id="curreancyname"
 																			name="curreancyname"
-																			
 																			value={this.state.customer_currency_des}
 																			onChange={(value) => {
 																				props.handleChange('curreancyname')(
@@ -2242,11 +2235,10 @@ class CreateCreditNote extends React.Component {
 																	<div>
 																		<Input
 																			type="number"
-min="0"
+																			min="0"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
-																			
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(
@@ -2262,9 +2254,7 @@ min="0"
 																		disabled
 																				id="currencyName"
 																				name="currencyName"
-																				value=	{
-																					this.state.basecurrency.currencyName }
-																				
+																				value={ this.state.basecurrency.currencyName }
 																			/>
 														</Col>
 														</Row> */}
@@ -2296,7 +2286,6 @@ min="0"
 																<i className="fa fa-plus"></i> {strings.Addproduct}
 															</Button>
 														</Col> */}
-
 
 																{this.state.isCreatedWIWP === false && (<Row>
 																	{props.errors.lineItemsString &&
@@ -2446,7 +2435,6 @@ min="0"
 																				{strings.VAT}
 																			</TableHeaderColumn>
 																			<TableHeaderColumn
-
 																				dataField="vat_amount"
 																				dataFormat={this.renderVatAmount}
 																				className="text-right"
@@ -2502,7 +2490,6 @@ min="0"
 																							placeholder={strings.ReceiptNumber}
 																							onChange={(value) => {
 																								props.handleChange('receiptNumber')(value);
-
 																							}}
 																							className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : " "}
 																						/>
@@ -2510,25 +2497,25 @@ min="0"
 																							<div className="invalid-feedback">{props.errors.receiptNumber}</div>
 																						)}
 																						{/* <Input
-																					type="text"
-																					maxLength="100"
-																					id="receiptNumber"
-																					name="receiptNumber"
-																					placeholder={strings.ReceiptNumber}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExBoth.test(
-																								option.target.value,
-																							)
-																						) {
-																							props.handleChange(
-																								'receiptNumber',
-																							)(option);
-																						}
-																					}}
-																					value={props.values.receiptNumber}
-																				/> */}
+																								type="text"
+																								maxLength="100"
+																								id="receiptNumber"
+																								name="receiptNumber"
+																								placeholder={strings.ReceiptNumber}
+																								onChange={(option) => {
+																									if (
+																										option.target.value === '' ||
+																										this.regExBoth.test(
+																											option.target.value,
+																										)
+																									) {
+																										props.handleChange(
+																											'receiptNumber',
+																										)(option);
+																									}
+																								}}
+																								value={props.values.receiptNumber}
+																							/> */}
 																					</FormGroup>
 																				</Col>
 																				<Col lg={6}>
@@ -2608,10 +2595,7 @@ min="0"
 																							'receiptAttachmentDescription',
 																						)(option)
 																					}
-																					value={
-																						props.values
-																							.receiptAttachmentDescription
-																					}
+																					value={props.values.receiptAttachmentDescription}
 																				/>
 																			</FormGroup>
 																		</Col>
@@ -2672,12 +2656,9 @@ min="0"
 																								name="discountPercentage"
 																								placeholder="Discount Percentage"
 																								type="number"
-min="0"
+																								min="0"
 																								maxLength="5"
-																								value={
-																									props.values
-																										.discountPercentage
-																							}
+																								value={props.values.discountPercentage}
 																								onChange={(e) => {
 																									if (
 																										e.target.value === '' ||
@@ -2717,10 +2698,9 @@ min="0"
 																						<Input
 																							id="discount"
 																							type="number"
-min="0"
+																							min="0"
 																							name="discount"
 																							maxLength="10"
-																							
 																							disabled={
 																								props.values.discountType &&
 																								props.values.discountType
@@ -2769,7 +2749,6 @@ min="0"
 																							</Col>
 																							<Col lg={6} className="text-right">
 																								<label className="mb-0">
-
 																									{this.state.customer_currency_symbol} &nbsp;
 																									{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																								</label>
@@ -2787,10 +2766,8 @@ min="0"
 																							</Col>
 																							<Col lg={6} className="text-right">
 																								<label className="mb-0">
-
 																									{this.state.customer_currency_symbol} &nbsp;
 																									{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-
 																								</label>
 																							</Col>
 																						</Row>
@@ -2921,14 +2898,12 @@ min="0"
 																				type="button"
 																				color="primary"
 																				className="btn-square mr-3"
-
 																				disabled={this.state.disabled || (parseFloat(parseFloat(initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
 																				onClick={() => {
 																					//	added validation popup	msg
 																					props.handleBlur();
 																					if (props.errors && Object.keys(props.errors).length != 0)
 																						this.props.commonActions.fillManDatoryDetails();
-
 																					this.setState(
 																						{
 																							createMore: true,

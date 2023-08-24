@@ -158,6 +158,27 @@ class DetailCreditNote extends React.Component {
 
 
 	initializeData = () => {
+		this.props.creditNotesActions
+			.getTaxTreatment()
+			.then((res) => {
+
+				if (res.status === 200) {
+					let array = []
+					res.data.map((row) => {
+						if (row.id !== 8)
+							array.push(row);
+					})
+					this.setState({ taxTreatmentList: array });
+				}
+			})
+			.catch((err) => {
+
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err.data ? err.data.message : 'ERROR',
+				);
+			});
 
 		if (this.props.location.state && this.props.location.state.id) {
 			//INV number
@@ -1444,7 +1465,7 @@ class DetailCreditNote extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 		const { project_list, currency_list, currency_convert_list, customer_list, universal_currency_list, vat_list } = this.props;
-		const { loadingMsg } = this.state
+		const { loadingMsg, taxTreatmentList } = this.state
 		let tmpCustomer_list = []
 
 		customer_list.map(item => {
@@ -1708,7 +1729,49 @@ class DetailCreditNote extends React.Component {
 																			<Label htmlFor="taxTreatmentid">
 																				{strings.TaxTreatment}
 																			</Label>
-																			<Input
+																			<Select
+																					options={
+																						taxTreatmentList
+																							? selectOptionsFactory.renderOptions(
+																								'name',
+																								'id',
+																								taxTreatmentList,
+																								'VAT',
+																							)
+																							: []
+																					}
+																					isDisabled={true}
+																					id="taxTreatmentid"
+																					name="taxTreatmentid"
+																					placeholder={strings.Select + strings.TaxTreatment}
+																					value={
+																						taxTreatmentList &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'name',
+																								'id',
+																								taxTreatmentList,
+																								'VAT',
+																							)
+																							.find(
+																								(option) =>
+																									option.label ===
+																									this.state.customer_taxTreatment_des,
+																							)
+																					}
+																					onChange={(option) => {
+																							props.handleChange('taxTreatmentid')(
+																								option,
+																							);
+																					}}
+																					className={
+																						props.errors.taxTreatmentid &&
+																							props.touched.taxTreatmentid
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																			{/* <Input
 																				disabled
 																				styles={customStyles}
 																				id="taxTreatmentid"
@@ -1728,7 +1791,7 @@ class DetailCreditNote extends React.Component {
 
 																				}}
 
-																			/>
+																			/> */}
 																			{props.errors.taxTreatmentid &&
 																				props.touched.taxTreatmentid && (
 																					<div className="invalid-feedback">

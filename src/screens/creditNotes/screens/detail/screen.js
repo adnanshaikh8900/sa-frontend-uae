@@ -1517,7 +1517,7 @@ class DetailCreditNote extends React.Component {
 															if (this.state.initValue.totalAmount > this.state.remainingInvoiceAmount) {
 																errors.remainingInvoiceAmount = 'The amount of the credit note cannot exceed the amount of the invoice';
 															}
-															if (values.totalamount > this.state.remainingInvoiceAmount) {
+															if (values.creditAmount > this.state.remainingInvoiceAmount) {
 																errors.remainingInvoiceAmount = 'The amount of the credit note cannot exceed the amount of the invoice';
 															}
 															return errors;

@@ -11,7 +11,7 @@ import { Currency } from 'components';
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
-import { InvoiceTemplate } from './sections';
+import { CreditNoteTemplate } from './sections';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -151,9 +151,9 @@ class ViewCreditNote extends React.Component {
 			id: invoice.invoiceId,
 			status: invoice.status,
 			contactId: invoice.contactId,
-			TCN_Id:this.props.location.state.id,
-			TCN_WithoutPRoduct:this.props.location.state.isCNWithoutProduct ,
-			TCN_Status:this.props.location.state.status,
+			TCN_Id: this.props.location.state.id,
+			TCN_WithoutPRoduct: this.props.location.state.isCNWithoutProduct,
+			TCN_Status: this.props.location.state.status,
 		});
 	}
 	exportPDFWithComponent = () => {
@@ -217,7 +217,7 @@ class ViewCreditNote extends React.Component {
 									fileName={this.state.invoiceData.creditNoteNumber + ".pdf"}
 								>
 
-									<InvoiceTemplate
+									<CreditNoteTemplate
 										invoiceData={invoiceData}
 										currencyData={currencyData}
 										status={this.props.location.state.status}
@@ -270,28 +270,28 @@ class ViewCreditNote extends React.Component {
 												}
 											}),
 											filteredInvoiceData.map((item, index) => {
-											return (
-												<tr key={index} onClick={() => {
-													this.redirectToCustmerIncoive(item);
-												}}>
-													<td className="center">{index + 1}</td>
-													<td>{item.invoiceNumber}</td>
-													<td>{item.contactName}</td>
-													
-													<td align="right">{item.totalAmount ? <Currency
-														value={item.totalAmount}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/> : 0}</td>
+												return (
+													<tr key={index} onClick={() => {
+														this.redirectToCustmerIncoive(item);
+													}}>
+														<td className="center">{index + 1}</td>
+														<td>{item.invoiceNumber}</td>
+														<td>{item.contactName}</td>
 
-													<td align="right">{currencyData?.currencyIsoCode} AED {item.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+														<td align="right">{item.totalAmount ? <Currency
+															value={item.totalAmount}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/> : 0}</td>
 
-												</tr>
-											);
-										})) : null )}
+														<td align="right">{currencyData?.currencyIsoCode} AED {item.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+
+													</tr>
+												);
+											})) : null)}
 								</tbody>
 							</Table>
 						</div>

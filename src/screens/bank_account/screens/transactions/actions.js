@@ -111,7 +111,6 @@ export const getProjectList = () => {
 };
 
 export const getCustomerInvoiceList = (param) => {
-  console.log(param);
   return (dispatch) => {
     let data = {
       method: "get",

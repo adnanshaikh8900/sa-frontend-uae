@@ -187,13 +187,10 @@ class DetailCreditNote extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						if (res.data.length && res.data.length != 0)
-							this.setState(
-								{
-									invoiceNumber: res.data[0].invoiceNumber,
-									showInvoiceNumber: true
-								},
-								() => { },
-							);
+							this.setState({
+								invoiceNumber: res.data[0].invoiceNumber,
+								showInvoiceNumber: true
+							});
 					}
 				})
 			//CN details
@@ -215,6 +212,7 @@ class DetailCreditNote extends React.Component {
 
 						this.setState(
 							{
+								isCreatedWithoutInvoice: res.data.isCreatedWithoutInvoice ? res.data.isCreatedWithoutInvoice : false,
 								current_customer_id: this.props.location.state.id,
 								initValue: {
 									receiptAttachmentDescription: res.data
@@ -361,7 +359,8 @@ class DetailCreditNote extends React.Component {
 									this.formRef.current.setFieldValue('contactId', this.state.option, true);
 									this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
 									this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
-									this.getTaxTreatment(this.state.option.value)
+									this.getTaxTreatment(this.state.option.value);
+									this.formRef.current.setFieldValue('invoiceNumber', res.data.invoiceId, true);
 
 								});
 						}
@@ -1181,6 +1180,8 @@ class DetailCreditNote extends React.Component {
 			creditAmount,
 			email,
 			exchangeRate,
+			lineItemsString,
+			invoiceNumber,
 		} = data;
 		let formData = new FormData();
 		formData.append('email', email ? email : '',);
@@ -1194,7 +1195,13 @@ class DetailCreditNote extends React.Component {
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('notes', notes !== null ? notes : '');
-		formData.append('isCreatedWithoutInvoice', this.props.location.state.isCNWithoutProduct == true ? true : false);
+		formData.append('isCreatedWithoutInvoice', this.state.isCreatedWithoutInvoice);
+		formData.append('isCreatedWIWP', this.state.isCreatedWIWP);
+
+		if (invoiceNumber) {
+			formData.append('invoiceId', invoiceNumber.value ? invoiceNumber.value : invoiceNumber);
+			formData.append('cnCreatedOnPaidInvoice', '1');
+		}
 		if (this.state.isCreatedWIWP == true)
 			formData.append('totalAmount', creditAmount);
 		else {
@@ -1226,10 +1233,9 @@ class DetailCreditNote extends React.Component {
 			.catch((err) => {
 				this.setState({ loading: false, disabled: false, disableLeavePage: false });
 				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data ? err.data?.message : 'Credit Note Updated Unsuccessfully'
-
+					'error', 'Credit Note Updated Unsuccessfully'
 				);
+				this.initializeData();
 			});
 	};
 
@@ -2117,7 +2123,6 @@ class DetailCreditNote extends React.Component {
 
 																</Row>
 																<hr />
-																{console.log(props.errors.lineItemsString, this.props.location.state.isCNWithoutProduct)}
 																{this.props.location.state.isCNWithoutProduct !== true && props.values.lineItemsString?.length > 0 && (<Row>
 																	{props.errors.lineItemsString &&
 																		typeof props.errors.lineItemsString ===

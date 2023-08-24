@@ -578,6 +578,27 @@ class CreateCreditNote extends React.Component {
 		this.props.creditNotesActions.getVatList();
 		this.props.creditNotesActions.getProductList();
 		this.props.productActions.getProductCategoryList();
+		this.props.creditNotesActions
+			.getTaxTreatment()
+			.then((res) => {
+
+				if (res.status === 200) {
+					let array = []
+					res.data.map((row) => {
+						if (row.id !== 8)
+							array.push(row);
+					})
+					this.setState({ taxTreatmentList: array });
+				}
+			})
+			.catch((err) => {
+
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err.data ? err.data.message : 'ERROR',
+				);
+			});
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
 			this.setState({
 				initValue: {
@@ -1440,7 +1461,7 @@ class CreateCreditNote extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, loadingMsg } = this.state
-		const { data, discountOptions, initValue, exist, lockInvoiceDetail } = this.state;
+		const { data, discountOptions, initValue, exist, lockInvoiceDetail, taxTreatmentList } = this.state;
 		const {
 			customer_list,
 			invoice_list,
@@ -1816,28 +1837,48 @@ class CreateCreditNote extends React.Component {
 																			<Label htmlFor="taxTreatmentid">
 																				{strings.TaxTreatment}
 																			</Label>
-																			<Input
-																				disabled
-																				styles={customStyles}
-																				id="taxTreatmentid"
-																				name="taxTreatmentid"
-																				placeholder={strings.Select + strings.TaxTreatment}
-																				value={
-																					this.state.customer_taxTreatment_des
-
-																				}
-																				className={
-																					props.errors.taxTreatmentid &&
-																						props.touched.taxTreatmentid
-																						? 'is-invalid'
-																						: ''
-																				}
-																				onChange={(option) => {
-																					props.handleChange('taxTreatmentid')(option);
-
-																				}}
-
-																			/>
+																			<Select
+																					options={
+																						taxTreatmentList
+																							? selectOptionsFactory.renderOptions(
+																								'name',
+																								'id',
+																								taxTreatmentList,
+																								'VAT',
+																							)
+																							: []
+																					}
+																					isDisabled={true}
+																					id="taxTreatmentid"
+																					name="taxTreatmentid"
+																					placeholder={strings.Select + strings.TaxTreatment}
+																					value={
+																						taxTreatmentList &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'name',
+																								'id',
+																								taxTreatmentList,
+																								'VAT',
+																							)
+																							.find(
+																								(option) =>
+																									option.label ===
+																									this.state.customer_taxTreatment_des,
+																							)
+																					}
+																					onChange={(option) => {
+																							props.handleChange('taxTreatmentid')(
+																								option,
+																							);
+																					}}
+																					className={
+																						props.errors.taxTreatmentid &&
+																							props.touched.taxTreatmentid
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
 																			{props.errors.taxTreatmentid &&
 																				props.touched.taxTreatmentid && (
 																					<div className="invalid-feedback">

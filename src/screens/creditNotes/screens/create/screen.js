@@ -326,7 +326,7 @@ class CreateCreditNote extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback display-d">
+								<div className="invalid-feedback d-block">
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
@@ -1238,7 +1238,6 @@ class CreateCreditNote extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
-
 		this.setState({ disabled: true, disableLeavePage: true });
 		const {
 			receiptAttachmentDescription,
@@ -1278,7 +1277,7 @@ class CreateCreditNote extends React.Component {
 		formData.append('vatCategoryId', 2);
 
 		if (invoiceNumber) {
-			formData.append('invoiceId', invoiceNumber.value?invoiceNumber.value:invoiceNumber);
+			formData.append('invoiceId', invoiceNumber.value ? invoiceNumber.value : invoiceNumber);
 			formData.append('cnCreatedOnPaidInvoice', '1');
 		}
 		if (!this.state.isCreatedWIWP) {
@@ -1290,8 +1289,8 @@ class CreateCreditNote extends React.Component {
 
 			formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
 		}
-		if (contactId && contactId.value) {
-			formData.append('contactId', contactId.value);
+		if (contactId) {
+			formData.append('contactId', contactId.value ? contactId.value : contactId);
 		}
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.customer_currency);
@@ -1522,7 +1521,7 @@ class CreateCreditNote extends React.Component {
 					this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
 					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
 					this.setExchange(this.getCurrency(customerdetails.value));
-					this.formRef.current.setFieldValue('contactId', this.state.option, true);
+					this.formRef.current.setFieldValue('contactId', response.data.contactId, true);
 					this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
 
 					this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
@@ -1870,7 +1869,15 @@ class CreateCreditNote extends React.Component {
 																						)
 																						: []
 																				}
-																				value={props.values.contactId}
+																				value={props.values.contactId?.value ? props.values.contactId :
+																					tmpCustomer_list
+																					&& selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						tmpCustomer_list,
+																						'Customer',
+																					).find(obj => obj.value === props.values.contactId)
+																				}
 
 																				isDisabled={this.state.invoiceSelected}
 																				onChange={(option) => {
@@ -2098,7 +2105,7 @@ class CreateCreditNote extends React.Component {
 																					value={props.values.creditAmount}
 																					// onBlur={props.handleBlur('currencyCode')}
 																					onChange={(value) => {
-																						if ((this.regEx.test(value.target.value)) || (parseFloat(value.target.value) >= 1) || (value.target.value === '')) {
+																						if (((this.regEx.test(value.target.value)) && (parseFloat(value.target.value) >= 1)) || (value.target.value === '')) {
 																							props.handleChange('creditAmount')(value,);
 																						}
 																					}}
@@ -2358,7 +2365,7 @@ min="0"
 																				</TableHeaderColumn>
 																			) : null))
 																			}
-																			{props.values.lineItemsString.map(i => (i.exciseAmount != 0 ? (
+																			{initValue.total_excise != 0 ?
 																				<TableHeaderColumn
 																					width="10%"
 																					dataField="exciseTaxId"
@@ -2378,7 +2385,7 @@ min="0"
 																						Excise dropdown will be enabled only for the excise products
 																					</UncontrolledTooltip>
 																				</TableHeaderColumn>
-																			) : null))
+																				: null
 																			}
 																			{/* <TableHeaderColumn
 																				width="12%"

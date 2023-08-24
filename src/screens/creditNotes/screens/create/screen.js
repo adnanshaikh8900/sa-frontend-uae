@@ -23,7 +23,7 @@ import * as CreditNotesCreateActions from './actions';
 import * as CreditNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { LeavePage, Loader, InvoivingTableCalculation } from 'components';
+import { LeavePage, Loader, ProductTableCalculation } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -1114,7 +1114,7 @@ class CreateCreditNote extends React.Component {
 
 	updateAmount = (data, props) => {
 		const { vat_list} = this.props;
-		const calculation_list = InvoivingTableCalculation.updateAmount(data, vat_list)
+		const calculation_list = ProductTableCalculation.updateAmount(data, vat_list)
 		this.setState({
 			data: calculation_list.data,
 			initValue: {

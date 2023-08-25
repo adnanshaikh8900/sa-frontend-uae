@@ -1659,10 +1659,9 @@ class CreateCreditNote extends React.Component {
 																.of(
 																	Yup.object().shape({
 																		quantity: Yup.string()
-																			.required('Value is required')
 																			.test(
 																				'quantity',
-																				'Quantity should be greater than 0',
+																				strings.QuantityGreaterThan0,
 																				(value) => {
 																					if (value > 0) {
 																						return true;
@@ -1670,7 +1669,7 @@ class CreateCreditNote extends React.Component {
 																						return false;
 																					}
 																				},
-																			),
+																			).required('Value is required'),
 																		// 			unitPrice: Yup.string()
 																		// 				.required('Value is required')
 																		// 				.test(

@@ -513,6 +513,7 @@ const en = {
       ProductCategoryCodeRequired: "Product category code is required",
       ProductCategoryNameRequired: "Product category name is required",
       VATCategoryRequired: "VAT category is required",
+      VATTYPERequired: "VAT Type is required",
       SellingPriceRequired: "Selling price is required",
       PurchasePriceRequired: "Purchase price is required",
       ProductType: "Product Type",

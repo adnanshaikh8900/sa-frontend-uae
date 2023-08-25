@@ -2593,7 +2593,6 @@ class CreateCustomerInvoice extends React.Component {
 																	.of(
 																		Yup.object().shape({
 																			quantity: Yup.string()
-																				.required('Value is required')
 																				.test(
 																					'quantity',
 																					strings.QuantityGreaterThan0,
@@ -2604,9 +2603,8 @@ class CreateCustomerInvoice extends React.Component {
 																							return false;
 																						}
 																					},
-																				),
+																				).required('Value is required'),
 																			unitPrice: Yup.string()
-																				.required('Value is required')
 																				.test(
 																					'Unit Price',
 																					strings.UnitPriceGreaterThan1,
@@ -2617,7 +2615,7 @@ class CreateCustomerInvoice extends React.Component {
 																							return false;
 																						}
 																					},
-																				),
+																				).required('Value is required'),
 																			vatCategoryId: Yup.string().required(
 																				strings.VATIsRequired
 																			),

@@ -2121,10 +2121,9 @@ class DetailQuotation extends React.Component {
                                 .of(
                                   Yup.object().shape({
                                     quantity: Yup.string()
-                                      .required("Value is required")
                                       .test(
                                         "quantity",
-                                        "Quantity should be greater than 0",
+                                        strings.QuantityGreaterThan0,
                                         (value) => {
                                           if (value > 0) {
                                             return true;
@@ -2132,12 +2131,11 @@ class DetailQuotation extends React.Component {
                                             return false;
                                           }
                                         }
-                                      ),
+                                      ).required("Value is required"),
                                     unitPrice: Yup.string()
-                                      .required("Value is required")
                                       .test(
                                         "Unit Price",
-                                        "Unit price should be greater than 1",
+                                        strings.UnitPriceGreaterThan1,
                                         (value) => {
                                           if (value > 0) {
                                             return true;
@@ -2145,7 +2143,7 @@ class DetailQuotation extends React.Component {
                                             return false;
                                           }
                                         }
-                                      ),
+                                      ).required("Value is required"),
                                     vatCategoryId:
                                       Yup.string().required("VAT is required"),
                                     productId: Yup.string().required(

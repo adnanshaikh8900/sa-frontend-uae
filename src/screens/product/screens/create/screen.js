@@ -600,7 +600,7 @@ try {
 														'Product code is required',
 													),
 													vatCategoryId: Yup.string()
-														.required(strings.VATCategoryRequired
+														.required(strings.VATTYPERequired
 															)
 														.nullable(),
 												})}

@@ -301,7 +301,7 @@ class InvoiceTemplate extends Component {
 									textAlign: 'right',
 								}}>
 									<div style={{ marginTop: '0.5rem' }}>
-										<h2 className="mb-1 ml-2"><b>TAX INVOICE</b></h2><br />
+										<h2 className="mb-1 ml-2"><b>CUSTOMER INVOICE</b></h2><br />
 										<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>

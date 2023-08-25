@@ -3343,7 +3343,7 @@ resetVatId = (props) => {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat mr-1"></i>
+																		<i className="fa fa-refresh mr-1"></i>
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }

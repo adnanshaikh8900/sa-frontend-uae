@@ -1021,6 +1021,7 @@ const en = {
       Invoice: "Invoice",
       InvoiceNo: "Invoice No",
       ReferenceNo: "Reference Number",
+      ReferenceN: "Reference No",
       Details: "Details",
       SupplierInvoiceDetails: "Supplier Invoice Details",
       ModeTBD: "Mode(TBD)",

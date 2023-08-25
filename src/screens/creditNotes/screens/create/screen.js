@@ -1286,7 +1286,7 @@ class CreateCreditNote extends React.Component {
 		formData.append('creditNoteNumber', creditNoteNumber ? this.state.prefix + creditNoteNumber : '',);
 		formData.append('email', email ? email : '',);
 		formData.append('creditNoteDate', creditNoteDate ? moment(creditNoteDate, 'DD-MM-YYYY').toDate() : null,);
-		formData.append('receiptNumber', receiptNumber !== null ? receiptNumber : '',);
+		formData.append('referenceNo', receiptNumber !== null ? receiptNumber : '',);
 		formData.append('exchangeRate', exchangeRate ? exchangeRate : '',);
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
@@ -1793,6 +1793,7 @@ class CreateCreditNote extends React.Component {
 																						props.handleChange('invoiceNumber')('');
 																						this.setState({ invoiceSelected: false })
 																					}
+																					this.formRef.current.setFieldValue('receiptNumber', option.label , true);
 
 																					// if(!this.state.data1){
 																					// 	this.state.supplierList = this.state.data1

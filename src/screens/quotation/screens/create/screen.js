@@ -2212,7 +2212,6 @@ resetVatId = (props) => {
 														.of(
 															Yup.object().shape({
 																quantity: Yup.string()
-																	.required('Value is required')
 																	.test(
 																		'quantity',
 																		strings.QuantityGreaterThan0,
@@ -2223,9 +2222,8 @@ resetVatId = (props) => {
 																				return false;
 																			}
 																		},
-																	),
+																	).required('Value is required'),
 																unitPrice: Yup.string()
-																	.required('Value is required')
 																	.test(
 																		'Unit Price',
 																		strings.UnitPriceGreaterThan1,
@@ -2236,7 +2234,7 @@ resetVatId = (props) => {
 																				return false;
 																			}
 																		},
-																	),
+																	).required('Value is required'),
 																vatCategoryId: Yup.string().required(
  																	strings.VATIsRequired,
 																),

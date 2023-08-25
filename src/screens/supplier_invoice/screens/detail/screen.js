@@ -2131,18 +2131,15 @@ class DetailSupplierInvoice extends React.Component {
 																	// 	'Value is required',
 																	// ),
 																	quantity: Yup.string()
-																		.required('Value is required')
 																		.test(
 																			'quantity',
-																			'Quantity should be greater than 0',
+																			strings.QuantityGreaterThan0,
 																			(value) => value > 0,
-																		),
-																	unitPrice: Yup.string().required(
-																		'Value is required'
-																	)
+																		).required('Value is required'),
+																	unitPrice: Yup.string()
 																	.test(
 																		'Unit Price',
-																		'Unit price Should be greater than 1',
+																		strings.UnitPriceGreaterThan1,
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -2150,7 +2147,7 @@ class DetailSupplierInvoice extends React.Component {
 																				return false;
 																			}
 																		},
-																	),
+																	).required('Value is required'),
 																	vatCategoryId: Yup.string().required(
 																		'VAT is required',
 																	),

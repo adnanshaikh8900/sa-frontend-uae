@@ -2537,11 +2537,11 @@ class CreateCustomerInvoice extends React.Component {
 
 																	} else {
 																		if (values.shippingPostZipCode == '')
-																			errors.shippingPostZipCode = 'Postal code is required';
+																			errors.shippingPostZipCode = 'Postal / Zip code is required';
 																		else if (values.shippingPostZipCode.length !== 6)
 																			errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
 																		if (values.shippingStateId == "")
-																			errors.shippingStateId = 'State is required';
+																			errors.shippingStateId = 'State / Provinces is required';
 																	}
 																}
 
@@ -3333,7 +3333,7 @@ class CreateCustomerInvoice extends React.Component {
 																							props.handleChange('shippingStateId')('');
 																						}
 																					}}
-																					placeholder={props.values.shippingCountryId && props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion}
+																					placeholder={props.values.shippingCountryId && props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.Select+ strings.StateRegion}
 																					id="shippingStateId"
 																					name="shippingStateId"
 																					className={

@@ -1623,11 +1623,11 @@ class CreateCreditNote extends React.Component {
 															if ((this.state.isCreatedWIWP) && (values.creditAmount == '')) {
 																errors.creditAmount = "Credit Amount is required";
 															}
-															if (this.state.invoiceSelected && !this.state.isCreatedWIWP && parseFloat(parseFloat(this.state.initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount) {
-																errors.remainingInvoiceAmount = 'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
-															}
+															// if (this.state.invoiceSelected && !this.state.isCreatedWIWP && parseFloat(parseFloat(this.state.initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount) {
+															// 	errors.remainingInvoiceAmount = 'Invoice Total Amount Cannot be greater than Remaining InvoiceAmount';
+															// }
 															if (this.state.invoiceSelected && this.state.isCreatedWIWP && values.creditAmount > this.state.remainingInvoiceAmount) {
-																errors.remainingInvoiceAmount = 'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
+																errors.creditAmount = 'Credit Amount Cannot Be Greater Than Remaining Invoice Amount';
 															}
 															return errors;
 														}}

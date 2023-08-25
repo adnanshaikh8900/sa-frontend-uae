@@ -278,6 +278,7 @@ class DetailCreditNote extends React.Component {
 								selectedContact: res.data.contactId ? res.data.contactId : '',
 								term: res.data.term ? res.data.term : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								remainingInvoiceAmount: res.data.remainingInvoiceAmount,
 								loading: false,
 							},
 							() => {
@@ -1675,7 +1676,7 @@ class DetailCreditNote extends React.Component {
 																				styles={customStyles}
 																				id="contactId"
 																				name="contactId"
-																				isDisabled={true}
+																				isDisabled={this.state.showInvoiceNumber}
 																				options={
 																					tmpCustomer_list
 																						? selectOptionsFactory.renderOptions(
@@ -1698,14 +1699,12 @@ class DetailCreditNote extends React.Component {
 																				onChange={(option) => {
 																					if (option && option.value) {
 																						this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																						this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																						this.setExchange(this.getCurrency(option.value));
-																						props.handleChange('contactId')(
-																							option.value,
-																						);
+																						props.handleChange('contactId')(option);
 																					} else {
 																						props.handleChange('contactId')('');
 																					}
-																					// this.getCurrentUser(option)
 																				}}
 																				className={
 																					props.errors.contactId &&

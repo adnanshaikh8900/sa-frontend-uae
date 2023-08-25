@@ -47,29 +47,6 @@ export const getdebitNotesList = (postObj) => {
 	};
 };
 
-export const getProjectList = () => {
-	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url: '/rest/project/getProjectsForDropdown',
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: DEBIT_NOTE.PROJECT_LIST,
-						payload: {
-							data: res.data,
-						},
-					});
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
-
 export const getExciseList = () => {
 	return (dispatch) => {
 		let data = {

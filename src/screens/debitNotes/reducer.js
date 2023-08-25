@@ -2,7 +2,6 @@ import { DEBIT_NOTE } from 'constants/types';
 
 const initState = {
 	debit_note_list: [],
-	project_list: [],
 	customer_list: [],
 	currency_list: [],
 	vat_list: [],
@@ -24,13 +23,6 @@ const CustomerInvoiceReducer = (state = initState, action) => {
 				...state,
 				debit_note_list: Object.assign([], payload.data),
 			};
-
-		case DEBIT_NOTE.PROJECT_LIST:
-			return {
-				...state,
-				project_list: Object.assign([], payload.data),
-			};
-
 		case DEBIT_NOTE.CUSTOMER_LIST:
 			return {
 				...state,

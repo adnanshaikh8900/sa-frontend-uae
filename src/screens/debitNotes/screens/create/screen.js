@@ -23,7 +23,6 @@ import * as CreditNotesCreateActions from './actions';
 import * as CreditNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -38,13 +37,12 @@ import { Checkbox } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
-		currency_list: state.customer_invoice.currency_list,
+		currency_list: state.debit_notes.currency_list,
 		invoice_list: state.debit_notes.invoice_list,
-		vat_list: state.customer_invoice.vat_list,
-		// product_list: state.customer_invoice.product_list,
-		customer_list: state.customer_invoice.customer_list,
-		excise_list: state.customer_invoice.excise_list,
-		country_list: state.customer_invoice.country_list,
+		vat_list: state.debit_notes.vat_list,
+		customer_list: state.debit_notes.customer_list,
+		excise_list: state.debit_notes.excise_list,
+		country_list: state.debit_notes.country_list,
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
@@ -52,15 +50,9 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		creditNotesActions: bindActionCreators(
-			CreditNotesActions,
-			dispatch,
-		),
+		creditNotesActions: bindActionCreators(CreditNotesActions,dispatch,),
 		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
-		creditNotesCreateActions: bindActionCreators(
-			CreditNotesCreateActions,
-			dispatch,
-		),
+		creditNotesCreateActions: bindActionCreators(CreditNotesCreateActions,dispatch,),
 		productActions: bindActionCreators(ProductActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
@@ -164,7 +156,6 @@ class CreateDebitNote extends React.Component {
 
 			},
 			total_excise: 0,
-			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
 			currentData: {},
 			contactType: 2,
 			selectedContact: '',
@@ -178,7 +169,6 @@ class CreateDebitNote extends React.Component {
 			prefix: '',
 			purchaseCategory: [],
 			salesCategory: [],
-			// exchangeRate:'',		
 			basecurrency: [],
 			inventoryList: [],
 			remainingInvoiceAmount: '',
@@ -187,7 +177,6 @@ class CreateDebitNote extends React.Component {
 			quantityExceeded: '',
 			isCreatedWithoutInvoice: false,
 			shippingCharges: 0,
-			roundofActive: false
 		};
 
 		this.formRef = React.createRef();
@@ -544,7 +533,6 @@ class CreateDebitNote extends React.Component {
 
 	componentDidMount = () => {
 		this.getInitialData();
-		this.getProductListByPlaceOfSupplyId(1)
 	};
 
 	getInitialData = () => {
@@ -1331,11 +1319,6 @@ class CreateDebitNote extends React.Component {
 			customer_currency: data.currencyCode,
 			customer_currency_des: result[0].currencyName,
 		})
-
-		// this.setState({
-		//   selectedContact: option
-		// })
-		console.log('data11', option)
 		this.formRef.current.setFieldValue('contactId', option, true);
 	};
 
@@ -1493,7 +1476,6 @@ class CreateDebitNote extends React.Component {
 			);
 			this.props.creditNotesCreateActions
 				.getInvoiceById(e.value).then((response) => {
-					this.getProductListByPlaceOfSupplyId(response.data.placeOfSupplyId ? response.data.placeOfSupplyId : '', undefined)
 					this.setState(
 						{
 							option: {
@@ -2258,64 +2240,7 @@ class CreateDebitNote extends React.Component {
 
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Field
-																					name="attachmentFile"
-																					render={({ field, form }) => (
-																						<div>
-																							<Label>{strings.ReceiptAttachment}</Label>{' '}
-																							<br />
-																							<Button
-																								color="primary"
-																								onClick={() => {
-																									document
-																										.getElementById('fileInput')
-																										.click();
-																								}}
-																								className="btn-square mr-3"
-																							>
-																								<i className="fa fa-upload"></i>{' '}
-																								{strings.upload}
-																							</Button>
-																							<input
-																								id="fileInput"
-																								ref={(ref) => {
-																									this.uploadFile = ref;
-																								}}
-																								type="file"
-																								style={{ display: 'none' }}
-																								onChange={(e) => {
-																									this.handleFileChange(
-																										e,
-																										props,
-																									);
-																								}}
-																							/>
-																							{this.state.fileName && (
-																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
-																								</div>
-																							)}
-																						</div>
-																					)}
-																				/>
-																				{props.errors.attachmentFile &&
-																					props.touched.attachmentFile && (
-																						<div className="invalid-file">
-																							{props.errors.attachmentFile}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
+																		
 
 																	</Row>
 																	<FormGroup className="mb-3">
@@ -2344,24 +2269,7 @@ class CreateDebitNote extends React.Component {
 																{this.state.isCNWithoutProduct === false && (<Col lg={4}>
 																	<div className="">
 
-																		{this.renderTotalValue(props, strings.SubTotal, initValue.total_net)}
-																		{this.renderTotalValue(props, strings.Discount, initValue.discount)}
-
-																		{this.state.igstEnabled == true && this.renderTotalValue(props, "Total IGST", initValue.IGST_totalAmount)}
-																		{this.state.igstEnabled == false && this.renderTotalValue(props, "Total CGST", initValue.CGST_totalAmount)}
-																		{this.state.igstEnabled == false && this.renderTotalValue(props, "Total SGST", initValue.SGST_totalAmount)}
-																		{this.renderTotalValue(props, "Total CESS", initValue.CESS_totalAmount)}
-																		{this.renderTotalValue(props, "Total Tax", initValue.totalTaxAmount)}
-																		<div className="total-item p-2">
-																			<Row><Col lg={6}><h5 className="mb-0 text-right">Shipping Charges</h5></Col>
-																				<Col lg={6} className="text-right">
-																					<Input disabled type='number' value={this.state.shippingCharges} onChange={(opt) => { this.setState({ shippingCharges: opt.target.value }) }} style={{ textAlign: "right" }} />
-																				</Col>
-																			</Row>
 																		</div>
-																		<Checkbox disabled value={this.state.roundofActive} onChange={(option) => { this.setState({ roundofActive: !this.state.roundofActive }) }} />Auto Round-of
-																		{this.renderTotalValue(props, strings.Total, this.state.roundofActive == false ? parseFloat(initValue.totalAmount) + parseFloat(this.state.shippingCharges) : Math.round(parseFloat(initValue.totalAmount) + parseFloat(this.state.shippingCharges)))}
-																	</div>
 																</Col>)}
 															</Row>
 														) : null}
@@ -2438,28 +2346,6 @@ class CreateDebitNote extends React.Component {
 			</div>
 		);
 	}
-	//
-	renderTotalValue = (props, label, value) => {
-
-		return (
-			<div className="total-item p-2">
-				<Row>
-					<Col lg={6}>
-						<h5 className="mb-0 text-right">
-							{label}
-						</h5>
-					</Col>
-					<Col lg={6} className="text-right">
-						<label className="mb-0">
-
-							{this.state.supplier_currency_symbol}&nbsp;
-							{value.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-						</label>
-					</Col>
-				</Row>
-			</div>
-		)
-	}//
 	renderTaxType = (cell, row, props) => {
 		const { vat_list } = this.props;
 		let vatList = vat_list.length
@@ -2530,32 +2416,6 @@ class CreateDebitNote extends React.Component {
 			/>
 		);
 	};//
-	getProductListByPlaceOfSupplyId = (id, props) => {
-		this.props.commonActions.getCompanyDetails().then((res) => {
-			if (res.status == 200) {
-
-				if (res.data.companyStateCode == id)
-					this.setState({
-						igstEnabled: false,
-						companyStateCode: res.data.companyStateCode
-					})
-				else
-					this.setState({
-						igstEnabled: true,
-						companyStateCode: res.data.companyStateCode
-					})
-			}
-		})
-		this.props.creditNotesActions.getProductListById(id).then((res) => {
-			if (res.status == 200) {
-				this.setState({ product_list: res.data })
-				this.updateAmount(this.state.data, props);
-			}
-		});
-
-		//
-
-	}
 }
 
 export default connect(

@@ -1296,6 +1296,7 @@ class CreateCreditNote extends React.Component {
 			formData.append('totalAmount', creditAmount);
 
 		formData.append('vatCategoryId', 2);
+		formData.append('taxType', this.state.taxType ? this.state.taxType : false);
 
 		if (invoiceNumber) {
 			formData.append('invoiceId', invoiceNumber.value ? invoiceNumber.value : invoiceNumber);
@@ -1930,47 +1931,47 @@ class CreateCreditNote extends React.Component {
 																				{strings.TaxTreatment}
 																			</Label>
 																			<Select
-																					options={
-																						taxTreatmentList
-																							? selectOptionsFactory.renderOptions(
-																								'name',
-																								'id',
-																								taxTreatmentList,
-																								'VAT',
-																							)
-																							: []
-																					}
-																					isDisabled={true}
-																					id="taxTreatmentid"
-																					name="taxTreatmentid"
-																					placeholder={strings.Select + strings.TaxTreatment}
-																					value={
-																						taxTreatmentList &&
-																						selectOptionsFactory
-																							.renderOptions(
-																								'name',
-																								'id',
-																								taxTreatmentList,
-																								'VAT',
-																							)
-																							.find(
-																								(option) =>
-																									option.label ===
-																									this.state.customer_taxTreatment_des,
-																							)
-																					}
-																					onChange={(option) => {
-																							props.handleChange('taxTreatmentid')(
-																								option,
-																							);
-																					}}
-																					className={
-																						props.errors.taxTreatmentid &&
-																							props.touched.taxTreatmentid
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
+																				options={
+																					taxTreatmentList
+																						? selectOptionsFactory.renderOptions(
+																							'name',
+																							'id',
+																							taxTreatmentList,
+																							'VAT',
+																						)
+																						: []
+																				}
+																				isDisabled={true}
+																				id="taxTreatmentid"
+																				name="taxTreatmentid"
+																				placeholder={strings.Select + strings.TaxTreatment}
+																				value={
+																					taxTreatmentList &&
+																					selectOptionsFactory
+																						.renderOptions(
+																							'name',
+																							'id',
+																							taxTreatmentList,
+																							'VAT',
+																						)
+																						.find(
+																							(option) =>
+																								option.label ===
+																								this.state.customer_taxTreatment_des,
+																						)
+																				}
+																				onChange={(option) => {
+																					props.handleChange('taxTreatmentid')(
+																						option,
+																					);
+																				}}
+																				className={
+																					props.errors.taxTreatmentid &&
+																						props.touched.taxTreatmentid
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
 																			{props.errors.taxTreatmentid &&
 																				props.touched.taxTreatmentid && (
 																					<div className="invalid-feedback">

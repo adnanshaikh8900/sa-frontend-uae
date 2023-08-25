@@ -1199,6 +1199,7 @@ class DetailCreditNote extends React.Component {
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append('isCreatedWithoutInvoice', this.state.isCreatedWithoutInvoice);
 		formData.append('isCreatedWIWP', this.state.isCreatedWIWP);
+		formData.append('taxType', this.state.taxType ? this.state.taxType : false);
 
 		if (invoiceNumber) {
 			formData.append('invoiceId', invoiceNumber.value ? invoiceNumber.value : invoiceNumber);
@@ -1516,10 +1517,10 @@ class DetailCreditNote extends React.Component {
 															// if ((this.state.isCreatedWIWP) && (values.creditAmount == '')) {
 															// 	errors.creditAmount = "Credit Amount is required";
 															// }
-															if (this.state.initValue.totalAmount > this.state.remainingInvoiceAmount) {
+															if (this.state.remainingInvoiceAmount && (this.state.initValue.totalAmount > this.state.remainingInvoiceAmount)) {
 																errors.remainingInvoiceAmount = 'The amount of the credit note cannot exceed the amount of the invoice';
 															}
-															if (values.creditAmount > this.state.remainingInvoiceAmount) {
+															if (this.state.remainingInvoiceAmount && (values.creditAmount > this.state.remainingInvoiceAmount)) {
 																errors.remainingInvoiceAmount = 'The amount of the credit note cannot exceed the amount of the invoice';
 															}
 															return errors;

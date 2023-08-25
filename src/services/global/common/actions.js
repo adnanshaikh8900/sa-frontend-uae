@@ -65,7 +65,7 @@ export const fillManDatoryDetails = (status, message) => {
 			"Please Fill All Mandatory Details",
 			{
 				position: "top-center",
-				draggable: true, 
+				draggable: true,
 				autoClose: 2000,
 				progress: undefined,
 				hideProgressBar: true,
@@ -99,10 +99,10 @@ export const getRoleList = (id) => {
 			method: 'GET',
 			url: `/rest/roleModule/getModuleListByRoleCode?roleCode=${id}`,
 		};
-	
+
 		return authApi(data)
 			.then((res) => {
-				
+
 				dispatch({
 					type: COMMON.USER_ROLE_LIST,
 					payload: res.data,
@@ -165,25 +165,25 @@ export const getCountryList = () => {
 export const getCompanyTypeListRegister = () => {
 
 	return (dispatch) => {
-	  let data = {
-		method: 'get',
-		url: `/rest/company/getCompanyType`
-	  }
-	  return api(data)
-	  .then((res) => {
-		  if (res.status === 200) {
-			  dispatch({
-				  type: COMMON.COMPANY_TYPE,
-				  payload: res.data,
-			  });
-		  }
-		  console.log(res)
-	  })
-	  .catch((err) => {
-		  throw err;
-	  });
+		let data = {
+			method: 'get',
+			url: `/rest/company/getCompanyType`
+		}
+		return api(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: COMMON.COMPANY_TYPE,
+						payload: res.data,
+					});
+				}
+				console.log(res)
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
 };
-  };
 export const getCurrencyList = () => {
 	return (dispatch) => {
 		let data = {
@@ -256,19 +256,39 @@ export const getCompany = () => {
 };
 
 export const checkValidation = (obj) => {
-    return (dispatch) => {
-      let data = {
-        method: 'get',
-        url: `/rest/validation/validate?name=${obj.name}&moduleType=${obj.moduleType}`,
-      };
-      return authApi(data)
-        .then((res) => {
-          if (res.status === 200) {
-            return res;
-          }
-        })
-        .catch((err) => {
-          throw err;
-        });
-    };
-  };
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/validation/validate?name=${obj.name}&moduleType=${obj.moduleType}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getTaxTreatmentList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/datalist/getTaxTreatment`
+		}
+		return authApi(data).then((res) => {
+			dispatch({
+				type: COMMON.TAX_TREATMENT_LIST,
+				payload: {
+					data: res.data,
+				},
+			});
+			return res
+		}).catch((err) => {
+			throw err
+		})
+	}
+};

@@ -1790,6 +1790,7 @@ class CreateCustomerInvoice extends React.Component {
 			const vat = index !== '' && index >= 0 ? vat_list[`${index}`].vat : 0;
 
 			//Exclusive case
+			debugger
 			if (this.state.taxType === false) {
 				if (obj.discountType === 'PERCENTAGE') {
 					net_value =

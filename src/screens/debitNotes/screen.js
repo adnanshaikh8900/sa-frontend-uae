@@ -786,7 +786,7 @@ class DebitNotes extends React.Component {
 														}
 													>
 														<i className="fas fa-plus mr-1" />
-														{strings.AddNewDebitNotes}
+														{strings.AddNewDebitNote}
 													</Button></div></Row>
 
 											<BootstrapTable

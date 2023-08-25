@@ -385,7 +385,6 @@ export const getInvoiceById = (_id) => {
 			});
 	};
 };
-
 export const deleteInvoice = (id) => {
 	return (dispatch) => {
 		let data = {
@@ -541,8 +540,9 @@ export const getInvoiceListForDropdown = (id) => {
 				if (res.status === 200) {
 					dispatch({
 						type: DEBIT_NOTE.INVOICE_LIST_FOR_DROPDOWN,
-						payload: res,
+						payload: res.data,
 					});
+					return res;
 				}
 			})
 			.catch((err) => {

@@ -19,8 +19,8 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import * as CreditNotesCreateActions from './actions';
-import * as CreditNotesActions from '../../actions';
+import * as DebitNoteCreateActions from './actions';
+import * as DebitNoteActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -36,9 +36,11 @@ import Switch from "react-switch";
 import { Checkbox } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
+	console.log(state)
 	return {
 		currency_list: state.debit_notes.currency_list,
 		invoice_list: state.debit_notes.invoice_list,
+		tax_treatment_list: state.common.tax_treatment_list,
 		vat_list: state.debit_notes.vat_list,
 		customer_list: state.debit_notes.customer_list,
 		excise_list: state.debit_notes.excise_list,
@@ -50,9 +52,9 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		creditNotesActions: bindActionCreators(CreditNotesActions,dispatch,),
+		debitNoteActions: bindActionCreators(DebitNoteActions, dispatch,),
 		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
-		creditNotesCreateActions: bindActionCreators(CreditNotesCreateActions,dispatch,),
+		debitNoteCreateActions: bindActionCreators(DebitNoteCreateActions, dispatch,),
 		productActions: bindActionCreators(ProductActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
@@ -91,30 +93,24 @@ class CreateDebitNote extends React.Component {
 					description: '',
 					quantity: 1,
 					unitPrice: '',
-					// vatCategoryId: '',
-					// exciseTaxId:'',
-					// exciseAmount:'',
+					vatCategoryId: '',
+					exciseTaxId: '',
+					exciseAmount: '',
 					subTotal: 0,
-					// vatAmount:0,
+					vatAmount: 0,
 					productId: '',
-					// isExciseTaxExclusive:'',
+					isExciseTaxExclusive: '',
 					discountType: 'FIXED',
 					discount: 0,
-					taxSlab: '',
-					hsnOrSac: '',
-
-					igst: 0,
-					cess: 0,
-
-					cgst: 0,
-					sgst: 0
+					unitType: '',
+					unitTypeId: ''
 				},
 			],
 			idCount: 0,
 			initValue: {
 				invoiceNumber: '',
 				receiptAttachmentDescription: '',
-				receiptNumber: '',
+				referenceNumber: '',
 				contact_po_number: '',
 				currency: '',
 				// invoiceDueDate: '',
@@ -130,30 +126,26 @@ class CreateDebitNote extends React.Component {
 						id: 0,
 						description: '',
 						quantity: 1,
+						exciseAmount: 0,
+						discount: 0,
 						unitPrice: '',
 						vatCategoryId: '',
 						productId: '',
 						subTotal: 0,
 					},
 				],
-				creditNoteNumber: '',
+				debitNoteNumber: '',
 				total_net: 0,
 				invoiceVATAmount: 0,
 				totalVatAmount: 0,
 				totalAmount: 0,
 				notes: '',
 				email: '',
-				discount: 0,
+				totalDiscount: 0,
 				discountPercentage: '',
 				discountType: 'FIXED',
 				creditAmount: 0,
 				total_excise: 0,
-				CESS_totalAmount: 0,
-				CGST_totalAmount: 0,
-				SGST_totalAmount: 0,
-				IGST_totalAmount: 0,
-				totalTaxAmount: 0
-
 			},
 			total_excise: 0,
 			currentData: {},
@@ -165,7 +157,7 @@ class CreateDebitNote extends React.Component {
 			selectedType: { value: 'FIXED', label: '₹' },
 			discountPercentage: '',
 			discountAmount: 0,
-			exist: false,
+			debitNoteExist: false,
 			prefix: '',
 			purchaseCategory: [],
 			salesCategory: [],
@@ -173,10 +165,11 @@ class CreateDebitNote extends React.Component {
 			inventoryList: [],
 			remainingInvoiceAmount: '',
 			invoiceSelected: false,
-			isCNWithoutProduct: false,
+			isDNWIWithoutProduct: false,
 			quantityExceeded: '',
 			isCreatedWithoutInvoice: false,
 			shippingCharges: 0,
+			invoiveSelected: false,
 		};
 
 		this.formRef = React.createRef();
@@ -225,45 +218,6 @@ class CreateDebitNote extends React.Component {
 			</div>
 		);
 	};
-
-	renderDescription = (cell, row, props) => {
-		let idx;
-		this.state.data.map((obj, index) => {
-			if (obj.id === row.id) {
-				idx = index;
-			}
-			return obj;
-		});
-
-		return (
-			<Field
-				name={`lineItemsString.${idx}.description`}
-				render={({ field, form }) => (
-					<Input
-						disabled
-						type="text"
-						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
-						onChange={(e) => {
-							this.selectItem(e.target.value, row, 'description', form, field);
-						}}
-						placeholder={strings.Description}
-						className={`form-control ${props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].description &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].description
-							? 'is-invalid'
-							: ''
-							}`}
-					/>
-				)}
-			/>
-		);
-	};
-
 	renderQuantity = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -430,7 +384,7 @@ class CreateDebitNote extends React.Component {
 								}}
 								placeholder={strings.discount}
 								className={`form-control 
-	   ${props.errors.lineItemsString &&
+	   									${props.errors.lineItemsString &&
 										props.errors.lineItemsString[parseInt(idx, 10)] &&
 										props.errors.lineItemsString[parseInt(idx, 10)].discount &&
 										Object.keys(props.touched).length > 0 &&
@@ -513,20 +467,13 @@ class CreateDebitNote extends React.Component {
 			moduleType: 6,
 			name: value,
 		};
-		this.props.creditNotesCreateActions
+		this.props.debitNoteCreateActions
 			.checkValidation(data)
 			.then((response) => {
 				if (response.data === 'Invoice Number Already Exists') {
-					this.setState(
-						{
-							exist: true,
-						},
-						() => { },
-					);
+					this.setState({ debitNoteExist: true, });
 				} else {
-					this.setState({
-						exist: false,
-					});
+					this.setState({ debitNoteExist: false, });
 				}
 			});
 	};
@@ -537,9 +484,10 @@ class CreateDebitNote extends React.Component {
 
 	getInitialData = () => {
 		this.getInvoiceNo();
-		this.props.creditNotesActions.getInvoiceListForDropdown();
-		this.props.creditNotesActions.getCustomerList(this.state.contactType);
-		this.props.creditNotesActions.getCountryList();
+		this.props.commonActions.getTaxTreatmentList();
+		this.props.debitNoteActions.getInvoiceListForDropdown();
+		this.props.debitNoteActions.getCustomerList(this.state.contactType);
+		this.props.debitNoteActions.getCountryList();
 		this.props.productActions.getProductCategoryList();
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
 			this.setState({
@@ -558,7 +506,7 @@ class CreateDebitNote extends React.Component {
 			// 	true,
 			// );
 		});
-		// this.props.creditNotesActions.getInvoicePrefix().then((response) => {
+		// this.props.debitNoteActions.getInvoicePrefix().then((response) => {
 		// 	this.setState({
 		// 		prefixData: response.data
 
@@ -677,14 +625,14 @@ class CreateDebitNote extends React.Component {
 							);
 						}}
 						className={`${props.errors.lineItemsString &&
-								props.errors.lineItemsString[parseInt(idx, 10)] &&
-								props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
-								Object.keys(props.touched).length > 0 &&
-								props.touched.lineItemsString &&
-								props.touched.lineItemsString[parseInt(idx, 10)] &&
-								props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
-								? 'is-invalid'
-								: ''
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
+							? 'is-invalid'
+							: ''
 							}`}
 					/>
 				)}
@@ -887,78 +835,84 @@ class CreateDebitNote extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
-					<Select
-						isDisabled
-						styles={customStyles}
-						options={
-							product_list
-								? selectOptionsFactory.renderOptions(
-									'name',
-									'id',
-									product_list,
-									'Product',
-								)
-								: []
-						}
-						id="productId"
-						placeholder={strings.Select + strings.Product}
-						onChange={(e) => {
-							if (e && e.label !== 'Select Product') {
-								this.selectItem(
-									e.value,
-									row,
-									'productId',
-									form,
-									field,
-									props,
-								);
-								this.prductValue(
-									e.value,
-									row,
-									'productId',
-									form,
-									field,
-									props,
-								);
-							} else {
-								form.setFieldValue(
-									`lineItemsString.${idx}.productId`,
-									e.value,
-									true,
-								);
-								this.setState({
-									data: [
-										{
-											id: 0,
-											description: '',
-											quantity: 1,
-											unitPrice: '',
-											vatCategoryId: '',
-											subTotal: 0,
-											productId: '',
-										},
-									],
-								});
+					<>
+						<Select
+							isDisabled
+							styles={customStyles}
+							options={
+								product_list
+									? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										product_list,
+										'Product',
+									)
+									: []
 							}
-						}}
-						value={
-							product_list && row.productId
-								? selectOptionsFactory
-									.renderOptions('name', 'id', product_list, 'Product')
-									.find((option) => option.value === +row.productId)
-								: []
-						}
-						className={`${props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].productId
-							? 'is-invalid'
-							: ''
-							}`}
-					/>
+							id="productId"
+							placeholder={strings.Select + strings.Product}
+							onChange={(e) => {
+								if (e && e.label !== 'Select Product') {
+									this.selectItem(e.value, row, 'productId', form, field, props,);
+									this.prductValue(e.value, row, 'productId', form, field, props,);
+								} else {
+									form.setFieldValue(`lineItemsString.${idx}.productId`, e.value, true,);
+									this.setState({
+										data: [
+											{
+												id: 0,
+												description: '',
+												quantity: 1,
+												unitPrice: '',
+												vatCategoryId: '',
+												subTotal: 0,
+												productId: '',
+											},
+										],
+									});
+								}
+							}}
+							value={
+								product_list && row.productId
+									? selectOptionsFactory
+										.renderOptions('name', 'id', product_list, 'Product')
+										.find((option) => option.value === +row.productId)
+									: ''
+							}
+							className={`${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].productId
+								? 'is-invalid'
+								: ''
+								}`}
+						/>
+						<div className='mt-1'>
+							<Input
+								disabled
+								type="text"
+								maxLength="250"
+								value={row['description'] ? row['description'] : ''}
+								onChange={(e) => {
+									this.selectItem(e.target.value, row, 'description', form, field);
+								}}
+								placeholder={strings.Description}
+								className={`form-control ${props.errors.lineItemsString &&
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)].description &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)].description
+									? 'is-invalid'
+									: ''
+									}`}
+							/>
+						</div>
+					</>
 				)}
 			/>
 		);
@@ -1116,7 +1070,7 @@ class CreateDebitNote extends React.Component {
 						totalTaxAmount: total_tax,
 						// discount:  discount ? discount : 0,
 						totalAmount: total_net + total_tax,
-						discount: discount,
+						totalDiscount: discount,
 						CESS_totalAmount: total_cess,
 						CGST_totalAmount: total_cgst,
 						SGST_totalAmount: total_sgst,
@@ -1145,14 +1099,14 @@ class CreateDebitNote extends React.Component {
 		this.setState({ disabled: true });
 		const {
 			receiptAttachmentDescription,
-			receiptNumber,
+			referenceNumber,
 			contact_po_number,
 			currency,
 			invoiceNumber,
 			creditNoteDate,
 			contactId,
-			creditNoteNumber,
-			discount,
+			debitNoteNumber,
+			totalDiscount,
 			discountType,
 			discountPercentage,
 			notes,
@@ -1166,14 +1120,14 @@ class CreateDebitNote extends React.Component {
 		const { term } = this.state;
 		const formData = new FormData();
 
-		formData.append('isCNWithoutProduct', this.state.isCNWithoutProduct);
+		formData.append('isDNWIWithoutProduct', this.state.isDNWIWithoutProduct);
 
 		if (reason)
 			formData.append('reason', reason.label ? reason.label : reason);
 
 		formData.append(
 			'creditNoteNumber',
-			creditNoteNumber !== null ? this.state.prefix + creditNoteNumber : '',
+			debitNoteNumber !== null ? this.state.prefix + debitNoteNumber : '',
 		);
 		formData.append(
 			'email',
@@ -1188,8 +1142,8 @@ class CreateDebitNote extends React.Component {
 				: null,
 		);
 		formData.append(
-			'receiptNumber',
-			receiptNumber !== null ? receiptNumber : '',
+			'referenceNumber',
+			referenceNumber !== null ? referenceNumber : '',
 		);
 		formData.append(
 			'contactPoNumber',
@@ -1202,7 +1156,7 @@ class CreateDebitNote extends React.Component {
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append('email', email !== null ? email : '');
 		formData.append('type', 11);
-		if (this.state.isCNWithoutProduct === true)
+		if (this.state.isDNWIWithoutProduct === true)
 			formData.append('totalAmount', creditAmount);
 		formData.append('exchangeRate', exchangeRate)
 		if (invoiceNumber && invoiceNumber.value) {
@@ -1210,7 +1164,7 @@ class CreateDebitNote extends React.Component {
 			formData.append('cnCreatedOnPaidInvoice', '1');
 		}
 		debugger
-		if (this.state.isCNWithoutProduct === false) {
+		if (this.state.isDNWIWithoutProduct === false) {
 			if (this.state.igstEnabled == true)
 				formData.append('totalIgst', this.state.initValue.IGST_totalAmount);
 			else {
@@ -1221,11 +1175,10 @@ class CreateDebitNote extends React.Component {
 			formData.append('totalTaxAmount', this.state.initValue.totalTaxAmount)
 
 			formData.append('subTotal', this.state.initValue.total_net);
-			formData.append('discount', this.state.initValue.discount);
+			formData.append('discount', this.state.initValue.totalDiscount);
 			formData.append('shippingCharges', this.state.shippingCharges);
 			formData.append('lineItemsString', JSON.stringify(this.state.data));
 			formData.append('totalAmount', this.state.initValue.totalAmount + this.state.shippingCharges);
-			formData.append('discount', this.state.initValue.discount);
 		}
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
@@ -1238,7 +1191,7 @@ class CreateDebitNote extends React.Component {
 		}
 
 		formData.append('placeOfSupplyId', this.state.initValue.placeOfSupplyId)
-		this.props.creditNotesCreateActions
+		this.props.debitNoteCreateActions
 			.createDebitNote(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
@@ -1327,7 +1280,7 @@ class CreateDebitNote extends React.Component {
 	};
 
 	getCurrentProduct = () => {
-		this.props.creditNotesActions.getProductList().then((res) => {
+		this.props.debitNoteActions.getProductList().then((res) => {
 			this.setState(
 				{
 					data: [
@@ -1383,15 +1336,15 @@ class CreateDebitNote extends React.Component {
 		});
 	};
 	getInvoiceNo = () => {
-		this.props.creditNotesCreateActions.getInvoiceNo().then((res) => {
+		this.props.debitNoteCreateActions.getInvoiceNo().then((res) => {
 			if (res.status === 200) {
 				this.setState({
 					initValue: {
 						...this.state.initValue,
-						...{ creditNoteNumber: res.data },
+						...{ debitNoteNumber: res.data },
 					},
 				});
-				this.formRef.current.setFieldValue('creditNoteNumber', res.data, true, this.validationCheck(res.data));
+				this.formRef.current.setFieldValue('debitNoteNumber', res.data, true, this.validationCheck(res.data));
 			}
 		});
 	};
@@ -1414,110 +1367,62 @@ class CreateDebitNote extends React.Component {
 
 		return customer_currencyCode;
 	}
-	getTaxTreatment = (opt) => {
-		let customer_taxTreatmentId = 0;
-		let customer_item_taxTreatment = ''
-		this.props.customer_list.map(item => {
-			if (item.label.contactId == opt) {
-				this.setState({
-					customer_taxTreatment: item.label.gstTreatment.id,
-					customer_taxTreatment_des: item.label.gstTreatment.gstTreatment,
-				});
-				customer_taxTreatmentId = item.label.gstTreatment.id;
-				customer_item_taxTreatment = item.label.currency
-			}
-		})
-		return customer_taxTreatmentId;
+	getTaxTreatment = (value) => {
+		debugger
+		const { tax_treatment_list } = this.props
+		const taxtreatment = tax_treatment_list ? tax_treatment_list.find((option) => option.name === value) : '';
+		if (taxtreatment)
+			this.formRef.current.setFieldValue('taxTreatmentId', { 'label': taxtreatment.name, 'value': taxtreatment.id }, true);
+		else
+			this.formRef.current.setFieldValue('taxTreatmentId', value, true);
 	}
-
-	invoiceValue = (e, row, name, form, field, props) => {
-		const { invoice_list } = this.props;
-		let data = this.state.data;
-		const result = invoice_list.data.find((item) => item.id === parseInt(e));
-		let idx;
-		data.map((obj, index) => {
-			if (obj.id === row.id) {
-				console.log(result);
-				obj['unitPrice'] = result.unitPrice;
-				obj['vatCategoryId'] = result.vatCategoryId;
-				obj['description'] = result.description;
-				obj['hsnOrSac'] = result.hsnOrSac;
-				obj['taxPercentage'] = result.interStateTaxSlab ? result.interStateTaxSlab.taxPercentage :
-					result.intraStateTaxSlab ? result.intraStateTaxSlab.taxPercentage : "0";
-				obj['taxSlab'] = result.interStateTaxSlab ? result.interStateTaxSlab.interStateTaxSlab :
-					result.intraStateTaxSlab ? result.intraStateTaxSlab.intraStateTaxSlab : "N/A";
-				idx = index;
-			}
-			return obj;
-		});
-
-		this.updateAmount(data, props);
-	};
-
-	getInvoiceDetails = (e, row, props, form, field) => {
-		let option;
-		const { invoice_list, selectedData } = this.props;
-		let idx;
-		this.state.data.map((obj, index) => {
-			if (obj.id === row.id) {
-				idx = index;
-			}
-			return obj;
-		});
-		if (e && e.label !== 'Select invoiceNumber') {
-
-			this.invoiceValue(
-				e.value,
-				row,
-				'invoiceNumber',
-				form,
-				field,
-				props,
-			);
-			this.props.creditNotesCreateActions
-				.getInvoiceById(e.value).then((response) => {
-					this.setState(
-						{
-							option: {
-								label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
-								value: response.data.contactId,
-							},
-							data: response.data.invoiceLineItems,
-							totalAmount: response.data.totalAmount,
-							customer_currency: response.data.currencyCode,
-							remainingInvoiceAmount: response.data.remainingInvoiceAmount,
-
-							shippingCharges: response.data.shippingCharges ? response.data.shippingCharges : 0,
-							initValue: {
-								...this.state.initValue,
-								...{
-									totalAmount: response.data.totalAmount,
-									discount: response.data.discount,
-									placeOfSupplyId: response.data.placeOfSupplyId,
+	getInvoiceDetails = (value) => {
+		if (value) {
+			this.props.debitNoteActions
+				.getInvoiceById(value).then((response) => {
+					if (response.status = 200) {
+						const custmerName = {
+							label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
+							value: response.data.contactId,
+						}
+						this.setState(
+							{
+								option: custmerName,
+								data: response.data.invoiceLineItems ? response.data.invoiceLineItems : [],
+								totalAmount: response.data.totalAmount,
+								customer_currency: response.data.currencyCode,
+								remainingInvoiceAmount: response.data.remainingInvoiceAmount,
+								shippingCharges: response.data.shippingCharges ? response.data.shippingCharges : 0,
+								initValue: {
+									...this.state.initValue,
+									...{
+										lineItemsString: response.data.invoiceLineItems ? response.data.invoiceLineItems : [],
+										totalAmount: response.data.totalAmount,
+										totalDiscount: response.data.discount,
+										placeOfSupplyId: response.data.placeOfSupplyId,
+									},
 								},
+
+							}, () => {
+								this.formRef.current.setFieldValue(
+									'lineItemsString',
+									this.state.data,
+									true,
+								);
+								this.formRef.current.setFieldTouched(
+									`lineItemsString[${this.state.data.length - 1}]`,
+									false,
+									true,
+								);
 							},
 
-						}, () => {
-							this.formRef.current.setFieldValue(
-								'lineItemsString',
-								this.state.data,
-								true,
-							);
-							this.formRef.current.setFieldTouched(
-								`lineItemsString[${this.state.data.length - 1}]`,
-								false,
-								true,
-							);
-						},
-
-					);
-					this.formRef.current.setFieldValue('contactId', this.state.option, true);
-					this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
-
-					this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
-					this.getCurrency(this.state.option.value)
-					this.getTaxTreatment(this.state.option.value)
-
+						);
+						this.formRef.current.setFieldValue('contactId', custmerName, true);
+						this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
+						this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
+						this.getCurrency(custmerName.value)
+						this.getTaxTreatment(response.data.taxTreatment)
+					}
 				});
 		}
 	}
@@ -1525,18 +1430,16 @@ class CreateDebitNote extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, exist, prefix } = this.state;
+		const { data, discountOptions, initValue, debitNoteExist, prefix } = this.state;
 		const {
 			customer_list,
 			invoice_list,
 			universal_currency_list,
 			currency_convert_list,
 			vat_list,
+			tax_treatment_list,
 		} = this.props;
-
-
 		let tmpCustomer_list = []
-
 		customer_list.map(item => {
 			let obj = { label: item.label.contactName, value: item.value }
 			tmpCustomer_list.push(obj)
@@ -1557,7 +1460,7 @@ class CreateDebitNote extends React.Component {
 													src={invoiceimage}
 													style={{ width: '40px' }}
 												/>
-												<span className="ml-2">Create Debit Note</span>
+												<span className="ml-2">{strings.CreateDebitNote}</span>
 											</div>
 										</Col>
 									</Row>
@@ -1574,15 +1477,15 @@ class CreateDebitNote extends React.Component {
 												validate={(values) => {
 													let errors = {};
 
-													if (exist === true) {
-														errors.creditNoteNumber = 'Tax Credit Note Number cannot be same';
+													if (debitNoteExist === true) {
+														errors.debitNoteNumber = 'Tax Credit Note Number cannot be same';
 													}
 
-													if (this.state.isCNWithoutProduct == false && !values.invoiceNumber) {
+													if (!this.state.isCreatedWithoutInvoice && !values.invoiceNumber) {
 														errors.invoiceNumber = 'Invoice Number is Required';
 													}
 
-													if (this.state.isCNWithoutProduct == true && this.state.invoiceSelected == true && !values.creditAmount)
+													if (this.state.isDNWIWithoutProduct == true && this.state.invoiceSelected == true && !values.creditAmount)
 														errors.creditAmount = 'Credit Amount is Required';
 
 													//credit amount check
@@ -1598,7 +1501,7 @@ class CreateDebitNote extends React.Component {
 												}}
 												validationSchema={Yup.object().shape({
 
-													creditNoteNumber: Yup.string().required(
+													debitNoteNumber: Yup.string().required(
 														'Tax Credit Note Number is Required',
 													),
 													contactId: Yup.string().required(
@@ -1650,150 +1553,61 @@ class CreateDebitNote extends React.Component {
 													<Form onSubmit={props.handleSubmit}>
 
 														<Row >
-															<Col lg={4}>
+															{this.state.invoiveSelected && <Col lg={4}>
 																<Checkbox
-																	checked={this.state.isCNWithoutProduct}
+																	checked={this.state.isDNWIWithoutProduct}
 																	onChange={(check) => {
-																		this.setState({ isCNWithoutProduct: !this.state.isCNWithoutProduct })
+																		this.setState({ isDNWIWithoutProduct: !this.state.isDNWIWithoutProduct })
 																	}}
-																/>	Create Debit Note Without Product
-															</Col>
+																/>	{strings.CreateDebitNoteWithoutProduct}
+															</Col>}
+															{!this.state.invoiveSelected && <Col lg={4}>
+																<Checkbox
+																	checked={this.state.isCreatedWithoutInvoice}
+																	onChange={(check) => {
+																		this.setState({ isCreatedWithoutInvoice: !this.state.isCreatedWithoutInvoice })
+																		this.setState({ isDNWIWithoutProduct: !this.state.isDNWIWithoutProduct })
+																	}}
+																/>	{strings.CreateDebitNoteWithoutInvoice}
+															</Col>}
 														</Row>
-														{/* {this.state.invoiceSelected==false &&(<Row  >
-																			<Col lg={4}>
-																				<Checkbox 
-																				checked={this.state.isCreatedWithoutInvoice}
-																				onChange={(check)=>{
-																					this.setState({isCreatedWithoutInvoice:!this.state.isCreatedWithoutInvoice})
-																					this.setState({isCNWithoutProduct:!this.state.isCNWithoutProduct})
-																				}}
-																				/>	Create Credit Note Without Invoice
-																				</Col>
-																				</Row>)} */}
 														<hr />
-
 														<Row>
-
-															<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="creditNoteNumber">
-																		<span className="text-danger">* </span>
-																		Debit Note Number
-																	</Label>
-																	<Input
-																		maxLength="50"
-																		type="text"
-																		id="creditNoteNumber"
-																		name="creditNoteNumber"
-																		placeholder={strings.CreditNoteNumber}
-																		value={props.values.creditNoteNumber}
-																		onBlur={props.handleBlur('creditNoteNumber')}
-																		onChange={(option) => {
-																			props.handleChange('creditNoteNumber')(
-																				option,
-																			);
-																			this.validationCheck(option.target.value);
-																		}}
-																		className={
-																			props.errors.creditNoteNumber &&
-																				props.touched.creditNoteNumber
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.creditNoteNumber &&
-																		props.touched.creditNoteNumber && (
-																			<div className="invalid-feedback">
-																				{props.errors.creditNoteNumber}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-															{/* <Col lg={3}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="reason">
-																					<span className="text-danger">* </span>
-																					Reason for issuing the credit note
-																				</Label>
-																				<Select
-																					id="reason"
-																					name="reason"
-																					placeholder="Select Place of Supply"
-																					options={
-																						this.reasonList
-																							? selectOptionsFactory.renderOptions(
-																									'label',
-																									'value',
-																									this.reasonList,
-																									'Reason',
-																									
-																							)
-																							: []
-																					}
-																					value={this.state.reasonList}
-																					className={
-																						props.errors.reason &&
-																						props.touched.reason
-																							? 'is-invalid'
-																							: ''
-																					}
-																					onChange={(option) =>
-																						props.handleChange('reason')(
-																							option,
-																						)
-																					}
-																				/>
-																				{props.errors.reason &&
-																					props.touched.reason && (
-																						<div className="invalid-feedback">
-																							{props.errors.reason}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col> */}
-														</Row>
-														<Row>
-															<Col lg={3}>
+															{!this.state.isCreatedWithoutInvoice && (<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoiceNumber"><span className="text-danger">* </span>
 																		{strings.InvoiceNumber}
 																	</Label>
 																	<Select
+																		//isDisabled={lockInvoiceDetail}
 																		id="invoiceNumber"
 																		name="invoiceNumber"
 																		placeholder={strings.Select + strings.InvoiceNumber}
 																		options={
-																			invoice_list.data
-																				? selectOptionsFactory.renderOptions(
-																					'label',
-																					'value',
-																					invoice_list.data,
-																					'Invoice Number',
-																				)
-																				: []
+																			invoice_list ? selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				invoice_list,
+																				'Invoice Number',
+																			) : []
 																		}
-																		value={props.values.invoiceNumber}
-
+																		value={props.values.invoiceNumber?.value ? props.values.invoiceNumber : invoice_list && selectOptionsFactory.renderOptions(
+																			'label',
+																			'value',
+																			invoice_list,
+																			'Invoice Number',).find(obj => obj.value === props.values.invoiceNumber)
+																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
-																				this.getInvoiceDetails(option, option.value, props)
+																				this.getInvoiceDetails(option.value)
 																				props.handleChange('invoiceNumber')(option);
 																				this.setState({ invoiceSelected: true })
 																			} else {
 																				this.setState({ invoiceSelected: false })
 																				props.handleChange('invoiceNumber')('');
+																				this.setState({ invoiceSelected: false })
 																			}
-
-																			// if(!this.state.data1){
-																			// 	this.state.supplierList = this.state.data1
-																			// }else{
-																			// 	this.state.supplierList =	props.values.supplierId
-																			// }
-
 																		}}
-																		// onChange={() => {
-																		//     this.getrfqDetails
-																		// }}
 																		className={
 																			props.errors.invoiceNumber &&
 																				props.touched.invoiceNumber
@@ -1808,8 +1622,44 @@ class CreateDebitNote extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
+															</Col>)}
+														</Row>
+														<Row>
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="debitNoteNumber">
+																		<span className="text-danger">* </span>
+																		{strings.DebitNoteNumber}
+																	</Label>
+																	<Input
+																		maxLength="50"
+																		type="text"
+																		id="debitNoteNumber"
+																		name="debitNoteNumber"
+																		placeholder={strings.DebitNoteNumber}
+																		value={props.values.debitNoteNumber}
+																		onBlur={props.handleBlur('debitNoteNumber')}
+																		onChange={(option) => {
+																			this.setState({ debitNoteExist: false }, () => {
+																				props.handleChange('debitNoteNumber')(option,);
+																				this.validationCheck(option.target.value);
+																			})
+																		}}
+																		className={
+																			props.errors.debitNoteNumber &&
+																				props.touched.debitNoteNumber
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.debitNoteNumber &&
+																		props.touched.debitNoteNumber && (
+																			<div className="invalid-feedback">
+																				{props.errors.debitNoteNumber}
+																			</div>
+																		)}
+																</FormGroup>
 															</Col>
-
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
@@ -1836,7 +1686,7 @@ class CreateDebitNote extends React.Component {
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
-																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
+																				this.formRef.current.setFieldValue('taxTreatmentId', this.getTaxTreatment(option.value), true);
 																				// this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
 																			} else {
@@ -1861,35 +1711,54 @@ class CreateDebitNote extends React.Component {
 
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="taxTreatmentid">
-																		Tax Treatment
+																	<Label htmlFor="taxTreatmentId">
+																		{strings.TaxTreatment}
 																	</Label>
-																	<Input
-																		disabled
-																		styles={customStyles}
-																		id="taxTreatmentid"
-																		name="taxTreatmentid"
-																		placeholder='Tax Treatment'
-																		value={
-																			this.state.customer_taxTreatment_des
-
+																	<Select
+																		options={
+																			tax_treatment_list
+																				? selectOptionsFactory.renderOptions(
+																					'name',
+																					'id',
+																					tax_treatment_list,
+																					'VAT',
+																				)
+																				: []
 																		}
+																		isDisabled={true}
+																		id="taxTreatmentId"
+																		name="taxTreatmentId"
+																		placeholder={strings.Select + strings.TaxTreatment}
+																		value={props.values.taxTreatmentId?.value ? props.values.taxTreatmentId :
+																			tax_treatment_list &&
+																			selectOptionsFactory
+																				.renderOptions(
+																					'name',
+																					'id',
+																					tax_treatment_list,
+																					'VAT',
+																				)
+																				.find(
+																					(option) =>
+																						option.label === props.values.taxTreatmentId,
+																				)
+																		}
+																		onChange={(option) => {
+																			props.handleChange('taxTreatmentId')(
+																				option,
+																			);
+																		}}
 																		className={
-																			props.errors.taxTreatmentid &&
-																				props.touched.taxTreatmentid
+																			props.errors.taxTreatmentId &&
+																				props.touched.taxTreatmentId
 																				? 'is-invalid'
 																				: ''
 																		}
-																		onChange={(option) => {
-																			props.handleChange('taxTreatmentid')(option);
-
-																		}}
-
 																	/>
-																	{props.errors.taxTreatmentid &&
-																		props.touched.taxTreatmentid && (
+																	{props.errors.taxTreatmentId &&
+																		props.touched.taxTreatmentId && (
 																			<div className="invalid-feedback">
-																				{props.errors.taxTreatmentid}
+																				{props.errors.taxTreatmentId}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1993,7 +1862,7 @@ class CreateDebitNote extends React.Component {
 																</FormGroup>
 															</Col>
 
-															{(this.state.isCNWithoutProduct === false || this.state.invoiceSelected == true) && (<Col lg={3}>
+															{(this.state.isDNWIWithoutProduct === false || this.state.invoiceSelected == true) && (<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="remainingInvoiceAmount">
 
@@ -2016,7 +1885,7 @@ class CreateDebitNote extends React.Component {
 																</FormGroup>
 															</Col>)}
 
-															{this.state.isCNWithoutProduct === true && (
+															{this.state.isDNWIWithoutProduct === true && (
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="creditAmount"><span className="text-danger">* </span>
@@ -2056,7 +1925,7 @@ class CreateDebitNote extends React.Component {
 
 
 
-														{this.state.isCNWithoutProduct === false && (
+														{this.state.isDNWIWithoutProduct === false && (
 															<Row>
 																{props.errors.lineItemsString &&
 																	typeof props.errors.lineItemsString ===
@@ -2090,7 +1959,7 @@ class CreateDebitNote extends React.Component {
 																			}
 																		></TableHeaderColumn>
 																		<TableHeaderColumn
-																			width="16%"
+																			width="20%"
 																			dataField="product"
 																			dataFormat={(cell, rows) =>
 																				this.renderProduct(cell, rows, props)
@@ -2098,22 +1967,8 @@ class CreateDebitNote extends React.Component {
 																		>
 																			{strings.PRODUCT}
 																		</TableHeaderColumn>
-
-																		<TableHeaderColumn
-																			dataField="description"
-																			dataFormat={(cell, rows) =>
-																				this.renderDescription(
-																					cell,
-																					rows,
-																					props,
-																				)
-																			}
-																		>
-																			{strings.DESCRIPTION}
-																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="quantity"
-																			width="5%"
 																			dataFormat={(cell, rows) =>
 																				this.renderQuantity(cell, rows, props)
 																			}
@@ -2127,64 +1982,49 @@ class CreateDebitNote extends React.Component {
 																			}
 																		>
 																			{strings.UNITPRICE}
+																			<i
+																				id="UnitPriceTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="UnitPriceTooltip"
+																			>
+																				Unit Price – Price of a single product or
+																				service
+																			</UncontrolledTooltip>
 																		</TableHeaderColumn>
-
-																		<TableHeaderColumn
-																			width="12%"
-																			dataField="discount"
-																			dataFormat={(cell, rows) =>
-																				this.renderDiscount(cell, rows, props)
-																			}
-																		>
-																			Discount Type
-																		</TableHeaderColumn>
-
-																		<TableHeaderColumn
-																			// width="10%"
-																			dataField="taxSlab"
-																			dataFormat={(cell, rows) =>
-																				this.renderTaxType(cell, rows, props)
-																			}
-																		>
-																			Tax Type
-																		</TableHeaderColumn>
-																		{this.state.igstEnabled == true && (<TableHeaderColumn
-																			// width="10%"
-																			dataField="igst"
-																			dataFormat={(cell, rows) =>
-																				this.renderAmount(cell, rows, props)
-																			}
-																		>
-																			IGST %
-																		</TableHeaderColumn>)}
-																		{this.state.igstEnabled == false && (<TableHeaderColumn
-																			// width="10%"
-																			dataField="cgst"
-																			dataFormat={(cell, rows) =>
-																				this.renderAmount(cell, rows, props)
-																			}
-																		>
-																			CGST %
-																		</TableHeaderColumn>)}
-																		{this.state.igstEnabled == false && (<TableHeaderColumn
-																			// width="10%"
-																			dataField="sgst"
-																			dataFormat={(cell, rows) =>
-																				this.renderAmount(cell, rows, props)
-																			}
-																		>
-																			SGST %
-																		</TableHeaderColumn>)}
-																		<TableHeaderColumn
-																			// width="10%"
-																			dataField="cess"
-																			dataFormat={(cell, rows) =>
-																				this.renderAmount(cell, rows, props)
-																			}
-																		>
-																			CESS %
-																		</TableHeaderColumn>
-
+																		{initValue.totalDiscount != 0 &&
+																			<TableHeaderColumn
+																				dataField="discount"
+																				dataFormat={(cell, rows) =>
+																					this.renderDiscount(cell, rows, props)
+																				}
+																			>
+																				Discount Type
+																			</TableHeaderColumn>
+																		}
+																		{initValue.total_excise != 0 &&
+																			<TableHeaderColumn
+																				width="10%"
+																				dataField="exciseTaxId"
+																				dataFormat={(cell, rows) =>
+																					this.renderExcise(cell, rows, props)
+																				}
+																			>
+																				{strings.Excises}
+																				<i
+																					id="ExiseTooltip"
+																					className="fa fa-question-circle ml-1"
+																				></i>
+																				<UncontrolledTooltip
+																					placement="right"
+																					target="ExiseTooltip"
+																				>
+																					Excise dropdown will be enabled only for the excise products
+																				</UncontrolledTooltip>
+																			</TableHeaderColumn>
+																		}
 																		<TableHeaderColumn
 																			dataField="sub_total"
 																			dataFormat={this.renderSubTotal}
@@ -2199,77 +2039,131 @@ class CreateDebitNote extends React.Component {
 															</Row>)}
 														{this.state.data.length > 0 ? (
 															<Row>
-																<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
-																			type="textarea"
-																			maxLength="250"
-																			name="notes"
-																			id="notes"
-																			rows="6"
-																			placeholder={strings.Notes}
-																			onChange={(option) =>
-																				props.handleChange('notes')(option)
-																			}
-																			value={props.values.notes}
-																		/>
-																	</FormGroup>
-																	<Row>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="receiptNumber">
-																					{strings.ReceiptNumber}
-																				</Label>
-																				<Input
-																					type="text"
-																					maxLength="100"
-																					id="receiptNumber"
-																					name="receiptNumber"
-																					value={props.values.receiptNumber}
-																					placeholder={strings.ReceiptNumber}
-																					onChange={(value) => {
-																						props.handleChange('receiptNumber')(value);
+																<Col lg={7}>
+																	<Col lg={6}>
+																		<FormGroup className="py-2">
+																			<Label htmlFor="notes">{strings.Notes}</Label>
+																			<Input
+																				type="textarea"
+																				maxLength="250"
+																				name="notes"
+																				id="notes"
+																				rows="6"
+																				placeholder={strings.Notes}
+																				onChange={(option) =>
+																					props.handleChange('notes')(option)
+																				}
+																				value={props.values.notes}
+																			/>
+																		</FormGroup>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="referenceNumber">
+																				{strings.ReferenceNumber}
+																			</Label>
+																			<Input
+																				type="text"
+																				maxLength="100"
+																				id="referenceNumber"
+																				name="referenceNumber"
+																				value={props.values.referenceNumber}
+																				placeholder={strings.ReceiptNumber}
+																				onChange={(value) => {
+																					props.handleChange('referenceNumber')(value);
 
-																					}}
-																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : " "}
-																				/>
-																				{props.errors.receiptNumber && props.touched.receiptNumber && (
-																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
-																				)}
-
-																			</FormGroup>
-																		</Col>
-																		
-
-																	</Row>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="receiptAttachmentDescription">
-																			{strings.AttachmentDescription}
-																		</Label>
-																		<Input
-																			type="textarea"
-																			maxLength="250"
-																			name="receiptAttachmentDescription"
-																			id="receiptAttachmentDescription"
-																			rows="5"
-																			placeholder={strings.ReceiptAttachmentDescription}
-																			onChange={(option) =>
-																				props.handleChange(
-																					'receiptAttachmentDescription',
-																				)(option)
-																			}
-																			value={
-																				props.values
-																					.receiptAttachmentDescription
-																			}
-																		/>
-																	</FormGroup>
+																				}}
+																				className={props.errors.referenceNumber && props.touched.referenceNumber ? "is-invalid" : " "}
+																			/>
+																			{props.errors.referenceNumber && props.touched.referenceNumber && (
+																				<div className="invalid-feedback">{props.errors.referenceNumber}</div>
+																			)}
+																		</FormGroup>
+																	</Col>
 																</Col>
-																{this.state.isCNWithoutProduct === false && (<Col lg={4}>
+																{this.state.isDNWIWithoutProduct === false && (<Col lg={5}>
 																	<div className="">
+																		{initValue.total_excise == 0 ? null : (
+																			<div className="total-item p-2" >
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																							{strings.TotalExcise}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
+																		)}
+																		{initValue.totalDiscount == 0 ? null : (
+																			<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																							{strings.Discount}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.totalDiscount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
+																		)}
 
+																		<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																						{strings.TotalNet}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+
+																					</label>
+																				</Col>
+																			</Row>
 																		</div>
+																		<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																						{strings.TotalVat}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
+
+																		<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																						{strings.Total}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
+																	</div>
 																</Col>)}
 															</Row>
 														) : null}
@@ -2402,14 +2296,14 @@ class CreateDebitNote extends React.Component {
 						}}
 						placeholder="HSN / SAC"
 						className={`form-control ${props.errors.lineItemsString &&
-								props.errors.lineItemsString[parseInt(idx, 10)] &&
-								props.errors.lineItemsString[parseInt(idx, 10)].hsnOrSac &&
-								Object.keys(props.touched).length > 0 &&
-								props.touched.lineItemsString &&
-								props.touched.lineItemsString[parseInt(idx, 10)] &&
-								props.touched.lineItemsString[parseInt(idx, 10)].hsnOrSac
-								? 'is-invalid'
-								: ''
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].hsnOrSac &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].hsnOrSac
+							? 'is-invalid'
+							: ''
 							}`}
 					/>
 				)}

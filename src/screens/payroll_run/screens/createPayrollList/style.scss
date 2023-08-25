@@ -16,3 +16,10 @@
   .is-invalid{
     border-color: red;
   }
+
+  .DateRangePickerInput__withBorder {
+    border: 1px solid #dbdbdb !important;
+  }
+  .startError .DateRangePickerInput__withBorder {
+    border: 1px solid red !important;
+  }

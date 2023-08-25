@@ -219,8 +219,8 @@ class DetailCreditNote extends React.Component {
 										.receiptAttachmentDescription
 										? res.data.receiptAttachmentDescription
 										: '',
-									receiptNumber: res.data.receiptNumber
-										? res.data.receiptNumber
+									receiptNumber: res.data.referenceNo
+										? res.data.referenceNo
 										: '',
 									contact_po_number: res.data.contactPoNumber
 										? res.data.contactPoNumber
@@ -1192,7 +1192,7 @@ class DetailCreditNote extends React.Component {
 		formData.append('creditNoteDate', typeof invoiceDate === 'string' ? moment(invoiceDate, 'DD-MM-YYYY').toDate() : invoiceDate,);
 		formData.append('vatCategoryId', 2);
 		formData.append('exchangeRate', exchangeRate);
-		formData.append('receiptNumber', receiptNumber !== null ? receiptNumber : '',);
+		formData.append('referenceNo', receiptNumber !== null ? receiptNumber : '',);
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('notes', notes !== null ? notes : '');

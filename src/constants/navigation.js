@@ -77,7 +77,7 @@ export default {
 					name: strings.DebitNotes,
 					url: '/admin/expense/debit-notes',
 					icon: 'fas fa-receipt',
-					path: 'Debit Note',
+					path: 'Debit Notes',
 				}] : []),
 				...(config.EXPENSE_PR ? [{
 					name: strings.Purchasereceipts,

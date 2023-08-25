@@ -358,6 +358,7 @@ const en = {
 
       //Debit Notes
       DebitNotes:"Debit Notes",
+      AddNewDebitNotes:"Add New Debit Note",
       
       //AddGoodsReceiveNotes
       CreateGoodsReceivedNote: "Create Goods Received Note",

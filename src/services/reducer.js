@@ -46,7 +46,8 @@ import {
 	PayrollEmployee,
 	CreditNotes,
 	Import,
-	PayrollRun
+	PayrollRun,
+	DebitNotes
 } from 'screens';
 
 
@@ -65,6 +66,7 @@ const reducer = combineReducers({
 	vat_transactions: VatTransactions.reducer,
 	receipt: Receipt.reducer,
 	supplier_invoice: SupplierInvoice.reducer,
+	debit_notes: DebitNotes.reducer,
 	request_for_quotation: RequestForQuotation.reducer,
 	purchase_order: PurchaseOrder.reducer,
 	goods_received_note: GoodsReceivedNote .reducer,

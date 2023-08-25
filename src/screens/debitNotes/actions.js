@@ -1,8 +1,8 @@
-import { CUSTOMER_INVOICE } from 'constants/types';
+import { DEBIT_NOTE } from 'constants/types';
 import { authApi } from 'utils';
 import moment from 'moment';
 
-export const getCreditNoteList = (postObj) => {
+export const getdebitNotesList = (postObj) => {
 	let customerName = postObj.customerId ? postObj.customerId.value : '';
 	let referenceNumber = postObj.referenceNumber ? postObj.referenceNumber : '';
 	let invoiceDate = postObj.invoiceDate ? postObj.invoiceDate : '';
@@ -31,7 +31,7 @@ export const getCreditNoteList = (postObj) => {
 				if (res.status === 200) {
 					if (!postObj.paginationDisable) {
 						dispatch({
-							type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
+							type: DEBIT_NOTE.DEBIT_NOTE_LIST,
 							payload: {
 								data: res.data,
 							},
@@ -57,7 +57,7 @@ export const getProjectList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.PROJECT_LIST,
+						type: DEBIT_NOTE.PROJECT_LIST,
 						payload: {
 							data: res.data,
 						},
@@ -80,7 +80,7 @@ export const getExciseList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.EXCISE_LIST,
+						type: DEBIT_NOTE.EXCISE_LIST,
 						payload: {
 							data: res.data,
 						},
@@ -103,7 +103,7 @@ export const getCustomerList = (nameCode) => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.CUSTOMER_LIST,
+						type: DEBIT_NOTE.CUSTOMER_LIST,
 						payload: {
 							data: res.data,
 						},
@@ -128,7 +128,7 @@ export const getPlaceOfSuppliyList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.PLACE_OF_SUPPLY,
+						type: DEBIT_NOTE.PLACE_OF_SUPPLY,
 						payload: {
 							data: res.data,
 						},
@@ -150,7 +150,7 @@ export const getCurrencyList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.CURRENCY_LIST,
+						type: DEBIT_NOTE.CURRENCY_LIST,
 						payload: res,
 					});
 					return res;
@@ -172,7 +172,7 @@ export const getVatList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.VAT_LIST,
+						type: DEBIT_NOTE.VAT_LIST,
 						payload: {
 							data: res.data,
 						},
@@ -195,7 +195,7 @@ export const getProductList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.PRODUCT_LIST,
+						type: DEBIT_NOTE.PRODUCT_LIST,
 						payload: {
 							data: res.data,
 						},
@@ -218,7 +218,7 @@ export const getDepositList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.DEPOSIT_LIST,
+						type: DEBIT_NOTE.DEPOSIT_LIST,
 						payload: {
 							data: res.data,
 						},
@@ -242,7 +242,7 @@ export const getContactList = (nameCode) => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.CONTACT_LIST,
+						type: DEBIT_NOTE.CONTACT_LIST,
 						payload: {
 							data: res.data,
 						},
@@ -265,7 +265,7 @@ export const getStatusList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.STATUS_LIST,
+						type: DEBIT_NOTE.STATUS_LIST,
 						payload: res,
 					});
 				}
@@ -320,7 +320,7 @@ export const getCountryList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.COUNTRY_LIST,
+						type: DEBIT_NOTE.COUNTRY_LIST,
 						payload: res.data,
 					});
 				}
@@ -341,7 +341,7 @@ export const getPaymentMode = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.PAY_MODE,
+						type: DEBIT_NOTE.PAY_MODE,
 						payload: {
 							data: res.data,
 						},
@@ -563,7 +563,7 @@ export const getInvoiceListForDropdown = (id) => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.INVOICE_LIST_FOR_DROPDOWN,
+						type: DEBIT_NOTE.INVOICE_LIST_FOR_DROPDOWN,
 						payload: res,
 					});
 				}
@@ -598,7 +598,7 @@ export const getProductListById = (id) => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.PRODUCT_LIST,
+						type: DEBIT_NOTE.PRODUCT_LIST,
 						payload: {
 							data: res.data,
 						},

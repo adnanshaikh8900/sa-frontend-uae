@@ -24,7 +24,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
 
-import * as CreditNotesActions from './actions';
+import * as DebitNotesActions from './actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 
@@ -44,19 +44,17 @@ const toWords = new ToWords({
 	}
 });
 const mapStateToProps = (state) => {
+	console.log(state)
 	return {
-		customer_invoice_list: state.customer_invoice.customer_invoice_list,
-		customer_list: state.customer_invoice.customer_list,
-		status_list: state.customer_invoice.status_list,
+		debit_note_list: state.debit_notes.debit_note_list,
+		customer_list: state.debit_notes.customer_list,
+		status_list: state.debit_notes.status_list,
 		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		creditNotesActions: bindActionCreators(
-			CreditNotesActions,
-			dispatch,
-		),
+		debitNotesActions: bindActionCreators(DebitNotesActions,dispatch,),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -94,7 +92,7 @@ class DebitNotes extends React.Component {
 				overDueAmountWeekly: '',
 				overDueAmountMonthly: '',
 			},
-			cN_list: [],
+			debit_note_list: [],
 			rowId: '',
 		};
 
@@ -122,15 +120,15 @@ class DebitNotes extends React.Component {
 
 	componentDidMount = () => {
 		let { filterData } = this.state;
-		this.props.creditNotesActions.getStatusList();
-		this.props.creditNotesActions.getCustomerList(filterData.contactType);
+		this.props.debitNotesActions.getStatusList();
+		this.props.debitNotesActions.getCustomerList(filterData.contactType);
 		this.initializeData();
 		this.getOverdue();
 	};
 
 	getOverdue = () => {
 		let { filterData } = this.state;
-		this.props.creditNotesActions
+		this.props.debitNotesActions
 			.getOverdueAmountDetails(filterData.contactType)
 			.then((res) => {
 				if (res.status === 200) {
@@ -157,11 +155,11 @@ class DebitNotes extends React.Component {
 			sortingCol: this.options.sortName ? this.options.sortName : '',
 		};
 		const postData = { ...filterData, ...paginationData, ...sortingData };
-		this.props.creditNotesActions
-			.getCreditNoteList(postData)
+		this.props.debitNotesActions
+			.getdebitNotesList(postData)
 			.then((res) => {
 				if (res.status === 200) {
-					this.setState({ loading: false, cN_list: res.data }, () => { });
+					this.setState({ loading: false});
 				}
 			})
 			.catch((err) => {
@@ -206,13 +204,13 @@ class DebitNotes extends React.Component {
 		const postingRequestModel = {
 			amount: row.amount,
 			postingRefId: row.id,
-			postingRefType: 'CREDIT_NOTE',
+			postingRefType: 'DEBIT_NOTE',
 			isCNWithoutProduct: row.isCNWithoutProduct == true ? true : false,
 			amountInWords: upperCase(row.currencyCode + " " + (toWords.convert(row.amount)) + " ONLY").replace("POINT", "AND"),
 			vatInWords: row.totalVatAmount ? upperCase(row.currencyCode + " " + (toWords.convert(row.totalVatAmount)) + " ONLY").replace("POINT", "AND") : "-"
 		};
 
-		this.props.creditNotesActions
+		this.props.debitNotesActions
 			.creditNoteposting(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
@@ -689,12 +687,9 @@ class DebitNotes extends React.Component {
 			selectedRows,
 			csvData,
 			view,
-			cN_list
 		} = this.state;
 		const {
-			status_list,
-			customer_list,
-			customer_invoice_list,
+			debit_note_list,
 			universal_currency_list,
 		} = this.props;
 
@@ -791,14 +786,14 @@ class DebitNotes extends React.Component {
 														}
 													>
 														<i className="fas fa-plus mr-1" />
-														Add New Debit-Note
+														{strings.AddNewDebitNotes}
 													</Button></div></Row>
 
 											<BootstrapTable
 												selectRow={this.selectRowProp}
 												search={false}
 												options={this.options}
-												data={cN_list ? cN_list : []}
+												data={debit_note_list ? debit_note_list : []}
 												version="4"
 												hover
 												responsive
@@ -806,14 +801,14 @@ class DebitNotes extends React.Component {
 												keyField="id"
 												remote
 												pagination={
-													cN_list &&
-														cN_list.length > 0
+													debit_note_list &&
+														debit_note_list.length > 0
 														? true
 														: false
 												}
 												fetchInfo={{
-													dataTotalSize: cN_list.count
-														? cN_list.count
+													dataTotalSize: debit_note_list && debit_note_list.count
+														? debit_note_list.count
 														: 0,
 												}}
 												className="customer-invoice-table"

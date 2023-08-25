@@ -39,7 +39,7 @@ import { Checkbox } from '@material-ui/core';
 const mapStateToProps = (state) => {
 	return {
 		currency_list: state.customer_invoice.currency_list,
-		invoice_list: state.debitNote.invoice_list,
+		invoice_list: state.debit_notes.invoice_list,
 		vat_list: state.customer_invoice.vat_list,
 		// product_list: state.customer_invoice.product_list,
 		customer_list: state.customer_invoice.customer_list,

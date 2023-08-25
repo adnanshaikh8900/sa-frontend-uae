@@ -493,7 +493,7 @@ class Refund extends React.Component {
 														'Amount cannot be empty or 0';
 													 }else if(this.state.amount<parseFloat(values.amount)){ 
 														errors.amount =
-														'Amount cannot More than the Invoice Amount';
+														'Amount cannot More than the Credit Amount';
 													 }
 													 if(!values.receiptDate){
 														errors.receiptDate='Payment date is required';

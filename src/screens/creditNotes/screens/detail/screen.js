@@ -212,6 +212,7 @@ class DetailCreditNote extends React.Component {
 
 						this.setState(
 							{
+								taxType: res.data.taxType ? res.data.taxType : false ,
 								isCreatedWithoutInvoice: res.data.isCreatedWithoutInvoice ? res.data.isCreatedWithoutInvoice : false,
 								current_customer_id: this.props.location.state.id,
 								initValue: {
@@ -1067,9 +1068,9 @@ class DetailCreditNote extends React.Component {
 
 			const vat = index > -1 ? vat_list[`${index}`]?.vat : 0;
 
-			if (!obj.isExciseTaxExclusive) {
+			if (!this.state.taxType) {
 				if (obj.discountType === 'PERCENTAGE')
-					net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
+					net_value = ((+unitprice - (+(unitprice * parseFloat(obj.discount)) / 100)) * parseInt(obj.quantity));
 				else
 					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
 
@@ -1100,7 +1101,7 @@ class DetailCreditNote extends React.Component {
 
 				//net value after removing vat for inclusive
 				net_value = net_value - vat_amount
-				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
+				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 3 : obj.exciseTaxId === 2 ? net_value / 2 : 0
 
 				totalnetamount(net_value - excisevalue)
 				totalexcise(excisevalue)

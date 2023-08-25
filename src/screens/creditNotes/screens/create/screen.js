@@ -1168,10 +1168,9 @@ class CreateCreditNote extends React.Component {
 					: '';
 
 			const vat = index > -1 ? vat_list[`${index}`]?.vat : 0;
-
-			if (!obj.isExciseTaxExclusive) {
+			if (!this.state.taxType) {
 				if (obj.discountType === 'PERCENTAGE')
-					net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
+					net_value = ((+unitprice - (+(unitprice * parseFloat(obj.discount)) / 100)) * parseInt(obj.quantity));
 				else
 					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
 
@@ -1203,7 +1202,7 @@ class CreateCreditNote extends React.Component {
 
 				//net value after removing vat for inclusive
 				net_value = net_value - vat_amount
-				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
+				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 3 : obj.exciseTaxId === 2 ? net_value / 2 : 0
 
 				totalnetamount(net_value - excisevalue)
 				totalexcise(excisevalue)
@@ -1511,42 +1510,44 @@ class CreateCreditNote extends React.Component {
 		if (value) {
 			this.props.creditNotesCreateActions
 				.getInvoiceById(value).then((response) => {
-					const customerdetails = {
-						label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
-						value: response.data.contactId
-					}
-
-					this.setState({
-						option: {
+					if (response.status === 200) {
+						const customerdetails = {
 							label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
-							value: response.data.contactId,
-						},
-						data: response.data.invoiceLineItems,
-						totalAmount: response.data.totalAmount,
-						customer_currency: response.data.currencyCode,
-						remainingInvoiceAmount: response.data.remainingInvoiceAmount,
-					}, () => {
-						this.formRef.current.setFieldValue(
-							'lineItemsString',
-							this.state.data,
-							true,
-						);
-						this.formRef.current.setFieldTouched(
-							`lineItemsString[${this.state.data.length - 1}]`,
-							false,
-							true,
-						);
-						this.updateAmount(this.state.data)
-					},);
-					this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
-					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
-					this.setExchange(this.getCurrency(customerdetails.value));
-					this.formRef.current.setFieldValue('contactId', response.data.contactId, true);
-					this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
-					this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
-					this.getCurrency(this.state.option.value)
-					this.getTaxTreatment(this.state.option.value)
+							value: response.data.contactId
+						}
 
+						this.setState({
+							taxType: response.data.taxType,
+							option: {
+								label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
+								value: response.data.contactId,
+							},
+							data: response.data.invoiceLineItems,
+							totalAmount: response.data.totalAmount,
+							customer_currency: response.data.currencyCode,
+							remainingInvoiceAmount: response.data.remainingInvoiceAmount,
+						}, () => {
+							this.formRef.current.setFieldValue(
+								'lineItemsString',
+								this.state.data,
+								true,
+							);
+							this.formRef.current.setFieldTouched(
+								`lineItemsString[${this.state.data.length - 1}]`,
+								false,
+								true,
+							);
+							this.updateAmount(this.state.data)
+						},);
+						this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
+						this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
+						this.setExchange(this.getCurrency(customerdetails.value));
+						this.formRef.current.setFieldValue('contactId', response.data.contactId, true);
+						this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
+						this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
+						this.getCurrency(this.state.option.value)
+						this.getTaxTreatment(this.state.option.value)
+					}
 				});
 		}
 	}

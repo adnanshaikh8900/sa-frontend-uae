@@ -2064,6 +2064,29 @@ class DetailCreditNote extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
+
+																	{(!this.state.isCreatedWithoutInvoice && this.state.invoiceNumber) && (<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="remainingInvoiceAmount">
+																				{strings.RemainingInvoiceAmount}
+																			</Label>
+																			<Input
+																				type="text"
+																				id="remainingInvoiceAmount"
+																				name="remainingInvoiceAmount"
+																				placeholder='Remaining invoice Amount'
+																				disabled={true}
+																				value={this.state.remainingInvoiceAmount}
+																			/>
+																			{props.errors.remainingInvoiceAmount &&
+																				(
+																					<div className="text-danger">
+																						{props.errors.remainingInvoiceAmount}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>)}
+
 																	{(<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="creditAmount"><span className="text-danger">* </span>
@@ -2099,28 +2122,6 @@ class DetailCreditNote extends React.Component {
 																		</FormGroup>
 																	</Col>
 																	)}
-
-																	{(!this.state.isCreatedWithoutInvoice && this.state.invoiceNumber) && (<Col lg={3}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="remainingInvoiceAmount">
-																				{strings.RemainingInvoiceAmount}
-																			</Label>
-																			<Input
-																				type="text"
-																				id="remainingInvoiceAmount"
-																				name="remainingInvoiceAmount"
-																				placeholder='Remaining invoice Amount'
-																				disabled={true}
-																				value={this.state.remainingInvoiceAmount}
-																			/>
-																			{props.errors.remainingInvoiceAmount &&
-																				(
-																					<div className="text-danger">
-																						{props.errors.remainingInvoiceAmount}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>)}
 
 																</Row>
 																<hr />

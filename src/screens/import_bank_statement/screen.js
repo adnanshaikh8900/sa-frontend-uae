@@ -275,7 +275,7 @@ class ImportBankStatement extends React.Component {
 										onClick={() => {
 											this.props.history.push(
 												'/admin/banking/bank-account/transaction',
-												{ bankAccountId: this.props.location.state.bankAccountId },
+												{ bankAccountId: this.state.id },
 											);
 										}}
 									className=' pull-right'>X

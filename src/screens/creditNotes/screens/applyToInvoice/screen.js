@@ -1026,7 +1026,7 @@ handleSubmit=(data)=>{
 			this.initializeData();
 			this.props.commonActions.tostifyAlert(
 				'success',
-				res.data ? res.data.message : 'Applied to Invoice Successfully!'  ,
+				res.data ?  'Amount Applied To Invoice Successfully!' : res.data.message ,
 			);
 			if (this.state.invoice_list && this.state.invoice_list.length > 0) {
 				this.setState({

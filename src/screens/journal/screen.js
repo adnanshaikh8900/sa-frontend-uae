@@ -240,7 +240,7 @@ class Journal extends React.Component {
 
 	renderDate = (cell, rows) => {
 		return rows.journalDate
-			? moment(rows.journalDate).format('YYYY-MM-DD')
+			? moment(rows.journalDate).format('DD-MM-YYYY')
 			: '';
 	};
 

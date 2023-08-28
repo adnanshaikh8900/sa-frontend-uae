@@ -292,3 +292,72 @@ export const getTaxTreatmentList = () => {
 		})
 	}
 };
+
+export const getVatList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/datalist/vatCategory',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: COMMON.VAT_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getProductList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/datalist/product?priceType=SALES`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: COMMON.PRODUCT_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getExciseList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/datalist/exciseTax',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: COMMON.EXCISE_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

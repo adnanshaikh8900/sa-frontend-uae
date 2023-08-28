@@ -358,11 +358,19 @@ const en = {
 
       //Debit Notes
       DebitNotes:"Debit Notes",
+      DebitNote:"Debit Note",
       AddNewDebitNote:"Add New Debit Note",
       CreateDebitNote:"Create Debit Note",
       CreateDebitNoteWithoutProduct:"Create Debit Note Without Product",
       CreateDebitNoteWithoutInvoice:"Create Debit Note Without Invoice",
       DebitNoteNumber:"Debit Note Number",
+      DebitNoteNumberIsRequired:'Tax Credit Note Number is Required',
+      DebitNoteDateIsRequired:"Tax Credit Note Date is Required",
+      DebitNoteNumberAlreadyExists:': Debit Note Number already exists',
+      QuatityIsRequired:"Quatity is required",
+      DebitNoteCreatedSuccessfully:"Debit Note Created Successfully!",
+      DebitNoteCreatedUnSuccessfully:"Debit Note Created Unsuccessfully!",
+      AmountCannotBeGreaterThanTheInvoiceamount:"Amount cannot be greater than the invoice amount",
       
       //AddGoodsReceiveNotes
       CreateGoodsReceivedNote: "Create Goods Received Note",

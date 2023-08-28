@@ -4,8 +4,6 @@ const initState = {
 	debit_note_list: [],
 	customer_list: [],
 	currency_list: [],
-	vat_list: [],
-	product_list: [],
 	deposit_list: [],
 	country_list: [],
 	place_of_supply: [],
@@ -40,19 +38,6 @@ const CustomerInvoiceReducer = (state = initState, action) => {
 				...state,
 				currency_list: Object.assign([], payload.data),
 			};
-
-		case DEBIT_NOTE.VAT_LIST:
-			return {
-				...state,
-				vat_list: Object.assign([], payload.data),
-			};
-
-		case DEBIT_NOTE.PRODUCT_LIST:
-			return {
-				...state,
-				product_list: Object.assign([], payload.data),
-			};
-
 		case DEBIT_NOTE.DEPOSIT_LIST:
 			return {
 				...state,

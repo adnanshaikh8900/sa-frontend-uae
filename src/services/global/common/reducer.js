@@ -13,6 +13,9 @@ const initState = {
 	state_list: [],
 	company_type_list: [],
 	tax_treatment_list: [],
+	vat_list: [],
+	product_list: [],
+	excise_list:[],
 };
 
 const CommonReducer = (state = initState, action) => {
@@ -97,7 +100,22 @@ const CommonReducer = (state = initState, action) => {
 				...state,
 				tax_treatment_list: Object.assign([], payload.data),
 			};
-
+		case COMMON.VAT_LIST:
+			return {
+				...state,
+				vat_list: Object.assign([], payload.data),
+			};
+		case COMMON.PRODUCT_LIST:
+			return {
+				...state,
+				product_list: Object.assign([], payload.data),
+			};
+			case COMMON.EXCISE_LIST:
+				return {
+					...state,
+					excise_list: Object.assign([], payload.data),
+				};
+	
 		default:
 			return state;
 	}

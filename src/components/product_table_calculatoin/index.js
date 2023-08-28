@@ -20,7 +20,7 @@ export const updateAmount = (data, vat_list,taxType) => {
     const discountamount = (a) => {
         discount = discount + a
     }
-    data.map((obj) => {
+    data && data.map((obj) => {
         let unitprice = parseFloat(obj.unitPrice);
         var net_value = 0;
         const index =

@@ -44,7 +44,6 @@ const toWords = new ToWords({
 	}
 });
 const mapStateToProps = (state) => {
-	console.log(state)
 	return {
 		debit_note_list: state.debit_notes.debit_note_list,
 		customer_list: state.debit_notes.customer_list,
@@ -54,7 +53,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		debitNotesActions: bindActionCreators(DebitNotesActions,dispatch,),
+		debitNotesActions: bindActionCreators(DebitNotesActions, dispatch,),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -159,7 +158,7 @@ class DebitNotes extends React.Component {
 			.getdebitNotesList(postData)
 			.then((res) => {
 				if (res.status === 200) {
-					this.setState({ loading: false});
+					this.setState({ loading: false });
 				}
 			})
 			.catch((err) => {
@@ -321,22 +320,15 @@ class DebitNotes extends React.Component {
 				<div>
 					<label className="font-weight-bold mr-2 ">{strings.Amount}: </label>
 					<label>
-						{row.amount === 0 ? row.currencyCode + " " + row.amount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + " " + row.amount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+						{row.totalAmount ? row.currencyName + " " + row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
 					</label>
 				</div>
 				<div>
 					<label className="font-weight-bold mr-2 ">Remaining Debits </label>
 					<label>
-						{row.dueAmount === 0 ? row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+						{row.dueAmount ? row.currencyName + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
 					</label>
 				</div>
-
-
-				{/* <div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2">Due Amount : </label>
-					<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
-				</div> */}
-
 			</div>);
 	};
 	renderCurrency = (cell, row) => {
@@ -692,8 +684,6 @@ class DebitNotes extends React.Component {
 			debit_note_list,
 			universal_currency_list,
 		} = this.props;
-
-
 		return (
 			loading == true ? <Loader /> :
 				<div>
@@ -793,7 +783,7 @@ class DebitNotes extends React.Component {
 												selectRow={this.selectRowProp}
 												search={false}
 												options={this.options}
-												data={debit_note_list ? debit_note_list : []}
+												data={debit_note_list && debit_note_list.data ? debit_note_list.data : []}
 												version="4"
 												hover
 												responsive
@@ -828,7 +818,7 @@ class DebitNotes extends React.Component {
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													width="20%"
-													dataField="contactName"
+													dataField="customerName"
 													//	dataSort width="10%"
 													className="table-header-bg"
 												>

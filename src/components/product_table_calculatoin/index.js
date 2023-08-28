@@ -1,4 +1,4 @@
-export const updateAmount = (data, vat_list) => {
+export const updateAmount = (data, vat_list,taxType) => {
     let total_net = 0;
     let total_excise = 0;
     let total = 0;
@@ -30,7 +30,7 @@ export const updateAmount = (data, vat_list) => {
 
         const vat = index !== null && index > -1 && vat_list[`${index}`] ? vat_list[`${index}`]?.vat : 0;
 
-        if (!obj.isExciseTaxExclusive) {
+        if (!taxType) {
             if (obj.discountType === 'PERCENTAGE')
                 net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
             else
@@ -64,7 +64,7 @@ export const updateAmount = (data, vat_list) => {
 
             //net value after removing vat for inclusive
             net_value = net_value - vat_amount
-            const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
+            const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 3 : obj.exciseTaxId === 2 ? net_value / 2 : 0
 
             totalnetamount(net_value - excisevalue)
             totalexcise(excisevalue)

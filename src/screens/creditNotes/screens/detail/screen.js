@@ -25,7 +25,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CreditNotesActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { CustomerModal, ProductModal } from '../../sections';
-import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal, ProductTableCalculation } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -217,7 +217,7 @@ class DetailCreditNote extends React.Component {
 
 						this.setState(
 							{
-								taxType: res.data.taxType ? res.data.taxType : false ,
+								taxType: res.data.taxType ? res.data.taxType : false,
 								isCreatedWithoutInvoice: res.data.isCreatedWithoutInvoice ? res.data.isCreatedWithoutInvoice : false,
 								current_customer_id: this.props.location.state.id,
 								initValue: {
@@ -1038,105 +1038,21 @@ class DetailCreditNote extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list, excise_list } = this.props;
-		const { discountPercentage, discountAmount } = this.state;
-
-		let total_net = 0;
-		let total_excise = 0;
-		let total = 0;
-		let total_vat = 0;
-		let net_value = 0;
-		let discount = 0;
-
-		const totalnetamount = (a) => {
-			total_net = total_net + a
-		}
-		const totalexcise = (a) => {
-			total_excise = total_excise + a
-		}
-		const totalvalt = (a) => {
-			total_vat = total_vat + a
-		}
-		const totalamount = (a) => {
-			total = total + a
-		}
-		const discountamount = (a) => {
-			discount = discount + a
-		}
-		data.map((obj) => {
-			let unitprice = parseFloat(obj.unitPrice);
-			var net_value = 0;
-			const index =
-				obj.vatCategoryId !== ''
-					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
-					: '';
-
-			const vat = index > -1 ? vat_list[`${index}`]?.vat : 0;
-
-			if (!this.state.taxType) {
-				if (obj.discountType === 'PERCENTAGE')
-					net_value = ((+unitprice - (+(unitprice * parseFloat(obj.discount)) / 100)) * parseInt(obj.quantity));
-				else
-					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
-
-				const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
-				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
-				net_value = parseFloat(net_value) + parseFloat(excisevalue);
-				const vat_amount = vat === 0 ? 0 : ((+net_value * vat) / 100);
-
-				totalnetamount(net_value - excisevalue)
-				totalexcise(excisevalue)
-				totalvalt(vat_amount)
-				totalamount(vat_amount + net_value)
-				discountamount(discount)
-				obj.subTotal = net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-				obj.vatAmount = vat_amount
-				obj.exciseAmount = excisevalue
-			} else {
-				if (obj.discountType === 'PERCENTAGE')
-					net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
-				else
-					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
-
-				const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
-				//vat amount
-				const vat_amount =
-					(vat === 0 ? 0 :
-						((+net_value * (vat / (100 + vat) * 100)) / 100));
-
-				//net value after removing vat for inclusive
-				net_value = net_value - vat_amount
-				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 3 : obj.exciseTaxId === 2 ? net_value / 2 : 0
-
-				totalnetamount(net_value - excisevalue)
-				totalexcise(excisevalue)
-				totalvalt(vat_amount)
-				totalamount(vat_amount + net_value)
-				discountamount(discount)
-				obj.subTotal = net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-				obj.vatAmount = vat_amount
-				obj.exciseAmount = excisevalue
-			}
-
-			return obj;
-		});
-
-		// const discount =
-		// 	props.values.discountType.value === 'PERCENTAGE'
-		// 		? +((total_net * discountPercentage) / 100)
-		// 		: discountAmount;
+		const { vat_list } = this.props;
+		const { taxType } = this.state;
+		const list = ProductTableCalculation.updateAmount(data ? data : [], vat_list, taxType);
 
 		this.setState(
 			{
-				data,
+				data: list.data,
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: total_net,
-						invoiceVATAmount: total_vat,
-						totalAmount: total,
-						total_excise: total_excise,
-						discount
+						total_net: list.total_net ? list.total_net : 0,
+						invoiceVATAmount: list.totalVatAmount ? list.totalVatAmount : 0,
+						totalAmount: list.totalAmount ? list.totalAmount : 0,
+						total_excise: list.total_excise ? list.total_excise : 0,
+						discount: list.discount ? list.discount : 0,
 					},
 
 				},

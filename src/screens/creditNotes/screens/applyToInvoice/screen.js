@@ -173,7 +173,7 @@ class ApplyToInvoice extends React.Component {
 				.getTransactionCategoryListForSalesProduct('2')
 				.then((res) => {
 					if (res.status === 200) {
-						this.setState({salesCategory: res.data,},);
+						this.setState({ salesCategory: res.data, },);
 					}
 				});
 		} catch (err) {
@@ -780,16 +780,9 @@ class ApplyToInvoice extends React.Component {
 			props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
-	applyInvoice = (row, selectedrowsdata, selectedRows) => {
+	applyInvoice = (row, selectedrowsdata, selectedRows, currenttotal) => {
 		let tempList = selectedRows;
 		let crtotal
-		let currenttotal = 0
-		selectedrowsdata.map((i) => {
-			if (i.creditstaken) {
-				currenttotal = currenttotal + i.creditstaken
-			}
-		})
-		currenttotal = this.props.location.state.creditAmount - currenttotal
 		tempList.push(row);
 		if (currenttotal > 0) {
 			crtotal = currenttotal - row.dueAmount
@@ -808,9 +801,6 @@ class ApplyToInvoice extends React.Component {
 			}
 			return list;
 		} else {
-			// this.setState({
-			// 	cannotsave: true,
-			// });
 			const list = {
 				selectedRows: tempList,
 				cannotsave: true,
@@ -822,27 +812,30 @@ class ApplyToInvoice extends React.Component {
 		var { selectedrowsdata, selectedRows, invoice_list, currenttotal } = this.state;
 		if (isSelected) {
 			var list = []
-			list = this.applyInvoice(row, selectedrowsdata, selectedRows);
+			list = this.applyInvoice(row, selectedrowsdata, selectedRows, currenttotal);
 			this.setState({
 				selectedRows: list.selectedRows,
-				currenttotal: list.currenttotal ? list.currenttotal : currenttotal,
+				currenttotal: list.currenttotal ? list.currenttotal : 0,
 				cannotsave: list.cannotsave,
 				selectedrowsdata: list.selectedrowsdata ? list.selectedrowsdata : selectedrowsdata,
 			});
 		} else {
 			var list = []
+			if (row?.creditstaken) {
+				let remaining = currenttotal + row?.creditstaken;
+				currenttotal = remaining > 0 ? remaining : 0;
+			}
 			selectedrowsdata = selectedrowsdata.filter((obj) => obj.id !== row.id)
 			selectedRows = selectedRows.filter((value) => value.id !== row.id)
-			if (e) {
-				var selectedRowwithNocredit = selectedRows.filter(obj => !(obj?.creditstaken > 0))
-				if (selectedRowwithNocredit) {
-					selectedRowwithNocredit.map(obj => {
-						selectedRows = selectedRows.filter((value) => value.id !== obj.id)
-						list = this.applyInvoice(obj, selectedrowsdata ? selectedrowsdata : [], selectedRows);
-						selectedrowsdata = list.selectedrowsdata ? list.selectedrowsdata : selectedrowsdata;
-						selectedRows = list.selectedRows ? list.selectedRows : selectedRows;
-					})
-				}
+			var selectedRowwithNocredit = selectedRows.filter(obj => !(obj?.creditstaken > 0))
+			if (selectedRowwithNocredit && selectedRowwithNocredit.length > 0) {
+				selectedRowwithNocredit.map(obj => {
+					selectedRows = selectedRows.filter((value) => value.id !== obj.id)
+					list = this.applyInvoice(obj, selectedrowsdata ? selectedrowsdata : [], selectedRows, currenttotal);
+					selectedrowsdata = list.selectedrowsdata ? list.selectedrowsdata : selectedrowsdata;
+					selectedRows = list.selectedRows ? list.selectedRows : selectedRows;
+					currenttotal = list.currenttotal ? list.currenttotal : 0;
+				})
 			}
 			invoice_list.map((obj) => {
 				if (obj.id === row.id) {
@@ -852,7 +845,7 @@ class ApplyToInvoice extends React.Component {
 			});
 			this.setState({
 				selectedRows: list.selectedRows ? list.selectedRows : selectedRows,
-				currenttotal: list.currenttotal ? list.currenttotal : currenttotal,
+				currenttotal: currenttotal,
 				cannotsave: list.cannotsave ? list.cannotsave : false,
 				selectedrowsdata: list.selectedrowsdata ? list.selectedrowsdata : selectedrowsdata,
 			});
@@ -863,9 +856,37 @@ class ApplyToInvoice extends React.Component {
 
 
 	onSelectAll = (isSelected, rows) => {
-		rows && rows.map((row) => {
-			this.onRowSelect(row, isSelected , false)
-		})
+		var { selectedrowsdata, selectedRows, invoice_list, currenttotal, cannotsave } = this.state;
+		if (isSelected) {
+			currenttotal=this.props.location.state.creditAmount;
+			rows && rows.map((row) => {
+				var list = []
+				list = this.applyInvoice(row, [], [], currenttotal );
+				selectedRows = list.selectedRows ? list.selectedRows : selectedRows;
+				currenttotal = list.currenttotal && list.currenttotal >= 0 ? list.currenttotal : 0;
+				cannotsave = list.cannotsave ? list.cannotsave : false;
+				selectedrowsdata = list.selectedrowsdata ? list.selectedrowsdata : selectedrowsdata;
+			})
+			this.setState({
+				selectedRows: selectedRows,
+				currenttotal: currenttotal,
+				cannotsave: cannotsave,
+				selectedrowsdata: selectedrowsdata,
+			});
+
+		} else {
+			invoice_list.map((obj) => {
+				obj.creditstaken = 0;
+				return obj
+			});
+
+			this.setState({
+				selectedRows: [],
+				currenttotal: this.props.location.state.creditAmount,
+				cannotsave: false,
+				selectedrowsdata: [],
+			});
+		}
 	};
 
 	handleFileChange = (e, props) => {

@@ -26,8 +26,9 @@ import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import moment from 'moment';
-import {data}  from '../../../Language/index'
+import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { L } from 'react-ladda/dist/constants';
 
 let strings = new LocalizedStrings(data);
 const mapStateToProps = (state) => {
@@ -96,13 +97,13 @@ class ApplyToInvoice extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			fileName: '',
-			basecurrency:[],
+			basecurrency: [],
 			customer_currency: '',
-			invoice_list:[],
-			currenttotal:0,
-			selectedrowsdata:[]
+			invoice_list: [],
+			currenttotal: 0,
+			selectedrowsdata: []
 		};
-		
+
 		this.options = {
 			onRowClick: this.goToDetail,
 			paginationPosition: 'bottom',
@@ -115,14 +116,14 @@ class ApplyToInvoice extends React.Component {
 			onSortChange: this.sortColumn,
 		};
 
-        this.selectRowProp = {
-            mode: 'checkbox',
-            bgColor: 'rgba(0,0,0, 0.05)',
-            clickToSelect: false,
-            onSelect:  this.onRowSelect,
-            onSelectAll: this.onSelectAll
-          }
-	
+		this.selectRowProp = {
+			mode: 'checkbox',
+			bgColor: 'rgba(0,0,0, 0.05)',
+			clickToSelect: false,
+			onSelect: this.onRowSelect,
+			onSelectAll: this.onSelectAll
+		}
+
 		// this.options = {
 		//   paginationPosition: 'top'
 		// }
@@ -133,7 +134,7 @@ class ApplyToInvoice extends React.Component {
 			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-			this.placelist = [
+		this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
@@ -172,37 +173,30 @@ class ApplyToInvoice extends React.Component {
 				.getTransactionCategoryListForSalesProduct('2')
 				.then((res) => {
 					if (res.status === 200) {
-						this.setState(
-							{
-								salesCategory: res.data,
-							},
-							() => {
-								console.log(this.state.salesCategory);
-							},
-						);
+						this.setState({salesCategory: res.data,},);
 					}
 				});
 		} catch (err) {
 			console.log(err);
 		}
 	};
-	
+
 
 	initializeData = () => {
-	
+
 		if (this.props.location.state && this.props.location.state.contactId) {
 			this.props.customerInvoiceDetailActions
 				.getInvoicesListForCN(this.props.location.state.contactId)
 				.then((res) => {
 					if (res.status === 200) {
-					
+
 						this.setState(
 							{
 								invoice_list: res.data,
 								invoice_number: this.props.location.state.referenceNumber,
 								creditNoteId: this.props.location.state.creditNoteId,
 								creditNoteNumber: this.props.location.state.creditNoteNumber,
-								
+
 								discountAmount: res.data.discount ? res.data.discount : 0,
 								discountPercentage: res.data.discountPercentage
 									? res.data.discountPercentage
@@ -214,8 +208,8 @@ class ApplyToInvoice extends React.Component {
 								term: res.data.term ? res.data.term : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								loading: false,
-								currenttotal:this.props.location.state.creditAmount,
-								cannotsave:false
+								currenttotal: this.props.location.state.creditAmount,
+								cannotsave: false
 							},
 							() => {
 								if (this.state.data.length > 0) {
@@ -224,11 +218,11 @@ class ApplyToInvoice extends React.Component {
 									const idCount =
 										data.length > 0
 											? Math.max.apply(
-													Math,
-													data.map((item) => {
-														return item.id;
-													}),
-											  )
+												Math,
+												data.map((item) => {
+													return item.id;
+												}),
+											)
 											: 0;
 									this.setState({
 										idCount,
@@ -279,17 +273,16 @@ class ApplyToInvoice extends React.Component {
 						}}
 						placeholder={strings.Description}
 						className={`form-control 
-            ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].description &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].description
+            ${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].description &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].description
 								? 'is-invalid'
 								: ''
-						}`}
+							}`}
 					/>
 				)}
 			/>
@@ -312,7 +305,7 @@ class ApplyToInvoice extends React.Component {
 					<div>
 						<Input
 							type="number"
-min="0"
+							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -328,19 +321,18 @@ min="0"
 							}}
 							placeholder={strings.Quantity}
 							className={`form-control 
-           						${
-												props.errors.lineItemsString &&
-												props.errors.lineItemsString[parseInt(idx, 10)] &&
-												props.errors.lineItemsString[parseInt(idx, 10)]
-													.quantity &&
-												Object.keys(props.touched).length > 0 &&
-												props.touched.lineItemsString &&
-												props.touched.lineItemsString[parseInt(idx, 10)] &&
-												props.touched.lineItemsString[parseInt(idx, 10)]
-													.quantity
-													? 'is-invalid'
-													: ''
-											}`}
+           						${props.errors.lineItemsString &&
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)]
+										.quantity &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)]
+										.quantity
+									? 'is-invalid'
+									: ''
+								}`}
 						/>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -366,12 +358,12 @@ min="0"
 		return (
 			<div>
 				<div>
-				
+
 					<label>
 						{extraData}
 					</label>
 				</div>
-			
+
 
 			</div>);
 	};
@@ -380,12 +372,12 @@ min="0"
 		return (
 			<div>
 				<div>
-				
+
 					<label>
-						{row.creditstaken|| 0}
+						{row.creditstaken || 0}
 					</label>
 				</div>
-			
+
 
 			</div>);
 	};
@@ -403,8 +395,8 @@ min="0"
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-					type="number"
-min="0"
+						type="number"
+						min="0"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -423,26 +415,25 @@ min="0"
 						}}
 						placeholder={strings.UnitPrice}
 						className={`form-control 
-                       ${
-													props.errors.lineItemsString &&
-													props.errors.lineItemsString[parseInt(idx, 10)] &&
-													props.errors.lineItemsString[parseInt(idx, 10)]
-														.unitPrice &&
-													Object.keys(props.touched).length > 0 &&
-													props.touched.lineItemsString &&
-													props.touched.lineItemsString[parseInt(idx, 10)] &&
-													props.touched.lineItemsString[parseInt(idx, 10)]
-														.unitPrice
-														? 'is-invalid'
-														: ''
-												}`}
+                       ${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)]
+									.unitPrice &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)]
+									.unitPrice
+								? 'is-invalid'
+								: ''
+							}`}
 					/>
 				)}
 			/>
 		);
 	};
 
-	renderSubTotal = (cell, row,extraData) => {
+	renderSubTotal = (cell, row, extraData) => {
 		// return row.subTotal ? (
 		// 	<Currency
 		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -533,11 +524,11 @@ min="0"
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
-										'name',
-										'id',
-										vat_list,
-										'VAT',
-								  )
+									'name',
+									'id',
+									vat_list,
+									'VAT',
+								)
 								: []
 						}
 						value={
@@ -547,7 +538,7 @@ min="0"
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.VAT}
+						placeholder={strings.Select + strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -558,17 +549,16 @@ min="0"
 								props,
 							);
 						}}
-						className={`${
-							props.errors.lineItemsString &&
+						className={`${props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
-								? 'is-invalid'
-								: ''
-						}`}
+							? 'is-invalid'
+							: ''
+							}`}
 					/>
 				)}
 			/>
@@ -612,7 +602,7 @@ min="0"
 				color="primary"
 				className="btn-twitter btn-brand icon"
 				onClick={(e, props) => {
-				this.openProductModal(props);
+					this.openProductModal(props);
 				}}
 			>
 				<i className="fas fa-plus"></i>
@@ -641,11 +631,11 @@ min="0"
 						options={
 							product_list
 								? selectOptionsFactory.renderOptions(
-										'name',
-										'id',
-										product_list,
-										'Product',
-								  )
+									'name',
+									'id',
+									product_list,
+									'Product',
+								)
 								: []
 						}
 						value={
@@ -661,17 +651,16 @@ min="0"
 								this.prductValue(e.value, row, 'productId', form, field, props);
 							}
 						}}
-						className={`${
-							props.errors.lineItemsString &&
+						className={`${props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].productId
-								? 'is-invalid'
-								: ''
-						}`}
+							? 'is-invalid'
+							: ''
+							}`}
 					/>
 				)}
 			/>
@@ -791,108 +780,92 @@ min="0"
 			props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
-	onRowSelect = (row, isSelected, e) => {
-		let tempList = [];
-		
+	applyInvoice = (row, selectedrowsdata, selectedRows) => {
+		let tempList = selectedRows;
 		let crtotal
-		let currenttotal=0
-		this.state.selectedrowsdata.map((i)=>{
-			if(i.creditstaken){
-				currenttotal=currenttotal+i.creditstaken
+		let currenttotal = 0
+		selectedrowsdata.map((i) => {
+			if (i.creditstaken) {
+				currenttotal = currenttotal + i.creditstaken
 			}
 		})
-		currenttotal=this.props.location.state.creditAmount-currenttotal
-			if (isSelected) {
-				tempList = [...this.state.selectedRows]
-				tempList.push(row);
-
-				if(currenttotal>0){
-					crtotal=currenttotal-row.dueAmount
-					
-					row['creditstaken']=crtotal>0?row.dueAmount:currenttotal
-					this.setState({
-						selectedRows: tempList,
-						currenttotal:crtotal>0?crtotal:0,
-						cannotsave:false,
-						selectedrowsdata:[...this.state.selectedrowsdata,{...row}]
-					})
-				} else {
-					this.setState({
-						selectedRows: tempList,
-						cannotsave:true
-					});
-				}
-				
-				
-			
-			} else {
-				
-				const indexofrowtemp=this.state.selectedRows.findIndex((i)=>row.id===i.id)
-				const newdatatemp=[...this.state.selectedRows]
-				if(indexofrowtemp>-1) newdatatemp.splice(indexofrowtemp,1)
-				
-		
-
-				
-				const indexofrow=this.state.selectedrowsdata.findIndex((i)=>row.id===i.id)
-				const newdata=[...this.state.selectedrowsdata]
-				if(indexofrow>-1) newdata.splice(indexofrow,1)
-				const crtotal=currenttotal+row.creditstaken
-				const theinvoicelist=[...this.state.invoice_list]
-			
-				const finaldata=[...newdata]
-				if(row.creditstaken){
-
-				
-					newdata.map((i,ind)=>{
-						const indd=theinvoicelist.findIndex((i)=>i.id===finaldata[ind].id)
-						
-						if(i.creditstaken-i.dueAmount>=0) {
-							finaldata[ind].creditstaken=i.dueAmount
-
-						}else {
-							finaldata[ind].creditstaken=currenttotal+row.creditstaken+i.creditstaken
-						}
-
-						if(indd>-1) theinvoicelist[indd]=finaldata[ind]
-					})
-				
-					delete row.creditstaken	
-					
-				} else {
-					
-		if(newdatatemp.length===finaldata.length )
-					this.setState({
-						cannotsave:false
-					});
-				}
-				
-				
-				this.setState({					
-					selectedrowsdata:finaldata,
-					currenttotal:crtotal,
-					selectedRows:newdatatemp,
-					invoice_list:theinvoicelist
-				})
-				
-			
-				
+		currenttotal = this.props.location.state.creditAmount - currenttotal
+		tempList.push(row);
+		if (currenttotal > 0) {
+			crtotal = currenttotal - row.dueAmount
+			row['creditstaken'] = crtotal > 0 ? row.dueAmount : currenttotal
+			// this.setState({
+			// 	currenttotal: crtotal > 0 ? crtotal : 0,
+			// 	cannotsave: false,
+			// 	selectedrowsdata: [...this.state.selectedrowsdata, { ...row }]
+			// })
+			selectedrowsdata.push(row);
+			const list = {
+				selectedRows: tempList,
+				currenttotal: crtotal > 0 ? crtotal : 0,
+				cannotsave: false,
+				selectedrowsdata: selectedrowsdata,
 			}
-			
-		
+			return list;
+		} else {
+			// this.setState({
+			// 	cannotsave: true,
+			// });
+			const list = {
+				selectedRows: tempList,
+				cannotsave: true,
+			}
+			return list;
 		}
-			
-		
-		
-		
-	onSelectAll = (isSelected, rows) => {
-		let tempList = [];
+	}
+	onRowSelect = (row, isSelected, e) => {
+		var { selectedrowsdata, selectedRows, invoice_list, currenttotal } = this.state;
 		if (isSelected) {
-			rows.map((item) => tempList.push(item.id));
+			var list = []
+			list = this.applyInvoice(row, selectedrowsdata, selectedRows);
+			this.setState({
+				selectedRows: list.selectedRows,
+				currenttotal: list.currenttotal ? list.currenttotal : currenttotal,
+				cannotsave: list.cannotsave,
+				selectedrowsdata: list.selectedrowsdata ? list.selectedrowsdata : selectedrowsdata,
+			});
+		} else {
+			var list = []
+			selectedrowsdata = selectedrowsdata.filter((obj) => obj.id !== row.id)
+			selectedRows = selectedRows.filter((value) => value.id !== row.id)
+			if (e) {
+				var selectedRowwithNocredit = selectedRows.filter(obj => !(obj?.creditstaken > 0))
+				if (selectedRowwithNocredit) {
+					selectedRowwithNocredit.map(obj => {
+						selectedRows = selectedRows.filter((value) => value.id !== obj.id)
+						list = this.applyInvoice(obj, selectedrowsdata ? selectedrowsdata : [], selectedRows);
+						selectedrowsdata = list.selectedrowsdata ? list.selectedrowsdata : selectedrowsdata;
+						selectedRows = list.selectedRows ? list.selectedRows : selectedRows;
+					})
+				}
+			}
+			invoice_list.map((obj) => {
+				if (obj.id === row.id) {
+					obj.creditstaken = 0
+				}
+				return obj
+			});
+			this.setState({
+				selectedRows: list.selectedRows ? list.selectedRows : selectedRows,
+				currenttotal: list.currenttotal ? list.currenttotal : currenttotal,
+				cannotsave: list.cannotsave ? list.cannotsave : false,
+				selectedrowsdata: list.selectedrowsdata ? list.selectedrowsdata : selectedrowsdata,
+			});
 		}
-		this.setState({
-			selectedRows: tempList,
-		});
+	}
+
+
+
+
+	onSelectAll = (isSelected, rows) => {
+		rows && rows.map((row) => {
+			this.onRowSelect(row, isSelected , false)
+		})
 	};
 
 	handleFileChange = (e, props) => {
@@ -900,7 +873,7 @@ min="0"
 		let reader = new FileReader();
 		let file = e.target.files[0];
 		if (file) {
-			reader.onloadend = () => {};
+			reader.onloadend = () => { };
 			reader.readAsDataURL(file);
 			props.setFieldValue('attachmentFile', file, true);
 		}
@@ -948,7 +921,7 @@ min="0"
 	// 	);
 
 	// 	formData.append('exchangeRate',  this.state.initValue.exchangeRate);
-		
+
 	// 	formData.append(
 	// 		'receiptNumber',
 	// 		receiptNumber !== null ? receiptNumber : '',
@@ -1007,41 +980,42 @@ min="0"
 	// };
 
 
-handleSubmit=(data)=>{
-	this.setState({ disabled: true });
-	// const { payroll_employee_list } = this.props;
-	// const {
-	// 	invoiceIds,
-	// 	creditNoteId
-	// } = data;
+	handleSubmit = (data) => {
+		this.setState({ disabled: true });
+		// const { payroll_employee_list } = this.props;
+		// const {
+		// 	invoiceIds,
+		// 	creditNoteId
+		// } = data;
 
-	const formData = new FormData();
-	const ids = this.state.selectedRows.map((i) => i.id)
-	formData.append('invoiceIds',ids)
-	formData.append('creditNoteId', this.state.creditNoteId)
-	this.props.customerInvoiceDetailActions
-		.refundAgainstInvoices(formData)
-		.then((res) => {
-			if (res.status === 200) {
-			this.initializeData();
-			this.props.commonActions.tostifyAlert(
-				'success',
-				res.data ?  'Amount Applied To Invoice Successfully!' : res.data.message ,
-			);
-			if (this.state.invoice_list && this.state.invoice_list.length > 0) {
-				this.setState({
-					selectedRows: [],
-				});
-				this.props.history.push('/admin/income/credit-notes');
-			}
-		}})
-		.catch((err) => {
-			this.props.commonActions.tostifyAlert(
-				'error',
-				err && err.data ? err.data.message : 'Something Went Wrong',
-			);
-		});
-};
+		const formData = new FormData();
+		const ids = this.state.selectedRows.map((i) => i.id)
+		formData.append('invoiceIds', ids)
+		formData.append('creditNoteId', this.state.creditNoteId)
+		this.props.customerInvoiceDetailActions
+			.refundAgainstInvoices(formData)
+			.then((res) => {
+				if (res.status === 200) {
+					this.initializeData();
+					this.props.commonActions.tostifyAlert(
+						'success',
+						res.data ? 'Amount Applied To Invoice Successfully!' : res.data.message,
+					);
+					if (this.state.invoice_list && this.state.invoice_list.length > 0) {
+						this.setState({
+							selectedRows: [],
+						});
+						this.props.history.push('/admin/income/credit-notes');
+					}
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
 	openCustomerModal = (e) => {
 		e.preventDefault();
 		this.setState({ openCustomerModal: true });
@@ -1138,21 +1112,21 @@ handleSubmit=(data)=>{
 				);
 				this.setState({ loading: false });
 			});
-	};	
+	};
 
 	setExchange = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
-		return obj.currencyCode === value;
+			return obj.currencyCode === value;
 		});
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		};
+	};
 
 	deleteInvoice = () => {
 		const message1 =
 			<text>
-			<b>Delete Customer Invoice?</b>
+				<b>Delete Customer Invoice?</b>
 			</text>
-			const message = 'This Credit Note will be deleted permanently and cannot be recovered. ';
+		const message = 'This Credit Note will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -1174,7 +1148,7 @@ handleSubmit=(data)=>{
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message :'Invoice Deleted Successfully',
+						res.data ? res.data.message : 'Invoice Deleted Successfully',
 					);
 					this.props.history.push('/admin/income/credit-notes');
 				}
@@ -1197,7 +1171,7 @@ handleSubmit=(data)=>{
 		let customer_currencyCode = 0;
 		let customer_item_currency = ''
 		this.props.customer_list.map(item => {
-			if(item.label.contactId == opt) {
+			if (item.label.contactId == opt) {
 				this.setState({
 					customer_currency: item.label.currency.currencyCode,
 					customer_currency_des: item.label.currency.currencyName,
@@ -1208,7 +1182,7 @@ handleSubmit=(data)=>{
 				customer_item_currency = item.label.currency
 			}
 		})
-	
+
 		return customer_currencyCode;
 	}
 
@@ -1216,14 +1190,13 @@ handleSubmit=(data)=>{
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
-		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list } = this.props;
+		const { project_list, currency_list, currency_convert_list, customer_list, universal_currency_list } = this.props;
 		let tmpCustomer_list = []
 
 		customer_list.map(item => {
-			let obj = {label: item.label.contactName, value: item.value}
+			let obj = { label: item.label.contactName, value: item.value }
 			tmpCustomer_list.push(obj)
 		})
-
 		return (
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -1235,9 +1208,9 @@ handleSubmit=(data)=>{
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
-	<span className="ml-2">
-		{/* Apply To Invoice  */}
-	{strings.Applycreditsfrom} <u>{this.state.creditNoteNumber}</u></span>
+												<span className="ml-2">
+													{/* Apply To Invoice  */}
+													{strings.Applycreditsfrom} <u>{this.state.creditNoteNumber}</u></span>
 											</div>
 										</Col>
 									</Row>
@@ -1255,11 +1228,11 @@ handleSubmit=(data)=>{
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
-											
+
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
-															
+
 															{/* <Row>
 																<Col lg={12} className="mb-3">
 																	<Button
@@ -1282,7 +1255,7 @@ handleSubmit=(data)=>{
 															<Row>
 																{props.errors.lineItemsString &&
 																	typeof props.errors.lineItemsString ===
-																		'string' && (
+																	'string' && (
 																		<div
 																			className={
 																				props.errors.lineItemsString
@@ -1296,16 +1269,16 @@ handleSubmit=(data)=>{
 																		</div>
 																	)}
 																<Col lg={12}>
-																	
+
 																	<BootstrapTable
 																		options={this.options}
 																		selectRow={this.selectRowProp}
 																		data={
-																			this.state.invoice_list 
+																			this.state.invoice_list
 																				? this.state.invoice_list
 																				: []
 																		}
-																	
+
 																		version="4"
 																		hover
 																		keyField="id"
@@ -1314,69 +1287,69 @@ handleSubmit=(data)=>{
 																		<TableHeaderColumn
 																			width="55"
 																			dataAlign="center"
-																			 className="table-header-bg"
-																			// dataFormat={(cell, rows) =>
-																			// 	this.renderActions(cell, rows, props)
-																			// }
+																			className="table-header-bg"
+																		// dataFormat={(cell, rows) =>
+																		// 	this.renderActions(cell, rows, props)
+																		// }
 																		></TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="referenceNo"
-																			 className="table-header-bg"
-																			// dataFormat={(cell, rows) =>
-																			// 	this.renderDescription(
-																			// 		cell,
-																			// 		rows,
-																			// 		props,
-																			// 	)
-																			// }
+																			className="table-header-bg"
+																		// dataFormat={(cell, rows) =>
+																		// 	this.renderDescription(
+																		// 		cell,
+																		// 		rows,
+																		// 		props,
+																		// 	)
+																		// }
 																		>
 																			{strings.InvoiceNumber}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField='date'
 																			dataFormat={this.renderDate}
-																			 className="table-header-bg"
-																			// dataFormat={(cell, rows) =>
-																			// 	this.renderQuantity(cell, rows, props)
-																			// }
+																			className="table-header-bg"
+																		// dataFormat={(cell, rows) =>
+																		// 	this.renderQuantity(cell, rows, props)
+																		// }
 																		>
 																			{strings.InvoiceDate}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="dueAmount"
 																			className="table-header-bg"
-																			// dataFormat={(cell, rows) =>
-																			// 	this.renderUnitPrice(cell, rows, props)
-																			// }
+																		// dataFormat={(cell, rows) =>
+																		// 	this.renderUnitPrice(cell, rows, props)
+																		// }
 																		>
 																			{strings.InvoiceAmount}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
-																	    	dataField="totalAount"
+																			dataField="totalAount"
 																			dataFormat={this.renderCreditAmount}
 																			formatExtraData={this.props.location.state.creditAmount}
 																			className="table-header-bg"
-																			// dataFormat={(cell, rows) =>
-																			// 	this.renderUnitPrice(cell, rows, props)
-																			// }
+																		// dataFormat={(cell, rows) =>
+																		// 	this.renderUnitPrice(cell, rows, props)
+																		// }
 																		>
-																			 {strings.AmountToCredit}
+																			{strings.AmountToCredit}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
-																	    	dataField="creditstaken"
+																			dataField="creditstaken"
 																			dataFormat={this.renderCredittaken}
 																			formatExtraData={this.props.location.state.creditAmount}
 																			className="table-header-bg"
-																			// dataFormat={(cell, rows) =>
-																			// 	this.renderUnitPrice(cell, rows, props)
-																			// }
+																		// dataFormat={(cell, rows) =>
+																		// 	this.renderUnitPrice(cell, rows, props)
+																		// }
 																		>
-																			 {strings.CreditUsed || "Credit Used"}
+																			{strings.CreditUsed || "Credit Used"}
 																		</TableHeaderColumn>
 																	</BootstrapTable>
 																</Col>
 															</Row>
-{/* 													
+															{/* 													
 																<Row style={{direction:'rtl'}}>
 																	
 																	<Col lg={4} style={{direction:'ltr'}}>
@@ -1460,9 +1433,9 @@ handleSubmit=(data)=>{
 																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
-																	
+
 																</Col>
-																{this.state.cannotsave && <div style={{fontSize:'1rem',color:'red'}}>You Dont have Sufficient Credit</div>}
+																{this.state.cannotsave && <div style={{ fontSize: '1rem', color: 'red' }}>You Dont have Sufficient Credit</div>}
 															</Row>
 														</Form>
 													)}
@@ -1475,7 +1448,7 @@ handleSubmit=(data)=>{
 						</Col>
 					</Row>
 				</div>
-			
+
 			</div>
 		);
 	}

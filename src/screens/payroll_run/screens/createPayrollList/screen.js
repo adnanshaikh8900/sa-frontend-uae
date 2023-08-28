@@ -915,6 +915,10 @@ class CreatePayrollList extends React.Component {
 																						<span className="text-danger">* </span>
 																						{strings.pay_period}
 																					</Label>
+																					<div className={props.errors.startDate
+																							? 'startError'
+																							: ''
+																							}>
 																					<DateRangePicker
 																						displayFormat="DD-MM-YYYY"
 																						endDate={this.state.endDate}
@@ -928,11 +932,12 @@ class CreatePayrollList extends React.Component {
 																						onFocusChange={this.handleFocusChange}
 																						startDate={this.state.startDate}
 																						startDateId="startDate"
-																						className={`form-control ${props.errors.startDate
-																							? 'is-invalid'
-																							: ''
-																							}`}
+																						// className={`form-control ${props.errors.startDate
+																						// 	? 'is-invalid'
+																						// 	: ''
+																						// 	}`}
 																					/>
+																					</div>
 																					{props.errors.startDate && (
 																						<div className="invalid-feedback">
 																							{props.errors.startDate}

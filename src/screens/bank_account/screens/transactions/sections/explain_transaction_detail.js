@@ -1733,6 +1733,10 @@ class ExplainTrasactionDetail extends React.Component {
                             date: Yup.string().required(
                               "Transaction Date is Required"
                             ),
+                            payrollListIds: Yup.string().required(
+                              "Please select Payroll"
+                            ),
+
                             amount: Yup.string()
                               .required("Transaction Amount is Required")
                               .test(

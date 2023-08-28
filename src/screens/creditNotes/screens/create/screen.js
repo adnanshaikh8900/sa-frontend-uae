@@ -1134,21 +1134,116 @@ class CreateCreditNote extends React.Component {
 
 
 	updateAmount = (data, props) => {
-		const { vat_list} = this.props;
-		const calculation_list = ProductTableCalculation.updateAmount(data, vat_list)
-		this.setState({
-			data: calculation_list.data,
-			initValue: {
-				...this.state.initValue,
-				...{
-					total_net: calculation_list.total_net,
-					totalVatAmount: calculation_list.total_vat,
-					totalAmount: calculation_list.total,
-					total_excise: calculation_list.total_excise,
-					discount: calculation_list.discount,
+		const { vat_list, excise_list } = this.props;
+		const { discountPercentage, discountAmount } = this.state;
+
+		let total_net = 0;
+		let total_excise = 0;
+		let total = 0;
+		let total_vat = 0;
+		let net_value = 0;
+		let discount = 0;
+
+		const totalnetamount = (a) => {
+			total_net = total_net + a
+		}
+		const totalexcise = (a) => {
+			total_excise = total_excise + a
+		}
+		const totalvalt = (a) => {
+			total_vat = total_vat + a
+		}
+		const totalamount = (a) => {
+			total = total + a
+		}
+		const discountamount = (a) => {
+			discount = discount + a
+		}
+		data.map((obj) => {
+			let unitprice = parseFloat(obj.unitPrice);
+			var net_value = 0;
+			const index =
+				obj.vatCategoryId !== ''
+					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
+					: '';
+
+			const vat = index > -1 ? vat_list[`${index}`]?.vat : 0;
+			if (!this.state.taxType) {
+				if (obj.discountType === 'PERCENTAGE')
+					net_value = ((+unitprice - (+(unitprice * parseFloat(obj.discount)) / 100)) * parseInt(obj.quantity));
+				else
+					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
+
+				const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
+
+				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
+				net_value = parseFloat(net_value) + parseFloat(excisevalue);
+				const vat_amount = vat === 0 ? 0 : ((+net_value * vat) / 100);
+
+				totalnetamount(net_value - excisevalue)
+				totalexcise(excisevalue)
+				totalvalt(vat_amount)
+				totalamount(vat_amount + net_value)
+				discountamount(discount)
+				obj.subTotal = net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+				obj.vatAmount = vat_amount
+				obj.exciseAmount = excisevalue
+			} else {
+				if (obj.discountType === 'PERCENTAGE')
+					net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
+				else
+					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
+
+				const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
+				//vat amount
+				const vat_amount =
+					(vat === 0 ? 0 :
+						((+net_value * (vat / (100 + vat) * 100)) / 100));
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 3 : obj.exciseTaxId === 2 ? net_value / 2 : 0
+
+				totalnetamount(net_value - excisevalue)
+				totalexcise(excisevalue)
+				totalvalt(vat_amount)
+				totalamount(vat_amount + net_value)
+				discountamount(discount)
+				obj.subTotal = net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+				obj.vatAmount = vat_amount
+				obj.exciseAmount = excisevalue
+			}
+
+
+
+			return obj;
+		});
+
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
+
+		this.setState(
+			{
+				data,
+				initValue: {
+					...this.state.initValue,
+					...{
+						total_net: total_net,
+						totalVatAmount: total_vat,
+						totalAmount: total,
+						total_excise: total_excise,
+						discount
+
+
+					},
+
 				},
 			},
-		},);
+
+		);
+
 	};
 
 	handleFileChange = (e, props) => {
@@ -1187,10 +1282,11 @@ class CreateCreditNote extends React.Component {
 		const formData = new FormData();
 
 		formData.append('isCreatedWithoutInvoice', this.state.isCreatedWithoutInvoice);
+		formData.append('isCreatedWIWP', this.state.isCreatedWIWP);
 		formData.append('creditNoteNumber', creditNoteNumber ? this.state.prefix + creditNoteNumber : '',);
 		formData.append('email', email ? email : '',);
 		formData.append('creditNoteDate', creditNoteDate ? moment(creditNoteDate, 'DD-MM-YYYY').toDate() : null,);
-		formData.append('receiptNumber', receiptNumber !== null ? receiptNumber : '',);
+		formData.append('referenceNo', receiptNumber !== null ? receiptNumber : '',);
 		formData.append('exchangeRate', exchangeRate ? exchangeRate : '',);
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
@@ -1200,18 +1296,17 @@ class CreateCreditNote extends React.Component {
 			formData.append('totalAmount', creditAmount);
 
 		formData.append('vatCategoryId', 2);
+		formData.append('taxType', this.state.taxType ? this.state.taxType : false);
 
 		if (invoiceNumber) {
 			formData.append('invoiceId', invoiceNumber.value ? invoiceNumber.value : invoiceNumber);
 			formData.append('cnCreatedOnPaidInvoice', '1');
 		}
 		if (!this.state.isCreatedWIWP) {
-
 			formData.append('lineItemsString', JSON.stringify(this.state.data));
 			formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 			formData.append('totalAmount', this.state.initValue.totalAmount);
 			formData.append('discount', this.state.initValue.discount);
-
 			formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
 		}
 		if (contactId) {
@@ -1416,43 +1511,44 @@ class CreateCreditNote extends React.Component {
 		if (value) {
 			this.props.creditNotesCreateActions
 				.getInvoiceById(value).then((response) => {
-					const customerdetails = {
-						label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
-						value: response.data.contactId
-					}
-
-					this.setState({
-						option: {
+					if (response.status === 200) {
+						const customerdetails = {
 							label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
-							value: response.data.contactId,
-						},
-						data: response.data.invoiceLineItems,
-						totalAmount: response.data.totalAmount,
-						customer_currency: response.data.currencyCode,
-						remainingInvoiceAmount: response.data.remainingInvoiceAmount,
-					}, () => {
-						this.formRef.current.setFieldValue(
-							'lineItemsString',
-							this.state.data,
-							true,
-						);
-						this.formRef.current.setFieldTouched(
-							`lineItemsString[${this.state.data.length - 1}]`,
-							false,
-							true,
-						);
-						this.updateAmount(this.state.data)
-					},);
-					this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
-					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
-					this.setExchange(this.getCurrency(customerdetails.value));
-					this.formRef.current.setFieldValue('contactId', response.data.contactId, true);
-					this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
+							value: response.data.contactId
+						}
 
-					this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
-					this.getCurrency(this.state.option.value)
-					this.getTaxTreatment(this.state.option.value)
-
+						this.setState({
+							taxType: response.data.taxType,
+							option: {
+								label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
+								value: response.data.contactId,
+							},
+							data: response.data.invoiceLineItems,
+							totalAmount: response.data.totalAmount,
+							customer_currency: response.data.currencyCode,
+							remainingInvoiceAmount: response.data.remainingInvoiceAmount,
+						}, () => {
+							this.formRef.current.setFieldValue(
+								'lineItemsString',
+								this.state.data,
+								true,
+							);
+							this.formRef.current.setFieldTouched(
+								`lineItemsString[${this.state.data.length - 1}]`,
+								false,
+								true,
+							);
+							this.updateAmount(this.state.data)
+						},);
+						this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
+						this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
+						this.setExchange(this.getCurrency(customerdetails.value));
+						this.formRef.current.setFieldValue('contactId', response.data.contactId, true);
+						this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
+						this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
+						this.getCurrency(this.state.option.value)
+						this.getTaxTreatment(this.state.option.value)
+					}
 				});
 		}
 	}
@@ -1528,11 +1624,11 @@ class CreateCreditNote extends React.Component {
 															if ((this.state.isCreatedWIWP) && (values.creditAmount == '')) {
 																errors.creditAmount = "Credit Amount is required";
 															}
-															if (this.state.invoiceSelected && !this.state.isCreatedWIWP && parseFloat(parseFloat(this.state.initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount) {
-																errors.remainingInvoiceAmount = 'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
-															}
+															// if (this.state.invoiceSelected && !this.state.isCreatedWIWP && parseFloat(parseFloat(this.state.initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount) {
+															// 	errors.remainingInvoiceAmount = 'Invoice Total Amount Cannot be greater than Remaining InvoiceAmount';
+															// }
 															if (this.state.invoiceSelected && this.state.isCreatedWIWP && values.creditAmount > this.state.remainingInvoiceAmount) {
-																errors.remainingInvoiceAmount = 'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
+																errors.creditAmount = 'Credit Amount Cannot Be Greater Than Remaining Invoice Amount';
 															}
 															return errors;
 														}}
@@ -1564,10 +1660,9 @@ class CreateCreditNote extends React.Component {
 																.of(
 																	Yup.object().shape({
 																		quantity: Yup.string()
-																			.required('Value is required')
 																			.test(
 																				'quantity',
-																				'Quantity should be greater than 0',
+																				strings.QuantityGreaterThan0,
 																				(value) => {
 																					if (value > 0) {
 																						return true;
@@ -1575,7 +1670,7 @@ class CreateCreditNote extends React.Component {
 																						return false;
 																					}
 																				},
-																			),
+																			).required('Value is required'),
 																		// 			unitPrice: Yup.string()
 																		// 				.required('Value is required')
 																		// 				.test(
@@ -1688,19 +1783,17 @@ class CreateCreditNote extends React.Component {
 																						invoice_list.data,
 																						'Invoice Number',
 																					).find(obj => obj.value === props.values.invoiceNumber)}
-
 																				onChange={(option) => {
 																					if (option && option.value) {
-
 																						this.getInvoiceDetails(option.value)
 																						props.handleChange('invoiceNumber')(option);
 																						this.setState({ invoiceSelected: true })
-
 																					} else {
 																						this.setState({ invoiceSelected: false })
 																						props.handleChange('invoiceNumber')('');
 																						this.setState({ invoiceSelected: false })
 																					}
+																					this.formRef.current.setFieldValue('receiptNumber', option.label , true);
 
 																					// if(!this.state.data1){
 																					// 	this.state.supplierList = this.state.data1
@@ -1838,47 +1931,47 @@ class CreateCreditNote extends React.Component {
 																				{strings.TaxTreatment}
 																			</Label>
 																			<Select
-																					options={
-																						taxTreatmentList
-																							? selectOptionsFactory.renderOptions(
-																								'name',
-																								'id',
-																								taxTreatmentList,
-																								'VAT',
-																							)
-																							: []
-																					}
-																					isDisabled={true}
-																					id="taxTreatmentid"
-																					name="taxTreatmentid"
-																					placeholder={strings.Select + strings.TaxTreatment}
-																					value={
-																						taxTreatmentList &&
-																						selectOptionsFactory
-																							.renderOptions(
-																								'name',
-																								'id',
-																								taxTreatmentList,
-																								'VAT',
-																							)
-																							.find(
-																								(option) =>
-																									option.label ===
-																									this.state.customer_taxTreatment_des,
-																							)
-																					}
-																					onChange={(option) => {
-																							props.handleChange('taxTreatmentid')(
-																								option,
-																							);
-																					}}
-																					className={
-																						props.errors.taxTreatmentid &&
-																							props.touched.taxTreatmentid
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
+																				options={
+																					taxTreatmentList
+																						? selectOptionsFactory.renderOptions(
+																							'name',
+																							'id',
+																							taxTreatmentList,
+																							'VAT',
+																						)
+																						: []
+																				}
+																				isDisabled={true}
+																				id="taxTreatmentid"
+																				name="taxTreatmentid"
+																				placeholder={strings.Select + strings.TaxTreatment}
+																				value={
+																					taxTreatmentList &&
+																					selectOptionsFactory
+																						.renderOptions(
+																							'name',
+																							'id',
+																							taxTreatmentList,
+																							'VAT',
+																						)
+																						.find(
+																							(option) =>
+																								option.label ===
+																								this.state.customer_taxTreatment_des,
+																						)
+																				}
+																				onChange={(option) => {
+																					props.handleChange('taxTreatmentid')(
+																						option,
+																					);
+																				}}
+																				className={
+																					props.errors.taxTreatmentid &&
+																						props.touched.taxTreatmentid
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
 																			{props.errors.taxTreatmentid &&
 																				props.touched.taxTreatmentid && (
 																					<div className="invalid-feedback">
@@ -2001,7 +2094,6 @@ class CreateCreditNote extends React.Component {
 																					// this.setExchange(option.value);
 																					this.setCurrency(option.value)
 																				}}
-
 																			/>
 																			{props.errors.currency &&
 																				props.touched.currency && (
@@ -2050,7 +2142,7 @@ class CreateCreditNote extends React.Component {
 																					value={props.values.creditAmount}
 																					// onBlur={props.handleBlur('currencyCode')}
 																					onChange={(value) => {
-																						if (((this.regEx.test(value.target.value)) && (parseFloat(value.target.value) >= 1)) || (value.target.value === '')) {
+																						if (((this.regDecimal.test(value.target.value)) && (parseFloat(value.target.value) >= 1)) || (value.target.value === '')) {
 																							props.handleChange('creditAmount')(value,);
 																						}
 																					}}
@@ -2128,7 +2220,6 @@ class CreateCreditNote extends React.Component {
 																			className="form-control"
 																			id="curreancyname"
 																			name="curreancyname"
-																			
 																			value={this.state.customer_currency_des}
 																			onChange={(value) => {
 																				props.handleChange('curreancyname')(
@@ -2146,11 +2237,10 @@ class CreateCreditNote extends React.Component {
 																	<div>
 																		<Input
 																			type="number"
-min="0"
+																			min="0"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
-																			
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(
@@ -2166,9 +2256,7 @@ min="0"
 																		disabled
 																				id="currencyName"
 																				name="currencyName"
-																				value=	{
-																					this.state.basecurrency.currencyName }
-																				
+																				value={ this.state.basecurrency.currencyName }
 																			/>
 														</Col>
 														</Row> */}
@@ -2200,7 +2288,6 @@ min="0"
 																<i className="fa fa-plus"></i> {strings.Addproduct}
 															</Button>
 														</Col> */}
-
 
 																{this.state.isCreatedWIWP === false && (<Row>
 																	{props.errors.lineItemsString &&
@@ -2350,7 +2437,6 @@ min="0"
 																				{strings.VAT}
 																			</TableHeaderColumn>
 																			<TableHeaderColumn
-
 																				dataField="vat_amount"
 																				dataFormat={this.renderVatAmount}
 																				className="text-right"
@@ -2406,7 +2492,6 @@ min="0"
 																							placeholder={strings.ReceiptNumber}
 																							onChange={(value) => {
 																								props.handleChange('receiptNumber')(value);
-
 																							}}
 																							className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : " "}
 																						/>
@@ -2414,25 +2499,25 @@ min="0"
 																							<div className="invalid-feedback">{props.errors.receiptNumber}</div>
 																						)}
 																						{/* <Input
-																					type="text"
-																					maxLength="100"
-																					id="receiptNumber"
-																					name="receiptNumber"
-																					placeholder={strings.ReceiptNumber}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExBoth.test(
-																								option.target.value,
-																							)
-																						) {
-																							props.handleChange(
-																								'receiptNumber',
-																							)(option);
-																						}
-																					}}
-																					value={props.values.receiptNumber}
-																				/> */}
+																								type="text"
+																								maxLength="100"
+																								id="receiptNumber"
+																								name="receiptNumber"
+																								placeholder={strings.ReceiptNumber}
+																								onChange={(option) => {
+																									if (
+																										option.target.value === '' ||
+																										this.regExBoth.test(
+																											option.target.value,
+																										)
+																									) {
+																										props.handleChange(
+																											'receiptNumber',
+																										)(option);
+																									}
+																								}}
+																								value={props.values.receiptNumber}
+																							/> */}
 																					</FormGroup>
 																				</Col>
 																				<Col lg={6}>
@@ -2512,10 +2597,7 @@ min="0"
 																							'receiptAttachmentDescription',
 																						)(option)
 																					}
-																					value={
-																						props.values
-																							.receiptAttachmentDescription
-																					}
+																					value={props.values.receiptAttachmentDescription}
 																				/>
 																			</FormGroup>
 																		</Col>
@@ -2576,12 +2658,9 @@ min="0"
 																								name="discountPercentage"
 																								placeholder="Discount Percentage"
 																								type="number"
-min="0"
+																								min="0"
 																								maxLength="5"
-																								value={
-																									props.values
-																										.discountPercentage
-																							}
+																								value={props.values.discountPercentage}
 																								onChange={(e) => {
 																									if (
 																										e.target.value === '' ||
@@ -2621,10 +2700,9 @@ min="0"
 																						<Input
 																							id="discount"
 																							type="number"
-min="0"
+																							min="0"
 																							name="discount"
 																							maxLength="10"
-																							
 																							disabled={
 																								props.values.discountType &&
 																								props.values.discountType
@@ -2673,7 +2751,6 @@ min="0"
 																							</Col>
 																							<Col lg={6} className="text-right">
 																								<label className="mb-0">
-
 																									{this.state.customer_currency_symbol} &nbsp;
 																									{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																								</label>
@@ -2691,10 +2768,8 @@ min="0"
 																							</Col>
 																							<Col lg={6} className="text-right">
 																								<label className="mb-0">
-
 																									{this.state.customer_currency_symbol} &nbsp;
 																									{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-
 																								</label>
 																							</Col>
 																						</Row>
@@ -2825,14 +2900,12 @@ min="0"
 																				type="button"
 																				color="primary"
 																				className="btn-square mr-3"
-
 																				disabled={this.state.disabled || (parseFloat(parseFloat(initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
 																				onClick={() => {
 																					//	added validation popup	msg
 																					props.handleBlur();
 																					if (props.errors && Object.keys(props.errors).length != 0)
 																						this.props.commonActions.fillManDatoryDetails();
-
 																					this.setState(
 																						{
 																							createMore: true,
@@ -2843,7 +2916,7 @@ min="0"
 																					);
 																				}}
 																			>
-																				<i className="fa fa-repeat"></i>{' '}
+																				<i className="fa fa-refresh"></i>{' '}
 																				{this.state.disabled
 																					? 'Creating...'
 																					: strings.CreateandMore}

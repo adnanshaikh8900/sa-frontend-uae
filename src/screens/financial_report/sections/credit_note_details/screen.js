@@ -395,9 +395,16 @@ class CreditNoteDetailsReport extends React.Component {
 																	<td style={{ textAlign: 'center'}}>{item.creditNoteDate ? (
 																		moment(item.creditNoteDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
-
-																	<td style={{ textAlign: 'center' }}>{item.status}</td>
-																	<td style={{ textAlign: 'right' }}>
+																		<td style={{ textAlign: 'center' }}>
+																		{(() => {
+																			if (item.status === 'Partially Paid') {
+																			return 'Partially Credited';
+																			} else {
+																			return item.status;
+																			}
+																		})()}
+																		</td>
+																		<td style={{ textAlign: 'right' }}>
 																		<Currency
 																			value={item.creditNoteTotalAmount}
 																			currencySymbol={

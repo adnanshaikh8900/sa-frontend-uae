@@ -1059,6 +1059,7 @@ const en = {
       Operating: "Operating",
       PaymentsRecevied: 'Payments Received',
       CreditNoteDetails: 'Tax Credit Note Details',
+      Credit_Note:"Credit Note",
       InvoiceDetails: 'Invoice Details',
       Invoices: 'Invoices',
       GenerateVATReport: 'Generate VAT Report',

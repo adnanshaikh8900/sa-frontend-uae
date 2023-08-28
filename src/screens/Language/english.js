@@ -432,6 +432,7 @@ const en = {
 
       //Journals
       UpdateJournal: "Update Journal",
+      ViewJournal:"View Journal",
       Journal: "Journal",
       POSTDATE: "POST DATE",
       PostDate: "Post Date",

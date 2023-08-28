@@ -2538,11 +2538,11 @@ class CreateCustomerInvoice extends React.Component {
 
 																	} else {
 																		if (values.shippingPostZipCode == '')
-																			errors.shippingPostZipCode = 'Postal code is required';
+																			errors.shippingPostZipCode = 'Postal / Zip code is required';
 																		else if (values.shippingPostZipCode.length !== 6)
 																			errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
 																		if (values.shippingStateId == "")
-																			errors.shippingStateId = 'State is required';
+																			errors.shippingStateId = 'State / Provinces is required';
 																	}
 																}
 
@@ -2594,7 +2594,6 @@ class CreateCustomerInvoice extends React.Component {
 																	.of(
 																		Yup.object().shape({
 																			quantity: Yup.string()
-																				.required('Value is required')
 																				.test(
 																					'quantity',
 																					strings.QuantityGreaterThan0,
@@ -2605,9 +2604,8 @@ class CreateCustomerInvoice extends React.Component {
 																							return false;
 																						}
 																					},
-																				),
+																				).required('Value is required'),
 																			unitPrice: Yup.string()
-																				.required('Value is required')
 																				.test(
 																					'Unit Price',
 																					strings.UnitPriceGreaterThan1,
@@ -2618,7 +2616,7 @@ class CreateCustomerInvoice extends React.Component {
 																							return false;
 																						}
 																					},
-																				),
+																				).required('Value is required'),
 																			vatCategoryId: Yup.string().required(
 																				strings.VATIsRequired
 																			),
@@ -3334,7 +3332,7 @@ class CreateCustomerInvoice extends React.Component {
 																							props.handleChange('shippingStateId')('');
 																						}
 																					}}
-																					placeholder={props.values.shippingCountryId && props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion}
+																					placeholder={props.values.shippingCountryId && props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.Select+ strings.StateRegion}
 																					id="shippingStateId"
 																					name="shippingStateId"
 																					className={
@@ -4224,7 +4222,7 @@ class CreateCustomerInvoice extends React.Component {
 																						);
 																					}}
 																				>
-																					<i className="fa fa-repeat mr-1"></i>
+																					<i className="fa fa-refresh mr-1"></i>
 																					{this.state.disabled
 																						? 'Creating...'
 																						: strings.CreateandMore}

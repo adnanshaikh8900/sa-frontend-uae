@@ -220,8 +220,8 @@ class DetailCreditNote extends React.Component {
 										.receiptAttachmentDescription
 										? res.data.receiptAttachmentDescription
 										: '',
-									receiptNumber: res.data.receiptNumber
-										? res.data.receiptNumber
+									receiptNumber: res.data.referenceNo
+										? res.data.referenceNo
 										: '',
 									contact_po_number: res.data.contactPoNumber
 										? res.data.contactPoNumber
@@ -279,6 +279,7 @@ class DetailCreditNote extends React.Component {
 								selectedContact: res.data.contactId ? res.data.contactId : '',
 								term: res.data.term ? res.data.term : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								remainingInvoiceAmount: res.data.remainingInvoiceAmount,
 								loading: false,
 							},
 							() => {
@@ -1100,7 +1101,7 @@ class DetailCreditNote extends React.Component {
 
 				//net value after removing vat for inclusive
 				net_value = net_value - vat_amount
-				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
+				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 3 : obj.exciseTaxId === 2 ? net_value / 2 : 0
 
 				totalnetamount(net_value - excisevalue)
 				totalexcise(excisevalue)
@@ -1192,12 +1193,13 @@ class DetailCreditNote extends React.Component {
 		formData.append('creditNoteDate', typeof invoiceDate === 'string' ? moment(invoiceDate, 'DD-MM-YYYY').toDate() : invoiceDate,);
 		formData.append('vatCategoryId', 2);
 		formData.append('exchangeRate', exchangeRate);
-		formData.append('receiptNumber', receiptNumber !== null ? receiptNumber : '',);
+		formData.append('referenceNo', receiptNumber !== null ? receiptNumber : '',);
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append('isCreatedWithoutInvoice', this.state.isCreatedWithoutInvoice);
 		formData.append('isCreatedWIWP', this.state.isCreatedWIWP);
+		formData.append('taxType', this.state.taxType ? this.state.taxType : false);
 
 		if (invoiceNumber) {
 			formData.append('invoiceId', invoiceNumber.value ? invoiceNumber.value : invoiceNumber);
@@ -1515,10 +1517,10 @@ class DetailCreditNote extends React.Component {
 															// if ((this.state.isCreatedWIWP) && (values.creditAmount == '')) {
 															// 	errors.creditAmount = "Credit Amount is required";
 															// }
-															if (this.state.initValue.totalAmount > this.state.remainingInvoiceAmount) {
+															if (this.state.remainingInvoiceAmount && (this.state.initValue.totalAmount > this.state.remainingInvoiceAmount)) {
 																errors.remainingInvoiceAmount = 'The amount of the credit note cannot exceed the amount of the invoice';
 															}
-															if (values.creditAmount > this.state.remainingInvoiceAmount) {
+															if (this.state.remainingInvoiceAmount && (values.creditAmount > this.state.remainingInvoiceAmount)) {
 																errors.remainingInvoiceAmount = 'The amount of the credit note cannot exceed the amount of the invoice';
 															}
 															return errors;
@@ -1676,7 +1678,7 @@ class DetailCreditNote extends React.Component {
 																				styles={customStyles}
 																				id="contactId"
 																				name="contactId"
-																				isDisabled={true}
+																				isDisabled={this.state.showInvoiceNumber}
 																				options={
 																					tmpCustomer_list
 																						? selectOptionsFactory.renderOptions(
@@ -1699,14 +1701,12 @@ class DetailCreditNote extends React.Component {
 																				onChange={(option) => {
 																					if (option && option.value) {
 																						this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																						this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																						this.setExchange(this.getCurrency(option.value));
-																						props.handleChange('contactId')(
-																							option.value,
-																						);
+																						props.handleChange('contactId')(option);
 																					} else {
 																						props.handleChange('contactId')('');
 																					}
-																					// this.getCurrentUser(option)
 																				}}
 																				className={
 																					props.errors.contactId &&
@@ -2064,6 +2064,29 @@ class DetailCreditNote extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
+
+																	{(!this.state.isCreatedWithoutInvoice && this.state.invoiceNumber) && (<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="remainingInvoiceAmount">
+																				{strings.RemainingInvoiceAmount}
+																			</Label>
+																			<Input
+																				type="text"
+																				id="remainingInvoiceAmount"
+																				name="remainingInvoiceAmount"
+																				placeholder='Remaining invoice Amount'
+																				disabled={true}
+																				value={this.state.remainingInvoiceAmount}
+																			/>
+																			{props.errors.remainingInvoiceAmount &&
+																				(
+																					<div className="text-danger">
+																						{props.errors.remainingInvoiceAmount}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>)}
+
 																	{(<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="creditAmount"><span className="text-danger">* </span>
@@ -2099,28 +2122,6 @@ class DetailCreditNote extends React.Component {
 																		</FormGroup>
 																	</Col>
 																	)}
-
-																	{(!this.state.isCreatedWithoutInvoice && this.state.invoiceNumber) && (<Col lg={3}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="remainingInvoiceAmount">
-																				{strings.RemainingInvoiceAmount}
-																			</Label>
-																			<Input
-																				type="text"
-																				id="remainingInvoiceAmount"
-																				name="remainingInvoiceAmount"
-																				placeholder='Remaining invoice Amount'
-																				disabled={true}
-																				value={this.state.remainingInvoiceAmount}
-																			/>
-																			{props.errors.remainingInvoiceAmount &&
-																				(
-																					<div className="text-danger">
-																						{props.errors.remainingInvoiceAmount}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>)}
 
 																</Row>
 																<hr />

@@ -1286,7 +1286,7 @@ class CreateCreditNote extends React.Component {
 		formData.append('creditNoteNumber', creditNoteNumber ? this.state.prefix + creditNoteNumber : '',);
 		formData.append('email', email ? email : '',);
 		formData.append('creditNoteDate', creditNoteDate ? moment(creditNoteDate, 'DD-MM-YYYY').toDate() : null,);
-		formData.append('receiptNumber', receiptNumber !== null ? receiptNumber : '',);
+		formData.append('referenceNo', receiptNumber !== null ? receiptNumber : '',);
 		formData.append('exchangeRate', exchangeRate ? exchangeRate : '',);
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
@@ -1296,6 +1296,7 @@ class CreateCreditNote extends React.Component {
 			formData.append('totalAmount', creditAmount);
 
 		formData.append('vatCategoryId', 2);
+		formData.append('taxType', this.state.taxType ? this.state.taxType : false);
 
 		if (invoiceNumber) {
 			formData.append('invoiceId', invoiceNumber.value ? invoiceNumber.value : invoiceNumber);
@@ -1623,11 +1624,11 @@ class CreateCreditNote extends React.Component {
 															if ((this.state.isCreatedWIWP) && (values.creditAmount == '')) {
 																errors.creditAmount = "Credit Amount is required";
 															}
-															if (this.state.invoiceSelected && !this.state.isCreatedWIWP && parseFloat(parseFloat(this.state.initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount) {
-																errors.remainingInvoiceAmount = 'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
-															}
+															// if (this.state.invoiceSelected && !this.state.isCreatedWIWP && parseFloat(parseFloat(this.state.initValue.totalAmount).toFixed(2)) > this.state.remainingInvoiceAmount) {
+															// 	errors.remainingInvoiceAmount = 'Invoice Total Amount Cannot be greater than Remaining InvoiceAmount';
+															// }
 															if (this.state.invoiceSelected && this.state.isCreatedWIWP && values.creditAmount > this.state.remainingInvoiceAmount) {
-																errors.remainingInvoiceAmount = 'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
+																errors.creditAmount = 'Credit Amount Cannot Be Greater Than Remaining Invoice Amount';
 															}
 															return errors;
 														}}
@@ -1659,10 +1660,9 @@ class CreateCreditNote extends React.Component {
 																.of(
 																	Yup.object().shape({
 																		quantity: Yup.string()
-																			.required('Value is required')
 																			.test(
 																				'quantity',
-																				'Quantity should be greater than 0',
+																				strings.QuantityGreaterThan0,
 																				(value) => {
 																					if (value > 0) {
 																						return true;
@@ -1670,7 +1670,7 @@ class CreateCreditNote extends React.Component {
 																						return false;
 																					}
 																				},
-																			),
+																			).required('Value is required'),
 																		// 			unitPrice: Yup.string()
 																		// 				.required('Value is required')
 																		// 				.test(
@@ -1793,6 +1793,7 @@ class CreateCreditNote extends React.Component {
 																						props.handleChange('invoiceNumber')('');
 																						this.setState({ invoiceSelected: false })
 																					}
+																					this.formRef.current.setFieldValue('receiptNumber', option.label , true);
 
 																					// if(!this.state.data1){
 																					// 	this.state.supplierList = this.state.data1
@@ -2915,7 +2916,7 @@ class CreateCreditNote extends React.Component {
 																					);
 																				}}
 																			>
-																				<i className="fa fa-repeat"></i>{' '}
+																				<i className="fa fa-refresh"></i>{' '}
 																				{this.state.disabled
 																					? 'Creating...'
 																					: strings.CreateandMore}

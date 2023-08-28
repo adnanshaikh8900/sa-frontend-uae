@@ -186,6 +186,8 @@ class InvoiceTemplate extends Component {
 								<div style={{ width: '27%' }}>
 									<br />
 									<div className="mb-1 ml-2"><b>{strings.CreditNote}: </b> # {invoiceData.creditNoteNumber}</div>
+									{invoiceData.referenceNo && 
+									<div className="mb-1 ml-2"><b>{strings.ReferenceN}: </b>{console.log(invoiceData) || invoiceData.referenceNo}</div>}
 									<div className="mb-1 ml-2"><b>{strings.TaxCreditDate}: </b>
 										{moment(invoiceData.creditNoteDate, 'YYYY-MM-DD').format('DD MMM YYYY')}
 									</div>

@@ -433,7 +433,7 @@ class CreateDebitNote extends React.Component {
 		this.getInvoiceNo();
 		this.props.commonActions.getTaxTreatmentList();
 		this.props.debitNoteActions.getInvoiceListForDropdown();
-		this.props.debitNoteActions.getCustomerList(this.state.contactType);
+		this.props.commonActions.getCustomerList(this.state.contactType);
 		this.props.debitNoteActions.getCountryList();
 		this.props.productActions.getProductCategoryList();
 		this.props.commonActions.getVatList();

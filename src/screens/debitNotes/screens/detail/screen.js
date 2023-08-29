@@ -91,12 +91,13 @@ class DetailDebitNote extends React.Component {
 			data: [],
 			creditNoteId: null,
 			initValue: {
-				total_excise: 0,
+				total_excise: 0, total_net: 0,
+
 			},
 			contactType: 1,
 			openCustomerModal: false,
 			openProductModal: false,
-			selectedContact: '',
+			invoiceSelected: '',
 			term: '',
 			placeOfSupplyId: '',
 			selectedType: '',
@@ -106,7 +107,7 @@ class DetailDebitNote extends React.Component {
 			basecurrency: [],
 			customer_currency: '',
 			showInvoiceNumber: false,
-			taxType:false,
+			taxType: false,
 		};
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\b]+$/;
@@ -164,6 +165,7 @@ class DetailDebitNote extends React.Component {
 								isCreatedWithoutInvoice: res.data.isCreatedWithoutInvoice ? res.data.isCreatedWithoutInvoice : false,
 								creditNoteId: this.props.location.state.id,
 								initValue: {
+									invoiceNumber: res.data.invoiceId ? res.data.invoiceId : '',
 									receiptAttachmentDescription: res.data
 										.receiptAttachmentDescription
 										? res.data.receiptAttachmentDescription
@@ -175,7 +177,6 @@ class DetailDebitNote extends React.Component {
 										? res.data.contactPoNumber
 										: '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
-									currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 									exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName: res.data.currencyName ? res.data.currencyName : '',
 									invoiceDate: res.data.creditNoteDate
@@ -183,15 +184,12 @@ class DetailDebitNote extends React.Component {
 										: '',
 									contactId: res.data.contactId ? res.data.contactId : '',
 									project: res.data.projectId ? res.data.projectId : '',
-									invoice_number: res.data.creditNoteNumber
+									debitNoteNumber: res.data.creditNoteNumber
 										? res.data.creditNoteNumber
 										: '',
-									total_net: 0,
-									invoiceVATAmount: res.data.totalVatAmount
-										? res.data.totalVatAmount
-										: 0,
+
 									totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
-									creditAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+									debitAmount: res.data.totalAmount ? res.data.totalAmount : 0,
 									notes: res.data.notes ? res.data.notes : '',
 									lineItemsString: res.data.invoiceLineItems
 										? res.data.invoiceLineItems
@@ -203,34 +201,27 @@ class DetailDebitNote extends React.Component {
 									discountType: res.data.discountType
 										? res.data.discountType
 										: '',
-									term: res.data.term ? res.data.term : '',
-									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+
 									fileName: res.data.fileName ? res.data.fileName : '',
 									// filePath: res.data.filePath ? res.data.filePath : '',
 									total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
 								},
-								isCreatedWIWP: res.data.invoiceLineItems && res.data.invoiceLineItems?.length > 0 ? false : true,
-
-								customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : '',
-								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
-								discountAmount: res.data.discount ? res.data.discount : 0,
-								total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
+								isDNWIWithoutProduct: res.data.isCreatedWIWP ? res.data.isCreatedWIWP : false,
 								discountPercentage: res.data.discountPercentage
 									? res.data.discountPercentage
 									: '',
 								data: res.data.invoiceLineItems
 									? res.data.invoiceLineItems
 									: [],
-								selectedContact: res.data.contactId ? res.data.contactId : '',
-								term: res.data.term ? res.data.term : '',
-								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								invoiceSelected: res.data.invoiceId ? res.data.invoiceId : '',
 								remainingInvoiceAmount: res.data.remainingInvoiceAmount,
 								loading: false,
 							},
 							() => {
-								if (this.state.data.length > 0) {
-									this.updateAmount(this.state.data);
-									const { data } = this.state;
+								const { data } = this.state;
+
+								if (data.length > 0) {
+									this.updateAmount(data);
 									const idCount =
 										data.length > 0
 											? Math.max.apply(
@@ -243,6 +234,16 @@ class DetailDebitNote extends React.Component {
 									this.setState({
 										idCount,
 									});
+									this.formRef.current.setFieldValue(
+										'lineItemsString',
+										data,
+										true,
+									);
+									this.formRef.current.setFieldTouched(
+										`lineItemsString[${data.length - 1}]`,
+										false,
+										true,
+									);
 								} else {
 									this.setState({
 										idCount: 0,
@@ -250,65 +251,13 @@ class DetailDebitNote extends React.Component {
 								}
 							},
 						);
+						this.getCurrency(res.data.contactId ? res.data.contactId : '')
+						this.formRef.current.setFieldValue('taxTreatmentid', res.data.taxTreatment ? res.data.taxTreatment : '', true);
+						this.formRef.current.setFieldValue('contactId', res.data.contactId ? res.data.contactId : '', true);
+						this.formRef.current.setFieldValue('remainingInvoiceAmount', res.data.remainingInvoiceAmount, true);
+						this.formRef.current.setFieldValue('currency', res.data.currencyCode ? res.data.currencyCode : '', true);
+						this.formRef.current.setFieldValue('invoiceNumber', res.data.invoiceId ? res.data.invoiceId : '', true);
 
-
-						if (res.data.invoiceId) {
-							this.props.debitNotesActions
-								.getDebitNoteById(this.props.location.state.id, false).then((response) => {
-									const customerdetails = {
-										label: response.data.contactName === '' ? response.data.organisationName : response.data.contactName,
-										value: response.data.contactId
-									}
-									this.setState(
-										{
-											option: {
-												label: response.data.contactName === '' ? response.data.organisationName : response.data.contactName,
-												value: response.data.contactId,
-											},
-											data: response.data.invoiceLineItems,
-											totalAmount: response.data.totalAmount,
-											customer_currency: response.data.currencyCode,
-											remainingInvoiceAmount: response.data.remainingInvoiceAmount,
-
-											//	data1:response.data.supplierId,
-										}, () => {
-											if (this.state.data && this.state.data.length > 1) {
-												this.formRef.current.setFieldValue(
-													'lineItemsString',
-													this.state.data,
-													true,
-												);
-												this.formRef.current.setFieldTouched(
-													`lineItemsString[${this.state.data.length - 1}]`,
-													false,
-													true,
-												);
-												this.updateAmount(this.state.data)
-											}
-											// this.formRef.current.setFieldValue(
-
-											// 	totalAmount,
-											// 	true,
-											// );
-										},
-										// () => {
-										// 	this.formRef.current.setFieldValue('supplierId',
-										// 	this.state.option.value,
-										// 	true,)
-										// },
-
-									);
-									this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
-									this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
-									this.setExchange(this.getCurrency(customerdetails.value));
-									this.formRef.current.setFieldValue('contactId', this.state.option, true);
-									this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
-									this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
-									this.getTaxTreatment(this.state.option.value);
-									this.formRef.current.setFieldValue('invoiceNumber', res.data.invoiceId, true);
-
-								});
-						}
 					}
 				});
 		} else {

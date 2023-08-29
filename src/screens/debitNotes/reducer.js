@@ -21,11 +21,6 @@ const CustomerInvoiceReducer = (state = initState, action) => {
 				...state,
 				debit_note_list: Object.assign([], payload.data),
 			};
-		case DEBIT_NOTE.CUSTOMER_LIST:
-			return {
-				...state,
-				customer_list: Object.assign([], payload.data),
-			};
 
 		case DEBIT_NOTE.STATUS_LIST:
 			return {

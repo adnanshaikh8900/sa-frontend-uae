@@ -361,3 +361,28 @@ export const getExciseList = () => {
 			});
 	};
 };
+export const getCustomerList = (nameCode) => {
+	let contactType = nameCode ? nameCode : '';
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/contact/getContactsForDropdown?contactType=${contactType}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: COMMON.CUSTOMER_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+					return res;
+				}
+
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

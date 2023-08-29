@@ -19,7 +19,7 @@ export const getdebitNotesList = (postObj) => {
 		: false;
 
 	return (dispatch) => {
-		let param = `/rest/creditNote/getList?contact=${customerName}&type=11&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
+		let param = `/rest/creditNote/getList?contact=${customerName}&type=13&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 		if (invoiceDate) {
 			let date = moment(invoiceDate).format('DD-MM-YYYY');
 			param = param + `&invoiceDate=${date}`;
@@ -47,32 +47,6 @@ export const getdebitNotesList = (postObj) => {
 					}
 
 				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
-
-export const getCustomerList = (nameCode) => {
-	let contactType = nameCode ? nameCode : '';
-	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url: `/rest/contact/getContactsForDropdown?contactType=${contactType}`,
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: DEBIT_NOTE.CUSTOMER_LIST,
-						payload: {
-							data: res.data,
-						},
-					});
-					return res;
-				}
-
 			})
 			.catch((err) => {
 				throw err;
@@ -527,3 +501,17 @@ export const getProductListById = (id) => {
 			});
 	};
 };
+
+export const getCreditNoteById = (_id,isCNWithoutProduct) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/creditNote/getCreditNoteById?id=${_id}&isCNWithoutProduct=${isCNWithoutProduct}`
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

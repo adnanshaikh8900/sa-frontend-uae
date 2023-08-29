@@ -386,3 +386,25 @@ export const getCustomerList = (nameCode) => {
 			});
 	};
 };
+export const getPaymentMode = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/datalist/payMode',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: COMMON.PAY_MODE,
+						payload: {
+							data: res.data,
+						},
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

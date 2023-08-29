@@ -46,7 +46,7 @@ const toWords = new ToWords({
 const mapStateToProps = (state) => {
 	return {
 		debit_note_list: state.debit_notes.debit_note_list,
-		customer_list: state.debit_notes.customer_list,
+		customer_list: state.common.customer_list,
 		status_list: state.debit_notes.status_list,
 		universal_currency_list: state.common.universal_currency_list,
 	};
@@ -695,11 +695,7 @@ class DebitNotes extends React.Component {
 									<Row>
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
-												<img
-													alt="invoiceimage"
-													src={invoiceimage}
-													style={{ width: '40px' }}
-												/>
+											<i class="fa fa-credit-card"/>
 												<span className="ml-2"> Debit Notes</span>
 											</div>
 										</Col>

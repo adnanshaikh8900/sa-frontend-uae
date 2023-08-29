@@ -331,6 +331,13 @@ class DebitNotes extends React.Component {
 				</div>
 			</div>);
 	};
+	renderInvoiceNumber = (cell, row) => {
+		return (
+			<label>
+				{row.invNumber}
+			</label>
+		);
+	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyCode) {
 			return (
@@ -825,6 +832,24 @@ class DebitNotes extends React.Component {
 													{strings.SUPPLIERNAME}
 												</TableHeaderColumn>
 												<TableHeaderColumn
+													dataField="invoiceNumber"
+													dataFormat={this.renderInvoiceNumber}
+													dataSort
+													//	width="7%"
+													className="table-header-bg"
+												>
+													{strings.INVOICENUMBER}
+												</TableHeaderColumn>
+												
+												<TableHeaderColumn
+													dataSort
+													//width="6%"
+													dataFormat={this.debitNoteDate}
+													className="table-header-bg"
+												>
+													{strings.DATE}
+												</TableHeaderColumn>
+												<TableHeaderColumn
 													//width="9%"
 													dataField="status"
 													dataFormat={this.renderInvoiceStatus}
@@ -833,16 +858,6 @@ class DebitNotes extends React.Component {
 												>
 													{strings.STATUS}
 												</TableHeaderColumn>
-												<TableHeaderColumn
-													dataField="creditNoteDate"
-													dataSort
-													//width="6%"
-													dataFormat={this.debitNoteDate}
-													className="table-header-bg"
-												>
-													{strings.DATE}
-												</TableHeaderColumn>
-
 												<TableHeaderColumn
 													dataAlign="right"
 													dataField="totalAmount"

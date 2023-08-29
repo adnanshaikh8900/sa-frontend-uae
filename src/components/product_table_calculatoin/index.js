@@ -1,4 +1,4 @@
-export const updateAmount = (data, vat_list,taxType) => {
+export const updateAmount = (data, vat_list, taxType) => {
     let total_net = 0;
     let total_excise = 0;
     let total = 0;
@@ -20,7 +20,7 @@ export const updateAmount = (data, vat_list,taxType) => {
     const discountamount = (a) => {
         discount = discount + a
     }
-    data.map((obj) => {
+    data && data.map((obj) => {
         let unitprice = parseFloat(obj.unitPrice);
         var net_value = 0;
         const index =
@@ -79,11 +79,11 @@ export const updateAmount = (data, vat_list,taxType) => {
     });
     const list = {
         data: data,
-        total_net: total_net,
-        totalVatAmount: total_vat,
-        totalAmount: total,
-        total_excise: total_excise,
-        discount: discount,
+        total_net: total_net ? parseFloat(total_net).toFixed(2) : 0,
+        totalVatAmount: total_vat ? parseFloat(total_vat).toFixed(2) : 0,
+        totalAmount: total ? parseFloat(total).toFixed(2) : 0,
+        total_excise: total_excise ? parseFloat(total_excise).toFixed(2) : 0,
+        discount: discount ? parseFloat(discount).toFixed(2) : 0,
     }
     return list;
 };

@@ -1,8 +1,8 @@
-import { CUSTOMER_INVOICE } from 'constants/types';
+import { DEBIT_NOTE } from 'constants/types';
 import { authApi } from 'utils';
 import moment from 'moment';
 
-export const getCreditNoteList = (postObj) => {
+export const getdebitNotesList = (postObj) => {
 	let customerName = postObj.customerId ? postObj.customerId.value : '';
 	let referenceNumber = postObj.referenceNumber ? postObj.referenceNumber : '';
 	let invoiceDate = postObj.invoiceDate ? postObj.invoiceDate : '';
@@ -19,8 +19,15 @@ export const getCreditNoteList = (postObj) => {
 		: false;
 
 	return (dispatch) => {
-		let param = `/rest/creditNote/getList?type=11`;
-
+		let param = `/rest/creditNote/getList?contact=${customerName}&type=13&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
+		if (invoiceDate) {
+			let date = moment(invoiceDate).format('DD-MM-YYYY');
+			param = param + `&invoiceDate=${date}`;
+		}
+		if (invoiceDueDate) {
+			let date = moment(invoiceDueDate).format('DD-MM-YYYY');
+			param = param + `&invoiceDueDate=${date}`;
+		}
 		let data = {
 			method: 'get',
 			url: param,
@@ -31,7 +38,7 @@ export const getCreditNoteList = (postObj) => {
 				if (res.status === 200) {
 					if (!postObj.paginationDisable) {
 						dispatch({
-							type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
+							type: DEBIT_NOTE.DEBIT_NOTE_LIST,
 							payload: {
 								data: res.data,
 							},
@@ -40,77 +47,6 @@ export const getCreditNoteList = (postObj) => {
 					}
 
 				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
-
-export const getProjectList = () => {
-	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url: '/rest/project/getProjectsForDropdown',
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: CUSTOMER_INVOICE.PROJECT_LIST,
-						payload: {
-							data: res.data,
-						},
-					});
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
-
-export const getExciseList = () => {
-	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url: '/rest/datalist/exciseTax',
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: CUSTOMER_INVOICE.EXCISE_LIST,
-						payload: {
-							data: res.data,
-						},
-					});
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
-export const getCustomerList = (nameCode) => {
-	let contactType = nameCode ? nameCode : '';
-	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url: `/rest/contact/getContactsForDropdown?contactType=${contactType}`,
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: CUSTOMER_INVOICE.CUSTOMER_LIST,
-						payload: {
-							data: res.data,
-						},
-					});
-					return res;
-				}
-
 			})
 			.catch((err) => {
 				throw err;
@@ -128,7 +64,7 @@ export const getPlaceOfSuppliyList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.PLACE_OF_SUPPLY,
+						type: DEBIT_NOTE.PLACE_OF_SUPPLY,
 						payload: {
 							data: res.data,
 						},
@@ -150,7 +86,7 @@ export const getCurrencyList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.CURRENCY_LIST,
+						type: DEBIT_NOTE.CURRENCY_LIST,
 						payload: res,
 					});
 					return res;
@@ -162,52 +98,6 @@ export const getCurrencyList = () => {
 	};
 };
 
-export const getVatList = () => {
-	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url: '/rest/datalist/vatCategory',
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: CUSTOMER_INVOICE.VAT_LIST,
-						payload: {
-							data: res.data,
-						},
-					});
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
-
-export const getProductList = () => {
-	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url: `/rest/datalist/product?priceType=PURCHASE`,
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: CUSTOMER_INVOICE.PRODUCT_LIST,
-						payload: {
-							data: res.data,
-						},
-					});
-					return res;
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
 export const getDepositList = () => {
 	return (dispatch) => {
 		let data = {
@@ -218,7 +108,7 @@ export const getDepositList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.DEPOSIT_LIST,
+						type: DEBIT_NOTE.DEPOSIT_LIST,
 						payload: {
 							data: res.data,
 						},
@@ -242,7 +132,7 @@ export const getContactList = (nameCode) => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.CONTACT_LIST,
+						type: DEBIT_NOTE.CONTACT_LIST,
 						payload: {
 							data: res.data,
 						},
@@ -265,7 +155,7 @@ export const getStatusList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.STATUS_LIST,
+						type: DEBIT_NOTE.STATUS_LIST,
 						payload: res,
 					});
 				}
@@ -320,7 +210,7 @@ export const getCountryList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.COUNTRY_LIST,
+						type: DEBIT_NOTE.COUNTRY_LIST,
 						payload: res.data,
 					});
 				}
@@ -341,7 +231,7 @@ export const getPaymentMode = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.PAY_MODE,
+						type: DEBIT_NOTE.PAY_MODE,
 						payload: {
 							data: res.data,
 						},
@@ -408,7 +298,6 @@ export const getInvoiceById = (_id) => {
 			});
 	};
 };
-
 export const deleteInvoice = (id) => {
 	return (dispatch) => {
 		let data = {
@@ -563,9 +452,10 @@ export const getInvoiceListForDropdown = (id) => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.INVOICE_LIST_FOR_DROPDOWN,
-						payload: res,
+						type: DEBIT_NOTE.INVOICE_LIST_FOR_DROPDOWN,
+						payload: res.data,
 					});
+					return res;
 				}
 			})
 			.catch((err) => {
@@ -598,7 +488,7 @@ export const getProductListById = (id) => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: CUSTOMER_INVOICE.PRODUCT_LIST,
+						type: DEBIT_NOTE.PRODUCT_LIST,
 						payload: {
 							data: res.data,
 						},
@@ -611,3 +501,17 @@ export const getProductListById = (id) => {
 			});
 	};
 };
+
+export const getDebitNoteById = (_id,isCNWithoutProduct) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/creditNote/getCreditNoteById?id=${_id}&isCNWithoutProduct=${isCNWithoutProduct}`
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

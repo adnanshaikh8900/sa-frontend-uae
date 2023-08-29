@@ -512,34 +512,34 @@ const adminRoutes = [
 		name: 'Supplier Invoices',
 		component: SupplierInvoice.screen,
 	},
-	Config.EXPENSE_DB &&{
+	Config.EXPENSE_DN &&{
 		path: '/admin/expense/debit-notes',
-		name: 'Debit Note',
+		name: 'Debit Notes',
 		component: DebitNotes.screen,
 	},
-	Config.EXPENSE_DB &&{
+	Config.EXPENSE_DN &&{
 		path: '/admin/expense/debit-notes/create',
-		name: 'AddDebitNotes',
+		name: 'Add Debit Notes',
 		component: CreateDebitNote.screen,
 	},
-	Config.EXPENSE_DB &&{
+	Config.EXPENSE_DN &&{
 		path: '/admin/expense/debit-notes/update',
-		name: 'UpdateDebitNotes',
+		name: 'Update Debit Notes',
 		component: DetailDebitNote.screen,
 	},	
-	Config.EXPENSE_DB &&{
+	Config.EXPENSE_DN &&{
 		path: '/admin/expense/debit-notes/refund',
 		name: 'Refund',
 		component: RefundDebitNote.screen,
 	},
-	// Config.EXPENSE_DB &&{
+	// Config.EXPENSE_DN &&{
 	// 	path: '/admin/expense/debit-notes/applyToInvoice',
 	// 	name: 'Apply To Invoice',
 	// 	component: ApplyToSupplierInvoice.screen,
 	// },
-	Config.EXPENSE_DB &&{
+	Config.EXPENSE_DN &&{
 		path: '/admin/expense/debit-notes/view',
-		name: 'ViewDebitNotes',
+		name: 'View Debit Notes',
 		component: ViewDebitNote.screen,
 	},
 	Config.EXPENSE_EXPENSES && {

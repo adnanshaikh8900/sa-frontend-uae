@@ -120,7 +120,7 @@ class DebitNotes extends React.Component {
 	componentDidMount = () => {
 		let { filterData } = this.state;
 		this.props.debitNotesActions.getStatusList();
-		this.props.debitNotesActions.getCustomerList(filterData.contactType);
+		this.props.commonActions.getCustomerList(filterData.contactType);
 		this.initializeData();
 		this.getOverdue();
 	};

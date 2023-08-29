@@ -89,16 +89,11 @@ class DetailDebitNote extends React.Component {
 			],
 			discount_option: '',
 			data: [],
-			current_customer_id: null,
+			creditNoteId: null,
 			initValue: {
 				total_excise: 0,
-				CESS_totalAmount: 0,
-				CGST_totalAmount: 0,
-				SGST_totalAmount: 0,
-				IGST_totalAmount: 0,
-				totalTaxAmount: 0
 			},
-			contactType: 2,
+			contactType: 1,
 			openCustomerModal: false,
 			openProductModal: false,
 			selectedContact: '',
@@ -110,7 +105,8 @@ class DetailDebitNote extends React.Component {
 			fileName: '',
 			basecurrency: [],
 			customer_currency: '',
-			showInvoiceNumber: false
+			showInvoiceNumber: false,
+			taxType:false,
 		};
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\b]+$/;
@@ -131,49 +127,48 @@ class DetailDebitNote extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+		this.props.commonActions.getVatList();
+		this.props.commonActions.getCustomerList(this.state.contactType,).then(response => {
+			if (response.status === 200)
+				this.getCurrency(response.data.contactId)
+		});
+		this.props.commonActions.getExciseList();
+		this.props.currencyConvertActions.getCurrencyConversionList();
+		this.props.debitNotesActions.getCountryList();
+		this.props.commonActions.getProductList();
 	};
 	initializeData = () => {
-		this.props.commonActions.getTaxTreatment();
+		this.props.commonActions.getTaxTreatmentList();
 		if (this.props.location.state && this.props.location.state.id) {
-			//INV number
-			this.props.debitNotesActions
-				.getInvoicesForCNById(this.props.location.state.id)
-				.then((res) => {
-					if (res.status === 200) {
-						if (res.data.length && res.data.length != 0)
-							this.setState({
-								invoiceNumber: res.data[0].invoiceNumber,
-								showInvoiceNumber: true
-							});
-					}
-				})
+			// //INV number
+			// this.props.debitNotesActions
+			// 	.getInvoicesForCNById(this.props.location.state.id)
+			// 	.then((res) => {
+			// 		if (res.status === 200) {
+			// 			if (res.data.length && res.data.length != 0)
+			// 				this.setState({
+			// 					invoiceNumber: res.data[0].invoiceNumber,
+			// 					showInvoiceNumber: true
+			// 				});
+			// 		}
+			// 	})
 			//CN details
-			this.props.creditNotesDetailActions
-				.getCreditNoteById(this.props.location.state.id,
+			this.props.debitNotesActions
+				.getDebitNoteById(this.props.location.state.id,
 					this.props.location.state.isCNWithoutProduct ? this.props.location.state.isCNWithoutProduct : false)
 				.then((res) => {
 					if (res.status === 200) {
-						this.props.commonActions.getVatList();
-						this.props.commonActions.getCustomerList(this.state.contactType,).then(response => {
-							if (response.status === 200)
-								this.getCurrency(res.data.contactId)
-						});
-						this.props.commonActions.getExciseList();
-						this.props.currencyConvertActions.getCurrencyConversionList();
-						this.props.debitNotesActions.getCountryList();
-						this.props.commonActions.getProductList();
-
 						this.setState(
 							{
 								taxType: res.data.taxType ? res.data.taxType : false,
 								isCreatedWithoutInvoice: res.data.isCreatedWithoutInvoice ? res.data.isCreatedWithoutInvoice : false,
-								current_customer_id: this.props.location.state.id,
+								creditNoteId: this.props.location.state.id,
 								initValue: {
 									receiptAttachmentDescription: res.data
 										.receiptAttachmentDescription
 										? res.data.receiptAttachmentDescription
 										: '',
-									receiptNumber: res.data.referenceNo
+									referenceNumber: res.data.referenceNo
 										? res.data.referenceNo
 										: '',
 									contact_po_number: res.data.contactPoNumber
@@ -258,8 +253,8 @@ class DetailDebitNote extends React.Component {
 
 
 						if (res.data.invoiceId) {
-							this.props.creditNotesDetailActions
-								.getCreditNoteById(this.props.location.state.id, false).then((response) => {
+							this.props.debitNotesActions
+								.getDebitNoteById(this.props.location.state.id, false).then((response) => {
 									const customerdetails = {
 										label: response.data.contactName === '' ? response.data.organisationName : response.data.contactName,
 										value: response.data.contactId
@@ -862,7 +857,7 @@ class DetailDebitNote extends React.Component {
 	handleSubmit = (data) => {
 
 		this.setState({ disabled: true });
-		const { current_customer_id, term } = this.state;
+		const { creditNoteId } = this.state;
 		const {
 			debitNoteNumber,
 			email,
@@ -879,7 +874,7 @@ class DetailDebitNote extends React.Component {
 		} = data;
 
 		let formData = new FormData();
-		formData.append('creditNoteId', current_customer_id);
+		formData.append('creditNoteId', creditNoteId);
 		formData.append('isCreatedWithoutInvoice', this.state.isCreatedWithoutInvoice);
 		formData.append('isCreatedWIWP', this.state.isDNWIWithoutProduct);
 		formData.append('creditNoteNumber', debitNoteNumber ? this.state.prefix + debitNoteNumber : '',);
@@ -953,10 +948,10 @@ class DetailDebitNote extends React.Component {
 
 	removeInvoice = () => {
 		this.setState({ disabled1: true });
-		const { current_customer_id } = this.state;
+		const { creditNoteId } = this.state;
 		if (this.props.location.state.isCNWithoutProduct != true) {
 			this.props.debitNotesDetailActions
-				.deleteCN(current_customer_id)
+				.deleteCN(creditNoteId)
 				.then((res) => {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
@@ -975,7 +970,7 @@ class DetailDebitNote extends React.Component {
 		}
 		else {
 			this.props.debitNotesDetailActions
-				.deleteCN(current_customer_id)
+				.deleteCN(creditNoteId)
 				.then((res) => {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(

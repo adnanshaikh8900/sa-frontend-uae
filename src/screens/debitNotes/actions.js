@@ -502,7 +502,7 @@ export const getProductListById = (id) => {
 	};
 };
 
-export const getCreditNoteById = (_id,isCNWithoutProduct) => {
+export const getDebitNoteById = (_id,isCNWithoutProduct) => {
 	return (dispatch) => {
 	  let data = {
 		method: 'GET',

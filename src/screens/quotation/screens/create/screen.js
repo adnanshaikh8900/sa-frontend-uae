@@ -2222,19 +2222,19 @@ resetVatId = (props) => {
 																				return false;
 																			}
 																		},
-																	).required('Value is required'),
+																	).required('Quantity is required'),
 																unitPrice: Yup.string()
 																	.test(
 																		'Unit Price',
 																		strings.UnitPriceGreaterThan1,
 																		(value) => {
-																			if (value > 0) {
+																			if (value > 1) {
 																				return true;
 																			} else {
 																				return false;
 																			}
 																		},
-																	).required('Value is required'),
+																	).required('Unit Price is required'),
 																vatCategoryId: Yup.string().required(
  																	strings.VATIsRequired,
 																),

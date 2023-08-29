@@ -1586,7 +1586,7 @@ class CreateCreditNote extends React.Component {
 																						return false;
 																					}
 																				},
-																			).required('Value is required'),
+																			).required('Quantity is required'),
 																		// 			unitPrice: Yup.string()
 																		// 				.required('Value is required')
 																		// 				.test(

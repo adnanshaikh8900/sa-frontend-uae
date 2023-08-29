@@ -989,7 +989,7 @@ class DetailDebitNote extends React.Component {
 											<Row>
 												<Col lg={12}>
 													<div className="h4 mb-0 d-flex align-items-center">
-														<i className="fas fa-address-book" />
+													<i class="fa fa-credit-card"/>
 														<span className="ml-2">Update Debit Note</span>
 													</div>
 												</Col>
@@ -1069,7 +1069,7 @@ class DetailDebitNote extends React.Component {
 																					{strings.InvoiceNumber}
 																				</Label>
 																				<Select
-																					//isDisabled={lockInvoiceDetail}
+																					isDisabled
 																					id="invoiceNumber"
 																					name="invoiceNumber"
 																					placeholder={strings.Select + strings.InvoiceNumber}
@@ -1125,6 +1125,7 @@ class DetailDebitNote extends React.Component {
 																					{strings.DebitNoteNumber}
 																				</Label>
 																				<Input
+																				disabled
 																					maxLength="50"
 																					type="text"
 																					id="debitNoteNumber"

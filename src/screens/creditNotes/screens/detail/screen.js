@@ -1483,7 +1483,7 @@ class DetailCreditNote extends React.Component {
 															lineItemsString: Yup.array().of(
 																Yup.object().shape({
 																	quantity: Yup.string()
-																		.required('Value is required')
+																		// .required('Quantity is required')
 																		.test(
 																			'quantity',
 																			'Quantity should be greater than 0',
@@ -1494,7 +1494,7 @@ class DetailCreditNote extends React.Component {
 																					return false;
 																				}
 																			},
-																		),
+																	).required('Quantity is required')
 																	// 			unitPrice: Yup.string()
 																	// 				.required('Value is required')
 																	// 				.test(

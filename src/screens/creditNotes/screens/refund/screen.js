@@ -83,9 +83,9 @@ class Refund extends React.Component {
 				receiptDate: new Date(),
 				contactId: this.props.location.state.id.contactId,
 				amount: this.props.location.state.id.dueAmount,
-				payMode: '',
+				payMode: { label: 'CASH', value: 'CASH' },
 				notes: '',
-				depositeTo: '',
+				depositeTo: { label: 'Petty Cash', value: 47 },
 				referenceCode: '',
 				attachmentFile: '',
 				paidInvoiceListStr: [],
@@ -757,7 +757,7 @@ class Refund extends React.Component {
 																		</Label>
 																		<Select
 																			options={deposit_list}
-																			value={props.values.depositeFrom}
+																			value={props.values.depositeTo}
 																			onChange={(option) => {
 																				if (option && option.value) {
 																					props.handleChange('depositeTo')(

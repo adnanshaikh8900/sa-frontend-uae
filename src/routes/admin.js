@@ -80,7 +80,7 @@ import {
 	DebitNotes,
 	CreateDebitNote,
 	DetailDebitNote,
-	RefundDebitNote,
+	DebitNoteRefund,
 	ApplyToSupplierInvoice,
 	ViewDebitNote,
 
@@ -529,8 +529,8 @@ const adminRoutes = [
 	},	
 	Config.EXPENSE_DN &&{
 		path: '/admin/expense/debit-notes/refund',
-		name: 'Refund',
-		component: RefundDebitNote.screen,
+		name: 'Refund Debit Notes',
+		component: DebitNoteRefund.screen,
 	},
 	// Config.EXPENSE_DN &&{
 	// 	path: '/admin/expense/debit-notes/applyToInvoice',

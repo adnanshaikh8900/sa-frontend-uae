@@ -25,7 +25,7 @@ import * as DebitNotesDetailActions from './actions';
 import * as DebitNotesActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
-import { Loader, ConfirmDeleteModal, ProductTableCalculation } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal, ProductTableCalculation } from 'components';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -89,15 +89,18 @@ class DetailDebitNote extends React.Component {
 			],
 			discount_option: '',
 			data: [],
-			creditNoteId: null,
+			debitNoteId: '',
 			initValue: {
-				total_excise: 0, total_net: 0,
-
+				total_excise: 0,
+				total_net: 0,
+				totalVatAmount: 0,
+				totalAmount: 0,
+				totalDiscount: 0,
 			},
 			contactType: 1,
 			openCustomerModal: false,
 			openProductModal: false,
-			invoiceSelected: '',
+			invoiceSelected: false,
 			term: '',
 			placeOfSupplyId: '',
 			selectedType: '',
@@ -106,8 +109,11 @@ class DetailDebitNote extends React.Component {
 			fileName: '',
 			basecurrency: [],
 			customer_currency: '',
+			loadingMsg: "Loading",
 			showInvoiceNumber: false,
 			taxType: false,
+			disableLeavePage: false,
+			isCreatedWithoutInvoice: false,
 		};
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\b]+$/;
@@ -162,10 +168,10 @@ class DetailDebitNote extends React.Component {
 						this.setState(
 							{
 								taxType: res.data.taxType ? res.data.taxType : false,
-								isCreatedWithoutInvoice: res.data.isCreatedWithoutInvoice ? res.data.isCreatedWithoutInvoice : false,
-								creditNoteId: this.props.location.state.id,
+								isCreatedWithoutInvoice: res.data.invoiceId ? false : true,
+								debitNoteId: this.props.location.state.id,
 								initValue: {
-									invoiceNumber: res.data.invoiceId ? res.data.invoiceId : '',
+									invoiceNumber: res.data.invoiceId ? { value: res.data.invoiceId, label: res.data.invoiceNumber } : '',
 									receiptAttachmentDescription: res.data
 										.receiptAttachmentDescription
 										? res.data.receiptAttachmentDescription
@@ -180,10 +186,9 @@ class DetailDebitNote extends React.Component {
 									exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName: res.data.currencyName ? res.data.currencyName : '',
 									invoiceDate: res.data.creditNoteDate
-										? moment(res.data.creditNoteDate).format('DD-MM-YYYY')
+										? new Date(res.data.creditNoteDate)
 										: '',
 									contactId: res.data.contactId ? res.data.contactId : '',
-									project: res.data.projectId ? res.data.projectId : '',
 									debitNoteNumber: res.data.creditNoteNumber
 										? res.data.creditNoteNumber
 										: '',
@@ -206,14 +211,14 @@ class DetailDebitNote extends React.Component {
 									// filePath: res.data.filePath ? res.data.filePath : '',
 									total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
 								},
-								isDNWIWithoutProduct: res.data.isCreatedWIWP ? res.data.isCreatedWIWP : false,
+								isDNWIWithoutProduct: res.data.invoiceLineItems ? false : true,
 								discountPercentage: res.data.discountPercentage
 									? res.data.discountPercentage
 									: '',
 								data: res.data.invoiceLineItems
 									? res.data.invoiceLineItems
 									: [],
-								invoiceSelected: res.data.invoiceId ? res.data.invoiceId : '',
+								invoiceSelected: res.data.invoiceId ? true : false,
 								remainingInvoiceAmount: res.data.remainingInvoiceAmount,
 								loading: false,
 							},
@@ -252,7 +257,7 @@ class DetailDebitNote extends React.Component {
 							},
 						);
 						this.getCurrency(res.data.contactId ? res.data.contactId : '')
-						this.formRef.current.setFieldValue('taxTreatmentid', res.data.taxTreatment ? res.data.taxTreatment : '', true);
+						this.formRef.current.setFieldValue('taxTreatmentId', res.data.taxTreatment ? res.data.taxTreatment : '', true);
 						this.formRef.current.setFieldValue('contactId', res.data.contactId ? res.data.contactId : '', true);
 						this.formRef.current.setFieldValue('remainingInvoiceAmount', res.data.remainingInvoiceAmount, true);
 						this.formRef.current.setFieldValue('currency', res.data.currencyCode ? res.data.currencyCode : '', true);
@@ -261,7 +266,7 @@ class DetailDebitNote extends React.Component {
 					}
 				});
 		} else {
-			this.props.history.push('/admin/income/credit-notes');
+			this.props.history.push('/admin/expense/debit-notes');
 		}
 	};
 
@@ -612,9 +617,7 @@ class DetailDebitNote extends React.Component {
 										name="discountType"
 										value={
 											discountOptions &&
-											selectOptionsFactory
-												.renderOptions('label', 'value', discountOptions, 'discount')
-												.find((option) => option.value == row.discountType)
+											discountOptions.find((option) => option.value == row.discountType)
 										}
 										onChange={(e) => {
 											this.selectItem(
@@ -804,13 +807,12 @@ class DetailDebitNote extends React.Component {
 	};
 
 	handleSubmit = (data) => {
-
-		this.setState({ disabled: true });
-		const { creditNoteId } = this.state;
+		this.setState({ disabled: true, disableLeavePage: true });
+		const { debitNoteId } = this.state;
 		const {
 			debitNoteNumber,
 			email,
-			debitNoteDate,
+			invoiceDate,
 			referenceNumber,
 			contact_po_number,
 			receiptAttachmentDescription,
@@ -823,12 +825,12 @@ class DetailDebitNote extends React.Component {
 		} = data;
 
 		let formData = new FormData();
-		formData.append('creditNoteId', creditNoteId);
+		formData.append('creditNoteId', debitNoteId);
 		formData.append('isCreatedWithoutInvoice', this.state.isCreatedWithoutInvoice);
 		formData.append('isCreatedWIWP', this.state.isDNWIWithoutProduct);
-		formData.append('creditNoteNumber', debitNoteNumber ? this.state.prefix + debitNoteNumber : '',);
+		formData.append('creditNoteNumber', debitNoteNumber ? debitNoteNumber : '',);
 		formData.append('email', email ? email : '',);
-		formData.append('creditNoteDate', debitNoteDate ? moment(debitNoteDate, 'DD-MM-YYYY').toDate() : null,);
+		formData.append('creditNoteDate', invoiceDate ? moment(invoiceDate, 'DD-MM-YYYY').toDate() : null,);
 		formData.append('referenceNo', referenceNumber !== null ? referenceNumber : '',);
 		formData.append('exchangeRate', exchangeRate ? exchangeRate : 1);
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
@@ -861,32 +863,32 @@ class DetailDebitNote extends React.Component {
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile?.files?.[0]) {
 			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
-
+		this.setState({ loading: true, loadingMsg: "Updating Credit Note..." });
 		this.props.debitNotesDetailActions
-			.createCreditNote(formData)
+			.updateInvoice(formData)
 			.then((res) => {
 				this.setState({ disabled: false, loading: false });
 				this.props.commonActions.tostifyAlert('success', strings.DebitNoteUpdatedSuccessfully);
 				this.props.history.push('/admin/expense/debit-notes');
 			})
 			.catch((err) => {
-				this.setState({ disabled: false, loading: false });
 				this.props.commonActions.tostifyAlert('error', strings.DebitNoteUpdatedUnsuccessfully);
+				this.setState({ disabled: false, loading: false, disableLeavePage: false });
 				this.initializeData();
 			});
 	};
 
-	deleteCN = () => {
+	deleteDebitNote = () => {
 		const message1 =
 			<text>
-				<b>Delete Tax Debit Note?</b>
+				<b>Delete Debit Note?</b>
 			</text>
-		const message = 'This Tax Debit Note  will be deleted permanently and cannot be recovered. ';
+		const message = 'This Debit Note  will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
-					okHandler={this.removeInvoice}
+					okHandler={this.removeDebitNote}
 					cancelHandler={this.removeDialog}
 					message={message}
 					message1={message1}
@@ -895,47 +897,21 @@ class DetailDebitNote extends React.Component {
 		});
 	};
 
-	removeInvoice = () => {
-		this.setState({ disabled1: true });
-		const { creditNoteId } = this.state;
-		if (this.props.location.state.isCNWithoutProduct != true) {
-			this.props.debitNotesDetailActions
-				.deleteCN(creditNoteId)
-				.then((res) => {
-					if (res.status === 200) {
-						this.props.commonActions.tostifyAlert(
-							'success',
-							'Debit Note Deleted Successfully'
-						);
-						this.props.history.push('/admin/expense/debit-notes');
-					}
-				})
-				.catch((err) => {
-					this.props.commonActions.tostifyAlert(
-						'error',
-						'Debit Note Deleted Unsuccessfully'
-					);
-				});
-		}
-		else {
-			this.props.debitNotesDetailActions
-				.deleteCN(creditNoteId)
-				.then((res) => {
-					if (res.status === 200) {
-						this.props.commonActions.tostifyAlert(
-							'success',
-							res.data ? res.data.message : 'Debit Note Deleted Successfully'
-						);
-						this.props.history.push('/admin/expense/debit-notes');
-					}
-				})
-				.catch((err) => {
-					this.props.commonActions.tostifyAlert(
-						'error',
-						err.data ? err.data.message : 'Debit Note Deleted Unsuccessfully'
-					);
-				});
-		}
+	removeDebitNote = () => {
+		this.setState({ disabled1: true, disableLeavePage: true });
+		const { debitNoteId } = this.state;
+		this.props.debitNotesDetailActions
+			.deleteCN(debitNoteId)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert('success', strings.DebitNoteDeletedSuccessfully);
+					this.props.history.push('/admin/expense/debit-notes');
+				}
+			})
+			.catch((err) => {
+				this.setState({ disabled1: false, disableLeavePage: false });
+				this.props.commonActions.tostifyAlert('error', strings.DebitNoteDeletedUnsuccessfully);
+			});
 	};
 
 	removeDialog = () => {
@@ -967,7 +943,7 @@ class DetailDebitNote extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, loading, dialog } = this.state;
+		const { data, loadingMsg, initValue, loading, dialog } = this.state;
 
 		const { tax_treatment_list, invoice_list, currency_convert_list, customer_list, universal_currency_list, vat_list } = this.props;
 		let tmpCustomer_list = []
@@ -978,892 +954,756 @@ class DetailDebitNote extends React.Component {
 		})
 
 		return (
-			loading == true ? <Loader /> :
-				<div>
-					<div className="detail-customer-invoice-screen">
-						<div className="animated fadeIn">
-							<Row>
-								<Col lg={12} className="mx-auto">
-									<Card>
-										<CardHeader>
+			loading == true ? <Loader loadingMsg={loadingMsg} /> : <div>
+				<div className="detail-customer-invoice-screen">
+					<div className="animated fadeIn">
+						<Row>
+							<Col lg={12} className="mx-auto">
+								<Card>
+									<CardHeader>
+										<Row>
+											<Col lg={12}>
+												<div className="h4 mb-0 d-flex align-items-center">
+													<i class="fa fa-credit-card" />
+													<span className="ml-2">Update Debit Note</span>
+												</div>
+											</Col>
+										</Row>
+									</CardHeader>
+									<CardBody>
+										{dialog}
+										{loading ? (
+											<Loader />
+										) : (
 											<Row>
 												<Col lg={12}>
-													<div className="h4 mb-0 d-flex align-items-center">
-													<i class="fa fa-credit-card"/>
-														<span className="ml-2">Update Debit Note</span>
-													</div>
-												</Col>
-											</Row>
-										</CardHeader>
-										<CardBody>
-											{dialog}
-											{loading ? (
-												<Loader />
-											) : (
-												<Row>
-													<Col lg={12}>
-														<Formik
-															initialValues={this.state.initValue}
-															ref={this.formRef}
-															onSubmit={(values, { resetForm }) => {
-																this.handleSubmit(values);
-															}}
-															validate={(values) => {
-																let errors = {};
+													<Formik
+														initialValues={this.state.initValue}
+														ref={this.formRef}
+														onSubmit={(values, { resetForm }) => {
+															this.handleSubmit(values);
+														}}
+														validate={(values) => {
+															let errors = {};
 
-																if (!this.state.isCreatedWithoutInvoice && !values.invoiceNumber) {
-																	errors.invoiceNumber = 'Invoice Number is Required';
-																}
+															if (!this.state.isCreatedWithoutInvoice && !values.invoiceNumber) {
+																errors.invoiceNumber = 'Invoice Number is Required';
+															}
 
-																if (this.state.isCreatedWithoutInvoice == true && !values.debitAmount)
-																	errors.debitAmount = 'Credit Amount is Required';
+															if (this.state.isCreatedWithoutInvoice == true && !values.debitAmount)
+																errors.debitAmount = 'Credit Amount is Required';
 
-																if (this.state.invoiceSelected && (parseFloat(initValue.totalAmount) > parseFloat(this.state.remainingInvoiceAmount))) {
-																	errors.totalAmount = 'Invoice Total Amount Cannot be greater than  Remaining Invoice Amount';
-																}
-																if (this.state.invoiceSelected && this.state.isDNWIWithoutProduct && values.debitAmount && parseFloat(values.debitAmount) > parseFloat(this.state.remainingInvoiceAmount)) {
-																	errors.debitAmount = strings.AmountCannotBeGreaterThanTheInvoiceamount;
-																}
-																return errors;
-															}}
-															validationSchema={Yup.object().shape({
+															if (this.state.invoiceSelected && (parseFloat(initValue.totalAmount) > parseFloat(this.state.remainingInvoiceAmount))) {
+																errors.totalAmount = 'Invoice Total Amount Cannot be greater than  Remaining Invoice Amount';
+															}
+															if (this.state.invoiceSelected && this.state.isDNWIWithoutProduct && values.debitAmount && parseFloat(values.debitAmount) > parseFloat(this.state.remainingInvoiceAmount)) {
+																errors.debitAmount = strings.AmountCannotBeGreaterThanTheInvoiceamount;
+															}
+															return errors;
+														}}
+														validationSchema={Yup.object().shape({
 
-																debitNoteNumber: Yup.string().required(strings.DebitNoteNumberIsRequired,),
-																contactId: Yup.string().required('Customer Name is Required',),
-																debitNoteDate: Yup.string().required(strings.DebitNoteDateIsRequired,),
-																lineItemsString: Yup.array().required('Atleast one Debit Note sub detail is mandatory',).of(
-																	Yup.object().shape({
-																		quantity: Yup.string().test(
-																			'quantity',
-																			strings.QuantityGreaterThan0,
-																			(value) => {
-																				if (value > 0) {
-																					return true;
-																				} else {
-																					return false;
-																				}
-																			},
-																		).required(strings.QuatityIsRequired),
-																	}),
-																),
-															})}
+															debitNoteNumber: Yup.string().required(strings.DebitNoteNumberIsRequired,),
+															contactId: Yup.string().required('Customer Name is Required',),
+															invoiceDate: Yup.string().required(strings.invoiceDateIsRequired,),
+															lineItemsString: Yup.array().of(
+																Yup.object().shape({
+																	quantity: Yup.string().test(
+																		'quantity',
+																		strings.QuantityGreaterThan0,
+																		(value) => {
+																			if (value > 0) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	).required(strings.QuatityIsRequired),
+																}),
+															),
+														})}
 
-														>
-															{(props) => (
-																<Form onSubmit={props.handleSubmit}>
+													>
+														{(props) => (
+															<Form onSubmit={props.handleSubmit}>
+																{this.state.invoiceSelected && <>
 																	<Row >
-																		{this.state.invoiceSelected && <Col lg={12}>
+																		<Col lg={12}>
 																			<Checkbox
 																				checked={this.state.isDNWIWithoutProduct}
 																				onChange={(check) => {
 																					this.setState({ isDNWIWithoutProduct: !this.state.isDNWIWithoutProduct })
 																				}}
 																			/>	{strings.CreateDebitNoteWithoutProduct}
-																		</Col>}
+																		</Col>
 																	</Row>
 																	<hr />
-																	{!this.state.isCreatedWithoutInvoice && (<Row>
-																		<Col lg={3}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="invoiceNumber"><span className="text-danger">* </span>
-																					{strings.InvoiceNumber}
-																				</Label>
-																				<Select
-																					isDisabled
-																					id="invoiceNumber"
-																					name="invoiceNumber"
-																					placeholder={strings.Select + strings.InvoiceNumber}
-																					options={
-																						invoice_list ? selectOptionsFactory.renderOptions(
-																							'label',
-																							'value',
-																							invoice_list,
-																							'Invoice Number',
-																						) : []
-																					}
-																					value={props.values.invoiceNumber?.value ? props.values.invoiceNumber : invoice_list && selectOptionsFactory.renderOptions(
+																</>}
+																{!this.state.isCreatedWithoutInvoice && (<Row>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="invoiceNumber"><span className="text-danger">* </span>
+																				{strings.InvoiceNumber}
+																			</Label>
+																			<Select
+																				isDisabled
+																				id="invoiceNumber"
+																				name="invoiceNumber"
+																				placeholder={strings.Select + strings.InvoiceNumber}
+																				options={
+																					invoice_list ? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
 																						invoice_list,
-																						'Invoice Number',).find(obj => obj.value === props.values.invoiceNumber)
+																						'Invoice Number',
+																					) : []
+																				}
+																				value={props.values.invoiceNumber?.value ? props.values.invoiceNumber : invoice_list && selectOptionsFactory.renderOptions(
+																					'label',
+																					'value',
+																					invoice_list,
+																					'Invoice Number',).find(obj => obj.value === props.values.invoiceNumber)
+																				}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						this.setState({ invoiceSelected: true }, () => {
+																							props.handleChange('invoiceNumber')(option);
+																							props.handleChange('referenceNumber')(option.label);
+																							this.getInvoiceDetails(option.value)
+																						})
+																					} else {
+																						this.setState({ invoiceSelected: false }, () => {
+																							props.handleChange('invoiceNumber')('');
+																							props.handleChange('referenceNumber')('');
+																						})
 																					}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							this.setState({ invoiceSelected: true }, () => {
-																								props.handleChange('invoiceNumber')(option);
-																								props.handleChange('referenceNumber')(option.label);
-																								this.getInvoiceDetails(option.value)
-																							})
-																						} else {
-																							this.setState({ invoiceSelected: false }, () => {
-																								props.handleChange('invoiceNumber')('');
-																								props.handleChange('referenceNumber')('');
-																							})
-																						}
-																					}}
-																					className={
-																						props.errors.invoiceNumber &&
-																							props.touched.invoiceNumber
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.invoiceNumber &&
-																					props.touched.invoiceNumber && (
-																						<div className="invalid-feedback">
-																							{props.errors.invoiceNumber}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																	</Row>)}
-																	<Row>
-																		<Col lg={3}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="debitNoteNumber">
-																					<span className="text-danger">* </span>
-																					{strings.DebitNoteNumber}
-																				</Label>
-																				<Input
-																				disabled
-																					maxLength="50"
-																					type="text"
-																					id="debitNoteNumber"
-																					name="debitNoteNumber"
-																					placeholder={strings.DebitNoteNumber}
-																					value={props.values.debitNoteNumber}
-																					//onBlur={props.handleBlur('debitNoteNumber')}
-																					onChange={(option) => {
-																						if (option?.target?.value === '')
-																							this.setState({ debitNoteExist: false }, () => {
-																								props.handleChange('debitNoteNumber')('');
-																							})
-																						else if (this.regExDNNum.test(option?.target?.value)) {
-																							this.setState({ debitNoteExist: false }, () => {
-																								props.handleChange('debitNoteNumber')(option?.target?.value);
-																								this.validationCheck(option?.target?.value);
-																							})
-																						}
-																					}}
-																					className={
-																						props.errors.debitNoteNumber &&
-																							props.touched.debitNoteNumber
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.debitNoteNumber &&
-																					props.touched.debitNoteNumber && (
-																						<div className="invalid-feedback">
-																							{props.errors.debitNoteNumber}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		<Col lg={3}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="contactId">
-																					<span className="text-danger">* </span>
-																					{strings.CustomerName}
-																				</Label>
-																				<Select
-																					id="contactId"
-																					name="contactId"
-																					placeholder={strings.Select + strings.CustomerName}
-																					options={
-																						tmpCustomer_list
-																							? selectOptionsFactory.renderOptions(
-																								'label',
-																								'value',
-																								tmpCustomer_list,
-																								'Customer',
-																							)
-																							: []
-																					}
-																					value={props.values.contactId}
-
-																					isDisabled={this.state.invoiceSelected}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
-																							this.getTaxTreatment(option.value);
-																							props.handleChange('contactId')(option);
-																						} else {
-																							props.handleChange('contactId')('');
-																						}
-																					}}
-																					className={
-																						props.errors.contactId &&
-																							props.touched.contactId
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.contactId &&
-																					props.touched.contactId && (
-																						<div className="invalid-feedback">
-																							{props.errors.contactId}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-
-																		<Col lg={3}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="taxTreatmentId">
-																					{strings.TaxTreatment}
-																				</Label>
-																				<Select
-																					options={
-																						tax_treatment_list
-																							? selectOptionsFactory.renderOptions(
-																								'name',
-																								'id',
-																								tax_treatment_list,
-																								'Tax Treatment',
-																							)
-																							: []
-																					}
-																					isDisabled={true}
-																					id="taxTreatmentId"
-																					name="taxTreatmentId"
-																					placeholder={strings.Select + strings.TaxTreatment}
-																					value={props.values.taxTreatmentId?.value ? props.values.taxTreatmentId :
-																						tax_treatment_list &&
-																						selectOptionsFactory
-																							.renderOptions(
-																								'name',
-																								'id',
-																								tax_treatment_list,
-																								'Tax Treatment',
-																							)
-																							.find(
-																								(option) =>
-																									option.label === props.values.taxTreatmentId,
-																							)
-																					}
-																					onChange={(option) => {
-																						props.handleChange('taxTreatmentId')(
-																							option,
-																						);
-																					}}
-																					className={
-																						props.errors.taxTreatmentId &&
-																							props.touched.taxTreatmentId
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.taxTreatmentId &&
-																					props.touched.taxTreatmentId && (
-																						<div className="invalid-feedback">
-																							{props.errors.taxTreatmentId}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-
-																	</Row>
-																	<Row>
-
-																		<Col lg={3}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="date">
-																					<span className="text-danger">* </span>
-																					Debit Note Date
-																				</Label>
-																				<DatePicker
-																					id="debitNoteDate"
-																					name="debitNoteDate"
-																					placeholderText={strings.Enter + strings.DebitNote + strings.Date}
-																					showMonthDropdown
-																					showYearDropdown
-																					dateFormat="dd-MM-yyyy"
-																					dropdownMode="select"
-																					value={props.values.debitNoteDate}
-																					selected={props.values.debitNoteDate}
-																					onChange={(value) => {
-																						props.handleChange('debitNoteDate')(value);
-																					}}
-																					className={`form-control ${props.errors.debitNoteDate &&
-																						props.touched.debitNoteDate
+																				}}
+																				className={
+																					props.errors.invoiceNumber &&
+																						props.touched.invoiceNumber
 																						? 'is-invalid'
 																						: ''
-																						}`}
-																				/>
-																				{props.errors.debitNoteDate &&
-																					props.touched.debitNoteDate && (
-																						<div className="invalid-feedback">
-																							{props.errors.debitNoteDate.includes("nullable()") ? "Tax Credit Note Date is Required" : props.errors.debitNoteDate}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-
-																		<Col lg={3}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="currency">
-																					<span className="text-danger">* </span>
-																					{strings.Currency}
-																				</Label>
-																				<Select
-																					isDisabled={true}
-																					styles={customStyles}
-																					placeholder={strings.Select + strings.Currency}
-																					options={
-																						currency_convert_list
-																							? selectCurrencyFactory.renderOptions(
-																								'currencyName',
-																								'currencyCode',
-																								currency_convert_list,
-																								'Currency',
-																							)
-																							: []
+																				}
+																			/>
+																			{props.errors.invoiceNumber &&
+																				props.touched.invoiceNumber && (
+																					<div className="invalid-feedback">
+																						{props.errors.invoiceNumber}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																</Row>)}
+																<Row>
+																	{console.log(props.values.debitNoteNumber)}
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="debitNoteNumber">
+																				<span className="text-danger">* </span>
+																				{strings.DebitNoteNumber}
+																			</Label>
+																			<Input
+																				disabled
+																				maxLength="50"
+																				type="text"
+																				id="debitNoteNumber"
+																				name="debitNoteNumber"
+																				placeholder={strings.DebitNoteNumber}
+																				value={props.values.debitNoteNumber}
+																				//onBlur={props.handleBlur('debitNoteNumber')}
+																				onChange={(option) => {
+																					if (option?.target?.value === '')
+																						props.handleChange('debitNoteNumber')('');
+																					else if (this.regExDNNum.test(option?.target?.value)) {
+																						props.handleChange('debitNoteNumber')(option?.target?.value);
 																					}
-																					id="currency"
-																					name="currency"
-																					value={props.values.currency?.value ? props.values.currency :
-																						currency_convert_list && selectCurrencyFactory.renderOptions(
+																				}}
+																				className={
+																					props.errors.debitNoteNumber &&
+																						props.touched.debitNoteNumber
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.debitNoteNumber &&
+																				props.touched.debitNoteNumber && (
+																					<div className="invalid-feedback">
+																						{props.errors.debitNoteNumber}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="contactId">
+																				<span className="text-danger">* </span>
+																				{strings.CustomerName}
+																			</Label>
+																			<Select
+																				id="contactId"
+																				name="contactId"
+																				placeholder={strings.Select + strings.CustomerName}
+																				options={tmpCustomer_list ? tmpCustomer_list : []}
+																				value={props.values.contactId?.values ? props.values.contactId : tmpCustomer_list && tmpCustomer_list.find(obj => obj.value === props.values.contactId)}
+
+																				isDisabled={this.state.invoiceSelected}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																						this.getTaxTreatment(option.value);
+																						props.handleChange('contactId')(option);
+																					} else {
+																						props.handleChange('contactId')('');
+																					}
+																				}}
+																				className={
+																					props.errors.contactId &&
+																						props.touched.contactId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.contactId &&
+																				props.touched.contactId && (
+																					<div className="invalid-feedback">
+																						{props.errors.contactId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="taxTreatmentId">
+																				{strings.TaxTreatment}
+																			</Label>
+																			<Select
+																				options={
+																					tax_treatment_list
+																						? selectOptionsFactory.renderOptions(
+																							'name',
+																							'id',
+																							tax_treatment_list,
+																							'Tax Treatment',
+																						)
+																						: []
+																				}
+																				isDisabled={true}
+																				id="taxTreatmentId"
+																				name="taxTreatmentId"
+																				placeholder={strings.Select + strings.TaxTreatment}
+																				value={props.values.taxTreatmentId?.value ? props.values.taxTreatmentId :
+																					tax_treatment_list &&
+																					selectOptionsFactory
+																						.renderOptions(
+																							'name',
+																							'id',
+																							tax_treatment_list,
+																							'Tax Treatment',
+																						)
+																						.find(
+																							(option) =>
+																								option.label === props.values.taxTreatmentId,
+																						)
+																				}
+																				onChange={(option) => {
+																					props.handleChange('taxTreatmentId')(
+																						option,
+																					);
+																				}}
+																				className={
+																					props.errors.taxTreatmentId &&
+																						props.touched.taxTreatmentId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.taxTreatmentId &&
+																				props.touched.taxTreatmentId && (
+																					<div className="invalid-feedback">
+																						{props.errors.taxTreatmentId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+
+																</Row>
+																<Row>
+
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="invoiceDate">
+																				<span className="text-danger">* </span>
+																				Debit Note Date
+																			</Label>
+																			<DatePicker
+																				id="invoiceDate"
+																				name="invoiceDate"
+																				placeholderText={strings.Enter + strings.DebitNote + strings.Date}
+																				showMonthDropdown
+																				showYearDropdown
+																				dateFormat="dd-MM-yyyy"
+																				dropdownMode="select"
+																				value={props.values.invoiceDate}
+																				selected={props.values.invoiceDate}
+																				onChange={(value) => {
+																					props.handleChange('invoiceDate')(value);
+																				}}
+																				className={`form-control ${props.errors.invoiceDate &&
+																					props.touched.invoiceDate
+																					? 'is-invalid'
+																					: ''
+																					}`}
+																			/>
+																			{props.errors.invoiceDate &&
+																				props.touched.invoiceDate && (
+																					<div className="invalid-feedback">
+																						{props.errors.invoiceDate.includes("nullable()") ? "Tax Credit Note Date is Required" : props.errors.invoiceDate}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="currency">
+																				<span className="text-danger">* </span>
+																				{strings.Currency}
+																			</Label>
+																			<Select
+																				isDisabled={true}
+																				styles={customStyles}
+																				placeholder={strings.Select + strings.Currency}
+																				options={
+																					currency_convert_list
+																						? selectCurrencyFactory.renderOptions(
 																							'currencyName',
 																							'currencyCode',
 																							currency_convert_list,
 																							'Currency',
-																						).find((option) => option.value === props.values.currency)
-																					}
-																					className={
-																						props.errors.currency &&
-																							props.touched.currency
-																							? 'is-invalid'
-																							: ''
-																					}
-																					onChange={(option) => {
-																						props.handleChange('currency')(option);
-																					}}
+																						)
+																						: []
+																				}
+																				id="currency"
+																				name="currency"
+																				value={props.values.currency?.value ? props.values.currency :
+																					currency_convert_list && selectCurrencyFactory.renderOptions(
+																						'currencyName',
+																						'currencyCode',
+																						currency_convert_list,
+																						'Currency',
+																					).find((option) => option.value === props.values.currency)
+																				}
+																				className={
+																					props.errors.currency &&
+																						props.touched.currency
+																						? 'is-invalid'
+																						: ''
+																				}
+																				onChange={(option) => {
+																					props.handleChange('currency')(option);
+																				}}
 
-																				/>
-																				{props.errors.currency &&
-																					props.touched.currency && (
-																						<div className="invalid-feedback">
-																							{props.errors.currency}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
+																			/>
+																			{props.errors.currency &&
+																				props.touched.currency && (
+																					<div className="invalid-feedback">
+																						{props.errors.currency}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	{(this.state.invoiceSelected) && (<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="remainingInvoiceAmount">
+																				Remaining Invoice Amount
+																			</Label>
+																			<Input
+																				type="text"
+																				id="remainingInvoiceAmount"
+																				name="remainingInvoiceAmount"
+																				placeholder='Remaining invoice Amount'
+																				disabled={true}
+																				value={this.state.remainingInvoiceAmount}
+																			/>
+																			{props.errors.remainingInvoiceAmount &&
+																				(
+																					<div className="text-danger">
+																						{props.errors.remainingInvoiceAmount}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>)}
 
-																		{(this.state.isDNWIWithoutProduct === false || this.state.invoiceSelected == true) && (<Col lg={3}>
+																	{this.state.isDNWIWithoutProduct === true && (
+																		<Col lg={3}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="remainingInvoiceAmount">
-																					Remaining Invoice Amount
+																				<Label htmlFor="debitAmount"><span className="text-danger">* </span>
+																					Debit Amount
 																				</Label>
 																				<Input
 																					type="text"
-																					id="remainingInvoiceAmount"
-																					name="remainingInvoiceAmount"
-																					placeholder='Remaining invoice Amount'
-																					disabled={true}
-																					value={this.state.remainingInvoiceAmount}
+																					id="debitAmount"
+																					name="debitAmount"
+																					placeholder={strings.Enter + " Debit Amount"}
+																					value={props.values.debitAmount}
+																					onChange={(value) => {
+																						props.handleChange('debitAmount')(
+																							value,
+																						);
+																					}}
+																					className={
+																						props.errors.debitAmount &&
+																							props.touched.debitAmount
+																							? 'is-invalid'
+																							: ''
+																					}
 																				/>
-																				{props.errors.remainingInvoiceAmount &&
-																					(
-																						<div className="text-danger">
-																							{props.errors.remainingInvoiceAmount}
-																						</div>
-																					)}
+																				{props.errors.debitAmount &&
+																					props.touched.debitAmount &&
+																					(<div className="invalid-feedback">
+																						{props.errors.debitAmount}
+																					</div>)}
 																			</FormGroup>
-																		</Col>)}
+																		</Col>
+																	)}
 
-																		{this.state.isDNWIWithoutProduct === true && (
-																			<Col lg={3}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="debitAmount"><span className="text-danger">* </span>
-																						Debit Amount
-																					</Label>
-																					<Input
-																						type="text"
-																						id="debitAmount"
-																						name="debitAmount"
-																						placeholder={strings.Enter + " Debit Amount"}
-																						value={props.values.debitAmount}
-																						onChange={(value) => {
-																							props.handleChange('debitAmount')(
-																								value,
-																							);
-																						}}
-																						className={
-																							props.errors.debitAmount &&
-																								props.touched.debitAmount
-																								? 'is-invalid'
-																								: ''
-																						}
-																					/>
-																					{props.errors.debitAmount &&
-																						props.touched.debitAmount &&
-																						(<div className="invalid-feedback">
-																							{props.errors.debitAmount}
-																						</div>)}
-																				</FormGroup>
-																			</Col>
-																		)}
-
-																	</Row>
-																	<hr />
-																	{this.state.isDNWIWithoutProduct === false && (
-																		<Row>
-																			{props.errors.lineItemsString &&
-																				typeof props.errors.lineItemsString ===
-																				'string' && (
-																					<div
-																						className={
-																							props.errors.lineItemsString
-																								? 'is-invalid'
-																								: ''
-																						}
-																					>
-																						<div className="invalid-feedback">
-																							{props.errors.lineItemsString}
-																						</div>
-																					</div>
-																				)}
-																			<Col lg={12}>
-																				<BootstrapTable
-																					options={this.options}
-																					data={data}
-																					version="4"
-																					hover
-																					keyField="id"
-																					className="invoice-create-table"
+																</Row>
+																<hr />
+																{this.state.isDNWIWithoutProduct === false && data && data.length > 0 && (
+																	<Row>
+																		{props.errors.lineItemsString &&
+																			typeof props.errors.lineItemsString ===
+																			'string' && (
+																				<div
+																					className={
+																						props.errors.lineItemsString
+																							? 'is-invalid'
+																							: ''
+																					}
 																				>
+																					<div className="invalid-feedback">
+																						{props.errors.lineItemsString}
+																					</div>
+																				</div>
+																			)}
+																		<Col lg={12}>
+																			<BootstrapTable
+																				options={this.options}
+																				data={data}
+																				version="4"
+																				hover
+																				keyField="id"
+																				className="invoice-create-table"
+																			>
+																				<TableHeaderColumn
+																					width="3%"
+																					dataAlign="center"
+																					dataFormat={(cell, rows) =>
+																						this.renderActions(cell, rows, props)
+																					}
+																				></TableHeaderColumn>
+																				<TableHeaderColumn
+																					width="20%"
+																					dataField="product"
+																					dataFormat={(cell, rows) =>
+																						this.renderProduct(cell, rows, props)
+																					}
+																				>
+																					{strings.PRODUCT}
+																				</TableHeaderColumn>
+																				<TableHeaderColumn
+																					dataField="quantity"
+																					dataFormat={(cell, rows) =>
+																						this.renderQuantity(cell, rows, props)
+																					}
+																				>
+																					{strings.QUANTITY}
+																				</TableHeaderColumn>
+																				<TableHeaderColumn
+																					dataField="unitPrice"
+																					dataFormat={(cell, rows) =>
+																						this.renderUnitPrice(cell, rows, props)
+																					}
+																				>
+																					{strings.UNITPRICE}
+																					<i
+																						id="UnitPriceTooltip"
+																						className="fa fa-question-circle ml-1"
+																					></i>
+																					<UncontrolledTooltip
+																						placement="right"
+																						target="UnitPriceTooltip"
+																					>
+																						Unit Price – Price of a single product or
+																						service
+																					</UncontrolledTooltip>
+																				</TableHeaderColumn>
+																				{initValue.totalDiscount != 0 &&
 																					<TableHeaderColumn
-																						width="3%"
-																						dataAlign="center"
+																						dataField="discount"
 																						dataFormat={(cell, rows) =>
-																							this.renderActions(cell, rows, props)
-																						}
-																					></TableHeaderColumn>
-																					<TableHeaderColumn
-																						width="20%"
-																						dataField="product"
-																						dataFormat={(cell, rows) =>
-																							this.renderProduct(cell, rows, props)
+																							this.renderDiscount(cell, rows, props)
 																						}
 																					>
-																						{strings.PRODUCT}
+																						Discount Type
 																					</TableHeaderColumn>
+																				}
+																				{initValue.total_excise != 0 &&
 																					<TableHeaderColumn
-																						dataField="quantity"
+																						width="10%"
+																						dataField="exciseTaxId"
 																						dataFormat={(cell, rows) =>
-																							this.renderQuantity(cell, rows, props)
+																							this.renderExcise(cell, rows, props)
 																						}
 																					>
-																						{strings.QUANTITY}
-																					</TableHeaderColumn>
-																					<TableHeaderColumn
-																						dataField="unitPrice"
-																						dataFormat={(cell, rows) =>
-																							this.renderUnitPrice(cell, rows, props)
-																						}
-																					>
-																						{strings.UNITPRICE}
+																						{strings.Excises}
 																						<i
-																							id="UnitPriceTooltip"
+																							id="ExiseTooltip"
 																							className="fa fa-question-circle ml-1"
 																						></i>
 																						<UncontrolledTooltip
 																							placement="right"
-																							target="UnitPriceTooltip"
+																							target="ExiseTooltip"
 																						>
-																							Unit Price – Price of a single product or
-																							service
+																							Excise dropdown will be enabled only for the excise products
 																						</UncontrolledTooltip>
 																					</TableHeaderColumn>
-																					{initValue.totalDiscount != 0 &&
-																						<TableHeaderColumn
-																							dataField="discount"
-																							dataFormat={(cell, rows) =>
-																								this.renderDiscount(cell, rows, props)
-																							}
-																						>
-																							Discount Type
-																						</TableHeaderColumn>
+																				}
+																				<TableHeaderColumn
+																					dataField="vat"
+																					dataFormat={(cell, rows) =>
+																						this.renderVat(cell, rows, props)
 																					}
-																					{initValue.total_excise != 0 &&
-																						<TableHeaderColumn
-																							width="10%"
-																							dataField="exciseTaxId"
-																							dataFormat={(cell, rows) =>
-																								this.renderExcise(cell, rows, props)
-																							}
-																						>
-																							{strings.Excises}
-																							<i
-																								id="ExiseTooltip"
-																								className="fa fa-question-circle ml-1"
-																							></i>
-																							<UncontrolledTooltip
-																								placement="right"
-																								target="ExiseTooltip"
-																							>
-																								Excise dropdown will be enabled only for the excise products
-																							</UncontrolledTooltip>
-																						</TableHeaderColumn>
-																					}
-																					<TableHeaderColumn
-																						dataField="vat"
-																						dataFormat={(cell, rows) =>
-																							this.renderVat(cell, rows, props)
-																						}
-																					>
-																						{strings.VAT}
-																					</TableHeaderColumn>
-																					<TableHeaderColumn
-																						dataField="vat_amount"
-																						dataFormat={this.renderVatAmount}
-																						className="text-right"
-																						columnClassName="text-right"
-																						formatExtraData={universal_currency_list}
-																					>
-																						{strings.VATAMOUNT}
-																					</TableHeaderColumn>
-																					<TableHeaderColumn
-																						dataField="sub_total"
-																						dataFormat={this.renderSubTotal}
-																						className="text-right"
-																						columnClassName="text-right"
-																						formatExtraData={universal_currency_list}
-																					>
-																						{strings.SUBTOTAL}
-																					</TableHeaderColumn>
-																				</BootstrapTable>
-																			</Col>
-																		</Row>)}
-																	{this.state.data.length > 0 ? (
-																		<Row>
-																			<Col lg={7}>
-																				<Col lg={6}>
-																					<FormGroup className="mb-3">
-																						<Label htmlFor="referenceNumber">
-																							{strings.ReferenceNumber}
-																						</Label>
-																						<Input
-																							type="text"
-																							maxLength="20"
-																							id="referenceNumber"
-																							name="referenceNumber"
-																							value={props.values.referenceNumber}
-																							placeholder={strings.ReceiptNumber}
-																							onChange={(value) => {
-																								props.handleChange('referenceNumber')(value);
-
-																							}}
-																							className={props.errors.referenceNumber && props.touched.referenceNumber ? "is-invalid" : " "}
-																						/>
-																						{props.errors.referenceNumber && props.touched.referenceNumber && (
-																							<div className="invalid-feedback">{props.errors.referenceNumber}</div>
-																						)}
-																					</FormGroup>
-																					<FormGroup className="py-2">
-																						<Label htmlFor="notes">{strings.Notes}</Label>
-																						<Input
-																							type="textarea"
-																							maxLength="255"
-																							name="notes"
-																							id="notes"
-																							rows="6"
-																							placeholder={strings.Notes}
-																							onChange={(option) =>
-																								props.handleChange('notes')(option)
-																							}
-																							value={props.values.notes}
-																						/>
-																					</FormGroup>
-
-																				</Col>
-																			</Col>
-																			{this.state.isDNWIWithoutProduct === false && (<Col lg={5}>
-																				<div className="">
-																					{initValue.total_excise == 0 ? null : (
-																						<div className="total-item p-2" >
-																							<Row>
-																								<Col lg={6}>
-																									<h5 className="mb-0 text-right">
-																										{strings.TotalExcise}
-																									</h5>
-																								</Col>
-																								<Col lg={6} className="text-right">
-																									<label className="mb-0">
-																										{this.state.customer_currency_symbol} &nbsp;
-																										{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																									</label>
-																								</Col>
-																							</Row>
-																						</div>
-																					)}
-																					{initValue.totalDiscount == 0 ? null : (
-																						<div className="total-item p-2">
-																							<Row>
-																								<Col lg={6}>
-																									<h5 className="mb-0 text-right">
-																										{strings.Discount}
-																									</h5>
-																								</Col>
-																								<Col lg={6} className="text-right">
-																									<label className="mb-0">
-																										{this.state.customer_currency_symbol} &nbsp;
-																										{initValue.totalDiscount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																									</label>
-																								</Col>
-																							</Row>
-																						</div>
-																					)}
-
-																					<div className="total-item p-2">
-																						<Row>
-																							<Col lg={6}>
-																								<h5 className="mb-0 text-right">
-																									{strings.TotalNet}
-																								</h5>
-																							</Col>
-																							<Col lg={6} className="text-right">
-																								<label className="mb-0">
-																									{this.state.customer_currency_symbol} &nbsp;
-																									{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-
-																								</label>
-																							</Col>
-																						</Row>
-																					</div>
-																					<div className="total-item p-2">
-																						<Row>
-																							<Col lg={6}>
-																								<h5 className="mb-0 text-right">
-																									{strings.TotalVat}
-																								</h5>
-																							</Col>
-																							<Col lg={6} className="text-right">
-																								<label className="mb-0">
-																									{this.state.customer_currency_symbol} &nbsp;
-																									{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																								</label>
-																							</Col>
-																						</Row>
-																					</div>
-
-																					<div className="total-item p-2">
-																						<Row>
-																							<Col lg={6}>
-																								<h5 className="mb-0 text-right">
-																									{strings.Total}
-																								</h5>
-																							</Col>
-																							<Col lg={6} className="text-right">
-																								<label className="mb-0">
-																									{this.state.customer_currency_symbol} &nbsp;
-																									{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																								</label>
-																							</Col>
-																							{props.errors.totalAmount &&
-																								props.touched.totalAmount &&
-																								<Col className="invalid-feedback d-block text-right">
-																									{props.errors.totalAmount}
-																								</Col>}
-																						</Row>
-																					</div>
-																				</div>
-																			</Col>)}
-																		</Row>
-																	) : null}
-																	<Row>
-																		<Col
-																			lg={12}
-																			className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
-																		>
-																			<FormGroup className="text-right w-100">
-																				<Button
-																					type="button"
-																					color="primary"
-																					className="btn-square mr-3"
-																					disabled={this.state.disabled}
-																					onClick={() => {
-																						this.setState(
-																							{ createMore: false },
-																							() => {
-																								props.handleSubmit();
-																							},
-																						);
-																					}}
 																				>
-																					<i className="fa fa-dot-circle-o"></i>{' '}
-																					{this.state.disabled
-																						? 'Creating...'
-																						: strings.Create}
-																				</Button>
-																				<Button
-																					type="button"
-																					color="primary"
-																					className="btn-square mr-3"
-																					disabled={this.state.disabled}
-																					onClick={() => {
-																						this.setState(
-																							{
-																								createMore: true,
-																							},
-																							() => {
-																								props.handleSubmit();
-																							},
-																						);
-																					}}
+																					{strings.VAT}
+																				</TableHeaderColumn>
+																				<TableHeaderColumn
+																					dataField="vat_amount"
+																					dataFormat={this.renderVatAmount}
+																					className="text-right"
+																					columnClassName="text-right"
+																					formatExtraData={universal_currency_list}
 																				>
-																					<i className="fa fa-repeat"></i>{' '}
-																					{this.state.disabled
-																						? 'Creating...'
-																						: strings.CreateandMore}
-																				</Button>
-																				<Button
-																					color="secondary"
-																					className="btn-square"
-																					onClick={() => {
-																						this.props.history.push(
-																							'/admin/expense/debit-notes',
-																						);
-																					}}
+																					{strings.VATAMOUNT}
+																				</TableHeaderColumn>
+																				<TableHeaderColumn
+																					dataField="sub_total"
+																					dataFormat={this.renderSubTotal}
+																					className="text-right"
+																					columnClassName="text-right"
+																					formatExtraData={universal_currency_list}
 																				>
-																					<i className="fa fa-ban"></i> {strings.Cancel}
-																				</Button>
-																			</FormGroup>
+																					{strings.SUBTOTAL}
+																				</TableHeaderColumn>
+																			</BootstrapTable>
 																		</Col>
+																	</Row>)}
+																{this.state.data.length > 0 ? (
+																	<Row>
+																		<Col lg={7}>
+																			<Col lg={6}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="referenceNumber">
+																						{strings.ReferenceNumber}
+																					</Label>
+																					<Input
+																						type="text"
+																						maxLength="20"
+																						id="referenceNumber"
+																						name="referenceNumber"
+																						value={props.values.referenceNumber}
+																						placeholder={strings.ReceiptNumber}
+																						onChange={(value) => {
+																							props.handleChange('referenceNumber')(value);
+
+																						}}
+																						className={props.errors.referenceNumber && props.touched.referenceNumber ? "is-invalid" : " "}
+																					/>
+																					{props.errors.referenceNumber && props.touched.referenceNumber && (
+																						<div className="invalid-feedback">{props.errors.referenceNumber}</div>
+																					)}
+																				</FormGroup>
+																				<FormGroup className="py-2">
+																					<Label htmlFor="notes">{strings.Notes}</Label>
+																					<Input
+																						type="textarea"
+																						maxLength="255"
+																						name="notes"
+																						id="notes"
+																						rows="6"
+																						placeholder={strings.Notes}
+																						onChange={(option) =>
+																							props.handleChange('notes')(option)
+																						}
+																						value={props.values.notes}
+																					/>
+																				</FormGroup>
+
+																			</Col>
+																		</Col>
+																		{this.state.isDNWIWithoutProduct === false && (<Col lg={5}>
+																			<div className="">
+																				{initValue.total_excise != 0 && (
+																					<div className="total-item p-2" >
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">
+																									{strings.TotalExcise}
+																								</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">
+																									{this.state.customer_currency_symbol} &nbsp;
+																									{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																								</label>
+																							</Col>
+																						</Row>
+																					</div>
+																				)}
+																				{initValue.totalDiscount != 0 && (
+																					<div className="total-item p-2">
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">
+																									{strings.Discount}
+																								</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">
+																									{this.state.customer_currency_symbol} &nbsp;
+																									{initValue.totalDiscount ? initValue.totalDiscount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
+																								</label>
+																							</Col>
+																						</Row>
+																					</div>
+																				)}
+																				<div className="total-item p-2">
+																					<Row>
+																						<Col lg={6}>
+																							<h5 className="mb-0 text-right">
+																								{strings.TotalNet}
+																							</h5>
+																						</Col>
+																						<Col lg={6} className="text-right">
+																							<label className="mb-0">
+																								{this.state.customer_currency_symbol} &nbsp;
+																								{initValue.total_net ? initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
+
+																							</label>
+																						</Col>
+																					</Row>
+																				</div>
+																				<div className="total-item p-2">
+																					<Row>
+																						<Col lg={6}>
+																							<h5 className="mb-0 text-right">
+																								{strings.TotalVat}
+																							</h5>
+																						</Col>
+																						<Col lg={6} className="text-right">
+																							<label className="mb-0">
+																								{this.state.customer_currency_symbol} &nbsp;
+																								{initValue.totalVatAmount ? initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
+																							</label>
+																						</Col>
+																					</Row>
+																				</div>
+
+																				<div className="total-item p-2">
+																					<Row>
+																						<Col lg={6}>
+																							<h5 className="mb-0 text-right">
+																								{strings.Total}
+																							</h5>
+																						</Col>
+																						<Col lg={6} className="text-right">
+																							<label className="mb-0">
+																								{this.state.customer_currency_symbol} &nbsp;
+																								{initValue.totalAmount ? initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
+																							</label>
+																						</Col>
+																						{props.errors.totalAmount &&
+																							props.touched.totalAmount &&
+																							<Col className="invalid-feedback d-block text-right">
+																								{props.errors.totalAmount}
+																							</Col>}
+																					</Row>
+																				</div>
+																			</div>
+																		</Col>)}
 																	</Row>
-																</Form>
-															)}
-														</Formik>
-													</Col>
-												</Row>
-											)}
-										</CardBody>
-									</Card>
-								</Col>
-							</Row>
-						</div>
-
+																) : null}
+																<Row>
+																	<Col
+																		lg={12}
+																		className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
+																	>
+																		<FormGroup>
+																			<Button
+																				type="button"
+																				color="danger"
+																				className="btn-square"
+																				disabled1={this.state.disabled1}
+																				onClick={this.deleteDebitNote}
+																			>
+																				<i className="fa fa-trash"></i> {' '} {this.state.disabled1
+																					? 'Deleting...'
+																					: strings.Delete}
+																			</Button>
+																		</FormGroup>
+																		<FormGroup className="text-right">
+																			<Button
+																				type="submit"
+																				color="primary"
+																				className="btn-square mr-3"
+																				disabled={this.state.disabled}
+																				onClick={() => {
+																					//	added validation popup	msg
+																					console.log(props.errors, "ERROR")
+																					props.handleBlur();
+																					if (props.errors && Object.keys(props.errors).length != 0)
+																						this.props.commonActions.fillManDatoryDetails();
+																				}}
+																			>
+																				<i className="fa fa-dot-circle-o"></i> {this.state.disabled
+																					? 'Updating...'
+																					: strings.Update}
+																				{/* { {this.state.disabled }
+																				? 'Updating...'
+																				{ : 'Update'} } */}
+																			</Button>
+																			<Button
+																				color="secondary"
+																				className="btn-square"
+																				onClick={() => {
+																					this.props.history.push(
+																						'/admin/expense/debit-notes',
+																					);
+																				}}
+																			>
+																				<i className="fa fa-ban"></i> {strings.Cancel}
+																			</Button>
+																		</FormGroup>
+																	</Col>
+																</Row>
+															</Form>
+														)}
+													</Formik>
+												</Col>
+											</Row>
+										)}
+									</CardBody>
+								</Card>
+							</Col>
+						</Row>
 					</div>
+
 				</div>
-		);
-	}
-	//
-	renderTotalValue = (props, label, value) => {
+				{this.state.disableLeavePage ? "" : <LeavePage />}
 
-		return (
-			<div className="total-item p-2">
-				<Row>
-					<Col lg={6}>
-						<h5 className="mb-0 text-right">
-							{label}
-						</h5>
-					</Col>
-					<Col lg={6} className="text-right">
-						<label className="mb-0">
-
-							{this.state.supplier_currency_symbol}&nbsp;
-							{value.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-						</label>
-					</Col>
-				</Row>
 			</div>
-		)
-	}//
-	renderTaxType = (cell, row, props) => {
-		const { vat_list } = this.props;
-		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select Tax' }, ...vat_list]
-			: vat_list;
-		let idx;
-		this.state.data.map((obj, index) => {
-			if (obj.id === row.id) {
-				idx = index;
-			}
-			return obj;
-		});
-
-
-
-		return (
-			<Field
-				name={`lineItemsString.${idx}.taxSlab`}
-				render={({ field, form }) => (
-
-					<Input
-						disabled
-						value={row.taxSlab}
-						title={row.taxSlab}
-					/>
-				)}
-			/>
 		);
-	};
-	renderAmount = (cell, row, extraData) => {
-
-		let value = cell && cell != 0 ? cell : 0
-		return value === 0 ? this.state.customer_currency_symbol + " " + value.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : this.state.customer_currency_symbol + " " + value.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-	};//
-	renderHsnSacCode = (cell, row, props) => {
-		let idx;
-		this.state.data.map((obj, index) => {
-			if (obj.id === row.id) {
-				idx = index;
-			}
-			return obj;
-		});
-
-		return (
-			<Field
-				name={`lineItemsString.${idx}.hsnOrSac`}
-				render={({ field, form }) => (
-					<Input
-						type="text"
-						maxLength="250"
-						value={row['hsnOrSac'] !== '' ? row['hsnOrSac'] : ''}
-						onChange={(e) => {
-							this.selectItem(e.target.value, row, 'hsnOrSac', form, field);
-						}}
-						placeholder="HSN / SAC"
-						className={`form-control ${props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].hsnOrSac &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].hsnOrSac
-							? 'is-invalid'
-							: ''
-							}`}
-					/>
-				)}
-			/>
-		);
-	};//
-	getProductListByPlaceOfSupplyId = (id, props) => {
-		this.props.debitNotesActions.getProductListById(id).then((res) => {
-			if (res.status == 200) {
-				this.setState({ product_list: res.data })
-				this.updateAmount(this.state.data, props);
-			}
-		});
-
-		//
-		this.props.commonActions.getCompanyDetails().then((res) => {
-			if (res.status == 200) {
-
-				if (res.data.companyStateCode == id)
-					this.setState({
-						igstEnabled: false,
-						companyStateCode: res.data.companyStateCode
-					})
-				else
-					this.setState({
-						igstEnabled: true,
-						companyStateCode: res.data.companyStateCode
-					})
-			}
-		})
 	}
 }
 

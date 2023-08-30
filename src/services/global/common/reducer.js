@@ -17,6 +17,7 @@ const initState = {
 	product_list: [],
 	excise_list: [],
 	customer_list: [],
+	pay_mode: [],
 };
 
 const CommonReducer = (state = initState, action) => {
@@ -120,6 +121,11 @@ const CommonReducer = (state = initState, action) => {
 			return {
 				...state,
 				customer_list: Object.assign([], payload.data),
+			};
+		case COMMON.PAY_MODE:
+			return {
+				...state,
+				pay_mode: Object.assign([], payload.data),
 			};
 
 		default:

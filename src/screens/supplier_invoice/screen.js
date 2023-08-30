@@ -27,20 +27,21 @@ import * as SupplierInvoiceActions from './actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import './style.scss';
-import {data}  from '../Language/index'
+import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperCase } from 'lodash';
+import config from 'constants/config';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
-	//   currency: true,
-	  ignoreDecimal: false,
-	  ignoreZeroCurrency: false,
-	  doNotAddOnly: false,
+		//   currency: true,
+		ignoreDecimal: false,
+		ignoreZeroCurrency: false,
+		doNotAddOnly: false,
 	}
-  });
+});
 const mapStateToProps = (state) => {
 	return {
 		supplier_invoice_list: state.supplier_invoice.supplier_invoice_list,
@@ -104,7 +105,7 @@ class SupplierInvoice extends React.Component {
 				overDueAmountMonthly: '',
 			},
 			language: window['localStorage'].getItem('language'),
-			loadingMsg:"Loading..."
+			loadingMsg: "Loading..."
 		};
 
 		this.options = {
@@ -209,16 +210,17 @@ class SupplierInvoice extends React.Component {
 			classname = 'label-draft';
 		} else if (row.status === 'Partially Paid') {
 			classname = 'label-PartiallyPaid';
-		}else if (row.status === 'Due Today') {
+		} else if (row.status === 'Due Today') {
 			classname = 'label-overdue';
 		} else {
 			classname = 'label-overdue';
 		}
-		return (
+		return (<>
 			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
 				{row.status}
 			</span>
-		);
+			{row.cnCreatedOnPaidInvoice && row.status == "Paid" && config.EXPENSE_DN && (<><br />{strings.Credit_Note_Created}</>)}
+		</>);
 	};
 
 	sortColumn = (sortName, sortOrder) => {
@@ -228,32 +230,32 @@ class SupplierInvoice extends React.Component {
 	};
 
 	renderInvoiceAmount = (cell, row, extraData) => {
-		return(
+		return (
 			<div>
-								<div>
-						<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount}: </label>
-						<label>
-					{row.invoiceAmount  === 0 ? row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
-						</label>
-					</div>
-					<div style={{display: row.vatAmount === 0 ? 'none' : ''}}>
+				<div>
+					<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount}: </label>
+					<label>
+						{row.invoiceAmount === 0 ? row.currencySymbol + " " + row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencySymbol + " " + row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+					</label>
+				</div>
+				<div style={{ display: row.vatAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
-					<label>{row.vatAmount === 0  ?  row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
-					</div>
-					<div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
-						<label className="font-weight-bold mr-2">{strings.DueAmount}: </label>
-						<label>{row.dueAmount === 0  ?  row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
-					</div>
-					
-			</div>);
-		};
+					<label>{row.vatAmount === 0 ? row.currencySymbol + " " + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencySymbol + " " + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</label>
+				</div>
+				<div style={{ display: row.dueAmount === 0 ? 'none' : '' }}>
+					<label className="font-weight-bold mr-2">{strings.DueAmount}: </label>
+					<label>{row.dueAmount === 0 ? row.currencySymbol + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencySymbol + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</label>
+				</div>
 
-	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
+			</div>);
+	};
+
+	renderDueAmount = (cell, row, extraData) => {
+		return row.dueAmount === 0 ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	}
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount === 0 ? row.currencySymbol+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
+		return row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencySymbol) {
@@ -306,14 +308,14 @@ class SupplierInvoice extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid'  && (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
-								onClick={() =>{
-								 if(row.editFlag)
-									this.props.history.push(
-										'/admin/expense/supplier-invoice/detail',
-										{ id: row.id },
-									)
+								onClick={() => {
+									if (row.editFlag)
+										this.props.history.push(
+											'/admin/expense/supplier-invoice/detail',
+											{ id: row.id },
+										)
 									else this.props.commonActions.tostifyAlert(
 										'error',
 										'You cannot edit transactions for which VAT is recorded'
@@ -324,10 +326,10 @@ class SupplierInvoice extends React.Component {
 								<i className="fas fa-edit" />  {strings.Edit}
 							</DropdownItem>
 						)}
-							{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
+						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.postInvoice(row,true);
+									this.postInvoice(row, true);
 								}}
 							>
 								<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
@@ -336,7 +338,7 @@ class SupplierInvoice extends React.Component {
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.postInvoice(row,false);
+									this.postInvoice(row, false);
 								}}
 							>
 								<i className="fas fa-send" />  {strings.Send}
@@ -345,19 +347,29 @@ class SupplierInvoice extends React.Component {
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
-			   			<DropdownItem
-						   onClick={() =>
-						this.props.history.push('/admin/expense/supplier-invoice/create', {parentInvoiceId: row.id})
-					}
-				>
-					<i className="fas fa-copy" /> {strings.CreateADuplicate}
-				</DropdownItem>
-
-						{row.statusEnum === 'Sent'  && (
+						<DropdownItem
+							onClick={() =>
+								this.props.history.push('/admin/expense/supplier-invoice/create', { parentInvoiceId: row.id })
+							}
+						>
+							<i className="fas fa-copy" /> {strings.CreateADuplicate}
+						</DropdownItem>
+						{(!row.cnCreatedOnPaidInvoice && row.statusEnum === 'Paid' && config.EXPENSE_DN) && (
 							<DropdownItem
 								onClick={() => {
-									if(row.editFlag)
-									this.unPostInvoice(row);
+									this.props.history.push('/admin/expense/debit-notes/create', {
+										invoiceID: row.id, invoiceNumber: row.invoiceNumber,
+									})
+								}}
+							>
+								<i className="fas fa-plus" /> {strings.Create + " " + strings.CreditNote}
+							</DropdownItem>
+						)}
+						{row.statusEnum === 'Sent' && (
+							<DropdownItem
+								onClick={() => {
+									if (row.editFlag)
+										this.unPostInvoice(row);
 									else this.props.commonActions.tostifyAlert(
 										'error',
 										'You cannot edit transactions for which VAT is recorded'
@@ -367,15 +379,15 @@ class SupplierInvoice extends React.Component {
 								<i className="fas fa-file" /> {strings.Draft}
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate == 1 &&  (
+						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate == 1 && (
 							<DropdownItem
-								onClick={() =>{
-									
-									
+								onClick={() => {
+
+
 									this.props.history.push(
 										'/admin/expense/supplier-invoice/record-payment',
 										{ id: row },)
-									
+
 								}
 								}
 							>
@@ -400,11 +412,11 @@ class SupplierInvoice extends React.Component {
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
 						)} */}
-					<DropdownItem
+						<DropdownItem
 							onClick={() =>
 								this.props.history.push(
 									'/admin/expense/supplier-invoice/view',
-									{ id: row.id ,status:row.status},
+									{ id: row.id, status: row.status },
 								)
 							}
 						>
@@ -423,14 +435,14 @@ class SupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message :'Invoice Posted Successfully',
+						res.data ? res.data.message : 'Invoice Posted Successfully',
 					);
 				}
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message :'Please First fill The Mail Configuration Detail',
+					err.data ? err.data.message : 'Please First fill The Mail Configuration Detail',
 				);
 			});
 	};
@@ -555,7 +567,7 @@ class SupplierInvoice extends React.Component {
 		this.initializeData();
 	};
 
-	postInvoice = (row,markAsSent) => {
+	postInvoice = (row, markAsSent) => {
 		this.setState({
 			loading: true,
 		});
@@ -563,11 +575,11 @@ class SupplierInvoice extends React.Component {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
 			postingRefType: 'INVOICE',
-			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
-			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-",
-			markAsSent:markAsSent
+			amountInWords: upperCase(row.currencyName + " " + (toWords.convert(row.invoiceAmount)) + " ONLY").replace("POINT", "AND"),
+			vatInWords: row.vatAmount ? upperCase(row.currencyName + " " + (toWords.convert(row.vatAmount)) + " ONLY").replace("POINT", "AND") : "-",
+			markAsSent: markAsSent
 		};
-		this.setState({ loading:true, loadingMsg:"Supplier Invoice Posting..."});
+		this.setState({ loading: true, loadingMsg: "Supplier Invoice Posting..." });
 		this.props.supplierInvoiceActions
 			.postInvoice(postingRequestModel)
 			.then((res) => {
@@ -581,7 +593,7 @@ class SupplierInvoice extends React.Component {
 					});
 					this.getOverdue();
 					this.initializeData();
-					this.setState({ loading:false,});
+					this.setState({ loading: false, });
 				}
 			})
 			.catch((err) => {
@@ -753,7 +765,7 @@ class SupplierInvoice extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,loadingMsg,
+			loading, loadingMsg,
 			filterData,
 			dialog,
 			selectedRows,
@@ -769,68 +781,69 @@ class SupplierInvoice extends React.Component {
 		// const containerStyle = {
 		//   zIndex: 1999
 		// }
-console.log(supplier_invoice_list)
+		console.log(supplier_invoice_list)
 		const supplier_invoice_data =
 			supplier_invoice_list && supplier_invoice_list.data
 				? this.props.supplier_invoice_list.data.map((supplier) => ({
-						id: supplier.id,
-						status: supplier.status,
-						statusEnum: supplier.statusEnum,
-						customerName: supplier.name,
-						dueAmount:supplier.dueAmount,
-						invoiceNumber: supplier.referenceNumber,
-						invoiceDate: supplier.invoiceDate ? supplier.invoiceDate : '',
-						invoiceDueDate: supplier.invoiceDueDate
-							? supplier.invoiceDueDate
-							: '',
-						invoiceAmount: supplier.totalAmount,
-						vatAmount: supplier.totalVatAmount,
-						currencyName:supplier.currencyName ? supplier.currencyName:'',
-						currencySymbol: supplier.currencySymbol ? supplier.currencySymbol : '',
-						contactId: supplier.contactId,
-						editFlag:supplier.editFlag,
-						exchangeRate:supplier.exchangeRate,
-				  }))
+					id: supplier.id,
+					status: supplier.status,
+					statusEnum: supplier.statusEnum,
+					customerName: supplier.name,
+					dueAmount: supplier.dueAmount,
+					invoiceNumber: supplier.referenceNumber,
+					invoiceDate: supplier.invoiceDate ? supplier.invoiceDate : '',
+					invoiceDueDate: supplier.invoiceDueDate
+						? supplier.invoiceDueDate
+						: '',
+					invoiceAmount: supplier.totalAmount,
+					vatAmount: supplier.totalVatAmount,
+					currencyName: supplier.currencyName ? supplier.currencyName : '',
+					currencySymbol: supplier.currencySymbol ? supplier.currencySymbol : '',
+					contactId: supplier.contactId,
+					editFlag: supplier.editFlag,
+					exchangeRate: supplier.exchangeRate,
+					cnCreatedOnPaidInvoice: supplier.cnCreatedOnPaidInvoice,
+				}))
 				: '';
 
-		
+
 		let tmpSupplier_list = []
 
 		supplier_list.map(item => {
-			let obj = {label: item.label.contactName, value: item.value}
+			let obj = { label: item.label.contactName, value: item.value }
 			tmpSupplier_list.push(obj)
-		})		
+		})
 
 		return (
-			loading ==true? <Loader loadingMsg={loadingMsg}/> :
-<div>
-			<div className="supplier-invoice-screen">
-				<div className="animated fadeIn">
-					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-					<Card>
-						<CardHeader>
-							<Row>
-								<Col lg={12}>
-									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="fas fa-file-invoice" />
-										<span className="ml-2">{strings.SupplierInvoices}</span>
-									</div>
-								</Col>
-							</Row>
-						</CardHeader>
-						<CardBody>
-							{dialog}
-							{loading && (
-								<Row>
-									<Col lg={12} className="rounded-loader">
-										<Loader />
-									</Col>
-								</Row>
-							)}
+			loading == true ? <Loader loadingMsg={loadingMsg} /> :
+				<div>
+					<div className="supplier-invoice-screen">
+						<div className="animated fadeIn">
+							{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+							<Card>
+								<CardHeader>
+									<Row>
+										<Col lg={12}>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<i className="fas fa-file-invoice" />
+												<span className="ml-2">{strings.SupplierInvoices}</span>
+											</div>
+										</Col>
+									</Row>
+								</CardHeader>
+								<CardBody>
+									{dialog}
+									{loading && (
+										<Row>
+											<Col lg={12} className="rounded-loader">
+												<Loader />
+											</Col>
+										</Row>
+									)}
 
-							<Row>
-								<Col lg={12}>
-									{/* <div className="mb-4 status-panel p-3">
+									<Row>
+										<Col lg={12}>
+											{/* <div className="mb-4 status-panel p-3">
 										<Row className="align-items-center justify-content-around">
 											<div className="h4 mb-0 d-flex align-items-center ">
 												<img
@@ -948,9 +961,9 @@ console.log(supplier_invoice_list)
 											</div>
 										</Row>
 									</div> */}
-									<div className="d-flex justify-content-end">
-										<ButtonGroup size="sm">
-											{/* <Button
+											<div className="d-flex justify-content-end">
+												<ButtonGroup size="sm">
+													{/* <Button
 												color="primary"
 												className="btn-square mr-1"
 												onClick={() => this.getCsvData()}
@@ -967,7 +980,7 @@ console.log(supplier_invoice_list)
 													target="_blank"
 												/>
 											)} */}
-											{/* <Button
+													{/* <Button
 												color="primary"
 												className="btn-square mr-1"
 												onClick={this.bulkDelete}
@@ -976,86 +989,86 @@ console.log(supplier_invoice_list)
 												<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
 												Bulk Delete
 											</Button> */}
-										</ButtonGroup>
-									</div>
-									<div className="py-3">
-										<h5>{strings.Filter}: </h5>
-										<Row>
-											<Col lg={2} className="mb-1">
-												<Select
-													styles={customStyles}
-													className="select-default-width"
-													placeholder={strings.Select+strings.Supplier}
-													id="supplier"
-													name="supplier"
-													options={
-														tmpSupplier_list
-															? selectOptionsFactory.renderOptions(
-																	'label',
-																	'value',
-																	tmpSupplier_list,
-																	'Supplier Name',
-															  )
-															: []
-													}
-													value={filterData.supplierId}
-													onChange={(option) => {
-														if (option && option.value) {
-															this.handleChange(option, 'supplierId');
-														} else {
-															this.handleChange('', 'supplierId');
-														}
-													}}
-												/>
-											</Col>
-											<Col lg={2} className="mb-1">
-												<DatePicker
-													className="form-control"
-													id="date"
-													name="invoiceDate"
-													placeholderText={strings.InvoiceDate}
-													showMonthDropdown
-													showYearDropdown
-													autoComplete="off"
-													dropdownMode="select"
-													dateFormat="dd-MM-yyyy"
-													selected={filterData.invoiceDate}
-													// value={filterData.invoiceDate}
-													onChange={(value) => {
-														this.handleChange(value, 'invoiceDate');
-													}}
-												/>
-											</Col>
-											<Col lg={2} className="mb-1">
-												<DatePicker
-													className="form-control"
-													id="date"
-													name="invoiceDueDate"
-													placeholderText={strings.InvoiceDueDate}
-													showMonthDropdown
-													showYearDropdown
-													autoComplete="off"
-													dropdownMode="select"
-													dateFormat="dd-MM-yyyy"
-													selected={filterData.invoiceDueDate}
-													onChange={(value) => {
-														this.handleChange(value, 'invoiceDueDate');
-													}}
-												/>
-											</Col>
-											<Col lg={2} className="mb-1">
-												<Input
-													type="number"
-													maxLength="14,2"
-													min="0"
-													value={filterData.amount}
-													placeholder={strings.Amount}
-													onChange={(e) => {
-														this.handleChange(e.target.value, 'amount');
-													}}
-												/>
-											</Col>
-											{/* <Col lg={2} className="mb-1">
+												</ButtonGroup>
+											</div>
+											<div className="py-3">
+												<h5>{strings.Filter}: </h5>
+												<Row>
+													<Col lg={2} className="mb-1">
+														<Select
+															styles={customStyles}
+															className="select-default-width"
+															placeholder={strings.Select + strings.Supplier}
+															id="supplier"
+															name="supplier"
+															options={
+																tmpSupplier_list
+																	? selectOptionsFactory.renderOptions(
+																		'label',
+																		'value',
+																		tmpSupplier_list,
+																		'Supplier Name',
+																	)
+																	: []
+															}
+															value={filterData.supplierId}
+															onChange={(option) => {
+																if (option && option.value) {
+																	this.handleChange(option, 'supplierId');
+																} else {
+																	this.handleChange('', 'supplierId');
+																}
+															}}
+														/>
+													</Col>
+													<Col lg={2} className="mb-1">
+														<DatePicker
+															className="form-control"
+															id="date"
+															name="invoiceDate"
+															placeholderText={strings.InvoiceDate}
+															showMonthDropdown
+															showYearDropdown
+															autoComplete="off"
+															dropdownMode="select"
+															dateFormat="dd-MM-yyyy"
+															selected={filterData.invoiceDate}
+															// value={filterData.invoiceDate}
+															onChange={(value) => {
+																this.handleChange(value, 'invoiceDate');
+															}}
+														/>
+													</Col>
+													<Col lg={2} className="mb-1">
+														<DatePicker
+															className="form-control"
+															id="date"
+															name="invoiceDueDate"
+															placeholderText={strings.InvoiceDueDate}
+															showMonthDropdown
+															showYearDropdown
+															autoComplete="off"
+															dropdownMode="select"
+															dateFormat="dd-MM-yyyy"
+															selected={filterData.invoiceDueDate}
+															onChange={(value) => {
+																this.handleChange(value, 'invoiceDueDate');
+															}}
+														/>
+													</Col>
+													<Col lg={2} className="mb-1">
+														<Input
+															type="number"
+															maxLength="14,2"
+															min="0"
+															value={filterData.amount}
+															placeholder={strings.Amount}
+															onChange={(e) => {
+																this.handleChange(e.target.value, 'amount');
+															}}
+														/>
+													</Col>
+													{/* <Col lg={2} className="mb-1">
 												<Select
 													styles={customStyles}
 													className=""
@@ -1083,105 +1096,105 @@ console.log(supplier_invoice_list)
 													placeholder={strings.Status}
 												/>
 											</Col> */}
-											<Col lg={2} className="pl-0 pr-0">
-												<Button
-													type="button"
-													color="primary"
-													className="btn-square mr-1"
-													onClick={this.handleSearch}
-												>
-													<i className="fa fa-search"></i>
-												</Button>
-												<Button
-													type="button"
-													color="primary"
-													className="btn-square"
-													onClick={this.clearAll}
-												>
-													<i className="fa fa-refresh"></i>
-												</Button>
-											</Col>
-										</Row>
-									</div>
-									<Row>
-									<div style={{width:"1650px", padding: "15px"}}>
-									<Button
-										color="primary"
-										style={{ marginBottom: '10px' }}
-										className="btn-square pull-right"
-										onClick={() =>
-											this.props.history.push(
-												`/admin/expense/supplier-invoice/create`,
-											)
-										}
-									>
-										<i className="fas fa-plus mr-1" />
-										{strings.AddNewInvoice}
-									</Button>
-									</div>
-									</Row> 
-										<BootstrapTable
-											selectRow={this.selectRowProp}
-											search={false}
-											options={this.options}
-											data={supplier_invoice_data ? supplier_invoice_data : []}
-											version="4"
-											hover
-											keyField="id"
-											pagination={
-												supplier_invoice_data &&
-												supplier_invoice_data.length > 0
-													? true
-													: false
-											}
-											remote
-											fetchInfo={{
-												dataTotalSize: supplier_invoice_list.count
-													? supplier_invoice_list.count
-													: 0,
-											}}
-											className="supplier-invoice-table"
-											ref={(node) => (this.table = node)}
-										>
-											<TableHeaderColumn
-												dataField="invoiceNumber"
-												// dataFormat={this.renderInvoiceNumber}
-												dataSort
-												width="10%"
-												className="table-header-bg"
+													<Col lg={2} className="pl-0 pr-0">
+														<Button
+															type="button"
+															color="primary"
+															className="btn-square mr-1"
+															onClick={this.handleSearch}
+														>
+															<i className="fa fa-search"></i>
+														</Button>
+														<Button
+															type="button"
+															color="primary"
+															className="btn-square"
+															onClick={this.clearAll}
+														>
+															<i className="fa fa-refresh"></i>
+														</Button>
+													</Col>
+												</Row>
+											</div>
+											<Row>
+												<div style={{ width: "1650px", padding: "15px" }}>
+													<Button
+														color="primary"
+														style={{ marginBottom: '10px' }}
+														className="btn-square pull-right"
+														onClick={() =>
+															this.props.history.push(
+																`/admin/expense/supplier-invoice/create`,
+															)
+														}
+													>
+														<i className="fas fa-plus mr-1" />
+														{strings.AddNewInvoice}
+													</Button>
+												</div>
+											</Row>
+											<BootstrapTable
+												selectRow={this.selectRowProp}
+												search={false}
+												options={this.options}
+												data={supplier_invoice_data ? supplier_invoice_data : []}
+												version="4"
+												hover
+												keyField="id"
+												pagination={
+													supplier_invoice_data &&
+														supplier_invoice_data.length > 0
+														? true
+														: false
+												}
+												remote
+												fetchInfo={{
+													dataTotalSize: supplier_invoice_list.count
+														? supplier_invoice_list.count
+														: 0,
+												}}
+												className="supplier-invoice-table"
+												ref={(node) => (this.table = node)}
 											>
+												<TableHeaderColumn
+													dataField="invoiceNumber"
+													// dataFormat={this.renderInvoiceNumber}
+													dataSort
+													width="10%"
+													className="table-header-bg"
+												>
 													{strings.INVOICENUMBER}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="customerName"
-												dataSort
-												tdStyle={{ whiteSpace: 'normal' }}
-											//	width="12%"
-												className="table-header-bg"
-											>
-												{strings.SUPPLIERNAME}
-											</TableHeaderColumn>
-											
-											<TableHeaderColumn
-												dataField="invoiceDate"
-												dataSort
-												// width="7%"
-												dataFormat={this.invoiceDate}
-												className="table-header-bg"
-											>
-												{strings.INVOICEDATE}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="invoiceDueDate"
-												dataSort
-												// width="7%"
-												dataFormat={this.invoiceDueDate}
-												className="table-header-bg"
-											>
-												{strings.DUEDATE}
-											</TableHeaderColumn>
-											
-											{/* <TableHeaderColumn
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													dataField="customerName"
+													dataSort
+													tdStyle={{ whiteSpace: 'normal' }}
+													//	width="12%"
+													className="table-header-bg"
+												>
+													{strings.SUPPLIERNAME}
+												</TableHeaderColumn>
+
+												<TableHeaderColumn
+													dataField="invoiceDate"
+													dataSort
+													// width="7%"
+													dataFormat={this.invoiceDate}
+													className="table-header-bg"
+												>
+													{strings.INVOICEDATE}
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													dataField="invoiceDueDate"
+													dataSort
+													// width="7%"
+													dataFormat={this.invoiceDueDate}
+													className="table-header-bg"
+												>
+													{strings.DUEDATE}
+												</TableHeaderColumn>
+
+												{/* <TableHeaderColumn
 												dataSort
 												width="5%"
 												dataFormat={this.renderVatAmount}
@@ -1191,28 +1204,28 @@ console.log(supplier_invoice_list)
 												VAT Amount
 											</TableHeaderColumn> */}
 
-											<TableHeaderColumn
-												// width="7%"
-												dataField="status"
-												dataFormat={this.renderInvoiceStatus}
-												dataSort
-												className="table-header-bg"
-											>
-												{strings.STATUS}
-											</TableHeaderColumn>
-											
-											<TableHeaderColumn
-												dataAlign="right"
-												dataField="totalAmount"
-												dataSort
-												width="20%"
-												dataFormat={this.renderInvoiceAmount}
-												className="table-header-bg"
-												
-											>
-												{strings.INVOICEAMOUNT}
-											</TableHeaderColumn>
-											{/* <TableHeaderColumn
+												<TableHeaderColumn
+													// width="7%"
+													dataField="status"
+													dataFormat={this.renderInvoiceStatus}
+													dataSort
+													className="table-header-bg"
+												>
+													{strings.STATUS}
+												</TableHeaderColumn>
+
+												<TableHeaderColumn
+													dataAlign="right"
+													dataField="totalAmount"
+													dataSort
+													width="20%"
+													dataFormat={this.renderInvoiceAmount}
+													className="table-header-bg"
+
+												>
+													{strings.INVOICEAMOUNT}
+												</TableHeaderColumn>
+												{/* <TableHeaderColumn
 												dataField="dueAmount"
 												dataSort
 												width="5%"
@@ -1221,19 +1234,19 @@ console.log(supplier_invoice_list)
 											>
 												Due Amount
 											</TableHeaderColumn> */}
-											<TableHeaderColumn
-												className="text-right table-header-bg"
-												columnClassName="text-right"
-												width="5%"
-												dataFormat={this.renderActions}
-											></TableHeaderColumn>
-										</BootstrapTable>
-								</Col>
-							</Row>
-						</CardBody>
-					</Card>
-				</div>
-				{/* <PreviewInvoiceModal
+												<TableHeaderColumn
+													className="text-right table-header-bg"
+													columnClassName="text-right"
+													width="5%"
+													dataFormat={this.renderActions}
+												></TableHeaderColumn>
+											</BootstrapTable>
+										</Col>
+									</Row>
+								</CardBody>
+							</Card>
+						</div>
+						{/* <PreviewInvoiceModal
           openInvoicePreviewModal={this.state.openInvoicePreviewModal}
           closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
           getInvoiceById={this.props.supplierInvoiceActions.getInvoiceById}
@@ -1241,14 +1254,14 @@ console.log(supplier_invoice_list)
           currency_list={this.props.currency_list}
           history={this.props.history}
         /> */}
-				<EmailModal
-					openEmailModal={this.state.openEmailModal}
-					closeEmailModal={(e) => {
-						this.closeEmailModal(e);
-					}}
-				/>
-			</div>
-			</div>
+						<EmailModal
+							openEmailModal={this.state.openEmailModal}
+							closeEmailModal={(e) => {
+								this.closeEmailModal(e);
+							}}
+						/>
+					</div>
+				</div>
 		);
 	}
 }

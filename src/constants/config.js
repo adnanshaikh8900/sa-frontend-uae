@@ -9,6 +9,7 @@ export default {
   // FRONTEND_RELEASE: 'latest',
   FRONTEND_RELEASE: window._env_.SIMPLEVAT_RELEASE,
 
+
   DASHBOARD: true,
   INCOME_MODULE: true,
   EXPENSE_MODULE: true,

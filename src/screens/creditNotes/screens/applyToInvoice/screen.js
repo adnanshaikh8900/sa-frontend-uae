@@ -856,12 +856,14 @@ class ApplyToInvoice extends React.Component {
 
 
 	onSelectAll = (isSelected, rows) => {
-		var { selectedrowsdata, selectedRows, invoice_list, currenttotal, cannotsave } = this.state;
+		var { invoice_list, currenttotal, cannotsave } = this.state;
+		var selectedrowsdata = [];
+		var selectedRows = [];
 		if (isSelected) {
-			currenttotal=this.props.location.state.creditAmount;
+			currenttotal = this.props.location.state.creditAmount;
 			rows && rows.map((row) => {
 				var list = []
-				list = this.applyInvoice(row, [], [], currenttotal );
+				list = this.applyInvoice(row, selectedrowsdata, selectedRows, currenttotal);
 				selectedRows = list.selectedRows ? list.selectedRows : selectedRows;
 				currenttotal = list.currenttotal && list.currenttotal >= 0 ? list.currenttotal : 0;
 				cannotsave = list.cannotsave ? list.cannotsave : false;
@@ -873,7 +875,6 @@ class ApplyToInvoice extends React.Component {
 				cannotsave: cannotsave,
 				selectedrowsdata: selectedrowsdata,
 			});
-
 		} else {
 			invoice_list.map((obj) => {
 				obj.creditstaken = 0;

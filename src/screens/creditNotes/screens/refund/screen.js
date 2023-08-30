@@ -20,7 +20,7 @@ import * as Yup from 'yup';
 import * as CustomerRecordPaymentActions from './actions';
 import * as CnActions from '../../actions';
 import { CustomerModal } from '../../sections';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -977,6 +977,7 @@ class Refund extends React.Component {
 					country_list={this.props.country_list}
 					getStateList={this.props.cnActions.getStateList}
 				/>
+				{this.state.disableLeavePage ? "" : <LeavePage />}
 			</div>
 		);
 	}

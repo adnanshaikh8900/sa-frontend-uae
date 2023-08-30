@@ -56,30 +56,30 @@ class ViewInvoice extends React.Component {
 
 	initializeData = () => {
 		this.props.supplierInvoiceDetailActions
-		.getCompanyDetails()
-		.then((res) => {
-			
-			if (res.status === 200) {
-				
-				this.setState(
-					{
-						companyData: res.data,							
-					},
-				
-				);
-			}
-		});
+			.getCompanyDetails()
+			.then((res) => {
+
+				if (res.status === 200) {
+
+					this.setState(
+						{
+							companyData: res.data,
+						},
+
+					);
+				}
+			});
 		if (this.props.location.state && this.props.location.state.id) {
 			this.props.supplierInvoiceDetailActions
 				.getInvoiceById(this.props.location.state.id)
 				.then((res) => {
 					let val = 0;
 					if (res.status === 200) {
-						if(res.data.invoiceLineItems&&res.data.invoiceLineItems.length !=0 )
-						res.data.invoiceLineItems.map((item) => {
-							val = val + item.subTotal;
-							return item;
-						});
+						if (res.data.invoiceLineItems && res.data.invoiceLineItems.length != 0)
+							res.data.invoiceLineItems.map((item) => {
+								val = val + item.subTotal;
+								return item;
+							});
 						this.setState(
 							{
 								invoiceData: res.data,
@@ -103,18 +103,17 @@ class ViewInvoice extends React.Component {
 											}
 										});
 								}
-								if(this.state.invoiceData.contactId)
-								{	
-							   this.props.supplierInvoiceDetailActions
-							   .getContactById(this.state.invoiceData.contactId)
-							   .then((res) => {
-								   if (res.status === 200) {									
-									   this.setState({
-										   contactData: res.data,
-									   });
-								   }
-							   });
-							   }
+								if (this.state.invoiceData.contactId) {
+									this.props.supplierInvoiceDetailActions
+										.getContactById(this.state.invoiceData.contactId)
+										.then((res) => {
+											if (res.status === 200) {
+												this.setState({
+													contactData: res.data,
+												});
+											}
+										});
+								}
 							},
 						);
 					}
@@ -127,14 +126,14 @@ class ViewInvoice extends React.Component {
 	};
 
 	render() {
-		const { invoiceData, currencyData, id , contactData} = this.state;
+		const { invoiceData, currencyData, id, contactData } = this.state;
 
 		const { profile } = this.props;
 		return (
 			<div className="view-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
-						<Col lg={12} className="mx-auto">							
+						<Col lg={12} className="mx-auto">
 							<div className="pull-right">
 								{/* <Button
 									className="btn btn-sm edit-btn"
@@ -147,7 +146,7 @@ class ViewInvoice extends React.Component {
 								>
 									<i className="fa fa-pencil"></i>
 								</Button> */}
-									<Button
+								<Button
 									className="btn-lg mb-1 print-btn-cont"
 									onClick={() => {
 										this.exportPDFWithComponent();
@@ -163,37 +162,43 @@ class ViewInvoice extends React.Component {
 									)}
 									content={() => this.componentRef}
 								/>
-										<Button
-											type="button"
-											className="close-btn mb-1 btn-lg print-btn-cont"
-											
-											onClick={() => {
-												if(this.props?.location?.state?.crossLinked && this.props?.location?.state?.boxNo){
-													this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
-														boxNo:this.props?.location?.state?.boxNo,
-														description:this.props?.location?.state?.description,
-														startDate:this.props?.location?.state?.startDate,
-														endDate:this.props?.location?.state?.endDate,
-														placeOfSupplyId:this.props?.location?.state?.placeOfSupplyId,
-														id:this.props?.location?.state?.id
-													});
-												}
-												else if(this.props?.location?.state?.crossLinked){
-													this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
-														description:this.props?.location?.state?.description,
-														startDate:this.props?.location?.state?.startDate,
-														endDate:this.props?.location?.state?.endDate,
-														placeOfSupplyId:this.props?.location?.state?.placeOfSupplyId,
-														id:this.props?.location?.state?.id
-													});
-												}else{
-												 	this.props.history.push('/admin/expense/supplier-invoice');
-												}
-											}}
-										>
+								<Button
+									type="button"
+									className="close-btn mb-1 btn-lg print-btn-cont"
+
+									onClick={() => {
+										if (this.props?.location?.state?.crossLinked && this.props?.location?.state?.boxNo) {
+											this.props.history.push('/admin/report/vatreports/vatreturnsubreports', {
+												boxNo: this.props?.location?.state?.boxNo,
+												description: this.props?.location?.state?.description,
+												startDate: this.props?.location?.state?.startDate,
+												endDate: this.props?.location?.state?.endDate,
+												placeOfSupplyId: this.props?.location?.state?.placeOfSupplyId,
+												id: this.props?.location?.state?.id
+											});
+										}
+										else if (this.props?.location?.state?.crossLinked) {
+											this.props.history.push('/admin/report/vatreports/vatreturnsubreports', {
+												description: this.props?.location?.state?.description,
+												startDate: this.props?.location?.state?.startDate,
+												endDate: this.props?.location?.state?.endDate,
+												placeOfSupplyId: this.props?.location?.state?.placeOfSupplyId,
+												id: this.props?.location?.state?.id
+											});
+										} if (this.props.location.state.DN_Id)
+											this.props.history.push('/admin/expense/debit-notes/view', {
+												id: this.props.location.state.DN_Id,
+												status: this.props.location.state.DN_Status,
+												isCNWithoutProduct: this.props.location.state.DN_WithoutPRoduct
+											})
+										else {
+											this.props.history.push('/admin/expense/supplier-invoice');
+										}
+									}}
+								>
 									<i class="fas fa-times"></i>
-										</Button>
-									
+								</Button>
+
 							</div>
 							<div>
 								<PDFExport
@@ -203,12 +208,12 @@ class ViewInvoice extends React.Component {
 									fileName={invoiceData.referenceNumber + ".pdf"}
 								>
 									<InvoiceTemplate
-									status={this.props.location.state.status}
+										status={this.props.location.state.status}
 										invoiceData={invoiceData}
 										currencyData={currencyData}
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
-										companyData={this.state && this.state.companyData ?this.state.companyData:''}
+										companyData={this.state && this.state.companyData ? this.state.companyData : ''}
 										contactData={contactData}
 									/>
 								</PDFExport>

@@ -375,7 +375,7 @@ class DebitNotes extends React.Component {
 								<div
 									onClick={() => {
 										this.props.history.push(
-											'/admin/expense/debit-notes/detail',
+											'/admin/expense/debit-notes/update',
 											{ id: row.id, isCNWithoutProduct: row.isCNWithoutProduct },
 										);
 									}}

@@ -17,19 +17,6 @@ export const getInvoiceById = (_id) => {
 	};
 };
 
-export const getCreditNoteById = (_id, isCNWithoutProduct) => {
-	return (dispatch) => {
-		let data = {
-			method: 'GET',
-			url: `/rest/creditNote/getCreditNoteById?id=${_id}&isCNWithoutProduct=${isCNWithoutProduct}`
-		}
-		return authApi(data).then((res) => {
-			return res
-		}).catch((err) => {
-			throw err
-		})
-	}
-}
 export const getInvoicesForCNById = (_id) => {
 	return (dispatch) => {
 		let data = {
@@ -43,20 +30,6 @@ export const getInvoicesForCNById = (_id) => {
 		})
 	}
 };
-export const getCompanyDetails = () => {
-	return (dispatch) => {
-		let data = {
-			method: 'GET',
-			url: `/rest/company/getCompanyDetails`
-		}
-
-		return authApi(data).then((res) => {
-			return res
-		}).catch((err) => {
-			throw err
-		})
-	}
-}
 export const getContactById = (id) => {
 	return (dispatch) => {
 		let data = {

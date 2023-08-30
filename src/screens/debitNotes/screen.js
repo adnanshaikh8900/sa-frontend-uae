@@ -332,9 +332,6 @@ class DebitNotes extends React.Component {
 	debitNoteDate = (cell, row) => {
 		return row.creditNoteDate ? row.creditNoteDate : '';
 	};
-
-
-
 	renderDueAmount = (cell, row, extraData) => {
 		return row.dueAmount === 0 ? row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	}

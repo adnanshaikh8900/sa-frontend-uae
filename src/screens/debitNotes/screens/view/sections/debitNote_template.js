@@ -154,7 +154,7 @@ class DebitNoteTemplate extends Component {
 												<th>{strings.DebitNoteNo}</th>
 												<th>{strings.DebitNoteDate}</th>
 												<th>{strings.Status}</th>
-												{isCNWithoutProduct && debitNoteData.referenceNo && <th>{strings.ReferenceN}</th>}
+												{isCNWithoutProduct && debitNoteData.invoiceId && <th>{strings.ReferenceN}</th>}
 												{isCNWithoutProduct && <th>{strings.DebitAmount}</th>}
 											</tr>
 										</thead>
@@ -163,7 +163,7 @@ class DebitNoteTemplate extends Component {
 												<td style={{ width: '143px' }}>{debitNoteData.creditNoteNumber}</td>
 												<td style={{ width: '143px' }}>{' '}{moment(debitNoteData.creditNoteDate).format('DD MMM YYYY',)}</td>
 												<td style={{ width: '143px' }}>{debitNoteData.status}</td>
-												{isCNWithoutProduct && debitNoteData.referenceNo && <td style={{ width: '143px' }}>{debitNoteData.referenceNo}</td>}
+												{isCNWithoutProduct && debitNoteData.referenceNo && <td style={{ width: '143px' }}>{debitNoteData.invoiceId}</td>}
 												{isCNWithoutProduct && <td style={{ width: '143px' }}>{debitNoteData.totalAmount}</td>}
 											</tr>
 										</tbody>

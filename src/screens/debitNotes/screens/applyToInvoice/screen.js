@@ -17,7 +17,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Formik, Field } from 'formik';
 import * as DebitNoteApplyToInvoiceActions from './actions';
 import * as DebitNoteActions from '../../actions';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, LeavePage } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -82,7 +82,8 @@ class ApplyToSupplierInvoice extends React.Component {
 			customer_currency: '',
 			invoice_list: [],
 			currenttotal: 0,
-			selectedrowsdata: []
+			selectedrowsdata: [],
+			disableLeavePage: false,
 		};
 
 		this.options = {
@@ -325,13 +326,7 @@ class ApplyToSupplierInvoice extends React.Component {
 		}
 	};
 	handleSubmit = (data) => {
-		this.setState({ disabled: true });
-		// const { payroll_employee_list } = this.props;
-		// const {
-		// 	invoiceIds,
-		// 	creditNoteId
-		// } = data;
-
+		this.setState({ loading: false, disabled: true, disableLeavePage: true });
 		const formData = new FormData();
 		const ids = this.state.selectedRows.map((i) => i.id)
 		formData.append('invoiceIds', ids)
@@ -342,28 +337,31 @@ class ApplyToSupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.initializeData();
 					this.props.commonActions.tostifyAlert(
-						'success',
-						res.data ? 'Amount Applied To Invoice Successfully!' : res.data.message,
+						'success', 'Amount Applied To Invoice Successfully!',
 					);
 					if (this.state.invoice_list && this.state.invoice_list.length > 0) {
 						this.setState({
 							selectedRows: [],
+
 						});
 						this.props.history.push('/admin/expense/debit-notes');
 					}
+					this.setState({ loading: false, disabled: false, disableLeavePage: false });
+
 				}
 			})
 			.catch((err) => {
+				this.setState({ loading: false, disabled: false, disableLeavePage: false });
+
 				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					'error', 'Something Went Wrong',
 				);
 			});
 	};
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, dialog,currenttotal,cannotsave } = this.state;
+		const { loading, dialog, currenttotal, cannotsave } = this.state;
 
 		return (
 			<div className="detail-customer-invoice-screen">
@@ -401,8 +399,8 @@ class ApplyToSupplierInvoice extends React.Component {
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
 															<Row>
-															<Col lg={12}><h5>{strings.DebitAmount}: {this.renderDebitAmount()}</h5></Col>
-																<Col lg={12} style={{color: currenttotal ? 'Green' : cannotsave ? 'red':'inherit' }}>{strings.RemainingDebitAmount}: {currenttotal}<br/></Col>
+																<Col lg={12}><h5>{strings.DebitAmount}: {this.renderDebitAmount()}</h5></Col>
+																<Col lg={12} style={{ fontSize: '12px', color: currenttotal ? 'Green' : cannotsave ? 'red' : 'inherit' }}>{strings.RemainingDebitAmount}: {currenttotal}<br /></Col>
 																<Col lg={12}>
 																	<BootstrapTable
 																		options={this.options}
@@ -436,7 +434,7 @@ class ApplyToSupplierInvoice extends React.Component {
 																			dataField="dueAmount"
 																			className="table-header-bg"
 																		>
-																			{strings.InvoiceAmount}
+																			{strings.InvoiceDueAmount}
 																		</TableHeaderColumn>
 
 																		<TableHeaderColumn
@@ -445,7 +443,7 @@ class ApplyToSupplierInvoice extends React.Component {
 																			formatExtraData={this.props.location.state.debitAmount}
 																			className="table-header-bg"
 																		>
-																			{strings.CreditUsed || "Credit Used"}
+																			{strings.AmountAppliedToTheInvoice}
 																		</TableHeaderColumn>
 																	</BootstrapTable>
 																</Col>
@@ -494,7 +492,7 @@ class ApplyToSupplierInvoice extends React.Component {
 						</Col>
 					</Row>
 				</div>
-
+				{this.state.disableLeavePage ? "" : <LeavePage />}
 			</div>
 		);
 	}

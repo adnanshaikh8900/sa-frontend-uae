@@ -132,6 +132,7 @@ const en = {
       Terms: "Terms",
       InvoiceDate: "Invoice Date",
       InvoiceDueDate: "Invoice Due Date",
+      InvoiceDueAmount: "Invoice Due Amount",
       CurrencyExchangeRate: "Currency Exchange Rate",
       PRODUCT: "PRODUCT",
       DESCRIPTION: "DESCRIPTION",
@@ -384,9 +385,11 @@ const en = {
       AmountCannotBeGreaterThanDebitAmount :"Amount cannot be greater than the Debit Amount",
       DebitAmount :"Debit Amount",
       RecordRefundOnDebitNote:"Record Refund On Debit Note",
-      DebitNoteIssuedOnTheSupplierInvoice:"Debit note issued on the supplier invoice",
+      DebitNoteIssuedOnTheSupplierInvoice:"Debit note issued on the supplier invoice:",
       ApplyDebitsfrom: "Apply debits from",
       RemainingDebitAmount: "Remaining Debit Amount",
+      RemainingCredittAmount: "Remaining Credit Amount",
+      AmountAppliedToTheInvoice:"Amount Applied To The Invoice",
       
       //AddGoodsReceiveNotes
       CreateGoodsReceivedNote: "Create Goods Received Note",
@@ -721,6 +724,7 @@ const en = {
       RefundMode: "Refund Mode",
       RefundFrom: "Refund From",
       RefundNotes: "Notes",
+      CreditNoteIssuedonCustomerInvoice: "Credit Note Issued on Customer Invoice:",
 
       //ImportStatement
       ImportStatement: "Import Statement",

@@ -915,7 +915,7 @@ class CreateDebitNote extends React.Component {
 				}
 			})
 			.catch((err) => {
-				this.setState({ disabled: false, loading: false });
+				this.setState({disableLeavePage: true, disabled: false, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error', strings.DebitNoteCreatedUnSuccessfully,
 				);

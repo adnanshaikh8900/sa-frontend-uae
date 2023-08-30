@@ -202,10 +202,6 @@ class CreditNotes extends React.Component {
 	};
 
 	creditNoteposting = (row, markAsSent) => {
-		this.setState({
-			loading: true,
-		});
-
 		const postingRequestModel = {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,

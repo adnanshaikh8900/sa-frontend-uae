@@ -221,30 +221,8 @@ export const getCountryList = () => {
 	};
 };
 
-export const getPaymentMode = () => {
-	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url: '/rest/datalist/payMode',
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: DEBIT_NOTE.PAY_MODE,
-						payload: {
-							data: res.data,
-						},
-					});
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
 
-export const creditNoteposting = (obj) => {
+export const debitNoteposting = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
@@ -263,7 +241,7 @@ export const creditNoteposting = (obj) => {
 	};
 };
 
-export const unPostInvoice = (obj) => {
+export const unPostDebitNote = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',

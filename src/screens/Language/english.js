@@ -359,6 +359,7 @@ const en = {
       //Debit Notes
       DebitNotes:"Debit Notes",
       DebitNote:"Debit Note",
+      DebitNoteNo:"Debit Note No",
       AddNewDebitNote:"Add New Debit Note",
       CreateDebitNote:"Create Debit Note",
       CreateDebitNoteWithoutProduct:"Create Debit Note Without Product",
@@ -366,7 +367,8 @@ const en = {
       DebitNoteNumber:"Debit Note Number",
       DebitNoteNumberIsRequired:'Debit Note Number is Required',
       DebitNoteDateIsRequired:"Debit Note Date is Required",
-      DebitNoteNumberAlreadyExists:': Debit Note Number already exists',
+      DebitNoteDate:"Debit Note Date",
+      DebitNoteNumberAlreadyExists:'Debit Note Number already exists',
       QuatityIsRequired:"Quatity is required",
       DebitNoteCreatedSuccessfully:"Debit Note Created Successfully!",
       DebitNoteCreatedUnSuccessfully:"Debit Note Created Unsuccessfully!",
@@ -375,6 +377,16 @@ const en = {
       AmountCannotBeGreaterThanTheInvoiceamount:"Amount cannot be greater than the invoice amount",
       DebitNoteDeletedSuccessfully:"Debit Note Deleted Successfully!",
       DebitNoteDeletedUnsuccessfully:"Debit Note Deleted Unsuccessfully!",
+      MarkAsOpen:"Mark As Open",
+      PostingDebitNote___:"Posting Debit Note...",
+      UnpostingDebitNote___:"Unposting Debit Note...",
+      AmountCannotBeZero:"Amount cannot be zero",
+      AmountCannotBeGreaterThanDebitAmount :"Amount cannot be greater than the Debit Amount",
+      DebitAmount :"Debit Amount",
+      RecordRefundOnDebitNote:"Record Refund On Debit Note",
+      DebitNoteIssuedOnTheSupplierInvoice:"Debit note issued on the supplier invoice",
+      ApplyDebitsfrom: "Apply debits from",
+      RemainingDebitAmount: "Remaining Debit Amount",
       
       //AddGoodsReceiveNotes
       CreateGoodsReceivedNote: "Create Goods Received Note",
@@ -651,6 +663,7 @@ const en = {
       DepositTo: "Deposit To",
       ReceivedThrough: "Received Through",
       RecordPayment: "Record Payment",
+      PaymentDateIsRequired:"Payment date is required",
 
       //RecordSupplierPayment
       PaidThrough: "Paid Through",

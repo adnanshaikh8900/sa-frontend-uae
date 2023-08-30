@@ -59,7 +59,7 @@ import ViewGoodsReceivedNote from './goods_received_note/screens/view';
 import CreateDebitNote from './debitNotes/screens/create'
 import DebitNotes from './debitNotes'
 import DetailDebitNote  from './debitNotes/screens/detail'
-import RefundDebitNote from './debitNotes/screens/refund'
+import DebitNoteRefund from './debitNotes/screens/refund'
 import ApplyToSupplierInvoice from './debitNotes/screens/applyToInvoice'
 import ViewDebitNote from './debitNotes/screens/view'
 
@@ -399,7 +399,7 @@ export {
 	DebitNotes,
 	CreateDebitNote,
 	DetailDebitNote,
-	RefundDebitNote,
+	DebitNoteRefund,
 	ApplyToSupplierInvoice,
 	ViewDebitNote,
 };

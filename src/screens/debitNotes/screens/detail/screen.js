@@ -865,7 +865,7 @@ class DetailDebitNote extends React.Component {
 		}
 		this.setState({ loading: true, loadingMsg: "Updating Credit Note..." });
 		this.props.debitNotesDetailActions
-			.updateInvoice(formData)
+			.updateDebitNote(formData)
 			.then((res) => {
 				this.setState({ disabled: false, loading: false });
 				this.props.commonActions.tostifyAlert('success', strings.DebitNoteUpdatedSuccessfully);
@@ -901,7 +901,7 @@ class DetailDebitNote extends React.Component {
 		this.setState({ disabled1: true, disableLeavePage: true });
 		const { debitNoteId } = this.state;
 		this.props.debitNotesDetailActions
-			.deleteCN(debitNoteId)
+			.deleteDebitNote(debitNoteId)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert('success', strings.DebitNoteDeletedSuccessfully);

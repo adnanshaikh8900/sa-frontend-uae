@@ -116,6 +116,7 @@ import {
 	CorporateTaxPaymentHistory,
 	CorporateTaxPaymentRecord,
 	ViewCorporateTax,
+	DebitNoteDetailsReport,
 
 	// Master Screens
 	ChartAccount,
@@ -892,6 +893,11 @@ const adminRoutes = [
 		path: '/admin/report/credit-note-details',
 		name: 'Credit Notes Details',
 		component: CreditNoteDetailsReport.screen,
+	},
+	Config.REPORTS_MODULE && {
+		path: '/admin/report/debit-note-details',
+		name: 'Debit Note Report',
+		component: DebitNoteDetailsReport.screen,
 	},
 	Config.REPORTS_MODULE && {
 		path: '/admin/report/invoice-details',

@@ -317,13 +317,6 @@ class DebitNotes extends React.Component {
 				</div>
 			</div>);
 	};
-	renderInvoiceNumber = (cell, row) => {
-		return (
-			<label>
-				{row.invNumber}
-			</label>
-		);
-	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyCode) {
 			return (
@@ -841,31 +834,18 @@ class DebitNotes extends React.Component {
 												<TableHeaderColumn
 													dataField="creditNoteNumber"
 													dataSort
-													//	width="7%"
 													className="table-header-bg"
 												>
 
 													Debit Note Number
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													width="20%"
 													dataField="customerName"
-													//	dataSort width="10%"
 													className="table-header-bg"
 												>
 													{strings.SUPPLIERNAME}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													dataField="invoiceNumber"
-													dataFormat={this.renderInvoiceNumber}
-													dataSort
-													//	width="7%"
-													className="table-header-bg"
-												>
-													{strings.INVOICENUMBER}
-												</TableHeaderColumn>
-												<TableHeaderColumn
-													//width="9%"
 													dataField="invNumber"
 													dataSort
 													className="table-header-bg"
@@ -874,14 +854,12 @@ class DebitNotes extends React.Component {
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataSort
-													//width="6%"
 													dataFormat={this.debitNoteDate}
 													className="table-header-bg"
 												>
 													{strings.DATE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													//width="9%"
 													dataField="status"
 													dataFormat={this.renderInvoiceStatus}
 													dataSort
@@ -892,8 +870,8 @@ class DebitNotes extends React.Component {
 												<TableHeaderColumn
 													dataAlign="right"
 													dataField="totalAmount"
+													width="22%"
 													dataSort
-													width="20%"
 													dataFormat={this.renderamount}
 													formatExtraData={universal_currency_list}
 													className="table-header-bg"
@@ -904,7 +882,7 @@ class DebitNotes extends React.Component {
 												<TableHeaderColumn
 													className="table-header-bg text-right"
 													columnClassName="text-right"
-													//	width="5%"
+													width="50px"
 													dataFormat={this.renderActions}
 												></TableHeaderColumn>
 											</BootstrapTable>

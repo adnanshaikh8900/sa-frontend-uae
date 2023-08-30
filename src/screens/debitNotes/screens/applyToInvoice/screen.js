@@ -431,6 +431,7 @@ class ApplyToSupplierInvoice extends React.Component {
 																			{strings.InvoiceDate}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
+																			dataAlign='right'
 																			dataField="dueAmount"
 																			className="table-header-bg"
 																		>
@@ -438,6 +439,7 @@ class ApplyToSupplierInvoice extends React.Component {
 																		</TableHeaderColumn>
 
 																		<TableHeaderColumn
+																			dataAlign='right'
 																			dataField="creditstaken"
 																			dataFormat={this.renderCredittaken}
 																			formatExtraData={this.props.location.state.debitAmount}
@@ -479,7 +481,7 @@ class ApplyToSupplierInvoice extends React.Component {
 																	</FormGroup>
 
 																</Col>
-																{cannotsave && <div style={{ fontSize: '1rem', color: 'red' }}>You Dont have Sufficient Credit</div>}
+																{cannotsave && <div style={{ fontSize: '1rem', color: 'red' }}>Insufficient Debit Amount</div>}
 															</Row>
 														</Form>
 													)}

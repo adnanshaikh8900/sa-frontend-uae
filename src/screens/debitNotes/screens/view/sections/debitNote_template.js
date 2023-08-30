@@ -146,6 +146,7 @@ class DebitNoteTemplate extends Component {
 									{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email}: {contactData.billingEmail}</div>)}
 									{debitNoteData && debitNoteData.taxTreatment && debitNoteData.taxTreatment.includes("NON") == false && (<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {contactData && contactData.vatRegistrationNumber && (contactData.vatRegistrationNumber)}</div>)}
 								</div>
+								<br/>
 								<div>
 									<Table className="table-striped" style={{ width: 'fit-content', border: '1px solid', borderColor: '#c8ced3', float: 'right' }}>
 										<thead className="header-row" style={{ fontSize: "12px" }}>
@@ -494,7 +495,8 @@ class DebitNoteTemplate extends Component {
 									</div>
 								}
 							</div>
-						</div><hr />
+						</div>
+						{(debitNoteData.referenceNo || debitNoteData.notes) && <hr />}
 						<br /><br /><br />
 					</CardBody>
 					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>

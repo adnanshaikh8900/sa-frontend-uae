@@ -105,7 +105,8 @@ class Refund extends React.Component {
 			invoiceNumber:"-",
 			showInvoiceNumber:false,
 			receiptNumber:'',
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			creditNoteDate: this.props.location.state.id.invoiceDate,
 		};
 
 		// this.options = {
@@ -677,6 +678,10 @@ class Refund extends React.Component {
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
+																			minDate={new Date( this.state.creditNoteDate.split('-')[2], 
+																			this.state.creditNoteDate.split('-')[1] - 1, 
+																			this.state.creditNoteDate.split('-')[0] 
+																			)}							
 																			value={props.values.receiptDate}
 																			selected={props.values.receiptDate}
 																			onChange={(value) => {

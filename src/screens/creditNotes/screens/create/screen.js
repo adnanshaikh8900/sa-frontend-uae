@@ -181,7 +181,8 @@ class CreateCreditNote extends React.Component {
 			isCreatedWithoutInvoice: false,
 			loadingMsg: "Loading",
 			disableLeavePage: false,
-			lockInvoiceDetail: false
+			lockInvoiceDetail: false,
+			receiptDate: '',
 		};
 
 		this.formRef = React.createRef();
@@ -1434,6 +1435,7 @@ class CreateCreditNote extends React.Component {
 						}
 
 						this.setState({
+							receiptDate: response.data.receiptDate,
 							taxType: response.data.taxType,
 							option: {
 								label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
@@ -1912,8 +1914,7 @@ class CreateCreditNote extends React.Component {
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
-																				minDate={new Date()}
-																				dropdownMode="select"
+																				minDate={new Date(moment(this.state.receiptDate,'YYYY-MM-DD').format())}																				dropdownMode="select"
 																				value={props.values.creditNoteDate}
 																				selected={props.values.creditNoteDate}
 																				onChange={(value) => {

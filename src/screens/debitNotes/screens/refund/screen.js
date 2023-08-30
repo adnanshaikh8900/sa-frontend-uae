@@ -156,7 +156,7 @@ class DebitNoteRefund extends React.Component {
 			formData.append('creditNoteId', this.props.location.state.id.id);
 			formData.append('amountReceived', amount !== null ? amount : '');
 			formData.append('notes', notes !== null ? notes : '');
-			formData.append('type', '7');
+			formData.append('type', '13');
 			formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
 			formData.append('payMode', payMode !== null ? payMode.value : '');
 			if (contactId) {
@@ -190,7 +190,7 @@ class DebitNoteRefund extends React.Component {
 			formData.append('creditNoteId', this.props.location.state.id.id);
 			formData.append('amountReceived', amount !== null ? amount : '');
 			formData.append('notes', notes !== null ? notes : '');
-			formData.append('type', '7');
+			formData.append('type', '13');
 			formData.append('invoiceId', this.state.invoiceId)
 			formData.append('depositTo', depositeTo !== null ? depositeTo.value : '');
 			formData.append('payMode', payMode !== null ? payMode.value : '');

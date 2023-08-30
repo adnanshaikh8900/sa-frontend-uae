@@ -385,6 +385,8 @@ const en = {
       DebitAmount :"Debit Amount",
       RecordRefundOnDebitNote:"Record Refund On Debit Note",
       DebitNoteIssuedOnTheSupplierInvoice:"Debit note issued on the supplier invoice",
+      ApplyDebitsfrom: "Apply debits from",
+      RemainingDebitAmount: "Remaining Debit Amount",
       
       //AddGoodsReceiveNotes
       CreateGoodsReceivedNote: "Create Goods Received Note",

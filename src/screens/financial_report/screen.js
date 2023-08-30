@@ -28,6 +28,7 @@ const Journal = require('assets/images/reports/journal.png');
 const Sales = require('assets/images/reports/sales.png');
 const Purchase = require('assets/images/reports/pay.png');
 const Receivables = require('assets/images/reports/inbox.png');
+const Credit = require('assets/images/reports/credit.png');
 const Debit = require('assets/images/reports/debit.png');
 const Payables = require('assets/images/reports/Payables Icon.png');
 const Expenses = require('assets/images/reports/Expense icon.png')
@@ -271,9 +272,9 @@ class FinancialReport extends React.Component {
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img
 												className="ml-2 mr-2 mt-2 mb-2 "
-											src={Financial}
+											src={Credit}
 											style={{height:'25px'}}
-											></img>	<h5 className="mb-3 mt-2">{strings.PaymentsRecevied}</h5></div>
+											></img>	<h5 className="mb-3 mt-2">{strings.CreditNote}</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
 											this.props.history.push('/admin/report/credit-note-details')}>{strings.CreditNoteDetails}</a></h6>

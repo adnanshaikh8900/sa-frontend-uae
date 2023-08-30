@@ -84,6 +84,7 @@ class DebitNoteRefund extends React.Component {
 				attachmentFile: '',
 				receiptNumber: this.props.location.state.id.creditNoteNumber ? this.props.location.state.id.creditNoteNumber : '',
 				invoiceNumber: this.props.location.state.id.invNumber ? this.props.location.state.id.invNumber : '',
+				debitNoteDate: this.props.location.state.id.creditNoteDate ? new Date(moment(this.props.location.state.id.creditNoteDate,'DD-MM-YYYY').format()) : '',
 			},
 			amount: this.props.location.state.id.dueAmount,
 			invoiceId: this.props.location.state.id.id,
@@ -412,6 +413,7 @@ class DebitNoteRefund extends React.Component {
 															<hr />
 															<Row>
 																<Col lg={4}>
+																	{console.log(this.props.location.state.id,props.values.debitNoteDate)}
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="paymentDate">
 																			<span className="text-danger">* </span>
@@ -424,6 +426,7 @@ class DebitNoteRefund extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
+																			minDate={props.values.debitNoteDate}
 																			dropdownMode="select"
 																			value={props.values.paymentDate}
 																			selected={props.values.paymentDate}

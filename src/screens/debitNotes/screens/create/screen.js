@@ -165,7 +165,7 @@ class CreateDebitNote extends React.Component {
 			invoiveSelected: false,
 			lockInvoiceDetail: false,
 			disableLeavePage: false,
-
+			receiptDate:'',
 		};
 
 		this.formRef = React.createRef();
@@ -964,7 +964,10 @@ class CreateDebitNote extends React.Component {
 							label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
 							value: response.data.contactId,
 						}
+						const date=response.data.receiptDate ? new Date(moment(response.data.receiptDate,'YYYY-MM-DD').format()) : new Date();
 						this.setState({
+							receiptDate : date,
+							debitNoteDate : date,
 							option: custmerName,
 							data: response.data.invoiceLineItems ? response.data.invoiceLineItems : [],
 							taxType: response.data.taxType ? response.data.taxType : false,
@@ -1003,6 +1006,7 @@ class CreateDebitNote extends React.Component {
 						this.formRef.current.setFieldValue('taxTreatmentId', response.data.taxTreatment ? response.data.taxTreatment : '', true);
 						this.formRef.current.setFieldValue('exchangeRate', response.data.exchangeRate ? response.data.exchangeRate : '', true);
 						this.formRef.current.setFieldValue('currency', response.data.currencyCode ? response.data.currencyCode : '', true);
+						this.formRef.current.setFieldValue('debitNoteDate', date, true);
 						this.getTaxTreatment(custmerName.value)
 						this.getCurrency(custmerName.value)
 					}
@@ -1013,7 +1017,7 @@ class CreateDebitNote extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, debitNoteExist, lockInvoiceDetail } = this.state;
+		const { data, receiptDate, initValue, debitNoteExist, lockInvoiceDetail } = this.state;
 		const {
 			customer_list,
 			invoice_list,
@@ -1334,6 +1338,7 @@ class CreateDebitNote extends React.Component {
 																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		value={props.values.debitNoteDate}
+																		minDate={receiptDate}																				
 																		selected={props.values.debitNoteDate}
 																		onChange={(value) => {
 																			props.handleChange('debitNoteDate')(value);

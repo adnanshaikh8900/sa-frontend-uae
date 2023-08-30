@@ -1914,7 +1914,8 @@ class CreateCreditNote extends React.Component {
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
-																				minDate={new Date(moment(this.state.receiptDate,'YYYY-MM-DD').format())}																				dropdownMode="select"
+																				minDate={new Date(moment(this.state.receiptDate,'YYYY-MM-DD').format())}																				
+																				dropdownMode="select"
 																				value={props.values.creditNoteDate}
 																				selected={props.values.creditNoteDate}
 																				onChange={(value) => {

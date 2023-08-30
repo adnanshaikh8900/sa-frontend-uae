@@ -114,6 +114,7 @@ class DetailDebitNote extends React.Component {
 			taxType: false,
 			disableLeavePage: false,
 			isCreatedWithoutInvoice: false,
+			receiptDate:'',
 		};
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\b]+$/;
@@ -933,17 +934,70 @@ class DetailDebitNote extends React.Component {
 		return currency;
 	}
 	getTaxTreatment = (opt) => {
-		const { tax_treatment_list } = this.props
 		this.props.customer_list.map(item => {
 			if (item.label.contactId == opt) {
 				this.formRef.current.setFieldValue('taxTreatmentId', { 'label': item.label.taxTreatment.taxTreatment, 'value': item.label.taxTreatment.id }, true);
 			}
 		});
 	}
+	getInvoiceDetails = (value) => {
+		if (value) {
+			this.props.debitNotesActions
+				.getInvoiceById(value).then((response) => {
+					if (response.status = 200) {
+						const custmerName = {
+							label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
+							value: response.data.contactId,
+						}
+						this.setState({
+							receiptDate : response.data.receiptDate ? new Date(moment(response.data.receiptDate,'YYYY-MM-DD').format()) : new Date(),
+							option: custmerName,
+							data: response.data.invoiceLineItems ? response.data.invoiceLineItems : [],
+							taxType: response.data.taxType ? response.data.taxType : false,
+							totalAmount: response.data.totalAmount,
+							remainingInvoiceAmount: response.data.remainingInvoiceAmount,
+							shippingCharges: response.data.shippingCharges ? response.data.shippingCharges : 0,
+							customer_currency_symbol: response.data.currencyIsoCode ? response.data.currencyIsoCode : '',
+							initValue: {
+								...this.state.initValue,
+								...{
+									currency: response.data.currencyCode ? response.data.currencyCode : '',
+									lineItemsString: response.data.invoiceLineItems ? response.data.invoiceLineItems : [],
+									totalAmount: response.data.totalAmount,
+									totalDiscount: response.data.discount,
+									taxTreatmentId: response.data.taxTreatment ? response.data.taxTreatment : '',
+									exchangeRate: response.data.exchangeRate ? response.data.exchangeRate : 1,
+								},
+							},
 
+						}, () => {
+							this.formRef.current.setFieldValue(
+								'lineItemsString',
+								this.state.data,
+								true,
+							);
+							this.formRef.current.setFieldTouched(
+								`lineItemsString[${this.state.data.length - 1}]`,
+								false,
+								true,
+							);
+						},);
+						this.updateAmount(this.state.data)
+						this.formRef.current.setFieldValue('contactId', custmerName, true);
+						this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
+						this.formRef.current.setFieldValue('currency', this.state.customer_currency, true);
+						this.formRef.current.setFieldValue('taxTreatmentId', response.data.taxTreatment ? response.data.taxTreatment : '', true);
+						this.formRef.current.setFieldValue('exchangeRate', response.data.exchangeRate ? response.data.exchangeRate : '', true);
+						this.formRef.current.setFieldValue('currency', response.data.currencyCode ? response.data.currencyCode : '', true);
+						this.getTaxTreatment(custmerName.value)
+						this.getCurrency(custmerName.value)
+					}
+				});
+		}
+	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, loadingMsg, initValue, loading, dialog } = this.state;
+		const { data, loadingMsg, initValue, loading, dialog ,isCreatedWithoutInvoice} = this.state;
 
 		const { tax_treatment_list, invoice_list, currency_convert_list, customer_list, universal_currency_list, vat_list } = this.props;
 		let tmpCustomer_list = []
@@ -986,11 +1040,11 @@ class DetailDebitNote extends React.Component {
 														validate={(values) => {
 															let errors = {};
 
-															if (!this.state.isCreatedWithoutInvoice && !values.invoiceNumber) {
+															if (!isCreatedWithoutInvoice && !values.invoiceNumber) {
 																errors.invoiceNumber = 'Invoice Number is Required';
 															}
 
-															if (this.state.isCreatedWithoutInvoice == true && !values.debitAmount)
+															if (isCreatedWithoutInvoice == true && !values.debitAmount)
 																errors.debitAmount = 'Credit Amount is Required';
 
 															if (this.state.invoiceSelected && (parseFloat(initValue.totalAmount) > parseFloat(this.state.remainingInvoiceAmount))) {
@@ -1033,13 +1087,14 @@ class DetailDebitNote extends React.Component {
 																				checked={this.state.isDNWIWithoutProduct}
 																				onChange={(check) => {
 																					this.setState({ isDNWIWithoutProduct: !this.state.isDNWIWithoutProduct })
+																					this.getInvoiceDetails(props.values.invoiceNumber?.value ? props.values.invoiceNumber.value : props.values.invoiceNumber )
 																				}}
 																			/>	{strings.CreateDebitNoteWithoutProduct}
 																		</Col>
 																	</Row>
 																	<hr />
 																</>}
-																{!this.state.isCreatedWithoutInvoice && (<Row>
+																{!isCreatedWithoutInvoice && (<Row>
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="invoiceNumber"><span className="text-danger">* </span>
@@ -1095,7 +1150,6 @@ class DetailDebitNote extends React.Component {
 																	</Col>
 																</Row>)}
 																<Row>
-																	{console.log(props.values.debitNoteNumber)}
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="debitNoteNumber">
@@ -1245,6 +1299,7 @@ class DetailDebitNote extends React.Component {
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				value={props.values.invoiceDate}
+																				minDate={this.state.receiptDate}																				
 																				selected={props.values.invoiceDate}
 																				onChange={(value) => {
 																					props.handleChange('invoiceDate')(value);
@@ -1499,7 +1554,7 @@ class DetailDebitNote extends React.Component {
 																			</BootstrapTable>
 																		</Col>
 																	</Row>)}
-																{this.state.data.length > 0 ? (
+																{!isCreatedWithoutInvoice ? (
 																	<Row>
 																		<Col lg={7}>
 																			<Col lg={6}>

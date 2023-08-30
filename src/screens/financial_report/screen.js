@@ -28,6 +28,7 @@ const Journal = require('assets/images/reports/journal.png');
 const Sales = require('assets/images/reports/sales.png');
 const Purchase = require('assets/images/reports/pay.png');
 const Receivables = require('assets/images/reports/inbox.png');
+const Debit = require('assets/images/reports/debit.png');
 const Payables = require('assets/images/reports/Payables Icon.png');
 const Expenses = require('assets/images/reports/Expense icon.png')
 
@@ -311,7 +312,21 @@ class FinancialReport extends React.Component {
 											this.props.history.push('/admin/report/payable-invoice-details')}> {strings.PayableInvoiceDetails}</a></h6>
 									</div>
 									</Col>}
-									<Col  className="report-section ml-4">
+									{config.REPORTS_HEAD_DN && <Col  className="report-section ml-4">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
+											<img
+												className="ml-2 mr-2 mt-2 mb-2 "
+											src={Debit}
+											style={{height:'25px'}}
+											></img>	<h5 className="mb-3 mt-2">{strings.DebitNotes}</h5></div>
+											<div className="mt-2 ml-4">
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/debit-note-details')}>{strings.DebitNoteDetails}</a></h6>
+											{/* <h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
+											this.props.history.push('/admin/report/payable-invoice-details')}> Payables Invoice Detail</a></h6> */}
+										</div>
+									</Col>}
+									{/* <Col  className="report-section ml-4"> */}
 										{/* <div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img
 											className="ml-2 mr-2 mt-2 mb-2 "
@@ -322,7 +337,7 @@ class FinancialReport extends React.Component {
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
 											this.props.history.push('/admin/report/statementOfAccount')}>SOA (Statement of Account)</a></h6>	
 									</div> */}
-									</Col>
+									{/* </Col> */}
 									{/* <Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img

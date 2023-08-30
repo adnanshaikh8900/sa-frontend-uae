@@ -297,6 +297,7 @@ class Refund extends React.Component {
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
+		formData.append('type', '7');
 		formData.append(
 			'paymentDate',
 			typeof receiptDate === 'string'

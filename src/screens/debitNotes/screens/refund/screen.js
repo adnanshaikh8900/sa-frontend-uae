@@ -17,7 +17,7 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import * as CustomerRecordPaymentActions from './actions';
+import * as DebitNotesRefundActions from './actions';
 import * as DebiteNoteActions from '../../actions';
 import { Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -40,8 +40,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		debiteNoteActions: bindActionCreators(DebiteNoteActions, dispatch,),
-		CustomerRecordPaymentActions: bindActionCreators(
-			CustomerRecordPaymentActions,
+		debitNotesRefundActions: bindActionCreators(
+			DebitNotesRefundActions,
 			dispatch,
 		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
@@ -156,7 +156,7 @@ class DebitNoteRefund extends React.Component {
 			formData.append('creditNoteId', this.props.location.state.id.id);
 			formData.append('amountReceived', amount !== null ? amount : '');
 			formData.append('notes', notes !== null ? notes : '');
-
+			formData.append('type', '7');
 			formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
 			formData.append('payMode', payMode !== null ? payMode.value : '');
 			if (contactId) {
@@ -169,7 +169,7 @@ class DebitNoteRefund extends React.Component {
 					: paymentDate,
 			);
 			this.setState({ loading: true, loadingMsg: "Credit Refunding..." });
-			this.props.CustomerRecordPaymentActions.recordPaymentCNWithoutInvoice(formData)
+			this.props.debitNotesRefundActions.refundPaymentCNWithoutInvoice(formData)
 				.then((res) => {
 					this.props.commonActions.tostifyAlert(
 						'success', 'Refund Recorded successfully',
@@ -211,7 +211,7 @@ class DebitNoteRefund extends React.Component {
 				formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 			}
 			this.setState({ loading: true, loadingMsg: " Payment Refunding..." });
-			this.props.CustomerRecordPaymentActions.recordPayment(formData)
+			this.props.debitNotesRefundActions.refundPaymentCNWithInvoice(formData)
 				.then((res) => {
 					this.props.commonActions.tostifyAlert(
 						'success', 'Refund Recorded Successfully!',

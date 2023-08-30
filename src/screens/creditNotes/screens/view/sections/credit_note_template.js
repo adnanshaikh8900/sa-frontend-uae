@@ -334,7 +334,7 @@ class InvoiceTemplate extends Component {
 								<br />
 
 								{invoiceData.notes && (<><h6 className="mb-0 pt-2">
-									<b>{strings.TermsAndConditions}:</b>
+									<b>{strings.RefundNotes}:</b>
 								</h6><br />
 									<h6 className="mb-0">{invoiceData.notes}</h6>
 								</>)}

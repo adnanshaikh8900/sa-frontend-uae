@@ -74,15 +74,16 @@ class DebitNoteRefund extends React.Component {
 			current_customer_id: null,
 			initValue: {
 				receiptNo: '',
-				receiptDate: new Date(),
+				paymentDate: new Date(),
 				contactId: this.props.location.state.id.contactId,
 				amount: this.props.location.state.id.dueAmount,
-				payMode: '',
+				payMode: { label: 'CASH', value: 'CASH' },
 				notes: '',
-				depositeTo: '',
+				depositeTo: { label: 'Petty Cash', value: 47 },
 				referenceCode: '',
 				attachmentFile: '',
-				paidInvoiceListStr: [],
+				receiptNumber: this.props.location.state.id.creditNoteNumber ? this.props.location.state.id.creditNoteNumber : '',
+				invoiceNumber: this.props.location.state.id.invNumber ? this.props.location.state.id.invNumber : '',
 			},
 			amount: this.props.location.state.id.dueAmount,
 			invoiceId: this.props.location.state.id.id,
@@ -95,9 +96,6 @@ class DebitNoteRefund extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
-			invoiceNumber: "-",
-			showInvoiceNumber: false,
-			receiptNumber: '',
 			loadingMsg: "Loading..."
 		};
 		this.formRef = React.createRef();
@@ -122,69 +120,10 @@ class DebitNoteRefund extends React.Component {
 	};
 
 	initializeData = () => {
-		this.setState({
-			initValue: {
-				paidInvoiceListStr: [
-					{
-						id: this.props.location.state.id.id,
-						date: moment(
-							this.props.location.state.id.invoiceDate,
-							'DD-MM-YYYY',
-						).toDate(),
-						dueDate: moment(
-							this.props.location.state.id.invoiceDueDate,
-							'DD-MM-YYYY',
-						).toDate(),
-						paidAmount: this.props.location.state.id.invoiceAmount,
-						dueAmount: this.props.location.state.id.dueAmount,
-						referenceNo: this.props.location.state.id.invoiceNumber,
-						totalAount: this.props.location.state.id.invoiceAmount,
-					},
-				],
-			},
-		});
 		this.props.debiteNoteActions.getDepositList();
-			this.props.commonActions.getPaymentMode();
-			this.props.commonActions.getCustomerList(this.state.contactType);
-			this.getReceiptNo();
-		//INV number & cn number
-		this.props.debiteNoteActions
-			.getInvoicesForCNById(this.props.location.state.id.id)
-			.then((res) => {
-
-				if (res.status === 200) {
-					if (res.data.length && res.data.length != 0)
-						this.setState(
-							{
-								invoiceNumber: res.data[0].invoiceNumber,
-								receiptNumber: res.data[0].creditNoteNumber,
-								showInvoiceNumber: true
-							},
-							() => { },
-						);
-				}
-			})
+		this.props.commonActions.getPaymentMode();
+		this.props.commonActions.getCustomerList(this.state.contactType);
 	};
-
-
-	getReceiptNo = () => {
-		this.props.CustomerRecordPaymentActions.getReceiptNo(
-			this.props.location.state.id.id,
-		).then((res) => {
-			if (res.status === 200) {
-				this.setState({
-					initValue: {
-						...this.state.initValue,
-						...{ receiptNo: res.data },
-					},
-				});
-				this.formRef.current.setFieldValue('receiptNo', res.data, true);
-			}
-		});
-	};
-
-
-
 
 	handleFileChange = (e, props) => {
 		e.preventDefault();
@@ -196,30 +135,13 @@ class DebitNoteRefund extends React.Component {
 			props.setFieldValue('attachmentFile', file, true);
 		}
 	};
-	showInvoiceNumber = () => {
-
-		return (
-			this.state.showInvoiceNumber && (
-				<Col lg={4}>
-					<FormGroup className="mb-3">
-						<Label htmlFor="project">{strings.InvoiceNumber}</Label>
-						<Input
-							disabled
-							id="invoiceNumber"
-							name="invoiceNumber"
-							value={this.state.invoiceNumber}
-						/>
-					</FormGroup>
-				</Col>)
-		)
-	}
 
 	handleSubmit = (data) => {
 		this.setState({ disabled: true });
 		const { invoiceId } = this.state;
 		const {
 			receiptNo,
-			receiptDate,
+			paymentDate,
 			contactId,
 			amount,
 			depositeTo,
@@ -242,24 +164,24 @@ class DebitNoteRefund extends React.Component {
 			}
 			formData.append(
 				'paymentDate',
-				typeof receiptDate === 'string'
-					? moment(receiptDate, 'DD/MM/YYYY').toDate()
-					: receiptDate,
+				typeof paymentDate === 'string'
+					? moment(paymentDate, 'DD/MM/YYYY').toDate()
+					: paymentDate,
 			);
 			this.setState({ loading: true, loadingMsg: "Credit Refunding..." });
 			this.props.CustomerRecordPaymentActions.recordPaymentCNWithoutInvoice(formData)
 				.then((res) => {
 					this.props.commonActions.tostifyAlert(
-						'success',
-						res.data ? res.data.message : 'Refund Recorded successfully',
+						'success', 'Refund Recorded successfully',
 					);
-					this.props.history.push('/admin/income/credit-notes');
+					this.props.history.push('/admin/expense/debit-notes');
 					this.setState({ loading: false, });
 				})
 				.catch((err) => {
+					this.setState({ loading: false, loadingMsg: "", disabled: false });
+
 					this.props.commonActions.tostifyAlert(
-						'error',
-						err && err.data ? err.data.message : 'Credit Refund Unsuccessfully.',
+						'error', 'Credit Refund Unsuccessfully.',
 					);
 				});
 		}//
@@ -277,9 +199,9 @@ class DebitNoteRefund extends React.Component {
 			}
 			formData.append(
 				'paymentDate',
-				typeof receiptDate === 'string'
-					? moment(receiptDate, 'DD/MM/YYYY').toDate()
-					: receiptDate,
+				typeof paymentDate === 'string'
+					? moment(paymentDate, 'DD/MM/YYYY').toDate()
+					: paymentDate,
 			);
 			formData.append('payMode', payMode !== null ? payMode.value : '');
 			if (contactId) {
@@ -292,66 +214,18 @@ class DebitNoteRefund extends React.Component {
 			this.props.CustomerRecordPaymentActions.recordPayment(formData)
 				.then((res) => {
 					this.props.commonActions.tostifyAlert(
-						'success',
-						res.data ? 'Refund Recorded Successfully!' : res.data.message,
+						'success', 'Refund Recorded Successfully!',
 					);
-					this.props.history.push('/admin/income/credit-notes');
+					this.props.history.push('/admin/expense/debit-notes');
 					this.setState({ loading: false, });
 				})
 				.catch((err) => {
+					this.setState({ loading: false, loadingMsg: "", disabled: false });
 					this.props.commonActions.tostifyAlert(
-						'error',
-						err && err.data ? err.data.message : 'Credit Refund Unsuccessfully.',
+						'error', 'Credit Refund Unsuccessfully.',
 					);
 				});
 		}//
-	};
-	deleteInvoice = () => {
-		const message1 =
-			<text>
-				<b>Delete Customer Invoice?</b>
-			</text>
-		const message = 'This Customer Invoice will be deleted permanently and cannot be recovered. ';
-		this.setState({
-			dialog: (
-				<ConfirmDeleteModal
-					isOpen={true}
-					okHandler={this.removeInvoice}
-					cancelHandler={this.removeDialog}
-					message={message}
-					message1={message1}
-				/>
-			),
-		});
-	};
-
-	removeInvoice = () => {
-		const { current_customer_id } = this.state;
-		this.setState({ loading: true, loadingMsg: "Deleting Invoice..." });
-		this.props.customerInvoiceDetailActions
-			.deleteInvoice(current_customer_id)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						res.data ? res.data.message : 'Invoice Deleted Successfully',
-					);
-					this.props.history.push('/admin/income/credit-notes');
-					this.setState({ loading: false, });
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Invoice Deleted Unsuccessfully',
-				);
-			});
-	};
-
-	removeDialog = () => {
-		this.setState({
-			dialog: null,
-		});
 	};
 
 	render() {
@@ -378,9 +252,9 @@ class DebitNoteRefund extends React.Component {
 										<Row>
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
-													<i className="fas fa-address-book" />
+													<i className="fa fa-credit-card" />
 													<span className="ml-2">
-														{strings.RefundForCreditNote}
+														{strings.RecordRefundOnDebitNote}
 													</span>
 												</div>
 											</Col>
@@ -401,15 +275,13 @@ class DebitNoteRefund extends React.Component {
 														}}
 														validate={(values) => {
 															let errors = {};
-															if (values.amount == 0) {
-																errors.amount =
-																	'Amount cannot be empty or 0';
+															if (!values.amount || values.amount == 0) {
+																errors.amount = strings.AmountCannotBeZero;
 															} else if (this.state.amount < parseFloat(values.amount)) {
-																errors.amount =
-																	'Amount cannot More than the Credit Amount';
+																errors.amount = strings.AmountCannotBeGreaterThanDebitAmount;
 															}
-															if (!values.receiptDate) {
-																errors.receiptDate = 'Payment date is required';
+															if (!values.paymentDate) {
+																errors.paymentDate = strings.PaymentDateIsRequired;
 															}
 															return errors
 														}}
@@ -462,11 +334,10 @@ class DebitNoteRefund extends React.Component {
 															<Form onSubmit={props.handleSubmit}>
 																<Row>
 																	<Col lg={4}>
-																		{console.log(this.props.location.state.id, props.values.contactId)}
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
 																				<span className="text-danger">* </span>
-																				{strings.CustomerName}
+																				{strings.SupplierName}
 																			</Label>
 																			<Select
 																				styles={customStyles}
@@ -497,48 +368,13 @@ class DebitNoteRefund extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-																	{
-																		this.state.isCNWithoutProduct != true &&
-																		(this.showInvoiceNumber())}
-																	{/* <Col lg={4}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="project">
-																			<span className="text-danger">* </span>{' '}
-																			Payment
-																		</Label>
-																		<Input
-																			type="text"
-																			id="receiptNo"
-																			name="receiptNo"
-																			placeholder=""
-																			disabled
-																			value={props.values.receiptNo}
-																			onChange={(value) => {
-																				props.handleChange('receiptNo')(value);
-																			}}
-																			className={
-																				props.errors.receiptNo &&
-																				props.touched.receiptNo
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.receiptNo &&
-																			props.touched.receiptNo && (
-																				<div className="invalid-feedback">
-																					{props.errors.receiptNo}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col> */}
 																</Row>
-																<hr />
 																<Row>
 																	<Col lg={4}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="project">
+																			<Label htmlFor="amount">
 																				<span className="text-danger">* </span>{' '}
-																				{strings.AmounttoRefund}
+																				{strings.AmountReceived}
 																			</Label>
 																			<Input
 																				type="text"
@@ -549,14 +385,12 @@ class DebitNoteRefund extends React.Component {
 																				name="amount"
 																				value={props.values.amount}
 																				onChange={(option) => {
-																					if (
-																						option.target.value === '' ||
-																						this.regDecimal.test(option.target.value)
-																					) {
+																					if ((option.target.value === '' || this.regDecimal.test(option.target.value))
+																						&& parseFloat(option.target.value) !== 0) {
 																						props.handleChange('amount')(option);
 																					}
 																				}}
-																				placeholder={strings.AmounttoRefund}
+																				placeholder={strings.AmountReceived}
 																				className={
 																					props.errors.amount &&
 																						props.touched.amount
@@ -578,35 +412,35 @@ class DebitNoteRefund extends React.Component {
 																<Row>
 																	<Col lg={4}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="date">
+																			<Label htmlFor="paymentDate">
 																				<span className="text-danger">* </span>
-																				{strings.RefundDate}
+																				{strings.PaymentDate}
 																			</Label>
 																			<DatePicker
-																				id="receiptDate"
-																				name="receiptDate"
-																				placeholderText={strings.RefundDate}
+																				id="paymentDate"
+																				name="paymentDate"
+																				placeholderText={strings.PaymentDate}
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
-																				value={props.values.receiptDate}
-																				selected={props.values.receiptDate}
+																				value={props.values.paymentDate}
+																				selected={props.values.paymentDate}
 																				onChange={(value) => {
-																					props.handleChange('receiptDate')(
+																					props.handleChange('paymentDate')(
 																						value,
 																					);
 																				}}
-																				className={`form-control ${props.errors.receiptDate &&
-																						props.touched.receiptDate
-																						? 'is-invalid'
-																						: ''
+																				className={`form-control ${props.errors.paymentDate &&
+																					props.touched.paymentDate
+																					? 'is-invalid'
+																					: ''
 																					}`}
 																			/>
-																			{props.errors.receiptDate &&
-																				props.touched.receiptDate && (
+																			{props.errors.paymentDate &&
+																				props.touched.paymentDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.receiptDate}
+																						{props.errors.paymentDate}
 																					</div>
 																				)}
 																		</FormGroup>
@@ -617,7 +451,7 @@ class DebitNoteRefund extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="payMode">
 																				<span className="text-danger">* </span>{' '}
-																				{strings.RefundMode}
+																				{strings.PaymentMode}
 																			</Label>
 																			<Select
 																				options={
@@ -638,7 +472,7 @@ class DebitNoteRefund extends React.Component {
 																						props.handleChange('payMode')('');
 																					}
 																				}}
-																				placeholder={strings.Select + strings.RefundMode}
+																				placeholder={strings.Select + strings.PaymentMode}
 																				id="payMode"
 																				name="payMode"
 																				className={
@@ -660,11 +494,11 @@ class DebitNoteRefund extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="depositeTo">
 																				<span className="text-danger">* </span>{' '}
-																				{strings.RefundFrom}
+																				{strings.ReceivedThrough}
 																			</Label>
 																			<Select
 																				options={deposit_list}
-																				value={props.values.depositeFrom}
+																				value={props.values.depositeTo}
 																				onChange={(option) => {
 																					if (option && option.value) {
 																						props.handleChange('depositeTo')(
@@ -674,7 +508,7 @@ class DebitNoteRefund extends React.Component {
 																						props.handleChange('depositeTo')('');
 																					}
 																				}}
-																				placeholder={strings.Select + strings.RefundFrom}
+																				placeholder={strings.Select + strings.ReceivedThrough}
 																				id="depositeTo"
 																				name="depositeTo"
 																				className={
@@ -696,108 +530,28 @@ class DebitNoteRefund extends React.Component {
 																<hr />
 
 																<Row>
-																	<Col lg={8}>
+																	<Col lg={4}>
 																		<FormGroup className="py-2">
 																			<Label htmlFor="notes">{strings.RefundNotes}</Label><br />
 																			<TextareaAutosize
 																				type="textarea"
-																				style={{ width: "870px" }}
 																				className="textarea form-control"
 																				maxLength="255"
 																				name="notes"
 																				id="notes"
-																				rows="2"
-																				placeholder={strings.RefundNotes}
-																				onChange={(option) =>
-																					props.handleChange('notes')(option)
-																				}
+																				minRows="2"
+																				placeholder={strings.Enter + strings.Notes}
+																				onChange={(option) => {
+																					if ((!props.values.notes && option.target.value !== ' ') || props.values.notes)
+																						props.handleChange('notes')(option)
+																				}}
 																				value={props.values.notes}
 																			/>
 																		</FormGroup>
-																		<Row>
-																			<Col lg={6}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="receiptNumber">
-																						{strings.ReferenceNumber}
-																					</Label>
-																					<Input
-																						type="text"
-																						maxLength="20"
-																						id="receiptNumber"
-																						name="receiptNumber"
-																						value={this.state.receiptNumber}
-																						placeholder={strings.ReceiptNumber}
-																						onChange={(value) => {
-																							props.handleChange('receiptNumber')(value);
-
-																						}}
-																						className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : " "}
-																					/>
-																					{props.errors.receiptNumber && props.touched.receiptNumber && (
-																						<div className="invalid-feedback">{props.errors.receiptNumber}</div>
-																					)}
-
-																				</FormGroup>
-																			</Col>
-																			<Col lg={6}>
-																				<FormGroup className="mb-3">
-																					<Field
-																						name="attachmentFile"
-																						render={({ field, form }) => (
-																							<div>
-																								<Label>{strings.ReceiptAttachment}</Label>{' '}
-																								<br />
-																								<Button
-																									color="primary"
-																									onClick={() => {
-																										document
-																											.getElementById('fileInput')
-																											.click();
-																									}}
-																									className="btn-square mr-3"
-																								>
-																									<i className="fa fa-upload"></i>{' '}
-																									{strings.upload}
-																								</Button>
-																								<input
-																									id="fileInput"
-																									ref={(ref) => {
-																										this.uploadFile = ref;
-																									}}
-																									type="file"
-																									style={{ display: 'none' }}
-																									onChange={(e) => {
-																										this.handleFileChange(
-																											e,
-																											props,
-																										);
-																									}}
-																								/>
-																								{this.state.fileName && (
-																									<div>
-																										<i
-																											className="fa fa-close"
-																											onClick={() =>
-																												this.setState({
-																													fileName: '',
-																												})
-																											}
-																										></i>{' '}
-																										{this.state.fileName}
-																									</div>
-																								)}
-																							</div>
-																						)}
-																					/>
-																					{props.errors.attachmentFile &&
-																						props.touched.attachmentFile && (
-																							<div className="invalid-file">
-																								{props.errors.attachmentFile}
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
-																		</Row>
+																	</Col>
+																</Row>
+																<Row>
+																	<Col lg={4}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="receiptAttachmentDescription">
 																				{strings.AttachmentDescription}
@@ -805,17 +559,17 @@ class DebitNoteRefund extends React.Component {
 																			<TextareaAutosize
 																				type="textarea"
 																				className="textarea form-control"
-																				maxLength="250"
-																				style={{ width: "870px" }}
+																				maxLength="255"
 																				name="receiptAttachmentDescription"
 																				id="receiptAttachmentDescription"
-																				rows="2"
+																				minRows="2"
 																				placeholder={strings.ReceiptAttachmentDescription}
-																				onChange={(option) =>
-																					props.handleChange(
-																						'receiptAttachmentDescription',
-																					)(option)
-																				}
+																				onChange={(option) => {
+																					if ((!props.values.receiptAttachmentDescription && option.target.value !== ' ') || props.values.receiptAttachmentDescription)
+																						props.handleChange(
+																							'receiptAttachmentDescription',
+																						)(option)
+																				}}
 																				value={
 																					props.values
 																						.receiptAttachmentDescription
@@ -823,7 +577,93 @@ class DebitNoteRefund extends React.Component {
 																			/>
 																		</FormGroup>
 																	</Col>
+																	<Col lg={4}>
+																		<FormGroup className="mb-3">
+																			<Field
+																				name="attachmentFile"
+																				render={({ field, form }) => (
+																					<div>
+																						<Label>{strings.ReceiptAttachment}</Label>{' '}
+																						<br />
 
+																						<input
+																							id="fileInput"
+																							ref={(ref) => {
+																								this.uploadFile = ref;
+																							}}
+																							type="file"
+																							style={{ display: 'none' }}
+																							onChange={(e) => {
+																								this.handleFileChange(
+																									e,
+																									props,
+																								);
+																							}}
+																						/>
+																						<Button
+																							color="primary"
+																							onClick={() => {
+																								document
+																									.getElementById('fileInput')
+																									.click();
+																							}}
+																							className="btn-square mr-3"
+																						>
+																							<i className="fa fa-upload"></i>{' '}
+																							{strings.upload}
+																						</Button>
+																						{this.state.fileName && (
+																							<div>
+																								<i
+																									className="fa fa-close"
+																									onClick={() =>
+																										this.setState({
+																											fileName: '',
+																										})
+																									}
+																								></i>{' '}
+																								{this.state.fileName}
+																							</div>
+																						)}
+																					</div>
+																				)}
+																			/>
+																			{props.errors.attachmentFile &&
+																				props.touched.attachmentFile && (
+																					<div className="invalid-file">
+																						{props.errors.attachmentFile}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																</Row>
+
+																<Row>
+																	<Col lg={4}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="receiptNumber">
+																				{strings.ReferenceNumber}
+																			</Label>
+																			<Input
+																				type="text"
+																				maxLength="20"
+																				id="receiptNumber"
+																				name="receiptNumber"
+																				value={props.values.receiptNumber}
+																				placeholder={strings.ReceiptNumber}
+																				onChange={(value) => {
+																					props.handleChange('receiptNumber')(value);
+																				}}
+																				className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : " "}
+																			/>
+																			{props.errors.receiptNumber && props.touched.receiptNumber && (
+																				<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																			)}
+
+																		</FormGroup>
+																	</Col>
+																</Row>
+																<Row>
 																	<Col
 																		lg={12}
 																		className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
@@ -853,7 +693,7 @@ class DebitNoteRefund extends React.Component {
 																				className="btn-square"
 																				onClick={() => {
 																					this.props.history.push(
-																						'/admin/income/credit-notes',
+																						'/admin/expense/debit-notes',
 																					);
 																				}}
 																			>
@@ -873,7 +713,7 @@ class DebitNoteRefund extends React.Component {
 							</Col>
 						</Row>
 					</div>
-				</div>
+				</div >
 		);
 	}
 }

@@ -378,6 +378,9 @@ const en = {
       MarkAsOpen:"Mark As Open",
       PostingDebitNote___:"Posting Debit Note...",
       UnpostingDebitNote___:"Unposting Debit Note...",
+      AmountCannotBeZero:"Amount cannot be zero",
+      AmountCannotBeGreaterThanDebitAmount :"Amount cannot be greater than the Debit Amount",
+      RecordRefundOnDebitNote:"Record Refund On Debit Note",
       
       //AddGoodsReceiveNotes
       CreateGoodsReceivedNote: "Create Goods Received Note",
@@ -654,6 +657,7 @@ const en = {
       DepositTo: "Deposit To",
       ReceivedThrough: "Received Through",
       RecordPayment: "Record Payment",
+      PaymentDateIsRequired:"Payment date is required",
 
       //RecordSupplierPayment
       PaidThrough: "Paid Through",

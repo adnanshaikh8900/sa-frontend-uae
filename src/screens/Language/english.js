@@ -375,7 +375,8 @@ const en = {
       AmountCannotBeGreaterThanTheInvoiceamount:"Amount cannot be greater than the invoice amount",
       DebitNoteDeletedSuccessfully:"Debit Note Deleted Successfully!",
       DebitNoteDeletedUnsuccessfully:"Debit Note Deleted Unsuccessfully!",
-      
+      DebitNoteDetails:"Debit Note Detail Report",
+
       //AddGoodsReceiveNotes
       CreateGoodsReceivedNote: "Create Goods Received Note",
       GRNNumber: "GRN Number",

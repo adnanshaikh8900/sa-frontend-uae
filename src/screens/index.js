@@ -210,6 +210,7 @@ import ViewFtaExciseAuditReport from './financial_report/sections/Excise_Audit_R
 import ARAgingReport from './financial_report/sections/ar_aging_report'
 import SubReports from './financial_report/sections/vat_return/screens/subReports'
 import NotesSettings from './notesSetting'
+import DebitNoteDetailsReport from './financial_report/sections/debit_note_details'
 export {
 	LogIn,
 	LogInTwo,
@@ -402,4 +403,5 @@ export {
 	RefundDebitNote,
 	ApplyToSupplierInvoice,
 	ViewDebitNote,
+	DebitNoteDetailsReport,
 };

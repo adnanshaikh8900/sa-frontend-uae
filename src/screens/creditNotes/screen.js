@@ -29,6 +29,7 @@ import './style.scss';
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperCase } from 'lodash';
+import moment from 'moment';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
@@ -363,7 +364,7 @@ class CreditNotes extends React.Component {
 		return row.invoiceDueDate ? row.invoiceDueDate : '';
 	};
 	invoiceDate = (cell, row) => {
-		return row.invoiceDate ? row.invoiceDate : '';
+		return row.invoiceDate ? moment(row.invoiceDate).format('DD-MM-YYYY') : '';
 	};
 
 	renderVatAmount = (cell, row, extraData) => {

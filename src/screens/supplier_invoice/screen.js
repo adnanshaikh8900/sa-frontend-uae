@@ -219,7 +219,7 @@ class SupplierInvoice extends React.Component {
 			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
 				{row.status}
 			</span>
-			{row.cnCreatedOnPaidInvoice && row.status == "Paid" && config.EXPENSE_DN && (<><br />{strings.Credit_Note_Created}</>)}
+			{row.cnCreatedOnPaidInvoice && row.status == "Paid" && config.EXPENSE_DN && (<><br />{strings.DebitNoteCreated}</>)}
 		</>);
 	};
 
@@ -362,7 +362,7 @@ class SupplierInvoice extends React.Component {
 									})
 								}}
 							>
-								<i className="fas fa-plus" /> {strings.Create + " " + strings.CreditNote}
+								<i className="fas fa-plus" /> {strings.Create + " " + strings.DebitNote}
 							</DropdownItem>
 						)}
 						{row.statusEnum === 'Sent' && (

@@ -379,7 +379,14 @@ const en = {
       DebitNoteDeletedSuccessfully:"Debit Note Deleted Successfully!",
       DebitNoteDeletedUnsuccessfully:"Debit Note Deleted Unsuccessfully!",
       DebitNoteDetails:"Debit Note Detail Report",
-
+      DebitNoteStatusChangedSuccessfully:"Debit Note Status Changed Successfully!",
+      DebitNoteStatusChangedUnsuccessfully:"Debit Note Status Changed Unsuccessfully!",
+      DebitNoteMovedToDraftSuccessfully:"Debit Note Moved To Draft Successfully!",
+      DebitNoteMovedToDraftUnsuccessfully:"Debit Note Moved To Draft Unsuccessfully!",
+      RefundRecordedSuccessfully:"Refund Recorded Successfully!",
+      RefundRecordedUnsuccessfully:"Refund Recorded Unsuccessfully!",
+      AmountAppliedToInvoiceSuccessfully:"Amount Applied To Invoice Successfully!",
+      AmountAppliedToInvoiceUnsuccessfully:"Amount Applied To Invoice Unsuccessfully!",
       MarkAsOpen:"Mark As Open",
       PostingDebitNote___:"Posting Debit Note...",
       UnpostingDebitNote___:"Unposting Debit Note...",
@@ -392,6 +399,8 @@ const en = {
       RemainingDebitAmount: "Remaining Debit Amount",
       RemainingCredittAmount: "Remaining Credit Amount",
       AmountAppliedToTheInvoice:"Amount Applied To The Invoice",
+      SomethingWentWrong:"Something Went Wrong",
+      DebitNoteCreated:"Debit Note Created",
       
       //AddGoodsReceiveNotes
       CreateGoodsReceivedNote: "Create Goods Received Note",

@@ -526,7 +526,7 @@ class ApplyToInvoice extends React.Component {
 																		>
 																			{strings.InvoiceAmount}
 																		</TableHeaderColumn>
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																			dataField="totalAount"
 																			dataFormat={this.renderCreditAmount}
 																			formatExtraData={this.props.location.state.creditAmount}
@@ -536,7 +536,7 @@ class ApplyToInvoice extends React.Component {
 																		// }
 																		>
 																			{strings.AmountToCredit}
-																		</TableHeaderColumn>
+																		</TableHeaderColumn> */}
 																		<TableHeaderColumn
 																			dataField="creditstaken"
 																			dataFormat={this.renderCredittaken}

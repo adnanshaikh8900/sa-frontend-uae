@@ -140,7 +140,7 @@ class CreateDebitNote extends React.Component {
 				totalDiscount: 0,
 				discountPercentage: '',
 				discountType: 'FIXED',
-				debitAmount: 0,
+				debitAmount: '',
 				total_excise: 0,
 				customer_currency_symbol: '',
 				taxTreatmentId: '',
@@ -812,6 +812,7 @@ class CreateDebitNote extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+		debugger
 		this.setState({ disabled: true, disableLeavePage: true });
 		const {
 			debitNoteNumber,
@@ -1067,8 +1068,8 @@ class CreateDebitNote extends React.Component {
 														errors.invoiceNumber = 'Invoice Number is Required';
 													}
 
-													if (this.state.isCreatedWithoutInvoice == true && !values.debitAmount)
-														errors.debitAmount = 'Credit Amount is Required';
+													if ((this.state.isDNWIWithoutProduct ||this.state.isCreatedWithoutInvoice) && !values.debitAmount)
+														errors.debitAmount = 'Debit Amount is Required';
 
 													if (this.state.invoiceSelected && (parseFloat(initValue.totalAmount) > parseFloat(this.state.remainingInvoiceAmount))) {
 														errors.totalAmount = 'Invoice Total Amount Cannot be greater than  Remaining Invoice Amount';

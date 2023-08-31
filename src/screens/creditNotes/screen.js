@@ -29,6 +29,7 @@ import './style.scss';
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperCase } from 'lodash';
+import moment from 'moment';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
@@ -363,7 +364,7 @@ class CreditNotes extends React.Component {
 		return row.invoiceDueDate ? row.invoiceDueDate : '';
 	};
 	invoiceDate = (cell, row) => {
-		return row.invoiceDate ? row.invoiceDate : '';
+		return row.invoiceDate ? moment(row.invoiceDate).format('DD-MM-YYYY') : '';
 	};
 
 	renderVatAmount = (cell, row, extraData) => {
@@ -1119,7 +1120,7 @@ class CreditNotes extends React.Component {
 													{strings.CREDITNOTE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													width="20%"
+													//width="22%"
 													dataField="customerName"
 													//	dataSort width="10%"
 													className="table-header-bg"
@@ -1189,7 +1190,7 @@ class CreditNotes extends React.Component {
 													dataAlign="right"
 													dataField="totalAmount"
 													dataSort
-													width="20%"
+													width="22%"
 													dataFormat={this.renderInvoiceAmount}
 													formatExtraData={universal_currency_list}
 													className="table-header-bg"
@@ -1209,7 +1210,7 @@ class CreditNotes extends React.Component {
 												<TableHeaderColumn
 													className="text-right table-header-bg"
 													columnClassName="text-right"
-													//	width="5%"
+													width="50px"
 													dataFormat={this.renderActions}
 												></TableHeaderColumn>
 											</BootstrapTable>

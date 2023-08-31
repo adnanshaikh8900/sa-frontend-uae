@@ -1666,7 +1666,6 @@ class DetailQuotation extends React.Component {
     });
   };
   handleSubmit = (data) => {
-    debugger
     this.setState({ disabled: true, disableLeavePage: true });
     const { current_po_id, term } = this.state;
     const {
@@ -1724,8 +1723,6 @@ class DetailQuotation extends React.Component {
     formData.append("totalAmount", this.state.initValue.totalAmount);
     formData.append("totalExciseAmount", this.state.initValue.total_excise);
     formData.append("discount", this.state.initValue.discount);
-
-    debugger;
     formData.append(
       "receiptNumber",
       receiptNumber !== null ? receiptNumber : ""
@@ -2585,7 +2582,6 @@ class DetailQuotation extends React.Component {
                                     </FormGroup>
                                   </Col>
                                   <Col lg={3}>
-                                    {console.log(props.values.currency)}
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="currency">
                                         <span className="text-danger">* </span>

@@ -13,16 +13,11 @@ import {
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
 import moment from 'moment';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
 import FilterComponent2 from '../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
@@ -40,10 +35,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		financialReportActions: bindActionCreators(
-			FinancialReportActions,
-			dispatch,
-		),
+		financialReportActions: bindActionCreators(FinancialReportActions, dispatch),
 	};
 };
 let strings = new LocalizedStrings(data);
@@ -59,7 +51,6 @@ class CreditNoteDetailsReport extends React.Component {
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
 				endDate: moment().endOf('month').format('DD/MM/YYYY'),
-			
 			},
 			csvData: [],
 			activePage: 1,
@@ -69,9 +60,7 @@ class CreditNoteDetailsReport extends React.Component {
 				column: null,
 				direction: 'desc',
 			},
-		
 		};
-	
 	}
 
 	generateReport = (value) => {
@@ -117,8 +106,6 @@ class CreditNoteDetailsReport extends React.Component {
 	};
 
 	exportFile = () => {
-
-	
 		let dl =""
 		let fn =""
 		let type="csv"
@@ -130,8 +117,8 @@ class CreditNoteDetailsReport extends React.Component {
 
 	   }
 
-	   exportExcelFile  = () => 
-	   {   let dl =""
+	   exportExcelFile  = () => {
+		   let dl =""
 		   let fn =""
 		   let type="xlsx"
 		   var elt = document.getElementById('tbl_exporttable_to_xls');												
@@ -139,7 +126,6 @@ class CreditNoteDetailsReport extends React.Component {
 		   return dl ?
 			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
 			 XLSX.writeFile(wb, fn || ('Tax Credit Note Details Report.'+ (type || 'xlsx')));
-   
 	   }
 
 	// exportFile = (csvData, fileName, type) => {
@@ -168,12 +154,15 @@ class CreditNoteDetailsReport extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
+
 	renderinvoiceDate = (cell, rows) => {
 		return moment(rows.creditNoteDate).format('DD/MM/YYYY');
 	};
+
 	renderinvoiceDueDate = (cell, rows) => {
 		return moment(rows.invoiceDueDate).format('DD/MM/YYYY');
 	};
+
 	renderbalance = (cell, row, extraData) => {
 		return row.balance === 0 ? (
 			<Currency
@@ -188,6 +177,7 @@ class CreditNoteDetailsReport extends React.Component {
 		);
 		
 	};
+
 	creditNoteTotalAmount = (cell, row, extraData) => {
 		return row.creditNoteTotalAmount === 0 ? (
 			<Currency
@@ -202,6 +192,7 @@ class CreditNoteDetailsReport extends React.Component {
 		);
 		
 	};
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
@@ -236,30 +227,29 @@ class CreditNoteDetailsReport extends React.Component {
 											<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
-														
-													<DropdownItem 
-													 onClick={()=>{this.exportFile()}}>
+														<DropdownItem 
+														onClick={()=>{this.exportFile()}}>
 															<span
-															style={{
-																border: 0,
-    															padding: 0,
-																backgroundColor:"white !important"
-															}}
-														    
+																style={{
+																	border: 0,
+																	padding: 0,
+																	backgroundColor:"white !important"
+																}}
 															>CSV (Comma Separated Value)</span>
 														</DropdownItem>
 														<DropdownItem 
 														 onClick={()=>{this.exportExcelFile()}}>
 															<span
-															style={{
-																border: 0,
-    															padding: 0,
-																backgroundColor:"white !important"
-															}}
+																style={{
+																	border: 0,
+																	padding: 0,
+																	backgroundColor:"white !important"
+																}}
 														    >Excel</span>
 														</DropdownItem>
-														<DropdownItem onClick={this.exportPDFWithComponent}>
-															Pdf
+														<DropdownItem 
+														onClick={this.exportPDFWithComponent}
+														>Pdf
 														</DropdownItem>
 														{/* <DropdownItem
 															onClick={() => {
@@ -280,31 +270,25 @@ class CreditNoteDetailsReport extends React.Component {
 												<div
 													className="mr-2 print-btn-cont"
 													onClick={() => window.print()}
-													style={{
-														cursor: 'pointer',
-														}}
+													style={{cursor: 'pointer'}}
 												>
 													<i className="fa fa-print"></i>
 												</div>
 												{/* <div
-												className="mr-2 print-btn-cont"
-												onClick={() => {
-													this.exportPDFWithComponent();
-												}}
-												style={{
-													cursor: 'pointer',
+													className="mr-2 print-btn-cont"
+													onClick={() => {
+														this.exportPDFWithComponent();
 													}}
-												>
-												<i className="fa fa-file-pdf-o"></i>
-											</div> */}
+													style={{cursor: 'pointer'}}
+													>
+													<i className="fa fa-file-pdf-o"></i>
+												</div> */}
 												<div
 													className="mr-2 print-btn-cont"
                                                     onClick={() => {
                                                         this.props.history.push('/admin/report/reports-page');
                                                     }}
-													style={{
-														cursor: 'pointer',
-														}}
+													style={{cursor: 'pointer'}}
 												>
 												<span>X</span>
 												</div>
@@ -329,25 +313,23 @@ class CreditNoteDetailsReport extends React.Component {
 									paperSize="A3"
 									fileName="Credit Note Details.pdf"
 								>
-							<div style={{	
-									
+								<div style={{
 									display: 'flex',
 									justifyContent: 'space-between',
 									marginBottom: '1rem'}}>
 									<div>
-									<img
-										src={ 
-											company_profile &&
-											company_profile.companyLogoByteArray
-												? 'data:image/jpg;base64,' +
-											company_profile.companyLogoByteArray
-												: logo
-										}
-										className=""
-										alt=""
-										style={{ width: ' 150px' }}></img>
-								
-									
+										<img
+											src={ 
+												company_profile &&
+												company_profile.companyLogoByteArray
+													? 'data:image/jpg;base64,' +
+												company_profile.companyLogoByteArray
+													: logo
+											}
+											className=""
+											alt=""
+											style={{ width: ' 150px' }}>
+										</img>
 									</div>			
 									<div style={{textAlign:'center'}} >
 								
@@ -365,7 +347,7 @@ class CreditNoteDetailsReport extends React.Component {
 									</div>
 									<div>
 									</div>									
-							</div>
+								</div>
 									{loading ? (
 										<Loader />
 									) : (
@@ -373,9 +355,9 @@ class CreditNoteDetailsReport extends React.Component {
 												<Table className="table-bordered">
 												<thead className="table-header-bg">
 													<tr>
-															<th style={{ padding: '0.5rem', textAlign: 'center', color: 'black' }}>{strings.Credit_Note +" "+strings.Number}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color: 'black' }}>{strings.Credit_Note +" "+strings.Number}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerName}</th>
-															<th style={{ padding: '0.5rem', textAlign: 'center', color: 'black' }}>{strings.Credit_Note +" "+strings.Date}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color: 'black' }}>{strings.Credit_Note +" "+strings.Date}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Status}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.SalesReturn}
 															{/* {strings.InvoiceAmount} */}
@@ -388,14 +370,19 @@ class CreditNoteDetailsReport extends React.Component {
 														this.state.data.creditNoteSummaryModelList.map((item, index) => {
 															return (
 																<tr key={index}>
-
-
-																	<td style={{ textAlign: 'center'}}>{item.creditNoteNumber}</td>
+																	<td style={{ textAlign: 'center'}}
+																	onClick={() =>
+																		this.props.history.push('/admin/income/credit-notes/view', {
+																			id: item.id, status: item.status, isCNWithoutProduct: item.isCNWithoutProduct,
+																			gotoReports:true
+																		})
+																	}
+																	>{item.creditNoteNumber}</td>
 																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
 																	<td style={{ textAlign: 'center'}}>{item.creditNoteDate ? (
 																		moment(item.creditNoteDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
-																		<td style={{ textAlign: 'center' }}>
+																	<td style={{ textAlign: 'center' }}>
 																		{(() => {
 																			if (item.status === 'Partially Paid') {
 																			return 'Partially Credited';
@@ -403,8 +390,8 @@ class CreditNoteDetailsReport extends React.Component {
 																			return item.status;
 																			}
 																		})()}
-																		</td>
-																		<td style={{ textAlign: 'right' }}>
+																	</td>
+																	<td style={{ textAlign: 'right' }}>
 																		<Currency
 																			value={item.creditNoteTotalAmount}
 																			currencySymbol={
@@ -428,40 +415,37 @@ class CreditNoteDetailsReport extends React.Component {
 																</tr>
 															);
 														})}
-
 												</tbody>
 												<tfoot>
 													<tr style={{ border: "3px solid #dfe9f7" }}>
-													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
-													<td></td>	<td></td>	<td></td>
-													<td style={{ textAlign: 'right', width: '20%' }}>
-												
-														<b><Currency
-															value={this.state.data.totalAmount}
-															currencySymbol={
-																universal_currency_list[0]
-																	? universal_currency_list[0].currencyIsoCode
-																	: 'USD'
-															}
-														/></b>
-														
-													</td>
-
+														<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
+														<td></td>	<td></td>	<td></td>
+														<td style={{ textAlign: 'right', width: '20%' }}>
 													
-													<td style={{ textAlign: 'right', width: '20%' }}>
-														
-													<b>
-													<Currency
-															value={this.state.data.totalBalance}
-															currencySymbol={
-																universal_currency_list[0]
-																	? universal_currency_list[0].currencyIsoCode
-																	: 'USD'
-															}
-														/></b>
-														
-													</td>
-												</tr>
+															<b><Currency
+																value={this.state.data.totalAmount}
+																currencySymbol={
+																	universal_currency_list[0]
+																		? universal_currency_list[0].currencyIsoCode
+																		: 'USD'
+																}
+															/></b>
+															
+														</td>
+														<td style={{ textAlign: 'right', width: '20%' }}>
+															
+														<b>
+														<Currency
+																value={this.state.data.totalBalance}
+																currencySymbol={
+																	universal_currency_list[0]
+																		? universal_currency_list[0].currencyIsoCode
+																		: 'USD'
+																}
+															/></b>
+															
+														</td>
+													</tr>
 												</tfoot>
 											</Table>
 										</div>

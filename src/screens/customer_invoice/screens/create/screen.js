@@ -367,7 +367,6 @@ class CreateCustomerInvoice extends React.Component {
 										? 'is-invalid'
 										: ''
 									}`}
-
 							/>
 							{row['productId'] != '' ?
 								<Input value={row['unitType']} disabled /> : ''}
@@ -387,7 +386,6 @@ class CreateCustomerInvoice extends React.Component {
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
-
 					</div>
 				)}
 			/>
@@ -892,6 +890,27 @@ class CreateCustomerInvoice extends React.Component {
 			});
 	}
 	componentDidMount = () => {
+		this.props.customerInvoiceActions
+			.getTaxTreatment()
+			.then((res) => {
+
+				if (res.status === 200) {
+					let array = []
+					res.data.map((row) => {
+						if (row.id !== 8)
+							array.push(row);
+					})
+					this.setState({ taxTreatmentList: array });
+				}
+			})
+			.catch((err) => {
+
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err.data ? err.data.message : 'ERROR',
+				);
+			});
 		this.props.customerInvoiceActions.getVatList();
 		if (this.props.location.state && this.props.location.state.quotationId)
 			this.getQuotationDetails(this.props.location.state.quotationId);
@@ -1771,6 +1790,7 @@ class CreateCustomerInvoice extends React.Component {
 			const vat = index !== '' && index >= 0 ? vat_list[`${index}`].vat : 0;
 
 			//Exclusive case
+			debugger
 			if (this.state.taxType === false) {
 				if (obj.discountType === 'PERCENTAGE') {
 					net_value =
@@ -2397,7 +2417,7 @@ class CreateCustomerInvoice extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, loadingMsg } = this.state
-		const { data, discountOptions, initValue, exist, param, prefix, tax_treatment_list, state_list_for_shipping } = this.state;
+		const { data, discountOptions, initValue, exist, param, prefix, tax_treatment_list, state_list_for_shipping, taxTreatmentList } = this.state;
 		const {
 			customer_list,
 			country_list,
@@ -2518,11 +2538,11 @@ class CreateCustomerInvoice extends React.Component {
 
 																	} else {
 																		if (values.shippingPostZipCode == '')
-																			errors.shippingPostZipCode = 'Postal code is required';
+																			errors.shippingPostZipCode = 'Postal / Zip code is required';
 																		else if (values.shippingPostZipCode.length !== 6)
 																			errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
 																		if (values.shippingStateId == "")
-																			errors.shippingStateId = 'State is required';
+																			errors.shippingStateId = 'State / Provinces is required';
 																	}
 																}
 
@@ -2574,7 +2594,6 @@ class CreateCustomerInvoice extends React.Component {
 																	.of(
 																		Yup.object().shape({
 																			quantity: Yup.string()
-																				.required('Value is required')
 																				.test(
 																					'quantity',
 																					strings.QuantityGreaterThan0,
@@ -2585,20 +2604,19 @@ class CreateCustomerInvoice extends React.Component {
 																							return false;
 																						}
 																					},
-																				),
+																				).required('Quantity is required'),
 																			unitPrice: Yup.string()
-																				.required('Value is required')
 																				.test(
 																					'Unit Price',
 																					strings.UnitPriceGreaterThan1,
 																					(value) => {
-																						if (value > 0) {
+																						if (value > 1) {
 																							return true;
 																						} else {
 																							return false;
 																						}
 																					},
-																				),
+																				).required('Unit Price is required'),
 																			vatCategoryId: Yup.string().required(
 																				strings.VATIsRequired
 																			),
@@ -2806,25 +2824,48 @@ class CreateCustomerInvoice extends React.Component {
 																					<Label htmlFor="taxTreatmentid">
 																						{strings.TaxTreatment}
 																					</Label>
-																					<Input
-																						disabled
-																						styles={customStyles}
-																						id="taxTreatmentid"
-																						name="taxTreatmentid"
-																						value={
-																							this.state.customer_taxTreatment_des
-
-																						}
-																						className={
-																							props.errors.taxTreatmentid &&
-																								props.touched.taxTreatmentid
-																								? 'is-invalid'
-																								: ''
-																						}
-																						onChange={(option) => {
-																							props.handleChange('taxTreatmentid')(option);
-																						}}
-																					/>
+																					<Select
+																					options={
+																						taxTreatmentList
+																							? selectOptionsFactory.renderOptions(
+																								'name',
+																								'id',
+																								taxTreatmentList,
+																								'VAT',
+																							)
+																							: []
+																					}
+																					isDisabled={true}
+																					id="taxTreatmentid"
+																					name="taxTreatmentid"
+																					placeholder={strings.Select + strings.TaxTreatment}
+																					value={
+																						taxTreatmentList &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'name',
+																								'id',
+																								taxTreatmentList,
+																								'VAT',
+																							)
+																							.find(
+																								(option) =>
+																									option.label ===
+																									this.state.customer_taxTreatment_des,
+																							)
+																					}
+																					onChange={(option) => {
+																							props.handleChange('taxTreatmentid')(
+																								option,
+																							);
+																					}}
+																					className={
+																						props.errors.taxTreatmentid &&
+																							props.touched.taxTreatmentid
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
 																					{props.errors.taxTreatmentid &&
 																						props.touched.taxTreatmentid && (
 																							<div className="invalid-feedback">
@@ -3291,7 +3332,7 @@ class CreateCustomerInvoice extends React.Component {
 																							props.handleChange('shippingStateId')('');
 																						}
 																					}}
-																					placeholder={props.values.shippingCountryId && props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion}
+																					placeholder={props.values.shippingCountryId && props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.Select+ strings.StateRegion}
 																					id="shippingStateId"
 																					name="shippingStateId"
 																					className={
@@ -4181,7 +4222,7 @@ class CreateCustomerInvoice extends React.Component {
 																						);
 																					}}
 																				>
-																					<i className="fa fa-repeat mr-1"></i>
+																					<i className="fa fa-refresh mr-1"></i>
 																					{this.state.disabled
 																						? 'Creating...'
 																						: strings.CreateandMore}

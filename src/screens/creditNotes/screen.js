@@ -26,20 +26,21 @@ import * as CreditNotesActions from './actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import './style.scss';
-import {data}  from '../Language/index'
+import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperCase } from 'lodash';
+import moment from 'moment';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
-	//   currency: true,
-	  ignoreDecimal: false,
-	  ignoreZeroCurrency: false,
-	  doNotAddOnly: false,
+		//   currency: true,
+		ignoreDecimal: false,
+		ignoreZeroCurrency: false,
+		doNotAddOnly: false,
 	}
-  });
+});
 const mapStateToProps = (state) => {
 	return {
 		customer_invoice_list: state.customer_invoice.customer_invoice_list,
@@ -93,7 +94,7 @@ class CreditNotes extends React.Component {
 				overDueAmountMonthly: '',
 			},
 			rowId: '',
-			loadingMsg:"Loading..."
+			loadingMsg: "Loading..."
 		};
 
 		this.options = {
@@ -167,6 +168,7 @@ class CreditNotes extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -200,34 +202,30 @@ class CreditNotes extends React.Component {
 		this.initializeData();
 	};
 
-	creditNoteposting = (row,markAsSent) => {
-		this.setState({
-			loading: true,
-		});
-
+	creditNoteposting = (row, markAsSent) => {
 		const postingRequestModel = {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
 			postingRefType: 'CREDIT_NOTE',
-			isCNWithoutProduct :row.isCNWithoutProduct==true?true:false ,
-			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
-			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-",
-			markAsSent:markAsSent
+			isCNWithoutProduct: row.isCNWithoutProduct == true ? true : false,
+			amountInWords: upperCase(row.currencyName + " " + (toWords.convert(row.invoiceAmount)) + " ONLY").replace("POINT", "AND"),
+			vatInWords: row.totalVatAmount ? upperCase(row.currencyName + " " + (toWords.convert(row.totalVatAmount)) + " ONLY").replace("POINT", "AND") : "-",
+			markAsSent: markAsSent
 		};
-		this.setState({ loading:true, loadingMsg:"Posting Credit Note..."});
+		this.setState({ loading: true, loadingMsg: "Posting Credit Note..." });
 		this.props.creditNotesActions
 			.creditNoteposting(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data= 'Credit Note Posted Successfully'
+						res.data = 'Credit Note Posted Successfully'
 					);
 					this.setState({
 						loading: false,
 					});
 					this.initializeData();
-					this.setState({ loading:false,});
+					this.setState({ loading: false, });
 				}
 			})
 			.catch((err) => {
@@ -241,7 +239,7 @@ class CreditNotes extends React.Component {
 			});
 	};
 
-	
+
 
 	unPostInvoice = (row) => {
 		this.setState({
@@ -251,19 +249,19 @@ class CreditNotes extends React.Component {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
 			postingRefType: 'CREDIT_NOTE',
-			isCNWithoutProduct :row.isCNWithoutProduct==true?true:false ,
-			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
-			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND"):"-",
-			markAsSent:false
+			isCNWithoutProduct: row.isCNWithoutProduct == true ? true : false,
+			amountInWords: upperCase(row.currencyName + " " + (toWords.convert(row.invoiceAmount)) + " ONLY").replace("POINT", "AND"),
+			vatInWords: row.totalVatAmount ? upperCase(row.currencyName + " " + (toWords.convert(row.totalVatAmount)) + " ONLY").replace("POINT", "AND") : "-",
+			markAsSent: false
 		};
-	
+
 		this.props.creditNotesActions
 			.unPostInvoice(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						"Credit Note Moved To Draft Successfully " 
+						"Credit Note Moved To Draft Successfully "
 					);
 					this.setState({
 						loading: false,
@@ -296,7 +294,7 @@ class CreditNotes extends React.Component {
 		);
 	};
 
-	
+
 	renderInvoiceStatus = (cell, row) => {
 		let classname = '';
 		if (row.status === 'Closed') {
@@ -305,14 +303,14 @@ class CreditNotes extends React.Component {
 			classname = 'label-draft';
 		} else if (row.status === 'Partially Paid') {
 			classname = 'label-PartiallyPaid';
-		}else if (row.status === 'Open') {
+		} else if (row.status === 'Open') {
 			classname = 'label-posted';
 		} else {
 			classname = 'label-overdue';
 		}
 		return (
 			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
-				{row.status}
+				{row.status === 'Partially Paid' ? 'Partially Credited' : row.status}
 			</span>
 		);
 	};
@@ -330,28 +328,28 @@ class CreditNotes extends React.Component {
 	};
 
 	renderInvoiceAmount = (cell, row, extraData) => {
-	return(
-		<div>
-		<div>
+		return (
+			<div>
+				<div>
 					<label className="font-weight-bold mr-2 ">{strings.Amount}: </label>
 					<label>
-					{row.invoiceAmount === 0  ? row.currencyName +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencyName+" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
+						{row.invoiceAmount === 0 ? row.currencyName + " " + row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencyName + " " + row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 					</label>
 				</div>
 				<div>
 					<label className="font-weight-bold mr-2 ">{strings.RemainingCredits}: </label>
 					<label>
-					{row.dueAmount === 0  ? row.currencyName+" " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}) : row.currencyName+" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
+						{row.dueAmount === 0 ? row.currencyName + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencyName + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 					</label>
 				</div>
-			
-			
+
+
 				{/* <div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">Due Amount : </label>
 					<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}</label>
 				</div> */}
-				
-		</div>);
+
+			</div>);
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {
@@ -366,7 +364,7 @@ class CreditNotes extends React.Component {
 		return row.invoiceDueDate ? row.invoiceDueDate : '';
 	};
 	invoiceDate = (cell, row) => {
-		return row.invoiceDate ? row.invoiceDate : '';
+		return row.invoiceDate ? moment(row.invoiceDate).format('DD-MM-YYYY') : '';
 	};
 
 	renderVatAmount = (cell, row, extraData) => {
@@ -381,20 +379,20 @@ class CreditNotes extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.totalVatAmount === 0  ? row.currencyName +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencyName +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 });
+		return row.totalVatAmount === 0 ? row.currencyName + " " + row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencyName + " " + row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	};
 
-	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencyName +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencyName +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 });
+	renderDueAmount = (cell, row, extraData) => {
+		return row.dueAmount === 0 ? row.currencyName + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencyName + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	}
 	renderActions = (cell, row) => {
 		return (
 			<div>
-				<ButtonDropdown 
+				<ButtonDropdown
 					isOpen={this.state.actionButtons[row.id]}
 					toggle={() => this.toggleActionButton(row.id)}
 				>
-	
+
 					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
 						{this.state.actionButtons[row.id] === true ? (
 							<i className="fas fa-chevron-up" />
@@ -403,46 +401,37 @@ class CreditNotes extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid'   && (
+						{row.statusEnum === 'Open' && <DropdownItem
+							onClick={() =>
+								this.unPostInvoice(row)
+							}
+						>
+							<i className="fas fa-file" />  {strings.Draft}
+						</DropdownItem>}
+						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem>
 								<div
 									onClick={() => {
 										this.props.history.push(
 											'/admin/income/credit-notes/detail',
-											{ id: row.id ,isCNWithoutProduct:row.isCNWithoutProduct},
+											{ id: row.id, isCNWithoutProduct: row.isCNWithoutProduct },
 										);
 									}}
 								>
 									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
-						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true  &&   (
-							<DropdownItem>
-								<div
-									onClick={() => {
-										
-										this.props.history.push(
-											'/admin/income/credit-notes/applyToInvoice',
-											{ contactId: row.contactId , creditNoteId: row.id ,
-											  referenceNumber:row.invoiceNumber,
-											  creditAmount:row.dueAmount},
-										);
-									}}
-								>
-									<i class="fas fa-file-invoice"></i>{strings.ApplyToInvoice}
-								</div>
-							</DropdownItem>
 						)}
-						{row.statusEnum == 'Draft'&& (
+						{row.statusEnum == 'Draft' && (
 							<DropdownItem
 								onClick={() => {
-									this.creditNoteposting(row,true);
+									this.creditNoteposting(row, true);
 								}}
 							>
-							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+								<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
 							</DropdownItem>
-						)}	
-						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid' &&(
+						)}
+						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
 									this.creditNoteposting(row);
@@ -452,7 +441,7 @@ class CreditNotes extends React.Component {
 							</DropdownItem>
 						)}
 
-									{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft'  && (
+						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -461,26 +450,41 @@ class CreditNotes extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-university" /> {strings.Refund}
+								<i className="fas fa-university" /> {strings.RefundPayment}
 							</DropdownItem>
-									)}
+						)}
+
+						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !== true && (
+							<DropdownItem>
+								<div
+									onClick={() => {
+
+										this.props.history.push(
+											'/admin/income/credit-notes/applyToInvoice',
+											{
+												contactId: row.contactId, creditNoteId: row.id,
+												creditNoteNumber: row.creditNoteNumber,
+												referenceNumber: row.invoiceNumber,
+												creditAmount: row.dueAmount
+											},
+										);
+									}}
+								>
+									<i class="fas fa-file-invoice"></i>{strings.ApplyToInvoice}
+								</div>
+							</DropdownItem>
+						)}
 
 						<DropdownItem
 							onClick={() =>
 								this.props.history.push('/admin/income/credit-notes/view', {
-									id: row.id,status:row.status,isCNWithoutProduct:row.isCNWithoutProduct
+									id: row.id, status: row.status, isCNWithoutProduct: row.isCNWithoutProduct
 								})
 							}
 						>
 							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
-						{row.statusEnum === 'Open' && <DropdownItem
-							onClick={() =>
-								this.unPostInvoice(row)
-							}
-						>
-							<i className="fas fa-file" />  {strings.Draft}
-						</DropdownItem>}
+
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -730,7 +734,7 @@ class CreditNotes extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,loadingMsg,
+			loading, loadingMsg,
 			filterData,
 			dialog,
 			selectedRows,
@@ -743,73 +747,74 @@ class CreditNotes extends React.Component {
 			customer_invoice_list,
 			universal_currency_list,
 		} = this.props;
-		
 		const customer_invoice_data =
-		this.props.customer_invoice_list
-			? this.props.customer_invoice_list.map((customer) => ({
-						id: customer.id,
-						status: customer.status,
-						statusEnum: customer.statusEnum,
-						customerName: customer.customerName,
-						dueAmount:customer.dueAmount ? customer.dueAmount : 0,
-						contactId: customer.contactId,
-						invoiceNumber: customer.invNumber,
-						creditNoteNumber: customer.creditNoteNumber,
-						invoiceDate: customer.creditNoteDate ? customer.creditNoteDate : '',
-						invoiceDueDate: customer.invoiceDueDate
-							? customer.invoiceDueDate
-							: '',
-						currencyName:customer.currencyName ? customer.currencyName:'',
-						currencySymbol:customer.currencySymbol ? customer.currencySymbol:'',
-						invoiceAmount: customer.totalAmount ? customer.totalAmount : 0,
-						totalVatAmount: customer.totalVatAmount,
-						cnCreatedOnPaidInvoice: customer.cnCreatedOnPaidInvoice,
-						isCNWithoutProduct: customer.isCNWithoutProduct,
-				  }))
+			this.props.customer_invoice_list.data
+				? this.props.customer_invoice_list.data.map((customer) => ({
+					id: customer.id,
+					status: customer.status,
+					statusEnum: customer.statusEnum,
+					customerName: customer.customerName,
+					dueAmount: customer.dueAmount ? customer.dueAmount : 0,
+					contactId: customer.contactId,
+					invoiceNumber: customer.invNumber,
+					creditNoteNumber: customer.creditNoteNumber,
+					invoiceDate: customer.creditNoteDate ? customer.creditNoteDate : '',
+					invoiceDueDate: customer.invoiceDueDate
+						? customer.invoiceDueDate
+						: '',
+					currencyName: customer.currencyName ? customer.currencyName : '',
+					currencySymbol: customer.currencySymbol ? customer.currencySymbol : '',
+					invoiceAmount: customer.totalAmount ? customer.totalAmount : 0,
+					totalVatAmount: customer.totalVatAmount,
+					cnCreatedOnPaidInvoice: customer.cnCreatedOnPaidInvoice,
+					isCNWithoutProduct: customer.isCNWithoutProduct,
+				}))
 				: '';
 
 		let tmpCustomer_list = []
 
 		customer_list.map(item => {
-			let obj = {label: item.label.contactName, value: item.value}
+			let obj = { label: item.label.contactName, value: item.value }
 			tmpCustomer_list.push(obj)
 		})
-		
+
 		return (
-			loading ==true? <Loader loadingMsg={loadingMsg}/> :
-<div>
-			<div className="customer-invoice-screen">
-				<div className="animated fadeIn">
-					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-					<Card>
-						<CardHeader>
-							<Row>
-								<Col lg={12}>
-									<div className="h4 mb-0 d-flex align-items-center">
-										<img
+			loading == true ? <Loader loadingMsg={loadingMsg} /> :
+				<div>
+					<div className="customer-invoice-screen">
+						<div className="animated fadeIn">
+							{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+							<Card>
+								<CardHeader>
+									<Row>
+										<Col lg={12}>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<i class="nav-icon fas fa-donate" />
+
+												{/* <img
 											alt="invoiceimage"
 											src={invoiceimage}
 											style={{ width: '40px' }}
-										/>
-										<span className="ml-2"> {strings.CreditNotes}</span>
-									</div>
-								</Col>
-							</Row>
-						</CardHeader>
-						<CardBody>
-							{dialog}
-							{loading && (
-								<Row>
-									<Col lg={12} className="rounded-loader">
-										<div>
-											<Loader />
-										</div>
-									</Col>
-								</Row>
-							)}
-							<Row>
-								<Col lg={12}>
-									{/* <div className="mb-4 status-panel p-3">
+										/> */}
+												<span className="ml-2"> {strings.CreditNotes}</span>
+											</div>
+										</Col>
+									</Row>
+								</CardHeader>
+								<CardBody>
+									{dialog}
+									{loading && (
+										<Row>
+											<Col lg={12} className="rounded-loader">
+												<div>
+													<Loader />
+												</div>
+											</Col>
+										</Row>
+									)}
+									<Row>
+										<Col lg={12}>
+											{/* <div className="mb-4 status-panel p-3">
 										<Row className="align-items-center justify-content-around">
 											<div className="h4 mb-0 d-flex align-items-center ">
 												<img
@@ -927,9 +932,9 @@ class CreditNotes extends React.Component {
 											</div>
 										</Row>
 									</div> */}
-									<div className="d-flex justify-content-end">
-										<ButtonGroup size="sm">
-											{/* <Button
+											<div className="d-flex justify-content-end">
+												<ButtonGroup size="sm">
+													{/* <Button
 												color="primary"
 												className="btn-square mr-1"
 												onClick={() => this.getCsvData()}
@@ -946,7 +951,7 @@ class CreditNotes extends React.Component {
 													target="_blank"
 												/>
 											)} */}
-											{/* <Button
+													{/* <Button
 												color="primary"
 												className="btn-square "
 												onClick={this.bulkDelete}
@@ -955,38 +960,38 @@ class CreditNotes extends React.Component {
 												<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
 												Bulk Delete
 											</Button> */}
-										</ButtonGroup>
-									</div>
-									<div className="py-3">
-										<h5>{strings.Filter}: </h5>
-										<Row>
-											<Col lg={2} className="mb-1">
-												<Select
-													className="select-default-width"
-													placeholder={strings.Select+strings.Customer}
-													id="customer"
-													name="customer"
-													options={
-														tmpCustomer_list
-															? selectOptionsFactory.renderOptions(
-																	'label',
-																	'value',
-																	tmpCustomer_list,
-																	'Customer',
-															  )
-															: []
-													}
-													value={filterData.customerId}
-													onChange={(option) => {
-														if (option && option.value) {
-															this.handleChange(option, 'customerId');
-														} else {
-															this.handleChange('', 'customerId');
-														}
-													}}
-												/>
-											</Col>
-											{/* <Col lg={2} className="mb-1">
+												</ButtonGroup>
+											</div>
+											<div className="py-3">
+												<h5>{strings.Filter}: </h5>
+												<Row>
+													<Col lg={2} className="mb-1">
+														<Select
+															className="select-default-width"
+															placeholder={strings.Select + strings.Customer}
+															id="customer"
+															name="customer"
+															options={
+																tmpCustomer_list
+																	? selectOptionsFactory.renderOptions(
+																		'label',
+																		'value',
+																		tmpCustomer_list,
+																		'Customer',
+																	)
+																	: []
+															}
+															value={filterData.customerId}
+															onChange={(option) => {
+																if (option && option.value) {
+																	this.handleChange(option, 'customerId');
+																} else {
+																	this.handleChange('', 'customerId');
+																}
+															}}
+														/>
+													</Col>
+													{/* <Col lg={2} className="mb-1">
 												<DatePicker
 													className="form-control"
 													id="date"
@@ -1005,19 +1010,19 @@ class CreditNotes extends React.Component {
 												/>
 											</Col> */}
 
-											<Col lg={2} className="mb-1">
-												<Input
-												maxLength="14,2"
-													type="number"
-													min="0"
-													value={filterData.amount}
-													placeholder={strings.Amount}
-													onChange={(e) => {
-														this.handleChange(e.target.value, 'amount');
-													}}
-												/>
-											</Col>
-											{/* <Col lg={2} className="mb-1">
+													<Col lg={2} className="mb-1">
+														<Input
+															maxLength="14,2"
+															type="number"
+															min="0"
+															value={filterData.amount}
+															placeholder={strings.Amount}
+															onChange={(e) => {
+																this.handleChange(e.target.value, 'amount');
+															}}
+														/>
+													</Col>
+													{/* <Col lg={2} className="mb-1">
 												<Select
 													className=""
 													options={
@@ -1041,118 +1046,117 @@ class CreditNotes extends React.Component {
 													placeholder={strings.Status}
 												/>
 											</Col> */}
-											<Col lg={2} className="pl-0 pr-0">
-												<Button
-													type="button"
-													color="primary"
-													className="btn-square mr-1"
-													onClick={this.handleSearch}
-												>
-													<i className="fa fa-search"></i>
-												</Button>
-												<Button
-													type="button"
-													color="primary"
-													className="btn-square"
-													onClick={this.clearAll}
-												>
-													<i className="fa fa-refresh"></i>
-												</Button>
-											</Col>
-										</Row>
-									</div>
-									<Row>
-									<div style={{width:"1650px"}}>
-									<Button
-										color="primary"
-										className="btn-square pull-right mb-2"
-										style={{ marginBottom: '10px' }}
-										onClick={() =>
-											this.props.history.push(
-												`/admin/income/credit-notes/create`,
-											)
-										}
-									>
-										<i className="fas fa-plus mr-1" />
-									        {strings.AddCreditNote}
-									</Button></div></Row>
-								{console.log("Asdasdas",customer_invoice_data)}
-										<BootstrapTable
-											selectRow={this.selectRowProp}
-											search={false}
-											options={this.options}
-											data={customer_invoice_data ? customer_invoice_data.sort((a,b)=>new Date(a.creditNoteDate)-new Date(b.creditNoteDate)) : []}
-											version="4"
-											hover
-											responsive
-											currencyList
-											keyField="id"
-											remote
-											pagination={
-												customer_invoice_data &&
-												customer_invoice_data.length > 0
-													? true
-													: false
-											}
-											fetchInfo={{
-												dataTotalSize: customer_invoice_list.count
-													? customer_invoice_list.count
-													: 0,
-											}}
-											className="customer-invoice-table"
-											csvFileName="Customer_Invoice.csv"
-											ref={(node) => {
-												this.table = node;
-											}}
-										>
+													<Col lg={2} className="pl-0 pr-0">
+														<Button
+															type="button"
+															color="primary"
+															className="btn-square mr-1"
+															onClick={this.handleSearch}
+														>
+															<i className="fa fa-search"></i>
+														</Button>
+														<Button
+															type="button"
+															color="primary"
+															className="btn-square"
+															onClick={this.clearAll}
+														>
+															<i className="fa fa-refresh"></i>
+														</Button>
+													</Col>
+												</Row>
+											</div>
+											<Row>
+												<div style={{ width: "1650px", padding: "15px" }}>
+													<Button
+														color="primary"
+														className="btn-square pull-right mb-2"
+														style={{ marginBottom: '10px' }}
+														onClick={() =>
+															this.props.history.push(
+																`/admin/income/credit-notes/create`,
+															)
+														}
+													>
+														<i className="fas fa-plus mr-1" />
+														{strings.AddCreditNote}
+													</Button></div></Row>
+											<BootstrapTable
+												selectRow={this.selectRowProp}
+												search={false}
+												options={this.options}
+												data={customer_invoice_data ? customer_invoice_data.sort((a, b) => new Date(a.creditNoteDate) - new Date(b.creditNoteDate)) : []}
+												version="4"
+												hover
+												responsive
+												currencyList
+												keyField="id"
+												remote
+												pagination={
+													customer_invoice_data &&
+														customer_invoice_data.length > 0
+														? true
+														: false
+												}
+												fetchInfo={{
+													dataTotalSize: customer_invoice_list.count
+														? customer_invoice_list.count
+														: 0,
+												}}
+												className="customer-invoice-table"
+												csvFileName="Customer_Invoice.csv"
+												ref={(node) => {
+													this.table = node;
+												}}
+											>
 												<TableHeaderColumn
-												dataField="creditNoteNumber"
-												// dataFormat={this.renderInvoiceNumber}
-												dataSort
-												//	width="7%"
-												className="table-header-bg"
-											>
-													
-													{strings.CREDITNOTE}
-											</TableHeaderColumn>
-											<TableHeaderColumn 
-												width="20%"
-												dataField="customerName" 
-											//	dataSort width="10%"
-												className="table-header-bg"
-											>
-												{strings.CUSTOMERNAME}
-											</TableHeaderColumn>
-											
-											<TableHeaderColumn
-												dataField="invoiceNumber"
-												// dataFormat={this.renderInvoiceNumber}
-												dataSort
-												//	width="7%"
-												className="table-header-bg"
-											>		
-												{strings.INVOICENUMBER}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="invoiceDate"
-												dataSort
-												//width="6%"
-												dataFormat={this.invoiceDate}
-												className="table-header-bg"
-											>
-											 {strings.DATE}
-											</TableHeaderColumn>
+													dataField="creditNoteNumber"
+													// dataFormat={this.renderInvoiceNumber}
+													dataSort
+													//	width="7%"
+													className="table-header-bg"
+												>
 
-											<TableHeaderColumn
-												//width="9%"
-												dataField="status"
-												dataFormat={this.renderInvoiceStatus}
-												dataSort
-												className="table-header-bg"
-											>
-												 {strings.STATUS}
-											</TableHeaderColumn>
-											{/* <TableHeaderColumn
+													{strings.CREDITNOTE}
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													//width="22%"
+													dataField="customerName"
+													//	dataSort width="10%"
+													className="table-header-bg"
+												>
+													{strings.CUSTOMERNAME}
+												</TableHeaderColumn>
+
+												<TableHeaderColumn
+													dataField="invoiceNumber"
+													// dataFormat={this.renderInvoiceNumber}
+													dataSort
+													//	width="7%"
+													className="table-header-bg"
+												>
+													{strings.INVOICENUMBER}
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													dataField="invoiceDate"
+													dataSort
+													//width="6%"
+													dataFormat={this.invoiceDate}
+													className="table-header-bg"
+												>
+													{strings.DATE}
+												</TableHeaderColumn>
+
+												<TableHeaderColumn
+													//width="9%"
+													dataField="status"
+													dataFormat={this.renderInvoiceStatus}
+													dataSort
+													className="table-header-bg"
+												>
+													{strings.STATUS}
+												</TableHeaderColumn>
+												{/* <TableHeaderColumn
 												dataField="regferenceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
@@ -1162,7 +1166,7 @@ class CreditNotes extends React.Component {
 													
 											Reference Number 
 											</TableHeaderColumn> */}
-											{/* <TableHeaderColumn
+												{/* <TableHeaderColumn
 												dataField="invoiceDueDate"
 												dataSort
 												//width="6%"
@@ -1171,8 +1175,8 @@ class CreditNotes extends React.Component {
 											>
 												Due Date
 											</TableHeaderColumn> */}
-											
-											{/* <TableHeaderColumn
+
+												{/* <TableHeaderColumn
 												dataField="totalVatAmount"
 												dataSort
 												width="5%"
@@ -1182,18 +1186,18 @@ class CreditNotes extends React.Component {
 											>
 												VAT Amount
 											</TableHeaderColumn> */}
-											<TableHeaderColumn
-												dataAlign="right"
-												dataField="totalAmount"
-												dataSort
-												width="20%"
-												dataFormat={this.renderInvoiceAmount}
-												formatExtraData={universal_currency_list}
-												className="table-header-bg"
-											>
-												 {strings.AMOUNT}
-											</TableHeaderColumn>
-											{/* <TableHeaderColumn
+												<TableHeaderColumn
+													dataAlign="right"
+													dataField="totalAmount"
+													dataSort
+													width="22%"
+													dataFormat={this.renderInvoiceAmount}
+													formatExtraData={universal_currency_list}
+													className="table-header-bg"
+												>
+													{strings.AMOUNT}
+												</TableHeaderColumn>
+												{/* <TableHeaderColumn
 												dataField="dueamount"
 												dataSort
 												width="5%"
@@ -1203,39 +1207,38 @@ class CreditNotes extends React.Component {
 											>
 												Due Amount
 											</TableHeaderColumn> */}
-											<TableHeaderColumn
-												className="text-right"
-												columnClassName="text-right"
-											//	width="5%"
-												dataFormat={this.renderActions}
-												className="table-header-bg"
-											></TableHeaderColumn>
-										</BootstrapTable>
-								</Col>
-							</Row>
-						</CardBody>
-					</Card>
-				</div>
-				{/* <PreviewInvoiceModal
+												<TableHeaderColumn
+													className="text-right table-header-bg"
+													columnClassName="text-right"
+													width="50px"
+													dataFormat={this.renderActions}
+												></TableHeaderColumn>
+											</BootstrapTable>
+										</Col>
+									</Row>
+								</CardBody>
+							</Card>
+						</div>
+						{/* <PreviewInvoiceModal
           openInvoicePreviewModal={this.state.openInvoicePreviewModal}
           closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
           getInvoiceById={this.props.customerInvoiceActions.getInvoiceById}
           currency_list={this.props.currency_list}
           id={this.state.selectedId}
         /> */}
-				<EmailModal
-					openEmailModal={this.state.openEmailModal}
-					closeEmailModal={(e) => {
-						this.closeEmailModal(e);
-					}}
-					sendEmail={(e) => {
-						this.sendMail(this.state.rowId);
-					}}
-					id={this.state.rowId}
-				/>
-				
-			</div>
-			</div>
+						<EmailModal
+							openEmailModal={this.state.openEmailModal}
+							closeEmailModal={(e) => {
+								this.closeEmailModal(e);
+							}}
+							sendEmail={(e) => {
+								this.sendMail(this.state.rowId);
+							}}
+							id={this.state.rowId}
+						/>
+
+					</div>
+				</div>
 		);
 	}
 }

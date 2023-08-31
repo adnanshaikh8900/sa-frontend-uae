@@ -178,6 +178,27 @@ class DetailCustomerInvoice extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.props.customerInvoiceActions
+			.getTaxTreatment()
+			.then((res) => {
+
+				if (res.status === 200) {
+					let array = []
+					res.data.map((row) => {
+						if (row.id !== 8)
+							array.push(row);
+					})
+					this.setState({ taxTreatmentList: array });
+				}
+			})
+			.catch((err) => {
+
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err.data ? err.data.message : 'ERROR',
+				);
+			});
 		this.props.customerInvoiceActions.getVatList().then((res)=>{
 			if(res.status==200)
 			 this.setState({vat_list:res.data})
@@ -1894,7 +1915,7 @@ class DetailCustomerInvoice extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 
-		const { data, discountOptions, initValue, loading, dialog,param,state_list_for_shipping } = this.state;
+		const { data, discountOptions, initValue, loading, dialog,param,state_list_for_shipping, taxTreatmentList } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list,country_list,} = this.props;
 
@@ -2047,10 +2068,9 @@ class DetailCustomerInvoice extends React.Component {
 																	// 	'Value is required',
 																	// ),
 																	quantity: Yup.string()
-																		.required('Value is required')
 																		.test(
 																			'quantity',
-																			'Quantity should be greater than 0',
+																			strings.QuantityGreaterThan0,
 																			(value) => {
 																				if (value > 0 ) {
 																					return true;
@@ -2058,20 +2078,19 @@ class DetailCustomerInvoice extends React.Component {
 																					return false;
 																				}
 																			},
-																		),
+																		).required('Quantity is required'),
 																	unitPrice: Yup.string()
-																		.required('Value is required')
 																		.test(
 																			'Unit Price',
-																			'Unit price should be greater than 1',
+																			strings.UnitPriceGreaterThan1,
 																			(value) => {
-																				if (value > 0) {
+																				if (value > 1) {
 																					return true;
 																				} else {
 																					return false;
 																				}
 																			},
-																		),
+																		).required('Unit Price is required'),
 																	vatCategoryId: Yup.string().required(
 																		'VAT is required',
 																	),
@@ -2223,27 +2242,48 @@ class DetailCustomerInvoice extends React.Component {
 																	<Label htmlFor="taxTreatmentid">
 																		{strings.TaxTreatment}
 																	</Label>
-																	<Input
-																	disabled
-																		styles={customStyles}
-																		id="taxTreatmentid"
-																		name="taxTreatmentid"
-																		value={
-																		this.state.customer_taxTreatment_des
-																	 	
-																		}
-																		className={
-																			props.errors.taxTreatmentid &&
-																			props.touched.taxTreatmentid
-																				? 'is-invalid'
-																				: ''
-																		}
-																		onChange={(option) => {
-																		props.handleChange('taxTreatmentid')(option);
-																		
-																	    }}
-
-																	/>
+																	<Select
+																					options={
+																						taxTreatmentList
+																							? selectOptionsFactory.renderOptions(
+																								'name',
+																								'id',
+																								taxTreatmentList,
+																								'VAT',
+																							)
+																							: []
+																					}
+																					isDisabled={true}
+																					id="taxTreatmentid"
+																					name="taxTreatmentid"
+																					placeholder={strings.Select + strings.TaxTreatment}
+																					value={
+																						taxTreatmentList &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'name',
+																								'id',
+																								taxTreatmentList,
+																								'VAT',
+																							)
+																							.find(
+																								(option) =>
+																									option.label ===
+																									this.state.customer_taxTreatment_des,
+																							)
+																					}
+																					onChange={(option) => {
+																							props.handleChange('taxTreatmentid')(
+																								option,
+																							);
+																					}}
+																					className={
+																						props.errors.taxTreatmentid &&
+																							props.touched.taxTreatmentid
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
 																	{props.errors.taxTreatmentid &&
 																		props.touched.taxTreatmentid && (
 																			<div className="invalid-feedback">

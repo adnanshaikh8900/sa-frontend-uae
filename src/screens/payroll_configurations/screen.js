@@ -82,6 +82,16 @@ class PayrollConfigurations extends React.Component {
 		};
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
+		this.designationoptions = {
+			paginationPosition: 'bottom',
+			page: 1,
+			sizePerPage: 10,
+			onSizePerPageList: this.designationonSizePerPageList,
+			onPageChange: this.designationonPageChange,
+			sortName: '',
+			sortOrder: '',
+			onSortChange: this.sortColumn
+		}
 		this.options = {
 			onRowClick: this.goToDetail,
 			paginationPosition: 'top',
@@ -93,7 +103,6 @@ class PayrollConfigurations extends React.Component {
 			sortOrder: '',
 			onSortChange: this.sortColumn
 		}
-
 		this.selectRowProp = {
 			bgColor: 'rgba(0,0,0, 0.05)',
 			clickToSelect: false,
@@ -146,8 +155,8 @@ class PayrollConfigurations extends React.Component {
 	initializeData = (search) => {
 		if (this.props.location.state !== undefined && this.props.location.state !== null && this.props.location.state.tabNo !== undefined && this.props.location.state.tabNo !== null) {
 			this.toggle(0, this.props.location.state.tabNo)
-		}else
-		this.toggle(0, "3")
+		} else
+			this.toggle(0, "3")
 		const { filterData } = this.state
 
 		const paginationData = {
@@ -263,7 +272,7 @@ class PayrollConfigurations extends React.Component {
 		return (
 			<Row>
 				<div>
-					{row.id == 1 || row.id == 2 || row.id == 3 ? ""
+					{row.id == 1 || row.id == 2 || row.id == 3 || row.id == 4 ? ""
 						:
 						(<Button
 							className="btn btn-sm pdf-btn"
@@ -364,6 +373,20 @@ class PayrollConfigurations extends React.Component {
 		if (this.options.page !== page) {
 			this.options.page = page
 			this.initializeData()
+		}
+	}
+
+	designationonSizePerPageList = (sizePerPage) => {
+		if (this.options.sizePerPage !== sizePerPage) {
+			this.options.sizePerPage = sizePerPage
+			this.initializeDataForDesignations()
+		}
+	}
+
+	designationonPageChange = (page, sizePerPage) => {
+		if (this.options.page !== page) {
+			this.options.page = page
+			this.initializeDataForDesignations()
 		}
 	}
 
@@ -913,49 +936,54 @@ class PayrollConfigurations extends React.Component {
 																			</ButtonGroup>
 																		</div>
 
-																		<div>
-																			<BootstrapTable
-																				selectRow={this.selectRowProp}
-																				search={false}
-																				options={this.options}
-																				data={designation_list && designation_list.data ? designation_list.data : []}
-																				version="4"
-																				hover
-																				// pagination={designation_list && designation_list.data && designation_list.data.length > 0 ? true : false}
-																				keyField="id"
-																				remote
-																				fetchInfo={{ dataTotalSize: designation_list.count ? designation_list.count : 0 }}
-																				className="employee-table"
-																				trClassName="cursor-pointer"
-																				csvFileName="designation_list.csv"
-																				ref={(node) => this.table = node}
+																		<BootstrapTable
+																			selectRow={this.selectRowProp}
+																			search={false}
+																			options={this.designationoptions}
+																			data={designation_list && designation_list.data ? designation_list.data : []}
+																			version="4"
+																			hover
+																			pagination={designation_list && designation_list.count > 0 ? true : false}
+																			keyField="id"
+																			remote
+
+																			fetchInfo={{ dataTotalSize: designation_list.count ? designation_list.count : 0 }}
+																			className="designation-list-table"
+																			trClassName="cursor-pointer"
+																			csvFileName="designation_list.csv"
+																			ref={(node) => this.table = node}
+																		// pagination={
+																		// 	designation_list &&
+																		// 	designation_list.count > 0
+																		// 		? true
+																		// 		: false
+																		// }
+																		>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="designationId"
+																				dataFormat={this.renderForId}
 																			>
-																				<TableHeaderColumn
-																					className="table-header-bg"
-																					dataField="designationId"
-																					dataFormat={this.renderForId}
-																				>
-																					{strings.DESIGNATIONID}
-																				</TableHeaderColumn>
-																				<TableHeaderColumn
-																					className="table-header-bg"
-																					dataField="designationName"
+																				{strings.DESIGNATIONID}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="designationName"
 
-																				// dataFormat={this.vatCategoryFormatter}
-																				>
-																					{strings.DESIGNATIONNAME}
-																				</TableHeaderColumn>
-																				<TableHeaderColumn
-																					className="table-header-bg"
-																					dataField="designationName"
+																			// dataFormat={this.vatCategoryFormatter}
+																			>
+																				{strings.DESIGNATIONNAME}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="designationName"
 
-																					dataFormat={this.goToDetailForDesignations}
-																				>
+																				dataFormat={this.goToDetailForDesignations}
+																			>
 
-																				</TableHeaderColumn>
+																			</TableHeaderColumn>
 
-																			</BootstrapTable>
-																		</div>
+																		</BootstrapTable>
 																	</Col>
 																</Row>
 														}
@@ -977,15 +1005,15 @@ class PayrollConfigurations extends React.Component {
 																	<i className="fas fa-object-group" />
 																	<span className="ml-2">Company Details </span>
 																	<i
-																									id="Tooltip"
-																									className="fa fa-question-circle ml-3"
-																								></i>
-																								<UncontrolledTooltip
-																									placement="right"
-																									target="Tooltip"
-																								>
-																									These Company Details Will be Populated On Payroll - SIF (Salary Information File).
-																								</UncontrolledTooltip>
+																		id="Tooltip"
+																		className="fa fa-question-circle ml-3"
+																	></i>
+																	<UncontrolledTooltip
+																		placement="right"
+																		target="Tooltip"
+																	>
+																		These Company Details Will be Populated On Payroll - SIF (Salary Information File).
+																	</UncontrolledTooltip>
 																</div>
 															</Col>
 														</Row>
@@ -1080,7 +1108,7 @@ class PayrollConfigurations extends React.Component {
 																								value={props.values.companyNumber}
 																							/>
 																							{props.errors.companyNumber &&
-																							props.touched.companyNumber&&
+																								props.touched.companyNumber &&
 																								(
 																									<div className='text-danger' >
 																										{props.errors.companyNumber}
@@ -1129,7 +1157,7 @@ class PayrollConfigurations extends React.Component {
 																								value={props.values.companyBankCode}
 																							/>
 																							{props.errors.companyBankCode &&
-																							props.touched.companyBankCode &&
+																								props.touched.companyBankCode &&
 																								(
 																									<div className='text-danger' >
 																										{props.errors.companyBankCode}
@@ -1143,8 +1171,8 @@ class PayrollConfigurations extends React.Component {
 
 
 																				<Row>
-																				<Col></Col>
-																				<Col>
+																					<Col></Col>
+																					<Col>
 																						<Button
 																							color="primary"
 																							type="submit"
@@ -1163,8 +1191,8 @@ class PayrollConfigurations extends React.Component {
 																								: strings.Save}
 																						</Button>
 																					</Col>
-																				<Col></Col>
-																					
+																					<Col></Col>
+
 
 																				</Row>
 

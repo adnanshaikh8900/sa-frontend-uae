@@ -1,7 +1,7 @@
 import Temp from './temp'
-import InvoiceTemplate from './invoice_template'
+import CreditNoteTemplate from './credit_note_template';
 
 export {
   Temp,
-  InvoiceTemplate
+  CreditNoteTemplate
 }

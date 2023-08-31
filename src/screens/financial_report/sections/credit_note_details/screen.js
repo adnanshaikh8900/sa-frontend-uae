@@ -373,9 +373,9 @@ class CreditNoteDetailsReport extends React.Component {
 												<Table className="table-bordered">
 												<thead className="table-header-bg">
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Credit+" "+strings.Number}</th>
+															<th style={{ padding: '0.5rem', textAlign: 'center', color: 'black' }}>{strings.Credit_Note +" "+strings.Number}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Credit+" "+strings.Date}</th>
+															<th style={{ padding: '0.5rem', textAlign: 'center', color: 'black' }}>{strings.Credit_Note +" "+strings.Date}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Status}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.SalesReturn}
 															{/* {strings.InvoiceAmount} */}
@@ -395,9 +395,16 @@ class CreditNoteDetailsReport extends React.Component {
 																	<td style={{ textAlign: 'center'}}>{item.creditNoteDate ? (
 																		moment(item.creditNoteDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
-
-																	<td style={{ textAlign: 'center' }}>{item.status}</td>
-																	<td style={{ textAlign: 'right' }}>
+																		<td style={{ textAlign: 'center' }}>
+																		{(() => {
+																			if (item.status === 'Partially Paid') {
+																			return 'Partially Credited';
+																			} else {
+																			return item.status;
+																			}
+																		})()}
+																		</td>
+																		<td style={{ textAlign: 'right' }}>
 																		<Currency
 																			value={item.creditNoteTotalAmount}
 																			currencySymbol={

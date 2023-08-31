@@ -173,7 +173,6 @@ class BankTransactions extends React.Component {
         this.props.location.state = {};
         this.props.location.state.bankAccountId =
           localStorage.getItem("bankId");
-        console.log("props", this.props.location);
       }
       this.props.transactionsActions.getTransactionTypeList();
       this.initializeData();
@@ -220,7 +219,6 @@ class BankTransactions extends React.Component {
         this.props.location.state = {};
         this.props.location.state.bankAccountId =
           localStorage.getItem("bankId");
-        console.log("props", this.props.location);
       }
       this.props.transactionsActions.getTransactionTypeList();
       this.initializeData();
@@ -389,7 +387,6 @@ class BankTransactions extends React.Component {
         transactionType: tab,
       },
       () => {
-        //console.log(this.state.transactionType);
         this.initializeData();
       }
     );
@@ -540,7 +537,6 @@ class BankTransactions extends React.Component {
     else return false;
   }
   expandComponent(row) {
-    //console.log(row);
     return <div className="transition">{row.id}</div>;
   }
 
@@ -712,7 +708,6 @@ class BankTransactions extends React.Component {
       transaction_type_list,
       universal_currency_list,
     } = this.props;
-    console.log(this.state.transactionCount);
     const columns = [
       {
         dataField: "transactionDate",
@@ -931,7 +926,7 @@ class BankTransactions extends React.Component {
                                 {strings.EditAccount}
                               </Button>
                             )}
-                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;
                             <Button
                               color="info"
                               className="btn-square mr-1"
@@ -1100,7 +1095,7 @@ class BankTransactions extends React.Component {
                         }
                         columns={columns}
                         expandRow={expandRow}
-                        noDataIndication="There is no data to display"
+                        noDataIndication="There are no records to display."
                         remote
                         fetchInfo={{
                           dataTotalSize: bank_transaction_list.count

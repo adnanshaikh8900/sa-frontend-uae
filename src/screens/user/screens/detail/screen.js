@@ -27,9 +27,10 @@ import * as Yup from 'yup';
 // import 'react-images-uploader/font.css'
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import {data}  from '../../../Language/index'
+import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { toast } from 'react-toastify';
+import { upperCase, upperFirst } from 'lodash';
 
 const eye = require('assets/images/settings/eye.png');
 const mapStateToProps = (state) => {
@@ -75,11 +76,12 @@ class DetailUser extends React.Component {
 			imageState: true,
 			current_user_id: null,
 			disabled: false,
-			disabled1:false,
+			disabled1: false,
 			timezone: [],
 			exist: false,
-			loadingMsg:"Loading...",
-			disableLeavePage:false
+			loadingMsg: "Loading...",
+			disableLeavePage: false,
+			enableDelete: true,
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
@@ -97,6 +99,11 @@ class DetailUser extends React.Component {
 			this.setState({ timezone: output });
 		});
 		if (this.props.location.state && this.props.location.state.id) {
+			this.props.userActions.getPayrollCount(this.props.location.state.id).then((res) => {
+				if (res.status === 200) {
+					this.setState({ enableDelete: res.data && res.data > 0 ? false : true })
+				}
+			});
 			this.props.userDetailActions
 				.getUserById(this.props.location.state.id)
 				.then((res) => {
@@ -116,8 +123,8 @@ class DetailUser extends React.Component {
 								roleId: res.data.roleId ? res.data.roleId : '',
 								companyId: res.data.companyId ? res.data.companyId : '',
 								timeZone: res.data.timeZone ? res.data.timeZone : '',
-								roleName:res.data.roleName ? res.data.roleName : '',
-								employeeId: res.data.employeeId ? res.data.employeeId: '',
+								roleName: res.data.roleName ? res.data.roleName : '',
+								employeeId: res.data.employeeId ? res.data.employeeId : '',
 							},
 							loading: false,
 							selectedStatus: res.data.active ? true : false,
@@ -163,7 +170,7 @@ class DetailUser extends React.Component {
 	togglePasswordVisiblity = () => {
 		const { isPasswordShown } = this.state;
 		this.setState({ isPasswordShown: !isPasswordShown });
-	  };
+	};
 	deleteUser = () => {
 		const message1 = (
 			<text>
@@ -188,7 +195,7 @@ class DetailUser extends React.Component {
 	removeUser = () => {
 		this.setState({ disabled1: true });
 		const { current_user_id } = this.state;
-			this.props.userDetailActions
+		this.props.userDetailActions
 			.deleteUser(current_user_id)
 			.then((res) => {
 				if (res.status === 200) {
@@ -227,7 +234,7 @@ class DetailUser extends React.Component {
 	};
 
 	handleSubmit = (data) => {
-		this.setState({ createDisabled: true, disableLeavePage:true	});
+		this.setState({ createDisabled: true, disableLeavePage: true });
 		const {
 			firstName,
 			lastName,
@@ -256,14 +263,14 @@ class DetailUser extends React.Component {
 		formData.append('active', this.state.selectedStatus);
 		// formData.append('password', password ? password : '');
 		formData.append('companyId', companyId ? companyId : '');
-		formData.append('employeeId',employeeId ? employeeId.value : '');
+		formData.append('employeeId', employeeId ? employeeId.value : '');
 		if (this.state.userPhotoFile.length > 0) {
 			formData.append('profilePic', userPhotoFile[0]);
 		}
 		//if (this.state.initValue !== data)
-		 {
+		{
 			this.setState({ disabled: true });
-			{this.setState({ loading:true, loadingMsg:"Updating User"})} 
+			{ this.setState({ loading: true, loadingMsg: "Updating User" }) }
 			this.props.userDetailActions
 				.updateUser(formData)
 				.then((res) => {
@@ -273,9 +280,9 @@ class DetailUser extends React.Component {
 							'success',
 							'User Updated Successfully',
 						);
-					//	this.updateRoles(+current_user_id);
+						//	this.updateRoles(+current_user_id);
 						this.props.history.push('/admin/settings/user');
-						{this.setState({ loading:false,})}
+						{ this.setState({ loading: false, }) }
 					}
 				})
 				.catch((err) => {
@@ -296,7 +303,7 @@ class DetailUser extends React.Component {
 			if (response.data === 'User Already Exists') {
 				this.setState({
 					exist: true,
-					 disabled: false,
+					disabled: false,
 				})
 			} else {
 				this.setState({
@@ -307,124 +314,122 @@ class DetailUser extends React.Component {
 	};
 	sendInviteMail = (event) => {
 		const { current_user_id } = this.state;
-		this.props.userDetailActions.getUserInviteEmail( current_user_id,window.location.origin).then((response) => {
+		this.props.userDetailActions.getUserInviteEmail(current_user_id, window.location.origin).then((response) => {
 			if (response.status === 200) {
-			toast.success("Mail Sent Successfully !")
+				toast.success("Mail Sent Successfully !")
 			} else {
 				toast.success("Mail Sent UnSuccessfully !")
 			}
 		}).catch(
-			(e)=>{
+			(e) => {
 				toast.success("Mail Sent UnSuccessfully !")
 			}
 		);
 	};
-	
+
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, dialog, timezone,current_user_id ,loadingMsg} = this.state;
-		const { role_list,employee_list } = this.props;
-		const { isPasswordShown } = this.state;
+		const { loading, dialog, timezone, current_user_id, loadingMsg } = this.state;
+		const { role_list, employee_list } = this.props;
+		const { isPasswordShown, enableDelete } = this.state;
+		console.log(enableDelete);
 
-		let active_roles_list=[];
-		role_list && role_list.length!==0 && role_list.map(row => {	
-			if(row.isActive==true){			active_roles_list.push(row)}					
+		let active_roles_list = [];
+		role_list && role_list.length !== 0 && role_list.map(row => {
+			if (row.isActive == true) { active_roles_list.push(row) }
 		})
-		console.log(role_list,"role_list")
-		console.log(active_roles_list,"temp_role_list")
-
 		return (
-			loading ==true? <Loader loadingMsg={loadingMsg}/> :
-<div>
-			<div className="create-user-screen">
-				<div className="animated fadeIn">
-					<Row>
-						<Col lg={12} className="mx-auto">
-							<Card>
-								<CardHeader>
-									<Row>
-										<Col lg={12}>
-											<div className="h4 mb-0 d-flex align-items-center">
-												<i className="nav-icon fas fa-users" />
-												<span className="ml-2">{strings.UpdateUser}
-												 </span>
-											</div>
-										</Col>
-									</Row>
-								</CardHeader>
-								<CardBody>
-									{dialog}
-									{loading ? (
-										<Loader />
-									) : (
-										<Row>
-											<Col lg={12}>
-												<Formik
-													initialValues={this.state.initValue}
-													onSubmit={(values, { resetForm }) => {
-														this.handleSubmit(values);
-														// resetForm(this.state.initValue)
+			loading == true ? <Loader loadingMsg={loadingMsg} /> :
+				<div>
+					<div className="create-user-screen">
+						<div className="animated fadeIn">
+							<Row>
+								<Col lg={12} className="mx-auto">
+									<Card>
+										<CardHeader>
+											<Row>
+												<Col lg={12}>
+													<div className="h4 mb-0 d-flex align-items-center">
+														<i className="nav-icon fas fa-users" />
+														<span className="ml-2">{strings.UpdateUser}
+														</span>
+													</div>
+												</Col>
+											</Row>
+										</CardHeader>
+										<CardBody>
+											{dialog}
+											{loading ? (
+												<Loader />
+											) : (
+												<Row>
+													<Col lg={12}>
+														<Formik
+															initialValues={this.state.initValue}
+															onSubmit={(values, { resetForm }) => {
+																this.handleSubmit(values);
+																// resetForm(this.state.initValue)
 
-														// this.setState({
-														//   selectedContactCurrency: null,
-														//   selectedCurrency: null,
-														//   selectedInvoiceLanguage: null
-														// })
-													}}
-													validate={(values) => {
-														let errors = {};
-														
-														if (this.state.exist === true) {
-															errors.email =
-																'User already exists';
-														}
-	
-														if (errors.length) {
-															this.setState({
-																 disabled: false,
-															})
-														}
-	
-														return errors;
-													}}
-													validationSchema={Yup.object().shape({
-														firstName: Yup.string().required(
-															'First name is required',
-														),
-														lastName: Yup.string().required(
-															'Last name is required',
-														),
-														email: Yup.string()
-															.required('Email is required')
-															.email('Invalid Email'),
-														roleId: Yup.string().required(
-															'Role name is required',
-														),
-														timeZone: Yup.string().required(
-															'Time zone is required',
-														),
-													// 	password: Yup.string()
-													// 	.required('Password is required')
-													// .min(8, "Password too Short")
-													// .matches(
-													// 	/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-														
-													// ),
-													// confirmPassword: Yup.string()
-													// .required('Confirm password is required')
-													// .oneOf(
-													// 	[Yup.ref('password'), null],
-													// 	'Passwords must match',
-													// ),
-														dob: Yup.string().required('DOB is required'),
-													})}
-												>
-													{(props) => (
-														<Form onSubmit={props.handleSubmit}>
-															<Row>
-																<Col xs="4" md="4" lg={2}>
-																	<FormGroup className="mb-3 text-center">
-																		{/* <ImagesUploader
+																// this.setState({
+																//   selectedContactCurrency: null,
+																//   selectedCurrency: null,
+																//   selectedInvoiceLanguage: null
+																// })
+															}}
+															validate={(values) => {
+																let errors = {};
+
+																if (this.state.exist === true) {
+																	errors.email =
+																		'User already exists';
+																}
+
+																if (errors.length) {
+																	this.setState({
+																		disabled: false,
+																	})
+																}
+
+																return errors;
+															}}
+															validationSchema={Yup.object().shape({
+																firstName: Yup.string().required(
+																	'First name is required',
+																),
+																lastName: Yup.string().required(
+																	'Last name is required',
+																),
+																email: Yup.string()
+																	.required('Email is required')
+																	.email('Invalid Email'),
+																roleId: Yup.string().required(
+																	'Role name is required',
+																),
+																timeZone: Yup.string().required(
+																	'Time zone is required',
+																),
+																// 	password: Yup.string()
+																// 	.required('Password is required')
+																// .min(8, "Password too Short")
+																// .matches(
+																// 	/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+
+																// ),
+																// confirmPassword: Yup.string()
+																// .required('Confirm password is required')
+																// .oneOf(
+																// 	[Yup.ref('password'), null],
+																// 	'Passwords must match',
+																// ),
+																dob: Yup.string().required('DOB is required'),
+															})}
+														>
+															{(props) => (
+																<Form onSubmit={props.handleSubmit}>
+																	<Row>
+																		<Col xs="4" md="4" lg={2}>
+																			<FormGroup className="mb-3 text-center">
+																				{/* <ImagesUploader
                                     // url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                                     optimisticPreviews
                                     multiple={false}
@@ -435,430 +440,434 @@ class DetailUser extends React.Component {
                                     }}
                                     onChange={(e) => {}}
                                   /> */}
-																		<ImageUploader
-																			// withIcon={true}
-																			buttonText="Choose images"
-																			onChange={(picture, file)=>{
-																				this.uploadImage(picture, file);
-																				props.handleChange("photo")(picture);
-																			}}
-																			imgExtension={[
-																				'jpg',
-																				'png',
-																				'jpeg',
-																			]}
-																			maxFileSize={40000}
-																			withPreview={true}
-																			singleImage={true}
-																			withIcon={this.state.showIcon}
-																			// buttonText="Choose Profile Image"
-																			flipHeight={
-																				this.state.userPhoto.length > 0
-																					? { height: 'inherit' }
-																					: {}
-																			}
-																			label="'Max file size: 40kb"
-																			labelClass={
-																				this.state.userPhoto.length > 0
-																					? 'hideLabel'
-																					: 'showLabel'
-																			}
-																			buttonClassName={
-																				this.state.userPhoto.length > 0
-																					? 'hideButton'
-																					: 'showButton'
-																			}
-																			defaultImages={this.state.userPhoto}
-																			imageState={this.state.imageState}
-																		/>
-																	</FormGroup>
-																</Col>
-																<Col lg={10}>
-																	<Row>
-																		<Col lg={6}>
-																			<FormGroup>
-																				<Label htmlFor="select">
-																					<span className="text-danger">* </span>
-																					 {strings.FirstName}
-																				</Label>
-																				<Input
-																					type="text"
-																					id="firstName"
-																					name="firstName"
-																					placeholder={strings.Enter+strings.FirstName}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExAlpha.test(
-																								option.target.value,
-																							)
-																						) {
-																							props.handleChange('firstName')(
-																								option,
-																							);
-																						}
+																				<ImageUploader
+																					// withIcon={true}
+																					buttonText="Choose images"
+																					onChange={(picture, file) => {
+																						this.uploadImage(picture, file);
+																						props.handleChange("photo")(picture);
 																					}}
-																					value={props.values.firstName}
-																					className={
-																						props.errors.firstName &&
-																						props.touched.firstName
-																							? 'is-invalid'
-																							: ''
+																					imgExtension={[
+																						'jpg',
+																						'png',
+																						'jpeg',
+																					]}
+																					maxFileSize={40000}
+																					withPreview={true}
+																					singleImage={true}
+																					withIcon={this.state.showIcon}
+																					// buttonText="Choose Profile Image"
+																					flipHeight={
+																						this.state.userPhoto.length > 0
+																							? { height: 'inherit' }
+																							: {}
 																					}
+																					label="'Max file size: 40kb"
+																					labelClass={
+																						this.state.userPhoto.length > 0
+																							? 'hideLabel'
+																							: 'showLabel'
+																					}
+																					buttonClassName={
+																						this.state.userPhoto.length > 0
+																							? 'hideButton'
+																							: 'showButton'
+																					}
+																					defaultImages={this.state.userPhoto}
+																					imageState={this.state.imageState}
 																				/>
-																				{props.errors.firstName &&
-																					props.touched.firstName && (
-																						<div className="invalid-feedback">
-																							{props.errors.firstName}
-																						</div>
-																					)}
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
-																			<FormGroup>
-																				<Label htmlFor="select">
-																					<span className="text-danger">* </span>
-																					 {strings.LastName}
-																				</Label>
-																				<Input
-																					type="text"
-																					id="lastName"
-																					name="lastName"
-																					placeholder={strings.Enter+strings.LastName}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExAlpha.test(
-																								option.target.value,
-																							)
-																						) {
-																							props.handleChange('lastName')(
-																								option,
-																							);
-																						}
-																					}}
-																					value={props.values.lastName}
-																					className={
-																						props.errors.lastName &&
-																						props.touched.lastName
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.lastName &&
-																					props.touched.lastName && (
-																						<div className="invalid-feedback">
-																							{props.errors.lastName}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																	</Row>
-																	<Row>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="email">
-																					<span className="text-danger">* </span>
-																					 {strings.EmailID}
-																				</Label>
-																				<Input
-																					type="email"
-																					id="email"
-																					name="email"
-																					disabled="true"
-																					placeholder={strings.Enter+strings.EmailID}
-																					value={props.values.email}
-																					onChange={(value) => {
-																						props.handleChange('email')(value);
-																						this.validationCheck(
-																							value.target.value,
-																						);
-																					}}
-																					className={
-																						props.errors.email &&
-																						props.touched.email
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.email &&
-																					props.touched.email && (
-																						<div className="invalid-feedback">
-																							{props.errors.email}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="date">
-																				<span className="text-danger">* </span>
-																					 {strings.DateOfBirth}
-																				</Label>
-																				<DatePicker
-																					className={`form-control ${
-																						props.errors.dob &&
-																						props.touched.dob
-																							? 'is-invalid'
-																							: ''
-																					}`}
-																					id="dob "
-																					name="dob "
-																					showMonthDropdown
-																					showYearDropdown
-																					dateFormat="dd-MM-yyyy"
-																					dropdownMode="select"
-																					maxDate={new Date()}
-																					autoComplete="off"
-																					placeholderText={strings.Enter+strings.DateOfBirth}
-																					// selected={props.values.dob}
-																					value={
-																						props.values.dob
-																							? moment(props.values.dob).format(
-																									'DD-MM-YYYY',
-																							  )
-																							: ''
-																					}
-																					onChange={(value) => {
-																						props.handleChange('dob')(value);
-																					}}
-																				/>
-																				{props.errors.dob &&
-																					props.touched.dob && (
-																						<div className="invalid-feedback">
-																							{props.errors.dob}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																	</Row>
-																
-																	<Row>
-																	{this.state.current_user_id !== 10000 &&
-																	  (
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="active">{strings.Status}</Label>
-																				<div>
-																					<FormGroup check inline>
-																						<div className="custom-radio custom-control">
-																							<input
-																								className="custom-control-input"
-																								type="radio"
-																								id="inline-radio1"
-																								name="active"
-																								checked={
-																									this.state.selectedStatus
+																		<Col lg={10}>
+																			<Row>
+																				<Col lg={6}>
+																					<FormGroup>
+																						<Label htmlFor="select">
+																							<span className="text-danger">* </span>
+																							{strings.FirstName}
+																						</Label>
+																						<Input
+																							type="text"
+																							id="firstName"
+																							name="firstName"
+																							autoComplete='off'
+																							placeholder={strings.Enter + strings.FirstName}
+																							onChange={(option) => {
+																								if (
+																									option.target.value === '' ||
+																									this.regExAlpha.test(
+																										option.target.value,
+																									)
+																								) {
+																									option = upperFirst(option.target.value)
+																									props.handleChange('firstName')(
+																										option,
+																									);
 																								}
-																								value={true}
-																								onChange={(e) => {
-																									if (
-																										e.target.value === 'true'
-																									) {
-																										this.setState({
-																											initValue:{
-																												active:true
-																											},
-																											selectedStatus: true,
-																										});
-																									}
-																								}}
-																							/>
-																							<label
-																								className="custom-control-label"
-																								htmlFor="inline-radio1"
-																							>
-																								Active
-																							</label>
-																						</div>
+																							}}
+																							value={props.values.firstName}
+																							className={
+																								props.errors.firstName &&
+																									props.touched.firstName
+																									? 'is-invalid'
+																									: ''
+																							}
+																						/>
+																						{props.errors.firstName &&
+																							props.touched.firstName && (
+																								<div className="invalid-feedback">
+																									{props.errors.firstName}
+																								</div>
+																							)}
 																					</FormGroup>
-																					<FormGroup check inline>
-																						<div className="custom-radio custom-control">
-																							<input
-																								className="custom-control-input"
-																								type="radio"
-																								id="inline-radio2"
-																								name="active"
-																								value={false}
-																								checked={
-																									!this.state.selectedStatus
+																				</Col>
+																				<Col lg={6}>
+																					<FormGroup>
+																						<Label htmlFor="select">
+																							<span className="text-danger">* </span>
+																							{strings.LastName}
+																						</Label>
+																						<Input
+																							type="text"
+																							id="lastName"
+																							name="lastName"
+																							autoComplete='off'
+																							placeholder={strings.Enter + strings.LastName}
+																							onChange={(option) => {
+																								if (
+																									option.target.value === '' ||
+																									this.regExAlpha.test(
+																										option.target.value,
+																									)
+																								) {
+																									option = upperFirst(option.target.value)
+																									props.handleChange('lastName')(
+																										option,
+																									);
 																								}
-																								onChange={(e) => {
-																									if (
-																										e.target.value === 'false'
-																									) {
-																										this.setState({
-																											initValue:{
-																												active:false
-																											},
-																											selectedStatus: false,
-																										});
-																									}
-																								}}
-																							/>
-																							<label
-																								className="custom-control-label"
-																								htmlFor="inline-radio2"
-																							>
-																								Inactive
-																							</label>
-																						</div>
+																							}}
+																							value={props.values.lastName}
+																							className={
+																								props.errors.lastName &&
+																									props.touched.lastName
+																									? 'is-invalid'
+																									: ''
+																							}
+																						/>
+																						{props.errors.lastName &&
+																							props.touched.lastName && (
+																								<div className="invalid-feedback">
+																									{props.errors.lastName}
+																								</div>
+																							)}
 																					</FormGroup>
-																				</div>
-																			</FormGroup>
-																		</Col>)}
-																		<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="contactId">
-																				
-																		 {strings.Employee} 
-																	</Label>
-																			<Select
-																				styles={customStyles}
-																				id="employeeId"
-																				name="employeeId"
-																				placeholder={strings.Select+strings.Employee}
-																				options={
-																					employee_list
-																						? selectOptionsFactory.renderOptions(
-																							'label',
-																							'value',
-																							employee_list,
-																							'Employee',
-																						)
-																						: []
-																				}
-																				value={props.values.employeeId}
-																				onChange={(option) => {
-																					if (option && option.value) {
-																						props.handleChange('employeeId')(option);
-																					} else {
-																						props.handleChange('employeeId')('');
-																					}
-																				}}
-																				className={
-																					props.errors.employeeId &&
-																						props.touched.employeeId
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.employeeId &&
-																				props.touched.employeeId && (
-																					<div className="invalid-feedback">
-																						{props.errors.employeeId}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-																	</Row>
-																	<Row>
-																		<Col lg={6}>
-																			<FormGroup>
-																				<Label htmlFor="roleId">
-																				<span className="text-danger">* </span>
-																					 {strings.Role}
-																				</Label>
-																				<Select
-																				//	styles={customStyles}
-																					options={
-																						active_roles_list
-																							? selectOptionsFactory.renderOptions(
+																				</Col>
+																			</Row>
+																			<Row>
+																				<Col lg={6}>
+																					<FormGroup className="mb-3">
+																						<Label htmlFor="email">
+																							<span className="text-danger">* </span>
+																							{strings.EmailID}
+																						</Label>
+																						<Input
+																							type="email"
+																							id="email"
+																							name="email"
+																							disabled="true"
+																							placeholder={strings.Enter + strings.EmailID}
+																							value={props.values.email}
+																							onChange={(value) => {
+																								props.handleChange('email')(value);
+																								this.validationCheck(
+																									value.target.value,
+																								);
+																							}}
+																							className={
+																								props.errors.email &&
+																									props.touched.email
+																									? 'is-invalid'
+																									: ''
+																							}
+																						/>
+																						{props.errors.email &&
+																							props.touched.email && (
+																								<div className="invalid-feedback">
+																									{props.errors.email}
+																								</div>
+																							)}
+																					</FormGroup>
+																				</Col>
+																				<Col lg={6}>
+																					<FormGroup className="mb-3">
+																						<Label htmlFor="date">
+																							<span className="text-danger">* </span>
+																							{strings.DateOfBirth}
+																						</Label>
+																						<DatePicker
+																							className={`form-control ${props.errors.dob &&
+																								props.touched.dob
+																								? 'is-invalid'
+																								: ''
+																								}`}
+																							id="dob "
+																							name="dob "
+																							showMonthDropdown
+																							showYearDropdown
+																							dateFormat="dd-MM-yyyy"
+																							dropdownMode="select"
+																							maxDate={moment().subtract(18, "years").toDate()}
+																							autoComplete="off"
+																							placeholderText={strings.Enter + strings.DateOfBirth}
+																							// selected={props.values.dob}
+																							value={
+																								props.values.dob
+																									? moment(props.values.dob).format(
+																										'DD-MM-YYYY',
+																									)
+																									: ''
+																							}
+																							onChange={(value) => {
+																								props.handleChange('dob')(value);
+																							}}
+																						/>
+																						{props.errors.dob &&
+																							props.touched.dob && (
+																								<div className="invalid-feedback">
+																									{props.errors.dob}
+																								</div>
+																							)}
+																					</FormGroup>
+																				</Col>
+																			</Row>
+
+																			<Row>
+																				{this.state.current_user_id !== 10000 &&
+																					(
+																						<Col lg={6}>
+																							<FormGroup className="mb-3">
+																								<Label htmlFor="active">{strings.Status}</Label>
+																								<div>
+																									<FormGroup check inline>
+																										<div className="custom-radio custom-control">
+																											<input
+																												className="custom-control-input"
+																												type="radio"
+																												id="inline-radio1"
+																												name="active"
+																												checked={
+																													this.state.selectedStatus
+																												}
+																												value={true}
+																												onChange={(e) => {
+																													if (
+																														e.target.value === 'true'
+																													) {
+																														this.setState({
+																															initValue: {
+																																active: true
+																															},
+																															selectedStatus: true,
+																														});
+																													}
+																												}}
+																											/>
+																											<label
+																												className="custom-control-label"
+																												htmlFor="inline-radio1"
+																											>
+																												Active
+																											</label>
+																										</div>
+																									</FormGroup>
+																									<FormGroup check inline>
+																										<div className="custom-radio custom-control">
+																											<input
+																												className="custom-control-input"
+																												type="radio"
+																												id="inline-radio2"
+																												name="active"
+																												value={false}
+																												checked={
+																													!this.state.selectedStatus
+																												}
+																												onChange={(e) => {
+																													if (
+																														e.target.value === 'false'
+																													) {
+																														this.setState({
+																															initValue: {
+																																active: false
+																															},
+																															selectedStatus: false,
+																														});
+																													}
+																												}}
+																											/>
+																											<label
+																												className="custom-control-label"
+																												htmlFor="inline-radio2"
+																											>
+																												Inactive
+																											</label>
+																										</div>
+																									</FormGroup>
+																								</div>
+																							</FormGroup>
+																						</Col>)}
+																				<Col lg={6}>
+																					<FormGroup className="mb-3">
+																						<Label htmlFor="contactId">
+
+																							{strings.Employee}
+																						</Label>
+																						<Select
+																							styles={customStyles}
+																							id="employeeId"
+																							name="employeeId"
+																							placeholder={strings.Select + strings.Employee}
+																							options={
+																								employee_list
+																									? selectOptionsFactory.renderOptions(
+																										'label',
+																										'value',
+																										employee_list,
+																										'Employee',
+																									)
+																									: []
+																							}
+																							value={props.values.employeeId}
+																							onChange={(option) => {
+																								if (option && option.value) {
+																									props.handleChange('employeeId')(option);
+																								} else {
+																									props.handleChange('employeeId')('');
+																								}
+																							}}
+																							className={
+																								props.errors.employeeId &&
+																									props.touched.employeeId
+																									? 'is-invalid'
+																									: ''
+																							}
+																						/>
+																						{props.errors.employeeId &&
+																							props.touched.employeeId && (
+																								<div className="invalid-feedback">
+																									{props.errors.employeeId}
+																								</div>
+																							)}
+																					</FormGroup>
+																				</Col>
+																			</Row>
+																			<Row>
+																				<Col lg={6}>
+																					<FormGroup>
+																						<Label htmlFor="roleId">
+																							<span className="text-danger">* </span>
+																							{strings.Role}
+																						</Label>
+																						<Select
+																							isDisabled={!enableDelete}
+																							//	styles={customStyles}
+																							options={
+																								active_roles_list
+																									? selectOptionsFactory.renderOptions(
+																										'roleName',
+																										'roleCode',
+																										active_roles_list,
+																										'Role',
+																									)
+																									: []
+																							}
+																							value={
+																								role_list &&
+																								selectOptionsFactory.renderOptions(
 																									'roleName',
 																									'roleCode',
-																									active_roles_list,
+																									role_list,
 																									'Role',
-																							  )
-																							: []
-																					}
-																					value={
-																						role_list &&
-																						 selectOptionsFactory.renderOptions(
-																							'roleName',
-																							'roleCode',
-																							role_list,
-																							'Role',
-																					  )
-																							.find(
-																								(option) =>
-																									option.value ===
-																									+props.values.roleId,
-																							)
-																					}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('roleId')(
-																								option,
-																							);
-																						} else {
-																							props.handleChange('roleId')('');
-																						}
-																					}}
-																					placeholder={strings.Select + strings.Role}
-																					id="roleId"
-																					name="roleId"
-																					className={
-																						props.errors.roleId &&
-																							props.touched.roleId
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.roleId &&
-																					props.touched.roleId && (
-																						<div className="invalid-feedback">
-																							{props.errors.roleId}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="timeZone">
-																					<span className="text-danger">* </span>
-																					 {strings.TimeZonePreference}
-																				</Label>
-																				<Select
-																					styles={customStyles}
-																					id="timeZone"
-																					name="timeZone"
-																					options={timezone ? timezone : []}
-																					value={
-																						timezone &&
-																						timezone.find(
-																							(option) =>
-																								option.value ===
-																								props.values.timeZone,
-																						)
-																					}
-																					isDisabled={this.state.current_user_id === 10000}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('timeZone')(
-																								option.value,
-																							);
-																						} else {
-																							props.handleChange('timeZone')(
-																								'',
-																							);
-																						}
-																					}}
-																					className={
-																						props.errors.timeZone &&
-																						props.touched.timeZone
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.timeZone &&
-																					props.touched.timeZone && (
-																						<div className="invalid-feedback">
-																							{props.errors.timeZone}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		{/* <Col lg={6}>
+																								)
+																									.find(
+																										(option) =>
+																											option.value ===
+																											+props.values.roleId,
+																									)
+																							}
+																							onChange={(option) => {
+																								if (option && option.value) {
+																									props.handleChange('roleId')(
+																										option,
+																									);
+																								} else {
+																									props.handleChange('roleId')('');
+																								}
+																							}}
+																							placeholder={strings.Select + strings.Role}
+																							id="roleId"
+																							name="roleId"
+																							className={
+																								props.errors.roleId &&
+																									props.touched.roleId
+																									? 'is-invalid'
+																									: ''
+																							}
+																						/>
+																						{props.errors.roleId &&
+																							props.touched.roleId && (
+																								<div className="invalid-feedback">
+																									{props.errors.roleId}
+																								</div>
+																							)}
+																					</FormGroup>
+																				</Col>
+																				<Col lg={6}>
+																					<FormGroup className="mb-3">
+																						<Label htmlFor="timeZone">
+																							<span className="text-danger">* </span>
+																							{strings.TimeZonePreference}
+																						</Label>
+																						<Select
+																							styles={customStyles}
+																							id="timeZone"
+																							name="timeZone"
+																							options={timezone ? timezone : []}
+																							value={
+																								timezone &&
+																								timezone.find(
+																									(option) =>
+																										option.value ===
+																										props.values.timeZone,
+																								)
+																							}
+																							isDisabled={this.state.current_user_id === 10000}
+																							onChange={(option) => {
+																								if (option && option.value) {
+																									props.handleChange('timeZone')(
+																										option.value,
+																									);
+																								} else {
+																									props.handleChange('timeZone')(
+																										'',
+																									);
+																								}
+																							}}
+																							className={
+																								props.errors.timeZone &&
+																									props.touched.timeZone
+																									? 'is-invalid'
+																									: ''
+																							}
+																						/>
+																						{props.errors.timeZone &&
+																							props.touched.timeZone && (
+																								<div className="invalid-feedback">
+																									{props.errors.timeZone}
+																								</div>
+																							)}
+																					</FormGroup>
+																				</Col>
+																				{/* <Col lg={6}>
                                   <FormGroup>
                                     <Label htmlFor="companyId">Company</Label>
                                     <Select
@@ -881,16 +890,16 @@ class DetailUser extends React.Component {
 
                                   </FormGroup>
                                 </Col> */}
-							
-																	
+
+
+																			</Row>
+
+
+																		</Col>
 																	</Row>
-																	
-														
-																</Col>
-															</Row>
-															
-															<Row>
-																{/* <Col
+
+																	<Row>
+																		{/* <Col
 																	lg={12}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 															>
@@ -912,8 +921,8 @@ class DetailUser extends React.Component {
 																	</FormGroup>
 																	)}
 													 */}
-																	<FormGroup className="text-right w-100" >
-																		{/* <Button
+																		<FormGroup className="text-right w-100" >
+																			{/* <Button
 																			type="submit"
 																			color="primary"
 																			className="btn-square mr-3"
@@ -924,65 +933,65 @@ class DetailUser extends React.Component {
 																				? 'Updating...'
 																				: 'Update'}
 																		</Button> */}
-																		<Button
-																			type="submit"
-																			color="primary"
-																			className="btn-square mr-3"
-																			disabled={this.state.disabled}
-																			onClick={() => {
-																				//	added validation popup	msg	
-																				props.handleBlur();
-																				if(props.errors &&  Object.keys(props.errors).length != 0)
-																				this.props.commonActions.fillManDatoryDetails();
-																		 }}
-																		>
-																			<i className="fa fa-dot-circle-o"></i>{' '}
-																		 {this.state.disabled
-																			? 'Updating...'
-																			: strings.Update }
-																		</Button>
-																		<Button
-																			type="submit"
-																			color="primary"
-																			className="btn-square mr-3"
-																			disabled={this.state.disabled}
-																			onClick={(event) => {
-																				this.sendInviteMail(event);
-																		 }}
-																		>
-																			<i className="fas fa-envelope"></i>{' '}
-																			Resend Invite
-																		</Button>
-																		<Button
-																			color="secondary"
-																			className="btn-square"
-																			onClick={() => {
-																				this.props.history.push(
-																					'/admin/settings/user',
-																				);
-																			}}
-																		>
-																			<i className="fa fa-ban"></i> {this.state.disabled1
-																			? 'Deleting...'
-																			: strings.Cancel }
-																		</Button>
-																	</FormGroup>
-																
-															</Row>
-														</Form>
-													)}
-												</Formik>
-											</Col>
-										</Row>
-									)}
-								</CardBody>
-							</Card>
-						</Col>
-					</Row>
+																			<Button
+																				type="submit"
+																				color="primary"
+																				className="btn-square mr-3"
+																				disabled={this.state.disabled}
+																				onClick={() => {
+																					//	added validation popup	msg	
+																					props.handleBlur();
+																					if (props.errors && Object.keys(props.errors).length != 0)
+																						this.props.commonActions.fillManDatoryDetails();
+																				}}
+																			>
+																				<i className="fa fa-dot-circle-o"></i>{' '}
+																				{this.state.disabled
+																					? 'Updating...'
+																					: strings.Update}
+																			</Button>
+																			<Button
+																				type="submit"
+																				color="primary"
+																				className="btn-square mr-3"
+																				disabled={this.state.disabled}
+																				onClick={(event) => {
+																					this.sendInviteMail(event);
+																				}}
+																			>
+																				<i className="fas fa-envelope"></i>{' '}
+																				Resend Invite
+																			</Button>
+																			<Button
+																				color="secondary"
+																				className="btn-square"
+																				onClick={() => {
+																					this.props.history.push(
+																						'/admin/settings/user',
+																					);
+																				}}
+																			>
+																				<i className="fa fa-ban"></i> {this.state.disabled1
+																					? 'Deleting...'
+																					: strings.Cancel}
+																			</Button>
+																		</FormGroup>
+
+																	</Row>
+																</Form>
+															)}
+														</Formik>
+													</Col>
+												</Row>
+											)}
+										</CardBody>
+									</Card>
+								</Col>
+							</Row>
+						</div>
+					</div>
+					{this.state.disableLeavePage ? "" : <LeavePage />}
 				</div>
-			</div>
-			{this.state.disableLeavePage ?"":<LeavePage/>}
-			</div>
 		);
 	}
 }

@@ -133,50 +133,26 @@ class ViewCorporateTax extends React.Component {
 	componentDidMount = () => {
 		this.props.financialReportActions.getCompany() 
 		this.initializeData();
-		console.log(this.state.initValue);
 	};
 
 	initializeData = () => {
-		const { initValue } = this.state;
-		let query = new URLSearchParams(document.location.search)
-		const idofct=query.get('id')
-		if(!idofct) this.props.history.push('/admin/report/corporate-tax')
-		this.props.ctReportActions
-			.getCorporateTaxList()
+		const postData = {
+			id: this.props.location.state.id
+		};
+		this.props.ctActions
+			.getCTView(postData)
 			.then((res) => {
-				
 				if (res.status === 200) {
-					this.setState({ ctReportData: res?.data?.data?.find((i)=>i.id==idofct) }) // comment for dummy
-					// console.log(this.state.ctReportData);
-					const postData = {
-						id:this.state.ctReportData.id,
-						startDate:moment(this.props.location.state.startDate).format('DD/MM/YYYY'),
-						endDate: moment(this.props.location.state.endDate).format('DD/MM/YYYY'),
-					};
-					// console.log(postData);
-					this.props.financialReportActions
-						.getProfitAndLossReport(postData)
-						.then((res) => {
-							if (res.status === 200) {
-								this.setState({
-									data: res.data,
-									loading: false,
-								});
-								// console.log(res.data);
-							}
-						})
-						.catch((err) => {
-							this.setState({ loading: false });
-						});
+					this.setState({
+						data: res.data,
+						loading: false,
+					});
 				}
 			})
 			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
+				this.setState({ loading: false });
 			});
-	 };
+	};
 
 	
 	exportFile = () => {
@@ -430,6 +406,9 @@ class ViewCorporateTax extends React.Component {
 															{Object.keys(
 																this.state.data['nonOperatingIncome'],
 															).map((item) => (
+																(this.state.data[
+																	'nonOperatingIncome'
+																][`${item}`] === 0 ) ? '' :
 																<tr>
 																	<td className="pt-0 pb-0">{item}</td>
 																	<td className="pt-0 pb-0 text-right">
@@ -450,6 +429,9 @@ class ViewCorporateTax extends React.Component {
 															{Object.keys(
 																this.state.data['operatingIncome'],
 															).map((item) => (
+																(this.state.data[
+																	'operatingIncome'
+																][`${item}`] === 0 ) ? '' :
 																<tr>
 																	<td className="pt-0 pb-0">{item}</td>
 																	<td className="pt-0 pb-0 text-right">
@@ -513,6 +495,9 @@ class ViewCorporateTax extends React.Component {
 															{Object.keys(
 																this.state.data['costOfGoodsSold'],
 															).map((item) => (
+																(this.state.data[
+																	'costOfGoodsSold'
+																][`${item}`] === 0 ) ? '' :
 																<tr>
 																	<td className="pt-0 pb-0">{item}</td>
 																	<td className="pt-0 pb-0 text-right">
@@ -605,6 +590,9 @@ class ViewCorporateTax extends React.Component {
 															{Object.keys(
 																this.state.data['operatingExpense'],
 															).map((item) => (
+																(this.state.data[
+																	'operatingExpense'
+																][`${item}`] === 0 ) ? '' :
 																<tr>
 																	<td className="pt-0 pb-0">{item}</td>
 																	{/* <td className="pt-0 pb-0"></td> */}

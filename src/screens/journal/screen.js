@@ -202,9 +202,14 @@ class Journal extends React.Component {
 	};
 
 	goToDetail = (row) => {
-		this.props.history.push('/admin/accountant/journal/detail', {
-			id: row['journalId'],
-		});
+		if (row.postingReferenceType === "MANUAL")
+			this.props.history.push('/admin/accountant/journal/detail', {
+				id: row['journalId'], postingReferenceType: 'MANUAL'
+			});
+		else
+			this.props.history.push('/admin/accountant/journal/view', {
+				id: row['journalId'],
+			});
 	};
 
 	onRowSelect = (row, isSelected, e) => {
@@ -240,7 +245,7 @@ class Journal extends React.Component {
 
 	renderDate = (cell, rows) => {
 		return rows.journalDate
-			? moment(rows.journalDate).format('YYYY-MM-DD')
+			? moment(rows.journalDate).format('DD-MM-YYYY')
 			: '';
 	};
 

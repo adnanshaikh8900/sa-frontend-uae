@@ -40,12 +40,12 @@ const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
-	//   currency: true,
-	  ignoreDecimal: false,
-	  ignoreZeroCurrency: false,
-	  doNotAddOnly: false,
+		//   currency: true,
+		ignoreDecimal: false,
+		ignoreZeroCurrency: false,
+		doNotAddOnly: false,
 	}
-  });
+});
 const mapStateToProps = (state) => {
 	return {
 		customer_invoice_list: state.customer_invoice.customer_invoice_list,
@@ -60,15 +60,15 @@ const mapDispatchToProps = (dispatch) => {
 			CustomerInvoiceActions,
 			dispatch,
 		),
-		customerInvoiceDetailActions:bindActionCreators(
+		customerInvoiceDetailActions: bindActionCreators(
 			CustomerInvoiceDetailActions,
 			dispatch,
 		),
-		creditNotesActions:bindActionCreators(
+		creditNotesActions: bindActionCreators(
 			CreditNotesActions,
 			dispatch,
 		),
-		
+
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -88,8 +88,8 @@ class CustomerInvoice extends React.Component {
 			loading: true,
 			dialog: false,
 			openEmailModal: false,
-			prefixData:'',
-			selectedData:{},
+			prefixData: '',
+			selectedData: {},
 			actionButtons: {},
 			filterData: {
 				customerId: '',
@@ -112,7 +112,7 @@ class CustomerInvoice extends React.Component {
 			},
 			rowId: '',
 			language: window['localStorage'].getItem('language'),
-			loadingMsg:"Loading..."
+			loadingMsg: "Loading..."
 		};
 
 		this.options = {
@@ -221,39 +221,39 @@ class CustomerInvoice extends React.Component {
 		this.initializeData();
 	};
 
-	
-stockInHandTestForProduct = (row,markAsSent) => {
-	this.postInvoice(row,markAsSent);
-// this.props.customerInvoiceActions
-// 	.stockInHandTestForProduct(row.id)
-// 	.then((res) => {
-// 	 if (res.status == 200)
-// 		this.postInvoice(row,markAsSent);
-// 	})
-// 	.catch((error)=>{
-// 		if (error.status == 417)
-// 		{
-// 			this.props.commonActions.tostifyAlert(
-// 				'error',
-// 				'Invoice Can\'t Posted Because Some Products are Out Of Stock ',
-// 			);
-// 		}
-// 	})		
-}
+
+	stockInHandTestForProduct = (row, markAsSent) => {
+		this.postInvoice(row, markAsSent);
+		// this.props.customerInvoiceActions
+		// 	.stockInHandTestForProduct(row.id)
+		// 	.then((res) => {
+		// 	 if (res.status == 200)
+		// 		this.postInvoice(row,markAsSent);
+		// 	})
+		// 	.catch((error)=>{
+		// 		if (error.status == 417)
+		// 		{
+		// 			this.props.commonActions.tostifyAlert(
+		// 				'error',
+		// 				'Invoice Can\'t Posted Because Some Products are Out Of Stock ',
+		// 			);
+		// 		}
+		// 	})		
+	}
 
 
 
-	postInvoice = (row,markAsSent) => {
-	
+	postInvoice = (row, markAsSent) => {
+
 		const postingRequestModel = {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
 			postingRefType: 'INVOICE',
-			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
-			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-",
-			markAsSent:markAsSent
+			amountInWords: upperCase(row.currencyName + " " + (toWords.convert(row.invoiceAmount)) + " ONLY").replace("POINT", "AND"),
+			vatInWords: row.vatAmount ? upperCase(row.currencyName + " " + (toWords.convert(row.vatAmount)) + " ONLY").replace("POINT", "AND") : "-",
+			markAsSent: markAsSent
 		};
-		this.setState({ loading:true, loadingMsg:"Customer Invoice Posting..."});
+		this.setState({ loading: true, loadingMsg: "Customer Invoice Posting..." });
 		this.props.customerInvoiceActions
 			.postInvoice(postingRequestModel)
 			.then((res) => {
@@ -267,7 +267,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 					});
 					this.getOverdue();
 					this.initializeData();
-					this.setState({ loading:false,});
+					this.setState({ loading: false, });
 				}
 			})
 			.catch((err) => {
@@ -347,11 +347,11 @@ stockInHandTestForProduct = (row,markAsSent) => {
 				{row.status}
 			</span>
 			{
-				row.cnCreatedOnPaidInvoice==true && (row.status=="Paid" || row.status=="Partially Paid") &&(
-					<><br/>{strings.Credit_Note_Created}</>
+				row.cnCreatedOnPaidInvoice == true && (row.status == "Paid" || row.status == "Partially Paid") && (
+					<><br />{strings.Credit_Note_Created}</>
 				)
 			}
-			</>
+		</>
 		);
 	};
 
@@ -366,14 +366,14 @@ stockInHandTestForProduct = (row,markAsSent) => {
 			actionButtons: temp,
 		});
 	};
-	updateParentAmount = (totalAmount,totalVatAmount,totalexcise) => {
-		this.setState({totalAmount:totalAmount,totalVatAmount:totalVatAmount,totalExciseAmount:totalexcise})
-		console.log(totalAmount,"00000000")
-		console.log(totalVatAmount,"00000000")
+	updateParentAmount = (totalAmount, totalVatAmount, totalexcise) => {
+		this.setState({ totalAmount: totalAmount, totalVatAmount: totalVatAmount, totalExciseAmount: totalexcise })
+		console.log(totalAmount, "00000000")
+		console.log(totalVatAmount, "00000000")
 	};
-	updateParentSelelectedData= (data) => {
-		this.setState({selectedData:data})
-		console.log(data,"NEW DATA...")
+	updateParentSelelectedData = (data) => {
+		this.setState({ selectedData: data })
+		console.log(data, "NEW DATA...")
 	};
 	renderInvoiceAmount = (cell, row, extraData) => {
 		return (
@@ -381,17 +381,17 @@ stockInHandTestForProduct = (row,markAsSent) => {
 				<div>
 					<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount}: </label>
 					<label>
-						{row.invoiceAmount === 0 ? row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }): row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
-					
+						{row.invoiceAmount === 0 ? row.currencySymbol + " " + row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencySymbol + " " + row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+
 					</label>
 				</div>
 				<div style={{ display: row.vatAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
-					<label>{row.vatAmount === 0 ? row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }): row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
+					<label>{row.vatAmount === 0 ? row.currencySymbol + " " + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencySymbol + " " + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</label>
 				</div>
 				<div style={{ display: row.dueAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.DueAmount}: </label>
-					<label>{row.dueAmount === 0 ? row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
+					<label>{row.dueAmount === 0 ? row.currencySymbol + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencySymbol + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</label>
 				</div>
 
 			</div>);
@@ -424,11 +424,11 @@ stockInHandTestForProduct = (row,markAsSent) => {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
+		return row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	};
 
 	renderDueAmount = (cell, row, extraData) => {
-		return row.dueAmount === 0 ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
+		return row.dueAmount === 0 ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	}
 	renderActions = (cell, row) => {
 		return (
@@ -445,15 +445,15 @@ stockInHandTestForProduct = (row,markAsSent) => {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' &&   (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem>
 								<div
 									onClick={() => {
-										if(row.editFlag) 
-										this.props.history.push(
-											'/admin/income/customer-invoice/detail',
-											{ id: row.id },
-										);
+										if (row.editFlag)
+											this.props.history.push(
+												'/admin/income/customer-invoice/detail',
+												{ id: row.id },
+											);
 										else this.props.commonActions.tostifyAlert(
 											'error',
 											'You cannot edit transactions for which VAT is recorded'
@@ -467,16 +467,16 @@ stockInHandTestForProduct = (row,markAsSent) => {
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.stockInHandTestForProduct(row,true);
+									this.stockInHandTestForProduct(row, true);
 								}}
 							>
-							<i class="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
+								<i class="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
 							</DropdownItem>
 						)}
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.stockInHandTestForProduct(row,false);
+									this.stockInHandTestForProduct(row, false);
 								}}
 							>
 								<i className="fas fa-send" /> {strings.Send}
@@ -486,11 +486,11 @@ stockInHandTestForProduct = (row,markAsSent) => {
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
 
-						{row.statusEnum === 'Sent' &&  (
+						{row.statusEnum === 'Sent' && (
 							<DropdownItem
 								onClick={() => {
-									if(row.editFlag)
-									this.unPostInvoice(row);
+									if (row.editFlag)
+										this.unPostInvoice(row);
 									else this.props.commonActions.tostifyAlert(
 										'error',
 										'You cannot edit transactions for which VAT is recorded'
@@ -500,7 +500,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 								<i className="fas fa-file" /> {strings.Draft}
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate ==1 && (
+						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate == 1 && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -513,13 +513,13 @@ stockInHandTestForProduct = (row,markAsSent) => {
 							</DropdownItem>
 						)}
 						<DropdownItem
-					
-					onClick={() =>
-						this.props.history.push('/admin/income/customer-invoice/create', {parentInvoiceId: row.id})
-					}
-				>
-					<i className="fas fa-copy" /> {strings.CreateADuplicate}
-				</DropdownItem>
+
+							onClick={() =>
+								this.props.history.push('/admin/income/customer-invoice/create', { parentInvoiceId: row.id })
+							}
+						>
+							<i className="fas fa-copy" /> {strings.CreateADuplicate}
+						</DropdownItem>
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
@@ -538,21 +538,23 @@ stockInHandTestForProduct = (row,markAsSent) => {
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
 						)} */}
-							 {(row.statusEnum === 'Paid'  && row.remainingInvoiceAmount !==true && config.INCOME_TCN)&& ( 
+						{(!row.cnCreatedOnPaidInvoice && row.statusEnum === 'Paid' && row.remainingInvoiceAmount !== true && config.INCOME_TCN) && (
 							<DropdownItem
-							onClick={() => {
-							this.renderActionForState(row.id);
-							}}
+								onClick={() => {
+									this.props.history.push('/admin/income/credit-notes/create', {
+										invoiceID: row.id
+									})
+								}}
 							>
-								<i className="fas fa-plus" /> {strings.Create +" "+strings.CreditNote}
+								<i className="fas fa-plus" /> {strings.Create + " " + strings.CreditNote}
 							</DropdownItem>
-							)} 
+						)}
 						<DropdownItem
-					
+
 							onClick={() =>
-								
+
 								this.props.history.push('/admin/income/customer-invoice/view', {
-									id: row.id, status:row.status,contactId:row.contactId
+									id: row.id, status: row.status, contactId: row.contactId
 								})
 							}
 						>
@@ -563,160 +565,6 @@ stockInHandTestForProduct = (row,markAsSent) => {
 			</div>
 		);
 	};
-	renderActionForState = (id) => {
-		this.props.customerInvoiceActions.getVatList();
-		this.props.customerInvoiceActions.getExciseList();
-		this.props.customerInvoiceActions.getProductList();
-
-
-		// this.props.customerInvoiceDetailActions
-		// .getInvoiceById(this.props.location.state.id)
-		// .then((res) => {
-		// 	if (res.status === 200) {
-		// 		this.getCompanyCurrency();
-		// 		this.props.customerInvoiceActions.getVatList();
-		// 		this.props.customerInvoiceActions.getCustomerList(
-		// 			this.state.contactType,
-		// 		);
-		// 		this.props.currencyConvertActions.getCurrencyConversionList();
-		// 		this.props.customerInvoiceActions.getCountryList();
-		// 		this.props.customerInvoiceActions.getProductList();
-
-		// 		this.setState(
-		// 			{
-		// 				current_customer_id: this.props.location.state.id,
-		// 				initValue: {
-		// 					receiptAttachmentDescription: res.data
-		// 						.receiptAttachmentDescription
-		// 						? res.data.receiptAttachmentDescription
-		// 						: '',
-		// 					receiptNumber: res.data.receiptNumber
-		// 						? res.data.receiptNumber
-		// 						: '',
-		// 					contact_po_number: res.data.contactPoNumber
-		// 						? res.data.contactPoNumber
-		// 						: '',
-		// 					currency: res.data.currencyCode ? res.data.currencyCode : '',
-		// 					exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
-		// 					currencyName:res.data.currencyName ? res.data.currencyName : '',
-		// 					invoiceDueDate: res.data.invoiceDueDate
-		// 						? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
-		// 						: '',
-		// 					invoiceDate: res.data.invoiceDate
-		// 						? moment(res.data.invoiceDate).format('DD-MM-YYYY')
-		// 						: '',
-		// 					contactId: res.data.contactId ? res.data.contactId : '',
-		// 					project: res.data.projectId ? res.data.projectId : '',
-		// 					invoice_number: res.data.referenceNumber
-		// 						? res.data.referenceNumber
-		// 						: '',
-		// 					total_net: 0,
-		// 					invoiceVATAmount: res.data.totalVatAmount
-		// 						? res.data.totalVatAmount
-		// 						: 0,
-		// 					totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
-		// 					notes: res.data.notes ? res.data.notes : '',
-		// 					lineItemsString: res.data.invoiceLineItems
-		// 						? res.data.invoiceLineItems
-		// 						: [],
-		// 					discount: res.data.discount ? res.data.discount : 0,
-		// 					discountPercentage: res.data.discountPercentage
-		// 						? res.data.discountPercentage
-		// 						: '',
-		// 					discountType: res.data.discountType
-		// 						? res.data.discountType
-		// 						: '',
-		// 					term: res.data.term ? res.data.term : '',
-		// 					placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-		// 					fileName: res.data.fileName ? res.data.fileName : '',
-		// 					filePath: res.data.filePath ? res.data.filePath : '',
-		// 				},
-		// 				discountAmount: res.data.discount ? res.data.discount : 0,
-		// 				discountPercentage: res.data.discountPercentage
-		// 					? res.data.discountPercentage
-		// 					: '',
-		// 				data: res.data.invoiceLineItems
-		// 					? res.data.invoiceLineItems
-		// 					: [],
-		// 				selectedContact: res.data.contactId ? res.data.contactId : '',
-		// 				term: res.data.term ? res.data.term : '',
-		// 				placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-		// 				loading: false,
-		// 			},
-		// 			() => {
-		// 				if (this.state.data.length > 0) {
-		// 					this.calTotalNet(this.state.data);
-		// 					const { data } = this.state;
-		// 					const idCount =
-		// 						data.length > 0
-		// 							? Math.max.apply(
-		// 									Math,
-		// 									data.map((item) => {
-		// 										return item.id;
-		// 									}),
-		// 							  )
-		// 							: 0;
-		// 					this.setState({
-		// 						idCount,
-		// 					});
-		// 				} else {
-		// 					this.setState({
-		// 						idCount: 0,
-		// 					});
-		// 				}
-		// 			},
-		// 		);
-		// 	}
-		// });
-		this.props.creditNotesActions.getInvoiceNo().then((response) => {
-			this.setState({
-				prefixData: response.data
-
-			});
-		});
-		this.props.customerInvoiceDetailActions
-		.getInvoiceById(id).then((res) => {
-			this.setState({		
-				// current_rfq_id: this.props.location.state.id,
-				openModal:true, rowId : id,
-				    selectedData:res.data,
-					invoiceNumber:res.data.referenceNumber,
-					rfqReceiveDate: res.data.invoiceDate
-						? moment(res.data.invoiceDate).format('DD-MM-YYYY')
-						: '',
-						rfqExpiryDate: res.data.invoiceDueDate
-						? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
-						: '',
-						supplierId: res.data.supplierId ? res.data.supplierId : '',
-						rfqNumber: res.data.referenceNumber
-						? res.data.referenceNumber
-						: '',
-					totalVatAmount: res.data.totalVatAmount
-						? res.data.totalVatAmount
-						: 0,
-						totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
-						totalExciseAmount: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
-						total_net: 0,
-					notes: res.data.notes ? res.data.notes : '',
-					lineItemsString: res.data.invoiceLineItems
-						? res.data.invoiceLineItems
-						: [],
-								
-				data: res.data.invoiceLineItems
-					? res.data.invoiceLineItems
-					: [],
-				selectedContact: res.data.contactId ? res.data.contactId : '',
-			
-				loading: false,
-			})
-			
-			console.log(this.state.rfqReceiveDate)
-			console.log('selecteddata ',this.state.selectedData)
-		});
-		// this.setState({openModal:true});
-	}
-
-
 	sendMail = (id) => {
 		this.props.customerInvoiceActions
 			.sendMail(id)
@@ -960,7 +808,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,loadingMsg,
+			loading, loadingMsg,
 			filterData,
 			dialog,
 			selectedRows,
@@ -991,9 +839,9 @@ stockInHandTestForProduct = (row,markAsSent) => {
 					currencySymbol: customer.currencySymbol ? customer.currencySymbol : '',
 					invoiceAmount: customer.totalAmount,
 					vatAmount: customer.totalVatAmount,
-					cnCreatedOnPaidInvoice:customer.cnCreatedOnPaidInvoice,
-					editFlag:customer.editFlag,
-					exchangeRate:customer.exchangeRate,
+					cnCreatedOnPaidInvoice: customer.cnCreatedOnPaidInvoice,
+					editFlag: customer.editFlag,
+					exchangeRate: customer.exchangeRate,
 				}))
 				: '';
 
@@ -1005,35 +853,35 @@ stockInHandTestForProduct = (row,markAsSent) => {
 		})
 
 		return (
-			loading ==true? <Loader loadingMsg={loadingMsg}/> :
-<div> <div className="customer-invoice-screen">
-				<div className="animated fadeIn">
-					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-					<Card>
-						<CardHeader>
-							<Row>
-								<Col lg={12}>
-									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="fas fa-file-invoice" />
-										<span className="ml-2">{strings.CustomerInvoices}</span>
-									</div>
-								</Col>
-							</Row>
-						</CardHeader>
-						<CardBody>
-							{dialog}
-							{loading && (
+			loading == true ? <Loader loadingMsg={loadingMsg} /> :
+				<div> <div className="customer-invoice-screen">
+					<div className="animated fadeIn">
+						{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+						<Card>
+							<CardHeader>
 								<Row>
-									<Col lg={12} className="rounded-loader">
-										<div>
-											<Loader />
+									<Col lg={12}>
+										<div className="h4 mb-0 d-flex align-items-center">
+											<i className="fas fa-file-invoice" />
+											<span className="ml-2">{strings.CustomerInvoices}</span>
 										</div>
 									</Col>
 								</Row>
-							)}
-							<Row>
-								<Col lg={12}>
-									{/* <div className="mb-4 status-panel p-3">
+							</CardHeader>
+							<CardBody>
+								{dialog}
+								{loading && (
+									<Row>
+										<Col lg={12} className="rounded-loader">
+											<div>
+												<Loader />
+											</div>
+										</Col>
+									</Row>
+								)}
+								<Row>
+									<Col lg={12}>
+										{/* <div className="mb-4 status-panel p-3">
 										<Row className="align-items-center justify-content-around">
 											<div className="h4 mb-0 d-flex align-items-center ">
 												<img
@@ -1151,9 +999,9 @@ stockInHandTestForProduct = (row,markAsSent) => {
 											</div>
 										</Row>
 									</div> */}
-									<div className="d-flex justify-content-end">
-										<ButtonGroup size="sm">
-											{/* <Button
+										<div className="d-flex justify-content-end">
+											<ButtonGroup size="sm">
+												{/* <Button
 												color="primary"
 												className="btn-square mr-1"
 												onClick={() => this.getCsvData()}
@@ -1170,7 +1018,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 													target="_blank"
 												/>
 											)} */}
-											{/* <Button
+												{/* <Button
 												color="primary"
 												className="btn-square "
 												onClick={this.bulkDelete}
@@ -1179,86 +1027,86 @@ stockInHandTestForProduct = (row,markAsSent) => {
 												<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
 												Bulk Delete
 											</Button> */}
-										</ButtonGroup>
-									</div>
-									<div className="py-3">
-										<h5>{strings.Filter}: </h5>
-										<Row>
-											<Col lg={2} className="mb-1">
-												<Select
-													className="select-default-width"
-													placeholder={strings.Select+strings.Customer}
-													id="customer"
-													name="customer"
-													options={
-														tmpCustomer_list
-															? selectOptionsFactory.renderOptions(
-																'label',
-																'value',
-																tmpCustomer_list,
-																'Customer',
-															)
-															: []
-													}
-													value={filterData.customerId}
-													onChange={(option) => {
-														if (option && option.value) {
-															this.handleChange(option, 'customerId');
-														} else {
-															this.handleChange('', 'customerId');
+											</ButtonGroup>
+										</div>
+										<div className="py-3">
+											<h5>{strings.Filter}: </h5>
+											<Row>
+												<Col lg={2} className="mb-1">
+													<Select
+														className="select-default-width"
+														placeholder={strings.Select + strings.Customer}
+														id="customer"
+														name="customer"
+														options={
+															tmpCustomer_list
+																? selectOptionsFactory.renderOptions(
+																	'label',
+																	'value',
+																	tmpCustomer_list,
+																	'Customer',
+																)
+																: []
 														}
-													}}
-												/>
-											</Col>
-											<Col lg={2} className="mb-1">
-												<DatePicker
-													className="form-control"
-													id="date"
-													name="invoiceDate"
-													placeholderText={strings.InvoiceDate}
-													selected={filterData.invoiceDate}
-													autoComplete="off"
-													showMonthDropdown
-													showYearDropdown
-													dateFormat="dd-MM-yyyy"
-													dropdownMode="select"
-													value={filterData.invoiceDate}
-													onChange={(value) => {
-														this.handleChange(value, 'invoiceDate');
-													}}
-												/>
-											</Col>
-											<Col lg={2} className="mb-1">
-												<DatePicker
-													className="form-control"
-													id="date"
-													name="invoiceDueDate"
-													placeholderText={strings.InvoiceDueDate}
-													showMonthDropdown
-													showYearDropdown
-													dropdownMode="select"
-													dateFormat="dd-MM-yyyy"
-													autoComplete="off"
-													selected={filterData.invoiceDueDate}
-													onChange={(value) => {
-														this.handleChange(value, 'invoiceDueDate');
-													}}
-												/>
-											</Col>
-											<Col lg={2} className="mb-1">
-												<Input
-													type="number"
-													maxLength="14,2"
-													min="0"
-													value={filterData.amount}
-													placeholder={strings.Amount}
+														value={filterData.customerId}
+														onChange={(option) => {
+															if (option && option.value) {
+																this.handleChange(option, 'customerId');
+															} else {
+																this.handleChange('', 'customerId');
+															}
+														}}
+													/>
+												</Col>
+												<Col lg={2} className="mb-1">
+													<DatePicker
+														className="form-control"
+														id="date"
+														name="invoiceDate"
+														placeholderText={strings.InvoiceDate}
+														selected={filterData.invoiceDate}
+														autoComplete="off"
+														showMonthDropdown
+														showYearDropdown
+														dateFormat="dd-MM-yyyy"
+														dropdownMode="select"
+														value={filterData.invoiceDate}
+														onChange={(value) => {
+															this.handleChange(value, 'invoiceDate');
+														}}
+													/>
+												</Col>
+												<Col lg={2} className="mb-1">
+													<DatePicker
+														className="form-control"
+														id="date"
+														name="invoiceDueDate"
+														placeholderText={strings.InvoiceDueDate}
+														showMonthDropdown
+														showYearDropdown
+														dropdownMode="select"
+														dateFormat="dd-MM-yyyy"
+														autoComplete="off"
+														selected={filterData.invoiceDueDate}
+														onChange={(value) => {
+															this.handleChange(value, 'invoiceDueDate');
+														}}
+													/>
+												</Col>
+												<Col lg={2} className="mb-1">
+													<Input
+														type="number"
+														maxLength="14,2"
+														min="0"
+														value={filterData.amount}
+														placeholder={strings.Amount}
 
-													onChange={(e) => {
-														this.handleChange(e.target.value, 'amount');
-													}}
-												/>
-											</Col>
-											{/* <Col lg={2} className="mb-1">
+														onChange={(e) => {
+															this.handleChange(e.target.value, 'amount');
+														}}
+													/>
+												</Col>
+												{/* <Col lg={2} className="mb-1">
 												<Select
 													className=""
 													options={
@@ -1303,7 +1151,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 										</Row>
 									</div>
 									<Row>
-										<div style={{ width: "1650px" }}>
+										<div style={{ width: "1650px" , padding: "15px"}}>
 											<Button
 												color="primary"
 												className="btn-square pull-right mb-2"
@@ -1320,80 +1168,80 @@ stockInHandTestForProduct = (row,markAsSent) => {
 										</div>
 									</Row>
 
-									<BootstrapTable
-										selectRow={this.selectRowProp}
-										search={false}
-										options={this.options}
-										data={customer_invoice_data ? customer_invoice_data : []}
-										version="4"
-										hover
-										responsive
-										currencyList
-										keyField="id"
-										remote
-										pagination={
-											customer_invoice_data &&
-												customer_invoice_data.length > 0
-												? true
-												: false
-										}
-										fetchInfo={{
-											dataTotalSize: customer_invoice_list.count
-												? customer_invoice_list.count
-												: 0,
-										}}
-										className="customer-invoice-table"
-										csvFileName="Customer_Invoice.csv"
-										ref={(node) => {
-											this.table = node;
-										}}
-									>
-										<TableHeaderColumn
-											dataField="invoiceNumber"
-											// dataFormat={this.renderInvoiceNumber}
-											dataSort
-											width="20%"
-											className="table-header-bg"
+										<BootstrapTable
+											selectRow={this.selectRowProp}
+											search={false}
+											options={this.options}
+											data={customer_invoice_data ? customer_invoice_data : []}
+											version="4"
+											hover
+											responsive
+											currencyList
+											keyField="id"
+											remote
+											pagination={
+												customer_invoice_data &&
+													customer_invoice_data.length > 0
+													? true
+													: false
+											}
+											fetchInfo={{
+												dataTotalSize: customer_invoice_list.count
+													? customer_invoice_list.count
+													: 0,
+											}}
+											className="customer-invoice-table"
+											csvFileName="Customer_Invoice.csv"
+											ref={(node) => {
+												this.table = node;
+											}}
 										>
-											{strings.INVOICENUMBER}
-										</TableHeaderColumn>
-										<TableHeaderColumn
-											dataField="customerName"
-											tdStyle={{ whiteSpace: 'normal' }}
-											//	dataSort width="10%"
-											className="table-header-bg"
-										>
-											{strings.CUSTOMERNAME}
-										</TableHeaderColumn>
-										<TableHeaderColumn
-											dataField="invoiceDate"
-											dataSort
-											// width="8%"
-											dataFormat={this.invoiceDate}
-											className="table-header-bg"
-										>
-											{strings.INVOICEDATE}
-										</TableHeaderColumn>
-										<TableHeaderColumn
-											dataField="invoiceDueDate"
-											dataSort
-											// width="8%"
-											dataFormat={this.invoiceDueDate}
-											className="table-header-bg"
-										>
-											{strings.DUEDATE}
-										</TableHeaderColumn>
-										<TableHeaderColumn
-											// width="7%"
-											dataField="status"
-											dataFormat={this.renderInvoiceStatus}
-											dataSort
-											className="table-header-bg"
-										>
-											{strings.STATUS}
-										</TableHeaderColumn>
-										
-										{/* <TableHeaderColumn
+											<TableHeaderColumn
+												dataField="invoiceNumber"
+												// dataFormat={this.renderInvoiceNumber}
+												dataSort
+												width="20%"
+												className="table-header-bg"
+											>
+												{strings.INVOICENUMBER}
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												dataField="customerName"
+												tdStyle={{ whiteSpace: 'normal' }}
+												//	dataSort width="10%"
+												className="table-header-bg"
+											>
+												{strings.CUSTOMERNAME}
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												dataField="invoiceDate"
+												dataSort
+												// width="8%"
+												dataFormat={this.invoiceDate}
+												className="table-header-bg"
+											>
+												{strings.INVOICEDATE}
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												dataField="invoiceDueDate"
+												dataSort
+												// width="8%"
+												dataFormat={this.invoiceDueDate}
+												className="table-header-bg"
+											>
+												{strings.DUEDATE}
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												// width="7%"
+												dataField="status"
+												dataFormat={this.renderInvoiceStatus}
+												dataSort
+												className="table-header-bg"
+											>
+												{strings.STATUS}
+											</TableHeaderColumn>
+
+											{/* <TableHeaderColumn
 												dataField="totalVatAmount"
 												dataSort
 												width="5%"
@@ -1403,18 +1251,18 @@ stockInHandTestForProduct = (row,markAsSent) => {
 											>
 												VAT Amount
 											</TableHeaderColumn> */}
-										<TableHeaderColumn
-											dataAlign="right"
-											dataField="totalAmount"
-											dataSort
-											// width="20%"
-											dataFormat={this.renderInvoiceAmount}
-											formatExtraData={universal_currency_list}
-											className="table-header-bg"
-										>
-											{strings.INVOICEAMOUNT}
-										</TableHeaderColumn>
-										{/* <TableHeaderColumn
+											<TableHeaderColumn
+												dataAlign="right"
+												dataField="totalAmount"
+												dataSort
+												// width="20%"
+												dataFormat={this.renderInvoiceAmount}
+												formatExtraData={universal_currency_list}
+												className="table-header-bg"
+											>
+												{strings.INVOICEAMOUNT}
+											</TableHeaderColumn>
+											{/* <TableHeaderColumn
 												dataField="dueamount"
 												dataSort
 												width="5%"
@@ -1424,21 +1272,21 @@ stockInHandTestForProduct = (row,markAsSent) => {
 											>
 												Due Amount
 											</TableHeaderColumn> */}
-										<TableHeaderColumn
-											className="text-right table-header-bg"
-											columnClassName="text-right"
-											width="5%"
-											dataFormat={this.renderActions}
-											
-										>										
-										</TableHeaderColumn>
-									</BootstrapTable>
-								</Col>
-							</Row>
-						</CardBody>
-					</Card>
-				</div>
-				{/* <PreviewInvoiceModal
+											<TableHeaderColumn
+												className="text-right table-header-bg"
+												columnClassName="text-right"
+												width="5%"
+												dataFormat={this.renderActions}
+
+											>
+											</TableHeaderColumn>
+										</BootstrapTable>
+									</Col>
+								</Row>
+							</CardBody>
+						</Card>
+					</div>
+					{/* <PreviewInvoiceModal
           openInvoicePreviewModal={this.state.openInvoicePreviewModal}
           closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
           getInvoiceById={this.props.customerInvoiceActions.getInvoiceById}
@@ -1447,49 +1295,49 @@ stockInHandTestForProduct = (row,markAsSent) => {
         /> */}
 
 
-				<CreateCreditNoteModal
-					openModal={this.state.openModal}
-					closeModal={(e) => {
-						this.closeModal(e);
-						this.initializeData();
-					}}
-					updateParentAmount={
-						(e,e1,e2) => {
-							this.updateParentAmount(e,e1,e2);
-					}}
-					updateParentSelelectedData={
-						(e) => {
-							this.updateParentSelelectedData(e);
-					}}
-					invoiceNumber={this.state.invoiceNumber}
-					id={this.state.rowId}
-					selectedData={this.state.selectedData}
+					<CreateCreditNoteModal
+						openModal={this.state.openModal}
+						closeModal={(e) => {
+							this.closeModal(e);
+							this.initializeData();
+						}}
+						updateParentAmount={
+							(e, e1, e2) => {
+								this.updateParentAmount(e, e1, e2);
+							}}
+						updateParentSelelectedData={
+							(e) => {
+								this.updateParentSelelectedData(e);
+							}}
+						invoiceNumber={this.state.invoiceNumber}
+						id={this.state.rowId}
+						selectedData={this.state.selectedData}
 
-					prefixData={this.state.prefixData}
+						prefixData={this.state.prefixData}
 
-					createCreditNote={this.props.creditNotesActions.createCreditNote}
-					totalAmount={this.state.totalAmount}
-					totalVatAmount={this.state.totalVatAmount}
-					totalExciseAmount={this.state.totalExciseAmount}
+						createCreditNote={this.props.creditNotesActions.createCreditNote}
+						totalAmount={this.state.totalAmount}
+						totalVatAmount={this.state.totalVatAmount}
+						totalExciseAmount={this.state.totalExciseAmount}
 					//  getRfqbyid={this.props.requestForQuotationDetailsAction.getRFQeById}
 					//	getState={this.props.requestForQuotationDetailsAction.renderActionForState}
 					//	getInvoice={this.props.purchaseOrderCreateAction.getPoNo()}
 					//	nextprefixData={this.state.nextprefixData}
 					//	getVat={this.props.purchaseOrderAction.getVatList()}
 					//	getProductList={this.props.purchaseOrderAction.getProductList()}
-				/>
-				<EmailModal
-					openEmailModal={this.state.openEmailModal}
-					closeEmailModal={(e) => {
-						this.closeEmailModal(e);
-					}}
-					sendEmail={(e) => {
-						this.sendMail(this.state.rowId);
-					}}
-					id={this.state.rowId}
-				/>
-			</div></div>
-			
+					/>
+					<EmailModal
+						openEmailModal={this.state.openEmailModal}
+						closeEmailModal={(e) => {
+							this.closeEmailModal(e);
+						}}
+						sendEmail={(e) => {
+							this.sendMail(this.state.rowId);
+						}}
+						id={this.state.rowId}
+					/>
+				</div></div>
+
 		);
 	}
 }

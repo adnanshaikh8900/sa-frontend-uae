@@ -11,7 +11,13 @@ const initState = {
 	company_profile: [],
 	country_list: [],
 	state_list: [],
-	company_type_list:[],
+	company_type_list: [],
+	tax_treatment_list: [],
+	vat_list: [],
+	product_list: [],
+	excise_list: [],
+	customer_list: [],
+	pay_mode: [],
 };
 
 const CommonReducer = (state = initState, action) => {
@@ -63,34 +69,65 @@ const CommonReducer = (state = initState, action) => {
 				...state,
 				universal_currency_list: Object.assign([], payload.data),
 			};
-			case COMMON.COUNTRY_LIST:
-				 
-				return {
-					
-					...state,
-					country_list: Object.assign([], payload),
-				};
-				case COMMON.STATE_LIST:
-					return {
-						...state,
-						state_list: Object.assign([], payload),
-					};
-			
-					case COMMON.COMPANY_TYPE :
-						return {
-							...state,
-							company_type_list: Object.assign([], payload),
-						};
-			case COMMON.CURRENCY_LIST:
+		case COMMON.COUNTRY_LIST:
+
+			return {
+
+				...state,
+				country_list: Object.assign([], payload),
+			};
+		case COMMON.STATE_LIST:
+			return {
+				...state,
+				state_list: Object.assign([], payload),
+			};
+
+		case COMMON.COMPANY_TYPE:
+			return {
+				...state,
+				company_type_list: Object.assign([], payload),
+			};
+		case COMMON.CURRENCY_LIST:
 			return {
 				...state,
 				currency_list: Object.assign([], payload.data),
 			};
-			case COMMON.COMPANY_PROFILE:
-				return {
-					...state,
-					company_profile: Object.assign([], payload.data),
-				};
+		case COMMON.COMPANY_PROFILE:
+			return {
+				...state,
+				company_profile: Object.assign([], payload.data),
+			};
+		case COMMON.TAX_TREATMENT_LIST:
+			return {
+				...state,
+				tax_treatment_list: Object.assign([], payload.data),
+			};
+		case COMMON.VAT_LIST:
+			return {
+				...state,
+				vat_list: Object.assign([], payload.data),
+			};
+		case COMMON.PRODUCT_LIST:
+			return {
+				...state,
+				product_list: Object.assign([], payload.data),
+			};
+		case COMMON.EXCISE_LIST:
+			return {
+				...state,
+				excise_list: Object.assign([], payload.data),
+			};
+		case COMMON.CUSTOMER_LIST:
+			return {
+				...state,
+				customer_list: Object.assign([], payload.data),
+			};
+		case COMMON.PAY_MODE:
+			return {
+				...state,
+				pay_mode: Object.assign([], payload.data),
+			};
+
 		default:
 			return state;
 	}

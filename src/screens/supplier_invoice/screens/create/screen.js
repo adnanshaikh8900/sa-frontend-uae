@@ -2725,7 +2725,6 @@ class CreateSupplierInvoice extends React.Component {
 														.of(
 															Yup.object().shape({
 																quantity: Yup.string()
-																	.required('Value is required')
 																	.test(
 																		'quantity',
 																		strings.QuantityGreaterThan0,
@@ -2736,20 +2735,19 @@ class CreateSupplierInvoice extends React.Component {
 																				return false;
 																			}
 																		},
-																	),
+																	).required('Quantity is required'),
 																unitPrice: Yup.string()
-																	.required('Value is required')
 																	.test(
 																		'Unit Price',
 																		strings.UnitPriceGreaterThan1,
 																		(value) => {
-																			if (value > 0) {
+																			if (value > 1) {
 																				return true;
 																			} else {
 																				return false;
 																			}
 																		},
-																	),
+																	).required('Unit Price is required'),
 																vatCategoryId: Yup.string().required(
 																	strings.VATIsRequired,
 																),

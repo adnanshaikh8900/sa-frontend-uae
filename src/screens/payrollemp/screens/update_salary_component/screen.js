@@ -22,6 +22,7 @@ import * as DetailSalaryComponentAction from './actions';
 import * as CreatePayrollEmployeeActions from '../create/actions'
 import { SalaryComponentDeduction, SalaryComponentFixed, SalaryComponentVariable } from 'screens/payrollemp/sections';
 import { Formik } from 'formik';
+import * as Yup from "yup";
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -559,14 +560,23 @@ class UpdateSalaryComponent extends React.Component {
                                                             onSubmit={(values) => {
                                                                 this.handleSubmit(values)
                                                             }}
-                                                            validate={(values) => {
-                                                                const errors = {}
-                                                                debugger
-                                                                if (parseFloat(values.CTC) <= 0) {
-                                                                    errors.CTC = "Please Enter Value greater than Zero"
-                                                                }
-                                                                return errors
-                                                            }}
+                                                            validationSchema={Yup.object().shape({
+                                                                CTC: Yup.string()
+                                                                    .required("CTC is required")
+                                                                    .test("non Zero", "CTC should be greater then zero", (value) => {
+                                                                        return parseFloat(value) > 0
+                                                                    }),
+                                                                // lastName: Yup.string()
+                                                                // .required("Last Name is required"),
+                                                                // email: Yup.string()
+                                                                // .email("Valid Email Required"),
+                                                                // employeeDesignationId : Yup.string()
+                                                                // .required("Designation is required"),
+                                                                // salaryRoleId :  Yup.string()
+                                                                // .required(" Employee Role is required"),
+                                                                // dob: Yup.date()
+                                                                //     .required('DOB is required')                   
+                                                            })}
 
                                                         >
                                                             {(props) => (

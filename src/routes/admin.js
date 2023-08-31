@@ -76,6 +76,14 @@ import {
 	CreatePayment,
 	DetailPayment,
 
+	//Debit Notes Screens
+	DebitNotes,
+	CreateDebitNote,
+	DetailDebitNote,
+	DebitNoteRefund,
+	ApplyToSupplierInvoice,
+	ViewDebitNote,
+
 	// Vat Screens
 	VatTransactions,
 	ReportsFiling,
@@ -108,6 +116,7 @@ import {
 	CorporateTaxPaymentHistory,
 	CorporateTaxPaymentRecord,
 	ViewCorporateTax,
+	DebitNoteDetailsReport,
 
 	// Master Screens
 	ChartAccount,
@@ -226,6 +235,11 @@ const adminRoutes = [
 		path: '/admin/accountant/journal/create',
 		name: 'Add Journal',
 		component: CreateJournal.screen,
+	},
+	Config.ACCOUNTANT_JOURNALS && {
+		path: "/admin/accountant/journal/view",
+		name: "View Journal",
+		component: DetailJournal.screen,
 	},
 	Config.ACCOUNTANT_JOURNALS && {
 		path: '/admin/accountant/journal/detail',
@@ -504,6 +518,36 @@ const adminRoutes = [
 		name: 'Supplier Invoices',
 		component: SupplierInvoice.screen,
 	},
+	Config.EXPENSE_DN &&{
+		path: '/admin/expense/debit-notes',
+		name: 'Debit Notes',
+		component: DebitNotes.screen,
+	},
+	Config.EXPENSE_DN &&{
+		path: '/admin/expense/debit-notes/create',
+		name: 'Add Debit Notes',
+		component: CreateDebitNote.screen,
+	},
+	Config.EXPENSE_DN &&{
+		path: '/admin/expense/debit-notes/update',
+		name: 'Update Debit Notes',
+		component: DetailDebitNote.screen,
+	},	
+	Config.EXPENSE_DN &&{
+		path: '/admin/expense/debit-notes/refund',
+		name: 'Refund Debit Notes',
+		component: DebitNoteRefund.screen,
+	},
+	Config.EXPENSE_DN &&{
+		path: '/admin/expense/debit-notes/applyToInvoice',
+		name: 'Apply To Supplier Invoice',
+		component: ApplyToSupplierInvoice.screen,
+	},
+	Config.EXPENSE_DN &&{
+		path: '/admin/expense/debit-notes/view',
+		name: 'View Debit Notes',
+		component: ViewDebitNote.screen,
+	},
 	Config.EXPENSE_EXPENSES && {
 		path: '/admin/expense/expense/create',
 		name: 'Add Expense',
@@ -592,9 +636,19 @@ const adminRoutes = [
 		name: 'Generate Payroll',
 		component: CreatePayroll.screen,
 	},
+	Config.PAYROLL_PR && {
+		path: '/admin/payroll/payrollrun/ViewPayroll',
+		name: 'View Payroll',
+		component: UpdatePayroll.screen,
+	},
 	Config.PAYROLL_MODULE && {
 		path: '/admin/payroll/payrollApproverScreen',
 		name: 'Approve Payroll',
+		component: PayrollApproverScreen.screen,
+	},
+	Config.PAYROLL_PR && {
+		path: '/admin/payroll/ViewPayroll',
+		name: 'View Payroll',
 		component: PayrollApproverScreen.screen,
 	},
 	Config.PAYROLL_PC && {
@@ -844,6 +898,11 @@ const adminRoutes = [
 		path: '/admin/report/credit-note-details',
 		name: 'Credit Notes Details',
 		component: CreditNoteDetailsReport.screen,
+	},
+	Config.REPORTS_MODULE && {
+		path: '/admin/report/debit-note-details',
+		name: 'Debit Note Report',
+		component: DebitNoteDetailsReport.screen,
 	},
 	Config.REPORTS_MODULE && {
 		path: '/admin/report/invoice-details',

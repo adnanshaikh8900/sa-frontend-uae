@@ -22,6 +22,7 @@ import moment from "moment";
 import * as transactionCreateActions from "./actions";
 import * as transactionActions from "../../actions";
 import * as detailBankAccountActions from "../../../detail/actions";
+import * as AllPayrollActions from "../../../../../payroll_run/actions";
 import * as CurrencyConvertActions from "../../../../../currencyConvert/actions";
 import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
@@ -31,10 +32,6 @@ import { selectOptionsFactory, selectCurrencyFactory } from "utils";
 import Switch from "react-switch";
 import { LeavePage, Loader } from "components";
 import { Checkbox } from "@material-ui/core";
-import {
-  createTransValidation,
-  createTranYupSchema,
-} from "./helpers/customvalidation";
 import { defaultState } from "./helpers/defaultstate";
 import { calculateVAT } from "./helpers/calculateVat";
 import { amountFormat } from "./helpers/amountformater";
@@ -58,6 +55,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     transactionActions: bindActionCreators(transactionActions, dispatch),
+    allPayrollActions: bindActionCreators(AllPayrollActions, dispatch),
     transactionCreateActions: bindActionCreators(
       transactionCreateActions,
       dispatch
@@ -138,8 +136,30 @@ class CreateBankTransaction extends React.Component {
           true
         );
       });
+    
+      const paginationData = {
+        pageNo: '',
+        pageSize: '',
+        paginationDisable: true,
+      };
+      const sortingData = {
+        order: '',
+        sortingCol: '',
+      };
+      const postData = { ...paginationData, ...sortingData };
+    
+    this.props.transactionCreateActions.getAllPayrollList(postData)
+    .then((res) => {
+        this.setState(
+          {
+            payrolldata: res.data
+          },
+          () => {}
+        );
+    })
+
     if (this.props.location.state && this.props.location.state.bankAccountId) {
-      this.setState({id: this.props.location.state.bankAccountId,});
+      this.setState({ id: this.props.location.state.bankAccountId, });
       this.props.detailBankAccountActions
         .getBankAccountByID(this.props.location.state.bankAccountId)
         .then((res) => {
@@ -236,16 +256,13 @@ class CreateBankTransaction extends React.Component {
       exchangeRateFromList,
     } = data;
     let formData = new FormData();
-    if (
-      coaCategoryId &&
-      (coaCategoryId.value === 10 || coaCategoryId.label === "Expense")
-    ) {
-      transactionAmount = calculateVAT(
-        transactionAmount,
-        vatId.value,
-        exclusiveVat,
-        this.setState
-      );
+    if (coaCategoryId && (coaCategoryId.value === 10 || coaCategoryId.label === "Expense")) {
+      const list = calculateVAT(transactionAmount, vatId.value, exclusiveVat);
+      transactionAmount = list.transactionAmount
+      this.setState({
+        transactionVatAmount: list.transactionVatAmount,
+        transactionExpenseAmount: list.transactionExpenseAmount,
+      })
     }
     if (
       coaCategoryId.label === "Sales" ||
@@ -414,15 +431,16 @@ class CreateBankTransaction extends React.Component {
         info ? JSON.stringify([info]) : ""
       );
     }
-    if (coaCategoryId.label === "Corporate Tax Payment" ) {
-    const report =  {
-      ...this.state.corporateTaxList.find((obj, index) => index === this.state.ct_taxPeriod.value),
-    };
+    if (coaCategoryId.label === "Corporate Tax Payment") {
+      const report = {
+        ...this.state.corporateTaxList.find((obj, index) => index === this.state.ct_taxPeriod.value),
+      };
       formData.append(
         "explainedCorporateTaxListString",
         report ? JSON.stringify([report]) : ""
       );
     }
+    debugger
     this.props.transactionCreateActions
       .createTransaction(formData)
       .then((res) => {
@@ -620,25 +638,50 @@ class CreateBankTransaction extends React.Component {
     return (
       <Col lg={3}>
         <FormGroup className="mb-3">
-          <Label htmlFor="payrollListIds">Payrolls</Label>
+          <Label htmlFor="payrollListIds"><span className="text-danger">* </span>{strings.Payroll}</Label>
           <Select
             style={customStyles}
             isMulti
-            className="select-default-width"
             options={
               UnPaidPayrolls_List && UnPaidPayrolls_List
                 ? UnPaidPayrolls_List
                 : []
             }
-            // options={
-            //     invoice_list ? invoice_list.data : []
-            // }
+            placeholder={strings.Select+strings.Payroll}
             id="payrollListIds"
             onChange={(option) => {
+              this.state.selectedPayrollListBank = []
               props.handleChange("payrollListIds")(option);
               this.payrollList(option);
+              // let selectedPayroll1 = []
+              if (option) {
+                option.map((i) => {
+                  const selectedPayroll = this.state.payrolldata.find((el) => el.id === i.value)
+                  this.state.selectedPayrollListBank.push(selectedPayroll)
+                  const uniqueArray = [];
+                  const seenIds = new Set();
+                  for (const obj of this.state.selectedPayrollListBank) {
+                    if (!seenIds.has(obj.id)) {
+                      uniqueArray.push(obj);
+                      seenIds.add(obj.id);
+                    }
+                  }
+                })
+              }
             }}
+            className={
+              props.errors.vatId &&
+                props.touched.vatId
+                ? "is-invalid"
+                : ""
+            }
           />
+          {props.errors.vatId &&
+            props.touched.vatId && (
+              <div className="invalid-feedback">
+                {props.errors.vatId}
+              </div>
+            )}
         </FormGroup>
       </Col>
     );
@@ -1204,7 +1247,13 @@ class CreateBankTransaction extends React.Component {
                           ) {
                             errors.vatId = "Please select Vat";
                           }
-
+                          if (
+                            values.payrollListIds === "" &&
+                            values.coaCategoryId.label === "Expense" &&
+                            values.expenseCategory.value == 34
+                          ) {
+                            errors.vatId = "Please select Payroll";
+                          }
                           if (
                             values.coaCategoryId.value === 2 ||
                             values.coaCategoryId.value === 100
@@ -1303,7 +1352,32 @@ class CreateBankTransaction extends React.Component {
                             if (values.balanceDue && values.transactionAmount && parseFloat(values.balanceDue) < parseFloat(values.transactionAmount))
                               errors.transactionAmount = strings.AmountShouldBeLessThanOrEqualToTheBalanceDue;
                           }
-
+                          if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
+                            if (values.expenseCategory && values.expenseCategory.value === 34) {
+                              const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
+                                let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
+                                return sum + num;
+                              }, 0);
+                              if (values.transactionAmount > sumOfPayrollAmounts) {
+                                errors.transactionAmount = 'Transaction amount cannot be greater than payroll amount.';
+                              }
+                            }
+                          }
+                          if (!values.transactionDate) {
+                            errors.transactionDate = "Transaction Date is Required";
+                          }
+                          if (values.transactionDate)
+                            {
+                              this.state.selectedPayrollListBank.map((i) => {
+                                const dateObject = new Date(i.runDate);
+                                let payrollDate1 = moment(dateObject).format('DD-MM-YYYY')
+                                if (moment(values.transactionDate).format('DD-MM-YYYY') < payrollDate1)
+                                {
+                                  errors.transactionDate =
+                                    "Transaction Date cannot be earlier than the payroll approval date.";
+                                }
+                              })
+                            }
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({
@@ -2157,13 +2231,10 @@ class CreateBankTransaction extends React.Component {
                                 </Row>
                               )}
                             {transactionCategoryList.categoriesList &&
-                              props.values.coaCategoryId?.label !==
-                              "VAT Payment" &&
-                              props.values.coaCategoryId?.label !==
-                              "VAT Claim" &&
+                              props.values.coaCategoryId?.label !== "VAT Payment" &&
+                              props.values.coaCategoryId?.label !== "VAT Claim" &&
                               props.values.coaCategoryId?.label !== "Expense" &&
-                              props.values.coaCategoryId?.label !==
-                              "Supplier Invoice" &&
+                              props.values.coaCategoryId?.label !== "Supplier Invoice" &&
                               props.values.coaCategoryId?.label !== "Sales" && (
                                 <Row>
                                   <Col lg={3}>
@@ -2200,19 +2271,14 @@ class CreateBankTransaction extends React.Component {
                                             )("");
                                           }
                                           if (
-                                            option.label !==
-                                            "Salaries and Employee Wages" &&
+                                            option.label !== "Salaries and Employee Wages" &&
                                             option.label !== "Owners Drawing" &&
                                             option.label !== "Dividend" &&
-                                            option.label !==
-                                            "Owners Current Account" &&
+                                            option.label !== "Owners Current Account" &&
                                             option.label !== "Share Premium" &&
-                                            option.label !==
-                                            "Employee Advance" &&
-                                            option.label !==
-                                            "Employee Reimbursements" &&
-                                            option.label !==
-                                            "Director Loan Account" &&
+                                            option.label !== "Employee Advance" &&
+                                            option.label !== "Employee Reimbursements" &&
+                                            option.label !== "Director Loan Account" &&
                                             option.label !== "Owners Equity"
                                           ) {
                                           }
@@ -3306,7 +3372,7 @@ class CreateBankTransaction extends React.Component {
                                       );
                                     }}
                                   >
-                                    <i className="fa fa-repeat"></i>{" "}
+                                    <i className="fa fa-refresh"></i>{" "}
                                     {this.state.disabled
                                       ? "Creating..."
                                       : strings.CreateandMore}

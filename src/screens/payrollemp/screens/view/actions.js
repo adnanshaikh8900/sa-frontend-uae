@@ -54,10 +54,12 @@ import {
 		let id=obj.id;
 		let salaryDate=obj.salaryDate;
 		let sendMail=obj.sendMail?obj.sendMail:false;
+		let startDate=obj.startDate;
+		let endDate=obj.endDate;
 	  let data = {
 		method: 'GET',
 		// url: `/rest/Salary/getSalariesByEmployeeId?id=${id}&salaryDate=${salaryDate}`
-		url: `/rest/Salary/getSalariesByEmployeeId?id=${id}&salaryDate=${salaryDate}&sendMail=${sendMail}`
+		url: `/rest/Salary/getSalariesByEmployeeId?id=${id}&salaryDate=${salaryDate}&sendMail=${sendMail}&startDate=${startDate}&endDate=${endDate}`
 		
 	  }
   
@@ -90,6 +92,24 @@ import {
 	  let data = {
 		method: 'GET',
 		url: `/rest/employee/getEmployeeInviteEmail?id=${_id}`
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
+  export const getEmployeeTransactions = (postObj) => {
+	return (dispatch) => {
+		let employeeId= postObj.employeeId
+		let startDate= postObj.startDate
+		let endDate= postObj.endDate
+
+	  let data = {
+		method: 'GET',
+		url: `/rest/Salary/getEmployeeTc?employeeId=${employeeId}&startDate=${startDate}&endDate=${endDate}`
 	  }
 	  return authApi(data).then((res) => {
 		return res

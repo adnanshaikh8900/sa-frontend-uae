@@ -36,13 +36,13 @@ import * as DetailProductActions from './actions';
 import { CommonActions } from 'services/global';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { InventoryModel} from '../../sections';
+import { InventoryModel } from '../../sections';
 import moment from 'moment'
-import {data}  from '../../../Language/index'
+import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 function dateFormat(value, row, index) {
 	return moment(value).format('DD-MM-YYYY');
- }
+}
 
 const mapStateToProps = (state) => {
 	return {
@@ -51,7 +51,7 @@ const mapStateToProps = (state) => {
 		product_category_list: state.product.product_category_list,
 		supplier_list: state.supplier_invoice.supplier_list,
 		inventory_list: state.product.inventory_list,
-		inventory_history_list :state.product.inventory_history_list,
+		inventory_history_list: state.product.inventory_history_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -117,7 +117,7 @@ class InventoryHistory extends React.Component {
 	componentDidMount = () => {
 		this.initializeData();
 	};
-	
+
 	onRowSelect = (row, isSelected, e) => {
 		let tempList = [];
 		if (isSelected) {
@@ -137,20 +137,20 @@ class InventoryHistory extends React.Component {
 	};
 
 	initializeData = () => {
-	//	if (this.props.location.state && this.props.location.state.id) {
-			// this.props.productActions
-			// 	.getInventoryHistory()
-			// 	.then((res) => {
-			// 		if (res.status === 200) {
-			// 			this.setState({
-			// 				loading: false,
-						
-			// 			});
-			// 		} else {
-			// 			this.setState({ loading: false });
-			// 			this.props.history.push('/admin/master/product');
-			// 		}
-			// 	});			
+		//	if (this.props.location.state && this.props.location.state.id) {
+		// this.props.productActions
+		// 	.getInventoryHistory()
+		// 	.then((res) => {
+		// 		if (res.status === 200) {
+		// 			this.setState({
+		// 				loading: false,
+
+		// 			});
+		// 		} else {
+		// 			this.setState({ loading: false });
+		// 			this.props.history.push('/admin/master/product');
+		// 		}
+		// 	});			
 	};
 	inventoryAccount = () => {
 		try {
@@ -162,13 +162,14 @@ class InventoryHistory extends React.Component {
 							{
 								inventoryAccount: res.data,
 							},
-							() => {},
+							() => { },
 						);
 					}
 				});
 		} catch (err) {
 			console.log(err);
-		}};
+		}
+	};
 
 	handleChange = (e, name) => {
 		this.setState({
@@ -194,7 +195,6 @@ class InventoryHistory extends React.Component {
 
 	handleSubmit = (data) => {
 		const { current_inventory_id } = this.state;
-		console.log(current_inventory_id);
 		const inventoryId = current_inventory_id;
 		const productCode = data['productCode'];
 		const vatCategoryId = data['vatCategoryId'];
@@ -202,14 +202,14 @@ class InventoryHistory extends React.Component {
 		const contactId = data['contactId'];
 		const isInventoryEnabled = data['isInventoryEnabled'];
 		const transactionCategoryId = data['transactionCategoryId'];
-	
+
 		const productName = data['productName'];
 		const productType = data['productType'];
 		const inventoryQty = data['inventoryQty'];
 		const inventoryReorderLevel = data['inventoryReorderLevel'];
 		const inventoryPurchasePrice = data['inventoryPurchasePrice'];
 		const dataNew = {
-			
+
 			productCode,
 			productName,
 			productType,
@@ -222,7 +222,7 @@ class InventoryHistory extends React.Component {
 			inventoryQty,
 			inventoryReorderLevel,
 			inventoryPurchasePrice,
-		
+
 		};
 		const postData = this.getData(dataNew);
 		this.props.productActions
@@ -253,7 +253,7 @@ class InventoryHistory extends React.Component {
 		this.props.productActions.getProductWareHouseList();
 	};
 	openInventoryModel = (props) => {
-		this.setState({ openInventoryModel : true });
+		this.setState({ openInventoryModel: true });
 	};
 	closeInventoryModel = (res) => {
 		this.setState({ openInventoryModel: false });
@@ -270,10 +270,10 @@ class InventoryHistory extends React.Component {
 					);
 				} else {
 					const message1 =
-			<text>
-			<b>Delete Product?</b>
-			</text>
-			const message = 'This Product will be deleted permanently and cannot be recovered. ';
+						<text>
+							<b>Delete Product?</b>
+						</text>
+					const message = 'This Product will be deleted permanently and cannot be recovered. ';
 					this.setState({
 						dialog: (
 							<ConfirmDeleteModal
@@ -282,7 +282,7 @@ class InventoryHistory extends React.Component {
 								cancelHandler={this.removeDialog}
 								message={message}
 								message1={message1}
-								
+
 							/>
 						),
 					});
@@ -291,16 +291,16 @@ class InventoryHistory extends React.Component {
 	};
 	getInventoryId = () => {
 		this.props.productActions.getInventoryById()
-		.then((res) => {
-			if (res.status === 200) {
-				this.setState({
-					initValue: {
-					
-					},
-				});
-			
-			}
-		});
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						initValue: {
+
+						},
+					});
+
+				}
+			});
 	};
 
 	renderDate = (cell, rows) => {
@@ -319,7 +319,7 @@ class InventoryHistory extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data ? res.data.message : 'Product Deleted Successfully'
-						)
+					)
 					this.props.history.push('/admin/master/product');
 				}
 			})
@@ -345,10 +345,10 @@ class InventoryHistory extends React.Component {
 		return (
 			<div>
 				<Button
-				onClick={(e, ) => {
-					this.openInventoryModel({id: row.inventoryId});
-		}}
-		>
+					onClick={(e,) => {
+						this.openInventoryModel({ id: row.inventoryId });
+					}}
+				>
 				</Button>
 			</div>
 		);
@@ -356,142 +356,137 @@ class InventoryHistory extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { vat_list, product_category_list,supplier_list,inventory_history_list,current_inventory_id} = this.props;
-		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,singleObject} = this.state;
-	 	// this.state.singleObject=this.props.inventory_history_list[0];
+		const { vat_list, product_category_list, supplier_list, inventory_history_list, current_inventory_id } = this.props;
+		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount, singleObject } = this.state;
+		// this.state.singleObject=this.props.inventory_history_list[0];
 		//const so=singleObject['productCode'];
 		// for(let x of Object.keys(this.state.singleObject)){
-		// 	console.log(x);
 		// }
-	 console.log(singleObject)
 		return (
-			loading ==true? <Loader/> :
-<div>
-			<div className="detail-product-screen">
-				<div className="animated fadeIn">
-					{dialog}
-					
-						<Row>
-							<Col lg={12} className="mx-auto">
-								<Card>
-									<CardHeader>
-										<Row>
-											<Col lg={12}>
-												<div className="h4 mb-0 d-flex align-items-center">
-													<i className="fa fa-history fa-2x" />
-													<span className="ml-2">{strings.InventoryHistory}</span>
-												</div>
-											</Col>
-										</Row>
+			loading == true ? <Loader /> :
+				<div>
+					<div className="detail-product-screen">
+						<div className="animated fadeIn">
+							{dialog}
 
-									</CardHeader>
-									<CardBody>
-									{inventory_history_list &&
-                                                        inventory_history_list.length > 0 ? (
-                                                            inventory_history_list.map(
-                                                            (item, index) => {
-																if(index==0){
-                                                            return(
-                                                                      <table><tr
-																	  style={{ background: '#f7f7f7' }}
-																	  key={index}
-																  >
-																	  <td colSpan="9">
-																		  <b style={{ fontWeight: '600' }}>
-																			  {console.log(Object.values(item['productCode']),"itemsss")}
-																			  <div><h5> {strings.ProductCode} :  </h5></div>
-																		  </b>
-																	  </td>
-																	  <td colSpan="9">
-																		  <b style={{ fontWeight: '600' }}>
-																			  {console.log(Object.values(item['productCode']),"itemsss")}
-																			  <div><h5>{Object.values(item['productCode'])} </h5></div>
-																		  </b>
-																	  </td>
-																  </tr> 
-																  <tr
-																	  style={{ background: '#f7f7f7' }}
-																	  key={index}
-																  >  <td colSpan="9">
-																  <b style={{ fontWeight: '600' }}>
-																  <div><h5> Product Name :  </h5></div>
-																	  {console.log(Object.values(item['productname']),"productname")}
-																  </b>
-															  </td>
-															  <td colSpan="9">
-																  <b style={{ fontWeight: '600' }}>
-																  <div><h5>{Object.values(item['productname'])} </h5></div>
-																	  {console.log(Object.values(item['productname']),"productname")}
-																  </b>
-															  </td></tr></table>  )
-															  }
-															  ;})):" "}
-															 
-															  <br></br>
-															  <br></br>
-										<div>
-											<BootstrapTable
-												selectRow={this.selectRowProp}
-												search={false}
-												options={this.options}
-												data={
-													inventory_history_list 
-														? inventory_history_list
-														: []
-												}
-												version="4"
-												hover			
-												remote	
-												className="product-table"
-												trClassName="cursor-pointer"	
-											>
-											    {/* <TableHeaderColumn dataField="productCode" dataSort className="table-header-bg">
+							<Row>
+								<Col lg={12} className="mx-auto">
+									<Card>
+										<CardHeader>
+											<Row>
+												<Col lg={12}>
+													<div className="h4 mb-0 d-flex align-items-center">
+														<i className="fa fa-history fa-2x" />
+														<span className="ml-2">{strings.InventoryHistory}</span>
+													</div>
+												</Col>
+											</Row>
+
+										</CardHeader>
+										<CardBody>
+											{inventory_history_list &&
+												inventory_history_list.length > 0 ? (
+												inventory_history_list.map(
+													(item, index) => {
+														if (index == 0) {
+															return (
+																<table><tr
+																	style={{ background: '#f7f7f7' }}
+																	key={index}
+																>
+																	<td colSpan="9">
+																		<b style={{ fontWeight: '600' }}>
+																			<div><h5> {strings.ProductCode} :  </h5></div>
+																		</b>
+																	</td>
+																	<td colSpan="9">
+																		<b style={{ fontWeight: '600' }}>
+																			<div><h5>{Object.values(item['productCode'])} </h5></div>
+																		</b>
+																	</td>
+																</tr>
+																	<tr
+																		style={{ background: '#f7f7f7' }}
+																		key={index}
+																	>  <td colSpan="9">
+																			<b style={{ fontWeight: '600' }}>
+																				<div><h5> Product Name :  </h5></div>
+																			</b>
+																		</td>
+																		<td colSpan="9">
+																			<b style={{ fontWeight: '600' }}>
+																				<div><h5>{Object.values(item['productname'])} </h5></div>
+																			</b>
+																		</td></tr></table>)
+														}
+														;
+													})) : " "}
+
+											<br></br>
+											<br></br>
+											<div>
+												<BootstrapTable
+													selectRow={this.selectRowProp}
+													search={false}
+													options={this.options}
+													data={
+														inventory_history_list
+															? inventory_history_list
+															: []
+													}
+													version="4"
+													hover
+													remote
+													className="product-table"
+													trClassName="cursor-pointer"
+												>
+													{/* <TableHeaderColumn dataField="productCode" dataSort className="table-header-bg">
 												Product Code
 												</TableHeaderColumn>
 												<TableHeaderColumn isKey dataField="productname" dataSort className="table-header-bg">
 												Product	Name
 												</TableHeaderColumn > */}
-												<TableHeaderColumn isKey  dataField="supplierName" dataSort className="table-header-bg">
-												{strings.Supplier} / {strings.Customer}
-												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="date" 
-												dataSort 
-												dataFormat={this.renderDate} className="table-header-bg">
-												 {strings.Date}
-												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="transactionType" dataSort className="table-header-bg">
-												{strings.TransactionType}
-												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="invoiceNumber" dataSort className="table-header-bg">
-												 {strings.InvoiceNumber}
-												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="quantitySold" dataSort className="table-header-bg">
-												Quantity Sold
-												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="stockOnHand" dataSort className="table-header-bg">
-											Stock In Hand
-												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="unitCost" dataSort className="table-header-bg">
-												 {strings.UnitCost} 
-												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="unitSellingPrice" dataSort className="table-header-bg">
-												 {strings.UnitSellingPrice}
-												</TableHeaderColumn >
-											</BootstrapTable>
-										</div>		
-								</CardBody>
-								</Card>
-							</Col>
-						</Row>
-					
+													<TableHeaderColumn isKey dataField="supplierName" dataSort className="table-header-bg">
+														{strings.Supplier} / {strings.Customer}
+													</TableHeaderColumn >
+													<TableHeaderColumn dataField="date"
+														dataSort
+														dataFormat={this.renderDate} className="table-header-bg">
+														{strings.Date}
+													</TableHeaderColumn >
+													<TableHeaderColumn dataField="transactionType" dataSort className="table-header-bg">
+														{strings.TransactionType}
+													</TableHeaderColumn >
+													<TableHeaderColumn dataField="invoiceNumber" dataSort className="table-header-bg">
+														{strings.InvoiceNumber}
+													</TableHeaderColumn >
+													<TableHeaderColumn dataField="quantitySold" dataSort className="table-header-bg">
+														Quantity Sold
+													</TableHeaderColumn >
+													<TableHeaderColumn dataField="stockOnHand" dataSort className="table-header-bg">
+														Stock In Hand
+													</TableHeaderColumn >
+													<TableHeaderColumn dataField="unitCost" dataSort className="table-header-bg">
+														{strings.UnitCost}
+													</TableHeaderColumn >
+													<TableHeaderColumn dataField="unitSellingPrice" dataSort className="table-header-bg">
+														{strings.UnitSellingPrice}
+													</TableHeaderColumn >
+												</BootstrapTable>
+											</div>
+										</CardBody>
+									</Card>
+								</Col>
+							</Row>
+
+						</div>
+
+						<WareHouseModal
+							openModal={this.state.openWarehouseModal}
+							closeWarehouseModal={this.closeWarehouseModal}
+						/>
+					</div>
 				</div>
-				
-				<WareHouseModal
-					openModal={this.state.openWarehouseModal}
-					closeWarehouseModal={this.closeWarehouseModal}
-				/>
-			</div>
-			</div>
 		);
 	}
 }

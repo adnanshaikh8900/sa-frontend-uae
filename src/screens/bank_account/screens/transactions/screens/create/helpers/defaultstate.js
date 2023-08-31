@@ -133,5 +133,6 @@ export const defaultState = (currency) => {
     cat1_label: "",
     id: "",
     conversionDetails: [],
+    selectedPayrollListBank: []
   };
 };

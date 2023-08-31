@@ -525,7 +525,7 @@ class CreateBankAccount extends React.Component {
 																				enabled: false,
 																			},
 																		}}
-																		placeholderText={strings.OpeningDate}
+																		placeholderText={strings.Select+strings.OpeningDate}
 																		selected={props.values.openingDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -981,7 +981,7 @@ class CreateBankAccount extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i>
+																		<i className="fa fa-refresh"></i>
 																		{this.state.disabled
 																			? ' Creating...'
 																			: strings.CreateandMore}

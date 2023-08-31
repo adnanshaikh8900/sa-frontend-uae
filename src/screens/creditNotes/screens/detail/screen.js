@@ -18,20 +18,21 @@ import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
+import Switch from "react-switch";
 import * as Yup from 'yup';
 import * as CreditNotesDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CreditNotesActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { CustomerModal ,ProductModal } from '../../sections';
-import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
+import { CustomerModal, ProductModal } from '../../sections';
+import { LeavePage, Loader, ConfirmDeleteModal, ProductTableCalculation } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import './style.scss';
 import moment from 'moment';
-import {data}  from '../../../Language/index'
+import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
 
@@ -52,14 +53,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
-		creditNotesActions: bindActionCreators(
-			CreditNotesActions,
-			dispatch,
-		),
-		creditNotesDetailActions: bindActionCreators(
-			CreditNotesDetailActions,
-			dispatch,
-		),
+		creditNotesActions: bindActionCreators(CreditNotesActions, dispatch),
+		creditNotesDetailActions: bindActionCreators(CreditNotesDetailActions, dispatch),
 		productActions: bindActionCreators(ProductActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
@@ -84,10 +79,14 @@ class DetailCreditNote extends React.Component {
 			loading: true,
 			dialog: false,
 			disabled: false,
-			disabled1:false,
+			disabled1: false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: 'Percentage' },
+			],
+			exciseTypeOption:[
+				{ value: 'Inclusive', label: 'Inclusive' },
+				{ value: 'Exclusive', label: 'Exclusive' },
 			],
 			discount_option: '',
 			data: [],
@@ -103,11 +102,11 @@ class DetailCreditNote extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			fileName: '',
-			basecurrency:[],
+			basecurrency: [],
 			customer_currency: '',
-			loadingMsg:"Loading...",
-			showInvoiceNumber:false,
-			disableLeavePage:false
+			loadingMsg: "Loading...",
+			showInvoiceNumber: false,
+			disableLeavePage: false
 		};
 
 		// this.options = {
@@ -120,7 +119,7 @@ class DetailCreditNote extends React.Component {
 			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-			this.placelist = [
+		this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
@@ -154,52 +153,63 @@ class DetailCreditNote extends React.Component {
 				.getTransactionCategoryListForSalesProduct('2')
 				.then((res) => {
 					if (res.status === 200) {
-						this.setState(
-							{
-								salesCategory: res.data,
-							},
-							() => {
-								console.log(this.state.salesCategory);
-							},
-						);
+						this.setState({ salesCategory: res.data, });
 					}
 				});
 		} catch (err) {
 			console.log(err);
 		}
 	};
-	
+
 
 	initializeData = () => {
+		this.props.creditNotesActions
+			.getTaxTreatment()
+			.then((res) => {
+
+				if (res.status === 200) {
+					let array = []
+					res.data.map((row) => {
+						if (row.id !== 8)
+							array.push(row);
+					})
+					this.setState({ taxTreatmentList: array });
+				}
+			})
+			.catch((err) => {
+
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err.data ? err.data.message : 'ERROR',
+				);
+			});
 
 		if (this.props.location.state && this.props.location.state.id) {
-		//INV number
-		this.props.creditNotesActions
-		.getInvoicesForCNById(this.props.location.state.id)
-		.then((res) => {
-			
-			if (res.status === 200) {
-				if(res.data.length && res.data.length !=0 )
-				this.setState(
-					{
-						invoiceNumber: res.data[0].invoiceNumber,
-						showInvoiceNumber:true
-					},
-					() => {	},
-				);
-			}
-		})
-		//CN details
+			//INV number
+			this.props.creditNotesActions
+				.getInvoicesForCNById(this.props.location.state.id)
+				.then((res) => {
+					if (res.status === 200) {
+						if (res.data.length && res.data.length != 0)
+							this.setState({
+								invoiceNumber: res.data[0].invoiceNumber,
+								showInvoiceNumber: true
+							});
+					}
+				})
+			//CN details
 			this.props.creditNotesDetailActions
 				.getCreditNoteById(this.props.location.state.id,
-					this.props.location.state.isCNWithoutProduct ?this.props.location.state.isCNWithoutProduct:false)
+					this.props.location.state.isCNWithoutProduct ? this.props.location.state.isCNWithoutProduct : false)
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
 						this.props.creditNotesActions.getVatList();
-						this.props.creditNotesActions.getCustomerList(
-							this.state.contactType,
-						);
+						this.props.creditNotesActions.getCustomerList(this.state.contactType,).then(response => {
+							if (response.status === 200)
+								this.getCurrency(res.data.contactId)
+						});
 						this.props.creditNotesActions.getExciseList();
 						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.creditNotesActions.getCountryList();
@@ -207,22 +217,24 @@ class DetailCreditNote extends React.Component {
 
 						this.setState(
 							{
+								taxType: res.data.taxType ? res.data.taxType : false,
+								isCreatedWithoutInvoice: res.data.isCreatedWithoutInvoice ? res.data.isCreatedWithoutInvoice : false,
 								current_customer_id: this.props.location.state.id,
 								initValue: {
 									receiptAttachmentDescription: res.data
 										.receiptAttachmentDescription
 										? res.data.receiptAttachmentDescription
 										: '',
-									receiptNumber: res.data.receiptNumber
-										? res.data.receiptNumber
+									receiptNumber: res.data.referenceNo
+										? res.data.referenceNo
 										: '',
 									contact_po_number: res.data.contactPoNumber
 										? res.data.contactPoNumber
 										: '',
-										
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
-									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
-									currencyName:res.data.currencyName ? res.data.currencyName : '',
+									currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+									exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
+									currencyName: res.data.currencyName ? res.data.currencyName : '',
 									// invoiceDueDate: res.data.invoiceDueDate
 									// 	? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 									// 	: '',
@@ -257,8 +269,9 @@ class DetailCreditNote extends React.Component {
 									// filePath: res.data.filePath ? res.data.filePath : '',
 									total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
 								},
-								
-								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
+								isCreatedWIWP: res.data.invoiceLineItems && res.data.invoiceLineItems?.length > 0 ? false : true,
+
+								customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : '',
 								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								discountAmount: res.data.discount ? res.data.discount : 0,
 								total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
@@ -271,6 +284,7 @@ class DetailCreditNote extends React.Component {
 								selectedContact: res.data.contactId ? res.data.contactId : '',
 								term: res.data.term ? res.data.term : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								remainingInvoiceAmount: res.data.remainingInvoiceAmount,
 								loading: false,
 							},
 							() => {
@@ -280,11 +294,11 @@ class DetailCreditNote extends React.Component {
 									const idCount =
 										data.length > 0
 											? Math.max.apply(
-													Math,
-													data.map((item) => {
-														return item.id;
-													}),
-											  )
+												Math,
+												data.map((item) => {
+													return item.id;
+												}),
+											)
 											: 0;
 									this.setState({
 										idCount,
@@ -296,65 +310,67 @@ class DetailCreditNote extends React.Component {
 								}
 							},
 						);
-							this.getCurrency(res.data.contactId)	
-							
-							if(res.data.invoiceId){
 
-								this.props.creditNotesDetailActions
-				.getInvoiceById(res.data.invoiceId).then((response) => {
-					const customerdetails={label: response.data.organisationName === '' ?  response.data.name : response.data.organisationName,
-					value: response.data.contactId}
-			
-					this.setState(
-						{
-							option : {
-								label: response.data.organisationName === '' ?  response.data.name : response.data.organisationName,
-								value: response.data.contactId,
-							},
-						data:response.data.invoiceLineItems ,
-						totalAmount:response.data.totalAmount,
-						customer_currency:response.data.currencyCode,
-						remainingInvoiceAmount:response.data.remainingInvoiceAmount,
-					
-						
-		
-					//	data1:response.data.supplierId,
-					},() => {
-						this.formRef.current.setFieldValue(
-							'lineItemsString',
-							this.state.data,
-							true,
-						);
-						this.formRef.current.setFieldTouched(
-							`lineItemsString[${this.state.data.length - 1}]`,
-							false,
-							true,
-						);
-						this.updateAmount( this.state.data)
-						// this.formRef.current.setFieldValue(
-							
-						// 	totalAmount,
-						// 	true,
-						// );
-					},
-					// () => {
-					// 	this.formRef.current.setFieldValue('supplierId',
-					// 	this.state.option.value,
-					// 	true,)
-					// },
-		
-					);
-					this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
-					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
-					this.setExchange( this.getCurrency(customerdetails.value) );
-					this.formRef.current.setFieldValue('contactId', this.state.option, true);
-					this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
-					
-					this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
-					this.getTaxTreatment(this.state.option.value)	
-				
-				});
-			}
+
+						if (res.data.invoiceId) {
+
+							this.props.creditNotesDetailActions
+								.getCreditNoteById(this.props.location.state.id, false).then((response) => {
+									const customerdetails = {
+										label: response.data.contactName === '' ? response.data.organisationName : response.data.contactName,
+										value: response.data.contactId
+									}
+
+									this.setState(
+										{
+											option: {
+												label: response.data.contactName === '' ? response.data.organisationName : response.data.contactName,
+												value: response.data.contactId,
+											},
+											data: response.data.invoiceLineItems,
+											totalAmount: response.data.totalAmount,
+											customer_currency: response.data.currencyCode,
+											remainingInvoiceAmount: response.data.remainingInvoiceAmount,
+
+											//	data1:response.data.supplierId,
+										}, () => {
+											if (this.state.data && this.state.data.length > 1) {
+												this.formRef.current.setFieldValue(
+													'lineItemsString',
+													this.state.data,
+													true,
+												);
+												this.formRef.current.setFieldTouched(
+													`lineItemsString[${this.state.data.length - 1}]`,
+													false,
+													true,
+												);
+												this.updateAmount(this.state.data)
+											}
+											// this.formRef.current.setFieldValue(
+
+											// 	totalAmount,
+											// 	true,
+											// );
+										},
+										// () => {
+										// 	this.formRef.current.setFieldValue('supplierId',
+										// 	this.state.option.value,
+										// 	true,)
+										// },
+
+									);
+									this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
+									this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
+									this.setExchange(this.getCurrency(customerdetails.value));
+									this.formRef.current.setFieldValue('contactId', this.state.option, true);
+									this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
+									this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
+									this.getTaxTreatment(this.state.option.value);
+									this.formRef.current.setFieldValue('invoiceNumber', res.data.invoiceId, true);
+
+								});
+						}
 					}
 				});
 		} else {
@@ -362,66 +378,43 @@ class DetailCreditNote extends React.Component {
 		}
 	};
 
-	calTotalNet = (data) => {
-		let total_net = 0;
-		data.map((obj) => {
-			if(obj.isExciseTaxExclusive === false){
+	// renderDescription = (cell, row, props) => {
+	// 	let idx;
+	// 	this.state.data.map((obj, index) => {
+	// 		if (obj.id === row.id) {
+	// 			idx = index;
+	// 		}
+	// 		return obj;
+	// 	});
 
-                total_net = +(total_net + +obj.unitPrice  * obj.quantity);
-
-            }else{
-
-                total_net = +(total_net + +(obj.unitPrice + obj.exciseAmount) * obj.quantity);
-
-            }
-        return obj;
-
-        });
-		total_net=total_net-this.state.discountAmount
-		this.setState({
-			initValue: Object.assign(this.state.initValue, { total_net }),
-		});
-	};
-
-	renderDescription = (cell, row, props) => {
-		let idx;
-		this.state.data.map((obj, index) => {
-			if (obj.id === row.id) {
-				idx = index;
-			}
-			return obj;
-		});
-
-		return (
-			<Field
-				name={`lineItemsString.${idx}.description`}
-				render={({ field, form }) => (
-					<Input
-					disabled
-						type="text"
-						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
-						onChange={(e) => {
-							this.selectItem(e.target.value, row, 'description', form, field);
-						}}
-						placeholder={strings.Description}
-						className={`form-control 
-            ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].description &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].description
-								? 'is-invalid'
-								: ''
-						}`}
-					/>
-				)}
-			/>
-		);
-	};
+	// 	return (
+	// 		<Field
+	// 			name={`lineItemsString.${idx}.description`}
+	// 			render={({ field, form }) => (
+	// 				<Input
+	// 					disabled
+	// 					type="text"
+	// 					maxLength="250"
+	// 					value={row['description'] !== '' ? row['description'] : ''}
+	// 					onChange={(e) => {
+	// 						this.selectItem(e.target.value, row, 'description', form, field);
+	// 					}}
+	// 					placeholder={strings.Description}
+	// 					className={`form-control  ${props.errors.lineItemsString &&
+	// 							props.errors.lineItemsString[parseInt(idx, 10)] &&
+	// 							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+	// 							Object.keys(props.touched).length > 0 &&
+	// 							props.touched.lineItemsString &&
+	// 							props.touched.lineItemsString[parseInt(idx, 10)] &&
+	// 							props.touched.lineItemsString[parseInt(idx, 10)].description
+	// 							? 'is-invalid'
+	// 							: ''
+	// 						}`}
+	// 				/>
+	// 			)}
+	// 		/>
+	// 	);
+	// };
 
 	renderExcise = (cell, row, props) => {
 		const { excise_list } = this.props;
@@ -443,24 +436,23 @@ class DetailCreditNote extends React.Component {
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
-										'name',
-										'id',
-										excise_list,
-										'Excise',
-								  )
+									'name',
+									'id',
+									excise_list,
+									'Excise',
+								)
 								: []
 						}
 						value={
-				
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
 								.find((option) => row.exciseTaxId ? option.value === +row.exciseTaxId : "Select Exise")
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select+strings.VAT}
+						placeholder={strings.Select + strings.VAT}
 						onChange={(e) => {
-							 
+
 							this.selectItem(
 								e.value,
 								row,
@@ -469,32 +461,27 @@ class DetailCreditNote extends React.Component {
 								field,
 								props,
 							);
-							
+
 							this.updateAmount(
 								this.state.data,
 								props,
 							);
 						}}
-						className={`${
-							props.errors.lineItemsString &&
+						className={`${props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
-								? 'is-invalid'
-								: ''
-						}`}
+							? 'is-invalid'
+							: ''
+							}`}
 					/>
 				)}
 			/>
 		);
 	};
-
-
-	
-	
 
 	renderQuantity = (cell, row, props) => {
 		let idx;
@@ -510,39 +497,41 @@ class DetailCreditNote extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
-						<Input
-							type="text"
-							min="0"
-							maxLength="10"
-							value={row['quantity'] !== 0 ? row['quantity'] : 0}
-							onChange={(e) => {
-								if (e.target.value === '' || this.regEx.test(e.target.value)) {
-									this.selectItem(
-										e.target.value,
-										row,
-										'quantity',
-										form,
-										field,
-										props,
-									);
-								}
-							}}
-							placeholder={strings.Quantity}
-							className={`form-control 
-           						${
-												props.errors.lineItemsString &&
-												props.errors.lineItemsString[parseInt(idx, 10)] &&
-												props.errors.lineItemsString[parseInt(idx, 10)]
-													.quantity &&
-												Object.keys(props.touched).length > 0 &&
-												props.touched.lineItemsString &&
-												props.touched.lineItemsString[parseInt(idx, 10)] &&
-												props.touched.lineItemsString[parseInt(idx, 10)]
-													.quantity
-													? 'is-invalid'
-													: ''
-											}`}
-						/>
+						<div class="input-group">
+							<Input
+								type="text"
+								min="0"
+								maxLength="10"
+								value={row['quantity'] !== 0 ? row['quantity'] : 0}
+								onChange={(e) => {
+									if (e.target.value === '' || this.regEx.test(e.target.value)) {
+										this.selectItem(
+											e.target.value,
+											row,
+											'quantity',
+											form,
+											field,
+											props,
+										);
+									}
+								}}
+								placeholder={strings.Quantity}
+								className={`form-control
+           						${props.errors.lineItemsString &&
+										props.errors.lineItemsString[parseInt(idx, 10)] &&
+										props.errors.lineItemsString[parseInt(idx, 10)]
+											.quantity &&
+										Object.keys(props.touched).length > 0 &&
+										props.touched.lineItemsString &&
+										props.touched.lineItemsString[parseInt(idx, 10)] &&
+										props.touched.lineItemsString[parseInt(idx, 10)]
+											.quantity
+										? 'is-invalid'
+										: ''
+									}`}
+							/>{row['productId'] != '' ?
+								<Input value={row['unitType']} disabled /> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -550,7 +539,7 @@ class DetailCreditNote extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback">
+								<div className="invalid-feedback d-block">
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
@@ -574,8 +563,8 @@ class DetailCreditNote extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-					type="text"
-					disabled
+						type="text"
+						disabled
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -594,26 +583,25 @@ class DetailCreditNote extends React.Component {
 						}}
 						placeholder={strings.UnitPrice}
 						className={`form-control 
-                       ${
-													props.errors.lineItemsString &&
-													props.errors.lineItemsString[parseInt(idx, 10)] &&
-													props.errors.lineItemsString[parseInt(idx, 10)]
-														.unitPrice &&
-													Object.keys(props.touched).length > 0 &&
-													props.touched.lineItemsString &&
-													props.touched.lineItemsString[parseInt(idx, 10)] &&
-													props.touched.lineItemsString[parseInt(idx, 10)]
-														.unitPrice
-														? 'is-invalid'
-														: ''
-												}`}
+                       ${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)]
+									.unitPrice &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)]
+									.unitPrice
+								? 'is-invalid'
+								: ''
+							}`}
 					/>
 				)}
 			/>
 		);
 	};
 
-	renderSubTotal = (cell, row,extraData) => {
+	renderSubTotal = (cell, row, extraData) => {
 		// return row.subTotal ? (
 		// 	<Currency
 		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -622,7 +610,7 @@ class DetailCreditNote extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.customer_currency_symbol + " " + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol + " " + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	renderVatAmount = (cell, row, extraData) => {
@@ -637,7 +625,7 @@ class DetailCreditNote extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? this.state.customer_currency_symbol + " " + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol + " " + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	addRow = () => {
@@ -652,12 +640,12 @@ class DetailCreditNote extends React.Component {
 					vatCategoryId: '',
 					subTotal: 0,
 					productId: '',
-					discountType :'FIXED',
-					exciseTaxId:'',
-					vatAmount:0,
+					discountType: 'FIXED',
+					exciseTaxId: '',
+					vatAmount: 0,
 					discount: 0,
-					unitType:'',
-					unitTypeId:'',
+					unitType: '',
+					unitTypeId: '',
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -722,16 +710,16 @@ class DetailCreditNote extends React.Component {
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
-					isDisabled
+						isDisabled
 						styles={customStyles}
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
-										'name',
-										'id',
-										vat_list,
-										'VAT',
-								  )
+									'name',
+									'id',
+									vat_list,
+									'VAT',
+								)
 								: []
 						}
 						value={
@@ -741,7 +729,7 @@ class DetailCreditNote extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.VAT}
+						placeholder={strings.Select + strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -752,17 +740,16 @@ class DetailCreditNote extends React.Component {
 								props,
 							);
 						}}
-						className={`${
-							props.errors.lineItemsString &&
+						className={`${props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
-								? 'is-invalid'
-								: ''
-						}`}
+							? 'is-invalid'
+							: ''
+							}`}
 					/>
 				)}
 			/>
@@ -771,111 +758,102 @@ class DetailCreditNote extends React.Component {
 
 	renderDiscount = (cell, row, props) => {
 		const { discountOptions } = this.state;
-	   let idx;
-	   this.state.data.map((obj, index) => {
-		   if (obj.id === row.id) {
-			   idx = index;
-		   }
-		   return obj;
-	   });
-	
-	   return (
-		   <Field
-				name={`lineItemsString.${idx}.discountType`}
-			   render={({ field, form }) => (
-			   <div>
-			   <div  class="input-group">
-				   <Input
-				   disabled
-						 type="text"
-						   min="0"
-						maxLength="14,2"
-						value={row['discount'] !== 0 ? row['discount'] : 0}
-						onChange={(e) => {
-						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
-							   this.selectItem(
-								   e.target.value,
-								   row,
-								   'discount',
-								   form,
-								   field,
-								   props,
-							   );
-						   }
-					   
-							   this.updateAmount(
-								   this.state.data,
-								   props,
-							   );
-					   
-					   }}
-					   placeholder={strings.discount}
-					   className={`form-control 
-		   ${
-						   props.errors.lineItemsString &&
-						   props.errors.lineItemsString[parseInt(idx, 10)] &&
-						   props.errors.lineItemsString[parseInt(idx, 10)].discount &&
-						   Object.keys(props.touched).length > 0 &&
-						   props.touched.lineItemsString &&
-						   props.touched.lineItemsString[parseInt(idx, 10)] &&
-						   props.touched.lineItemsString[parseInt(idx, 10)].discount
-							   ? 'is-invalid'
-							   : ''
-					   }`}
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
 
-	/>
-	<div class="dropdown open input-group-append">
-	
-		<div 	style={{width:'100px'}}>
-		<Select
-	isDisabled
-	
-																						   options={discountOptions}
-																						   id="discountType"
-																						   name="discountType"
-																						   value={
-																						discountOptions &&
-																							selectOptionsFactory
-																								.renderOptions('label', 'value', discountOptions, 'discount')
-																								.find((option) => option.value == row.discountType)
-																						   }
-																						   onChange={(e) => {
-																							   this.selectItem(
-																								   e.value,
-																								   row,
-																								   'discountType',
-																								   form,
-																								   field,
-																								   props,
-																							   );
-																							   this.updateAmount(
-																								   this.state.data,
-																								   props,
-																							   );
-																						   }}
-																					   />
-			 </div>
-			  </div>
-			  </div>
-			   </div>
-	
-				   )}
-	
-		   />
-	   );
+		return (
+			<Field
+				name={`lineItemsString.${idx}.discountType`}
+				render={({ field, form }) => (
+					<div>
+						<div class="input-group">
+							<Input
+								disabled
+								type="text"
+								min="0"
+								maxLength="14,2"
+								value={row['discount'] !== 0 ? row['discount'] : 0}
+								onChange={(e) => {
+									if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+										this.selectItem(
+											e.target.value,
+											row,
+											'discount',
+											form,
+											field,
+											props,
+										);
+									}
+
+									this.updateAmount(
+										this.state.data,
+										props,
+									);
+
+								}}
+								placeholder={strings.discount}
+								className={`form-control    ${props.errors.lineItemsString &&
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)].discount
+									? 'is-invalid'
+									: ''
+									}`}
+
+							/>
+							<div class="dropdown open input-group-append">
+
+								<div style={{ width: '100px' }}>
+									<Select
+										isDisabled
+										options={discountOptions}
+										id="discountType"
+										name="discountType"
+										value={
+											discountOptions &&
+											selectOptionsFactory
+												.renderOptions('label', 'value', discountOptions, 'discount')
+												.find((option) => option.value == row.discountType)
+										}
+										onChange={(e) => {
+											this.selectItem(
+												e.value,
+												row,
+												'discountType',
+												form,
+												field,
+												props,
+											);
+											this.updateAmount(
+												this.state.data,
+												props,
+											);
+										}}
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
+			/>
+		);
 	}
 
+	discountType = (row) => {
 
-	discountType = (row) =>
-
-{
-	 
-	
 		return this.state.discountOptions &&
-		selectOptionsFactory
-			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
-			.find((option) => option.value === +row.discountType)
-}
+			selectOptionsFactory
+				.renderOptions('label', 'value', this.state.discountOptions, 'discount')
+				.find((option) => option.value === +row.discountType)
+	}
 
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
@@ -889,8 +867,8 @@ class DetailCreditNote extends React.Component {
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
-				obj['unitType']=result.unitType;
-				obj['unitTypeId']=result.unitTypeId;
+				obj['unitType'] = result.unitType;
+				obj['unitTypeId'] = result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -922,19 +900,21 @@ class DetailCreditNote extends React.Component {
 		);
 		this.updateAmount(data, props);
 	};
+
 	renderAddProduct = (cell, rows, props) => {
 		return (
 			<Button
 				color="primary"
 				className="btn-twitter btn-brand icon"
 				onClick={(e, props) => {
-				this.openProductModal(props);
+					this.openProductModal(props);
 				}}
 			>
 				<i className="fas fa-plus"></i>
 			</Button>
 		);
 	};
+
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
 		let productList = product_list.length
@@ -952,44 +932,67 @@ class DetailCreditNote extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
-					<Select
-						styles={customStyles}
-						isDisabled
-						options={
-							product_list
-								? selectOptionsFactory.renderOptions(
+					<>
+						<Select
+							styles={customStyles}
+							isDisabled
+							options={
+								product_list
+									? selectOptionsFactory.renderOptions(
 										'name',
 										'id',
 										product_list,
 										'Product',
-								  )
-								: []
-						}
-						value={
-							product_list &&
-							selectOptionsFactory
-								.renderOptions('name', 'id', product_list, 'Product')
-								.find((option) => option.value === +row.productId)
-						}
-						id="productId"
-						onChange={(e) => {
-							if (e && e.label !== 'Select Product') {
-								this.selectItem(e.value, row, 'productId', form, field, props);
-								this.prductValue(e.value, row, 'productId', form, field, props);
+									)
+									: []
 							}
-						}}
-						className={`${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].productId
+							value={
+								product_list &&
+								selectOptionsFactory
+									.renderOptions('name', 'id', product_list, 'Product')
+									.find((option) => option.value === +row.productId)
+							}
+							id="productId"
+							onChange={(e) => {
+								if (e && e.label !== 'Select Product') {
+									this.selectItem(e.value, row, 'productId', form, field, props);
+									this.prductValue(e.value, row, 'productId', form, field, props);
+								}
+							}}
+							className={`${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].productId
 								? 'is-invalid'
 								: ''
-						}`}
-					/>
+								}`}
+						/>
+						<div className='mt-1'>
+							<Input
+								disabled
+								type="text"
+								maxLength="250"
+								value={row['description'] !== '' ? row['description'] : ''}
+								onChange={(e) => {
+									this.selectItem(e.target.value, row, 'description', form, field);
+								}}
+								placeholder={strings.Description}
+								className={`form-control  ${props.errors.lineItemsString &&
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)].description &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)].description
+									? 'is-invalid'
+									: ''
+									}`}
+							/>
+						</div>
+					</>
 				)}
 			/>
 		);
@@ -1035,112 +1038,28 @@ class DetailCreditNote extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
-		
-		const { discountPercentage, discountAmount } = this.state;
-		
-		let total_net = 0;
-		let total_excise = 0;
-		let total = 0;
-		let total_vat = 0;
-		let net_value = 0;
-		let discount = 0;
+		const { vat_list } = this.props;
+		const { taxType } = this.state;
+		const list = ProductTableCalculation.updateAmount(data ? data : [], vat_list, taxType);
 
-		const totalnetamount=(a)=>{
-			total_net=total_net+a
-		}
-		const totalexcise=(a)=>{
-			total_excise=total_excise+a
-		}
-		const totalvalt=(a)=>{
-			total_vat=total_vat+a
-		}
-		const totalamount=(a)=>{
-			total=total+a
-		}
-		const discountamount=(a)=>{
-			discount=discount+a
-		}
-		data.map((obj) => {
-			
-			const index =
-				obj.vatCategoryId !== ''
-					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
-					: '';
-			
-					const vat = index >-1 ? vat_list[`${index}`]?.vat : 0;
-
-			if(!obj.isExciseTaxExclusive){
-			const totalwithouttax= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
-			const discounvalue=obj.discountType === 'PERCENTAGE'?
-			(totalwithouttax*obj.discount)/100:
-			obj.discountType === 'FIXED' && obj.discount
-			const totalAfterdiscount= totalwithouttax-discounvalue
-			
-			const excisevalue=obj.exciseTaxId === 1?totalAfterdiscount/2:obj.exciseTaxId===2?totalAfterdiscount:0
-			const totalwithexcise=excisevalue+totalAfterdiscount
-			const vatvalue=(totalwithexcise*vat)/100
-
-			const finaltotalamount=totalwithexcise+vatvalue
-			totalnetamount(totalwithouttax)
-			totalexcise(excisevalue)
-			totalvalt(vatvalue)
-			totalamount(finaltotalamount)
-			discountamount(discounvalue)
-			obj.subTotal=totalwithouttax+vatvalue+excisevalue-discounvalue
-			obj.vatAmount=vatvalue
-			obj.exciseAmount=excisevalue
-			} else {
-				const totalwithtaxandexcise= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
-				const discounvalue=obj.discountType === 'PERCENTAGE'?
-			(totalwithtaxandexcise*obj.discount)/100:
-			obj.discountType === 'FIXED' && obj.discount
-			const totalwitoutdiscount= totalwithtaxandexcise-discounvalue
-			const vatvalue=(totalwitoutdiscount*vat)/(100+vat)
-			const totalwithoutvat=totalwitoutdiscount-vatvalue
-			const excisevalue=obj.exciseTaxId === 1?totalwithoutvat/3:obj.exciseTaxId===2?totalwithoutvat/2:0
-			const finaltotalamount=totalwithoutvat-excisevalue
-			totalnetamount(totalwithtaxandexcise-(discounvalue+excisevalue+vatvalue))
-		
-			totalexcise(excisevalue)
-			totalvalt(vatvalue)
-			totalamount(totalwitoutdiscount)
-			discountamount(discounvalue)	
-			obj.subTotal=totalwitoutdiscount
-			obj.vatAmount=vatvalue
-			obj.exciseAmount=excisevalue
-			}
-			
-			
-			
-			return obj;
-		});
-
-		// const discount =
-		// 	props.values.discountType.value === 'PERCENTAGE'
-		// 		? +((total_net * discountPercentage) / 100)
-		// 		: discountAmount;
-	
 		this.setState(
 			{
-				data,
+				data: list.data,
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net:  total_net,
-						invoiceVATAmount: total_vat,
- 						totalAmount: total,
-						total_excise: total_excise,
-						discount
-						
-						
+						total_net: list.total_net ? list.total_net : 0,
+						invoiceVATAmount: list.totalVatAmount ? list.totalVatAmount : 0,
+						totalAmount: list.totalAmount ? list.totalAmount : 0,
+						total_excise: list.total_excise ? list.total_excise : 0,
+						discount: list.discount ? list.discount : 0,
 					},
 
 				},
 			},
 
 		);
-		
+
 	};
 	setDate = (props, value) => {
 		const { term } = this.state;
@@ -1162,7 +1081,7 @@ class DetailCreditNote extends React.Component {
 		let reader = new FileReader();
 		let file = e.target.files[0];
 		if (file) {
-			reader.onloadend = () => {};
+			reader.onloadend = () => { };
 			reader.readAsDataURL(file);
 			props.setFieldValue('attachmentFile', file, true);
 		}
@@ -1170,100 +1089,60 @@ class DetailCreditNote extends React.Component {
 
 	handleSubmit = (data) => {
 
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage: true });
 		const { current_customer_id, term } = this.state;
 		const {
 			receiptAttachmentDescription,
 			receiptNumber,
 			contact_po_number,
 			currency,
-			// invoiceDueDate,
 			invoiceDate,
 			contactId,
-			// project,
-			// placeOfSupplyId,
-			// exchangeRate,
 			invoice_number,
 			notes,
 			creditAmount,
-			discount,
-			discountType,
-			discountPercentage,
-			vatCategoryId
+			email,
+			exchangeRate,
+			lineItemsString,
+			invoiceNumber,
 		} = data;
-
 		let formData = new FormData();
+		formData.append('email', email ? email : '',);
 		formData.append('type', 7);
 		formData.append('creditNoteId', current_customer_id);
-		formData.append(
-			'creditNoteNumber',
-			invoice_number !== null ? invoice_number : '',
-		);
-		formData.append(
-			'creditNoteDate',
-			typeof invoiceDate === 'string'
-				? moment(invoiceDate, 'DD-MM-YYYY').toDate()
-				: invoiceDate,
-		);
-		// formData.append(
-		// 	'invoiceDueDate',
-		// 	typeof invoiceDueDate === 'string'
-		// 		? moment(invoiceDueDate, 'DD-MM-YYYY').toDate()
-		// 		: invoiceDueDate,
-		// );
+		formData.append('creditNoteNumber', invoice_number !== null ? invoice_number : '',);
+		formData.append('creditNoteDate', typeof invoiceDate === 'string' ? moment(invoiceDate, 'DD-MM-YYYY').toDate() : invoiceDate,);
 		formData.append('vatCategoryId', 2);
-		formData.append('exchangeRate',  this.state.initValue.exchangeRate);
-		
-		formData.append(
-			'receiptNumber',
-			receiptNumber !== null ? receiptNumber : '',
-		);
-		formData.append(
-			'contactPoNumber',
-			contact_po_number !== null ? contact_po_number : '',
-		);
-		formData.append(
-			'receiptAttachmentDescription',
-			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
-		);
+		formData.append('exchangeRate', exchangeRate);
+		formData.append('referenceNo', receiptNumber !== null ? receiptNumber : '',);
+		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
+		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('notes', notes !== null ? notes : '');
+		formData.append('isCreatedWithoutInvoice', this.state.isCreatedWithoutInvoice);
+		formData.append('isCreatedWIWP', this.state.isCreatedWIWP);
+		formData.append('taxType', this.state.taxType ? this.state.taxType : false);
 
-		
-		formData.append('isCreatedWithoutInvoice', this.props.location.state.isCNWithoutProduct==true ?true:false);
-		if(this.props.location.state.isCNWithoutProduct==true)
-		formData.append('totalAmount', creditAmount);
-		else
-		{
+		if (invoiceNumber) {
+			formData.append('invoiceId', invoiceNumber.value ? invoiceNumber.value : invoiceNumber);
+			formData.append('cnCreatedOnPaidInvoice', '1');
+		}
+		if (this.state.isCreatedWIWP == true)
+			formData.append('totalAmount', creditAmount);
+		else {
 			formData.append('lineItemsString', JSON.stringify(this.state.data));
 			formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
-			formData.append('totalAmount', this.state.initValue.totalAmount);	
+			formData.append('totalAmount', this.state.initValue.totalAmount);
 			formData.append('totalExciseAmount', this.state.initValue.total_excise);
-			formData.append('discount',this.state.initValue.discount);	
-		formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);}
-		// formData.append('exciseType', this.state.checked);
-		// formData.append('discountType', discountType);
-		// formData.append('term', term);
-		//formData.append('placeOfSupplyId',placeOfSupplyId.value);
-		// if (discountType === 'PERCENTAGE') {
-		// 	formData.append('discountPercentage', discountPercentage);
-		// }
+			formData.append('discount', this.state.initValue.discount);
+			formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
+		}
 		if (contactId) {
-			formData.append('contactId', contactId);
+			formData.append('contactId', contactId ? contactId.value ? contactId.value : contactId : '');
 		}
-		if (currency && currency.value) {
-			formData.append('currencyCode', currency.value);
+		if (currency) {
+			formData.append('currencyCode', currency.value ? currency.value : currency);
 		}
-		// if (placeOfSupplyId && placeOfSupplyId.value) {
-		// 	formData.append('placeOfSupplyId', placeOfSupplyId.value);
-		// }
-		// if (project) {
-		// 	formData.append('projectId', project);
-		// }
-		// if (this.uploadFile?.files?.[0]) {
-		// 	formData.append('attachmentFile', this.uploadFile?.files?.[0]);
-		// }
-
-		this.setState({ loading:true, loadingMsg:"Updating Credit Note..."});
+		this.setState({ loading: true, loadingMsg: "Updating Credit Note..." });
 		this.props.creditNotesDetailActions
 			.UpdateCreditNotes(formData)
 			.then((res) => {
@@ -1273,15 +1152,14 @@ class DetailCreditNote extends React.Component {
 					res.data ? res.data.message : 'Credit Note Updated Successfully'
 				);
 				this.props.history.push('/admin/income/credit-notes');
-				this.setState({ loading:false,});
+				this.setState({ loading: false, });
 			})
 			.catch((err) => {
-				this.setState({ disabled: false, disableLeavePage:true });
+				this.setState({ loading: false, disabled: false, disableLeavePage: false });
 				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data ? err.data.message : 'Credit Note Updated Unsuccessfully'
-
+					'error', 'Credit Note Updated Unsuccessfully'
 				);
+				this.initializeData();
 			});
 	};
 
@@ -1394,21 +1272,21 @@ class DetailCreditNote extends React.Component {
 				);
 				this.setState({ loading: false });
 			});
-	};	
+	};
 
 	setExchange = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
-		return obj.currencyCode === value;
+			return obj.currencyCode === value;
 		});
-		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		};
+		this.formRef.current.setFieldValue('exchangeRate', result && result.length > 0 ? result[0].exchangeRate : '', true);
+	};
 
 	deleteInvoice = () => {
 		const message1 =
 			<text>
-			<b>Delete Tax Credit Note?</b>
+				<b>Delete Tax Credit Note?</b>
 			</text>
-			const message = 'This Tax Credit Note  will be deleted permanently and cannot be recovered. ';
+		const message = 'This Tax Credit Note  will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -1423,25 +1301,25 @@ class DetailCreditNote extends React.Component {
 	};
 
 	removeInvoice = () => {
-		this.setState({ disabled1: true,disableLeavePage:true });
+		this.setState({ disabled1: true, disableLeavePage: true });
 		const { current_customer_id } = this.state;
 		this.props.creditNotesDetailActions
-				.deleteCN(current_customer_id)
-				.then((res) => {
-					if (res.status === 200) {
-						this.props.commonActions.tostifyAlert(
-							'success',
-							res.data = 'Tax Credit Note Deleted Successfully'
-						);
-						this.props.history.push('/admin/income/credit-notes');
-					}
-				})
-				.catch((err) => {
+			.deleteCN(current_customer_id)
+			.then((res) => {
+				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
-						'error',
-						err.data = 'Tax Credit Note Deleted Unsuccessfully'
+						'success',
+						res.data = 'Tax Credit Note Deleted Successfully'
 					);
-				});
+					this.props.history.push('/admin/income/credit-notes');
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err.data = 'Tax Credit Note Deleted Unsuccessfully'
+				);
+			});
 	};
 
 	removeDialog = () => {
@@ -1454,7 +1332,7 @@ class DetailCreditNote extends React.Component {
 		let customer_currencyCode = 0;
 		let customer_item_currency = ''
 		this.props.customer_list.map(item => {
-			if(item.label.contactId == opt) {
+			if (item.label.contactId == opt) {
 				this.setState({
 					customer_currency: item.label.currency.currencyCode,
 					customer_currency_des: item.label.currency.currencyName,
@@ -1465,15 +1343,15 @@ class DetailCreditNote extends React.Component {
 				customer_item_currency = item.label.currency
 			}
 		})
-	
+
 		return customer_currencyCode;
 	}
-	getTaxTreatment= (opt) => {
-		
+	getTaxTreatment = (opt) => {
+
 		let customer_taxTreatmentId = 0;
 		let customer_item_taxTreatment = ''
 		this.props.customer_list.map(item => {
-			if(item.label.contactId == opt) {
+			if (item.label.contactId == opt) {
 				this.setState({
 					customer_taxTreatment: item.label.taxTreatment.id,
 					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
@@ -1484,318 +1362,361 @@ class DetailCreditNote extends React.Component {
 				customer_item_taxTreatment = item.label.currency
 			}
 		})
-	
+
 		return customer_taxTreatmentId;
 	}
-	showInvoiceNumber=()=>{
-		return(
-			this.state.showInvoiceNumber &&(<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="project">
-																		<span className="text-danger">* </span>
-																			 {strings.InvoiceNumber}
-																		</Label>
-																		<Input																			
-																			disabled
-																			id="invoiceNumber"
-																			name="invoiceNumber"
-																			value={this.state.invoiceNumber}
-																		/>
-																	</FormGroup>
-																</Col>)
+	showInvoiceNumber = () => {
+		return (
+			this.state.showInvoiceNumber && (<Col lg={3}>
+				<FormGroup className="mb-3">
+					<Label htmlFor="project">
+						<span className="text-danger">* </span>
+						{strings.InvoiceNumber}
+					</Label>
+					<Input
+						disabled
+						id="invoiceNumber"
+						name="invoiceNumber"
+						value={this.state.invoiceNumber}
+					/>
+				</FormGroup>
+			</Col>)
 		)
 	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
-
-		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list,vat_list } = this.props;
-		const {  loadingMsg } = this.state
+		const { project_list, currency_list, currency_convert_list, customer_list, universal_currency_list, vat_list } = this.props;
+		const { loadingMsg, taxTreatmentList } = this.state
 		let tmpCustomer_list = []
 
 		customer_list.map(item => {
-			let obj = {label: item.label.contactName, value: item.value}
+			let obj = { label: item.label.contactName, value: item.value }
 			tmpCustomer_list.push(obj)
 		})
 
 		return (
-			loading ==true? <Loader loadingMsg={loadingMsg}/> :
-<div>
-			<div className="detail-customer-invoice-screen">
-				<div className="animated fadeIn">
-					<Row>
-						<Col lg={12} className="mx-auto">
-							<Card>
-								<CardHeader>
-									<Row>
-										<Col lg={12}>
-											<div className="h4 mb-0 d-flex align-items-center">
-												<i className="fas fa-address-book" />
-												<span className="ml-2">{strings.UpdateCreditNote}</span>
-											</div>
-										</Col>
-									</Row>
-								</CardHeader>
-								<CardBody>
-									{dialog}
-									{loading ? (
-										<Loader />
-									) : (
+			loading == true ? <Loader loadingMsg={loadingMsg} /> : <div>
+				<div className="detail-customer-invoice-screen">
+					<div className="animated fadeIn">
+						<Row>
+							<Col lg={12} className="mx-auto">
+								<Card>
+									<CardHeader>
 										<Row>
 											<Col lg={12}>
-												<Formik
-													initialValues={this.state.initValue}
-													ref={this.formRef}
-													onSubmit={(values, { resetForm }) => {
-														this.handleSubmit(values);
-													}}
-													validate={(values) => {
-													
-														let errors = {};
-														 
-														
-														if(this.state.isCreatedWIWP==false && !values.invoiceNumber)
-														{
-															errors.invoiceNumber = 'Invoice number is required';}
-												
-														if((this.state.isCreatedWIWP  && !this.state.invoiceSelected)&& values.creditAmount<1)
-															{
-																errors.creditAmount = 'Credit amount is required';}
-														if(this.state.invoiceSelected && !this.state.isCreatedWIWP && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)
-														{
-															errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
-														}	
-														if(this.state.invoiceSelected && this.state.isCreatedWIWP && values.creditAmount>this.state.remainingInvoiceAmount)
-														{
-															errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
-														}											
-														return errors;
-													}}
-													validationSchema={Yup.object().shape({
-														// invoiceNumber: Yup.string().required(
-														// 	'Invoice Number is required',
-														// ),
-														creditNoteNumber: Yup.string().required(
-															'Tax credit note number is required',
-														),
-														contactId: Yup.string().required(
+												<div className="h4 mb-0 d-flex align-items-center">
+													<i className="nav-icon fas fa-donate" />
+													<span className="ml-2">{strings.UpdateCreditNote}</span>
+												</div>
+											</Col>
+										</Row>
+									</CardHeader>
+									<CardBody>
+										{dialog}
+										{loading ? (
+											<Loader />
+										) : (
+											<Row>
+												<Col lg={12}>
+													<Formik
+														initialValues={this.state.initValue}
+														ref={this.formRef}
+														onSubmit={(values, { resetForm }) => {
+															this.handleSubmit(values);
+														}}
+														validate={(values) => {
+
+															let errors = {};
+
+															// if (this.state.isCreatedWIWP == false && !values.invoiceNumber) {
+															// 	errors.invoiceNumber = 'Invoice number is required';
+															// }
+															// if ((this.state.isCreatedWIWP && !this.state.invoiceSelected) && (!values.creditAmount || values.creditAmount < 1)) {
+															// 	errors.creditAmount = 'Credit amount is required';
+															// }
+															// if ((this.state.isCreatedWIWP) && (values.creditAmount == '')) {
+															// 	errors.creditAmount = "Credit Amount is required";
+															// }
+															if (this.state.remainingInvoiceAmount && (this.state.initValue.totalAmount > this.state.remainingInvoiceAmount)) {
+																errors.remainingInvoiceAmount = 'The amount of the credit note cannot exceed the amount of the invoice';
+															}
+															if (this.state.remainingInvoiceAmount && (values.creditAmount > this.state.remainingInvoiceAmount)) {
+																errors.remainingInvoiceAmount = 'The amount of the credit note cannot exceed the amount of the invoice';
+															}
+															return errors;
+														}}
+														validationSchema={Yup.object().shape({
+															// invoiceNumber: Yup.string().required(
+															// 	'Invoice Number is required',
+															// ),
+															invoice_number: Yup.string().required(
+																'Tax credit note number is required',
+															),
+															contactId: Yup.string().required(
 																'Customer name is required',
 															),
-														// contactId: Yup.string().required(
-														// 	'Customer is required',
-														// ),
-														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
-														// term: Yup.string().required('Term is required'),
-														// currency: Yup.string().required(
-														// 	'Currency is required',
-														// ),
-														creditNoteDate: Yup.string().required(
-															'Tax credit note date is required',
-														),
-														// lineItemsString: Yup.array()
-														// 	.required(
-														// 		'Atleast one Tax Credit Note sub detail is mandatory',
-														// 	)
-														// 	.of(
-														// 		Yup.object().shape({
-														// 			quantity: Yup.string()
-														// 				.required('Value is required')
-														// 				.test(
-														// 					'quantity',
-														// 					'Quantity should be greater than 0',
-														// 					(value) => {
-														// 						if (value > 0) {
-														// 							return true;
-														// 						} else {
-														// 							return false;
-														// 						}
-														// 					},
-														// 				),
-														// 			unitPrice: Yup.string()
-														// 				.required('Value is required')
-														// 				.test(
-														// 					'Unit Price',
-														// 					'Unit Price Should be Greater than 1',
-														// 					(value) => {
-														// 						if (value > 0) {
-														// 							return true;
-														// 						} else {
-														// 							return false;
-														// 						}
-														// 					},
-														// 				),
-														// 			vatCategoryId: Yup.string().required(
-														// 				'Value is required',
-														// 			),
-														// 			productId: Yup.string().required(
-														// 				'Product is required',
-														// 			),
-														// 		}),
-														// 	),
-														attachmentFile: Yup.mixed()
-															.test(
-																'fileType',
-																'*Unsupported file format',
+															// contactId: Yup.string().required(
+															// 	'Customer is required',
+															// ),
+															// placeOfSupplyId: Yup.string().required('Place of supply is required'),
+															// term: Yup.string().required('Term is required'),
+															// currency: Yup.string().required(
+															// 	'Currency is required',
+															// ),
+															invoiceDate: Yup.string().required(
+																'Tax credit note date is required',
+															),
+															creditAmount: Yup.string().required(
+																strings.AmountIsRequired
+															).test(
+																'Credit Amount',
+																'Credit amount should be greater than 0',
 																(value) => {
-																	value &&
-																		this.setState({
-																			fileName: value.name,
-																		});
-																	if (
-																		!value ||
-																		(value &&
-																			this.supported_format.includes(value.type))
-																	) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																},
-															)
-															.test(
-																'fileSize',
-																'*File size is too large',
-																(value) => {
-																	if (
-																		!value ||
-																		(value && value.size <= this.file_size)
-																	) {
+																	if (value > 0) {
 																		return true;
 																	} else {
 																		return false;
 																	}
 																},
 															),
-													})}
-												>
-													{(props) => (
-														<Form onSubmit={props.handleSubmit}>
-															<Row>{this.showInvoiceNumber()}  </Row>
-															<Row>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="invoice_number">
-																			<span className="text-danger">* </span>
-															        {strings.CreditNoteNumber}
-																		</Label>
-																		<Input
-																			type="text"
-																			id="invoice_number"
-																			name="invoice_number"
-																			placeholder=""
-																			disabled
-																			value={props.values.invoice_number}
-																			onChange={(value) => {
-																				props.handleChange('invoice_number')(
-																					value,
-																				);
-																			}}
-																			className={
-																				props.errors.invoice_number &&
-																				props.touched.invoice_number
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.invoice_number &&
-																			props.touched.invoice_number && (
-																				<div className="invalid-feedback">
-																					{props.errors.invoice_number}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="contactId">
-																			<span className="text-danger">* </span>
-																			 {strings.CustomerName}
-																		</Label>
-																		<Select
-																			styles={customStyles}
-																			id="contactId"
-																			name="contactId"
-																			isDisabled={true}
-																			options={
-																				tmpCustomer_list
-																					? selectOptionsFactory.renderOptions(
+															lineItemsString: Yup.array().of(
+																Yup.object().shape({
+																	quantity: Yup.string()
+																		// .required('Quantity is required')
+																		.test(
+																			'quantity',
+																			'Quantity should be greater than 0',
+																			(value) => {
+																				if (value > 0) {
+																					return true;
+																				} else {
+																					return false;
+																				}
+																			},
+																	).required('Quantity is required')
+																	// 			unitPrice: Yup.string()
+																	// 				.required('Value is required')
+																	// 				.test(
+																	// 					'Unit Price',
+																	// 					'Unit Price Should be Greater than 1',
+																	// 					(value) => {
+																	// 						if (value > 0) {
+																	// 							return true;
+																	// 						} else {
+																	// 							return false;
+																	// 						}
+																	// 					},
+																	// 				),
+																	// 			vatCategoryId: Yup.string().required(
+																	// 				'Value is required',
+																	// 			),
+																	// 			productId: Yup.string().required(
+																	// 				'Product is required',
+																	// 			),
+																}),
+															),
+															attachmentFile: Yup.mixed()
+																.test(
+																	'fileType',
+																	'*Unsupported file format',
+																	(value) => {
+																		value &&
+																			this.setState({
+																				fileName: value.name,
+																			});
+																		if (
+																			!value ||
+																			(value &&
+																				this.supported_format.includes(value.type))
+																		) {
+																			return true;
+																		} else {
+																			return false;
+																		}
+																	},
+																)
+																.test(
+																	'fileSize',
+																	'*File size is too large',
+																	(value) => {
+																		if (
+																			!value ||
+																			(value && value.size <= this.file_size)
+																		) {
+																			return true;
+																		} else {
+																			return false;
+																		}
+																	},
+																),
+														})}
+													>
+														{(props) => (
+															<Form onSubmit={props.handleSubmit}>
+																<Row>{this.showInvoiceNumber()}  </Row>
+																<Row>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="invoice_number">
+																				<span className="text-danger">* </span>
+																				{strings.CreditNoteNumber}
+																			</Label>
+																			<Input
+																				type="text"
+																				id="invoice_number"
+																				name="invoice_number"
+																				placeholder=""
+																				disabled
+																				value={props.values.invoice_number}
+																				onChange={(value) => {
+																					props.handleChange('invoice_number')(
+																						value,
+																					);
+																				}}
+																				className={
+																					props.errors.invoice_number &&
+																						props.touched.invoice_number
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.invoice_number &&
+																				props.touched.invoice_number && (
+																					<div className="invalid-feedback">
+																						{props.errors.invoice_number}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="contactId">
+																				<span className="text-danger">* </span>
+																				{strings.CustomerName}
+																			</Label>
+																			<Select
+																				styles={customStyles}
+																				id="contactId"
+																				name="contactId"
+																				isDisabled={this.state.showInvoiceNumber}
+																				options={
+																					tmpCustomer_list
+																						? selectOptionsFactory.renderOptions(
 																							'label',
 																							'value',
 																							tmpCustomer_list,
 																							'Customer',
-																					  )
-																					: []
-																			}
-																			value={
-																				tmpCustomer_list &&
-																				tmpCustomer_list.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.contactId,
-																				)
-																			}
-																			onChange={(option) => {
-																				if (option && option.value) {
-																					this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
-																					this.setExchange( this.getCurrency(option.value) );
-																					props.handleChange('contactId')(
-																						option.value,
-																					);
-																				} else {
-																					props.handleChange('contactId')('');
+																						)
+																						: []
 																				}
-																				// this.getCurrentUser(option)
-																			}}
-																			className={
-																				props.errors.contactId &&
-																				props.touched.contactId
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.contactId &&
-																			props.touched.contactId && (
-																				<div className="invalid-feedback">
-																					{props.errors.contactId}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="taxTreatmentid">
+																				value={
+																					props.values.contactId?.value ? props.values.contactId :
+																						tmpCustomer_list &&
+																						tmpCustomer_list.find(
+																							(option) =>
+																								option.value ===
+																								+props.values.contactId,
+																						)
+																				}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																						this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
+																						this.setExchange(this.getCurrency(option.value));
+																						props.handleChange('contactId')(option);
+																					} else {
+																						props.handleChange('contactId')('');
+																					}
+																				}}
+																				className={
+																					props.errors.contactId &&
+																						props.touched.contactId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.contactId &&
+																				props.touched.contactId && (
+																					<div className="invalid-feedback">
+																						{props.errors.contactId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="taxTreatmentid">
 																				{strings.TaxTreatment}
-																	</Label>
-																	<Input
-																	disabled
-																		styles={customStyles}
-																		id="taxTreatmentid"
-																		name="taxTreatmentid"
-																		value={
-																		this.state.customer_taxTreatment_des
-																	 	
-																		}
-																		className={
-																			props.errors.taxTreatmentid &&
-																			props.touched.taxTreatmentid
-																				? 'is-invalid'
-																				: ''
-																		}
-																		onChange={(option) => {
-																		props.handleChange('taxTreatmentid')(option);
-																		
-																	    }}
+																			</Label>
+																			<Select
+																				options={
+																					taxTreatmentList
+																						? selectOptionsFactory.renderOptions(
+																							'name',
+																							'id',
+																							taxTreatmentList,
+																							'VAT',
+																						)
+																						: []
+																				}
+																				isDisabled={true}
+																				id="taxTreatmentid"
+																				name="taxTreatmentid"
+																				placeholder={strings.Select + strings.TaxTreatment}
+																				value={
+																					taxTreatmentList &&
+																					selectOptionsFactory
+																						.renderOptions(
+																							'name',
+																							'id',
+																							taxTreatmentList,
+																							'VAT',
+																						)
+																						.find(
+																							(option) =>
+																								option.label ===
+																								this.state.customer_taxTreatment_des,
+																						)
+																				}
+																				onChange={(option) => {
+																					props.handleChange('taxTreatmentid')(
+																						option,
+																					);
+																				}}
+																				className={
+																					props.errors.taxTreatmentid &&
+																						props.touched.taxTreatmentid
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{/* <Input
+																				disabled
+																				styles={customStyles}
+																				id="taxTreatmentid"
+																				name="taxTreatmentid"
+																				value={	this.state.customer_taxTreatment_des }
+																				className={
+																					props.errors.taxTreatmentid &&
+																						props.touched.taxTreatmentid
+																						? 'is-invalid'
+																						: ''
+																				}
+																				onChange={(option) => {
+																					props.handleChange('taxTreatmentid')(option);
+																				}}
 
-																	/>
-																	{props.errors.taxTreatmentid &&
-																		props.touched.taxTreatmentid && (
-																			<div className="invalid-feedback">
-																				{props.errors.taxTreatmentid}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-																{/* <Col>
+																			/> */}
+																			{props.errors.taxTreatmentid &&
+																				props.touched.taxTreatmentid && (
+																					<div className="invalid-feedback">
+																						{props.errors.taxTreatmentid}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	{/* <Col>
 																	<Label
 																		htmlFor="contactId"
 																		style={{ display: 'block' }}
@@ -1812,7 +1733,7 @@ class DetailCreditNote extends React.Component {
 																		Customer
 																	</Button>
 																</Col> */}
-																{/* <Col lg={3}>
+																	{/* <Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
 																			<span className="text-danger">* </span>
@@ -1872,10 +1793,10 @@ class DetailCreditNote extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col> */}
-															</Row>
-															<hr />
-															<Row>
-																{/* <Col lg={3}>
+																</Row>
+																<hr />
+																<Row>
+																	{/* <Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="term">
 																			<span className="text-danger">* </span>
@@ -1940,44 +1861,43 @@ class DetailCreditNote extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col> */}
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="date">
-																			<span className="text-danger">* </span>
-																			 {strings.CreditNoteDate}
-																		</Label>
-																		<DatePicker
-																			id="invoiceDate"
-																			name="invoiceDate"
-																			placeholderText={strings.InvoiceDate}
-																			showMonthDropdown
-																			showYearDropdown
-																			dateFormat="dd-MM-yyyy"
-																			minDate={new Date()}
-																			dropdownMode="select"
-																			value={props.values.invoiceDate}
-																			onChange={(value) => {
-																				props.handleChange('invoiceDate')(
-																					moment(value).format('DD-MM-YYYY'),
-																				);
-																				this.setDate(props, value);
-																			}}
-																			className={`form-control ${
-																				props.errors.invoiceDate &&
-																				props.touched.invoiceDate
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="date">
+																				<span className="text-danger">* </span>
+																				{strings.CreditNoteDate}
+																			</Label>
+																			<DatePicker
+																				id="invoiceDate"
+																				name="invoiceDate"
+																				placeholderText={strings.Select + strings.CreditNoteDate}
+																				showMonthDropdown
+																				showYearDropdown
+																				dateFormat="dd-MM-yyyy"
+																				minDate={new Date()}
+																				dropdownMode="select"
+																				value={props.values.invoiceDate}
+																				onChange={(value) => {
+																					props.handleChange('invoiceDate')(
+																						moment(value).format('DD-MM-YYYY'),
+																					);
+																					this.setDate(props, value);
+																				}}
+																				className={`form-control ${props.errors.invoiceDate &&
+																					props.touched.invoiceDate
 																					? 'is-invalid'
 																					: ''
-																			}`}
-																		/>
-																		{props.errors.invoiceDate &&
-																			props.touched.invoiceDate && (
-																				<div className="invalid-feedback">
-																					{props.errors.invoiceDate}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																{/* <Col lg={3}>
+																					}`}
+																			/>
+																			{props.errors.invoiceDate &&
+																				props.touched.invoiceDate && (
+																					<div className="invalid-feedback">
+																						{props.errors.invoiceDate}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	{/* <Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="due_date">
 																		Credit Note Due Date
@@ -2015,410 +1935,353 @@ class DetailCreditNote extends React.Component {
 																		</div>
 																	</FormGroup>
 																</Col> */}
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="currencyCode">
-																			<span className="text-danger">* </span>
-																			{strings.Currency}
-																		</Label>
-																		<Select
-																		isDisabled={true}
-																			styles={customStyles}
-																			options={
-																				currency_convert_list
-																					? selectCurrencyFactory.renderOptions(
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="currencyCode">
+																				<span className="text-danger">* </span>
+																				{strings.Currency}
+																			</Label>
+																			<Select
+																				isDisabled={true}
+																				styles={customStyles}
+																				options={
+																					currency_convert_list
+																						? selectCurrencyFactory.renderOptions(
 																							'currencyName',
 																							'currencyCode',
 																							currency_convert_list,
 																							'Currency',
-																					  )
-																					: []
-																			}
-																			id="currencyCode"
-																			name="currencyCode"
-																			value={
-																				currency_convert_list &&
-																				selectCurrencyFactory
-																					.renderOptions(
-																						'currencyName',
-																						'currencyCode',
-																						currency_convert_list,
-																						'Currency',
+																						)
+																						: []
+																				}
+																				id="currencyCode"
+																				name="currencyCode"
+																				value={
+																					currency_convert_list &&
+																					selectCurrencyFactory
+																						.renderOptions(
+																							'currencyName',
+																							'currencyCode',
+																							currency_convert_list,
+																							'Currency',
+																						).find((option) => option.value === +props.values.currencyCode,)
+																				}
+																				onChange={(option) =>
+																					props.handleChange('currencyCode')(
+																						option.value,
 																					)
-																					.find(
-																						(option) =>
-																							option.value ===
-																							(this.state.currency ? +this.state.currency : +props.values.currency),
-																					)
-																			}
-																			onChange={(option) =>
-																				props.handleChange('currencyCode')(
-																					option.value,
-																				)
-																			}
-																			className={`${
-																				props.errors.currencyCode &&
-																				props.touched.currency
+																				}
+																				className={`${props.errors.currencyCode &&
+																					props.touched.currency
 																					? 'is-invalid'
 																					: ''
-																			}`}
-																		/>
-																		{props.errors.currencyCode &&
-																			props.touched.currencyCode && (
-																				<div className="invalid-feedback">
-																					{props.errors.currencyCode}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																{(<Col  lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="creditAmount"><span className="text-danger">* </span>
-																	{strings.CreditAmount}
-																	</Label>
-																	<Input
-																		type="text"
-																		id="creditAmount"
-																		name="creditAmount"
-																		placeholder={strings.Enter+" Credit Amount"}																		
-																		value={props.values.creditAmount}
-																		// onBlur={props.handleBlur('currencyCode')}
-																		onChange={(value) => {
-																			props.handleChange('creditAmount')(
-																				value,
-																			);
-																		}}
-																		className={
-																			props.errors.creditAmount &&
-																			props.touched.creditAmount
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.creditAmount &&
-																	 (
-																			<div className="invalid-feedback">
-																				{props.errors.creditAmount}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-															)}
+																					}`}
+																			/>
+																			{props.errors.currencyCode &&
+																				props.touched.currencyCode && (
+																					<div className="invalid-feedback">
+																						{props.errors.currencyCode}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
 
-{(!this.state.isCreatedWithoutInvoice && this.state.invoiceNumber) &&(<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="remainingInvoiceAmount">
-																
-																{strings.RemainingInvoiceAmount}
-																	</Label>
-																	<Input
-																		type="text"
-																		id="remainingInvoiceAmount"
-																		name="remainingInvoiceAmount"
-																		placeholder='Remaining invoice Amount'
-																		disabled={true}
-																		value={this.state.remainingInvoiceAmount}																							
-																	/>
-																	{props.errors.remainingInvoiceAmount &&
-																	 (
-																			<div className="text-danger">
-																				{props.errors.remainingInvoiceAmount}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>)}
+																	{(!this.state.isCreatedWithoutInvoice && this.state.invoiceNumber) && (<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="remainingInvoiceAmount">
+																				{strings.RemainingInvoiceAmount}
+																			</Label>
+																			<Input
+																				type="text"
+																				id="remainingInvoiceAmount"
+																				name="remainingInvoiceAmount"
+																				placeholder='Remaining invoice Amount'
+																				disabled={true}
+																				value={this.state.remainingInvoiceAmount}
+																			/>
+																			{props.errors.remainingInvoiceAmount &&
+																				(
+																					<div className="text-danger">
+																						{props.errors.remainingInvoiceAmount}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>)}
+
+																	{(<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="creditAmount"><span className="text-danger">* </span>
+																				{strings.CreditAmount}
+																			</Label>
+																			<Input
+																				type="text"
+																				maxLength="14,2"
+																				id="creditAmount"
+																				name="creditAmount"
+																				placeholder={strings.Enter + strings.CreditAmount}
+																				value={props.values.creditAmount}
+																				// disabled={true}
+																				// onBlur={props.handleBlur('currencyCode')}
+																				onChange={(value) => {
+																					if (((this.regDecimal.test(value.target.value)) && (parseFloat(value.target.value) >= 1)) || (value.target.value === '')) {
+																						props.handleChange('creditAmount')(value,);
+																					}
+																				}}
+																				className={
+																					props.errors.creditAmount &&
+																						props.touched.creditAmount
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.creditAmount &&
+																				(
+																					<div className="invalid-feedback">
+																						{props.errors.creditAmount}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	)}
 
 																</Row>
 																<hr />
-																{/* <Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
-																<Col>
-																<Label htmlFor="currency">
-																		Currency Exchange Rate
-																	</Label>	
-																</Col>
-																</Row>
-																
-																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
-																<Col md={1}>
-																<Input
-																		disabled
-																				id="1"
-																				name="1"
-																				value=	{
-																					1 }
-																				
-																			/>
-																</Col>
-																<Col md={2}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="exchangeRate">
-																		Exchange rate
-																	</Label>
-																	<div>
-																		<Input
-																		disabled	
-																			className="form-control"
-																			id="currencyName"
-																			name="currencyName"
-																			disabled
-																			value={this.state.customer_currency_des ? this.state.customer_currency_des : props.values.currencyName}
-																			onChange={(value) => {
-																				props.handleChange('currencyName')(
-																					value,
-																				);
-																			}}
-																		/>
-																	</div>
-																</FormGroup>
-															</Col>
-															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={2}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="exchangeRate">
-																		Exchange rate
-																	</Label>
-																	<div>
-																		<Input
-																			type="number"
-min="0"
-																			className="form-control"
-																			id="exchangeRate"
-																			name="exchangeRate"
-																			
-																			value={props.values.exchangeRate}
-																			onChange={(value) => {
-																				props.handleChange('exchangeRate')(
-																					value,
-																				);
-																			}}
-																		/>
-																	</div>
-																</FormGroup>
-															</Col>
-														
-															<Col md={2}>
-															<Input
-																		disabled
-																				id="currencyName"
-																				name="currencyName"
-																				value=	{
-																					this.state.basecurrency.currencyName }
-																				
-																			/>
+										{this.props.location.state.isCNWithoutProduct !== true && props.values.lineItemsString?.length > 0 && (
+										<>
+										<Row>
+										<Col lg={8} className="mb-3">
 														</Col>
-														</Row> */}
-															{/* <hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
-															<Row>
-																<Col lg={12} className="mb-3">
-																	<Button
-																		color="primary"
-																		className={`btn-square mr-3 ${
-																			this.checkedRow() ? `disabled-cursor` : ``
-																		} `}
-																		onClick={this.addRow}
-																		title={
-																			this.checkedRow()
-																				? `Please add detail to add more`
-																				: ''
-																		}
-																		disabled={this.checkedRow() ? true : false}
-																	>
-																		<i className="fa fa-plus"></i> {strings.Addmore}
-																	</Button>
-																</Col>
-															</Row> */}
-														
-														{this.props.location.state.isCNWithoutProduct!=true &&(	<Row>
-																{props.errors.lineItemsString &&
-																	typeof props.errors.lineItemsString ===
-																		'string' && (
-																		<div
-																			className={
-																				props.errors.lineItemsString
-																					? 'is-invalid'
-																					: ''
-																			}
-																		>
-																			<div className="invalid-feedback">
-																				{props.errors.lineItemsString}
-																			</div>
-																		</div>
-																	)}
-																<Col lg={12}>
-																	<BootstrapTable
-																		options={this.options}
-																		data={data}
-																		version="4"
-																		hover
-																		keyField="id"
-																		className="invoice-create-table"
-																	>
-																		<TableHeaderColumn
-																			width="55"
-																			dataAlign="center"
-																			dataFormat={(cell, rows) =>
-																				this.renderActions(cell, rows, props)
-																			}
-																		></TableHeaderColumn>
-																		<TableHeaderColumn
-																			dataField="product"
-																			dataFormat={(cell, rows) =>
-																				this.renderProduct(cell, rows, props)
-																			}
-																		>
-																			 {strings.PRODUCT}
-																		</TableHeaderColumn>
-																		{/* <TableHeaderColumn
-																		width="55"
-																		dataAlign="center"
-																		dataFormat={(cell, rows) =>
-																			this.renderAddProduct(cell, rows, props)
-																		}
-																	></TableHeaderColumn> */}
-																		<TableHeaderColumn
-																			dataField="description"
-																			dataFormat={(cell, rows) =>
-																				this.renderDescription(
-																					cell,
-																					rows,
-																					props,
-																				)
-																			}
-																		>
-																		 {strings.DESCRIPTION}
-																		</TableHeaderColumn>
-																		<TableHeaderColumn
-																			dataField="quantity"
-																			dataFormat={(cell, rows) =>
-																				this.renderQuantity(cell, rows, props)
-																			}
-																		>
-																			 {strings.QUANTITY}
-																		</TableHeaderColumn>
-																		<TableHeaderColumn
-																			width="5%"
-																			dataField="unitType"
-																     	>{strings.Unit}	<i
-																		 id="unitTooltip"
-																		 className="fa fa-question-circle ml-1"
-																	 ></i>
-																	 
-																	 <UncontrolledTooltip
-																		 placement="right"
-																		 target="unitTooltip"
-																	 >
-																		Units / Measurements
-																	 </UncontrolledTooltip>
-																 </TableHeaderColumn> 
-																		<TableHeaderColumn
-																			dataField="unitPrice"
-																			dataFormat={(cell, rows) =>
-																				this.renderUnitPrice(cell, rows, props)
-																			}
-																		>
-																			{strings.UNITPRICE}
-																		</TableHeaderColumn>
-																		<TableHeaderColumn
-																	width="10%"
-																		dataField="exciseTaxId"
-																		dataFormat={(cell, rows) =>
-																			this.renderExcise(cell, rows, props)
-																		}
-																	>
-																	{strings.Excises}
-																	<i
-																			id="ExiseTooltip"
-																			className="fa fa-question-circle ml-1"
-																		></i>
-																		<UncontrolledTooltip
-																			placement="right"
-																			target="ExiseTooltip"
-																		>
-																			Excise dropdown will be enabled only for the excise products
-																		</UncontrolledTooltip>
-																	</TableHeaderColumn>
-																	<TableHeaderColumn
-																		width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																	>
-																		{strings.DisCount}
-																	</TableHeaderColumn>
-																		<TableHeaderColumn
-																			dataField="vat"
-																			dataFormat={(cell, rows) =>
-																				this.renderVat(cell, rows, props)
-																			}
-																		>
-																			{strings.VAT}
-																		</TableHeaderColumn>
-																		<TableHeaderColumn
-																		width="10%"
-																		dataField="sub_total"
-																		dataFormat={this.renderVatAmount}
-																		className="text-right"
-																		columnClassName="text-right"
-																		formatExtraData={universal_currency_list}
-																		>
-																		{strings.VATAMOUNT}
-																		</TableHeaderColumn>
-																		<TableHeaderColumn
-																			dataField="sub_total"
-																			dataFormat={this.renderSubTotal}
-																			className="text-right"
-																			columnClassName="text-right"
-																			formatExtraData={universal_currency_list}
-																		>
-																		{strings.SUBTOTAL}
-																		</TableHeaderColumn>
-																	</BootstrapTable>
-																</Col>
-															</Row>)}
-															{data.length > 0 && (
-																<Row>
-																	<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
-																		<TextareaAutosize
-																			type="textarea"
-																			style={{width: "700px"}}
-																			className="textarea form-control"
-																			maxLength="255"
-																			name="notes"
-																			id="notes"
-																			rows="2"
-																			placeholder={strings.DeliveryNotes}
-																			onChange={(option) =>
-																				props.handleChange('notes')(option)
-																			}
-																			value={props.values.notes}
-																		/>
-																	</FormGroup>
-																	<Row>
-																		<Col lg={6}>
-																		<FormGroup className="mb-3">
-																				<Label htmlFor="receiptNumber">
-																					 {strings.ReferenceNumber}
-																				</Label>
-																				<Input
-																					type="text"
-																					maxLength="20"
-																					id="receiptNumber"
-																					name="receiptNumber"
-																					value={props.values.receiptNumber}
-																					placeholder={strings.ReceiptNumber}
-																					onChange={(value) => {
-																						props.handleChange('receiptNumber')(value);
+														<Col>
+															{this.state.taxType === false ?
+																<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																<span className='mr-4'>{strings.Exclusive}</span>}
+															<Switch
+																value={props.values.taxType}
+																checked={this.state.taxType}
+																disabled
+																onChange={(taxType) => {
+																	props.handleChange('taxType')(taxType);
+																	this.setState({ taxType }, () => {
+																		this.updateAmount(
+																			this.state.data,
+																			props
+																		)
+																	});
+																}}
 
-																					}}
-																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : " "}
+																onColor="#2064d8"
+																onHandleColor="#2693e6"
+																handleDiameter={25}
+																uncheckedIcon={false}
+																checkedIcon={false}
+																boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																height={20}
+																width={48}
+																className="react-switch "
+															/>
+															{this.state.taxType === true ?
+																<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																: <span className='ml-4'>{strings.Inclusive}</span>
+															}
+														</Col>
+														</Row>
+
+																<Row>
+																	{props.errors.lineItemsString &&
+																		typeof props.errors.lineItemsString ===
+																		'string' && (
+																			<div
+																				className={
+																					props.errors.lineItemsString
+																						? 'is-invalid'
+																						: ''
+																				}
+																			>
+																				<div className="invalid-feedback">
+																					{props.errors.lineItemsString}
+																				</div>
+																			</div>
+																		)}
+																	<Col lg={12}>
+																		<BootstrapTable
+																			options={this.options}
+																			data={data}
+																			version="4"
+																			hover
+																			keyField="id"
+																			className="invoice-create-table"
+																		>
+																			<TableHeaderColumn
+																				width="55"
+																				dataAlign="center"
+																				dataFormat={(cell, rows) =>
+																					this.renderActions(cell, rows, props)
+																				}
+																			></TableHeaderColumn>
+																			<TableHeaderColumn
+																				dataField="product"
+																				dataFormat={(cell, rows) =>
+																					this.renderProduct(cell, rows, props)
+																				}
+																			>
+																				{strings.PRODUCT}
+																			</TableHeaderColumn>
+																			{/* <TableHeaderColumn
+																				width="55"
+																				dataAlign="center"
+																				dataFormat={(cell, rows) =>
+																					this.renderAddProduct(cell, rows, props)
+																				}
+																			></TableHeaderColumn> */}
+																			{/* <TableHeaderColumn
+																				dataField="description"
+																				dataFormat={(cell, rows) =>
+																					this.renderDescription(
+																						cell,
+																						rows,
+																						props,
+																					)
+																				}
+																			>
+																				{strings.DESCRIPTION}
+																			</TableHeaderColumn> */}
+																			<TableHeaderColumn
+																				dataField="quantity"
+																				dataFormat={(cell, rows) =>
+																					this.renderQuantity(cell, rows, props)
+																				}
+																			>
+																				{strings.QUANTITY}
+																			</TableHeaderColumn>
+																			{/* <TableHeaderColumn
+																				width="5%"
+																				dataField="unitType"
+																			>{strings.Unit}	<i
+																				id="unitTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																				<UncontrolledTooltip
+																					placement="right"
+																					target="unitTooltip"
+																				>
+																					Units / Measurements
+																				</UncontrolledTooltip>
+																			</TableHeaderColumn> */}
+																			<TableHeaderColumn
+																				dataField="unitPrice"
+																				dataFormat={(cell, rows) =>
+																					this.renderUnitPrice(cell, rows, props)
+																				}
+																			>
+																				{strings.UNITPRICE}
+																			</TableHeaderColumn>
+																			{props.values.lineItemsString.map(i => (i.discount != 0 ? (
+																				<TableHeaderColumn
+																					width="12%"
+																					dataField="discount"
+																					dataFormat={(cell, rows) =>
+																						this.renderDiscount(cell, rows, props)
+																					}
+																				>
+																					{strings.DisCount}
+																				</TableHeaderColumn>
+																			) : null))
+																			}
+																			{props.values.lineItemsString.map(i => (i.exciseAmount != 0 ? (
+																				<TableHeaderColumn
+																					width="10%"
+																					dataField="exciseTaxId"
+																					dataFormat={(cell, rows) =>
+																						this.renderExcise(cell, rows, props)
+																					}
+																				>
+																					{strings.Excises}
+																					<i
+																						id="ExiseTooltip"
+																						className="fa fa-question-circle ml-1"
+																					></i>
+																					<UncontrolledTooltip
+																						placement="right"
+																						target="ExiseTooltip"
+																					>
+																						Excise dropdown will be enabled only for the excise products
+																					</UncontrolledTooltip>
+																				</TableHeaderColumn>
+																			) : null))
+																			}
+																			<TableHeaderColumn
+																				dataField="vat"
+																				dataFormat={(cell, rows) =>
+																					this.renderVat(cell, rows, props)
+																				}
+																			>
+																				{strings.VAT}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				width="10%"
+																				dataField="sub_total"
+																				dataFormat={this.renderVatAmount}
+																				className="text-right"
+																				columnClassName="text-right"
+																				formatExtraData={universal_currency_list}
+																			>
+																				{strings.VATAMOUNT}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				dataField="sub_total"
+																				dataFormat={this.renderSubTotal}
+																				className="text-right"
+																				columnClassName="text-right"
+																				formatExtraData={universal_currency_list}
+																			>
+																				{strings.SUBTOTAL}
+																			</TableHeaderColumn>
+																		</BootstrapTable>
+																	</Col>
+																</Row></>)}
+																{this.state.invoiceNumber ? (
+																	<Row>
+																		<Col lg={8}>
+																			<FormGroup className="py-2">
+																				<Label htmlFor="notes">{strings.RefundNotes}</Label><br />
+																				<TextareaAutosize
+																					type="textarea"
+																					style={{ width: "700px" }}
+																					className="textarea form-control"
+																					maxLength="255"
+																					name="notes"
+																					id="notes"
+																					rows="2"
+																					placeholder={strings.DeliveryNotes}
+																					onChange={(option) =>
+																						props.handleChange('notes')(option)
+																					}
+																					value={props.values.notes}
 																				/>
-																				{props.errors.receiptNumber && props.touched.receiptNumber && (
-																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
-																				)}
-																				{/* <Input
+																			</FormGroup>
+																			<Row>
+																				<Col lg={6}>
+																					<FormGroup className="mb-3">
+																						<Label htmlFor="receiptNumber">
+																							{strings.ReferenceNumber}
+																						</Label>
+																						<Input
+																							type="text"
+																							maxLength="20"
+																							id="receiptNumber"
+																							name="receiptNumber"
+																							value={props.values.receiptNumber}
+																							placeholder={strings.ReceiptNumber}
+																							onChange={(value) => {
+																								props.handleChange('receiptNumber')(value);
+																							}}
+																							className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : " "}
+																						/>
+																						{props.errors.receiptNumber && props.touched.receiptNumber && (
+																							<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																						)}
+																						{/* <Input
 																					type="text"
 																					maxLength="100"
 																					id="receiptNumber"
@@ -2438,460 +2301,300 @@ min="0"
 																					}}
 																					value={props.values.receiptNumber}
 																				/> */}
-																			</FormGroup>
-																		</Col>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3 hideAttachment">
-																				<Field
-																					name="attachmentFile"
-																					render={({ field, form }) => (
-																						<div>
-																							<Label>{strings.ReceiptAttachment}</Label>{' '}
-																							<br />
-																							<Button
-																								color="primary"
-																								onClick={() => {
-																									document
-																										.getElementById('fileInput')
-																										.click();
-																								}}
-																								className="btn-square mr-3"
-																							>
-																								<i className="fa fa-upload"></i>{' '}
-																								{strings.upload}
-																							</Button>
-																							<input
-																								id="fileInput"
-																								ref={(ref) => {
-																									this.uploadFile = ref;
-																								}}
-																								type="file"
-																								style={{ display: 'none' }}
-																								onChange={(e) => {
-																									this.handleFileChange(
-																										e,
-																										props,
-																									);
-																								}}
-																							
-																							/>
-																							{this.state.fileName && (
+																					</FormGroup>
+																				</Col>
+																				<Col lg={6}>
+																					<FormGroup className="mb-3 hideAttachment">
+																						<Field
+																							name="attachmentFile"
+																							render={({ field, form }) => (
 																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
+																									<Label>{strings.ReceiptAttachment}</Label>{' '}
+																									<br />
+																									<Button
+																										color="primary"
+																										onClick={() => {
+																											document
+																												.getElementById('fileInput')
+																												.click();
+																										}}
+																										className="btn-square mr-3"
+																									>
+																										<i className="fa fa-upload"></i>{' '}
+																										{strings.upload}
+																									</Button>
+																									<input
+																										id="fileInput"
+																										ref={(ref) => {
+																											this.uploadFile = ref;
+																										}}
+																										type="file"
+																										style={{ display: 'none' }}
+																										onChange={(e) => {
+																											this.handleFileChange(
+																												e,
+																												props,
+																											);
+																										}}
+																									/>
+																									{this.state.fileName && (
+																										<div>
+																											<i
+																												className="fa fa-close"
+																												onClick={() =>
+																													this.setState({
+																														fileName: '',
+																													})
+																												}
+																											></i>{' '}
+																											{this.state.fileName}
+																										</div>
+																									)}
 																								</div>
 																							)}
-																						</div>
-																					)}
+																						/>
+																						{props.errors.attachmentFile &&
+																							props.touched.attachmentFile && (
+																								<div className="invalid-file">
+																									{props.errors.attachmentFile}
+																								</div>
+																							)}
+																					</FormGroup>
+																				</Col>
+																			</Row>
+																			<FormGroup className="mb-3 hideAttachment">
+																				<Label htmlFor="receiptAttachmentDescription">
+																					{strings.AttachmentDescription}
+																				</Label><br />
+																				<TextareaAutosize
+																					type="textarea"
+																					className="textarea form-control"
+																					maxLength="250"
+																					style={{ width: "700px" }}
+																					name="receiptAttachmentDescription"
+																					id="receiptAttachmentDescription"
+																					rows="2"
+																					placeholder={strings.ReceiptAttachmentDescription}
+																					onChange={(option) =>
+																						props.handleChange(
+																							'receiptAttachmentDescription',
+																						)(option)
+																					}
+																					value={
+																						props.values
+																							.receiptAttachmentDescription
+																					}
 																				/>
-																				{props.errors.attachmentFile &&
-																					props.touched.attachmentFile && (
-																						<div className="invalid-file">
-																							{props.errors.attachmentFile}
+																			</FormGroup>
+																		</Col>
+																		{props.values.lineItemsString?.length > 0 &&
+																			<Col lg={4}>
+																				{initValue.total_excise == 0 ? null : (
+																					<div className="total-item p-2" >
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">
+																									{strings.TotalExcise}
+																								</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">
+
+																									{this.state.customer_currency_symbol} &nbsp;
+																									{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																								</label>
+																							</Col>
+																						</Row>
+																					</div>
+																				)}
+																				<div className="">
+
+																					{initValue.discount == 0 ? null : (
+																						<div className="total-item p-2">
+																							<Row>
+																								<Col lg={6}>
+																									<h5 className="mb-0 text-right">
+																										{strings.Discount}
+																									</h5>
+																								</Col>
+																								<Col lg={6} className="text-right">
+																									<label className="mb-0">
+
+																										{this.state.customer_currency_symbol} &nbsp;
+																										{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+
+																									</label>
+																								</Col>
+																							</Row>
 																						</div>
 																					)}
+
+																					<div className="total-item p-2">
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">
+																									{strings.TotalNet}
+																								</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">
+
+																									{this.state.customer_currency_symbol} &nbsp;
+																									{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																								</label>
+																							</Col>
+																						</Row>
+																					</div>
+																					<div className="total-item p-2">
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">
+																									{strings.TotalVat}
+																								</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">
+
+																									{this.state.customer_currency_symbol} &nbsp;
+																									{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																								</label>
+																							</Col>
+																						</Row>
+																					</div>
+
+																					<div className="total-item p-2">
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">
+																									{strings.Total}
+																								</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">
+
+																									{this.state.customer_currency_symbol} &nbsp;
+																									{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																								</label>
+																							</Col>
+																						</Row>
+																					</div>
+																				</div>
+																			</Col>
+																		}
+																	</Row>
+																) : (
+																	<Row>
+																		<Col lg={8}>
+																			<FormGroup className="py-2">
+																				<Label htmlFor="notes">{strings.RefundNotes}</Label><br />
+																				<TextareaAutosize
+																					type="textarea"
+																					style={{ width: "700px" }}
+																					className="textarea form-control"
+																					maxLength="255"
+																					name="notes"
+																					id="notes"
+																					rows="2"
+																					placeholder={strings.DeliveryNotes}
+																					onChange={(option) =>
+																						props.handleChange('notes')(option)
+																					}
+																					value={props.values.notes}
+																				/>
 																			</FormGroup>
 																		</Col>
 																	</Row>
-																	<FormGroup className="mb-3 hideAttachment">
-																		<Label htmlFor="receiptAttachmentDescription">
-																			{strings.AttachmentDescription}
-																		</Label><br/>
-																		<TextareaAutosize
-																			type="textarea"
-																			className="textarea form-control"
-																			maxLength="250"
-																			style={{width: "700px"}}
-																			name="receiptAttachmentDescription"
-																			id="receiptAttachmentDescription"
-																			rows="2"
-																			placeholder={strings.ReceiptAttachmentDescription}
-																			onChange={(option) =>
-																				props.handleChange(
-																					'receiptAttachmentDescription',
-																				)(option)
-																			}
-																			value={
-																				props.values
-																					.receiptAttachmentDescription
-																			}
-																		/>
-																	</FormGroup>
-																</Col>
-																	<Col lg={4}>
-																	<div className="total-item p-2" >
-																			<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																					{strings.TotalExcise}
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
-
-																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																					</label>
-																				</Col>
-																			</Row>
-																		</div>
-																		<div className="">
-																			{/* <div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<FormGroup>
-																							<Label htmlFor="discountType">
-																								 {strings.DiscountType}
-																							</Label>
-																							<Select
-																								styles={customStyles}
-																								className="select-default-width"
-																								options={discountOptions}
-																								id="discountType"
-																								name="discountType"
-																								value={
-																									discountOptions &&
-																									discountOptions.find(
-																										(option) =>
-																											option.value ===
-																											props.values.discountType,
-																									)
-																								}
-																								onChange={(item) => {
-																									props.handleChange(
-																										'discountPercentage',
-																									)('');
-																									props.handleChange(
-																										'discountType',
-																									)(item.value);
-																									props.setFieldValue(
-																										'discount',
-																										0,
-																									);
-
-																									this.setState(
-																										{
-																											discountPercentage: 0,
-																											discountAmount: 0,
-																										},
-																										() => {
-																											this.updateAmount(
-																												this.state.data,
-																												props,
-																											);
-																										},
-																									);
-																								}}
-																							/>
-																						</FormGroup>
-																					</Col>
-																					{props.values.discountType ===
-																						'PERCENTAGE' && (
-																						<Col lg={6}>
-																							<FormGroup>
-																								<Label htmlFor="discountPercentage">
-																									 {strings.Percentage}
-																								</Label>
-																								<Input
-																								id="discountPercentage"
-																								name="discountPercentage"
-																								placeholder="Discount Percentage"
-																								type="number"
-min="0"
-																								maxLength="5"
-																								value={
-																									props.values
-																										.discountPercentage
-																								}
-																								onChange={(e) => {
-																									if (
-																										e.target.value === '' ||
-																										this.regDecimal.test(
-																											e.target.value,
-																										)
-																									) {
-																										props.handleChange(
-																											'discountPercentage',
-																										)(e);
-																										this.setState(
-																											{
-																												discountPercentage:
-																													e.target.value,
-																											},
-																											() => {
-																												this.updateAmount(
-																													this.state.data,
-																													props,
-																												);
-																											},
-																										);
-																									}
-																								}}
-																							/>
-																							</FormGroup>
-																						</Col>
-																					)}
-																				</Row>
-																				<Row>
-																					<Col lg={6} className="mt-4">
-																						<FormGroup>
-																							<Label htmlFor="discount">
-																								 {strings.DiscountAmount}
-																							</Label>
-																							<Input
-																								id="discount"
-																								name="discount"
-																								type="text"
-																								disabled={
-																									props.values.discountType &&
-																									props.values.discountType ===
-																										'Percentage'
-																										? true
-																										: false
-																								}
-																								placeholder="Discount Amounts"
-																								value={props.values.discount}
-																								onChange={(option) => {
-																									if (
-																										option.target.value ===
-																											'' ||
-																										this.regDecimal.test(
-																											option.target.value,
-																										)
-																									) {
-																										props.handleChange(
-																											'discount',
-																										)(option);
-																										this.setState(
-																											{
-																												discountAmount: +option
-																													.target.value,
-																											},
-																											() => {
-																												this.updateAmount(
-																													this.state.data,
-																													props,
-																												);
-																											},
-																										);
-																									}
-																								}}
-																							/>
-																						</FormGroup>
-																					</Col>
-																				</Row>
-																			</div> */}
-																				<div className="total-item p-2">
-																			<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																						 {strings.Discount}
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
-																				
-																						{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																					
-																					</label>
-																				</Col>
-																			</Row>
-																		</div>
-																		
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							 {strings.TotalNet}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							 {strings.TotalVat}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value={initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																			{/* <div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.Discount}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																					
-																							{this.state.customer_currency_symbol} &nbsp;
-																								{this.state.initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div> */}
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.Total}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
-																								{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																		</div>
-																	</Col>
-																</Row>
-															)}
-															<Row>
-																<Col
-																	lg={12}
-																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
-																>
-																	<FormGroup>
-																		<Button
-																			type="button"
-																			color="danger"
-																			className="btn-square"
-																			disabled1={this.state.disabled1}
-																			onClick={this.deleteInvoice}
-																		>
-																			<i className="fa fa-trash"></i> {' '} {this.state.disabled1
-																			? 'Deleting...'
-																			: strings.Delete }
-																		</Button>
-																	</FormGroup>
-																	<FormGroup className="text-right">
-																		<Button
-																			type="submit"
-																			color="primary"
-																			className="btn-square mr-3"
-																			disabled={this.state.disabled}
-																			onClick={() => {
-																				//	added validation popup	msg
-																				props.handleBlur();
-																				if(props.errors &&  Object.keys(props.errors).length != 0)
-																				this.props.commonActions.fillManDatoryDetails();
-
-																			
-																		}}
-																		>
-																			<i className="fa fa-dot-circle-o"></i> {this.state.disabled
-																			? 'Updating...'
-																			: strings.Update }
-																			{/* { {this.state.disabled }
+																)}
+																<Row>
+																	<Col
+																		lg={12}
+																		className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
+																	>
+																		<FormGroup>
+																			<Button
+																				type="button"
+																				color="danger"
+																				className="btn-square"
+																				disabled1={this.state.disabled1}
+																				onClick={this.deleteInvoice}
+																			>
+																				<i className="fa fa-trash"></i> {' '} {this.state.disabled1
+																					? 'Deleting...'
+																					: strings.Delete}
+																			</Button>
+																		</FormGroup>
+																		<FormGroup className="text-right">
+																			<Button
+																				type="submit"
+																				color="primary"
+																				className="btn-square mr-3"
+																				disabled={this.state.disabled}
+																				onClick={() => {
+																					//	added validation popup	msg
+																					console.log(props.errors, "ERROR")
+																					props.handleBlur();
+																					if (props.errors && Object.keys(props.errors).length != 0)
+																						this.props.commonActions.fillManDatoryDetails();
+																				}}
+																			>
+																				<i className="fa fa-dot-circle-o"></i> {this.state.disabled
+																					? 'Updating...'
+																					: strings.Update}
+																				{/* { {this.state.disabled }
 																				? 'Updating...'
 																				{ : 'Update'} } */}
-																		</Button>
-																		<Button
-																			color="secondary"
-																			className="btn-square"
-																			onClick={() => {
-																				this.props.history.push(
-																					'/admin/income/credit-notes',
-																				);
-																			}}
-																		>
-																			<i className="fa fa-ban"></i> {strings.Cancel}
-																		</Button>
-																	</FormGroup>
-																</Col>
-															</Row>
-														</Form>
-													)}
-												</Formik>
-											</Col>
-										</Row>
-									)}
-								</CardBody>
-							</Card>
-						</Col>
-					</Row>
-				</div>
-				<CustomerModal
-					openCustomerModal={this.state.openCustomerModal}
-					closeCustomerModal={(e) => {
-						this.closeCustomerModal(e);
-					}}
-					getCurrentUser={(e) => this.getCurrentUser(e)}
-					createCustomer={this.props.creditNotesActions.createCustomer}
-					currency_list={this.props.currency_list}
-					country_list={this.props.country_list}
-					getStateList={this.props.creditNotesActions.getStateList}
-				/>
-				<ProductModal
-					openProductModal={this.state.openProductModal}
-					closeProductModal={(e) => {
-						this.closeProductModal(e);
-					}}
-					getCurrentProduct={(e) => this.getCurrentProduct(e)}
-					createProduct={this.props.productActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
-					product_category_list={this.props.product_category_list}
-					salesCategory={this.state.salesCategory}
-					purchaseCategory={this.state.purchaseCategory}
-				/>
-			</div>
-			{this.state.disableLeavePage ?"":<LeavePage/>}
-			</div>
+																			</Button>
+																			<Button
+																				color="secondary"
+																				className="btn-square"
+																				onClick={() => {
+																					this.props.history.push(
+																						'/admin/income/credit-notes',
+																					);
+																				}}
+																			>
+																				<i className="fa fa-ban"></i> {strings.Cancel}
+																			</Button>
+																		</FormGroup>
+																	</Col>
+																</Row>
+															</Form>
+														)}
+													</Formik>
+												</Col>
+											</Row>
+										)}
+									</CardBody>
+								</Card>
+							</Col>
+						</Row>
+					</div>
+					<CustomerModal
+						openCustomerModal={this.state.openCustomerModal}
+						closeCustomerModal={(e) => {
+							this.closeCustomerModal(e);
+						}}
+						getCurrentUser={(e) => this.getCurrentUser(e)}
+						createCustomer={this.props.creditNotesActions.createCustomer}
+						currency_list={this.props.currency_list}
+						country_list={this.props.country_list}
+						getStateList={this.props.creditNotesActions.getStateList}
+					/>
+					<ProductModal
+						openProductModal={this.state.openProductModal}
+						closeProductModal={(e) => {
+							this.closeProductModal(e);
+						}}
+						getCurrentProduct={(e) => this.getCurrentProduct(e)}
+						createProduct={this.props.productActions.createAndSaveProduct}
+						vat_list={this.props.vat_list}
+						product_category_list={this.props.product_category_list}
+						salesCategory={this.state.salesCategory}
+						purchaseCategory={this.state.purchaseCategory}
+					/>
+				</div >
+				{this.state.disableLeavePage ? "" : <LeavePage />}
+			</div >
 		);
 	}
 }

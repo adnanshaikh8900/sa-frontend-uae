@@ -20,7 +20,7 @@ import * as Yup from 'yup';
 import * as CustomerRecordPaymentActions from './actions';
 import * as CnActions from '../../actions';
 import { CustomerModal } from '../../sections';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -83,9 +83,9 @@ class Refund extends React.Component {
 				receiptDate: new Date(),
 				contactId: this.props.location.state.id.contactId,
 				amount: this.props.location.state.id.dueAmount,
-				payMode: '',
+				payMode: { label: 'CASH', value: 'CASH' },
 				notes: '',
-				depositeTo: '',
+				depositeTo: { label: 'Petty Cash', value: 47 },
 				referenceCode: '',
 				attachmentFile: '',
 				paidInvoiceListStr: [],
@@ -104,7 +104,9 @@ class Refund extends React.Component {
 			disabled: false,
 			invoiceNumber:"-",
 			showInvoiceNumber:false,
-			loadingMsg:"Loading..."
+			receiptNumber:'',
+			loadingMsg:"Loading...",
+			creditNoteDate: this.props.location.state.id.invoiceDate,
 		};
 
 		// this.options = {
@@ -166,7 +168,7 @@ class Refund extends React.Component {
 			this.props.cnActions.getCustomerList(this.state.contactType),
 		]);
 		this.getReceiptNo();
-		//INV number
+		//INV number & cn number
 		this.props.cnActions
 			.getInvoicesForCNById(this.props.location.state.id.id)
 			.then((res) => {
@@ -176,6 +178,7 @@ class Refund extends React.Component {
 					this.setState(
 						{
 							invoiceNumber: res.data[0].invoiceNumber,
+							receiptNumber:res.data[0].creditNoteNumber,
 							showInvoiceNumber:true
 						},
 						() => {	},
@@ -183,6 +186,7 @@ class Refund extends React.Component {
 				}
 			})
 	};
+	
 
 	getReceiptNo = () => {
 		this.props.CustomerRecordPaymentActions.getReceiptNo(
@@ -266,6 +270,7 @@ class Refund extends React.Component {
 			</Col>)
 		)
 	}
+	
 	handleSubmit = (data) => {
 		this.setState({ disabled: true });
 		const { invoiceId } = this.state;
@@ -293,6 +298,7 @@ class Refund extends React.Component {
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
+		formData.append('type', '7');
 		formData.append(
 			'paymentDate',
 			typeof receiptDate === 'string'
@@ -304,7 +310,7 @@ class Refund extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Credits applied to the invoice successfully',
+					res.data ? res.data.message : 'Refund Recorded successfully',
 				);
 				this.props.history.push('/admin/income/credit-notes');
 				this.setState({ loading:false,});
@@ -347,7 +353,7 @@ class Refund extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Credit Refund Successfully',
+					res.data ? 'Refund Recorded Successfully!' : res.data.message ,
 				);
 				this.props.history.push('/admin/income/credit-notes');
 				this.setState({ loading:false,});
@@ -438,6 +444,7 @@ class Refund extends React.Component {
 	};
 
 	render() {
+		
 		strings.setLanguage(this.state.language);
 		const { initValue, loading, dialog ,loadingMsg} = this.state;
 		const { pay_mode, customer_list, deposit_list } = this.props;
@@ -488,7 +495,7 @@ class Refund extends React.Component {
 														'Amount cannot be empty or 0';
 													 }else if(this.state.amount<parseFloat(values.amount)){ 
 														errors.amount =
-														'Amount cannot More than the Invoice Amount';
+														'Amount cannot More than the Credit Amount';
 													 }
 													 if(!values.receiptDate){
 														errors.receiptDate='Payment date is required';
@@ -619,7 +626,7 @@ class Refund extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
 																			<span className="text-danger">* </span>{' '}
-																			 {strings.AmountPaid}
+																			 {strings.AmounttoRefund}
 																		</Label>
 																		<Input
 																			type="text"
@@ -637,7 +644,7 @@ class Refund extends React.Component {
 																					props.handleChange('amount')(option);
 																				}
 																			}}
-																			placeholder={strings.AmountPaid}
+																			placeholder={strings.AmounttoRefund}
 																			className={
 																				props.errors.amount &&
 																				props.touched.amount
@@ -661,16 +668,20 @@ class Refund extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">* </span>
-																			{strings.PaymentDate}
+																			{strings.RefundDate}
 																		</Label>
 																		<DatePicker
 																			id="receiptDate"
 																			name="receiptDate"
-																			placeholderText={strings.PaymentDate}
+																			placeholderText={strings.RefundDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
+																			minDate={new Date( this.state.creditNoteDate.split('-')[2], 
+																			this.state.creditNoteDate.split('-')[1] - 1, 
+																			this.state.creditNoteDate.split('-')[0] 
+																			)}							
 																			value={props.values.receiptDate}
 																			selected={props.values.receiptDate}
 																			onChange={(value) => {
@@ -699,7 +710,7 @@ class Refund extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode">
 																			<span className="text-danger">* </span>{' '}
-																			 {strings.PaymentMode}
+																			 {strings.RefundMode}
 																		</Label>
 																		<Select
 																			options={
@@ -720,7 +731,7 @@ class Refund extends React.Component {
 																					props.handleChange('payMode')('');
 																				}
 																			}}
-																			placeholder={strings.Select+strings.PaymentMode}
+																			placeholder={strings.Select+strings.RefundMode}
 																			id="payMode"
 																			name="payMode"
 																			className={
@@ -742,11 +753,11 @@ class Refund extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="depositeTo">
 																			<span className="text-danger">* </span>{' '}
-																		      {strings.DepositFrom}
+																		      {strings.RefundFrom}
 																		</Label>
 																		<Select
 																			options={deposit_list}
-																			value={props.values.depositeFrom}
+																			value={props.values.depositeTo}
 																			onChange={(option) => {
 																				if (option && option.value) {
 																					props.handleChange('depositeTo')(
@@ -756,7 +767,7 @@ class Refund extends React.Component {
 																					props.handleChange('depositeTo')('');
 																				}
 																			}}
-																			placeholder={strings.Select+strings.DepositFrom}
+																			placeholder={strings.Select+strings.RefundFrom}
 																			id="depositeTo"
 																			name="depositeTo"
 																			className={
@@ -780,7 +791,7 @@ class Refund extends React.Component {
 																<Row>
 																<Col lg={8}>
 																<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<Label htmlFor="notes">{strings.RefundNotes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "870px"}}
@@ -789,7 +800,7 @@ class Refund extends React.Component {
 																			name="notes"
 																			id="notes"
 																			rows="2"
-																			placeholder={strings.DeliveryNotes}
+																			placeholder={strings.RefundNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -807,7 +818,7 @@ class Refund extends React.Component {
 																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					value={props.values.receiptNumber}
+																					value={this.state.receiptNumber}
 																					placeholder={strings.ReceiptNumber}
 																					onChange={(value) => {
 																						props.handleChange('receiptNumber')(value);
@@ -910,7 +921,7 @@ class Refund extends React.Component {
 																	lg={12}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 															>
-																{console.log( this.props.location.state.id.dueAmount,this.state.amount,props.values.amount,props.errors)}
+																
 																<FormGroup className="text-right w-100">
 																		<Button
 																			type="submit"
@@ -928,7 +939,7 @@ class Refund extends React.Component {
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
 																			? 'Refunding...'
-																			: strings.Refund }
+																			: strings.RefundPayment}
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -966,6 +977,7 @@ class Refund extends React.Component {
 					country_list={this.props.country_list}
 					getStateList={this.props.cnActions.getStateList}
 				/>
+				{this.state.disableLeavePage ? "" : <LeavePage />}
 			</div>
 		);
 	}

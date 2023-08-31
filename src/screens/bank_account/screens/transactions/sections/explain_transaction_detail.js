@@ -207,8 +207,8 @@ class ExplainTrasactionDetail extends React.Component {
             reference: res.data.reference ? res.data.reference : "",
             exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : "",
             //currencyName: res.data.currencyName ? res.data.currencyName : '',
-            coaCategoryId: res.data.coaCategoryId
-              ? parseInt(res.data.coaCategoryId)
+            coaCategoryId: res.data.coaCategoryId ? res.data.coaCategoryId === 18 ? {'label' : 'Corporate Tax Payment' , 'value' : 18} : 
+              parseInt(res.data.coaCategoryId)
               : "",
             invoiceIdList:
               res.data.explainParamList && res.data.explainedInvoiceList
@@ -575,7 +575,6 @@ class ExplainTrasactionDetail extends React.Component {
               }
               return {label : newcategory , options : newOption }
             })
-            console.log(res.data,"290912083092");
 
             this.setState(
               {
@@ -1048,16 +1047,27 @@ class ExplainTrasactionDetail extends React.Component {
     });
     this.formRef.current.setFieldValue("payrollListIds", option, true);
   };
+
   getPayrollList = (UnPaidPayrolls_List, props) => {
     return (
       <Col lg={3}>
         <FormGroup className="mb-3">
-          <Label htmlFor="payrollListIds">Payolls</Label>
+        <Label htmlFor="payrollListIds"><span className="text-danger">* </span>{strings.Payroll}</Label>
           <Select
+            isDisabled={
+              this.state.initValue
+                .explinationStatusEnum ===
+              "PARTIAL" ||
+              this.state.initValue
+                .explinationStatusEnum === "FULL" ||
+              this.state.initValue
+                .explinationStatusEnum ===
+              "RECONCILED"
+            }
             styles={customStyles}
             isMulti
             value={props.values.payrollListIds}
-            className="select-default-width"
+            // className="select-default-width"
             options={
               UnPaidPayrolls_List && UnPaidPayrolls_List
                 ? UnPaidPayrolls_List
@@ -1068,7 +1078,19 @@ class ExplainTrasactionDetail extends React.Component {
               props.handleChange("payrollListIds")(option);
               this.payrollList(option);
             }}
+            className={
+              props.errors.payrollListIds &&
+                props.touched.payrollListIds
+                ? "is-invalid"
+                : ""
+            }
           />
+          {props.errors.payrollListIds &&
+            props.touched.payrollListIds && (
+              <div className="invalid-feedback">
+                {props.errors.payrollListIds}
+              </div>
+            )}
         </FormGroup>
       </Col>
     );
@@ -1660,6 +1682,13 @@ class ExplainTrasactionDetail extends React.Component {
                             ) {
                               errors.vatId = "Please select Vat";
                             }
+                            if (
+                              values.payrollListIds === "" &&
+                              values.coaCategoryId.label === "Expense" &&
+                              values.expenseCategory.value == 34
+                            ) {
+                              errors.payrollListIds = "Please select Payroll";
+                            }
 
                             if (
                               (values.expenseCategory === "" ||
@@ -1687,12 +1716,27 @@ class ExplainTrasactionDetail extends React.Component {
                             ) {
                               errors.employeeId = "User is Required";
                             }
+                            if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
+                              if(values.expenseCategory && (values.expenseCategory.value === 34 || values.expenseCategory === 34)) {
+                                const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
+                                  let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
+                                  return sum + num;
+                                }, 0);
+                                if (values.payrollListIds && values.payrollListIds.length > 0 && values.amount > sumOfPayrollAmounts) {
+                                  errors.amount = 'Transaction amount cannot be greater than payroll amount.';
+                                }
+                              }
+                            }
                             return errors;
                           }}
                           validationSchema={Yup.object().shape({
                             date: Yup.string().required(
                               "Transaction Date is Required"
                             ),
+                            payrollListIds: Yup.string().required(
+                              "Please select Payroll"
+                            ),
+
                             amount: Yup.string()
                               .required("Transaction Amount is Required")
                               .test(
@@ -1948,8 +1992,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       }}
                                       value={props.values.amount}
                                       className={
-                                        props.errors.amount &&
-                                        props.touched.amount
+                                        props.errors.amount
                                           ? "is-invalid"
                                           : ""
                                       }
@@ -1961,7 +2004,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       }
                                     />
                                     {props.errors.amount &&
-                                      props.touched.amount && (
+                                      (
                                         <div className="invalid-feedback">
                                           {props.errors.amount}
                                         </div>
@@ -2130,6 +2173,10 @@ class ExplainTrasactionDetail extends React.Component {
                                               "expenseCategory"
                                             )(option.value);
                                           }}
+                                          placeholder={
+                                            strings.Select +
+                                            strings.ExpenseCategory
+                                          }
                                           id="expenseCategory"
                                           name="expenseCategory"
                                           className={
@@ -2236,6 +2283,10 @@ class ExplainTrasactionDetail extends React.Component {
                                           </FormGroup>
                                         </Col>
                                       )}
+                                  {props.values.coaCategoryId &&
+                                      props.values.coaCategoryId?.label ===
+                                        "Expense" &&
+                                      props.values.expenseCategory !== 34 && (
                                     <Col className="mb-3" lg={3}>
                                       <Label htmlFor="inline-radio3">
                                         <span className="text-danger">* </span>
@@ -2305,19 +2356,19 @@ class ExplainTrasactionDetail extends React.Component {
                                         )}
                                       </div>
                                     </Col>
+                                  )}
                                   </Row>
                                 )}
 
-                              {props.values.coaCategoryId &&
-                                props.values.coaCategoryId?.label ===
-                                  "Expense" &&
-                                props.values?.vatId === 1 && (
+                              
+                            {props.values.coaCategoryId &&
+                              props.values.coaCategoryId?.label === "Expense" &&
+                              props.values?.vatId?.value === 1 && (
                                   <Row>
                                     <Col lg={3}></Col>
                                     {props.values.expenseCategory &&
                                       props.values.expenseCategory.value &&
-                                      props.values.expenseCategory.value ==
-                                        34 &&
+                                      props.values.expenseCategory.value == 34 &&
                                       this.getPayrollList(
                                         UnPaidPayrolls_List,
                                         props
@@ -2344,9 +2395,7 @@ class ExplainTrasactionDetail extends React.Component {
                                             )}
 
                                             <Switch
-                                              checked={
-                                                props.values.exclusiveVat
-                                              }
+                                              checked={props.values.exclusiveVat}
                                               disabled
                                               onChange={(exclusiveVat) => {
                                                 if (
@@ -2403,9 +2452,11 @@ class ExplainTrasactionDetail extends React.Component {
                                 )}
 
                               <Row>
-                                {props.values.coaCategoryId &&
-                                  props.values.coaCategoryId?.label ===
-                                    "Expense" && (
+                                  {props.values.coaCategoryId &&
+                                      props.values.coaCategoryId?.label ===
+                                        "Expense" &&
+                                      props.values.expenseCategory &&
+                                      props.values.expenseCategory !== 34 && (
                                     <Col>
                                       <Checkbox
                                         id="isReverseChargeEnabled"
@@ -2419,9 +2470,7 @@ class ExplainTrasactionDetail extends React.Component {
                                             .explinationStatusEnum ===
                                             "RECONCILED"
                                         }
-                                        checked={
-                                          props.values.isReverseChargeEnabled
-                                        }
+                                        checked={props.values.isReverseChargeEnabled}
                                         onChange={(option) => {
                                           this.setState({
                                             isReverseChargeEnabled:
@@ -4235,6 +4284,7 @@ class ExplainTrasactionDetail extends React.Component {
                                             type="button"
                                             color="primary"
                                             className="btn-square mr-3"
+                                            disabled={this.props.data.isCTNCreated}
                                             onClick={() =>
                                               this.UnexplainTransaction(
                                                 this.state.initValue

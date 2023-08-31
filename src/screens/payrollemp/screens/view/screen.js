@@ -65,6 +65,7 @@ class ViewEmployee extends React.Component {
 			FixedAllowance: [],
 			CTC: '',
 			current_employee_id: '',
+			transactionList: []
 		};
 
 
@@ -78,7 +79,6 @@ class ViewEmployee extends React.Component {
 	toggle = (tabPane, tab) => {
 		const newArray = this.state.activeTab.slice();
 		newArray[parseInt(tabPane, 10)] = tab;
-		console.log(tab);
 		this.setState({
 			activeTab: newArray,
 		});
@@ -144,9 +144,15 @@ class ViewEmployee extends React.Component {
 					style={{ padding: '0px' }}
 					color="link"
 					onClick={() => {
-
+						const postData = {
+							id: this.props.location.state.id,
+							salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'),
+							sendMail: true,
+							startDate: '',
+							endDate: '',
+						};
 						this.props.employeeViewActions
-							.getSalarySlip({ id: this.props.location.state.id, salaryDate: moment(row.salaryDate).format('DD/MM/YYYY') })
+							.getSalarySlip(postData)
 							.then((res) => {
 								if (res.status === 200) {
 									// this.initializeData();
@@ -160,13 +166,35 @@ class ViewEmployee extends React.Component {
 										Variable: res.data.salarySlipResult.Variable,
 										Deduction: res.data.salarySlipResult.Deduction,
 									});
-
 								}
+							let payPeriod = this.state.selectedData.payPeriod
+							const [startDateString, endDateString] = payPeriod.split("-");
+							const startDate = startDateString.trim();
+							const endDate = endDateString.trim();
+							const postData = {
+								employeeId: this.props.location.state.id,
+								startDate: moment(startDate).format('DD/MM/YYYY'),
+								endDate: moment(endDate).format('DD/MM/YYYY'),
+							};
+							this.props.employeeViewActions
+								.getEmployeeTransactions(postData)
+								.then((res) => {
+									if (res.status === 200) {
+										this.setState({
+											transactionList: res.data,
+										});
+									}
+								})
+								.catch((err) => {
+									this.props.commonActions.tostifyAlert(
+										'error',
+										err && err.data ? err.data.message : 'Something Went Wrong',
+									);
+								})
 							})
 							.catch((err) => {
 								this.props.commonActions.tostifyAlert(
 									'error',
-
 									err && err.data ? err.data.message : 'Something Went Wrong',
 								);
 							});
@@ -184,10 +212,31 @@ class ViewEmployee extends React.Component {
 					style={{ padding: '0px' }}
 					color="link"
 					onClick={() => {
+						let payPeriod = row.payPeriod
+						const [startDateString, endDateString] = payPeriod.split("-");
+						const startDate = startDateString.trim();
+						const endDate = endDateString.trim();
+						const postData = {
+							id: this.props.location.state.id,
+							salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'),
+							sendMail: true,
+							startDate: moment(startDate).format('DD-MM-YYYY'),
+							endDate: moment(endDate).format('DD-MM-YYYY'),
+						};
 						this.props.employeeViewActions
-							.getSalarySlip({ id: this.props.location.state.id, salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'), sendMail: true })
+							.getSalarySlip(postData)
 							.then((res) => {
 								if (res.status === 200) {
+									// let payPeriod = res.data.payPeriod
+									// const [startDateString, endDateString] = payPeriod.split("-");
+									// const startDate = startDateString.trim();
+									// const endDate = endDateString.trim();
+									// const postData = {
+									// 	employeeId: this.props.location.state.id,
+									// 	startDate: moment(startDate).format('DD/MM/YYYY'),
+									// 	endDate: moment(endDate).format('DD/MM/YYYY'),
+									// };
+									// console.log(postData);
 									toast.success("Payslip Sent Successfully")
 								}
 							})
@@ -295,7 +344,6 @@ class ViewEmployee extends React.Component {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		console.log(this.state.Fixed)
 		const { profile } = this.props;
 		return (
 			<div className="financial-report-screen">
@@ -744,6 +792,7 @@ class ViewEmployee extends React.Component {
 					companyData={profile}
 					salaryDate={this.state.salaryDate}
 					empData={this.state.EmployeeDetails}
+					transactionList={this.state.transactionList}
 				/>
 			</div>
 		);

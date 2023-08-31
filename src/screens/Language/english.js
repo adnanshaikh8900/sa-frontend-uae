@@ -400,6 +400,7 @@ const en = {
       RemainingCredittAmount: "Remaining Credit Amount",
       AmountAppliedToTheInvoice:"Amount Applied To The Invoice",
       SomethingWentWrong:"Something Went Wrong",
+      DebitNoteCreated:"Debit Note Created",
       
       //AddGoodsReceiveNotes
       CreateGoodsReceivedNote: "Create Goods Received Note",

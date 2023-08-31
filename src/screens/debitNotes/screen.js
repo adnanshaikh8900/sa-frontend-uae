@@ -29,6 +29,7 @@ import './style.scss';
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperCase } from 'lodash';
+import moment from 'moment';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
@@ -74,7 +75,6 @@ class DebitNotes extends React.Component {
 			},
 			selectedRows: [],
 			selectedId: '',
-			openInvoicePreviewModal: false,
 			csvData: [],
 			view: false,
 			overDueAmountDetails: {
@@ -127,8 +127,7 @@ class DebitNotes extends React.Component {
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					'error',strings.SomethingWentWrong,
 				);
 				this.setState({ loading: false });
 			});
@@ -153,9 +152,9 @@ class DebitNotes extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ loading: false })
 				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					'error',strings.SomethingWentWrong,
 				);
 			});
 	};
@@ -202,8 +201,7 @@ class DebitNotes extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
-						'success',
-						'Dedit Note Posted Successfully'
+						'success',strings.DebitNoteStatusChangedSuccessfully
 					);
 					this.setState({
 						loading: false,
@@ -212,7 +210,7 @@ class DebitNotes extends React.Component {
 				}
 			})
 			.catch((err) => {
-				this.props.commonActions.tostifyAlert('error', 'Dedit Note Posted Unsuccessfully');
+				this.props.commonActions.tostifyAlert('error', strings.DebitNoteStatusChangedUnsuccessfully);
 				this.setState({ loading: false, });
 			});
 	};
@@ -233,7 +231,7 @@ class DebitNotes extends React.Component {
 			.unPostDebitNote(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success',"Credit Note Moved To Draft Successfully ");
+					this.props.commonActions.tostifyAlert('success',strings.DebitNoteMovedToDraftSuccessfully);
 					this.setState({
 						loading: false,
 					});
@@ -243,8 +241,7 @@ class DebitNotes extends React.Component {
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data ? err.data.message : 'Invoice Unposted Unsuccessfully'
+					'error',strings.DebitNoteMovedToDraftUnsuccessfully
 				);
 				this.setState({
 					loading: false,
@@ -282,7 +279,7 @@ class DebitNotes extends React.Component {
 			}
 			return (
 				<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
-					{row.status}
+					{row.status === 'Partially Paid' ? 'Partially Debited' : row.status}
 				</span>
 			);
 		}
@@ -330,7 +327,7 @@ class DebitNotes extends React.Component {
 		return row.invoiceDueDate ? row.invoiceDueDate : '';
 	};
 	debitNoteDate = (cell, row) => {
-		return row.creditNoteDate ? row.creditNoteDate : '';
+		return row.creditNoteDate ? moment(row.creditNoteDate).format('DD-MM-YYYY') : '';
 	};
 	renderDueAmount = (cell, row, extraData) => {
 		return row.dueAmount === 0 ? row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
@@ -558,20 +555,6 @@ class DebitNotes extends React.Component {
 	handleSearch = () => {
 		this.initializeData();
 	};
-
-	openInvoicePreviewModal = (id) => {
-		this.setState(
-			{
-				selectedId: id,
-			},
-			() => {
-				this.setState({
-					openInvoicePreviewModal: true,
-				});
-			},
-		);
-	};
-
 	closeInvoice = (id, status) => {
 		if (status === 'Paid') {
 			this.props.commonActions.tostifyAlert(
@@ -617,10 +600,6 @@ class DebitNotes extends React.Component {
 					err.data ? err.data.message : 'Invoice Deleted Unsuccessfully'
 				);
 			});
-	};
-
-	closeInvoicePreviewModal = (res) => {
-		this.setState({ openInvoicePreviewModal: false });
 	};
 
 	getCsvData = () => {

@@ -237,6 +237,11 @@ const adminRoutes = [
 		component: CreateJournal.screen,
 	},
 	Config.ACCOUNTANT_JOURNALS && {
+		path: "/admin/accountant/journal/view",
+		name: "View Journal",
+		component: DetailJournal.screen,
+	},
+	Config.ACCOUNTANT_JOURNALS && {
 		path: '/admin/accountant/journal/detail',
 		name: 'Update Journal',
 		component: DetailJournal.screen,

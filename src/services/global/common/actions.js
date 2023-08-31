@@ -423,3 +423,17 @@ export const getCompanyDetails = () => {
 		})
 	}
 }
+
+export const getByNoteListByInvoiceId = (id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/creditNote/getCreditNoteByInvoiceId?id=${id}`
+		}
+		return authApi(data).then((res) => {
+			return res
+		}).catch((err) => {
+			throw err
+		})
+	}
+}

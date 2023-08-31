@@ -239,7 +239,7 @@ class DetailCreditNote extends React.Component {
 									// 	? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 									// 	: '',
 									invoiceDate: res.data.creditNoteDate
-										? moment(res.data.creditNoteDate).format('DD-MM-YYYY')
+										? res.data.creditNoteDate
 										: '',
 									contactId: res.data.contactId ? res.data.contactId : '',
 									project: res.data.projectId ? res.data.projectId : '',
@@ -1061,20 +1061,7 @@ class DetailCreditNote extends React.Component {
 		);
 
 	};
-	setDate = (props, value) => {
-		const { term } = this.state;
-		const val = term.split('_');
-		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		const values = value
-			? value
-			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
-		if (temp && values) {
-			const date = moment(values)
-				.add(temp - 1, 'days')
-				.format('DD-MM-YYYY');
-			// props.setFieldValue('invoiceDueDate', date, true);
-		}
-	};
+	
 
 	handleFileChange = (e, props) => {
 		e.preventDefault();
@@ -1088,7 +1075,6 @@ class DetailCreditNote extends React.Component {
 	};
 
 	handleSubmit = (data) => {
-
 		this.setState({ disabled: true, disableLeavePage: true });
 		const { current_customer_id, term } = this.state;
 		const {
@@ -1111,7 +1097,7 @@ class DetailCreditNote extends React.Component {
 		formData.append('type', 7);
 		formData.append('creditNoteId', current_customer_id);
 		formData.append('creditNoteNumber', invoice_number !== null ? invoice_number : '',);
-		formData.append('creditNoteDate', typeof invoiceDate === 'string' ? moment(invoiceDate, 'DD-MM-YYYY').toDate() : invoiceDate,);
+		formData.append('creditNoteDate', invoiceDate ? moment(invoiceDate) : new Date());
 		formData.append('vatCategoryId', 2);
 		formData.append('exchangeRate', exchangeRate);
 		formData.append('referenceNo', receiptNumber !== null ? receiptNumber : '',);
@@ -1876,12 +1862,11 @@ class DetailCreditNote extends React.Component {
 																				dateFormat="dd-MM-yyyy"
 																				minDate={new Date()}
 																				dropdownMode="select"
-																				value={props.values.invoiceDate}
+																				value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
 																				onChange={(value) => {
 																					props.handleChange('invoiceDate')(
-																						moment(value).format('DD-MM-YYYY'),
+																						value,
 																					);
-																					this.setDate(props, value);
 																				}}
 																				className={`form-control ${props.errors.invoiceDate &&
 																					props.touched.invoiceDate
@@ -1897,44 +1882,7 @@ class DetailCreditNote extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-																	{/* <Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="due_date">
-																		Credit Note Due Date
-																		</Label>
-																		<div>
-																			<DatePicker
-																				id="invoiceDueDate"
-																				name="invoiceDueDate"
-																				placeholderText="Invoice Due Date"
-																				// selected={props.values.invoiceDueDate}
-																				showMonthDropdown
-																				showYearDropdown
-																				disabled
-																				dateFormat="dd-MM-yyyy"
-																				dropdownMode="select"
-																				value={props.values.invoiceDueDate}
-																				onChange={(value) => {
-																					props.handleChange('invoiceDueDate')(
-																						value,
-																					);
-																				}}
-																				className={`form-control ${
-																					props.errors.invoiceDueDate &&
-																					props.touched.invoiceDueDate
-																						? 'is-invalid'
-																						: ''
-																				}`}
-																			/>
-																			{props.errors.invoiceDueDate &&
-																				props.touched.invoiceDueDate && (
-																					<div className="invalid-feedback">
-																						{props.errors.invoiceDueDate}
-																					</div>
-																				)}
-																		</div>
-																	</FormGroup>
-																</Col> */}
+																	
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="currencyCode">

@@ -368,12 +368,9 @@ class CustomerInvoice extends React.Component {
 	};
 	updateParentAmount = (totalAmount, totalVatAmount, totalexcise) => {
 		this.setState({ totalAmount: totalAmount, totalVatAmount: totalVatAmount, totalExciseAmount: totalexcise })
-		console.log(totalAmount, "00000000")
-		console.log(totalVatAmount, "00000000")
 	};
 	updateParentSelelectedData = (data) => {
 		this.setState({ selectedData: data })
-		console.log(data, "NEW DATA...")
 	};
 	renderInvoiceAmount = (cell, row, extraData) => {
 		return (
@@ -1200,7 +1197,7 @@ class CustomerInvoice extends React.Component {
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
-												width="20%"
+												//width="20%"
 												className="table-header-bg"
 											>
 												{strings.INVOICENUMBER}
@@ -1255,7 +1252,7 @@ class CustomerInvoice extends React.Component {
 												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-												// width="20%"
+												width="22%"
 												dataFormat={this.renderInvoiceAmount}
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"

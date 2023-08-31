@@ -155,7 +155,7 @@ class ViewCreditNote extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
-	
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const { invoiceData, currencyData, InvoiceDataList, contactData } = this.state;
@@ -199,11 +199,17 @@ class ViewCreditNote extends React.Component {
 									type="button"
 									className="close-btn mb-1 btn-lg print-btn-cont"
 									onClick={() => {
-										if(this.props.location && this.props.location.state && this.props.location.state.gotoReports)
-										this.props.history.push('/admin/report/credit-note-details');
+										if (this.props.location.state.CI_id)
+											this.props.history.push('/admin/income/customer-invoice/view', {
+												id: this.props.location.state.CI_id,
+												status: this.props.location.state.CI_status,
+												contactId: this.props.location.state.CI_contactId
+											})
+										else if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
+											this.props.history.push('/admin/report/credit-note-details');
 										else
-										this.props.history.push('/admin/income/credit-notes');
-									
+											this.props.history.push('/admin/income/credit-notes');
+
 									}}
 								>
 									<i class="fas fa-times"></i>

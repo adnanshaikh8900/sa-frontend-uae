@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Row, Col } from 'reactstrap';
+import { Button, Row, Col, Card, Table } from 'reactstrap';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
@@ -11,6 +11,11 @@ import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { InvoiceTemplate } from './sections';
+import { CommonActions } from 'services/global';
+import { data } from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
+import { Currency } from 'components';
+import moment from 'moment';
 
 const mapStateToProps = (state) => {
 	return {
@@ -27,18 +32,20 @@ const mapDispatchToProps = (dispatch) => {
 			SupplierInvoiceDetailActions,
 			dispatch,
 		),
-		//commonActions: bindActionCreators(CommonActions, dispatch),
+		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class ViewInvoice extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			invoiceData: {},
 			totalNet: 0,
 			currencyData: {},
 			id: '',
+			debitNoteDataList: [],
 		};
 
 		this.formRef = React.createRef();
@@ -75,10 +82,10 @@ class ViewInvoice extends React.Component {
 				.then((res) => {
 					let val = 0;
 					if (res.status === 200) {
-						if (res.data.invoiceLineItems && res.data.invoiceLineItems.length != 0)
-							res.data.invoiceLineItems.map((item) => {
-								val = val + item.subTotal;
-								return item;
+						if (res.data.invoiceLinedebitNoteDataLists && res.data.invoiceLinedebitNoteDataLists.length != 0)
+							res.data.invoiceLinedebitNoteDataLists.map((debitNoteDataList) => {
+								val = val + debitNoteDataList.subTotal;
+								return debitNoteDataList;
 							});
 						this.setState(
 							{
@@ -93,8 +100,8 @@ class ViewInvoice extends React.Component {
 										.then((res) => {
 											if (res.status === 200) {
 												const temp = res.data.filter(
-													(item) =>
-														item.currencyCode ===
+													(debitNoteDataList) =>
+														debitNoteDataList.currencyCode ===
 														this.state.invoiceData.currencyCode,
 												);
 												this.setState({
@@ -118,17 +125,36 @@ class ViewInvoice extends React.Component {
 						);
 					}
 				});
+
+			this.props.commonActions
+				.getByNoteListByInvoiceId(this.props.location.state.id)
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState({
+							debitNoteDataList: res.data,
+							id: this.props.location.state.id,
+						},);
+					}
+				})
 		}
 	};
 
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
-
+	redirectToDebitNote = (debiteNote) => {
+		this.props.history.push('/admin/expense/debit-notes/view', {
+			SUP_id: this.props.location.state.id,
+			SUP_status: this.props.location.state.status,
+			id: debiteNote.creditNoteId,
+			isCNWithoutProduct: debiteNote.isCreatedWithoutInvoice,
+			status: debiteNote.status,
+		});
+	}
 	render() {
-		const { invoiceData, currencyData, id, contactData } = this.state;
-
-		const { profile } = this.props;
+		strings.setLanguage(this.state.language);
+		const { invoiceData, currencyData, id, contactData, debitNoteDataList } = this.state;
+		
 		return (
 			<div className="view-invoice-screen">
 				<div className="animated fadeIn">
@@ -220,6 +246,44 @@ class ViewInvoice extends React.Component {
 							</div>
 						</Col>
 					</Row>
+					<div style={{ display: this.state.debitNoteDataList.length === 0 ? 'none' : '' }}><strong>{strings.DebitNoteIssuedOnTheSupplierInvoice}</strong></div>
+					<Card>
+
+						<div style={{ display: this.state.debitNoteDataList.length === 0 ? 'none' : '' }} >
+							<Table  >
+								<thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
+									<tr>
+										<th className="center" style={{ padding: '0.5rem' }}>#</th>
+										<th style={{ padding: '0.5rem' }}>{strings.DebitNoteNumber}</th>
+										<th style={{ padding: '0.5rem' }}>{strings.DebitNoteDate}</th>
+										<th style={{ padding: '0.5rem' }}>{strings.Status}</th>
+										<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.DebitAmount}</th>
+									</tr>
+								</thead>
+								<tbody className=" table-bordered table-hover">
+									<tr onClick={() => {
+										this.redirectToDebitNote(debitNoteDataList);
+									}}>
+										<td className="center">{1}</td>
+										<td>{debitNoteDataList.creditNoteNumber}</td>
+										<td>{debitNoteDataList.creditNoteDate ? moment(debitNoteDataList.creditNoteDate).format('DD-MM-YYYY') : ''}</td>
+										<td align="right">{debitNoteDataList?.status}</td>
+										<td align="right">
+											{debitNoteDataList.totalAmount ? <Currency
+												value={debitNoteDataList.totalAmount}
+												currencySymbol={
+													currencyData[0]
+														? currencyData[0].currencyIsoCode
+														: 'AED'
+												}
+											/> : '0.00'}
+										</td>
+									</tr>
+
+								</tbody>
+							</Table>
+						</div>
+					</Card>
 				</div>
 			</div>
 		);

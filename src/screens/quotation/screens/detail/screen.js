@@ -266,6 +266,7 @@ class DetailQuotation extends React.Component {
                     ? res.data.discountType
                     : "",
                   taxType: res.data.taxType ? true : false,
+                  currency: res.data.currencyCode ? res.data.currencyCode : '',
                 },
                 quotaionExpirationNotChanged: res.data.quotaionExpiration
                   ? moment(res.data.quotaionExpiration)
@@ -304,11 +305,11 @@ class DetailQuotation extends React.Component {
                   const idCount =
                     data.length > 0
                       ? Math.max.apply(
-                          Math,
-                          data.map((item) => {
-                            return item.id;
-                          })
-                        )
+                        Math,
+                        data.map((item) => {
+                          return item.id;
+                        })
+                      )
                       : 0;
                   this.setState({
                     idCount: idCount,
@@ -321,7 +322,7 @@ class DetailQuotation extends React.Component {
                 }
               }
             );
-            this.getCurrency(res.data.customerId);
+            this.formRef.current.setFieldValue("currency",res.data.currencyCode ? res.data.currencyCode:'' , true);
             this.salesCategory();
           }
         });
@@ -360,7 +361,7 @@ class DetailQuotation extends React.Component {
             {
               purchaseCategory: res.data,
             },
-            () => {}
+            () => { }
           );
         }
       });
@@ -403,13 +404,13 @@ class DetailQuotation extends React.Component {
       const idCount = this.state.idCount
         ? this.state.idCount
         : data.length > 0
-        ? Math.max.apply(
+          ? Math.max.apply(
             Math,
             data.map((item) => {
               return item.id;
             })
           )
-        : 0;
+          : 0;
       this.setState(
         {
           data: newData.concat({
@@ -511,17 +512,16 @@ class DetailQuotation extends React.Component {
             }}
             placeholder={strings.Description}
             className={`form-control 
-            ${
-              props.errors.lineItemsString &&
-              props.errors.lineItemsString[parseInt(idx, 10)] &&
-              props.errors.lineItemsString[parseInt(idx, 10)].description &&
-              Object.keys(props.touched).length > 0 &&
-              props.touched.lineItemsString &&
-              props.touched.lineItemsString[parseInt(idx, 10)] &&
-              props.touched.lineItemsString[parseInt(idx, 10)].description
+            ${props.errors.lineItemsString &&
+                props.errors.lineItemsString[parseInt(idx, 10)] &&
+                props.errors.lineItemsString[parseInt(idx, 10)].description &&
+                Object.keys(props.touched).length > 0 &&
+                props.touched.lineItemsString &&
+                props.touched.lineItemsString[parseInt(idx, 10)] &&
+                props.touched.lineItemsString[parseInt(idx, 10)].description
                 ? "is-invalid"
                 : ""
-            }`}
+              }`}
           />
         )}
       />
@@ -537,7 +537,7 @@ class DetailQuotation extends React.Component {
             {
               salesCategory: res.data,
             },
-            () => {}
+            () => { }
           );
         }
       });
@@ -564,11 +564,11 @@ class DetailQuotation extends React.Component {
             options={
               excise_list
                 ? selectOptionsFactory.renderOptions(
-                    "name",
-                    "id",
-                    excise_list,
-                    "Excise"
-                  )
+                  "name",
+                  "id",
+                  excise_list,
+                  "Excise"
+                )
                 : []
             }
             value={
@@ -598,17 +598,16 @@ class DetailQuotation extends React.Component {
                 this.updateAmount(this.state.data, props);
               }
             }}
-            className={`${
-              props.errors.lineItemsString &&
-              props.errors.lineItemsString[parseInt(idx, 10)] &&
-              props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
-              Object.keys(props.touched).length > 0 &&
-              props.touched.lineItemsString &&
-              props.touched.lineItemsString[parseInt(idx, 10)] &&
-              props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
+            className={`${props.errors.lineItemsString &&
+                props.errors.lineItemsString[parseInt(idx, 10)] &&
+                props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
+                Object.keys(props.touched).length > 0 &&
+                props.touched.lineItemsString &&
+                props.touched.lineItemsString[parseInt(idx, 10)] &&
+                props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
                 ? "is-invalid"
                 : ""
-            }`}
+              }`}
           />
         )}
       />
@@ -651,19 +650,18 @@ class DetailQuotation extends React.Component {
                 }}
                 placeholder={strings.Quantity}
                 className={`form-control  w-50 
-           						${
-                        props.errors.lineItemsString &&
-                        props.errors.lineItemsString[parseInt(idx, 10)] &&
-                        props.errors.lineItemsString[parseInt(idx, 10)]
-                          .quantity &&
-                        Object.keys(props.touched).length > 0 &&
-                        props.touched.lineItemsString &&
-                        props.touched.lineItemsString[parseInt(idx, 10)] &&
-                        props.touched.lineItemsString[parseInt(idx, 10)]
-                          .quantity
-                          ? "is-invalid"
-                          : ""
-                      }`}
+           						${props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)]
+                      .quantity &&
+                    Object.keys(props.touched).length > 0 &&
+                    props.touched.lineItemsString &&
+                    props.touched.lineItemsString[parseInt(idx, 10)] &&
+                    props.touched.lineItemsString[parseInt(idx, 10)]
+                      .quantity
+                    ? "is-invalid"
+                    : ""
+                  }`}
               />
               {row["productId"] != "" ? (
                 <Input value={row["unitType"]} disabled />
@@ -723,19 +721,18 @@ class DetailQuotation extends React.Component {
               }}
               placeholder={strings.UnitPrice}
               className={`form-control 
-                       ${
-                         props.errors.lineItemsString &&
-                         props.errors.lineItemsString[parseInt(idx, 10)] &&
-                         props.errors.lineItemsString[parseInt(idx, 10)]
-                           .unitPrice &&
-                         Object.keys(props.touched).length > 0 &&
-                         props.touched.lineItemsString &&
-                         props.touched.lineItemsString[parseInt(idx, 10)] &&
-                         props.touched.lineItemsString[parseInt(idx, 10)]
-                           .unitPrice
-                           ? "is-invalid"
-                           : ""
-                       }`}
+                       ${props.errors.lineItemsString &&
+                  props.errors.lineItemsString[parseInt(idx, 10)] &&
+                  props.errors.lineItemsString[parseInt(idx, 10)]
+                    .unitPrice &&
+                  Object.keys(props.touched).length > 0 &&
+                  props.touched.lineItemsString &&
+                  props.touched.lineItemsString[parseInt(idx, 10)] &&
+                  props.touched.lineItemsString[parseInt(idx, 10)]
+                    .unitPrice
+                  ? "is-invalid"
+                  : ""
+                }`}
             />
             {props.errors.lineItemsString &&
               props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -794,17 +791,16 @@ class DetailQuotation extends React.Component {
                 }}
                 placeholder={strings.Discount}
                 className={`form-control
-           ${
-             props.errors.lineItemsString &&
-             props.errors.lineItemsString[parseInt(idx, 10)] &&
-             props.errors.lineItemsString[parseInt(idx, 10)].discount &&
-             Object.keys(props.touched).length > 0 &&
-             props.touched.lineItemsString &&
-             props.touched.lineItemsString[parseInt(idx, 10)] &&
-             props.touched.lineItemsString[parseInt(idx, 10)].discount
-               ? "is-invalid"
-               : ""
-           }`}
+           ${props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+                    Object.keys(props.touched).length > 0 &&
+                    props.touched.lineItemsString &&
+                    props.touched.lineItemsString[parseInt(idx, 10)] &&
+                    props.touched.lineItemsString[parseInt(idx, 10)].discount
+                    ? "is-invalid"
+                    : ""
+                  }`}
               />
               <div class="dropdown open input-group-append">
                 <div style={{ width: "100px" }}>
@@ -879,17 +875,17 @@ class DetailQuotation extends React.Component {
     // );
     return row.subTotal === 0
       ? this.state.supplier_currency_symbol +
-          " " +
-          row.subTotal.toLocaleString(navigator.language, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })
+      " " +
+      row.subTotal.toLocaleString(navigator.language, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
       : this.state.supplier_currency_symbol +
-          " " +
-          row.subTotal.toLocaleString(navigator.language, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          });
+      " " +
+      row.subTotal.toLocaleString(navigator.language, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
   };
 
   renderVatAmount = (cell, row, extraData) => {
@@ -906,15 +902,15 @@ class DetailQuotation extends React.Component {
     // );
     return row.vatAmount === 0
       ? this.state.supplier_currency_symbol +
-          " " +
-          row.vatAmount.toLocaleString(navigator.language, {
-            minimumFractionDigits: 2,
-          })
+      " " +
+      row.vatAmount.toLocaleString(navigator.language, {
+        minimumFractionDigits: 2,
+      })
       : this.state.supplier_currency_symbol +
-          " " +
-          row.vatAmount.toLocaleString(navigator.language, {
-            minimumFractionDigits: 2,
-          });
+      " " +
+      row.vatAmount.toLocaleString(navigator.language, {
+        minimumFractionDigits: 2,
+      });
   };
 
   addRow = () => {
@@ -922,13 +918,13 @@ class DetailQuotation extends React.Component {
     const idCount = this.state.idCount
       ? this.state.idCount
       : data.length > 0
-      ? Math.max.apply(
+        ? Math.max.apply(
           Math,
           data.map((item) => {
             return item.id;
           })
         )
-      : 0;
+        : 0;
     this.setState(
       {
         data: data.concat({
@@ -1056,21 +1052,21 @@ class DetailQuotation extends React.Component {
             if (
               this.state.isRegisteredVat &&
               this.state.quotationDateForVatValidation >
-                this.state.companyVATRegistrationDate
+              this.state.companyVATRegistrationDate
             ) {
               if (this.state.isDesignatedZone) {
                 if (res.data.productType === "GOODS") {
                   if (
                     this.state.customer_taxTreatment_des ===
-                      "UAE VAT REGISTERED" ||
+                    "UAE VAT REGISTERED" ||
                     this.state.customer_taxTreatment_des ===
-                      "UAE VAT REGISTERED FREEZONE" ||
+                    "UAE VAT REGISTERED FREEZONE" ||
                     this.state.customer_taxTreatment_des ===
-                      "UAE NON-VAT REGISTERED FREEZONE" ||
+                    "UAE NON-VAT REGISTERED FREEZONE" ||
                     this.state.customer_taxTreatment_des ===
-                      "GCC VAT REGISTERED" ||
+                    "GCC VAT REGISTERED" ||
                     this.state.customer_taxTreatment_des ===
-                      "GCC NON-VAT REGISTERED" ||
+                    "GCC NON-VAT REGISTERED" ||
                     this.state.customer_taxTreatment_des === "NON GCC"
                   ) {
                     vat_list.map((element) => {
@@ -1088,21 +1084,21 @@ class DetailQuotation extends React.Component {
                 } else if (res.data.productType === "SERVICE") {
                   if (
                     this.state.customer_taxTreatment_des ===
-                      "UAE VAT REGISTERED" ||
+                    "UAE VAT REGISTERED" ||
                     this.state.customer_taxTreatment_des ===
-                      "UAE NON-VAT REGISTERED" ||
+                    "UAE NON-VAT REGISTERED" ||
                     this.state.customer_taxTreatment_des ===
-                      "UAE VAT REGISTERED FREEZONE" ||
+                    "UAE VAT REGISTERED FREEZONE" ||
                     this.state.customer_taxTreatment_des ===
-                      "UAE NON-VAT REGISTERED FREEZONE"
+                    "UAE NON-VAT REGISTERED FREEZONE"
                   ) {
                     vt = vat_list;
                   }
                   if (
                     this.state.customer_taxTreatment_des ===
-                      "GCC VAT REGISTERED" ||
+                    "GCC VAT REGISTERED" ||
                     this.state.customer_taxTreatment_des ===
-                      "GCC NON-VAT REGISTERED" ||
+                    "GCC NON-VAT REGISTERED" ||
                     this.state.customer_taxTreatment_des === "NON GCC"
                   ) {
                     vat_list.map((element) => {
@@ -1115,21 +1111,21 @@ class DetailQuotation extends React.Component {
               } else {
                 if (
                   this.state.customer_taxTreatment_des ===
-                    "UAE VAT REGISTERED" ||
+                  "UAE VAT REGISTERED" ||
                   this.state.customer_taxTreatment_des ===
-                    "UAE NON-VAT REGISTERED" ||
+                  "UAE NON-VAT REGISTERED" ||
                   this.state.customer_taxTreatment_des ===
-                    "UAE VAT REGISTERED FREEZONE" ||
+                  "UAE VAT REGISTERED FREEZONE" ||
                   this.state.customer_taxTreatment_des ===
-                    "UAE NON-VAT REGISTERED FREEZONE"
+                  "UAE NON-VAT REGISTERED FREEZONE"
                 ) {
                   vt = vat_list;
                 }
                 if (
                   this.state.customer_taxTreatment_des ===
-                    "GCC VAT REGISTERED" ||
+                  "GCC VAT REGISTERED" ||
                   this.state.customer_taxTreatment_des ===
-                    "GCC NON-VAT REGISTERED" ||
+                  "GCC NON-VAT REGISTERED" ||
                   this.state.customer_taxTreatment_des === "NON GCC"
                 ) {
                   vat_list.map((element) => {
@@ -1203,11 +1199,11 @@ class DetailQuotation extends React.Component {
               options={
                 vat_list
                   ? selectOptionsFactory.renderOptions(
-                      "name",
-                      "id",
-                      vat_list,
-                      "VAT"
-                    )
+                    "name",
+                    "id",
+                    vat_list,
+                    "VAT"
+                  )
                   : []
               }
               value={
@@ -1243,17 +1239,16 @@ class DetailQuotation extends React.Component {
                   this.updateAmount(this.state.data, props);
                 }
               }}
-              className={`${
-                props.errors.lineItemsString &&
-                props.errors.lineItemsString[parseInt(idx, 10)] &&
-                props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
-                Object.keys(props.touched).length > 0 &&
-                props.touched.lineItemsString &&
-                props.touched.lineItemsString[parseInt(idx, 10)] &&
-                props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
+              className={`${props.errors.lineItemsString &&
+                  props.errors.lineItemsString[parseInt(idx, 10)] &&
+                  props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+                  Object.keys(props.touched).length > 0 &&
+                  props.touched.lineItemsString &&
+                  props.touched.lineItemsString[parseInt(idx, 10)] &&
+                  props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
                   ? "is-invalid"
                   : ""
-              }`}
+                }`}
             />
             {props.errors.lineItemsString &&
               props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1287,7 +1282,7 @@ class DetailQuotation extends React.Component {
     let idx;
     let exchangeRate =
       this.formRef.current?.state?.values?.exchangeRate > 0 &&
-      this.formRef.current?.state?.values?.exchangeRate !== ""
+        this.formRef.current?.state?.values?.exchangeRate !== ""
         ? this.formRef.current?.state?.values?.exchangeRate
         : 1;
     data.map((obj, index) => {
@@ -1382,11 +1377,11 @@ class DetailQuotation extends React.Component {
               options={
                 product_list
                   ? optionFactory.renderOptions(
-                      "name",
-                      "id",
-                      product_list,
-                      "Product"
-                    )
+                    "name",
+                    "id",
+                    product_list,
+                    "Product"
+                  )
                   : []
               }
               value={
@@ -1417,17 +1412,16 @@ class DetailQuotation extends React.Component {
                   if (this.checkedRow()) this.addRow();
                 }
               }}
-              className={`${
-                props.errors.lineItemsString &&
-                props.errors.lineItemsString[parseInt(idx, 10)] &&
-                props.errors.lineItemsString[parseInt(idx, 10)].productId &&
-                Object.keys(props.touched).length > 0 &&
-                props.touched.lineItemsString &&
-                props.touched.lineItemsString[parseInt(idx, 10)] &&
-                props.touched.lineItemsString[parseInt(idx, 10)].productId
+              className={`${props.errors.lineItemsString &&
+                  props.errors.lineItemsString[parseInt(idx, 10)] &&
+                  props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+                  Object.keys(props.touched).length > 0 &&
+                  props.touched.lineItemsString &&
+                  props.touched.lineItemsString[parseInt(idx, 10)] &&
+                  props.touched.lineItemsString[parseInt(idx, 10)].productId
                   ? "is-invalid"
                   : ""
-              }`}
+                }`}
             />
             {row["productId"] != "" ? (
               <div className="mt-1">
@@ -1445,18 +1439,17 @@ class DetailQuotation extends React.Component {
                     );
                   }}
                   placeholder={strings.Description}
-                  className={`form-control ${
-                    props.errors.lineItemsString &&
-                    props.errors.lineItemsString[parseInt(idx, 10)] &&
-                    props.errors.lineItemsString[parseInt(idx, 10)]
-                      .description &&
-                    Object.keys(props.touched).length > 0 &&
-                    props.touched.lineItemsString &&
-                    props.touched.lineItemsString[parseInt(idx, 10)] &&
-                    props.touched.lineItemsString[parseInt(idx, 10)].description
+                  className={`form-control ${props.errors.lineItemsString &&
+                      props.errors.lineItemsString[parseInt(idx, 10)] &&
+                      props.errors.lineItemsString[parseInt(idx, 10)]
+                        .description &&
+                      Object.keys(props.touched).length > 0 &&
+                      props.touched.lineItemsString &&
+                      props.touched.lineItemsString[parseInt(idx, 10)] &&
+                      props.touched.lineItemsString[parseInt(idx, 10)].description
                       ? "is-invalid"
                       : ""
-                  }`}
+                    }`}
                 />
               </div>
             ) : (
@@ -1707,6 +1700,7 @@ class DetailQuotation extends React.Component {
           ? this.state.quotaionExpiration
           : quotaionExpiration
       );
+
     } else {
       formData.append(
         "quotaionExpiration",
@@ -1715,17 +1709,20 @@ class DetailQuotation extends React.Component {
           : " "
       );
     }
+    if (typeof quotationdate === 'string') {
+      const [day, month, year] = quotationdate.split("-");
+      let dd = new Date(+year, +month - 1, +day);
+      formData.append("quotationdate", dd);
+    } else {
+      formData.append("quotationdate", quotationdate);
 
+    }
     formData.append("notes", notes ? notes : "");
     formData.append("lineItemsString", JSON.stringify(this.state.data));
     formData.append("totalVatAmount", this.state.initValue.totalVatAmount);
     formData.append("totalAmount", this.state.initValue.totalAmount);
     formData.append("totalExciseAmount", this.state.initValue.total_excise);
     formData.append("discount", this.state.initValue.discount);
-    const [day, month, year] = quotationdate.split("-");
-    let dd = new Date(+year, +month - 1, +day);
-    formData.append("quotationdate", dd);
-    debugger;
     formData.append(
       "receiptNumber",
       receiptNumber !== null ? receiptNumber : ""
@@ -1891,9 +1888,8 @@ class DetailQuotation extends React.Component {
       option = data;
     } else {
       option = {
-        label: `${
-          data.organization !== "" ? data.organization : data.fullName
-        }`,
+        label: `${data.organization !== "" ? data.organization : data.fullName
+          }`,
         value: data.id,
       };
     }
@@ -1946,7 +1942,7 @@ class DetailQuotation extends React.Component {
     let reader = new FileReader();
     let file = e.target.files[0];
     if (file) {
-      reader.onloadend = () => {};
+      reader.onloadend = () => { };
       reader.readAsDataURL(file);
       props.setFieldValue("attachmentFile", file, true);
     }
@@ -2056,11 +2052,11 @@ class DetailQuotation extends React.Component {
                               let errors = {};
                               if (
                                 this.state.customer_taxTreatment_des !=
-                                  "NON GCC" &&
+                                "NON GCC" &&
                                 this.state.customer_taxTreatment_des !=
-                                  "GCC NON-VAT REGISTERED" &&
+                                "GCC NON-VAT REGISTERED" &&
                                 this.state.customer_taxTreatment_des !=
-                                  "GCC VAT REGISTERED"
+                                "GCC VAT REGISTERED"
                               ) {
                                 if (!values.placeOfSupplyId)
                                   errors.placeOfSupplyId =
@@ -2070,7 +2066,7 @@ class DetailQuotation extends React.Component {
                                   (values.placeOfSupplyId == "" ||
                                     (values.placeOfSupplyId.label &&
                                       values.placeOfSupplyId.label ===
-                                        "Select Place of Supply"))
+                                      "Select Place of Supply"))
                                 )
                                   errors.placeOfSupplyId =
                                     "Place of supply is required";
@@ -2082,7 +2078,7 @@ class DetailQuotation extends React.Component {
                                 (values.customerId == "" ||
                                   (values.customerId.label &&
                                     values.customerId.label ===
-                                      "Customer Name"))
+                                    "Customer Name"))
                               )
                                 errors.customerId = "Customer name is required";
                               if (!values.quotationdate) {
@@ -2097,11 +2093,11 @@ class DetailQuotation extends React.Component {
                                     "MM DD YYYY"
                                   )
                                 ) >
-                                  new Date(
-                                    moment(values.quotaionExpiration1).format(
-                                      "MM DD YYYY"
-                                    )
+                                new Date(
+                                  moment(values.quotaionExpiration1).format(
+                                    "MM DD YYYY"
                                   )
+                                )
                               ) {
                                 errors.quotaionExpiration =
                                   "Expiry date should be later than the quotation date";
@@ -2256,7 +2252,7 @@ class DetailQuotation extends React.Component {
                                         }}
                                         className={
                                           props.errors.quotationNumber &&
-                                          props.touched.quotationNumber
+                                            props.touched.quotationNumber
                                             ? "is-invalid"
                                             : ""
                                         }
@@ -2284,11 +2280,11 @@ class DetailQuotation extends React.Component {
                                         options={
                                           tmpSupplier_list
                                             ? selectOptionsFactory.renderOptions(
-                                                "label",
-                                                "value",
-                                                tmpSupplier_list,
-                                                "Customer Name"
-                                              )
+                                              "label",
+                                              "value",
+                                              tmpSupplier_list,
+                                              "Customer Name"
+                                            )
                                             : []
                                         }
                                         // value={
@@ -2348,7 +2344,7 @@ class DetailQuotation extends React.Component {
                                         }}
                                         className={
                                           props.errors.customerId &&
-                                          props.touched.customerId
+                                            props.touched.customerId
                                             ? "is-invalid"
                                             : ""
                                         }
@@ -2376,7 +2372,7 @@ class DetailQuotation extends React.Component {
                                         }
                                         className={
                                           props.errors.taxTreatmentid &&
-                                          props.touched.taxTreatmentid
+                                            props.touched.taxTreatmentid
                                             ? "is-invalid"
                                             : ""
                                         }
@@ -2398,9 +2394,9 @@ class DetailQuotation extends React.Component {
                                     {this.state.customer_taxTreatment_des !==
                                       "NON GCC" &&
                                       this.state.customer_taxTreatment_des !==
-                                        "GCC VAT REGISTERED" &&
+                                      "GCC VAT REGISTERED" &&
                                       this.state.customer_taxTreatment_des !==
-                                        "GCC NON-VAT REGISTERED" && (
+                                      "GCC NON-VAT REGISTERED" && (
                                         <FormGroup className="mb-3">
                                           <Label htmlFor="placeOfSupplyId">
                                             <span className="text-danger">
@@ -2418,11 +2414,11 @@ class DetailQuotation extends React.Component {
                                             options={
                                               this.placelist
                                                 ? selectOptionsFactory.renderOptions(
-                                                    "label",
-                                                    "value",
-                                                    this.placelist,
-                                                    "Place of Supply"
-                                                  )
+                                                  "label",
+                                                  "value",
+                                                  this.placelist,
+                                                  "Place of Supply"
+                                                )
                                                 : []
                                             }
                                             id="placeOfSupplyId"
@@ -2453,12 +2449,11 @@ class DetailQuotation extends React.Component {
                                                 )("");
                                               }
                                             }}
-                                            className={`${
-                                              props.errors.placeOfSupplyId &&
-                                              props.touched.placeOfSupplyId
+                                            className={`${props.errors.placeOfSupplyId &&
+                                                props.touched.placeOfSupplyId
                                                 ? "is-invalid"
                                                 : ""
-                                            }`}
+                                              }`}
                                           />
                                           {props.errors.placeOfSupplyId &&
                                             props.touched.placeOfSupplyId && (
@@ -2490,8 +2485,8 @@ class DetailQuotation extends React.Component {
                                         selected={
                                           props.values.quotationdate1
                                             ? new Date(
-                                                props.values.quotationdate1
-                                              )
+                                              props.values.quotationdate1
+                                            )
                                             : new Date()
                                         }
                                         onChange={(value) => {
@@ -2501,15 +2496,15 @@ class DetailQuotation extends React.Component {
                                               this.state
                                                 .companyVATRegistrationDate &&
                                               value >
-                                                this.state
-                                                  .companyVATRegistrationDate) ||
+                                              this.state
+                                                .companyVATRegistrationDate) ||
                                             (value <
                                               this.state
                                                 .companyVATRegistrationDate &&
                                               this.state
                                                 .quotationDateForVatValidation >
-                                                this.state
-                                                  .companyVATRegistrationDate)
+                                              this.state
+                                                .companyVATRegistrationDate)
                                           ) {
                                             this.resetVatId(props);
                                           }
@@ -2522,12 +2517,11 @@ class DetailQuotation extends React.Component {
                                           );
                                           this.setDate1(props, value);
                                         }}
-                                        className={`form-control ${
-                                          props.errors.quotationdate &&
-                                          props.touched.quotationdate
+                                        className={`form-control ${props.errors.quotationdate &&
+                                            props.touched.quotationdate
                                             ? "is-invalid"
                                             : ""
-                                        }`}
+                                          }`}
                                       />
                                       {props.errors.quotationdate &&
                                         props.touched.quotationdate && (
@@ -2568,12 +2562,11 @@ class DetailQuotation extends React.Component {
                                           )(value);
                                           this.setDate(props, value);
                                         }}
-                                        className={`form-control ${
-                                          props.errors.quotaionExpiration &&
-                                          props.touched.quotaionExpiration
+                                        className={`form-control ${props.errors.quotaionExpiration &&
+                                            props.touched.quotaionExpiration
                                             ? "is-invalid"
                                             : ""
-                                        }`}
+                                          }`}
                                       />
                                       {props.errors.quotaionExpiration &&
                                         props.touched.quotaionExpiration && (
@@ -2595,7 +2588,7 @@ class DetailQuotation extends React.Component {
                                         {strings.Currency}
                                       </Label>
                                       <Select
-                                        isDisabled={true}
+                                        //isDisabled={true}
                                         placeholder={
                                           strings.Select + strings.Currency
                                         }
@@ -2603,11 +2596,11 @@ class DetailQuotation extends React.Component {
                                         options={
                                           currency_convert_list
                                             ? selectCurrencyFactory.renderOptions(
-                                                "currencyName",
-                                                "currencyCode",
-                                                currency_convert_list,
-                                                "Currency"
-                                              )
+                                              "currencyName",
+                                              "currencyCode",
+                                              currency_convert_list,
+                                              "Currency"
+                                            )
                                             : []
                                         }
                                         id="currency"
@@ -2624,7 +2617,7 @@ class DetailQuotation extends React.Component {
                                             .find(
                                               (option) =>
                                                 option.value ===
-                                                this.state.supplier_currency
+                                                props.values.currency
                                             )
                                         }
                                         onChange={(option) => {
@@ -2634,12 +2627,11 @@ class DetailQuotation extends React.Component {
                                           this.setExchange(option.value);
                                           this.setCurrency(option.value);
                                         }}
-                                        className={`${
-                                          props.errors.currency &&
-                                          props.touched.currency
+                                        className={`${props.errors.currency &&
+                                            props.touched.currency
                                             ? "is-invalid"
                                             : ""
-                                        }`}
+                                          }`}
                                       />
                                       {props.errors.currency &&
                                         props.touched.currency && (
@@ -2863,7 +2855,7 @@ class DetailQuotation extends React.Component {
                                     {props.errors.lineItemsString &&
                                       props.touched.lineItemsString &&
                                       typeof props.errors.lineItemsString ===
-                                        "string" && (
+                                      "string" && (
                                         <div
                                           className={
                                             props.errors.lineItemsString
@@ -3094,7 +3086,7 @@ class DetailQuotation extends React.Component {
                                             <Input
                                               type="text"
                                               maxLength="20"
-                                              style={{width: "500px"}}
+                                              style={{ width: "500px" }}
                                               id="receiptNumber"
                                               name="receiptNumber"
                                               value={props.values.receiptNumber}
@@ -3106,7 +3098,7 @@ class DetailQuotation extends React.Component {
                                               }}
                                               className={
                                                 props.errors.receiptNumber &&
-                                                props.touched.receiptNumber
+                                                  props.touched.receiptNumber
                                                   ? "is-invalid"
                                                   : ""
                                               }
@@ -3261,19 +3253,19 @@ class DetailQuotation extends React.Component {
                                                   &nbsp;
                                                   {this.state.initValue.discount
                                                     ? initValue.discount.toLocaleString(
-                                                        navigator.language,
-                                                        {
-                                                          minimumFractionDigits: 2,
-                                                          maximumFractionDigits: 2,
-                                                        }
-                                                      )
+                                                      navigator.language,
+                                                      {
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2,
+                                                      }
+                                                    )
                                                     : initValue.discount.toLocaleString(
-                                                        navigator.language,
-                                                        {
-                                                          minimumFractionDigits: 2,
-                                                          maximumFractionDigits: 2,
-                                                        }
-                                                      )}
+                                                      navigator.language,
+                                                      {
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2,
+                                                      }
+                                                    )}
                                                 </label>
                                               </Col>
                                             </Row>

@@ -89,7 +89,6 @@ class InvoiceTemplate extends Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { invoiceData, currencyData, totalNet, companyData,status,contactData } = this.props;
-		console.log(contactData,"contactData")
 	return (
 			<div>
 				<Card id="singlePage" className="box">
@@ -483,11 +482,11 @@ class InvoiceTemplate extends Component {
 									<b><u> {invoiceData.totalVatAmount ? (upperCase(invoiceData.currencyName + " " +(toWords.convert(invoiceData.totalVatAmount))+" ONLY")).replace("POINT","AND") : " -" }</u></b> */}
 									{/* <b> {invoiceData.totalVatAmount}</b> */}
 								{/* </div> */}
-								{invoiceData.notes&& (<><h6 className="mb-0 pt-2">
+								<><h6 className="mb-0 pt-2">
 									<b>{strings.Notes }:</b>
 								</h6><br/>
-								<h6 className="mb-0">{invoiceData.notes}</h6>
-								</>)}
+								<h6 className="mb-0">{invoiceData.notes ? invoiceData.notes : "Business Terms and conditions."}</h6>
+								</>
 							
 							
 							</div>

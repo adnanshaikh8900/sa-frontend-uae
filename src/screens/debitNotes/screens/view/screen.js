@@ -179,7 +179,13 @@ class ViewDebitNote extends React.Component {
 									className="close-btn mb-1 btn-lg print-btn-cont"
 
 									onClick={() => {
-										this.props.history.push('/admin/expense/debit-notes');
+										if (this.props.location.state.SUP_id)
+											this.props.history.push('/admin/expense/supplier-invoice/view', {
+												id: this.props.location.state.SUP_id,
+												status: this.props.location.state.SUP_status,
+											})
+										else
+											this.props.history.push('/admin/expense/debit-notes');
 									}}
 								>
 									<i class="fas fa-times"></i>

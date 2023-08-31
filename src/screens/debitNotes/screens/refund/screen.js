@@ -175,16 +175,15 @@ class DebitNoteRefund extends React.Component {
 			this.props.debitNotesRefundActions.refundPaymentCNWithoutInvoice(formData)
 				.then((res) => {
 					this.props.commonActions.tostifyAlert(
-						'success', 'Refund Recorded successfully',
+						'success',strings.RefundRecordedSuccessfully
 					);
 					this.props.history.push('/admin/expense/debit-notes');
 					this.setState({ loading: false, });
 				})
 				.catch((err) => {
 					this.setState({ loading: false, loadingMsg: "", disabled: false, disableLeavePage: false });
-
 					this.props.commonActions.tostifyAlert(
-						'error', 'Credit Refund Unsuccessfully.',
+						'error', strings.RefundRecordedUnsuccessfully,
 					);
 				});
 		}//
@@ -217,7 +216,7 @@ class DebitNoteRefund extends React.Component {
 			this.props.debitNotesRefundActions.refundPaymentCNWithInvoice(formData)
 				.then((res) => {
 					this.props.commonActions.tostifyAlert(
-						'success', 'Refund Recorded Successfully!',
+						'success', strings.RefundRecordedSuccessfully,
 					);
 					this.props.history.push('/admin/expense/debit-notes');
 					this.setState({ loading: false, });
@@ -225,7 +224,7 @@ class DebitNoteRefund extends React.Component {
 				.catch((err) => {
 					this.setState({ loading: false, loadingMsg: "", disabled: false, disableLeavePage: false });
 					this.props.commonActions.tostifyAlert(
-						'error', 'Credit Refund Unsuccessfully.',
+						'error', strings.RefundRecordedUnsuccessfully,
 					);
 				});
 		}//

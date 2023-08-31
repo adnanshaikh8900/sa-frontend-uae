@@ -337,12 +337,11 @@ class ApplyToSupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.initializeData();
 					this.props.commonActions.tostifyAlert(
-						'success', 'Amount Applied To Invoice Successfully!',
+						'success', strings.AmountAppliedToInvoiceSuccessfully,
 					);
 					if (this.state.invoice_list && this.state.invoice_list.length > 0) {
 						this.setState({
 							selectedRows: [],
-
 						});
 						this.props.history.push('/admin/expense/debit-notes');
 					}
@@ -352,9 +351,8 @@ class ApplyToSupplierInvoice extends React.Component {
 			})
 			.catch((err) => {
 				this.setState({ loading: false, disabled: false, disableLeavePage: false });
-
 				this.props.commonActions.tostifyAlert(
-					'error', 'Something Went Wrong',
+					'error', strings.AmountAppliedToInvoiceUnsuccessfully,
 				);
 			});
 	};

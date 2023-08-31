@@ -497,6 +497,7 @@ class ApplyToInvoice extends React.Component {
 																		<TableHeaderColumn
 																			dataField="referenceNo"
 																			className="table-header-bg"
+																			dataAlign="center"
 																		// dataFormat={(cell, rows) =>
 																		// 	this.renderDescription(
 																		// 		cell,
@@ -511,6 +512,7 @@ class ApplyToInvoice extends React.Component {
 																			dataField='date'
 																			dataFormat={this.renderDate}
 																			className="table-header-bg"
+																			dataAlign="center"
 																		// dataFormat={(cell, rows) =>
 																		// 	this.renderQuantity(cell, rows, props)
 																		// }
@@ -520,6 +522,7 @@ class ApplyToInvoice extends React.Component {
 																		<TableHeaderColumn
 																			dataField="dueAmount"
 																			className="table-header-bg"
+																			dataAlign="right"
 																		// dataFormat={(cell, rows) =>
 																		// 	this.renderUnitPrice(cell, rows, props)
 																		// }
@@ -542,6 +545,7 @@ class ApplyToInvoice extends React.Component {
 																			dataFormat={this.renderCredittaken}
 																			formatExtraData={this.props.location.state.creditAmount}
 																			className="table-header-bg"
+																			dataAlign="right"
 																		// dataFormat={(cell, rows) =>
 																		// 	this.renderUnitPrice(cell, rows, props)
 																		// }

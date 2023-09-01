@@ -256,10 +256,10 @@ class ViewCustomerInvoice extends React.Component {
 							</div>
 						</Col>
 					</Row>
-					<div style={{ display: this.state.creditNoteDataList.creditNoteId === 0 ? '' : 'none' }}><strong>{strings.CreditNoteIssuedonCustomerInvoice}</strong></div>
+					<div style={{ display: this.state.creditNoteDataList.creditNoteId ? '' : 'none' }}><strong>{strings.CreditNoteIssuedonCustomerInvoice}</strong></div>
 					<Card>
 
-						<div style={{ display: this.state.creditNoteDataList.creditNoteId === 0 ? '' : 'none' }} >
+						<div style={{ display: this.state.creditNoteDataList.creditNoteId ? '' : 'none' }} >
 							<Table  >
 								<thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
 									<tr>

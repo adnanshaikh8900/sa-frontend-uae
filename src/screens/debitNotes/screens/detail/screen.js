@@ -1191,12 +1191,12 @@ class DetailDebitNote extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
 																				<span className="text-danger">* </span>
-																					{strings.SupplierName}
+																				{strings.SupplierName}
 																			</Label>
 																			<Select
 																				id="contactId"
 																				name="contactId"
-																					placeholder={strings.Select + strings.SupplierName}
+																				placeholder={strings.Select + strings.SupplierName}
 																				options={tmpCustomer_list ? tmpCustomer_list : []}
 																				value={props.values.contactId?.values ? props.values.contactId : tmpCustomer_list && tmpCustomer_list.find(obj => obj.value === props.values.contactId)}
 
@@ -1403,9 +1403,9 @@ class DetailDebitNote extends React.Component {
 																					placeholder={strings.Enter + " Debit Amount"}
 																					value={props.values.debitAmount}
 																					onChange={(value) => {
-																						props.handleChange('debitAmount')(
-																							value,
-																						);
+																						if ((value.target.value === '' || this.regDecimal.test(value.target.value))
+																							&& parseFloat(value.target.value) !== 0)
+																							props.handleChange('debitAmount')(value,);
 																					}}
 																					className={
 																						props.errors.debitAmount &&

@@ -1223,19 +1223,19 @@ class CreateDebitNote extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																		<span className="text-danger">* </span>
-																		{strings.CustomerName}
+																		{strings.SupplierName}
 																	</Label>
 																	<Select
 																		id="contactId"
 																		name="contactId"
-																		placeholder={strings.Select + strings.CustomerName}
+																		placeholder={strings.Select + strings.SupplierName}
 																		options={
 																			tmpCustomer_list
 																				? selectOptionsFactory.renderOptions(
 																					'label',
 																					'value',
 																					tmpCustomer_list,
-																					'Customer',
+																					'Supplier',
 																				)
 																				: []
 																		}

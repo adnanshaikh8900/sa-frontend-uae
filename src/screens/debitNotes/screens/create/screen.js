@@ -1018,7 +1018,7 @@ class CreateDebitNote extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, receiptDate, initValue, debitNoteExist, lockInvoiceDetail,isCreatedWithoutInvoice } = this.state;
+		const { data, receiptDate, initValue, debitNoteExist, lockInvoiceDetail, isCreatedWithoutInvoice } = this.state;
 		const {
 			customer_list,
 			invoice_list,
@@ -1444,9 +1444,9 @@ class CreateDebitNote extends React.Component {
 																			placeholder={strings.Enter + " Debit Amount"}
 																			value={props.values.debitAmount}
 																			onChange={(value) => {
-																				props.handleChange('debitAmount')(
-																					value,
-																				);
+																				if ((value.target.value === '' || this.regDecimal.test(value.target.value))
+																					&& parseFloat(value.target.value) !== 0)
+																					props.handleChange('debitAmount')(value,);
 																			}}
 																			className={
 																				props.errors.debitAmount &&

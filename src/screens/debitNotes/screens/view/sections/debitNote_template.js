@@ -148,7 +148,7 @@ class DebitNoteTemplate extends Component {
 								</div>
 								<br/>
 								<div>
-									<Table className="table-striped" style={{ width: 'fit-content', border: '1px solid', borderColor: '#c8ced3', float: 'right' }}>
+									<Table className="table-striped" style={{ width: 'fit-content', border: '1px solid', borderColor: '#c8ced3', float: 'right',minWidth: '30%', }}>
 										<thead className="header-row" style={{ fontSize: "12px" }}>
 											<tr>
 												<th>{strings.DebitNoteNo}</th>
@@ -160,11 +160,11 @@ class DebitNoteTemplate extends Component {
 										</thead>
 										<tbody>
 											<tr>
-												<td style={{ width: '143px' }}>{debitNoteData.creditNoteNumber}</td>
-												<td style={{ width: '143px' }}>{' '}{moment(debitNoteData.creditNoteDate).format('DD MMM YYYY',)}</td>
-												<td style={{ width: '143px' }}>{debitNoteData.status}</td>
-												{isCNWithoutProduct && debitNoteData.referenceNo && <td style={{ width: '143px' }}>{debitNoteData.invoiceId}</td>}
-												{isCNWithoutProduct && <td style={{ width: '143px' }}>{debitNoteData.totalAmount}</td>}
+												<td>{debitNoteData.creditNoteNumber}</td>
+												<td>{' '}{moment(debitNoteData.creditNoteDate).format('DD-MM-YYYY',)}</td>
+												<td>{debitNoteData.status}</td>
+												{isCNWithoutProduct && debitNoteData.referenceNo && <td>{debitNoteData.invoiceId}</td>}
+												{isCNWithoutProduct && <td>{debitNoteData.totalAmount}</td>}
 											</tr>
 										</tbody>
 									</Table>
@@ -287,12 +287,12 @@ class DebitNoteTemplate extends Component {
 								}}
 							>
 								<br />
-								{debitNoteData.referenceNo && (<><h6 className="mb-0 pt-2">
+								{/* {debitNoteData.referenceNo && (<><h6 className="mb-0 pt-2">
 									<b>{strings.ReferenceNumber}:</b>
 								</h6>
 									<h6 className="mb-0">{debitNoteData.referenceNo}</h6>
 								</>)}
-								<br/>
+								<br/> */}
 								{debitNoteData.notes && (<><h6 className="mb-0 pt-2">
 									<b>{strings.Notes}:</b>
 								</h6>

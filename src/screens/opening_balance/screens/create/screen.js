@@ -185,8 +185,8 @@ class CreateOpeningBalance extends React.Component {
 							<Card>
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon icon-briefcase mr-1" />
-										<span>{strings.NewOpeningBalance}</span>
+									<i className="fas fa-balance-scale" />
+										<span className="ml-2">{strings.NewOpeningBalance}</span>
 									</div>
 								</CardHeader>
 								<CardBody>

@@ -2936,7 +2936,7 @@ class CreateQuotation extends React.Component {
 																						Excise dropdown will be enabled only for the excise products
 																					</UncontrolledTooltip>
 																				</TableHeaderColumn>}
-																			{isRegisteredVat && <>
+																			{isRegisteredVat &&
 																				<TableHeaderColumn
 																					//width="13%"
 																					dataField="vat"
@@ -2946,6 +2946,8 @@ class CreateQuotation extends React.Component {
 																				>
 																					{strings.VAT}
 																				</TableHeaderColumn>
+																			}
+																			{isRegisteredVat &&
 																				<TableHeaderColumn
 																					//width="10%"
 																					dataField="sub_total"
@@ -2956,7 +2958,7 @@ class CreateQuotation extends React.Component {
 																				>
 																					{strings.VATAMOUNT}
 																				</TableHeaderColumn>
-																			</>}
+																			}
 																			<TableHeaderColumn
 																				dataField="sub_total"
 																				dataFormat={this.renderSubTotal}

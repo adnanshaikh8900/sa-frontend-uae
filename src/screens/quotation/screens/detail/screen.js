@@ -1166,6 +1166,8 @@ class DetailQuotation extends React.Component {
     data.map((obj, index) => {
       obj["vatCategoryId"] = "";
       newData.push(obj);
+      if (obj['productId'])
+					this.getProductType(obj['productId'])
       return obj;
     });
     props.setFieldValue("lineItemsString", newData, true);
@@ -1191,7 +1193,9 @@ class DetailQuotation extends React.Component {
       }
       return obj;
     });
-
+    if (row.productId && row.vatCategoryId) {
+			row.vatCategoryId = typeof (row.vatCategoryId) === 'string' ? parseInt(row.vatCategoryId) : row.vatCategoryId;
+		}
     return (
       <Field
         name={`lineItemsString.${idx}.vatCategoryId`}
@@ -1212,7 +1216,7 @@ class DetailQuotation extends React.Component {
                 vat_list &&
                 selectOptionsFactory
                   .renderOptions("name", "id", vat_list, "VAT")
-                  .find((option) => option.value === +row.vatCategoryId)
+                  .find((option) => option.value === row.vatCategoryId)
               }
               id="vatCategoryId"
               placeholder={strings.Select + strings.VAT}
@@ -1334,6 +1338,7 @@ class DetailQuotation extends React.Component {
       result.exciseTaxId,
       true
     );
+		this.getProductType(parseInt(e))
     this.updateAmount(data, props);
   };
   renderAddProduct = (cell, rows, props) => {
@@ -2884,7 +2889,7 @@ class DetailQuotation extends React.Component {
                                         }
                                       ></TableHeaderColumn>
                                       <TableHeaderColumn
-                                       // width="17%"
+                                        // width="17%"
                                         dataField="product"
                                         dataFormat={(cell, rows) =>
                                           this.renderProduct(cell, rows, props)
@@ -2922,7 +2927,7 @@ class DetailQuotation extends React.Component {
 																		</TableHeaderColumn> */}
                                       <TableHeaderColumn
                                         dataField="quantity"
-                                       // width="13%"
+                                        // width="13%"
                                         dataFormat={(cell, rows) =>
                                           this.renderQuantity(cell, rows, props)
                                         }
@@ -2958,7 +2963,7 @@ class DetailQuotation extends React.Component {
                                       </TableHeaderColumn>
                                       {this.state.discountEnabled == true && (
                                         <TableHeaderColumn
-                                         // width="12%"
+                                          // width="12%"
                                           dataField="discount"
                                           dataFormat={(cell, rows) =>
                                             this.renderDiscount(
@@ -2973,7 +2978,7 @@ class DetailQuotation extends React.Component {
                                       )}
                                       {initValue.total_excise != 0 && (
                                         <TableHeaderColumn
-                                         // width="10%"
+                                          // width="10%"
                                           dataField="exciseTaxId"
                                           dataFormat={(cell, rows) =>
                                             this.renderExcise(cell, rows, props)
@@ -2993,16 +2998,19 @@ class DetailQuotation extends React.Component {
                                           </UncontrolledTooltip>
                                         </TableHeaderColumn>
                                       )}
-                                      {isRegisteredVat && <>                                      <TableHeaderColumn
-                                        dataField="vat"
-                                        dataFormat={(cell, rows) =>
-                                          this.renderVat(cell, rows, props)
-                                        }
-                                      >
-                                        {strings.VAT}
-                                      </TableHeaderColumn>
+                                      {isRegisteredVat &&
                                         <TableHeaderColumn
-                                        //  width="10%"
+                                          dataField="vat"
+                                          dataFormat={(cell, rows) =>
+                                            this.renderVat(cell, rows, props)
+                                          }
+                                        >
+                                          {strings.VAT}
+                                        </TableHeaderColumn>
+                                      }
+                                      {isRegisteredVat &&
+                                        <TableHeaderColumn
+                                          //  width="10%"
                                           dataField="sub_total"
                                           dataFormat={this.renderVatAmount}
                                           className="text-right"
@@ -3013,7 +3021,7 @@ class DetailQuotation extends React.Component {
                                         >
                                           {strings.VATAMOUNT}
                                         </TableHeaderColumn>
-                                      </>}
+                                      }
                                       <TableHeaderColumn
                                         dataField="sub_total"
                                         dataFormat={this.renderSubTotal}

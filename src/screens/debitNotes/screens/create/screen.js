@@ -83,7 +83,7 @@ class CreateDebitNote extends React.Component {
 			customer_currency_symbol: '',
 			disabled: false,
 			discountOptions: [
-				{ value: 'FIXED', label: '₹' },
+				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: '%' },
 			],
 			disabledDate: true,
@@ -375,10 +375,7 @@ class CreateDebitNote extends React.Component {
 										id="discountType"
 										name="discountType"
 										value={
-											discountOptions &&
-											selectOptionsFactory
-												.renderOptions('label', 'value', discountOptions, 'discount')
-												.find((option) => option.value == row.discountType)
+											discountOptions && discountOptions.find((option) => option.value == row.discountType)
 										}
 										onChange={(e) => {
 											this.selectItem(

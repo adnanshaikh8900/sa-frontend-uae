@@ -84,7 +84,7 @@ class DetailDebitNote extends React.Component {
 			disabled1: false,
 			customer_currency_symbol: '',
 			discountOptions: [
-				{ value: 'FIXED', label: '₹' },
+				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: '%' },
 			],
 			discount_option: '',
@@ -572,6 +572,7 @@ class DetailDebitNote extends React.Component {
 					<div>
 						<div class="input-group">
 							<Input
+								disabled
 								type="text"
 								min="0"
 								maxLength="14,2"
@@ -608,11 +609,9 @@ class DetailDebitNote extends React.Component {
 									}`}
 							/>
 							<div class="dropdown open input-group-append">
-
-								<div style={{ width: '100px' }}>
+								<div style={{ width: '100%' }}>
 									<Select
-
-
+										isDisabled
 										options={discountOptions}
 										id="discountType"
 										name="discountType"
@@ -1459,7 +1458,7 @@ class DetailDebitNote extends React.Component {
 																					}
 																				></TableHeaderColumn>
 																				<TableHeaderColumn
-																					width="20%"
+																					//width="20%"
 																					dataField="product"
 																					dataFormat={(cell, rows) =>
 																						this.renderProduct(cell, rows, props)
@@ -1506,7 +1505,7 @@ class DetailDebitNote extends React.Component {
 																				}
 																				{initValue.total_excise != 0 &&
 																					<TableHeaderColumn
-																						width="10%"
+																					//	width="10%"
 																						dataField="exciseTaxId"
 																						dataFormat={(cell, rows) =>
 																							this.renderExcise(cell, rows, props)

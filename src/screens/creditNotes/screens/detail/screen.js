@@ -14,6 +14,7 @@ import {
 	Label,
 	UncontrolledTooltip
 } from 'reactstrap';
+import { Checkbox } from '@material-ui/core';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
@@ -84,7 +85,7 @@ class DetailCreditNote extends React.Component {
 				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: 'Percentage' },
 			],
-			exciseTypeOption:[
+			exciseTypeOption: [
 				{ value: 'Inclusive', label: 'Inclusive' },
 				{ value: 'Exclusive', label: 'Exclusive' },
 			],
@@ -106,7 +107,8 @@ class DetailCreditNote extends React.Component {
 			customer_currency: '',
 			loadingMsg: "Loading...",
 			showInvoiceNumber: false,
-			disableLeavePage: false
+			disableLeavePage: false,
+			invoiceSelected: false,
 		};
 
 		// this.options = {
@@ -191,11 +193,12 @@ class DetailCreditNote extends React.Component {
 				.getInvoicesForCNById(this.props.location.state.id)
 				.then((res) => {
 					if (res.status === 200) {
-						if (res.data.length && res.data.length != 0)
+						if (res.data.length && res.data.length != 0) {
 							this.setState({
 								invoiceNumber: res.data[0].invoiceNumber,
 								showInvoiceNumber: true
 							});
+						}
 					}
 				})
 			//CN details
@@ -218,7 +221,7 @@ class DetailCreditNote extends React.Component {
 						this.setState(
 							{
 								taxType: res.data.taxType ? res.data.taxType : false,
-								isCreatedWithoutInvoice: res.data.isCreatedWithoutInvoice ? res.data.isCreatedWithoutInvoice : false,
+								isCreatedWithoutInvoice: res.data.invoiceId ? false : true,
 								current_customer_id: this.props.location.state.id,
 								initValue: {
 									receiptAttachmentDescription: res.data
@@ -270,7 +273,7 @@ class DetailCreditNote extends React.Component {
 									total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
 								},
 								isCreatedWIWP: res.data.invoiceLineItems && res.data.invoiceLineItems?.length > 0 ? false : true,
-
+								invoiceSelected: res.data.invoiceId ? true : false,
 								customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : '',
 								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								discountAmount: res.data.discount ? res.data.discount : 0,
@@ -367,7 +370,7 @@ class DetailCreditNote extends React.Component {
 									this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
 									this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
 									this.getTaxTreatment(this.state.option.value);
-									this.formRef.current.setFieldValue('invoiceNumber', res.data.invoiceId, true);
+									this.formRef.current.setFieldValue('invoiceNumber', { value: res.data.invoiceId, label: res.data.invoiceNumber }, true);
 
 								});
 						}
@@ -819,9 +822,7 @@ class DetailCreditNote extends React.Component {
 										name="discountType"
 										value={
 											discountOptions &&
-											selectOptionsFactory
-												.renderOptions('label', 'value', discountOptions, 'discount')
-												.find((option) => option.value == row.discountType)
+											discountOptions.find((option) => option.value == row.discountType)
 										}
 										onChange={(e) => {
 											this.selectItem(
@@ -1061,7 +1062,7 @@ class DetailCreditNote extends React.Component {
 		);
 
 	};
-	
+
 
 	handleFileChange = (e, props) => {
 		e.preventDefault();
@@ -1073,7 +1074,52 @@ class DetailCreditNote extends React.Component {
 			props.setFieldValue('attachmentFile', file, true);
 		}
 	};
+	getInvoiceDetails = (value) => {
+		if (value) {
+			this.props.creditNotesActions
+				.getInvoiceById(value).then((response) => {
+					if (response.status === 200) {
+						const customerdetails = {
+							label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
+							value: response.data.contactId
+						}
 
+						this.setState({
+							receiptDate: response.data.receiptDate,
+							taxType: response.data.taxType,
+							option: {
+								label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
+								value: response.data.contactId,
+							},
+							data: response.data.invoiceLineItems,
+							totalAmount: response.data.totalAmount,
+							customer_currency: response.data.currencyCode,
+							remainingInvoiceAmount: response.data.remainingInvoiceAmount,
+						}, () => {
+							this.formRef.current.setFieldValue(
+								'lineItemsString',
+								this.state.data,
+								true,
+							);
+							this.formRef.current.setFieldTouched(
+								`lineItemsString[${this.state.data.length - 1}]`,
+								false,
+								true,
+							);
+							this.updateAmount(this.state.data)
+						},);
+						this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
+						this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
+						this.setExchange(this.getCurrency(customerdetails.value));
+						this.formRef.current.setFieldValue('contactId', response.data.contactId, true);
+						this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
+						this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
+						this.getCurrency(this.state.option.value)
+						this.getTaxTreatment(this.state.option.value)
+					}
+				});
+		}
+	}
 	handleSubmit = (data) => {
 		this.setState({ disabled: true, disableLeavePage: true });
 		const { current_customer_id, term } = this.state;
@@ -1351,7 +1397,7 @@ class DetailCreditNote extends React.Component {
 
 		return customer_taxTreatmentId;
 	}
-	showInvoiceNumber = () => {
+	showInvoiceNumber = (props) => {
 		return (
 			this.state.showInvoiceNumber && (<Col lg={3}>
 				<FormGroup className="mb-3">
@@ -1363,7 +1409,7 @@ class DetailCreditNote extends React.Component {
 						disabled
 						id="invoiceNumber"
 						name="invoiceNumber"
-						value={this.state.invoiceNumber}
+						value={props.values.invoiceNumber?.label ? props.values.invoiceNumber?.label : props.values.invoiceNumber}
 					/>
 				</FormGroup>
 			</Col>)
@@ -1480,7 +1526,7 @@ class DetailCreditNote extends React.Component {
 																					return false;
 																				}
 																			},
-																	).required('Quantity is required')
+																		).required('Quantity is required')
 																	// 			unitPrice: Yup.string()
 																	// 				.required('Value is required')
 																	// 				.test(
@@ -1540,7 +1586,19 @@ class DetailCreditNote extends React.Component {
 													>
 														{(props) => (
 															<Form onSubmit={props.handleSubmit}>
-																<Row>{this.showInvoiceNumber()}  </Row>
+																<Row style={{ display: this.state.invoiceSelected === true ? '' : 'none' }}>
+																	<Col lg={4}>
+																		<Checkbox
+																			checked={this.state.isCreatedWIWP}
+																			onChange={(check) => {
+																				this.setState({ isCreatedWIWP: !this.state.isCreatedWIWP })
+																				if (this.props.location.state.isCNWithoutProduct)
+																					this.getInvoiceDetails(props.values.invoiceNumber?.value ? props.values.invoiceNumber.value : props.values.invoiceNumber)
+																			}}
+																		/>	{strings.CreateCreditNoteWithoutProduct}
+																	</Col>
+																</Row>
+																<Row>{this.showInvoiceNumber(props)}  </Row>
 																<Row>
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
@@ -1882,7 +1940,7 @@ class DetailCreditNote extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-																	
+
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="currencyCode">
@@ -1934,7 +1992,7 @@ class DetailCreditNote extends React.Component {
 																		</FormGroup>
 																	</Col>
 
-																	{(!this.state.isCreatedWithoutInvoice && this.state.invoiceNumber) && (<Col lg={3}>
+																	{(this.state.invoiceSelected) && (<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="remainingInvoiceAmount">
 																				{strings.RemainingInvoiceAmount}
@@ -1956,7 +2014,7 @@ class DetailCreditNote extends React.Component {
 																		</FormGroup>
 																	</Col>)}
 
-																	{(<Col lg={3}>
+																	{this.state.isCreatedWIWP && (<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="creditAmount"><span className="text-danger">* </span>
 																				{strings.CreditAmount}
@@ -1994,95 +2052,95 @@ class DetailCreditNote extends React.Component {
 
 																</Row>
 																<hr />
-										{this.props.location.state.isCNWithoutProduct !== true && props.values.lineItemsString?.length > 0 && (
-										<>
-										<Row>
-										<Col lg={8} className="mb-3">
-														</Col>
-														<Col>
-															{this.state.taxType === false ?
-																<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
-																<span className='mr-4'>{strings.Exclusive}</span>}
-															<Switch
-																value={props.values.taxType}
-																checked={this.state.taxType}
-																disabled
-																onChange={(taxType) => {
-																	props.handleChange('taxType')(taxType);
-																	this.setState({ taxType }, () => {
-																		this.updateAmount(
-																			this.state.data,
-																			props
-																		)
-																	});
-																}}
+																{!this.state.isCreatedWIWP && props.values.lineItemsString?.length > 0 && (
+																	<>
+																		<Row>
+																			<Col lg={8} className="mb-3">
+																			</Col>
+																			<Col>
+																				{this.state.taxType === false ?
+																					<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																					<span className='mr-4'>{strings.Exclusive}</span>}
+																				<Switch
+																					value={props.values.taxType}
+																					checked={this.state.taxType}
+																					disabled
+																					onChange={(taxType) => {
+																						props.handleChange('taxType')(taxType);
+																						this.setState({ taxType }, () => {
+																							this.updateAmount(
+																								this.state.data,
+																								props
+																							)
+																						});
+																					}}
 
-																onColor="#2064d8"
-																onHandleColor="#2693e6"
-																handleDiameter={25}
-																uncheckedIcon={false}
-																checkedIcon={false}
-																boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-																activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-																height={20}
-																width={48}
-																className="react-switch "
-															/>
-															{this.state.taxType === true ?
-																<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
-																: <span className='ml-4'>{strings.Inclusive}</span>
-															}
-														</Col>
-														</Row>
+																					onColor="#2064d8"
+																					onHandleColor="#2693e6"
+																					handleDiameter={25}
+																					uncheckedIcon={false}
+																					checkedIcon={false}
+																					boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																					activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																					height={20}
+																					width={48}
+																					className="react-switch "
+																				/>
+																				{this.state.taxType === true ?
+																					<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																					: <span className='ml-4'>{strings.Inclusive}</span>
+																				}
+																			</Col>
+																		</Row>
 
-																<Row>
-																	{props.errors.lineItemsString &&
-																		typeof props.errors.lineItemsString ===
-																		'string' && (
-																			<div
-																				className={
-																					props.errors.lineItemsString
-																						? 'is-invalid'
-																						: ''
-																				}
-																			>
-																				<div className="invalid-feedback">
-																					{props.errors.lineItemsString}
-																				</div>
-																			</div>
-																		)}
-																	<Col lg={12}>
-																		<BootstrapTable
-																			options={this.options}
-																			data={data}
-																			version="4"
-																			hover
-																			keyField="id"
-																			className="invoice-create-table"
-																		>
-																			<TableHeaderColumn
-																				width="55"
-																				dataAlign="center"
-																				dataFormat={(cell, rows) =>
-																					this.renderActions(cell, rows, props)
-																				}
-																			></TableHeaderColumn>
-																			<TableHeaderColumn
-																				dataField="product"
-																				dataFormat={(cell, rows) =>
-																					this.renderProduct(cell, rows, props)
-																				}
-																			>
-																				{strings.PRODUCT}
-																			</TableHeaderColumn>
-																			{/* <TableHeaderColumn
+																		<Row>
+																			{props.errors.lineItemsString &&
+																				typeof props.errors.lineItemsString ===
+																				'string' && (
+																					<div
+																						className={
+																							props.errors.lineItemsString
+																								? 'is-invalid'
+																								: ''
+																						}
+																					>
+																						<div className="invalid-feedback">
+																							{props.errors.lineItemsString}
+																						</div>
+																					</div>
+																				)}
+																			<Col lg={12}>
+																				<BootstrapTable
+																					options={this.options}
+																					data={data}
+																					version="4"
+																					hover
+																					keyField="id"
+																					className="invoice-create-table"
+																				>
+																					<TableHeaderColumn
+																						width="55"
+																						dataAlign="center"
+																						dataFormat={(cell, rows) =>
+																							this.renderActions(cell, rows, props)
+																						}
+																					></TableHeaderColumn>
+																					<TableHeaderColumn
+																						dataField="product"
+																						dataFormat={(cell, rows) =>
+																							this.renderProduct(cell, rows, props)
+																						}
+																					>
+																						{strings.PRODUCT}
+																					</TableHeaderColumn>
+																					{/* <TableHeaderColumn
 																				width="55"
 																				dataAlign="center"
 																				dataFormat={(cell, rows) =>
 																					this.renderAddProduct(cell, rows, props)
 																				}
 																			></TableHeaderColumn> */}
-																			{/* <TableHeaderColumn
+																					{/* <TableHeaderColumn
 																				dataField="description"
 																				dataFormat={(cell, rows) =>
 																					this.renderDescription(
@@ -2094,15 +2152,15 @@ class DetailCreditNote extends React.Component {
 																			>
 																				{strings.DESCRIPTION}
 																			</TableHeaderColumn> */}
-																			<TableHeaderColumn
-																				dataField="quantity"
-																				dataFormat={(cell, rows) =>
-																					this.renderQuantity(cell, rows, props)
-																				}
-																			>
-																				{strings.QUANTITY}
-																			</TableHeaderColumn>
-																			{/* <TableHeaderColumn
+																					<TableHeaderColumn
+																						dataField="quantity"
+																						dataFormat={(cell, rows) =>
+																							this.renderQuantity(cell, rows, props)
+																						}
+																					>
+																						{strings.QUANTITY}
+																					</TableHeaderColumn>
+																					{/* <TableHeaderColumn
 																				width="5%"
 																				dataField="unitType"
 																			>{strings.Unit}	<i
@@ -2116,78 +2174,78 @@ class DetailCreditNote extends React.Component {
 																					Units / Measurements
 																				</UncontrolledTooltip>
 																			</TableHeaderColumn> */}
-																			<TableHeaderColumn
-																				dataField="unitPrice"
-																				dataFormat={(cell, rows) =>
-																					this.renderUnitPrice(cell, rows, props)
-																				}
-																			>
-																				{strings.UNITPRICE}
-																			</TableHeaderColumn>
-																			{props.values.lineItemsString.map(i => (i.discount != 0 ? (
-																				<TableHeaderColumn
-																					width="12%"
-																					dataField="discount"
-																					dataFormat={(cell, rows) =>
-																						this.renderDiscount(cell, rows, props)
-																					}
-																				>
-																					{strings.DisCount}
-																				</TableHeaderColumn>
-																			) : null))
-																			}
-																			{props.values.lineItemsString.map(i => (i.exciseAmount != 0 ? (
-																				<TableHeaderColumn
-																					width="10%"
-																					dataField="exciseTaxId"
-																					dataFormat={(cell, rows) =>
-																						this.renderExcise(cell, rows, props)
-																					}
-																				>
-																					{strings.Excises}
-																					<i
-																						id="ExiseTooltip"
-																						className="fa fa-question-circle ml-1"
-																					></i>
-																					<UncontrolledTooltip
-																						placement="right"
-																						target="ExiseTooltip"
+																					<TableHeaderColumn
+																						dataField="unitPrice"
+																						dataFormat={(cell, rows) =>
+																							this.renderUnitPrice(cell, rows, props)
+																						}
 																					>
-																						Excise dropdown will be enabled only for the excise products
-																					</UncontrolledTooltip>
-																				</TableHeaderColumn>
-																			) : null))
-																			}
-																			<TableHeaderColumn
-																				dataField="vat"
-																				dataFormat={(cell, rows) =>
-																					this.renderVat(cell, rows, props)
-																				}
-																			>
-																				{strings.VAT}
-																			</TableHeaderColumn>
-																			<TableHeaderColumn
-																				width="10%"
-																				dataField="sub_total"
-																				dataFormat={this.renderVatAmount}
-																				className="text-right"
-																				columnClassName="text-right"
-																				formatExtraData={universal_currency_list}
-																			>
-																				{strings.VATAMOUNT}
-																			</TableHeaderColumn>
-																			<TableHeaderColumn
-																				dataField="sub_total"
-																				dataFormat={this.renderSubTotal}
-																				className="text-right"
-																				columnClassName="text-right"
-																				formatExtraData={universal_currency_list}
-																			>
-																				{strings.SUBTOTAL}
-																			</TableHeaderColumn>
-																		</BootstrapTable>
-																	</Col>
-																</Row></>)}
+																						{strings.UNITPRICE}
+																					</TableHeaderColumn>
+																					{props.values.lineItemsString.map(i => (i.discount != 0 ? (
+																						<TableHeaderColumn
+																							width="12%"
+																							dataField="discount"
+																							dataFormat={(cell, rows) =>
+																								this.renderDiscount(cell, rows, props)
+																							}
+																						>
+																							{strings.DisCount}
+																						</TableHeaderColumn>
+																					) : null))
+																					}
+																					{props.values.lineItemsString.map(i => (i.exciseAmount != 0 ? (
+																						<TableHeaderColumn
+																							width="10%"
+																							dataField="exciseTaxId"
+																							dataFormat={(cell, rows) =>
+																								this.renderExcise(cell, rows, props)
+																							}
+																						>
+																							{strings.Excises}
+																							<i
+																								id="ExiseTooltip"
+																								className="fa fa-question-circle ml-1"
+																							></i>
+																							<UncontrolledTooltip
+																								placement="right"
+																								target="ExiseTooltip"
+																							>
+																								Excise dropdown will be enabled only for the excise products
+																							</UncontrolledTooltip>
+																						</TableHeaderColumn>
+																					) : null))
+																					}
+																					<TableHeaderColumn
+																						dataField="vat"
+																						dataFormat={(cell, rows) =>
+																							this.renderVat(cell, rows, props)
+																						}
+																					>
+																						{strings.VAT}
+																					</TableHeaderColumn>
+																					<TableHeaderColumn
+																						width="10%"
+																						dataField="sub_total"
+																						dataFormat={this.renderVatAmount}
+																						className="text-right"
+																						columnClassName="text-right"
+																						formatExtraData={universal_currency_list}
+																					>
+																						{strings.VATAMOUNT}
+																					</TableHeaderColumn>
+																					<TableHeaderColumn
+																						dataField="sub_total"
+																						dataFormat={this.renderSubTotal}
+																						className="text-right"
+																						columnClassName="text-right"
+																						formatExtraData={universal_currency_list}
+																					>
+																						{strings.SUBTOTAL}
+																					</TableHeaderColumn>
+																				</BootstrapTable>
+																			</Col>
+																		</Row></>)}
 																{this.state.invoiceNumber ? (
 																	<Row>
 																		<Col lg={8}>
@@ -2195,12 +2253,12 @@ class DetailCreditNote extends React.Component {
 																				<Label htmlFor="notes">{strings.RefundNotes}</Label><br />
 																				<TextareaAutosize
 																					type="textarea"
-																					style={{ width: "700px" }}
+																					//style={{ width: "700px" }}
 																					className="textarea form-control"
 																					maxLength="255"
 																					name="notes"
 																					id="notes"
-																					rows="2"
+																					minRows="2"
 																					placeholder={strings.DeliveryNotes}
 																					onChange={(option) =>
 																						props.handleChange('notes')(option)
@@ -2335,7 +2393,7 @@ class DetailCreditNote extends React.Component {
 																				/>
 																			</FormGroup>
 																		</Col>
-																		{props.values.lineItemsString?.length > 0 &&
+																		{!this.state.isCreatedWIWP && props.values.lineItemsString?.length > 0 &&
 																			<Col lg={4}>
 																				{initValue.total_excise == 0 ? null : (
 																					<div className="total-item p-2" >
@@ -2437,7 +2495,7 @@ class DetailCreditNote extends React.Component {
 																				<Label htmlFor="notes">{strings.RefundNotes}</Label><br />
 																				<TextareaAutosize
 																					type="textarea"
-																					style={{ width: "700px" }}
+																					//style={{ width: "700px" }}
 																					className="textarea form-control"
 																					maxLength="255"
 																					name="notes"

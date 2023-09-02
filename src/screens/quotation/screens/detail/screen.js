@@ -1162,14 +1162,17 @@ class DetailQuotation extends React.Component {
       producttype: [],
     });
     let newData = [];
-    const data = this.state.data;
-    data.map((obj, index) => {
-      obj["vatCategoryId"] = "";
-      newData.push(obj);
-      if (obj['productId'])
-        this.getProductType(obj['productId'])
-      return obj;
-    });
+    const { data, isRegisteredVat } = this.state;
+		data.map((obj, index) => {
+			if (isRegisteredVat)
+				obj['vatCategoryId'] = '';
+			else
+				obj['vatCategoryId'] = 10;
+			newData.push(obj);
+			if (obj['productId'])
+				this.getProductType(obj['productId'])
+			return obj;
+		})
     props.setFieldValue("lineItemsString", newData, true);
     this.updateAmount(newData, props);
   };
@@ -1297,26 +1300,30 @@ class DetailQuotation extends React.Component {
           parseFloat(result.unitPrice) *
           (1 / exchangeRate)
         ).toFixed(2);
-        obj["vatCategoryId"] = parseInt(result.vatCategoryId);
+      //  obj["vatCategoryId"] = parseInt(result.vatCategoryId);
         obj["exciseTaxId"] = result.exciseTaxId;
         obj["description"] = result.description;
         obj["isExciseTaxExclusive"] = result.isExciseTaxExclusive;
         obj["unitType"] = result.unitType;
         obj["unitTypeId"] = result.unitTypeId;
         idx = index;
-        this.state.producttype.map((element) => {
-          if (element.id === e) {
-            const found = element.vat_list.find(
-              (element) => element.id === result.vatCategoryId
-            );
-            if (!found) {
-              obj["vatCategoryId"] = "";
+        if (this.state.isRegisteredVat) {
+          this.state.producttype.map((element) => {
+            if (element.id === e) {
+              const found = element.vat_list.find((element) => element.id === parseInt(result.vatCategoryId));
+              if (!found) {
+                obj["vatCategoryId"] = "";
+              } else {
+                obj['vatCategoryId'] = parseInt(result.vatCategoryId);
+              }
+              return found;
             }
-            return found;
-          }
-        });
+          });
+        } else {
+          obj['vatCategoryId'] = 10;
+        }
+        return obj;
       }
-      return obj;
     });
     form.setFieldValue(
       `lineItemsString.${idx}.vatCategoryId`,

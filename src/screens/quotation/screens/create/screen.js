@@ -1054,9 +1054,12 @@ class CreateQuotation extends React.Component {
 			producttype: [],
 		}, () => {
 			let newData = [];
-			const data = this.state.data;
+			const { data, isRegisteredVat } = this.state;
 			data.map((obj, index) => {
-				obj['vatCategoryId'] = '';
+				if (isRegisteredVat)
+					obj['vatCategoryId'] = '';
+				else
+					obj['vatCategoryId'] = 10;
 				newData.push(obj);
 				if (obj['productId'])
 					this.getProductType(obj['productId'])

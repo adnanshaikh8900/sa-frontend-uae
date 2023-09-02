@@ -2404,7 +2404,7 @@ class CreateQuotation extends React.Component {
 																			<i className="fas fa-plus mr-1" />
 																			{strings.AddACustomer}
 																		</Button></Col>
-																	{this.state.customer_taxTreatment_des ?
+																	{this.state.customer_taxTreatment_des && isRegisteredVat &&
 																		<Col lg={3}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="taxTreatmentid">
@@ -2438,7 +2438,8 @@ class CreateQuotation extends React.Component {
 																						</div>
 																					)}
 																			</FormGroup>
-																		</Col> : ''}
+																		</Col>
+																	}
 																	<Col lg={3}>
 																		{this.state.customer_taxTreatment_des !== "NON GCC" && this.state.customer_taxTreatment_des !== "GCC VAT REGISTERED" && this.state.customer_taxTreatment_des !== "GCC NON-VAT REGISTERED" &&
 																			(<FormGroup className="mb-3">

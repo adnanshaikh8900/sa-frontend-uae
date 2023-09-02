@@ -1167,7 +1167,7 @@ class DetailQuotation extends React.Component {
       obj["vatCategoryId"] = "";
       newData.push(obj);
       if (obj['productId'])
-					this.getProductType(obj['productId'])
+        this.getProductType(obj['productId'])
       return obj;
     });
     props.setFieldValue("lineItemsString", newData, true);
@@ -1194,8 +1194,8 @@ class DetailQuotation extends React.Component {
       return obj;
     });
     if (row.productId && row.vatCategoryId) {
-			row.vatCategoryId = typeof (row.vatCategoryId) === 'string' ? parseInt(row.vatCategoryId) : row.vatCategoryId;
-		}
+      row.vatCategoryId = typeof (row.vatCategoryId) === 'string' ? parseInt(row.vatCategoryId) : row.vatCategoryId;
+    }
     return (
       <Field
         name={`lineItemsString.${idx}.vatCategoryId`}
@@ -1338,7 +1338,7 @@ class DetailQuotation extends React.Component {
       result.exciseTaxId,
       true
     );
-		this.getProductType(parseInt(e))
+    this.getProductType(parseInt(e))
     this.updateAmount(data, props);
   };
   renderAddProduct = (cell, rows, props) => {
@@ -2362,39 +2362,41 @@ class DetailQuotation extends React.Component {
                                         )}
                                     </FormGroup>
                                   </Col>
-                                  <Col lg={3}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="taxTreatmentid">
-                                        {strings.TaxTreatment}
-                                      </Label>
-                                      <Input
-                                        disabled
-                                        styles={customStyles}
-                                        id="taxTreatmentid"
-                                        name="taxTreatmentid"
-                                        value={
-                                          this.state.customer_taxTreatment_des
-                                        }
-                                        className={
-                                          props.errors.taxTreatmentid &&
-                                            props.touched.taxTreatmentid
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                        onChange={(option) => {
-                                          props.handleChange("taxTreatmentid")(
-                                            option
-                                          );
-                                        }}
-                                      />
-                                      {props.errors.taxTreatmentid &&
-                                        props.touched.taxTreatmentid && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.taxTreatmentid}
-                                          </div>
-                                        )}
-                                    </FormGroup>
-                                  </Col>
+                                  {isRegisteredVat &&
+                                    <Col lg={3}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="taxTreatmentid">
+                                          {strings.TaxTreatment}
+                                        </Label>
+                                        <Input
+                                          disabled
+                                          styles={customStyles}
+                                          id="taxTreatmentid"
+                                          name="taxTreatmentid"
+                                          value={
+                                            this.state.customer_taxTreatment_des
+                                          }
+                                          className={
+                                            props.errors.taxTreatmentid &&
+                                              props.touched.taxTreatmentid
+                                              ? "is-invalid"
+                                              : ""
+                                          }
+                                          onChange={(option) => {
+                                            props.handleChange("taxTreatmentid")(
+                                              option
+                                            );
+                                          }}
+                                        />
+                                        {props.errors.taxTreatmentid &&
+                                          props.touched.taxTreatmentid && (
+                                            <div className="invalid-feedback">
+                                              {props.errors.taxTreatmentid}
+                                            </div>
+                                          )}
+                                      </FormGroup>
+                                    </Col>
+                                  }
                                   <Col lg={3}>
                                     {this.state.customer_taxTreatment_des !==
                                       "NON GCC" &&

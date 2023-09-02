@@ -1018,7 +1018,7 @@ class CreateDebitNote extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, receiptDate, initValue, debitNoteExist, lockInvoiceDetail,isCreatedWithoutInvoice } = this.state;
+		const { data, receiptDate, initValue, debitNoteExist, lockInvoiceDetail, isCreatedWithoutInvoice } = this.state;
 		const {
 			customer_list,
 			invoice_list,
@@ -1223,19 +1223,19 @@ class CreateDebitNote extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																		<span className="text-danger">* </span>
-																		{strings.CustomerName}
+																		{strings.SupplierName}
 																	</Label>
 																	<Select
 																		id="contactId"
 																		name="contactId"
-																		placeholder={strings.Select + strings.CustomerName}
+																		placeholder={strings.Select + strings.SupplierName}
 																		options={
 																			tmpCustomer_list
 																				? selectOptionsFactory.renderOptions(
 																					'label',
 																					'value',
 																					tmpCustomer_list,
-																					'Customer',
+																					'Supplier',
 																				)
 																				: []
 																		}
@@ -1444,9 +1444,9 @@ class CreateDebitNote extends React.Component {
 																			placeholder={strings.Enter + " Debit Amount"}
 																			value={props.values.debitAmount}
 																			onChange={(value) => {
-																				props.handleChange('debitAmount')(
-																					value,
-																				);
+																				if ((value.target.value === '' || this.regDecimal.test(value.target.value))
+																					&& parseFloat(value.target.value) !== 0)
+																					props.handleChange('debitAmount')(value,);
 																			}}
 																			className={
 																				props.errors.debitAmount &&

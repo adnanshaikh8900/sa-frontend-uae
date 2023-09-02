@@ -246,10 +246,10 @@ class ViewInvoice extends React.Component {
 							</div>
 						</Col>
 					</Row>
-					<div style={{ display: this.state.debitNoteDataList.length === 0 ? 'none' : '' }}><strong>{strings.DebitNoteIssuedOnTheSupplierInvoice}</strong></div>
+					<div style={{ display: this.state.debitNoteDataList.creditNoteId ? '' : 'none' }}><strong>{strings.DebitNoteIssuedOnTheSupplierInvoice}</strong></div>
 					<Card>
 
-						<div style={{ display: this.state.debitNoteDataList.length === 0 ? 'none' : '' }} >
+						<div style={{ display: this.state.debitNoteDataList.creditNoteId ? '' : 'none' }} >
 							<Table  >
 								<thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
 									<tr>

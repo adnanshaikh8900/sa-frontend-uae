@@ -715,7 +715,7 @@ class DebitNotes extends React.Component {
 																		'label',
 																		'value',
 																		tmpCustomer_list,
-																		'Customer',
+																		'Supplier',
 																	)
 																	: []
 															}

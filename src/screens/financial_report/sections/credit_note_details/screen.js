@@ -60,6 +60,8 @@ class CreditNoteDetailsReport extends React.Component {
 				column: null,
 				direction: 'desc',
 			},
+			totalSR : 0,
+			totalBal : 0,
 		};
 	}
 
@@ -367,7 +369,7 @@ class CreditNoteDetailsReport extends React.Component {
 												</thead>
 												<tbody className=" table-bordered table-hover">
 													{this.state.data.creditNoteSummaryModelList &&
-														this.state.data.creditNoteSummaryModelList.map((item, index) => {
+														this.state.data.creditNoteSummaryModelList.filter((item) => item.type === 7).map((item, index) => {
 															return (
 																<tr key={index}>
 																	<td style={{ textAlign: 'center'}}
@@ -417,13 +419,20 @@ class CreditNoteDetailsReport extends React.Component {
 														})}
 												</tbody>
 												<tfoot>
+													{/* {this.state.data.creditNoteSummaryModelList.filter((item) => item.type === 7) 
+													const sumOfTotalAmount = this.state.data.creditNoteSummaryModelList.reduce((total, item) => total + item.creditNoteTotalAmount, 0);
+													const sumOfBalance = this.state.data.creditNoteSummaryModelList.reduce((total, item) => total + item.balance, 0);
+													this.setState({totalSR : sumOfTotalAmount, totalBal : sumOfBalance})
+													console.log('totalSR ------ ' ,this.state.totalSR);
+													console.log('totalBal ------ ' ,this.state.totalBal);
+													)} */}
 													<tr style={{ border: "3px solid #dfe9f7" }}>
 														<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
 														<td></td>	<td></td>	<td></td>
 														<td style={{ textAlign: 'right', width: '20%' }}>
 													
 															<b><Currency
-																value={this.state.data.totalAmount}
+																value={this.state.data.creditNoteSummaryModelList.filter((item) => item.type === 7).reduce((total, item) => total + item.creditNoteTotalAmount, 0)}
 																currencySymbol={
 																	universal_currency_list[0]
 																		? universal_currency_list[0].currencyIsoCode
@@ -436,7 +445,7 @@ class CreditNoteDetailsReport extends React.Component {
 															
 														<b>
 														<Currency
-																value={this.state.data.totalBalance}
+																value={this.state.data.creditNoteSummaryModelList.filter((item) => item.type === 7).reduce((total, item) => total + item.balance, 0)}
 																currencySymbol={
 																	universal_currency_list[0]
 																		? universal_currency_list[0].currencyIsoCode

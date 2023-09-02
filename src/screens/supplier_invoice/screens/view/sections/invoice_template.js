@@ -603,6 +603,7 @@ class InvoiceTemplate extends Component {
 												{invoiceData.totalAmount ? invoiceData.currencyIsoCode + " " + ((parseFloat(invoiceData.totalAmount)-parseFloat(invoiceData.totalVatAmount))-parseFloat(invoiceData.totalExciseAmount)).toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : 0 }												</span>
 											</td>
 										</tr>
+										{invoiceData.totalVatAmount && invoiceData.totalVatAmount > 0 ?
 										<tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.VAT }</strong>
@@ -618,7 +619,7 @@ class InvoiceTemplate extends Component {
 													{invoiceData.totalVatAmount ? invoiceData.currencyIsoCode + " " + invoiceData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :invoiceData.currencyIsoCode + " " + ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits:2 }) }
 												</span>
 											</td>
-										</tr>
+										</tr> : "" }
 										<tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.Total }</strong>

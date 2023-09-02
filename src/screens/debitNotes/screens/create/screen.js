@@ -83,7 +83,7 @@ class CreateDebitNote extends React.Component {
 			customer_currency_symbol: '',
 			disabled: false,
 			discountOptions: [
-				{ value: 'FIXED', label: '₹' },
+				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: '%' },
 			],
 			disabledDate: true,
@@ -144,6 +144,7 @@ class CreateDebitNote extends React.Component {
 				total_excise: 0,
 				customer_currency_symbol: '',
 				taxTreatmentId: '',
+				
 			},
 			currentData: {},
 			contactType: 1,
@@ -308,7 +309,7 @@ class CreateDebitNote extends React.Component {
 	}
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount === 0 ? this.state.customer_currency_symbol + " " + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol + " " + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount != 0 ? this.state.customer_currency_symbol + " " + row.vatAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol + "0.00";
 
 	}
 
@@ -375,10 +376,7 @@ class CreateDebitNote extends React.Component {
 										id="discountType"
 										name="discountType"
 										value={
-											discountOptions &&
-											selectOptionsFactory
-												.renderOptions('label', 'value', discountOptions, 'discount')
-												.find((option) => option.value == row.discountType)
+											discountOptions && discountOptions.find((option) => option.value == row.discountType)
 										}
 										onChange={(e) => {
 											this.selectItem(
@@ -812,7 +810,6 @@ class CreateDebitNote extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
-		debugger
 		this.setState({ disabled: true, disableLeavePage: true });
 		const {
 			debitNoteNumber,
@@ -875,6 +872,8 @@ class CreateDebitNote extends React.Component {
 					this.props.debitNoteActions.getInvoiceListForDropdown();
 					this.setState(
 						{
+							remainingInvoiceAmount:'',
+							disableLeavePage: false,
 							createMore: false,
 							selectedContact: '',
 							term: '',
@@ -887,6 +886,16 @@ class CreateDebitNote extends React.Component {
 									unitPrice: '',
 									subTotal: 0,
 									productId: '',
+									vatCategoryId: '',
+									exciseTaxId: '',
+									exciseAmount: '',
+									vatAmount: 0,
+									productId: '',
+									isExciseTaxExclusive: '',
+									discountType: 'FIXED',
+									discount: 0,
+									unitType: '',
+									unitTypeId: ''
 								},
 							],
 							initValue: {
@@ -898,6 +907,8 @@ class CreateDebitNote extends React.Component {
 									discount: 0,
 									discountPercentage: '',
 									total_excise: 0,
+									taxTreatmentId:'',
+									currency:'',
 								},
 							},
 						},
@@ -916,7 +927,7 @@ class CreateDebitNote extends React.Component {
 				}
 			})
 			.catch((err) => {
-				this.setState({ disableLeavePage: true, disabled: false, loading: false });
+				this.setState({ disableLeavePage: false, disabled: false, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error', strings.DebitNoteCreatedUnSuccessfully,
 				);

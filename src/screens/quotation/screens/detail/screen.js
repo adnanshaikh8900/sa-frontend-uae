@@ -307,6 +307,8 @@ class DetailQuotation extends React.Component {
                       ? Math.max.apply(
                         Math,
                         data.map((item) => {
+                          if (item['productId'])
+                            this.getProductType(item['productId'])
                           return item.id;
                         })
                       )
@@ -322,7 +324,7 @@ class DetailQuotation extends React.Component {
                 }
               }
             );
-            this.formRef.current.setFieldValue("currency",res.data.currencyCode ? res.data.currencyCode:'' , true);
+            this.formRef.current.setFieldValue("currency", res.data.currencyCode ? res.data.currencyCode : '', true);
             this.salesCategory();
           }
         });
@@ -599,14 +601,14 @@ class DetailQuotation extends React.Component {
               }
             }}
             className={`${props.errors.lineItemsString &&
-                props.errors.lineItemsString[parseInt(idx, 10)] &&
-                props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
-                Object.keys(props.touched).length > 0 &&
-                props.touched.lineItemsString &&
-                props.touched.lineItemsString[parseInt(idx, 10)] &&
-                props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
-                ? "is-invalid"
-                : ""
+              props.errors.lineItemsString[parseInt(idx, 10)] &&
+              props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
+              Object.keys(props.touched).length > 0 &&
+              props.touched.lineItemsString &&
+              props.touched.lineItemsString[parseInt(idx, 10)] &&
+              props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
+              ? "is-invalid"
+              : ""
               }`}
           />
         )}
@@ -1160,12 +1162,17 @@ class DetailQuotation extends React.Component {
       producttype: [],
     });
     let newData = [];
-    const data = this.state.data;
-    data.map((obj, index) => {
-      obj["vatCategoryId"] = "";
-      newData.push(obj);
-      return obj;
-    });
+    const { data, isRegisteredVat } = this.state;
+		data.map((obj, index) => {
+			if (isRegisteredVat)
+				obj['vatCategoryId'] = '';
+			else
+				obj['vatCategoryId'] = 10;
+			newData.push(obj);
+			if (obj['productId'])
+				this.getProductType(obj['productId'])
+			return obj;
+		})
     props.setFieldValue("lineItemsString", newData, true);
     this.updateAmount(newData, props);
   };
@@ -1189,7 +1196,9 @@ class DetailQuotation extends React.Component {
       }
       return obj;
     });
-
+    if (row.productId && row.vatCategoryId) {
+      row.vatCategoryId = typeof (row.vatCategoryId) === 'string' ? parseInt(row.vatCategoryId) : row.vatCategoryId;
+    }
     return (
       <Field
         name={`lineItemsString.${idx}.vatCategoryId`}
@@ -1210,7 +1219,7 @@ class DetailQuotation extends React.Component {
                 vat_list &&
                 selectOptionsFactory
                   .renderOptions("name", "id", vat_list, "VAT")
-                  .find((option) => option.value === +row.vatCategoryId)
+                  .find((option) => option.value === row.vatCategoryId)
               }
               id="vatCategoryId"
               placeholder={strings.Select + strings.VAT}
@@ -1240,14 +1249,14 @@ class DetailQuotation extends React.Component {
                 }
               }}
               className={`${props.errors.lineItemsString &&
-                  props.errors.lineItemsString[parseInt(idx, 10)] &&
-                  props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
-                  Object.keys(props.touched).length > 0 &&
-                  props.touched.lineItemsString &&
-                  props.touched.lineItemsString[parseInt(idx, 10)] &&
-                  props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
-                  ? "is-invalid"
-                  : ""
+                props.errors.lineItemsString[parseInt(idx, 10)] &&
+                props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+                Object.keys(props.touched).length > 0 &&
+                props.touched.lineItemsString &&
+                props.touched.lineItemsString[parseInt(idx, 10)] &&
+                props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
+                ? "is-invalid"
+                : ""
                 }`}
             />
             {props.errors.lineItemsString &&
@@ -1291,26 +1300,30 @@ class DetailQuotation extends React.Component {
           parseFloat(result.unitPrice) *
           (1 / exchangeRate)
         ).toFixed(2);
-        obj["vatCategoryId"] = parseInt(result.vatCategoryId);
+      //  obj["vatCategoryId"] = parseInt(result.vatCategoryId);
         obj["exciseTaxId"] = result.exciseTaxId;
         obj["description"] = result.description;
         obj["isExciseTaxExclusive"] = result.isExciseTaxExclusive;
         obj["unitType"] = result.unitType;
         obj["unitTypeId"] = result.unitTypeId;
         idx = index;
-        this.state.producttype.map((element) => {
-          if (element.id === e) {
-            const found = element.vat_list.find(
-              (element) => element.id === result.vatCategoryId
-            );
-            if (!found) {
-              obj["vatCategoryId"] = "";
+        if (this.state.isRegisteredVat) {
+          this.state.producttype.map((element) => {
+            if (element.id === e) {
+              const found = element.vat_list.find((element) => element.id === parseInt(result.vatCategoryId));
+              if (!found) {
+                obj["vatCategoryId"] = "";
+              } else {
+                obj['vatCategoryId'] = parseInt(result.vatCategoryId);
+              }
+              return found;
             }
-            return found;
-          }
-        });
+          });
+        } else {
+          obj['vatCategoryId'] = 10;
+        }
+        return obj;
       }
-      return obj;
     });
     form.setFieldValue(
       `lineItemsString.${idx}.vatCategoryId`,
@@ -1332,6 +1345,7 @@ class DetailQuotation extends React.Component {
       result.exciseTaxId,
       true
     );
+    this.getProductType(parseInt(e))
     this.updateAmount(data, props);
   };
   renderAddProduct = (cell, rows, props) => {
@@ -1353,13 +1367,13 @@ class DetailQuotation extends React.Component {
     let productList = product_list.length
       ? [{ id: "", name: "Select Product" }, ...product_list]
       : product_list;
-    if (product_list.length > 0) {
-      if (product_list.length > this.state.producttype.length) {
-        product_list.map((element) => {
-          this.getProductType(element.id);
-        });
-      }
-    }
+    // if (product_list.length > 0) {
+    //   if (product_list.length > this.state.producttype.length) {
+    //     product_list.map((element) => {
+    //       this.getProductType(element.id);
+    //     });
+    //   }
+    // }
     let idx;
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -1413,14 +1427,14 @@ class DetailQuotation extends React.Component {
                 }
               }}
               className={`${props.errors.lineItemsString &&
-                  props.errors.lineItemsString[parseInt(idx, 10)] &&
-                  props.errors.lineItemsString[parseInt(idx, 10)].productId &&
-                  Object.keys(props.touched).length > 0 &&
-                  props.touched.lineItemsString &&
-                  props.touched.lineItemsString[parseInt(idx, 10)] &&
-                  props.touched.lineItemsString[parseInt(idx, 10)].productId
-                  ? "is-invalid"
-                  : ""
+                props.errors.lineItemsString[parseInt(idx, 10)] &&
+                props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+                Object.keys(props.touched).length > 0 &&
+                props.touched.lineItemsString &&
+                props.touched.lineItemsString[parseInt(idx, 10)] &&
+                props.touched.lineItemsString[parseInt(idx, 10)].productId
+                ? "is-invalid"
+                : ""
                 }`}
             />
             {row["productId"] != "" ? (
@@ -1440,15 +1454,15 @@ class DetailQuotation extends React.Component {
                   }}
                   placeholder={strings.Description}
                   className={`form-control ${props.errors.lineItemsString &&
-                      props.errors.lineItemsString[parseInt(idx, 10)] &&
-                      props.errors.lineItemsString[parseInt(idx, 10)]
-                        .description &&
-                      Object.keys(props.touched).length > 0 &&
-                      props.touched.lineItemsString &&
-                      props.touched.lineItemsString[parseInt(idx, 10)] &&
-                      props.touched.lineItemsString[parseInt(idx, 10)].description
-                      ? "is-invalid"
-                      : ""
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)]
+                      .description &&
+                    Object.keys(props.touched).length > 0 &&
+                    props.touched.lineItemsString &&
+                    props.touched.lineItemsString[parseInt(idx, 10)] &&
+                    props.touched.lineItemsString[parseInt(idx, 10)].description
+                    ? "is-invalid"
+                    : ""
                     }`}
                 />
               </div>
@@ -1997,9 +2011,7 @@ class DetailQuotation extends React.Component {
   };
   render() {
     strings.setLanguage(this.state.language);
-    const { data, discountOptions, initValue, loading, loadingMsg, dialog } =
-      this.state;
-
+    const { data, isRegisteredVat, initValue, loading, loadingMsg, dialog } = this.state;
     const {
       project_list,
       currency_list,
@@ -2357,39 +2369,41 @@ class DetailQuotation extends React.Component {
                                         )}
                                     </FormGroup>
                                   </Col>
-                                  <Col lg={3}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="taxTreatmentid">
-                                        {strings.TaxTreatment}
-                                      </Label>
-                                      <Input
-                                        disabled
-                                        styles={customStyles}
-                                        id="taxTreatmentid"
-                                        name="taxTreatmentid"
-                                        value={
-                                          this.state.customer_taxTreatment_des
-                                        }
-                                        className={
-                                          props.errors.taxTreatmentid &&
-                                            props.touched.taxTreatmentid
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                        onChange={(option) => {
-                                          props.handleChange("taxTreatmentid")(
-                                            option
-                                          );
-                                        }}
-                                      />
-                                      {props.errors.taxTreatmentid &&
-                                        props.touched.taxTreatmentid && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.taxTreatmentid}
-                                          </div>
-                                        )}
-                                    </FormGroup>
-                                  </Col>
+                                  {isRegisteredVat &&
+                                    <Col lg={3}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="taxTreatmentid">
+                                          {strings.TaxTreatment}
+                                        </Label>
+                                        <Input
+                                          disabled
+                                          styles={customStyles}
+                                          id="taxTreatmentid"
+                                          name="taxTreatmentid"
+                                          value={
+                                            this.state.customer_taxTreatment_des
+                                          }
+                                          className={
+                                            props.errors.taxTreatmentid &&
+                                              props.touched.taxTreatmentid
+                                              ? "is-invalid"
+                                              : ""
+                                          }
+                                          onChange={(option) => {
+                                            props.handleChange("taxTreatmentid")(
+                                              option
+                                            );
+                                          }}
+                                        />
+                                        {props.errors.taxTreatmentid &&
+                                          props.touched.taxTreatmentid && (
+                                            <div className="invalid-feedback">
+                                              {props.errors.taxTreatmentid}
+                                            </div>
+                                          )}
+                                      </FormGroup>
+                                    </Col>
+                                  }
                                   <Col lg={3}>
                                     {this.state.customer_taxTreatment_des !==
                                       "NON GCC" &&
@@ -2450,9 +2464,9 @@ class DetailQuotation extends React.Component {
                                               }
                                             }}
                                             className={`${props.errors.placeOfSupplyId &&
-                                                props.touched.placeOfSupplyId
-                                                ? "is-invalid"
-                                                : ""
+                                              props.touched.placeOfSupplyId
+                                              ? "is-invalid"
+                                              : ""
                                               }`}
                                           />
                                           {props.errors.placeOfSupplyId &&
@@ -2518,9 +2532,9 @@ class DetailQuotation extends React.Component {
                                           this.setDate1(props, value);
                                         }}
                                         className={`form-control ${props.errors.quotationdate &&
-                                            props.touched.quotationdate
-                                            ? "is-invalid"
-                                            : ""
+                                          props.touched.quotationdate
+                                          ? "is-invalid"
+                                          : ""
                                           }`}
                                       />
                                       {props.errors.quotationdate &&
@@ -2563,9 +2577,9 @@ class DetailQuotation extends React.Component {
                                           this.setDate(props, value);
                                         }}
                                         className={`form-control ${props.errors.quotaionExpiration &&
-                                            props.touched.quotaionExpiration
-                                            ? "is-invalid"
-                                            : ""
+                                          props.touched.quotaionExpiration
+                                          ? "is-invalid"
+                                          : ""
                                           }`}
                                       />
                                       {props.errors.quotaionExpiration &&
@@ -2628,9 +2642,9 @@ class DetailQuotation extends React.Component {
                                           this.setCurrency(option.value);
                                         }}
                                         className={`${props.errors.currency &&
-                                            props.touched.currency
-                                            ? "is-invalid"
-                                            : ""
+                                          props.touched.currency
+                                          ? "is-invalid"
+                                          : ""
                                           }`}
                                       />
                                       {props.errors.currency &&
@@ -2884,7 +2898,7 @@ class DetailQuotation extends React.Component {
                                         }
                                       ></TableHeaderColumn>
                                       <TableHeaderColumn
-                                        width="17%"
+                                        // width="17%"
                                         dataField="product"
                                         dataFormat={(cell, rows) =>
                                           this.renderProduct(cell, rows, props)
@@ -2922,7 +2936,7 @@ class DetailQuotation extends React.Component {
 																		</TableHeaderColumn> */}
                                       <TableHeaderColumn
                                         dataField="quantity"
-                                        width="13%"
+                                        // width="13%"
                                         dataFormat={(cell, rows) =>
                                           this.renderQuantity(cell, rows, props)
                                         }
@@ -2958,7 +2972,7 @@ class DetailQuotation extends React.Component {
                                       </TableHeaderColumn>
                                       {this.state.discountEnabled == true && (
                                         <TableHeaderColumn
-                                          width="12%"
+                                          // width="12%"
                                           dataField="discount"
                                           dataFormat={(cell, rows) =>
                                             this.renderDiscount(
@@ -2973,7 +2987,7 @@ class DetailQuotation extends React.Component {
                                       )}
                                       {initValue.total_excise != 0 && (
                                         <TableHeaderColumn
-                                          width="10%"
+                                          // width="10%"
                                           dataField="exciseTaxId"
                                           dataFormat={(cell, rows) =>
                                             this.renderExcise(cell, rows, props)
@@ -2993,27 +3007,30 @@ class DetailQuotation extends React.Component {
                                           </UncontrolledTooltip>
                                         </TableHeaderColumn>
                                       )}
-
-                                      <TableHeaderColumn
-                                        dataField="vat"
-                                        dataFormat={(cell, rows) =>
-                                          this.renderVat(cell, rows, props)
-                                        }
-                                      >
-                                        {strings.VAT}
-                                      </TableHeaderColumn>
-                                      <TableHeaderColumn
-                                        width="10%"
-                                        dataField="sub_total"
-                                        dataFormat={this.renderVatAmount}
-                                        className="text-right"
-                                        columnClassName="text-right"
-                                        formatExtraData={
-                                          universal_currency_list
-                                        }
-                                      >
-                                        {strings.VATAMOUNT}
-                                      </TableHeaderColumn>
+                                      {isRegisteredVat &&
+                                        <TableHeaderColumn
+                                          dataField="vat"
+                                          dataFormat={(cell, rows) =>
+                                            this.renderVat(cell, rows, props)
+                                          }
+                                        >
+                                          {strings.VAT}
+                                        </TableHeaderColumn>
+                                      }
+                                      {isRegisteredVat &&
+                                        <TableHeaderColumn
+                                          //  width="10%"
+                                          dataField="sub_total"
+                                          dataFormat={this.renderVatAmount}
+                                          className="text-right"
+                                          columnClassName="text-right"
+                                          formatExtraData={
+                                            universal_currency_list
+                                          }
+                                        >
+                                          {strings.VATAMOUNT}
+                                        </TableHeaderColumn>
+                                      }
                                       <TableHeaderColumn
                                         dataField="sub_total"
                                         dataFormat={this.renderSubTotal}
@@ -3308,7 +3325,7 @@ class DetailQuotation extends React.Component {
                                             </Col>
                                           </Row>
                                         </div>
-                                        <div className="total-item p-2">
+                                        {isRegisteredVat && <div className="total-item p-2">
                                           <Row>
                                             <Col lg={6}>
                                               <h5 className="mb-0 text-right">
@@ -3342,7 +3359,7 @@ class DetailQuotation extends React.Component {
                                               </label>
                                             </Col>
                                           </Row>
-                                        </div>
+                                        </div>}
                                         <div className="total-item p-2">
                                           <Row>
                                             <Col lg={6}>

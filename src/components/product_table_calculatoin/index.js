@@ -79,11 +79,11 @@ export const updateAmount = (data, vat_list, taxType) => {
     });
     const list = {
         data: data,
-        total_net: total_net ? parseFloat(total_net).toFixed(2) : 0,
-        totalVatAmount: total_vat ? parseFloat(total_vat).toFixed(2) : 0,
-        totalAmount: total ? parseFloat(total).toFixed(2) : 0,
-        total_excise: total_excise ? parseFloat(total_excise).toFixed(2) : 0,
-        discount: discount ? parseFloat(discount).toFixed(2) : 0,
+        total_net: total_net ? parseFloat(parseFloat(total_net).toFixed(2)) : 0,
+        totalVatAmount: total_vat ? parseFloat(parseFloat(total_vat).toFixed(2)) : 0,
+        totalAmount: total ? parseFloat(parseFloat(total).toFixed(2)) : 0,
+        total_excise: total_excise ? parseFloat(parseFloat(total_excise).toFixed(2)) : 0,
+        discount: discount ? parseFloat(parseFloat(discount).toFixed(2)) : 0,
     }
     return list;
 };

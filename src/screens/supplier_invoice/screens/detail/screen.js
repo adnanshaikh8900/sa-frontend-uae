@@ -2049,7 +2049,6 @@ class DetailSupplierInvoice extends React.Component {
 		const { project_list, currency_list, currency_convert_list, supplier_list, universal_currency_list } = this.props;
 
 		let tmpSupplier_list = []
-		console.log(data)
 
 		supplier_list.map(item => {
 			let obj = { label: item.label.contactName, value: item.value }

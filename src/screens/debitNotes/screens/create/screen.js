@@ -310,7 +310,7 @@ class CreateDebitNote extends React.Component {
 	}
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount != 0 ? this.state.customer_currency_symbol + " " + row.vatAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol + "0.00";
+		return row.vatAmount != 0 ? this.state.customer_currency_symbol + " " + row.vatAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol+ " " +  "0.00";
 
 	}
 

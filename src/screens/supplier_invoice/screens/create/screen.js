@@ -473,7 +473,7 @@ class CreateSupplierInvoice extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.getCompanyCurrency();
-					let term = this.termList.find((option) => option.value == res.data.term)
+					let term = this.termList ? this.termList.find((option) => option?.value == res.data.term) : '';
 					this.setState(
 						{
 							parentInvoiceId: parentInvoiceId,
@@ -613,8 +613,10 @@ class CreateSupplierInvoice extends React.Component {
 								? true
 								: false,
 							loading: false,
+							customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : ''
 						},
 						() => {
+							this.UpdateProductVatList();
 
 							if (this.state.data.length > 0) {
 								this.updateAmount(this.state.data);
@@ -631,18 +633,13 @@ class CreateSupplierInvoice extends React.Component {
 								this.setState({
 									idCount,
 								});
-								this.UpdateProductVatList();
 								this.formRef.current.setFieldValue('contactId', res.data.contactId, true);
 								this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 								this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.contactId), true);
 								this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.contactId), true);
 								this.formRef.current.setFieldValue('term', term, true);
-								// this.formRef.current.setFieldValue('notes',  res.data.notes, true);
-								// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
-								// this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
-								const val = term ? term.value.split('_') : '';
+								const val = term ? term?.value.split('_') : '';
 								const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-								// const values = moment( moment( res.data.invoiceDate).format('DD-MM-YYYY'), 'DD-MM-YYYY').toDate();	
 								const values = new Date();
 								this.setState({
 									date: moment(values).add(temp, 'days'),
@@ -1869,6 +1866,8 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
+		const transactionCatory = purchaseCategory && row.transactionCategoryLabel ? purchaseCategory.find((item) => item.label === row.transactionCategoryLabel) : '';
+
 		return (
 			<Field
 				name={`lineItemsString.${idx}.transactionCategoryId`}
@@ -1890,13 +1889,11 @@ class CreateSupplierInvoice extends React.Component {
 							);
 						}}
 						value={
-							purchaseCategory && row.transactionCategoryLabel
-								? purchaseCategory
-									.find((item) => item.label === row.transactionCategoryLabel)
-									.options.find(
-										(item) => item.value === +row.transactionCategoryId,
-									)
-								: row.transactionCategoryId
+							purchaseCategory && row.transactionCategoryLabel && transactionCatory
+								? transactionCatory.options.find(
+									(item) => item.value === +row.transactionCategoryId,
+								)
+								: { value: row.transactionCategoryId, label: row.transactionCategoryLabel }
 						}
 						isDisabled={row.transactionCategoryId === 150}
 						placeholder={strings.Select + strings.Account}
@@ -1998,7 +1995,6 @@ class CreateSupplierInvoice extends React.Component {
 	updateAmount = (data, props, addrowinfo) => {
 		const { vat_list, taxType } = this.props;
 		const list = ProductTableCalculation.updateAmount(data, vat_list, taxType);
-		console.log(list)
 		this.setState(
 			{
 				data: list.data ? list.data : [],
@@ -2271,7 +2267,7 @@ class CreateSupplierInvoice extends React.Component {
 	getCurrentProduct = (newProduct) => {
 		if (newProduct) {
 			let newData = []
-			const {data,isRegisteredVat} = this.state;
+			const { data, isRegisteredVat } = this.state;
 			newData = data.filter((obj) => obj.productId !== "");
 			// props.setFieldValue('lineItemsString', newData, true);
 			// this.updateAmount(newData, props);
@@ -2286,7 +2282,7 @@ class CreateSupplierInvoice extends React.Component {
 						quantity: 1,
 						discount: 0,
 						unitPrice: (parseFloat(newProduct.unitPrice) * (1 / exchangeRate)).toFixed(2),
-						vatCategoryId: isRegisteredVat? '':10,
+						vatCategoryId: isRegisteredVat ? '' : 10,
 						exciseTaxId: newProduct.exciseTaxId,
 						vatAmount: newProduct.vatAmount ? newProduct.vatAmount : 0,
 						subTotal: newProduct.unitPrice,
@@ -2715,7 +2711,7 @@ class CreateSupplierInvoice extends React.Component {
 																						: []
 																				}
 
-																				value={(this.state.rfqId || this.state.parentInvoiceId || this.state.poId) ?
+																				value={props.values.contactId?.value ? props.values.contactId :
 																					tmpSupplier_list &&
 																					selectOptionsFactory.renderOptions(
 																						'label',
@@ -2723,10 +2719,6 @@ class CreateSupplierInvoice extends React.Component {
 																						tmpSupplier_list,
 																						strings.CustomerName,
 																					).find((option) => option.value == this.state.contactId)
-
-																					:
-
-																					props.values.contactId
 																				}
 																				onChange={(option) => {
 																					if (option && option.value) {
@@ -3369,7 +3361,7 @@ class CreateSupplierInvoice extends React.Component {
 																	 </UncontrolledTooltip>
 																 </TableHeaderColumn>  */}
 																			<TableHeaderColumn
-																			//	width="10%"
+																				//	width="10%"
 																				dataField="unitPrice"
 																				dataFormat={(cell, rows) =>
 																					this.renderUnitPrice(cell, rows, props)
@@ -3379,7 +3371,7 @@ class CreateSupplierInvoice extends React.Component {
 																			</TableHeaderColumn>
 																			{this.state.discountEnabled == true &&
 																				<TableHeaderColumn
-																				//	width="12%"
+																					//	width="12%"
 																					dataField="discount"
 																					dataFormat={(cell, rows) =>
 																						this.renderDiscount(cell, rows, props)
@@ -3389,7 +3381,7 @@ class CreateSupplierInvoice extends React.Component {
 																				</TableHeaderColumn>}
 																			{initValue.total_excise != 0 &&
 																				<TableHeaderColumn
-																				//	width="10%"
+																					//	width="10%"
 																					dataField="exciseTaxId"
 																					dataFormat={(cell, rows) =>
 																						this.renderExcise(cell, rows, props)
@@ -3409,7 +3401,7 @@ class CreateSupplierInvoice extends React.Component {
 																				</TableHeaderColumn>}
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
-																				//	width="10%"
+																					//	width="10%"
 																					dataField="vat"
 																					dataFormat={(cell, rows) =>
 																						this.renderVat(cell, rows, props)
@@ -3420,7 +3412,7 @@ class CreateSupplierInvoice extends React.Component {
 																			}
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
-																				//	width="10%"
+																					//	width="10%"
 																					dataField="sub_total"
 																					dataFormat={this.renderVatAmount}
 																					className="text-right"

@@ -1000,7 +1000,7 @@ class DetailDebitNote extends React.Component {
 
 		const { tax_treatment_list, invoice_list, currency_convert_list, customer_list, universal_currency_list, company_details } = this.props;
 		let tmpCustomer_list = []
-		const { isRegisteredVat } = company_details.isRegisteredVat;
+		const { isRegisteredVat } = company_details;
 
 		customer_list.map(item => {
 			let obj = { label: item.label.contactName, value: item.value }

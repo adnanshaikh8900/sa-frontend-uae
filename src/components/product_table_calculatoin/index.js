@@ -35,7 +35,6 @@ export const updateAmount = (data, vat_list, taxType) => {
                     net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
                 else
                     net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
-                console.log(net_value, "NET VALUE")
                 const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
 
                 const excisevalue = obj.exciseTaxId ? obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0 : 0
@@ -55,7 +54,6 @@ export const updateAmount = (data, vat_list, taxType) => {
                     net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
                 else
                     net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
-
                 const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
                 //vat amount
                 const vat_amount =

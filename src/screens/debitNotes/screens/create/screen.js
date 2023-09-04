@@ -1037,7 +1037,7 @@ class CreateDebitNote extends React.Component {
 			tax_treatment_list,
 			company_details
 		} = this.props;
-		const { isRegisteredVat } = company_details.isRegisteredVat;
+		const { isRegisteredVat } = company_details;
 		let tmpCustomer_list = []
 		customer_list.map(item => {
 			let obj = { label: item.label.contactName, value: item.value }

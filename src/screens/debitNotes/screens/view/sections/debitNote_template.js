@@ -516,7 +516,7 @@ class DebitNoteTemplate extends Component {
 								}
 							</div>
 						</div>
-						{(debitNoteData.referenceNo || debitNoteData.notes) && <hr />}
+						{(debitNoteData.referenceNo || debitNoteData.notes) && <br />}
 						<br /><br /><br />
 					</CardBody>
 					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>

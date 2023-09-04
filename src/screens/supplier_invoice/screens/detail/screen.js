@@ -372,52 +372,6 @@ class DetailSupplierInvoice extends React.Component {
 		this.setState({ openProductModal: false });
 	};
 
-	getCurrentProduct = () => {
-		this.props.customerInvoiceActions.getProductList().then((res) => {
-			this.setState(
-				{
-					data: [
-						{
-							id: 0,
-							description: res.data[0].description,
-							quantity: 1,
-							unitPrice: res.data[0].unitPrice,
-							vatCategoryId: res.data[0].vatCategoryId,
-							subTotal: res.data[0].unitPrice,
-							productId: res.data[0].id,
-						},
-					],
-				},
-				() => {
-					const values = {
-						values: this.state.initValue,
-					};
-					this.updateAmount(this.state.data, values);
-				},
-			);
-			this.formRef.current.setFieldValue(
-				`lineItemsString.${0}.unitPrice`,
-				res.data[0].unitPrice,
-				true,
-			);
-			this.formRef.current.setFieldValue(
-				`lineItemsString.${0}.quantity`,
-				1,
-				true,
-			);
-			this.formRef.current.setFieldValue(
-				`lineItemsString.${0}.vatCategoryId`,
-				res.data[0].vatCategoryId,
-				true,
-			);
-			this.formRef.current.setFieldValue(
-				`lineItemsString.${0}.productId`,
-				res.data[0].id,
-				true,
-			);
-		});
-	};
-
 	renderExcise = (cell, row, props) => {
 		const { excise_list } = this.props;
 		let idx;
@@ -1877,37 +1831,49 @@ class DetailSupplierInvoice extends React.Component {
 		}
 	};
 
-	getCurrentProduct = () => {
-		this.props.customerInvoiceActions.getProductList().then((res) => {
+	getCurrentProduct = (newProduct) => {
+		if (newProduct) {
+			let newData = []
+			const {data,isRegisteredVat} = this.state;
+			newData = data.filter((obj) => obj.productId !== "");
+			// props.setFieldValue('lineItemsString', newData, true);
+			// this.updateAmount(newData, props);
+			let exchangeRate = this.formRef.current?.state?.values?.exchangeRate > 0
+				&& this.formRef.current?.state?.values?.exchangeRate !== "" ?
+				this.formRef.current?.state?.values?.exchangeRate : 1
 			this.setState(
 				{
-					data: [
-						{
-							id: 0,
-							description: res.data[0].description,
-							quantity: 1,
-							unitPrice: res.data[0].unitPrice,
-							vatCategoryId: res.data[0].vatCategoryId,
-							subTotal: res.data[0].unitPrice,
-							productId: res.data[0].id,
-						},
-					],
+					data: newData.concat({
+						id: this.state.idCount + 1,
+						description: newProduct.description,
+						quantity: 1,
+						discount: 0,
+						unitPrice: (parseFloat(newProduct.unitPrice) * (1 / exchangeRate)).toFixed(2),
+						vatCategoryId: isRegisteredVat? '':10,
+						exciseTaxId: newProduct.exciseTaxId,
+						vatAmount: newProduct.vatAmount ? newProduct.vatAmount : 0,
+						subTotal: newProduct.unitPrice,
+						productId: newProduct.id,
+						discountType: newProduct.discountType,
+						unitType: newProduct.unitType,
+						unitTypeId: newProduct.unitTypeId,
+						transactionCategoryId: newProduct.transactionCategoryId,
+						transactionCategoryLabel: newProduct.transactionCategoryLabel,
+					}),
+					idCount: this.state.idCount + 1,
+					producttype: [],
 				},
 				() => {
 					const values = {
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
+					this.addRow();
 				},
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
-				res.data[0].unitPrice,
-				true,
-			);
-			this.formRef.current.setFieldValue(
-				`lineItemsString.${0}.unitType`,
-				res.data[0].unitType,
+				newProduct.unitPrice,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -1916,16 +1882,41 @@ class DetailSupplierInvoice extends React.Component {
 				true,
 			);
 			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discount`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discountType`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.exciseTaxId`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.vatCategoryId`,
-				res.data[0].vatCategoryId,
+				newProduct.vatCategoryId,
 				true,
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.productId`,
-				res.data[0].id,
+				newProduct.id,
 				true,
 			);
-		});
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.transactionCategoryId`,
+				newProduct.transactionCategoryId,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.transactionCategoryLabel`,
+				newProduct.transactionCategoryLabel,
+				true,
+			);
+		}
 	};
 	getCompanyCurrency = (basecurrency) => {
 		this.props.currencyConvertActions
@@ -2049,7 +2040,6 @@ class DetailSupplierInvoice extends React.Component {
 		const { project_list, currency_list, currency_convert_list, supplier_list, universal_currency_list } = this.props;
 
 		let tmpSupplier_list = []
-		console.log(data)
 
 		supplier_list.map(item => {
 			let obj = { label: item.label.contactName, value: item.value }
@@ -2669,23 +2659,18 @@ class DetailSupplierInvoice extends React.Component {
 																</Row>
 
 																<hr style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }} />
-																<Row>
-																	<Col lg={8} className="mb-3">
-																		{/* <Button
-																		color="primary"
-																		className={`btn-square mr-3 ${
-																			this.checkedRow() ? `disabled-cursor` : ``
-																		} `}
-																		onClick={this.addRow}
-																		title={
-																			this.checkedRow()
-																				? `Please add detail to add more`
-																				: ''
-																		}
-																		disabled={this.checkedRow() ? true : false}
-																	>
-																		<i className="fa fa-plus"></i>  {strings.Addmore}
-																	</Button> */}
+																<Row className="mb-1">
+																	<Col lg={8}>
+																		<Button
+																			color="primary"
+																			className="btn-square "
+																			onClick={(e, props) => {
+																				this.openProductModal()
+																				// this.props.history.push(`/admin/master/product/create`, { gotoParentURL: "/admin/expense/supplier-invoice/create" })
+																			}}
+																		>
+																			<i className="fa fa-plus"></i> {strings.Addproduct}
+																		</Button>
 																	</Col>
 																	<Col  >
 
@@ -3249,7 +3234,12 @@ class DetailSupplierInvoice extends React.Component {
 						closeProductModal={(e) => {
 							this.closeProductModal(e);
 						}}
-						getCurrentProduct={(e) => this.getCurrentProduct(e)}
+						getCurrentProduct={(e) => {
+							this.props.supplierInvoiceActions.getProductList().then(res => {
+								if (res.status === 200)
+									this.getCurrentProduct(res.data[0]);
+							});
+						}}
 						createProduct={this.props.ProductActions.createAndSaveProduct}
 						vat_list={this.state.vat_list}
 						product_category_list={this.props.product_category_list}

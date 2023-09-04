@@ -830,7 +830,7 @@ class DetailDebitNote extends React.Component {
 		formData.append('isCreatedWIWP', this.state.isDNWIWithoutProduct);
 		formData.append('creditNoteNumber', debitNoteNumber ? debitNoteNumber : '',);
 		formData.append('email', email ? email : '',);
-		formData.append('creditNoteDate', invoiceDate ? moment(invoiceDate, 'DD-MM-YYYY').toDate() : null,);
+		formData.append('creditNoteDate', invoiceDate ? moment(invoiceDate) : new Date());
 		formData.append('referenceNo', referenceNumber !== null ? referenceNumber : '',);
 		formData.append('exchangeRate', exchangeRate ? exchangeRate : 1);
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
@@ -1298,7 +1298,7 @@ class DetailDebitNote extends React.Component {
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
-																				value={props.values.invoiceDate}
+																				value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
 																				minDate={this.state.receiptDate}
 																				selected={props.values.invoiceDate}
 																				onChange={(value) => {

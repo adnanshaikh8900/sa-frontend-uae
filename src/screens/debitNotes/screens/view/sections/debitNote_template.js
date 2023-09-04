@@ -163,9 +163,9 @@ class DebitNoteTemplate extends Component {
 											<tr>
 												<td>{debitNoteData.creditNoteNumber}</td>
 												<td>{' '}{moment(debitNoteData.creditNoteDate).format('DD-MM-YYYY',)}</td>
-												<td>{debitNoteData.status}</td>
+												<td>{debitNoteData.status ? debitNoteData.status === 'Partially Paid' ? 'Partially Debited' : debitNoteData.status : ''}</td>
 												{debitNoteData.referenceNo && <td>{debitNoteData.referenceNo}</td>}
-												{isCNWithoutProduct && <td style={{textAlign: 'right' }}>
+												{isCNWithoutProduct && <td style={{ textAlign: 'right' }}>
 													<Currency
 														value={debitNoteData.totalAmount}
 														currencySymbol={
@@ -175,7 +175,7 @@ class DebitNoteTemplate extends Component {
 														}
 													/>
 												</td>}
-												<td style={{textAlign: 'right' }}>
+												<td style={{ textAlign: 'right' }}>
 													<Currency
 														value={debitNoteData.dueAmount}
 														currencySymbol={

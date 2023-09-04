@@ -202,8 +202,7 @@ class ViewInvoice extends React.Component {
 												placeOfSupplyId: this.props?.location?.state?.placeOfSupplyId,
 												id: this.props?.location?.state?.id
 											});
-										}
-										else if (this.props?.location?.state?.crossLinked) {
+										} else if (this.props?.location?.state?.crossLinked) {
 											this.props.history.push('/admin/report/vatreports/vatreturnsubreports', {
 												description: this.props?.location?.state?.description,
 												startDate: this.props?.location?.state?.startDate,
@@ -216,7 +215,9 @@ class ViewInvoice extends React.Component {
 												id: this.props.location.state.DN_Id,
 												status: this.props.location.state.DN_Status,
 												isCNWithoutProduct: this.props.location.state.DN_WithoutPRoduct
-											})
+											});
+										 if (this.props.location && this.props.location.state && this.props.location.state.gotoReports) 
+												this.props.history.push('/admin/report/debit-note-details');
 										else {
 											this.props.history.push('/admin/expense/supplier-invoice');
 										}

@@ -126,7 +126,7 @@ class DebitNoteDetailsReport extends React.Component {
 		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
 		return dl ?
 		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-		  XLSX.writeFile(wb, fn || ('Tax Credit Note Details Report.'+ (type || 'csv')));
+		  XLSX.writeFile(wb, fn || ('Debit Note Detail Report.'+ (type || 'csv')));
 
 	   }
 
@@ -138,7 +138,7 @@ class DebitNoteDetailsReport extends React.Component {
 		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
 		   return dl ?
 			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-			 XLSX.writeFile(wb, fn || ('Tax Credit Note Details Report.'+ (type || 'xlsx')));
+			 XLSX.writeFile(wb, fn || ('Debit Note Detail Report.'+ (type || 'xlsx')));
    
 	   }
 
@@ -327,7 +327,7 @@ class DebitNoteDetailsReport extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-									fileName="Credit Note Details.pdf"
+									fileName="Debit Note Detail.pdf"
 								>
 							<div style={{	
 									

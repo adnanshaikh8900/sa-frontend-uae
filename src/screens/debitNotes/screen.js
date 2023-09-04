@@ -307,7 +307,7 @@ class DebitNotes extends React.Component {
 					</label>
 				</div>
 				<div>
-					<label className="font-weight-bold mr-2 ">Remaining Balance </label>
+					<label className="font-weight-bold mr-2 ">Remaining Balance: </label>
 					<label>
 						{row.dueAmount ? row.currencyName + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
 					</label>

@@ -184,6 +184,8 @@ class ViewDebitNote extends React.Component {
 												id: this.props.location.state.SUP_id,
 												status: this.props.location.state.SUP_status,
 											})
+										else if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
+											this.props.history.push('/admin/report/debit-note-details');
 										else
 											this.props.history.push('/admin/expense/debit-notes');
 									}}

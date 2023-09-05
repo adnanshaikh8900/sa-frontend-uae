@@ -1993,7 +1993,7 @@ class CreateSupplierInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props, addrowinfo) => {
-		const { vat_list, taxType } = this.props;
+		const { vat_list, taxType } = this.state;
 		const list = ProductTableCalculation.updateAmount(data, vat_list, taxType);
 		this.setState(
 			{

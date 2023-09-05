@@ -133,7 +133,7 @@ class DetailCustomerInvoice extends React.Component {
 			loadingMsg: "Loading",
 			disableLeavePage: false,
 			datesChanged: false,
-			customer_currency_symbol:'',
+			customer_currency_symbol: '',
 		};
 
 		// this.options = {
@@ -815,6 +815,7 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	selectItem = (e, row, name, form, field, props) => {
+		console.log(e, row, name, form, field, props)
 		//e.preventDefault();
 		let data = this.state.data;
 		let idx;
@@ -1728,37 +1729,55 @@ class DetailCustomerInvoice extends React.Component {
 		this.setState({ openProductModal: false });
 	};
 
-	getCurrentProduct = () => {
-		this.props.customerInvoiceActions.getProductList().then((res) => {
+	getCurrentProduct = (newProduct) => {
+		if (newProduct) {
+			let newData = []
+			const { data, isRegisteredVat } = this.state;
+			newData = data.filter((obj) => obj.productId !== "");
+			let exchangeRate = this.formRef.current?.state?.values?.exchangeRate > 0
+				&& this.formRef.current?.state?.values?.exchangeRate !== "" ?
+				this.formRef.current?.state?.values?.exchangeRate : 1
+			// props.setFieldValue('lineItemsString', newData, true);
+			// this.updateAmount(newData, props);
 			this.setState(
 				{
-					data: [
-						{
-							id: 0,
-							description: res.data[0].description,
-							quantity: 1,
-							unitPrice: res.data[0].unitPrice,
-							vatCategoryId: res.data[0].vatCategoryId,
-							subTotal: res.data[0].unitPrice,
-							productId: res.data[0].id,
-						},
+					data: [...newData, {
+						id: this.state.idCount + 1,
+						description: newProduct.description,
+						quantity: 1,
+						discount: 0,
+						unitPrice: (parseFloat(newProduct.unitPrice) * (1 / exchangeRate)).toFixed(2),
+						vatCategoryId: isRegisteredVat ? '' : 10,
+						exciseTaxId: newProduct.exciseTaxId,
+						vatAmount: newProduct.vatAmount ? newProduct.vatAmount : 0,
+						subTotal: newProduct.unitPrice,
+						productId: newProduct.id,
+						discountType: newProduct.discountType,
+						unitType: newProduct.unitType,
+						unitTypeId: newProduct.unitTypeId,
+					},
+
 					],
+					idCount: this.state.idCount + 1,
+
 				},
 				() => {
 					const values = {
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
+					this.addRow();
+					this.getProductType(newProduct.id);
 				},
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
-				res.data[0].unitPrice,
+				newProduct.unitPrice,
 				true,
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitType`,
-				res.data[0].unitType,
+				newProduct.unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -1767,16 +1786,31 @@ class DetailCustomerInvoice extends React.Component {
 				true,
 			);
 			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discount`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discountType`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.vatCategoryId`,
-				res.data[0].vatCategoryId,
+				newProduct.vatCategoryId,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.exciseTaxId`,
+				1,
 				true,
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.productId`,
-				res.data[0].id,
+				newProduct.id,
 				true,
 			);
-		});
+		}
 	};
 
 	getCompanyCurrency = (basecurrency) => {
@@ -3045,25 +3079,19 @@ class DetailCustomerInvoice extends React.Component {
 																</Row>
 
 																<hr style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }} />
-																<Row className="mb-3">
-																	<Col lg={8} className="mb-3">
-																		{/* <Button
-																		color="primary"
-																		className={`btn-square mr-3 ${
-																			this.checkedRow() ? `disabled-cursor` : ``
-																		} `}
-																		onClick={this.addRow}
-																		title={
-																			this.checkedRow()
-																				? `Please add detail to add more`
-																				: ''
-																		}
-																		disabled={this.checkedRow() ? true : false}
-																	>
-																		<i className="fa fa-plus"></i> {strings.Addmore}
-																	</Button> */}
+																<Row className="mb-1">
+																	<Col lg={8}>
+																		<Button
+																			color="primary"
+																			className="btn-square mr-3"
+																			onClick={(e, props) => {
+																				this.openProductModal()
+																			}}
+																		>
+																			<i className="fa fa-plus"></i> {strings.Addproduct}
+																		</Button>
 																	</Col>
-																	<Col  >
+																	<Col>
 
 																		{this.state.taxType === false ?
 																			<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
@@ -3629,7 +3657,12 @@ class DetailCustomerInvoice extends React.Component {
 						closeProductModal={(e) => {
 							this.closeProductModal(e);
 						}}
-						getCurrentProduct={(e) => this.getCurrentProduct(e)}
+						getCurrentProduct={(e) => {
+							this.props.customerInvoiceActions.getProductList().then(res => {
+								if (res.status === 200)
+									this.getCurrentProduct(res.data[0])
+							})
+						}}
 						createProduct={this.props.productActions.createAndSaveProduct}
 						// vat_list={this.props.vat_list}
 						vat_list={this.state.vat_list}

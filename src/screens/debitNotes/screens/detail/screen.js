@@ -51,6 +51,7 @@ const mapStateToProps = (state) => {
 		country_list: state.customer_invoice.country_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
+		company_details: state.common.company_details,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -298,15 +299,14 @@ class DetailDebitNote extends React.Component {
 								)
 								: []
 						}
-						value={
-
-							excise_list &&
+						value={row.exciseTaxId ? excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
 								.find((option) => option.value === +row.exciseTaxId)
+							: ''
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select + strings.Vat}
+						placeholder={strings.Select + strings.Excises}
 						onChange={(e) => {
 
 							this.selectItem(
@@ -830,7 +830,7 @@ class DetailDebitNote extends React.Component {
 		formData.append('isCreatedWIWP', this.state.isDNWIWithoutProduct);
 		formData.append('creditNoteNumber', debitNoteNumber ? debitNoteNumber : '',);
 		formData.append('email', email ? email : '',);
-		formData.append('creditNoteDate', invoiceDate ? moment(invoiceDate, 'DD-MM-YYYY').toDate() : null,);
+		formData.append('creditNoteDate', invoiceDate ? moment(invoiceDate) : new Date());
 		formData.append('referenceNo', referenceNumber !== null ? referenceNumber : '',);
 		formData.append('exchangeRate', exchangeRate ? exchangeRate : 1);
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
@@ -998,8 +998,9 @@ class DetailDebitNote extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { data, loadingMsg, initValue, loading, dialog, isCreatedWithoutInvoice } = this.state;
 
-		const { tax_treatment_list, invoice_list, currency_convert_list, customer_list, universal_currency_list, vat_list } = this.props;
+		const { tax_treatment_list, invoice_list, currency_convert_list, customer_list, universal_currency_list, company_details } = this.props;
 		let tmpCustomer_list = []
+		const { isRegisteredVat } = company_details;
 
 		customer_list.map(item => {
 			let obj = { label: item.label.contactName, value: item.value }
@@ -1224,7 +1225,7 @@ class DetailDebitNote extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-
+																	{isRegisteredVat &&
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="taxTreatmentId">
@@ -1279,7 +1280,7 @@ class DetailDebitNote extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-
+	}
 																</Row>
 																<Row>
 
@@ -1297,7 +1298,7 @@ class DetailDebitNote extends React.Component {
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
-																				value={props.values.invoiceDate}
+																				value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
 																				minDate={this.state.receiptDate}
 																				selected={props.values.invoiceDate}
 																				onChange={(value) => {
@@ -1505,7 +1506,7 @@ class DetailDebitNote extends React.Component {
 																				}
 																				{initValue.total_excise != 0 &&
 																					<TableHeaderColumn
-																					//	width="10%"
+																						//	width="10%"
 																						dataField="exciseTaxId"
 																						dataFormat={(cell, rows) =>
 																							this.renderExcise(cell, rows, props)
@@ -1524,6 +1525,7 @@ class DetailDebitNote extends React.Component {
 																						</UncontrolledTooltip>
 																					</TableHeaderColumn>
 																				}
+																				{isRegisteredVat &&
 																				<TableHeaderColumn
 																					dataField="vat"
 																					dataFormat={(cell, rows) =>
@@ -1532,6 +1534,8 @@ class DetailDebitNote extends React.Component {
 																				>
 																					{strings.VAT}
 																				</TableHeaderColumn>
+	}
+																	{isRegisteredVat &&
 																				<TableHeaderColumn
 																					dataField="vat_amount"
 																					dataFormat={this.renderVatAmount}
@@ -1541,6 +1545,7 @@ class DetailDebitNote extends React.Component {
 																				>
 																					{strings.VATAMOUNT}
 																				</TableHeaderColumn>
+	}
 																				<TableHeaderColumn
 																					dataField="sub_total"
 																					dataFormat={this.renderSubTotal}
@@ -1647,6 +1652,7 @@ class DetailDebitNote extends React.Component {
 																					</Col>
 																				</Row>
 																			</div>
+																	{isRegisteredVat &&
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -1662,7 +1668,7 @@ class DetailDebitNote extends React.Component {
 																					</Col>
 																				</Row>
 																			</div>
-
+	}
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

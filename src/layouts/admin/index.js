@@ -63,6 +63,7 @@ class AdminLayout extends React.Component {
 			this.props.authActions
 				.checkAuthStatus()
 				.then((response) => {
+					this.props.commonActions.getCompanyDetails();
 					this.props.commonActions.getRoleList(response.data.role.roleCode);
 				})
 				.catch((err) => {

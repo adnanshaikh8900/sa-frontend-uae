@@ -417,6 +417,14 @@ export const getCompanyDetails = () => {
 		}
 
 		return authApi(data).then((res) => {
+			if (res.status === 200) {
+				dispatch({
+					type: COMMON.COMPANY_DETAILS,
+					payload: {
+						data: res.data,
+					},
+				});
+			}
 			return res
 		}).catch((err) => {
 			throw err

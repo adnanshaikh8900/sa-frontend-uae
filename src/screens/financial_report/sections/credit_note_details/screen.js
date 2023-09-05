@@ -372,7 +372,7 @@ class CreditNoteDetailsReport extends React.Component {
 														this.state.data.creditNoteSummaryModelList.filter((item) => item.type === 7).map((item, index) => {
 															return (
 																<tr key={index}>
-																	<td style={{ textAlign: 'center'}}
+																	<td style={{ textAlign: 'center', color: "#2046DB"}}
 																	onClick={() =>
 																		this.props.history.push('/admin/income/credit-notes/view', {
 																			id: item.id, status: item.status, isCNWithoutProduct: item.isCNWithoutProduct,

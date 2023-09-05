@@ -99,14 +99,14 @@ class ViewExpense extends React.Component {
 		const { expenseData,  } = this.state;
 		const { profile } = this.props;
 		return (
-			<div className="view-expense-screen">
+			<div className="view-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
-							<div className="action-btn-container">
+							<div className="pull-right">
 						
 								<Button
-									className="btn pdf-btn"
+									className="btn-lg mb-1 print-btn-cont"
 									onClick={() => {
 										this.exportPDFWithComponent();
 									}}
@@ -117,7 +117,7 @@ class ViewExpense extends React.Component {
 									trigger={() => (
 										<Button
 											type="button"
-											className="btn  print-btn"
+											className="ml-1 mb-1 mr-1 print-btn-cont btn-lg"
 											onClick={() => window.print()}
 										>
 											<i className="fa fa-print"></i>
@@ -127,7 +127,7 @@ class ViewExpense extends React.Component {
 								/>
 
 								<Button
-									className="btn close-btn"
+									className="close-btn mb-1 btn-lg print-btn-cont"
 									onClick={() => {
 										if(this.props.location?.state?.crossLinked==true){
 											this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{

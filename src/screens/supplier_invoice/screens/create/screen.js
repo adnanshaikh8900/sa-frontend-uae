@@ -42,6 +42,7 @@ const mapStateToProps = (state) => {
 	return {
 		contact_list: state.supplier_invoice.contact_list,
 		currency_list: state.supplier_invoice.currency_list,
+		tax_treatment_list: state.common.tax_treatment_list,
 		vat_list: state.supplier_invoice.vat_list,
 		excise_list: state.supplier_invoice.excise_list,
 		product_list: state.supplier_invoice.product_list,
@@ -905,27 +906,7 @@ class CreateSupplierInvoice extends React.Component {
 			})
 	}
 	componentDidMount = () => {
-		this.props.customerInvoiceActions
-			.getTaxTreatment()
-			.then((res) => {
-
-				if (res.status === 200) {
-					let array = []
-					res.data.map((row) => {
-						if (row.id !== 8)
-							array.push(row);
-					})
-					this.setState({ taxTreatmentList: array });
-				}
-			})
-			.catch((err) => {
-
-				this.setState({ disabled: false });
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data ? err.data.message : 'ERROR',
-				);
-			});
+		this.props.commonActions.getTaxTreatmentList();
 		this.props.supplierInvoiceActions.getVatList();
 		this.getInitialData();
 		this.getCompanyType();
@@ -2460,13 +2441,14 @@ class CreateSupplierInvoice extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, initValue, isRegisteredVat, tax_treatment_list, param, loading, loadingMsg, taxTreatmentList } = this.state;
+		const { data, initValue, isRegisteredVat, param, loading, loadingMsg } = this.state;
 
 		const {
 			product_list,
 			supplier_list,
 			universal_currency_list,
 			currency_convert_list,
+			tax_treatment_list,
 		} = this.props;
 		let tmpSupplier_list = []
 
@@ -2827,11 +2809,11 @@ class CreateSupplierInvoice extends React.Component {
 																				</Label>
 																				<Select
 																						options={
-																							taxTreatmentList
+																							tax_treatment_list
 																								? selectOptionsFactory.renderOptions(
 																									'name',
 																									'id',
-																									taxTreatmentList,
+																									tax_treatment_list,
 																									'VAT',
 																								)
 																								: []
@@ -2841,12 +2823,12 @@ class CreateSupplierInvoice extends React.Component {
 																						name="taxTreatmentid"
 																						placeholder={strings.Select + strings.TaxTreatment}
 																						value={
-																							taxTreatmentList &&
+																							tax_treatment_list &&
 																							selectOptionsFactory
 																								.renderOptions(
 																									'name',
 																									'id',
-																									taxTreatmentList,
+																									tax_treatment_list,
 																									'VAT',
 																								)
 																								.find(

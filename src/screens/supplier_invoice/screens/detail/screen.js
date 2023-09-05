@@ -26,7 +26,6 @@ import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 import { Loader, ConfirmDeleteModal, LeavePage, } from 'components';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -43,6 +42,7 @@ const mapStateToProps = (state) => {
 		project_list: state.supplier_invoice.project_list,
 		contact_list: state.supplier_invoice.contact_list,
 		currency_list: state.supplier_invoice.currency_list,
+		tax_treatment_list: state.common.tax_treatment_list,
 		excise_list: state.supplier_invoice.excise_list,
 		product_list: state.customer_invoice.product_list,
 		supplier_list: state.supplier_invoice.supplier_list,
@@ -56,10 +56,6 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		supplierInvoiceActions: bindActionCreators(
 			SupplierInvoiceActions,
-			dispatch,
-		),
-		customerInvoiceActions: bindActionCreators(
-			CustomerInvoiceActions,
 			dispatch,
 		),
 		ProductActions: bindActionCreators(ProductActions, dispatch),
@@ -180,27 +176,7 @@ class DetailSupplierInvoice extends React.Component {
 	// }
 
 	componentDidMount = () => {
-		this.props.customerInvoiceActions
-			.getTaxTreatment()
-			.then((res) => {
-
-				if (res.status === 200) {
-					let array = []
-					res.data.map((row) => {
-						if (row.id !== 8)
-							array.push(row);
-					})
-					this.setState({ taxTreatmentList: array });
-				}
-			})
-			.catch((err) => {
-
-				this.setState({ disabled: false });
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data ? err.data.message : 'ERROR',
-				);
-			});
+		this.props.commonActions.getTaxTreatmentList();
 		this.props.supplierInvoiceActions.getProductList();
 		this.props.supplierInvoiceActions.getVatList().then((res) => {
 			if (res.status === 200)
@@ -2061,9 +2037,9 @@ class DetailSupplierInvoice extends React.Component {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, isRegisteredVat, initValue, loading, dialog, param, loadingMsg, taxTreatmentList } = this.state;
+		const { data, isRegisteredVat, initValue, loading, dialog, param, loadingMsg } = this.state;
 
-		const { project_list, currency_list, currency_convert_list, supplier_list, universal_currency_list } = this.props;
+		const { project_list, currency_list, currency_convert_list, supplier_list, universal_currency_list, tax_treatment_list, } = this.props;
 
 		let tmpSupplier_list = []
 
@@ -2312,11 +2288,11 @@ class DetailSupplierInvoice extends React.Component {
 																				</Label>
 																				<Select
 																						options={
-																							taxTreatmentList
+																							tax_treatment_list
 																								? selectOptionsFactory.renderOptions(
 																									'name',
 																									'id',
-																									taxTreatmentList,
+																									tax_treatment_list,
 																									'VAT',
 																								)
 																								: []
@@ -2326,12 +2302,12 @@ class DetailSupplierInvoice extends React.Component {
 																						name="taxTreatmentid"
 																						placeholder={strings.Select + strings.TaxTreatment}
 																						value={
-																							taxTreatmentList &&
+																							tax_treatment_list &&
 																							selectOptionsFactory
 																								.renderOptions(
 																									'name',
 																									'id',
-																									taxTreatmentList,
+																									tax_treatment_list,
 																									'VAT',
 																								)
 																								.find(

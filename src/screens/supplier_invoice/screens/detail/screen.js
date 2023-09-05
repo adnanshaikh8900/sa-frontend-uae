@@ -26,6 +26,7 @@ import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 import { Loader, ConfirmDeleteModal, LeavePage, } from 'components';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
+import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -55,6 +56,10 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		supplierInvoiceActions: bindActionCreators(
 			SupplierInvoiceActions,
+			dispatch,
+		),
+		customerInvoiceActions: bindActionCreators(
+			CustomerInvoiceActions,
 			dispatch,
 		),
 		ProductActions: bindActionCreators(ProductActions, dispatch),
@@ -175,6 +180,27 @@ class DetailSupplierInvoice extends React.Component {
 	// }
 
 	componentDidMount = () => {
+		this.props.customerInvoiceActions
+			.getTaxTreatment()
+			.then((res) => {
+
+				if (res.status === 200) {
+					let array = []
+					res.data.map((row) => {
+						if (row.id !== 8)
+							array.push(row);
+					})
+					this.setState({ taxTreatmentList: array });
+				}
+			})
+			.catch((err) => {
+
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err.data ? err.data.message : 'ERROR',
+				);
+			});
 		this.props.supplierInvoiceActions.getProductList();
 		this.props.supplierInvoiceActions.getVatList().then((res) => {
 			if (res.status === 200)
@@ -2035,7 +2061,7 @@ class DetailSupplierInvoice extends React.Component {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, isRegisteredVat, initValue, loading, dialog, param, loadingMsg } = this.state;
+		const { data, isRegisteredVat, initValue, loading, dialog, param, loadingMsg, taxTreatmentList } = this.state;
 
 		const { project_list, currency_list, currency_convert_list, supplier_list, universal_currency_list } = this.props;
 
@@ -2284,27 +2310,48 @@ class DetailSupplierInvoice extends React.Component {
 																				<Label htmlFor="taxTreatmentid">
 																					{strings.TaxTreatment}
 																				</Label>
-																				<Input
-																					disabled
-																					styles={customStyles}
-																					id="taxTreatmentid"
-																					name="taxTreatmentid"
-																					value={
-																						this.state.customer_taxTreatment_des
-
-																					}
-																					className={
-																						props.errors.taxTreatmentid &&
-																							props.touched.taxTreatmentid
-																							? 'is-invalid'
-																							: ''
-																					}
-																					onChange={(option) => {
-																						props.handleChange('taxTreatmentid')(option);
-
-																					}}
-
-																				/>
+																				<Select
+																						options={
+																							taxTreatmentList
+																								? selectOptionsFactory.renderOptions(
+																									'name',
+																									'id',
+																									taxTreatmentList,
+																									'VAT',
+																								)
+																								: []
+																						}
+																						isDisabled={true}
+																						id="taxTreatmentid"
+																						name="taxTreatmentid"
+																						placeholder={strings.Select + strings.TaxTreatment}
+																						value={
+																							taxTreatmentList &&
+																							selectOptionsFactory
+																								.renderOptions(
+																									'name',
+																									'id',
+																									taxTreatmentList,
+																									'VAT',
+																								)
+																								.find(
+																									(option) =>
+																										option.label ===
+																										this.state.customer_taxTreatment_des,
+																								)
+																						}
+																						onChange={(option) => {
+																							props.handleChange('taxTreatmentid')(
+																								option,
+																							);
+																						}}
+																						className={
+																							props.errors.taxTreatmentid &&
+																								props.touched.taxTreatmentid
+																								? 'is-invalid'
+																								: ''
+																						}
+																					/>
 																				{props.errors.taxTreatmentid &&
 																					props.touched.taxTreatmentid && (
 																						<div className="invalid-feedback">

@@ -368,12 +368,9 @@ class CustomerInvoice extends React.Component {
 	};
 	updateParentAmount = (totalAmount, totalVatAmount, totalexcise) => {
 		this.setState({ totalAmount: totalAmount, totalVatAmount: totalVatAmount, totalExciseAmount: totalexcise })
-		console.log(totalAmount, "00000000")
-		console.log(totalVatAmount, "00000000")
 	};
 	updateParentSelelectedData = (data) => {
 		this.setState({ selectedData: data })
-		console.log(data, "NEW DATA...")
 	};
 	renderInvoiceAmount = (cell, row, extraData) => {
 		return (
@@ -1130,43 +1127,43 @@ class CustomerInvoice extends React.Component {
 													placeholder={strings.Status}
 												/>
 											</Col> */}
-											<Col lg={2} className="pl-0 pr-0">
-												<Button
-													type="button"
-													color="primary"
-													className="btn-square mr-1"
-													onClick={this.handleSearch}
-												>
-													<i className="fa fa-search"></i>
-												</Button>
-												<Button
-													type="button"
-													color="primary"
-													className="btn-square"
-													onClick={this.clearAll}
-												>
-													<i className="fa fa-refresh"></i>
-												</Button>
-											</Col>
-										</Row>
-									</div>
-									<Row>
-										<div style={{ width: "1650px" , padding: "15px"}}>
-											<Button
-												color="primary"
-												className="btn-square pull-right mb-2"
-												style={{ marginBottom: '10px' }}
-												onClick={() =>
-													this.props.history.push(
-														`/admin/income/customer-invoice/create`,
-													)
-												}
-											>
-												<i className="fas fa-plus mr-1" />
-												{strings.AddNewInvoice}
-											</Button>
+												<Col lg={2} className="pl-0 pr-0">
+													<Button
+														type="button"
+														color="primary"
+														className="btn-square mr-1"
+														onClick={this.handleSearch}
+													>
+														<i className="fa fa-search"></i>
+													</Button>
+													<Button
+														type="button"
+														color="primary"
+														className="btn-square"
+														onClick={this.clearAll}
+													>
+														<i className="fa fa-refresh"></i>
+													</Button>
+												</Col>
+											</Row>
 										</div>
-									</Row>
+										<Row>
+											<div style={{ width: "1650px", padding: "15px" }}>
+												<Button
+													color="primary"
+													className="btn-square pull-right mb-2"
+													style={{ marginBottom: '10px' }}
+													onClick={() =>
+														this.props.history.push(
+															`/admin/income/customer-invoice/create`,
+														)
+													}
+												>
+													<i className="fas fa-plus mr-1" />
+													{strings.AddNewInvoice}
+												</Button>
+											</div>
+										</Row>
 
 										<BootstrapTable
 											selectRow={this.selectRowProp}
@@ -1200,7 +1197,7 @@ class CustomerInvoice extends React.Component {
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
-												width="20%"
+												//width="20%"
 												className="table-header-bg"
 											>
 												{strings.INVOICENUMBER}
@@ -1255,7 +1252,7 @@ class CustomerInvoice extends React.Component {
 												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-												// width="20%"
+												width="22%"
 												dataFormat={this.renderInvoiceAmount}
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"

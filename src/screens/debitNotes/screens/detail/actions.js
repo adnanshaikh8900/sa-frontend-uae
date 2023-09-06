@@ -18,63 +18,7 @@ export const getInvoiceById = (_id) => {
   }
 }
 
-export const updateInvoice = (obj) => {
-  return (dispatch) => {
-    let data = {
-      method: 'post',
-      url: '/rest/invoice/update',
-      data: obj
-    }
-    return authFileUploadApi(data).then((res) => {
-      return res
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
-
-export const deleteInvoice = (id) => {
-  return (dispatch) => {
-    let data = {
-      method: 'DELETE',
-      url: `/rest/invoice/delete?id=${id}`
-    }
-
-    return authApi(data).then((res) => {
-      return res
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
-export const deleteCN = (id) => {
-  return (dispatch) => {
-    let data = {
-      method: 'DELETE',
-      url: `/rest/creditNote/delete?id=${id}`
-    }
-
-    return authApi(data).then((res) => {
-      return res
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
-export const getCreditNoteById = (_id, isCNWithoutProduct) => {
-  return (dispatch) => {
-    let data = {
-      method: 'GET',
-      url: `/rest/creditNote/getCreditNoteById?id=${_id}&isCNWithoutProduct=${isCNWithoutProduct}`
-    }
-    return authApi(data).then((res) => {
-      return res
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
-export const UpdateCreditNotes = (obj) => {
+export const updateDebitNote = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
@@ -88,19 +32,18 @@ export const UpdateCreditNotes = (obj) => {
     })
   }
 }
-export const createCreditNote = (obj) => {
+
+export const deleteDebitNote = (id) => {
   return (dispatch) => {
     let data = {
-      method: 'post',
-      url: '/rest/creditNote/save',
-      data: obj,
-    };
-    return authFileUploadApi(data)
-      .then((res) => {
-        return res;
-      })
-      .catch((err) => {
-        throw err;
-      });
-  };
-};
+      method: 'DELETE',
+      url: `/rest/creditNote/delete?id=${id}`
+    }
+
+    return authApi(data).then((res) => {
+      return res
+    }).catch((err) => {
+      throw err
+    })
+  }
+}

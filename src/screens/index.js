@@ -59,7 +59,7 @@ import ViewGoodsReceivedNote from './goods_received_note/screens/view';
 import CreateDebitNote from './debitNotes/screens/create'
 import DebitNotes from './debitNotes'
 import DetailDebitNote  from './debitNotes/screens/detail'
-import RefundDebitNote from './debitNotes/screens/refund'
+import DebitNoteRefund from './debitNotes/screens/refund'
 import ApplyToSupplierInvoice from './debitNotes/screens/applyToInvoice'
 import ViewDebitNote from './debitNotes/screens/view'
 
@@ -210,6 +210,7 @@ import ViewFtaExciseAuditReport from './financial_report/sections/Excise_Audit_R
 import ARAgingReport from './financial_report/sections/ar_aging_report'
 import SubReports from './financial_report/sections/vat_return/screens/subReports'
 import NotesSettings from './notesSetting'
+import DebitNoteDetailsReport from './financial_report/sections/debit_note_details'
 export {
 	LogIn,
 	LogInTwo,
@@ -399,7 +400,8 @@ export {
 	DebitNotes,
 	CreateDebitNote,
 	DetailDebitNote,
-	RefundDebitNote,
+	DebitNoteRefund,
 	ApplyToSupplierInvoice,
 	ViewDebitNote,
+	DebitNoteDetailsReport,
 };

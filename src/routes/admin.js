@@ -80,7 +80,7 @@ import {
 	DebitNotes,
 	CreateDebitNote,
 	DetailDebitNote,
-	RefundDebitNote,
+	DebitNoteRefund,
 	ApplyToSupplierInvoice,
 	ViewDebitNote,
 
@@ -116,6 +116,7 @@ import {
 	CorporateTaxPaymentHistory,
 	CorporateTaxPaymentRecord,
 	ViewCorporateTax,
+	DebitNoteDetailsReport,
 
 	// Master Screens
 	ChartAccount,
@@ -234,6 +235,11 @@ const adminRoutes = [
 		path: '/admin/accountant/journal/create',
 		name: 'Add Journal',
 		component: CreateJournal.screen,
+	},
+	Config.ACCOUNTANT_JOURNALS && {
+		path: "/admin/accountant/journal/view",
+		name: "View Journal",
+		component: DetailJournal.screen,
 	},
 	Config.ACCOUNTANT_JOURNALS && {
 		path: '/admin/accountant/journal/detail',
@@ -512,34 +518,34 @@ const adminRoutes = [
 		name: 'Supplier Invoices',
 		component: SupplierInvoice.screen,
 	},
-	Config.EXPENSE_DB &&{
+	Config.EXPENSE_DN &&{
 		path: '/admin/expense/debit-notes',
-		name: 'Debit Note',
+		name: 'Debit Notes',
 		component: DebitNotes.screen,
 	},
-	Config.EXPENSE_DB &&{
+	Config.EXPENSE_DN &&{
 		path: '/admin/expense/debit-notes/create',
-		name: 'AddDebitNotes',
+		name: 'Add Debit Notes',
 		component: CreateDebitNote.screen,
 	},
-	Config.EXPENSE_DB &&{
+	Config.EXPENSE_DN &&{
 		path: '/admin/expense/debit-notes/update',
-		name: 'UpdateDebitNotes',
+		name: 'Update Debit Notes',
 		component: DetailDebitNote.screen,
 	},	
-	Config.EXPENSE_DB &&{
+	Config.EXPENSE_DN &&{
 		path: '/admin/expense/debit-notes/refund',
-		name: 'Refund',
-		component: RefundDebitNote.screen,
+		name: 'Refund Debit Notes',
+		component: DebitNoteRefund.screen,
 	},
-	// Config.EXPENSE_DB &&{
-	// 	path: '/admin/expense/debit-notes/applyToInvoice',
-	// 	name: 'Apply To Invoice',
-	// 	component: ApplyToSupplierInvoice.screen,
-	// },
-	Config.EXPENSE_DB &&{
+	Config.EXPENSE_DN &&{
+		path: '/admin/expense/debit-notes/applyToInvoice',
+		name: 'Apply To Supplier Invoice',
+		component: ApplyToSupplierInvoice.screen,
+	},
+	Config.EXPENSE_DN &&{
 		path: '/admin/expense/debit-notes/view',
-		name: 'ViewDebitNotes',
+		name: 'View Debit Notes',
 		component: ViewDebitNote.screen,
 	},
 	Config.EXPENSE_EXPENSES && {
@@ -892,6 +898,11 @@ const adminRoutes = [
 		path: '/admin/report/credit-note-details',
 		name: 'Credit Notes Details',
 		component: CreditNoteDetailsReport.screen,
+	},
+	Config.REPORTS_MODULE && {
+		path: '/admin/report/debit-note-details',
+		name: 'Debit Note Report',
+		component: DebitNoteDetailsReport.screen,
 	},
 	Config.REPORTS_MODULE && {
 		path: '/admin/report/invoice-details',

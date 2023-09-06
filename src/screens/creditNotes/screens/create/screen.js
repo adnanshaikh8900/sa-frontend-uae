@@ -18,12 +18,13 @@ import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
+import Switch from "react-switch";
 import * as Yup from 'yup';
 import * as CreditNotesCreateActions from './actions';
 import * as CreditNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { LeavePage, Loader } from 'components';
+import { LeavePage, Loader, ProductTableCalculation } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -90,6 +91,10 @@ class CreateCreditNote extends React.Component {
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: 'Percentage' },
+			],
+			exciseTypeOption: [
+				{ value: 'Inclusive', label: 'Inclusive' },
+				{ value: 'Exclusive', label: 'Exclusive' },
 			],
 			disabledDate: true,
 			data: [
@@ -176,7 +181,8 @@ class CreateCreditNote extends React.Component {
 			isCreatedWithoutInvoice: false,
 			loadingMsg: "Loading",
 			disableLeavePage: false,
-			lockInvoiceDetail: false
+			lockInvoiceDetail: false,
+			receiptDate: '',
 		};
 
 		this.formRef = React.createRef();
@@ -1134,109 +1140,20 @@ class CreateCreditNote extends React.Component {
 
 
 	updateAmount = (data, props) => {
-		const { vat_list, excise_list } = this.props;
-		const { discountPercentage, discountAmount } = this.state;
-
-		let total_net = 0;
-		let total_excise = 0;
-		let total = 0;
-		let total_vat = 0;
-		let net_value = 0;
-		let discount = 0;
-
-		const totalnetamount = (a) => {
-			total_net = total_net + a
-		}
-		const totalexcise = (a) => {
-			total_excise = total_excise + a
-		}
-		const totalvalt = (a) => {
-			total_vat = total_vat + a
-		}
-		const totalamount = (a) => {
-			total = total + a
-		}
-		const discountamount = (a) => {
-			discount = discount + a
-		}
-		data.map((obj) => {
-			let unitprice = parseFloat(obj.unitPrice);
-			var net_value = 0;
-			const index =
-				obj.vatCategoryId !== ''
-					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
-					: '';
-
-			const vat = index > -1 ? vat_list[`${index}`]?.vat : 0;
-			if (!this.state.taxType) {
-				if (obj.discountType === 'PERCENTAGE')
-					net_value = ((+unitprice - (+(unitprice * parseFloat(obj.discount)) / 100)) * parseInt(obj.quantity));
-				else
-					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
-
-				const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
-
-				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
-				net_value = parseFloat(net_value) + parseFloat(excisevalue);
-				const vat_amount = vat === 0 ? 0 : ((+net_value * vat) / 100);
-
-				totalnetamount(net_value - excisevalue)
-				totalexcise(excisevalue)
-				totalvalt(vat_amount)
-				totalamount(vat_amount + net_value)
-				discountamount(discount)
-				obj.subTotal = net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-				obj.vatAmount = vat_amount
-				obj.exciseAmount = excisevalue
-			} else {
-				if (obj.discountType === 'PERCENTAGE')
-					net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
-				else
-					net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
-
-				const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
-				//vat amount
-				const vat_amount =
-					(vat === 0 ? 0 :
-						((+net_value * (vat / (100 + vat) * 100)) / 100));
-
-				//net value after removing vat for inclusive
-				net_value = net_value - vat_amount
-				const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 3 : obj.exciseTaxId === 2 ? net_value / 2 : 0
-
-				totalnetamount(net_value - excisevalue)
-				totalexcise(excisevalue)
-				totalvalt(vat_amount)
-				totalamount(vat_amount + net_value)
-				discountamount(discount)
-				obj.subTotal = net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-				obj.vatAmount = vat_amount
-				obj.exciseAmount = excisevalue
-			}
-
-
-
-			return obj;
-		});
-
-		// const discount =
-		// 	props.values.discountType.value === 'PERCENTAGE'
-		// 		? +((total_net * discountPercentage) / 100)
-		// 		: discountAmount;
-
+		const { vat_list } = this.props;
+		const { taxType } = this.state;
+		const list = ProductTableCalculation.updateAmount(data ? data : [], vat_list, taxType);
 		this.setState(
 			{
-				data,
+				data: list.data,
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: total_net,
-						totalVatAmount: total_vat,
-						totalAmount: total,
-						total_excise: total_excise,
-						discount
-
-
+						total_net: list.total_net ? list.total_net : 0,
+						totalVatAmount: list.totalVatAmount ? list.totalVatAmount : 0,
+						totalAmount: list.totalAmount ? list.totalAmount : 0,
+						total_excise: list.total_excise ? list.total_excise : 0,
+						discount: list.discount ? list.discount : 0,
 					},
 
 				},
@@ -1333,6 +1250,7 @@ class CreateCreditNote extends React.Component {
 					this.props.creditNotesActions.getInvoiceListForDropdown();
 					this.setState(
 						{
+							disableLeavePage: false,
 							remainingInvoiceAmount: '',
 							createMore: false,
 							selectedContact: '',
@@ -1379,7 +1297,7 @@ class CreateCreditNote extends React.Component {
 				}
 			})
 			.catch((err) => {
-				this.setState({ disabled: false });
+				this.setState({ disabled: false,loading:false,disableLeavePage: false  });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'New Tax Credit Note Created Unsuccessfully.',
@@ -1518,6 +1436,7 @@ class CreateCreditNote extends React.Component {
 						}
 
 						this.setState({
+							receiptDate: response.data.receiptDate,
 							taxType: response.data.taxType,
 							option: {
 								label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
@@ -1670,7 +1589,7 @@ class CreateCreditNote extends React.Component {
 																						return false;
 																					}
 																				},
-																			).required('Value is required'),
+																			).required('Quantity is required'),
 																		// 			unitPrice: Yup.string()
 																		// 				.required('Value is required')
 																		// 				.test(
@@ -1793,7 +1712,7 @@ class CreateCreditNote extends React.Component {
 																						props.handleChange('invoiceNumber')('');
 																						this.setState({ invoiceSelected: false })
 																					}
-																					this.formRef.current.setFieldValue('receiptNumber', option.label , true);
+																					this.formRef.current.setFieldValue('receiptNumber', option.label, true);
 
 																					// if(!this.state.data1){
 																					// 	this.state.supplierList = this.state.data1
@@ -1996,7 +1915,7 @@ class CreateCreditNote extends React.Component {
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
-																				minDate={new Date()}
+																				minDate={new Date(moment(this.state.receiptDate,'YYYY-MM-DD').format())}																				
 																				dropdownMode="select"
 																				value={props.values.creditNoteDate}
 																				selected={props.values.creditNoteDate}
@@ -2288,8 +2207,49 @@ class CreateCreditNote extends React.Component {
 																<i className="fa fa-plus"></i> {strings.Addproduct}
 															</Button>
 														</Col> */}
+														{this.state.isCreatedWIWP === false && (
+													<>
+														<Row>
+														<Col lg={8} className="mb-3">
+																		</Col>
+																		<Col>
+																			{this.state.taxType === false ?
+																				<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																				<span className='mr-4'>{strings.Exclusive}</span>}
+																			<Switch
+																				value={props.values.taxType}
+																				checked={this.state.taxType}
+																				disabled
+																				onChange={(taxType) => {
+																					props.handleChange('taxType')(taxType);
+																					this.setState({ taxType }, () => {
+																						this.updateAmount(
+																							this.state.data,
+																							props
+																						)
+																					});
+																				}}
 
-																{this.state.isCreatedWIWP === false && (<Row>
+																				onColor="#2064d8"
+																				onHandleColor="#2693e6"
+																				handleDiameter={25}
+																				uncheckedIcon={false}
+																				checkedIcon={false}
+																				boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																				activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																				height={20}
+																				width={48}
+																				className="react-switch "
+																			/>
+																			{this.state.taxType === true ?
+																				<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																				: <span className='ml-4'>{strings.Inclusive}</span>
+																			}
+																		</Col>
+																		</Row>
+
+																
+																<Row>
 																	{props.errors.lineItemsString &&
 																		typeof props.errors.lineItemsString ===
 																		'string' && (
@@ -2456,7 +2416,8 @@ class CreateCreditNote extends React.Component {
 																			</TableHeaderColumn>
 																		</BootstrapTable>
 																	</Col>
-																</Row>)}
+																</Row></>)}
+
 																{this.state.data[0].id != 0 ? (
 																	<Row>
 																		<Col lg={8}>

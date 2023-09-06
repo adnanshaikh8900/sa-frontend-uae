@@ -14,7 +14,7 @@ import {
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import {data}  from '../../Language/index'
+import { data } from '../../Language/index'
 import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings(data);
@@ -22,28 +22,28 @@ class SupplierModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			language: window['localStorage'].getItem('language'),	
+			language: window['localStorage'].getItem('language'),
 		};
-		
+
 	}
 
-	
+
 
 	// Create or Contact
-	renderQuantity = (cell, row) =>  {
+	renderQuantity = (cell, row) => {
 		return (
 
-		<div>
-			{/* <TextField></TextField> */}
-			<Input
-				type="text"
-				
-				placeholder={strings.Quantity} >
-			</Input>
-		</div>
+			<div>
+				{/* <TextField></TextField> */}
+				<Input
+					type="text"
+
+					placeholder={strings.Quantity} >
+				</Input>
+			</div>
 		)
 	}
-	
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -77,7 +77,7 @@ class SupplierModal extends React.Component {
 							//       .required("Organization Name is Required"),
 							//     poBoxNumber: Yup.number()
 							//       .required("PO Box Number is Required"),
-						
+
 							//     addressLine1: Yup.string()
 							//       .required("Address is required"),
 							// countryId: Yup.string()
@@ -120,70 +120,70 @@ class SupplierModal extends React.Component {
 										</Row>
 									</CardHeader>
 									<ModalBody>
-									<h4 className="mb-3 mt-3">Quantity</h4>
-									<div style={{overflowX:'auto'}}>
-										<BootstrapTable
-											selectRow={this.selectRowProp}
-											search={false}
-											options={this.options}
-											data={inventory_list ? inventory_list : []}
-											version="4"
-											hover
-											keyField="id"
-											pagination={
-												inventory_list &&
-												inventory_list > 0
-													? true
-													: false
-											}
-											remote
-											fetchInfo={{
-												dataTotalSize: inventory_list.count
-													? inventory_list.count
-													: 0,
-											}}
-											className="supplier-invoice-table"
-											ref={(node) => (this.table = node)}
-										>
-											<TableHeaderColumn
-												dataField="supplierName"
-												// dataFormat={this.renderInvoiceNumber}
-												dataSort
-											//	width="10%"
-												className="table-header-bg"
+										<h4 className="mb-3 mt-3">Quantity</h4>
+										<div style={{ overflowX: 'auto' }}>
+											<BootstrapTable
+												selectRow={this.selectRowProp}
+												search={false}
+												options={this.options}
+												data={inventory_list ? inventory_list : []}
+												version="4"
+												hover
+												keyField="id"
+												pagination={
+													inventory_list &&
+														inventory_list > 0
+														? true
+														: false
+												}
+												remote
+												fetchInfo={{
+													dataTotalSize: inventory_list.count
+														? inventory_list.count
+														: 0,
+												}}
+												className="supplier-invoice-table"
+												ref={(node) => (this.table = node)}
 											>
-												Supplier Name
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="stockInHand"
-												dataSort
-											//	width="12%"
-												className="table-header-bg"
-											>
-												Stock in hand
-											</TableHeaderColumn>
-											<TableHeaderColumn
-											//	width="10%"
-												dataField="reOrderLevel"
-												dataFormat={this.renderInvoiceStatus}
-												dataSort
-												className="table-header-bg"
-											>
-												Reorder Level
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="invoiceDate"
-												dataSort
-											//	width="7%"
-												dataFormat={this.renderQuantity}
-												className="table-header-bg"
-											>
-												Quantity
-											</TableHeaderColumn>
-											
-										</BootstrapTable>
-									</div>
-										
+												<TableHeaderColumn
+													dataField="supplierName"
+													// dataFormat={this.renderInvoiceNumber}
+													dataSort
+													//	width="10%"
+													className="table-header-bg"
+												>
+													Supplier Name
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													dataField="stockInHand"
+													dataSort
+													//	width="12%"
+													className="table-header-bg"
+												>
+													Stock in hand
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													//	width="10%"
+													dataField="reOrderLevel"
+													dataFormat={this.renderInvoiceStatus}
+													dataSort
+													className="table-header-bg"
+												>
+													Reorder Level
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													dataField="invoiceDate"
+													dataSort
+													//	width="7%"
+													dataFormat={this.renderQuantity}
+													className="table-header-bg"
+												>
+													Quantity
+												</TableHeaderColumn>
+
+											</BootstrapTable>
+										</div>
+
 									</ModalBody>
 									<ModalFooter>
 										<Button

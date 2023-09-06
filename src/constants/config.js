@@ -9,6 +9,7 @@ export default {
   // FRONTEND_RELEASE: 'latest',
   FRONTEND_RELEASE: window._env_.SIMPLEVAT_RELEASE,
 
+
   DASHBOARD: true,
   INCOME_MODULE: true,
   EXPENSE_MODULE: true,
@@ -16,7 +17,7 @@ export default {
   ACCOUNTANT_MODULE: true,
   REPORTS_MODULE: true,
   MASTER_MODULE: true,
-  INVENTORY_MODULE: true,
+  INVENTORY_MODULE: false,
   PAYROLL_MODULE: true,
 
   EXPENSE_EXPENSES: true,
@@ -25,7 +26,7 @@ export default {
   EXPENSE_RFQ: false,
   EXPENSE_PO: false,
   EXPENSE_GRN: false,
-  EXPENSE_DB: true,
+  EXPENSE_DN: true,
 
   INCOME_CI: true,
   INCOME_IR: true,
@@ -75,6 +76,8 @@ export default {
 
   REPORTS_HEAD_PR: true,
   REPORTS_TAXCREDITNOTEDETAILS: true,
+
+  REPORTS_HEAD_DN: true,
 
   REPORTS_HEAD_INVOICES: true,
   REPORTS_INVOICEDETAILS: true,

@@ -882,7 +882,8 @@ min="0"
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fa fa-diamond" />
-												<span className="ml-2">{strings.UpdateJournal}</span>
+												{/* <span className="ml-2">{strings.UpdateJournal}</span> */}
+												<span className="ml-2">{initValue.postingReferenceType !== 'MANUAL' ? strings.ViewJournal : strings.UpdateJournal}</span>
 											</div>
 										</Col>
 									</Row>

@@ -380,7 +380,7 @@ class BalanceSheet extends React.Component {
 														<th
 															key={index}
 															className={column.class ? 'text-right th' : 'th' }
-						  									colSpan={2}
+						  									colSpan={column.class ? 1 : 2}
 														>
 															{column.label}
 														</th>
@@ -412,7 +412,7 @@ class BalanceSheet extends React.Component {
 														<td className="pt-3 pb-3" colSpan={2}></td>
 													</tr>
 					  								<tr style={{backgroundColor: '#4472C4'}}>
-														<td className="pt-1 pb-1 bld wh" colSpan={3}>{strings.Cash}</td>
+														<td className="pt-1 pb-1 bld wh" colSpan={2}>{strings.Cash}</td>
 													</tr>
 													{/* {Object.keys(
 														this.state.data['cash'],
@@ -482,7 +482,7 @@ class BalanceSheet extends React.Component {
 														</td>
 													</tr>
 					  								<tr>
-														<td className="pt-3 pb-3" colSpan={3}></td>
+														<td className="pt-3 pb-3" colSpan={2}></td>
 													</tr>
 					  								<tr style={{backgroundColor: '#4472C4'}}>
 														<td className="pt-1 pb-1 bld wh">{strings.Bank}</td>
@@ -556,10 +556,10 @@ class BalanceSheet extends React.Component {
 														</td>
 													</tr>
 					  								<tr>
-														<td className="pt-3 pb-3" colSpan={3}></td>
+														<td className="pt-3 pb-3" colSpan={2}></td>
 													</tr>
 													<tr style={{backgroundColor: '#4472C4'}}>
-														<td className="pt-1 pb-1 bld wh" colSpan={3}>
+														<td className="pt-1 pb-1 bld wh" colSpan={2}>
 														 {strings.Accounts+" "+strings.Receivable}
 														</td>
 													</tr>
@@ -629,10 +629,10 @@ class BalanceSheet extends React.Component {
 														</td>
 													</tr>
 					  								<tr>
-														<td className="pt-3 pb-3" colSpan={3}></td>
+														<td className="pt-3 pb-3" colSpan={2}></td>
 													</tr>
 													<tr style={{backgroundColor: '#4472C4'}}>
-														<td className="pt-1 pb-1 bld wh" colSpan={3}>{strings.CurrentAssets}</td>
+														<td className="pt-1 pb-1 bld wh" colSpan={2}>{strings.CurrentAssets}</td>
 													</tr>
 													{Object.keys(this.state.data['currentAssets']).map(
 														(item) => (
@@ -702,10 +702,10 @@ class BalanceSheet extends React.Component {
 														</td>
 													</tr>
 													<tr>
-														<td className="pt-3 pb-3" colSpan={3}></td>
+														<td className="pt-3 pb-3" colSpan={2}></td>
 													</tr>
 													<tr style={{backgroundColor: '#4472C4'}}>
-														<td className="pt-1 pb-1 bld wh" colSpan={3}>{strings.Other+" "+strings.CurrentAssets}</td>
+														<td className="pt-1 pb-1 bld wh" colSpan={2}>{strings.Other+" "+strings.CurrentAssets}</td>
 													</tr>
 													{Object.keys(this.state.data['otherCurrentAssets']).map(
 														(item) => (
@@ -775,10 +775,10 @@ class BalanceSheet extends React.Component {
 														</td>
 													</tr>
 													<tr>
-														<td className="pt-3 pb-3" colSpan={3}></td>
+														<td className="pt-3 pb-3" colSpan={2}></td>
 													</tr>
 													<tr style={{backgroundColor: '#4472C4'}}>
-														<td className="pt-1 pb-1 bld wh" colSpan={3}>{strings.FixedAssets}</td>
+														<td className="pt-1 pb-1 bld wh" colSpan={2}>{strings.FixedAssets}</td>
 													</tr>
 													{Object.keys(this.state.data['fixedAssets']).map(
 														(item) => (
@@ -848,7 +848,7 @@ class BalanceSheet extends React.Component {
 														</td>
 													</tr>
 													<tr>
-														<td className="pt-3 pb-3" colSpan={3}></td>
+														<td className="pt-3 pb-3" colSpan={2}></td>
 													</tr>
 													<tr style={{backgroundColor: '#9CC2E5'}}>
 														<td className="pt-1 pb-1 bld" colSpan={2}>{strings.Total+" "+strings.Assets}</td>
@@ -1083,8 +1083,7 @@ class BalanceSheet extends React.Component {
 													</tr>
 													<tr style={{backgroundColor: '#B4C6E7'}}>
 														<td className="pt-1 pb-1 bld">
-															{strings.Total+" "+strings.Other+" "+strings.CurrentLiabilities}
-														</td>
+															{strings.Total+" "+strings.Other+" "+strings.CurrentLiabilities}</td>
 														<td className="text-right pt-1 pb-1 bld">
 															{this.state.data['totalOtherCurrentLiabilities'] ? (
 																<Currency
@@ -1229,7 +1228,7 @@ class BalanceSheet extends React.Component {
 														</td>
 													</tr>
 													<tr>
-														<td className="pt-3 pb-3" colSpan={3}></td>
+														<td className="pt-3 pb-3" colSpan={2}></td>
 													</tr>
 													<tr style={{backgroundColor: '#9CC2E5'}}>
 														<td className="pt-1 pb-1 bld" colSpan={2}>{strings.Total+" "+strings.Liabilities+" & "+strings.Equities}</td>

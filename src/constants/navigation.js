@@ -73,11 +73,11 @@ export default {
 					icon: 'fas fa-file-invoice',
 					path: 'Supplier Invoices',
 				}] : []),
-				...(config.EXPENSE_DB ? [{
+				...(config.EXPENSE_DN ? [{
 					name: strings.DebitNotes,
 					url: '/admin/expense/debit-notes',
-					icon: 'fas fa-receipt',
-					path: 'Debit Note',
+					icon: 'fa fa-credit-card',
+					path: 'Debit Notes',
 				}] : []),
 				...(config.EXPENSE_PR ? [{
 					name: strings.Purchasereceipts,

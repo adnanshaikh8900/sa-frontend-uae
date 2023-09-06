@@ -6,11 +6,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import 'assets/css/global.scss';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 
 import App from 'app';
 import * as serviceWorker from 'serviceWorker';
-const theme = createMuiTheme({
+const theme = createTheme({
 	palette: {
 		primary: {
 			main: '#2064d8', // This is an orange looking color

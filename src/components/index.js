@@ -15,6 +15,7 @@ import * as CustomStyles from './react-select';
 import ConfirmLeavePageModal from './confirm_leave_page'
 import LeavePage from './navigationPromtForLeavePage'
 import {CommonList} from './comman_list_data'
+import * as ProductTableCalculation from './product_table_calculatoin'
 
 export {
 	Loading,
@@ -34,4 +35,5 @@ export {
 	Currency,
 	InvoiceTemplate,
 	CommonList,
+	ProductTableCalculation,
 };

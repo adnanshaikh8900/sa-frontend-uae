@@ -18,26 +18,23 @@ import {
 } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Loader, ConfirmDeleteModal, Currency } from 'components';
-
+import Select from 'react-select';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
-
-
-import * as CreditNotesActions from './actions';
+import * as DebitNotesActions from './actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperCase } from 'lodash';
+import moment from 'moment';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
-		//   currency: true,
 		ignoreDecimal: false,
 		ignoreZeroCurrency: false,
 		doNotAddOnly: false,
@@ -45,26 +42,18 @@ const toWords = new ToWords({
 });
 const mapStateToProps = (state) => {
 	return {
-		customer_invoice_list: state.customer_invoice.customer_invoice_list,
-		customer_list: state.customer_invoice.customer_list,
-		status_list: state.customer_invoice.status_list,
+		debit_note_list: state.debit_notes.debit_note_list,
+		customer_list: state.common.customer_list,
+		status_list: state.debit_notes.status_list,
 		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		creditNotesActions: bindActionCreators(
-			CreditNotesActions,
-			dispatch,
-		),
+		debitNotesActions: bindActionCreators(DebitNotesActions, dispatch,),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
-const invoiceimage = require('assets/images/invoice/invoice.png');
-const overWeekly = require('assets/images/invoice/week1.png');
-const overduemonthly = require('assets/images/invoice/month.png');
-const overdue = require('assets/images/invoice/due1.png');
 
 let strings = new LocalizedStrings(data);
 class DebitNotes extends React.Component {
@@ -82,11 +71,10 @@ class DebitNotes extends React.Component {
 				invoiceDueDate: '',
 				amount: '',
 				status: '',
-				contactType: 2,
+				contactType: 1,
 			},
 			selectedRows: [],
 			selectedId: '',
-			openInvoicePreviewModal: false,
 			csvData: [],
 			view: false,
 			overDueAmountDetails: {
@@ -94,7 +82,7 @@ class DebitNotes extends React.Component {
 				overDueAmountWeekly: '',
 				overDueAmountMonthly: '',
 			},
-			cN_list: [],
+			debit_note_list: [],
 			rowId: '',
 		};
 
@@ -122,15 +110,15 @@ class DebitNotes extends React.Component {
 
 	componentDidMount = () => {
 		let { filterData } = this.state;
-		this.props.creditNotesActions.getStatusList();
-		this.props.creditNotesActions.getCustomerList(filterData.contactType);
+		this.props.debitNotesActions.getStatusList();
+		this.props.commonActions.getCustomerList(filterData.contactType);
 		this.initializeData();
 		this.getOverdue();
 	};
 
 	getOverdue = () => {
 		let { filterData } = this.state;
-		this.props.creditNotesActions
+		this.props.debitNotesActions
 			.getOverdueAmountDetails(filterData.contactType)
 			.then((res) => {
 				if (res.status === 200) {
@@ -139,8 +127,7 @@ class DebitNotes extends React.Component {
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					'error',strings.SomethingWentWrong,
 				);
 				this.setState({ loading: false });
 			});
@@ -157,17 +144,17 @@ class DebitNotes extends React.Component {
 			sortingCol: this.options.sortName ? this.options.sortName : '',
 		};
 		const postData = { ...filterData, ...paginationData, ...sortingData };
-		this.props.creditNotesActions
-			.getCreditNoteList(postData)
+		this.props.debitNotesActions
+			.getdebitNotesList(postData)
 			.then((res) => {
 				if (res.status === 200) {
-					this.setState({ loading: false, cN_list: res.data }, () => { });
+					this.setState({ loading: false });
 				}
 			})
 			.catch((err) => {
+				this.setState({ loading: false })
 				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					'error',strings.SomethingWentWrong,
 				);
 			});
 	};
@@ -198,27 +185,23 @@ class DebitNotes extends React.Component {
 		this.initializeData();
 	};
 
-	creditNoteposting = (row) => {
-		this.setState({
-			loading: true,
-		});
-
+	debitNoteposting = (row, markAsSent) => {
 		const postingRequestModel = {
-			amount: row.amount,
+			amount: row.invoiceAmount,
 			postingRefId: row.id,
-			postingRefType: 'CREDIT_NOTE',
+			postingRefType: 'DEBIT_NOTE',
 			isCNWithoutProduct: row.isCNWithoutProduct == true ? true : false,
-			amountInWords: upperCase(row.currencyCode + " " + (toWords.convert(row.amount)) + " ONLY").replace("POINT", "AND"),
-			vatInWords: row.totalVatAmount ? upperCase(row.currencyCode + " " + (toWords.convert(row.totalVatAmount)) + " ONLY").replace("POINT", "AND") : "-"
+			amountInWords: upperCase(row.currencyName + " " + (toWords.convert(row.totalAmount)) + " ONLY").replace("POINT", "AND"),
+			vatInWords: row.totalVatAmount && parseFloat(row.totalVatAmount) > 0 ? upperCase(row.currencyName + " " + (toWords.convert(row.totalVatAmount)) + " ONLY").replace("POINT", "AND") : "-",
+			markAsSent: markAsSent
 		};
-
-		this.props.creditNotesActions
-			.creditNoteposting(postingRequestModel)
+		this.setState({ loading: true, loadingMsg: strings.PostingDebitNote___ });
+		this.props.debitNotesActions
+			.debitNoteposting(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
-						'success',
-						'Dedit Note Posted Successfully'
+						'success',strings.DebitNoteStatusChangedSuccessfully
 					);
 					this.setState({
 						loading: false,
@@ -227,30 +210,28 @@ class DebitNotes extends React.Component {
 				}
 			})
 			.catch((err) => {
-				this.props.commonActions.tostifyAlert('error', 'Dedit Note Posted Unsuccessfully');
-				this.setState({
-					loading: false,
-				});
+				this.props.commonActions.tostifyAlert('error', strings.DebitNoteStatusChangedUnsuccessfully);
+				this.setState({ loading: false, });
 			});
 	};
 
-	unPostInvoice = (row) => {
-		this.setState({
-			loading: true,
-		});
+	unPostDebitNote = (row) => {
 		const postingRequestModel = {
-			amount: row.amount,
+			amount: row.invoiceAmount,
 			postingRefId: row.id,
-			postingRefType: 'INVOICE',
+			postingRefType: 'DEBIT_NOTE',
+			isCNWithoutProduct: row.isCNWithoutProduct == true ? true : false,
+			amountInWords: upperCase(row.currencyName + " " + (toWords.convert(row.totalAmount)) + " ONLY").replace("POINT", "AND"),
+			vatInWords: row.totalVatAmount && parseFloat(row.totalVatAmount) > 0 ? upperCase(row.currencyName + " " + (toWords.convert(row.totalVatAmount)) + " ONLY").replace("POINT", "AND") : "-",
+			markAsSent: false
 		};
-		this.props.customerInvoiceActions
-			.unPostInvoice(postingRequestModel)
+		this.setState({ loading: true, loadingMsg: strings.UnpostingDebitNote___ });
+
+		this.props.debitNotesActions
+			.unPostDebitNote(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						res.data ? res.data.message : 'Invoice Unposted Successfully'
-					);
+					this.props.commonActions.tostifyAlert('success',strings.DebitNoteMovedToDraftSuccessfully);
 					this.setState({
 						loading: false,
 					});
@@ -260,8 +241,7 @@ class DebitNotes extends React.Component {
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data ? err.data.message : 'Invoice Unposted Unsuccessfully'
+					'error',strings.DebitNoteMovedToDraftUnsuccessfully
 				);
 				this.setState({
 					loading: false,
@@ -299,7 +279,7 @@ class DebitNotes extends React.Component {
 			}
 			return (
 				<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
-					{row.status}
+					{row.status === 'Partially Paid' ? 'Partially Debited' : row.status}
 				</span>
 			);
 		}
@@ -323,22 +303,15 @@ class DebitNotes extends React.Component {
 				<div>
 					<label className="font-weight-bold mr-2 ">{strings.Amount}: </label>
 					<label>
-						{row.amount === 0 ? row.currencyCode + " " + row.amount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + " " + row.amount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+						{row.totalAmount ? row.currencyName + " " + row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
 					</label>
 				</div>
 				<div>
-					<label className="font-weight-bold mr-2 ">Remaining Debits </label>
+					<label className="font-weight-bold mr-2 ">Remaining Balance: </label>
 					<label>
-						{row.dueAmount === 0 ? row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+						{row.dueAmount ? row.currencyName + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
 					</label>
 				</div>
-
-
-				{/* <div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2">Due Amount : </label>
-					<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
-				</div> */}
-
 			</div>);
 	};
 	renderCurrency = (cell, row) => {
@@ -354,11 +327,8 @@ class DebitNotes extends React.Component {
 		return row.invoiceDueDate ? row.invoiceDueDate : '';
 	};
 	debitNoteDate = (cell, row) => {
-		return row.creditNoteDate ? row.creditNoteDate : '';
+		return row.creditNoteDate ? moment(row.creditNoteDate).format('DD-MM-YYYY') : '';
 	};
-
-
-
 	renderDueAmount = (cell, row, extraData) => {
 		return row.dueAmount === 0 ? row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	}
@@ -378,7 +348,14 @@ class DebitNotes extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.status !== 'Closed' && row.status !== 'Open' && row.status !== 'Partially Paid' && (
+						{row.statusEnum === 'Open' && <DropdownItem
+							onClick={() =>
+								this.unPostDebitNote(row)
+							}
+						>
+							<i className="fas fa-file" />  {strings.Draft}
+						</DropdownItem>}
+						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -391,37 +368,18 @@ class DebitNotes extends React.Component {
 									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
-						)}	{row.status !== 'Closed' && row.status !== 'Draft' && row.cnCreatedOnPaidInvoice !== true && row.isCNWithoutProduct !== true && (
-							<DropdownItem>
-								<div
-									onClick={() => {
-
-										this.props.history.push(
-											'/admin/expense/debit-notes/applyToInvoice',
-											{
-												contactId: row.contactId, creditNoteId: row.id,
-												referenceNumber: row.creditNoteNumber,
-												creditAmount: row.dueAmount
-											},
-										);
-									}}
-								>
-									<i class="fas fa-file-invoice"></i>{strings.ApplyToInvoice}
-								</div>
-							</DropdownItem>
 						)}
-
-						{row.status !== 'Closed' && row.status !== 'Open' && row.status !== 'Partially Paid' && (
+						{row.statusEnum == 'Draft' && (
 							<DropdownItem
 								onClick={() => {
-									this.creditNoteposting(row);
+									this.debitNoteposting(row, true);
 								}}
 							>
-								<i className="fas fa-send" />  {strings.Post}
+								<i class="far fa-arrow-alt-circle-right"></i>{strings.MarkAsOpen}
 							</DropdownItem>
 						)}
 
-						{row.status !== 'Closed' && row.status !== 'Draft' && (
+						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -430,7 +388,29 @@ class DebitNotes extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-university" /> {strings.Refund}
+								<i className="fas fa-university" /> {strings.RefundPayment}
+							</DropdownItem>
+						)}
+
+						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !== true && (
+							<DropdownItem>
+								<div
+									onClick={() => {
+
+										this.props.history.push(
+											'/admin/expense/debit-notes/applyToInvoice',
+											{
+												contactId: row.contactId, creditNoteId: row.id,
+												debitNoteNumber: row.creditNoteNumber,
+												referenceNumber: row.invoiceNumber,
+												debitAmount: row.dueAmount,
+												currency:row.currencyName,
+											},
+										);
+									}}
+								>
+									<i class="fas fa-file-invoice"></i>{strings.ApplyToInvoice}
+								</div>
 							</DropdownItem>
 						)}
 
@@ -443,6 +423,7 @@ class DebitNotes extends React.Component {
 						>
 							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
+
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -575,20 +556,6 @@ class DebitNotes extends React.Component {
 	handleSearch = () => {
 		this.initializeData();
 	};
-
-	openInvoicePreviewModal = (id) => {
-		this.setState(
-			{
-				selectedId: id,
-			},
-			() => {
-				this.setState({
-					openInvoicePreviewModal: true,
-				});
-			},
-		);
-	};
-
 	closeInvoice = (id, status) => {
 		if (status === 'Paid') {
 			this.props.commonActions.tostifyAlert(
@@ -636,10 +603,6 @@ class DebitNotes extends React.Component {
 			});
 	};
 
-	closeInvoicePreviewModal = (res) => {
-		this.setState({ openInvoicePreviewModal: false });
-	};
-
 	getCsvData = () => {
 		if (this.state.csvData.length === 0) {
 			let obj = {
@@ -680,6 +643,14 @@ class DebitNotes extends React.Component {
 		);
 	};
 
+	renderInvoiceNumber = (cell, row) => {
+		return (
+			<>
+				{row.invNumber}
+			</>
+		);
+	};
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -689,16 +660,18 @@ class DebitNotes extends React.Component {
 			selectedRows,
 			csvData,
 			view,
-			cN_list
 		} = this.state;
 		const {
-			status_list,
-			customer_list,
-			customer_invoice_list,
+			debit_note_list,
 			universal_currency_list,
+			customer_list,
 		} = this.props;
+		let tmpCustomer_list = []
 
-
+		customer_list.map(item => {
+			let obj = { label: item.label.contactName, value: item.value }
+			tmpCustomer_list.push(obj)
+		})
 		return (
 			loading == true ? <Loader /> :
 				<div>
@@ -710,11 +683,7 @@ class DebitNotes extends React.Component {
 									<Row>
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
-												<img
-													alt="invoiceimage"
-													src={invoiceimage}
-													style={{ width: '40px' }}
-												/>
+												<i class="fa fa-credit-card" />
 												<span className="ml-2"> Debit Notes</span>
 											</div>
 										</Col>
@@ -743,7 +712,32 @@ class DebitNotes extends React.Component {
 												<h5>{strings.Filter} : </h5>
 												<Row>
 
-
+												<Col lg={2} className="mb-1">
+														<Select
+															className="select-default-width"
+															placeholder={strings.Select + strings.Supplier}
+															id="customer"
+															name="customer"
+															options={
+																tmpCustomer_list
+																	? selectOptionsFactory.renderOptions(
+																		'label',
+																		'value',
+																		tmpCustomer_list,
+																		'Supplier',
+																	)
+																	: []
+															}
+															value={filterData.customerId}
+															onChange={(option) => {
+																if (option && option.value) {
+																	this.handleChange(option, 'customerId');
+																} else {
+																	this.handleChange('', 'customerId');
+																}
+															}}
+														/>
+													</Col>
 
 													<Col lg={2} className="mb-1">
 														<Input
@@ -791,14 +785,14 @@ class DebitNotes extends React.Component {
 														}
 													>
 														<i className="fas fa-plus mr-1" />
-														Add New Debit-Note
+														{strings.AddNewDebitNote}
 													</Button></div></Row>
 
 											<BootstrapTable
 												selectRow={this.selectRowProp}
 												search={false}
 												options={this.options}
-												data={cN_list ? cN_list : []}
+												data={debit_note_list ? debit_note_list.data : []}
 												version="4"
 												hover
 												responsive
@@ -806,14 +800,14 @@ class DebitNotes extends React.Component {
 												keyField="id"
 												remote
 												pagination={
-													cN_list &&
-														cN_list.length > 0
+													debit_note_list &&
+														debit_note_list.count > 0
 														? true
 														: false
 												}
 												fetchInfo={{
-													dataTotalSize: cN_list.count
-														? cN_list.count
+													dataTotalSize: debit_note_list && debit_note_list.count
+														? debit_note_list.count
 														: 0,
 												}}
 												className="customer-invoice-table"
@@ -825,22 +819,33 @@ class DebitNotes extends React.Component {
 												<TableHeaderColumn
 													dataField="creditNoteNumber"
 													dataSort
-													//	width="7%"
 													className="table-header-bg"
 												>
 
 													Debit Note Number
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													width="20%"
-													dataField="contactName"
-													//	dataSort width="10%"
+													dataField="customerName"
 													className="table-header-bg"
 												>
 													{strings.SUPPLIERNAME}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													//width="9%"
+													dataField="invoiceNumber"
+													dataFormat={this.renderInvoiceNumber}
+													dataSort
+													className="table-header-bg"
+												>
+													{strings.InvoiceNumber}
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													dataSort
+													dataFormat={this.debitNoteDate}
+													className="table-header-bg"
+												>
+													{strings.DATE}
+												</TableHeaderColumn>
+												<TableHeaderColumn
 													dataField="status"
 													dataFormat={this.renderInvoiceStatus}
 													dataSort
@@ -849,20 +854,10 @@ class DebitNotes extends React.Component {
 													{strings.STATUS}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													dataField="creditNoteDate"
-													dataSort
-													//width="6%"
-													dataFormat={this.debitNoteDate}
-													className="table-header-bg"
-												>
-													{strings.DATE}
-												</TableHeaderColumn>
-
-												<TableHeaderColumn
 													dataAlign="right"
 													dataField="totalAmount"
+													width="22%"
 													dataSort
-													width="20%"
 													dataFormat={this.renderamount}
 													formatExtraData={universal_currency_list}
 													className="table-header-bg"
@@ -873,7 +868,7 @@ class DebitNotes extends React.Component {
 												<TableHeaderColumn
 													className="table-header-bg text-right"
 													columnClassName="text-right"
-													//	width="5%"
+													width="50px"
 													dataFormat={this.renderActions}
 												></TableHeaderColumn>
 											</BootstrapTable>

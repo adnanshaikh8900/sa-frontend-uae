@@ -20,7 +20,7 @@ import * as Yup from 'yup';
 import * as CustomerRecordPaymentActions from './actions';
 import * as CnActions from '../../actions';
 import { CustomerModal } from '../../sections';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -83,9 +83,9 @@ class Refund extends React.Component {
 				receiptDate: new Date(),
 				contactId: this.props.location.state.id.contactId,
 				amount: this.props.location.state.id.dueAmount,
-				payMode: '',
+				payMode: { label: 'CASH', value: 'CASH' },
 				notes: '',
-				depositeTo: '',
+				depositeTo: { label: 'Petty Cash', value: 47 },
 				referenceCode: '',
 				attachmentFile: '',
 				paidInvoiceListStr: [],
@@ -105,7 +105,8 @@ class Refund extends React.Component {
 			invoiceNumber:"-",
 			showInvoiceNumber:false,
 			receiptNumber:'',
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			creditNoteDate: this.props.location.state.id.invoiceDate,
 		};
 
 		// this.options = {
@@ -297,6 +298,7 @@ class Refund extends React.Component {
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
+		formData.append('type', '7');
 		formData.append(
 			'paymentDate',
 			typeof receiptDate === 'string'
@@ -676,6 +678,7 @@ class Refund extends React.Component {
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
+																			minDate={new Date(moment(this.state.creditNoteDate,'YYYY-MM-DD').format())}																										
 																			value={props.values.receiptDate}
 																			selected={props.values.receiptDate}
 																			onChange={(value) => {
@@ -751,7 +754,7 @@ class Refund extends React.Component {
 																		</Label>
 																		<Select
 																			options={deposit_list}
-																			value={props.values.depositeFrom}
+																			value={props.values.depositeTo}
 																			onChange={(option) => {
 																				if (option && option.value) {
 																					props.handleChange('depositeTo')(
@@ -971,6 +974,7 @@ class Refund extends React.Component {
 					country_list={this.props.country_list}
 					getStateList={this.props.cnActions.getStateList}
 				/>
+				{this.state.disableLeavePage ? "" : <LeavePage />}
 			</div>
 		);
 	}

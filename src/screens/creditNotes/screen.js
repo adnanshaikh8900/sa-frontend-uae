@@ -465,7 +465,8 @@ class CreditNotes extends React.Component {
 												contactId: row.contactId, creditNoteId: row.id,
 												creditNoteNumber: row.creditNoteNumber,
 												referenceNumber: row.invoiceNumber,
-												creditAmount: row.dueAmount
+												creditAmount: row.dueAmount,
+												currency:row.currencyName,
 											},
 										);
 									}}

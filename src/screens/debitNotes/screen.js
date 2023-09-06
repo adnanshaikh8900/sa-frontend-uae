@@ -643,6 +643,14 @@ class DebitNotes extends React.Component {
 		);
 	};
 
+	renderInvoiceNumber = (cell, row) => {
+		return (
+			<>
+				{row.invNumber}
+			</>
+		);
+	};
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -823,7 +831,8 @@ class DebitNotes extends React.Component {
 													{strings.SUPPLIERNAME}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													dataField="invNumber"
+													dataField="invoiceNumber"
+													dataFormat={this.renderInvoiceNumber}
 													dataSort
 													className="table-header-bg"
 												>

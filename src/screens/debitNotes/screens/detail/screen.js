@@ -34,6 +34,7 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
+import Switch from "react-switch";
 import API_ROOT_URL from '../../../../constants/config';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -87,6 +88,10 @@ class DetailDebitNote extends React.Component {
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: '%' },
+			],
+			exciseTypeOption: [
+				{ value: 'Inclusive', label: 'Inclusive' },
+				{ value: 'Exclusive', label: 'Exclusive' },
 			],
 			discount_option: '',
 			data: [],
@@ -1425,6 +1430,45 @@ class DetailDebitNote extends React.Component {
 
 																</Row>
 																<hr />
+																{!isCreatedWithoutInvoice && !this.state.isDNWIWithoutProduct && (
+																<Row>
+																			<Col lg={8} className="mb-3">
+																			</Col>
+																			<Col>
+																				{this.state.taxType === false ?
+																					<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																					<span className='mr-4'>{strings.Exclusive}</span>}
+																				<Switch
+																					value={props.values.taxType}
+																					checked={this.state.taxType}
+																					disabled
+																					onChange={(taxType) => {
+																						props.handleChange('taxType')(taxType);
+																						this.setState({ taxType }, () => {
+																							this.updateAmount(
+																								this.state.data,
+																								props
+																							)
+																						});
+																					}}
+
+																					onColor="#2064d8"
+																					onHandleColor="#2693e6"
+																					handleDiameter={25}
+																					uncheckedIcon={false}
+																					checkedIcon={false}
+																					boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																					activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																					height={20}
+																					width={48}
+																					className="react-switch "
+																				/>
+																				{this.state.taxType === true ?
+																					<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																					: <span className='ml-4'>{strings.Inclusive}</span>
+																				}
+																			</Col>
+																		</Row>)}
 																{this.state.isDNWIWithoutProduct === false && data && data.length > 0 && (
 																	<Row>
 																		{props.errors.lineItemsString &&

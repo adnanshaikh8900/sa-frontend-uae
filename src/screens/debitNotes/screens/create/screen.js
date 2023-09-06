@@ -83,9 +83,14 @@ class CreateDebitNote extends React.Component {
 			loading: false,
 			customer_currency_symbol: '',
 			disabled: false,
+			disabled1: false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: '%' },
+			],
+			exciseTypeOption: [
+				{ value: 'Inclusive', label: 'Inclusive' },
+				{ value: 'Exclusive', label: 'Exclusive' },
 			],
 			disabledDate: true,
 			data: [
@@ -809,7 +814,7 @@ class CreateDebitNote extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
-		this.setState({ disabled: true, disableLeavePage: true });
+		this.setState({ disableLeavePage: true });
 		const {
 			debitNoteNumber,
 			email,
@@ -865,7 +870,7 @@ class CreateDebitNote extends React.Component {
 		this.props.debitNoteCreateActions
 			.createDebitNote(formData)
 			.then((res) => {
-				this.setState({ disabled: false, loading: false });
+				this.setState({ disabled: false, disabled1: false, loading: false });
 				this.props.commonActions.tostifyAlert('success', strings.DebitNoteCreatedSuccessfully);
 				if (this.state.createMore) {
 					this.props.debitNoteActions.getInvoiceListForDropdown();
@@ -926,7 +931,7 @@ class CreateDebitNote extends React.Component {
 				}
 			})
 			.catch((err) => {
-				this.setState({ disableLeavePage: false, disabled: false, loading: false });
+				this.setState({ disableLeavePage: false, disabled: false, disabled1: false, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error', strings.DebitNoteCreatedUnSuccessfully,
 				);
@@ -1479,6 +1484,45 @@ class CreateDebitNote extends React.Component {
 
 														</Row>
 														<hr />
+														{!isCreatedWithoutInvoice && !this.state.isDNWIWithoutProduct && (
+														<Row>
+														<Col lg={8} className="mb-3">
+																		</Col>
+																		<Col>
+																			{this.state.taxType === false ?
+																				<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																				<span className='mr-4'>{strings.Exclusive}</span>}
+																			<Switch
+																				value={props.values.taxType}
+																				checked={this.state.taxType}
+																				disabled
+																				onChange={(taxType) => {
+																					props.handleChange('taxType')(taxType);
+																					this.setState({ taxType }, () => {
+																						this.updateAmount(
+																							this.state.data,
+																							props
+																						)
+																					});
+																				}}
+
+																				onColor="#2064d8"
+																				onHandleColor="#2693e6"
+																				handleDiameter={25}
+																				uncheckedIcon={false}
+																				checkedIcon={false}
+																				boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																				activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																				height={20}
+																				width={48}
+																				className="react-switch "
+																			/>
+																			{this.state.taxType === true ?
+																				<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																				: <span className='ml-4'>{strings.Inclusive}</span>
+																			}
+																		</Col>
+																		</Row>)}
 
 
 
@@ -1764,7 +1808,7 @@ class CreateDebitNote extends React.Component {
 																		onClick={() => {
 																			console.log(props.errors)
 																			this.setState(
-																				{ createMore: false },
+																				{ createMore: false, disabled: true, },
 																				() => {
 																					props.handleSubmit();
 																				},
@@ -1780,11 +1824,12 @@ class CreateDebitNote extends React.Component {
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
-																		disabled={this.state.disabled}
+																		disabled={this.state.disabled1}
 																		onClick={() => {
 																			this.setState(
 																				{
 																					createMore: true,
+																					disabled1: true,
 																				},
 																				() => {
 																					props.handleSubmit();
@@ -1793,7 +1838,7 @@ class CreateDebitNote extends React.Component {
 																		}}
 																	>
 																		<i className="fa fa-refresh"></i>{' '}
-																		{this.state.disabled
+																		{this.state.disabled1
 																			? 'Creating...'
 																			: strings.CreateandMore}
 																	</Button>

@@ -815,6 +815,11 @@ class CreateDebitNote extends React.Component {
 
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disableLeavePage: true });
+		if (this.state.createMore === true){
+			this.setState({ disable1: true });
+		} else {
+			this.setState({ disable: true });
+		}
 		const {
 			debitNoteNumber,
 			email,
@@ -1808,7 +1813,7 @@ class CreateDebitNote extends React.Component {
 																		onClick={() => {
 																			console.log(props.errors)
 																			this.setState(
-																				{ createMore: false, disabled: true, },
+																				{ createMore: false },
 																				() => {
 																					props.handleSubmit();
 																				},
@@ -1829,7 +1834,6 @@ class CreateDebitNote extends React.Component {
 																			this.setState(
 																				{
 																					createMore: true,
-																					disabled1: true,
 																				},
 																				() => {
 																					props.handleSubmit();

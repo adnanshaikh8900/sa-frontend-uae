@@ -225,8 +225,11 @@ class ViewCustomerInvoice extends React.Component {
 												status: this.props.location.state.TCN_Status,
 												isCNWithoutProduct: this.props.location.state.TCN_WithoutPRoduct
 											})
-										else
+											if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)  
+												this.props.history.push('/admin/report/credit-note-details');
+										else {
 											this.props.history.push('/admin/income/customer-invoice');
+										}
 
 									}}
 								>

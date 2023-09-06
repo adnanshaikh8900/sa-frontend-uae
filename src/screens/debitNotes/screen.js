@@ -403,7 +403,8 @@ class DebitNotes extends React.Component {
 												contactId: row.contactId, creditNoteId: row.id,
 												debitNoteNumber: row.creditNoteNumber,
 												referenceNumber: row.invoiceNumber,
-												debitAmount: row.dueAmount
+												debitAmount: row.dueAmount,
+												currency:row.currencyName,
 											},
 										);
 									}}

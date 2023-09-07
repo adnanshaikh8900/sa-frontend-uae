@@ -219,7 +219,8 @@ class ViewInvoice extends React.Component {
 										 if (this.props.location && this.props.location.state && this.props.location.state.gotoReports) 
 												this.props.history.push('/admin/report/debit-note-details');
 										else {
-											this.props.history.push('/admin/expense/supplier-invoice');
+											// this.props.history.push('/admin/expense/supplier-invoice');
+											 this.props.history.push('/admin/report/debit-note-details');
 										}
 									}}
 								>

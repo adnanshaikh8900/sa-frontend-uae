@@ -157,14 +157,18 @@ class ViewCustomerInvoice extends React.Component {
 		this.pdfExportComponent.save();
 	};
 	redirectToCreditNote = (creditNote) => {
-		this.props.history.push('/admin/income/credit-notes/view', {
+		const commonParams = {
 			CI_id: this.props.location.state.id,
 			CI_status: this.props.location.state.status,
 			CI_contactId: this.props.location.state.contactId,
 			id: creditNote.creditNoteId,
 			isCNWithoutProduct: creditNote.isCreatedWithoutInvoice,
 			status: creditNote.status,
-		});
+	};
+	if (this.props.location.state && this.props.location.state.gotoReports) {
+			commonParams.gotoReports = true;
+	}
+	this.props.history.push('/admin/income/credit-notes/view', commonParams)
 	}
 	render() {
 		strings.setLanguage(this.state.language);

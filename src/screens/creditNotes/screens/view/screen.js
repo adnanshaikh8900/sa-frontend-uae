@@ -199,14 +199,14 @@ class ViewCreditNote extends React.Component {
 									type="button"
 									className="close-btn mb-1 btn-lg print-btn-cont"
 									onClick={() => {
-										if (this.props.location.state.CI_id)
+										if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
+										this.props.history.push('/admin/report/credit-note-details');
+										else if (this.props.location.state.CI_id)
 											this.props.history.push('/admin/income/customer-invoice/view', {
 												id: this.props.location.state.CI_id,
 												status: this.props.location.state.CI_status,
 												contactId: this.props.location.state.CI_contactId
 											})
-										else if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
-											this.props.history.push('/admin/report/credit-note-details');
 										else
 											this.props.history.push('/admin/income/credit-notes');
 

@@ -403,7 +403,8 @@ class DebitNotes extends React.Component {
 												contactId: row.contactId, creditNoteId: row.id,
 												debitNoteNumber: row.creditNoteNumber,
 												referenceNumber: row.invoiceNumber,
-												debitAmount: row.dueAmount
+												debitAmount: row.dueAmount,
+												currency:row.currencyName,
 											},
 										);
 									}}
@@ -642,6 +643,14 @@ class DebitNotes extends React.Component {
 		);
 	};
 
+	renderInvoiceNumber = (cell, row) => {
+		return (
+			<>
+				{row.invNumber}
+			</>
+		);
+	};
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -822,7 +831,8 @@ class DebitNotes extends React.Component {
 													{strings.SUPPLIERNAME}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													dataField="invNumber"
+													dataField="invoiceNumber"
+													dataFormat={this.renderInvoiceNumber}
 													dataSort
 													className="table-header-bg"
 												>

@@ -359,8 +359,9 @@ class CreditNoteDetailsReport extends React.Component {
 													<tr>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color: 'black' }}>{strings.Credit_Note +" "+strings.Number}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerName}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceNumber}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color: 'black' }}>{strings.Credit_Note +" "+strings.Date}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Status}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black', width: "10%" }}>{strings.Status}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.SalesReturn}
 															{/* {strings.InvoiceAmount} */}
 														</th>
@@ -372,7 +373,7 @@ class CreditNoteDetailsReport extends React.Component {
 														this.state.data.creditNoteSummaryModelList.filter((item) => item.type === 7).map((item, index) => {
 															return (
 																<tr key={index}>
-																	<td style={{ textAlign: 'center', color: "#2046DB"}}
+																	<td style={{ textAlign: 'left', color: "#2046DB"}}
 																	onClick={() =>
 																		this.props.history.push('/admin/income/credit-notes/view', {
 																			id: item.id, status: item.status, isCNWithoutProduct: item.isCNWithoutProduct,
@@ -380,11 +381,19 @@ class CreditNoteDetailsReport extends React.Component {
 																		})
 																	}
 																	>{item.creditNoteNumber}</td>
-																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
-																	<td style={{ textAlign: 'center'}}>{item.creditNoteDate ? (
+																	<td style={{ textAlign: 'left'}}>{item.customerName}</td>
+																	<td style={{ textAlign: 'left', color: "#2046DB"}}
+																	onClick={() =>
+																		this.props.history.push('/admin/income/customer-invoice/view', {
+																			id: item.invoiceId, status: item.invoiceStatus,
+																			gotoReports:true
+																		})
+																	}
+																	>{item.invoiceNumber}</td>
+																	<td style={{ textAlign: 'left'}}>{item.creditNoteDate ? (
 																		moment(item.creditNoteDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
-																	<td style={{ textAlign: 'center' }}>
+																	<td style={{ textAlign: 'left' }}>
 																		{(() => {
 																			if (item.status === 'Partially Paid') {
 																			return 'Partially Credited';
@@ -417,6 +426,15 @@ class CreditNoteDetailsReport extends React.Component {
 																</tr>
 															);
 														})}
+														<tr>
+															<td></td>
+															<td></td>
+															<td></td>
+															<td></td>
+															<td></td>
+															<td></td>
+															<td></td>
+														</tr>
 												</tbody>
 												<tfoot>
 													{/* {this.state.data.creditNoteSummaryModelList.filter((item) => item.type === 7) 
@@ -427,9 +445,9 @@ class CreditNoteDetailsReport extends React.Component {
 													console.log('totalBal ------ ' ,this.state.totalBal);
 													)} */}
 													<tr style={{ border: "3px solid #dfe9f7" }}>
-														<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
-														<td></td>	<td></td>	<td></td>
-														<td style={{ textAlign: 'right', width: '20%' }}>
+														<td></td>	<td></td>	<td></td> <td></td>
+														<td style={{ textAlign: 'right' }}><b>{strings.Total}</b></td>
+														<td style={{ textAlign: 'right' }}>
 													
 															<b><Currency
 																value={this.state.data.creditNoteSummaryModelList.filter((item) => item.type === 7).reduce((total, item) => total + item.creditNoteTotalAmount, 0)}
@@ -441,7 +459,7 @@ class CreditNoteDetailsReport extends React.Component {
 															/></b>
 															
 														</td>
-														<td style={{ textAlign: 'right', width: '20%' }}>
+														<td style={{ textAlign: 'right' }}>
 															
 														<b>
 														<Currency

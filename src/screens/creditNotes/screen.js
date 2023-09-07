@@ -337,7 +337,7 @@ class CreditNotes extends React.Component {
 					</label>
 				</div>
 				<div>
-					<label className="font-weight-bold mr-2 ">{strings.RemainingCredits}: </label>
+					<label className="font-weight-bold mr-2 ">{strings.RemainingBalance}: </label>
 					<label>
 						{row.dueAmount === 0 ? row.currencyName + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : row.currencyName + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 					</label>
@@ -465,7 +465,8 @@ class CreditNotes extends React.Component {
 												contactId: row.contactId, creditNoteId: row.id,
 												creditNoteNumber: row.creditNoteNumber,
 												referenceNumber: row.invoiceNumber,
-												creditAmount: row.dueAmount
+												creditAmount: row.dueAmount,
+												currency:row.currencyName,
 											},
 										);
 									}}

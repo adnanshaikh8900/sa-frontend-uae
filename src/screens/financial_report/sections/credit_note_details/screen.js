@@ -365,7 +365,7 @@ class CreditNoteDetailsReport extends React.Component {
 														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.SalesReturn}
 															{/* {strings.InvoiceAmount} */}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Balance}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.RemainingBalance}</th>
 													</tr>
 												</thead>
 												<tbody className=" table-bordered table-hover">

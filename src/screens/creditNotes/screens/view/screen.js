@@ -319,7 +319,6 @@ class ViewCreditNote extends React.Component {
 					<div style={{ display: this.state.applyToInvoiceData?.length === 0 ? 'none' : '' }}><strong>{strings.CreditNoteAmountUsedSummary}</strong></div>
 
 					<Card>
-						{console.log(this.state.applyToInvoiceData)}
 						<div style={{ display: this.state.applyToInvoiceData?.length === 0 ? 'none' : '' }} >
 							<Table  >
 								<thead style={{ backgroundColor: '#2064d8', color: 'white' }}>

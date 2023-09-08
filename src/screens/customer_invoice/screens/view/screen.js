@@ -213,9 +213,17 @@ class ViewCustomerInvoice extends React.Component {
 									className="close-btn mb-1 btn-lg print-btn-cont"
 
 									onClick={() => {
-
-										if (this.props.location.state && this.props.location.state.crossLinked &&
-											this.props.location.state.crossLinked == true)
+										// console.log(this.props.location.state);
+										if (this.props.location && this.props.location.state && this.props.location.state.gotoReports) {
+												this.props.history.push('/admin/report/credit-note-details')
+										} else if (this.props.location.state.TCN_Id) {
+											this.props.history.push('/admin/income/credit-notes/view', {
+												id: this.props.location.state.TCN_Id,
+												status: this.props.location.state.TCN_Status,
+												isCNWithoutProduct: this.props.location.state.TCN_WithoutPRoduct
+											})
+										} else if (this.props.location.state && this.props.location.state.crossLinked &&
+											this.props.location.state.crossLinked == true) {
 											this.props.history.push('/admin/report/vatreports/vatreturnsubreports', {
 												boxNo: this.props.location.state.description,
 												description: this.props.location.state.description,
@@ -223,18 +231,9 @@ class ViewCustomerInvoice extends React.Component {
 												endDate: this.props.location.state.endDate,
 												placeOfSupplyId: this.props.location.state.placeOfSupplyId
 											});
-										if (this.props.location.state.TCN_Id)
-											this.props.history.push('/admin/income/credit-notes/view', {
-												id: this.props.location.state.TCN_Id,
-												status: this.props.location.state.TCN_Status,
-												isCNWithoutProduct: this.props.location.state.TCN_WithoutPRoduct
-											})
-											if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)  
-												this.props.history.push('/admin/report/credit-note-details');
-										else {
+										} else {
 											this.props.history.push('/admin/income/customer-invoice');
 										}
-
 									}}
 								>
 									<i class="fas fa-times"></i>

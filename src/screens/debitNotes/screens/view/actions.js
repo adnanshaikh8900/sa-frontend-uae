@@ -44,3 +44,17 @@ export const getContactById = (id) => {
 		})
 	}
 }
+
+export const getAppliedToInvoiceDetails = (_id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/creditNote/getAppliedInvoicesByCreditNoteId?id=${_id}`
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  };

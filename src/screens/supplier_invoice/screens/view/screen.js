@@ -144,14 +144,14 @@ class ViewInvoice extends React.Component {
 	};
 	redirectToDebitNote = (debiteNote) => {
 		// this.props.history.push('/admin/expense/debit-notes/view', {
-			const commonParams={
+		const commonParams = {
 			SUP_id: this.props.location.state.id,
 			SUP_status: this.props.location.state.status,
 			id: debiteNote.creditNoteId,
 			isCNWithoutProduct: debiteNote.isCreatedWithoutInvoice,
 			status: debiteNote.status,
-		// });
-	}
+			// });
+		}
 		if (this.props.location.state && this.props.location.state.gotoReports) {
 			commonParams.gotoReports = true;
 		}
@@ -160,7 +160,7 @@ class ViewInvoice extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { invoiceData, currencyData, id, contactData, debitNoteDataList } = this.state;
-		
+
 		return (
 			<div className="view-invoice-screen">
 				<div className="animated fadeIn">
@@ -199,35 +199,25 @@ class ViewInvoice extends React.Component {
 									className="close-btn mb-1 btn-lg print-btn-cont"
 
 									onClick={() => {
-										if (this.props?.location?.state?.crossLinked && this.props?.location?.state?.boxNo) {
-											this.props.history.push('/admin/report/vatreports/vatreturnsubreports', {
-												boxNo: this.props?.location?.state?.boxNo,
-												description: this.props?.location?.state?.description,
-												startDate: this.props?.location?.state?.startDate,
-												endDate: this.props?.location?.state?.endDate,
-												placeOfSupplyId: this.props?.location?.state?.placeOfSupplyId,
-												id: this.props?.location?.state?.id
-											});
-										} else if (this.props?.location?.state?.crossLinked) {
-											this.props.history.push('/admin/report/vatreports/vatreturnsubreports', {
-												description: this.props?.location?.state?.description,
-												startDate: this.props?.location?.state?.startDate,
-												endDate: this.props?.location?.state?.endDate,
-												placeOfSupplyId: this.props?.location?.state?.placeOfSupplyId,
-												id: this.props?.location?.state?.id
-											});
-										} if (this.props.location.state.DN_Id)
+										if (this.props.location && this.props.location.state && this.props.location.state.gotoReports) {
+											this.props.history.push('/admin/report/debit-note-details')
+										} else if (this.props.location.state.DN_Id) {
 											this.props.history.push('/admin/expense/debit-notes/view', {
 												id: this.props.location.state.DN_Id,
 												status: this.props.location.state.DN_Status,
 												isCNWithoutProduct: this.props.location.state.DN_WithoutPRoduct
+											})
+										} else if (this.props.location.state && this.props.location.state.crossLinked &&
+											this.props.location.state.crossLinked == true) {
+											this.props.history.push('/admin/report/vatreports/vatreturnsubreports', {
+												boxNo: this.props.location.state.description,
+												description: this.props.location.state.description,
+												startDate: this.props.location.state.startDate,
+												endDate: this.props.location.state.endDate,
+												placeOfSupplyId: this.props.location.state.placeOfSupplyId
 											});
-										  if (this.props.location && this.props.location.state && this.props.location.state.gotoReports) 
-										
-												this.props.history.push('/admin/report/debit-note-details');
-										else {
-											   this.props.history.push('/admin/expense/supplier-invoice');
-										
+										} else {
+											this.props.history.push('/admin/expense/supplier-invoice');
 										}
 									}}
 								>

@@ -736,6 +736,7 @@ const en = {
       RefundFrom: "Refund From",
       RefundNotes: "Notes",
       CreditNoteIssuedonCustomerInvoice: "Credit Note Issued on Customer Invoice:",
+      CreditNoteAmountUsedSummary:"Credit note amount used summary:",
 
       //ImportStatement
       ImportStatement: "Import Statement",

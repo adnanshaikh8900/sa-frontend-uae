@@ -327,7 +327,7 @@ class ViewDebitNote extends React.Component {
 											this.state.applyToInvoiceData.map((item, index) => {
 												return (
 													<tr key={index} onClick={() => {
-														this.redirectToCustmerIncoive(item);
+														this.redirectToSupplierIncoive(item);
 													}}>
 														<td className="center">{index + 1}</td>
 														<td>{item.transactionType}</td>

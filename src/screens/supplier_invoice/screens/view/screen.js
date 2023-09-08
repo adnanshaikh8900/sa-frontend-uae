@@ -143,13 +143,19 @@ class ViewInvoice extends React.Component {
 		this.pdfExportComponent.save();
 	};
 	redirectToDebitNote = (debiteNote) => {
-		this.props.history.push('/admin/expense/debit-notes/view', {
+		// this.props.history.push('/admin/expense/debit-notes/view', {
+			const commonParams={
 			SUP_id: this.props.location.state.id,
 			SUP_status: this.props.location.state.status,
 			id: debiteNote.creditNoteId,
 			isCNWithoutProduct: debiteNote.isCreatedWithoutInvoice,
 			status: debiteNote.status,
-		});
+		// });
+	}
+		if (this.props.location.state && this.props.location.state.gotoReports) {
+			commonParams.gotoReports = true;
+		}
+		this.props.history.push('/admin/expense/debit-notes/view', commonParams)
 	}
 	render() {
 		strings.setLanguage(this.state.language);
@@ -216,10 +222,12 @@ class ViewInvoice extends React.Component {
 												status: this.props.location.state.DN_Status,
 												isCNWithoutProduct: this.props.location.state.DN_WithoutPRoduct
 											});
-										 if (this.props.location && this.props.location.state && this.props.location.state.gotoReports) 
+										  if (this.props.location && this.props.location.state && this.props.location.state.gotoReports) 
+										
 												this.props.history.push('/admin/report/debit-note-details');
 										else {
-											this.props.history.push('/admin/expense/supplier-invoice');
+											   this.props.history.push('/admin/expense/supplier-invoice');
+										
 										}
 									}}
 								>

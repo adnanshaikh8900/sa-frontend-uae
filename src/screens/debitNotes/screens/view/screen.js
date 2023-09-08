@@ -179,13 +179,18 @@ class ViewDebitNote extends React.Component {
 									className="close-btn mb-1 btn-lg print-btn-cont"
 
 									onClick={() => {
-										if (this.props.location.state.SUP_id)
+
+										if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
+											this.props.history.push('/admin/report/debit-note-details') 
+												
+											
+										// else if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
+										// 	this.props.history.push('/admin/report/debit-note-details');
+										else if (this.props.location.state.SUP_id)
 											this.props.history.push('/admin/expense/supplier-invoice/view', {
 												id: this.props.location.state.SUP_id,
 												status: this.props.location.state.SUP_status,
 											})
-										else if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
-											this.props.history.push('/admin/report/debit-note-details');
 										else
 											this.props.history.push('/admin/expense/debit-notes');
 									}}

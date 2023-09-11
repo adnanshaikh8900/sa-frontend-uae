@@ -373,7 +373,7 @@ class CreditNoteDetailsReport extends React.Component {
 														this.state.data.creditNoteSummaryModelList.filter((item) => item.type === 7).map((item, index) => {
 															return (
 																<tr key={index}>
-																	<td style={{ textAlign: 'left', color: "#2046DB"}}
+																	<td style={{ textAlign: 'center', color: "#2046DB"}}
 																	onClick={() =>
 																		this.props.history.push('/admin/income/credit-notes/view', {
 																			id: item.id, status: item.status, isCNWithoutProduct: item.isCNWithoutProduct,
@@ -381,8 +381,8 @@ class CreditNoteDetailsReport extends React.Component {
 																		})
 																	}
 																	>{item.creditNoteNumber}</td>
-																	<td style={{ textAlign: 'left'}}>{item.customerName}</td>
-																	<td style={{ textAlign: 'left', color: "#2046DB"}}
+																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
+																	<td style={{ textAlign: 'center', color: "#2046DB"}}
 																	onClick={() =>
 																		this.props.history.push('/admin/income/customer-invoice/view', {
 																			id: item.invoiceId, status: item.invoiceStatus,
@@ -390,10 +390,10 @@ class CreditNoteDetailsReport extends React.Component {
 																		})
 																	}
 																	>{item.invoiceNumber}</td>
-																	<td style={{ textAlign: 'left'}}>{item.creditNoteDate ? (
+																	<td style={{ textAlign: 'center'}}>{item.creditNoteDate ? (
 																		moment(item.creditNoteDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
-																	<td style={{ textAlign: 'left' }}>
+																	<td style={{ textAlign: 'center' }}>
 																		{(() => {
 																			if (item.status === 'Partially Paid') {
 																			return 'Partially Credited';

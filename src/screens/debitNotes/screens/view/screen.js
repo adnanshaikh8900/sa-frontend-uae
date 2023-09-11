@@ -121,7 +121,7 @@ class ViewDebitNote extends React.Component {
 						);
 					}
 				})
-				this.props.debitNoteViewActions
+			this.props.debitNoteViewActions
 				.getAppliedToInvoiceDetails(this.props.location.state.id)
 				.then((res) => {
 
@@ -141,13 +141,14 @@ class ViewDebitNote extends React.Component {
 		}
 	};
 	redirectToSupplierIncoive = (invoice) => {
-		this.props.history.push('/admin/expense/supplier-invoice/view', {
-			id: invoice.invoiceId,
-			status: invoice.status,
-			DN_Id: this.props.location.state.id,
-			DN_WithoutPRoduct: this.props.location.state.isCNWithoutProduct,
-			DN_Status: this.props.location.state.status,
-		});
+		if (!(invoice.transactionType && invoice.transactionType === 'Refund'))
+			this.props.history.push('/admin/expense/supplier-invoice/view', {
+				id: invoice.invoiceId,
+				status: invoice.status,
+				DN_Id: this.props.location.state.id,
+				DN_WithoutPRoduct: this.props.location.state.isCNWithoutProduct,
+				DN_Status: this.props.location.state.status,
+			});
 	}
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
@@ -198,9 +199,9 @@ class ViewDebitNote extends React.Component {
 									onClick={() => {
 
 										if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
-											this.props.history.push('/admin/report/debit-note-details') 
-												
-											
+											this.props.history.push('/admin/report/debit-note-details')
+
+
 										// else if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
 										// 	this.props.history.push('/admin/report/debit-note-details');
 										else if (this.props.location.state.SUP_id)

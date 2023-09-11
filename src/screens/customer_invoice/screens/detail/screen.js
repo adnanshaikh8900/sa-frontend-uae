@@ -23,7 +23,7 @@ import * as CustomerInvoiceDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CustomerInvoiceActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { CustomerModal ,ProductModal } from '../../sections';
+import { CustomerModal, ProductModal } from '../../sections';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -31,7 +31,7 @@ import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import './style.scss';
 import moment from 'moment';
-import {data}  from '../../../Language/index'
+import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
 import { TextField } from '@material-ui/core';
@@ -86,12 +86,12 @@ class DetailCustomerInvoice extends React.Component {
 			loading: true,
 			dialog: false,
 			disabled: false,
-			disabled1:false,
+			disabled1: false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'FIXED' },
 				{ value: 'PERCENTAGE', label: '%' },
 			],
-			exciseTypeOption:[
+			exciseTypeOption: [
 				{ value: 'Inclusive', label: 'Inclusive' },
 				{ value: 'Exclusive', label: 'Exclusive' },
 			],
@@ -111,28 +111,30 @@ class DetailCustomerInvoice extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			fileName: '',
-			basecurrency:[],
+			basecurrency: [],
 			customer_currency: '',
-			state_list_for_shipping:[],
+			state_list_for_shipping: [],
 			language: window['localStorage'].getItem('language'),
-			param :false,
-			date:''	,
-			isDesignatedZone:false,
-			isRegisteredVat:false,
-			invoiceDateForVatValidation:new Date(),
-			producttype:[],
-			changeShippingAddress:'',
-			shippingAddress:'',
-			shippingCountryId:'',
-			shippingStateId:'',
-			shippingCity:'',
-			shippingPostZipCode:'',
+			param: false,
+			date: '',
+			isDesignatedZone: false,
+			isRegisteredVat: false,
+			invoiceDateForVatValidation: new Date(),
+			producttype: [],
+			changeShippingAddress: '',
+			shippingAddress: '',
+			shippingCountryId: '',
+			shippingStateId: '',
+			shippingCity: '',
+			shippingPostZipCode: '',
 			POBoxNumber: '',
-			shippingTelephone:'',
-			shippingFax:'',
-			loadingMsg:"Loading",
-			disableLeavePage:false, 
-			datesChanged : false	};
+			shippingTelephone: '',
+			shippingFax: '',
+			loadingMsg: "Loading",
+			disableLeavePage: false,
+			datesChanged: false,
+			customer_currency_symbol: '',
+		};
 
 		// this.options = {
 		//   paginationPosition: 'top'
@@ -147,7 +149,7 @@ class DetailCustomerInvoice extends React.Component {
 			{ label: 'Net 60 Days', value: 'NET_60' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-			this.placelist = [
+		this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
@@ -159,7 +161,7 @@ class DetailCustomerInvoice extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
+		this.regDec1 = /^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regExTelephone = /^[0-9-]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/]+$/;
@@ -199,9 +201,9 @@ class DetailCustomerInvoice extends React.Component {
 					err.data ? err.data.message : 'ERROR',
 				);
 			});
-		this.props.customerInvoiceActions.getVatList().then((res)=>{
-			if(res.status==200)
-			 this.setState({vat_list:res.data})
+		this.props.customerInvoiceActions.getVatList().then((res) => {
+			if (res.status == 200)
+				this.setState({ vat_list: res.data })
 		});
 		this.initializeData();
 		this.getCompanyType();
@@ -226,7 +228,7 @@ class DetailCustomerInvoice extends React.Component {
 			console.log(err);
 		}
 	};
-	
+
 
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
@@ -258,15 +260,15 @@ class DetailCustomerInvoice extends React.Component {
 										? res.data.contactPoNumber
 										: '',
 									currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
-									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
-									currencyName:res.data.currencyName ? res.data.currencyName : '',
+									exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
+									currencyName: res.data.currencyName ? res.data.currencyName : '',
 									invoiceDueDate: res.data.invoiceDueDate
 										? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 										: '',
 									invoiceDate: res.data.invoiceDate
 										? moment(res.data.invoiceDate).format('DD-MM-YYYY')
 										: '',
-										invoiceDate1: res.data.invoiceDate
+									invoiceDate1: res.data.invoiceDate
 										? res.data.invoiceDate
 										: '',
 									contactId: res.data.contactId ? res.data.contactId : '',
@@ -292,27 +294,27 @@ class DetailCustomerInvoice extends React.Component {
 										? res.data.invoiceLineItems
 										: [],
 									discount: res.data.discount ? res.data.discount : 0,
-									
-								
+
+
 									term: res.data.term ? res.data.term : '',
 									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
 									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
-									taxType : res.data.taxType ? true : false,
-									footNote:res.data.footNote?res.data.footNote:''
-                                 },
-								 discountEnabled : res.data.discount > 0 ? true : false,
-								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
-								invoiceDateNoChange :res.data.invoiceDate
-								? moment(res.data.invoiceDate)
-								: '',
-								taxType : res.data.taxType ? true : false,
-								invoiceDueDateNoChange : res.data.invoiceDueDate ?
-								moment(res.data.invoiceDueDate) : '',
+									taxType: res.data.taxType ? true : false,
+									footNote: res.data.footNote ? res.data.footNote : ''
+								},
+								discountEnabled: res.data.discount > 0 ? true : false,
+								customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : '',
+								invoiceDateNoChange: res.data.invoiceDate
+									? moment(res.data.invoiceDate)
+									: '',
+								taxType: res.data.taxType ? true : false,
+								invoiceDueDateNoChange: res.data.invoiceDueDate ?
+									moment(res.data.invoiceDueDate) : '',
 								invoiceDate: res.data.invoiceDate
-										? res.data.invoiceDate
-										: '',
+									? res.data.invoiceDate
+									: '',
 								invoiceDueDate: res.data.invoiceDueDate
 									? res.data.invoiceDueDate
 									: '',
@@ -332,10 +334,9 @@ class DetailCustomerInvoice extends React.Component {
 								loading: false,
 							},
 							() => {
-								if(this.state.initValue && this.state.initValue.changeShippingAddress && this.state.initValue.shippingCountryId)
-								{
-								this.props.customerInvoiceActions.getStateListForShippingAddress(this.state.initValue.shippingCountryId).then((res)=>{
-										this.setState({state_list_for_shipping:res})
+								if (this.state.initValue && this.state.initValue.changeShippingAddress && this.state.initValue.shippingCountryId) {
+									this.props.customerInvoiceActions.getStateListForShippingAddress(this.state.initValue.shippingCountryId).then((res) => {
+										this.setState({ state_list_for_shipping: res })
 									});
 								}
 								if (this.state.data.length > 0) {
@@ -344,11 +345,13 @@ class DetailCustomerInvoice extends React.Component {
 									const idCount =
 										data.length > 0
 											? Math.max.apply(
-													Math,
-													data.map((item) => {
-														return item.id;
-													}),
-											  )
+												Math,
+												data.map((item) => {
+													if (item['productId'])
+														this.getProductType(item['productId'])
+													return item.id;
+												}),
+											)
 											: 0;
 									this.setState({
 										idCount,
@@ -361,7 +364,7 @@ class DetailCustomerInvoice extends React.Component {
 								}
 							},
 						);
-						this.getCurrency(res.data.contactId)	
+						this.getCurrency(res.data.contactId)
 					}
 				});
 		} else {
@@ -372,19 +375,19 @@ class DetailCustomerInvoice extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			if(obj.isExciseTaxExclusive === false){
+			if (obj.isExciseTaxExclusive === false) {
 
-                total_net = +(total_net + +obj.unitPrice  * obj.quantity);
+				total_net = +(total_net + +obj.unitPrice * obj.quantity);
 
-            }else{
+			} else {
 
-                total_net = +(total_net + +(obj.unitPrice + obj.exciseAmount) * obj.quantity);
+				total_net = +(total_net + +(obj.unitPrice + obj.exciseAmount) * obj.quantity);
 
-            }
-        return obj;
+			}
+			return obj;
 
-        });
-		total_net=total_net-this.state.discountAmount
+		});
+		total_net = total_net - this.state.discountAmount
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net }),
 		});
@@ -406,15 +409,15 @@ class DetailCustomerInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.exciseTaxId === null }
+						isDisabled={row.exciseTaxId === 0 || row.exciseTaxId === null}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
-										'name',
-										'id',
-										excise_list,
-										'Excise',
-								  )
+									'name',
+									'id',
+									excise_list,
+									'Excise',
+								)
 								: []
 						}
 						value={
@@ -444,117 +447,116 @@ class DetailCustomerInvoice extends React.Component {
 									this.state.data,
 									props,
 								);
-						}}
-					}
-						className={`${
-							props.errors.lineItemsString &&
+							}
+						}
+						}
+						className={`${props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
-								? 'is-invalid'
-								: ''
-						}`}
+							? 'is-invalid'
+							: ''
+							}`}
 					/>
 				)}
 			/>
 		);
 	};
 
-	
+
 	renderDiscount = (cell, row, props) => {
-        const { discountOptions } = this.state;
-       let idx;
-       this.state.data.map((obj, index) => {
-           if (obj.id === row.id) {
-               idx = index;
-           }
-           return obj;
-       });
-	   
-	   return (
-		<Field
-			 name={`lineItemsString.${idx}.discountType`}
-			render={({ field, form }) => (
-			<div>
-			<div  class="input-group">
-				<Input
-					  type="text"
-						min="0"
-					 maxLength="14,2"
-					 value={row['discount'] !== 0 ? row['discount'] : 0}
-					 onChange={(e) => {
-						if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
-							this.selectItem(
-								e.target.value,
-								row,
-								'discount',
-								form,
-								field,
-								props,
-							);
-						}
-					
-							this.updateAmount(
-								this.state.data,
-								props,
-							);
-					
-					}}
-					placeholder={strings.Discount}
-					className={`form-control 
-		${
-						props.errors.lineItemsString &&
-						props.errors.lineItemsString[parseInt(idx, 10)] &&
-						props.errors.lineItemsString[parseInt(idx, 10)].discount &&
-						Object.keys(props.touched).length > 0 &&
-						props.touched.lineItemsString &&
-						props.touched.lineItemsString[parseInt(idx, 10)] &&
-						props.touched.lineItemsString[parseInt(idx, 10)].discount
-							? 'is-invalid'
-							: ''
-					}`}
-/>
- <div class="dropdown open input-group-append">
+		const { discountOptions } = this.state;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
 
-	 <div 	style={{width:'100px'}}>
-	 <Select
+		return (
+			<Field
+				name={`lineItemsString.${idx}.discountType`}
+				render={({ field, form }) => (
+					<div>
+						<div class="input-group">
+							<Input
+								type="text"
+								min="0"
+								maxLength="14,2"
+								value={row['discount'] !== 0 ? row['discount'] : 0}
+								onChange={(e) => {
+									if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+										this.selectItem(
+											e.target.value,
+											row,
+											'discount',
+											form,
+											field,
+											props,
+										);
+									}
+
+									this.updateAmount(
+										this.state.data,
+										props,
+									);
+
+								}}
+								placeholder={strings.Discount}
+								className={`form-control 
+		${props.errors.lineItemsString &&
+										props.errors.lineItemsString[parseInt(idx, 10)] &&
+										props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+										Object.keys(props.touched).length > 0 &&
+										props.touched.lineItemsString &&
+										props.touched.lineItemsString[parseInt(idx, 10)] &&
+										props.touched.lineItemsString[parseInt(idx, 10)].discount
+										? 'is-invalid'
+										: ''
+									}`}
+							/>
+							<div class="dropdown open input-group-append">
+
+								<div style={{ width: '100px' }}>
+									<Select
 
 
-																						options={discountOptions}
-																						id="discountType"
-																						name="discountType"
-																						value={
-																					 discountOptions &&
-																					 discountOptions .find((option) => option.value == row.discountType)
-																						}
-																						onChange={(e) => {
-																							this.selectItem(
-																								e.value,
-																								row,
-																								'discountType',
-																								form,
-																								field,
-																								props,
-																							);
-																							this.updateAmount(
-																								this.state.data,
-																								props,
-																							);
-																						}}
-																					/>
-		  </div>
-		   </div>
-		   </div>
-			</div>
+										options={discountOptions}
+										id="discountType"
+										name="discountType"
+										value={
+											discountOptions &&
+											discountOptions.find((option) => option.value == row.discountType)
+										}
+										onChange={(e) => {
+											this.selectItem(
+												e.value,
+												row,
+												'discountType',
+												form,
+												field,
+												props,
+											);
+											this.updateAmount(
+												this.state.data,
+												props,
+											);
+										}}
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
 
 				)}
 
-		/>
-	);
-}
+			/>
+		);
+	}
 
 	renderDescription = (cell, row, props) => {
 		let idx;
@@ -577,34 +579,33 @@ class DetailCustomerInvoice extends React.Component {
 						}}
 						placeholder={strings.Description}
 						className={`form-control 
-            ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].description &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].description
+            ${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].description &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].description
 								? 'is-invalid'
 								: ''
-						}`}
+							}`}
 					/>
 				)}
 			/>
 		);
 	};
-	checkAmount=(discount)=>{
+	checkAmount = (discount) => {
 		const { initValue } = this.state;
-			if(discount >= initValue.totalAmount){
-					this.setState({
-						param:true
-					});
-			}
-			else{
-				this.setState({
-					param:false
-				});
-			}
+		if (discount >= initValue.totalAmount) {
+			this.setState({
+				param: true
+			});
+		}
+		else {
+			this.setState({
+				param: false
+			});
+		}
 
 	}
 	renderQuantity = (cell, row, props) => {
@@ -616,70 +617,69 @@ class DetailCustomerInvoice extends React.Component {
 			return obj;
 		});
 		var { product_list } = this.props;
-		const product = product_list.find((i)=>row['productId']===i.id)
-		let addedproducts=[]
-		if(product)
-		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
-		let totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
-		totalquantityleft=totalquantityleft-parseInt(row.quantity)
-		
+		const product = product_list.find((i) => row['productId'] === i.id)
+		let addedproducts = []
+		if (product)
+			addedproducts = props.values.lineItemsString.filter((i) => (i.productId === product.id && row.id !== i.id))
+		let totalquantityleft = addedproducts.length > 0 && product?.stockOnHand !== null ? product?.stockOnHand - addedproducts.reduce((a, c) => a + parseInt(c.quantity === "" ? 0 : c.quantity), 0) : product?.stockOnHand
+		totalquantityleft = totalquantityleft - parseInt(row.quantity)
+
 		return (
 			<Field
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
 						<div class="input-group">
-						<Input
-							type="text"
-							maxLength="10"
-							min="0"
-							value={row['quantity'] !== 0 ? row['quantity'] : 0}
-							onChange={(e) => {
-								if (e.target.value === '' || this.regEx.test(e.target.value)) {
-									this.selectItem(
-										e.target.value,
-										row,
-										'quantity',
-										form,
-										field,
-										props,
-									);
-								}
-							}}
-							
-							placeholder={strings.Quantity}
-							className={`form-control w-50
-							${
-								props.errors.lineItemsString &&
-								props.errors.lineItemsString[parseInt(idx, 10)] &&
-								props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
-								Object.keys(props.touched).length > 0 &&
-								props.touched.lineItemsString &&
-								props.touched.lineItemsString[parseInt(idx, 10)] &&
-								props.touched.lineItemsString[parseInt(idx, 10)].quantity
-									? 'is-invalid'
-									: ''
-							}`}
-						
-						/>
-						 {row['productId'] != '' ? 
-						<Input value={row['unitType'] }  disabled/> : ''}
+							<Input
+								type="text"
+								maxLength="10"
+								min="0"
+								value={row['quantity'] !== 0 ? row['quantity'] : 0}
+								onChange={(e) => {
+									if (e.target.value === '' || this.regEx.test(e.target.value)) {
+										this.selectItem(
+											e.target.value,
+											row,
+											'quantity',
+											form,
+											field,
+											props,
+										);
+									}
+								}}
+
+								placeholder={strings.Quantity}
+								className={`form-control w-50
+							${props.errors.lineItemsString &&
+										props.errors.lineItemsString[parseInt(idx, 10)] &&
+										props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+										Object.keys(props.touched).length > 0 &&
+										props.touched.lineItemsString &&
+										props.touched.lineItemsString[parseInt(idx, 10)] &&
+										props.touched.lineItemsString[parseInt(idx, 10)].quantity
+										? 'is-invalid'
+										: ''
+									}`}
+
+							/>
+							{row['productId'] != '' ?
+								<Input value={row['unitType']} disabled /> : ''}
 						</div>
-						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
-									Stock in Hand:{product?.stockOnHand}
-								</div>} 
-								{props.errors.lineItemsString &&
+						{(totalquantityleft < 0 && product?.stockOnHand) && <div style={{ color: 'red', fontSize: '0.8rem' }} >
+							Stock in Hand:{product?.stockOnHand}
+						</div>}
+						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
+								<div className="invalid-feedback" style={{ display: "block", whiteSpace: "normal" }}>
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
-						
+
 					</div>
 				)}
 			/>
@@ -700,59 +700,58 @@ class DetailCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<>
-					<Input
-					type="text"
-						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
-						onChange={(e) => {
-							if (
-								e.target.value === '' ||
-								this.regDecimal.test(e.target.value)
-							) {
-								this.selectItem(
-									e.target.value,
-									row,
-									'unitPrice',
-									form,
-									field,
-									props,
-								);
-							}
-						}}
-						placeholder={strings.UnitPrice}
-						className={`form-control 
-                       ${
-													props.errors.lineItemsString &&
-													props.errors.lineItemsString[parseInt(idx, 10)] &&
-													props.errors.lineItemsString[parseInt(idx, 10)]
-														.unitPrice &&
-													Object.keys(props.touched).length > 0 &&
-													props.touched.lineItemsString &&
-													props.touched.lineItemsString[parseInt(idx, 10)] &&
-													props.touched.lineItemsString[parseInt(idx, 10)]
-														.unitPrice
-														? 'is-invalid'
-														: ''
-												}`}
-					/>
-					{props.errors.lineItemsString &&
-                    props.errors.lineItemsString[parseInt(idx, 10)] &&
-                    props.errors.lineItemsString[parseInt(idx, 10)].unitPrice &&
-                    Object.keys(props.touched).length > 0 &&
-					props.touched.lineItemsString &&
-					props.touched.lineItemsString[parseInt(idx, 10)] &&
-					props.touched.lineItemsString[parseInt(idx, 10)].unitPrice && 
-                    (
-                   <div className='invalid-feedback'>
-                   {props.errors.lineItemsString[parseInt(idx, 10)].unitPrice}
-                   </div>
-                     )}
-                   </>
+						<Input
+							type="text"
+							value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
+							onChange={(e) => {
+								if (
+									e.target.value === '' ||
+									this.regDecimal.test(e.target.value)
+								) {
+									this.selectItem(
+										e.target.value,
+										row,
+										'unitPrice',
+										form,
+										field,
+										props,
+									);
+								}
+							}}
+							placeholder={strings.UnitPrice}
+							className={`form-control 
+                       ${props.errors.lineItemsString &&
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)]
+										.unitPrice &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)]
+										.unitPrice
+									? 'is-invalid'
+									: ''
+								}`}
+						/>
+						{props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].unitPrice &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].unitPrice &&
+							(
+								<div className='invalid-feedback'>
+									{props.errors.lineItemsString[parseInt(idx, 10)].unitPrice}
+								</div>
+							)}
+					</>
 				)}
 			/>
 		);
 	};
 
-	renderSubTotal = (cell, row,extraData) => {
+	renderSubTotal = (cell, row, extraData) => {
 		// return row.subTotal ? (
 		// 	<Currency
 		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -761,7 +760,7 @@ class DetailCustomerInvoice extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.customer_currency_symbol + " " + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : this.state.customer_currency_symbol + " " + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	};
 	renderVatAmount = (cell, row, extraData) => {
 		// return row.subTotal === 0 ? (
@@ -775,19 +774,19 @@ class DetailCustomerInvoice extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+		return row.vatAmount === 0 ? this.state.customer_currency_symbol + " " + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : this.state.customer_currency_symbol + " " + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	};
 	addRow = () => {
 		const data = [...this.state.data];
-		const idCount =this.state.idCount? this.state.idCount:
-						data.length > 0
-							? Math.max.apply(
-									Math,
-									data.map((item) => {
-										return item.id;
-									}),
-							)
-							: 0;
+		const idCount = this.state.idCount ? this.state.idCount :
+			data.length > 0
+				? Math.max.apply(
+					Math,
+					data.map((item) => {
+						return item.id;
+					}),
+				)
+				: 0;
 		this.setState(
 			{
 				data: data.concat({
@@ -797,9 +796,9 @@ class DetailCustomerInvoice extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
-					exciseTaxId:'',
-					discountType :'FIXED',
-					vatAmount:0,
+					exciseTaxId: '',
+					discountType: 'FIXED',
+					vatAmount: 0,
 					discount: 0,
 					productId: '',
 				}),
@@ -816,6 +815,7 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	selectItem = (e, row, name, form, field, props) => {
+		console.log(e, row, name, form, field, props)
 		//e.preventDefault();
 		let data = this.state.data;
 		let idx;
@@ -829,7 +829,7 @@ class DetailCustomerInvoice extends React.Component {
 		if (
 			name === 'unitPrice' ||
 			name === 'vatCategoryId' ||
-			name === 'quantity'||
+			name === 'quantity' ||
 			name === 'exciseTaxId'
 		) {
 			form.setFieldValue(
@@ -848,20 +848,20 @@ class DetailCustomerInvoice extends React.Component {
 			});
 		}
 	};
-	getCustomerShippingAddress = (cutomerID,taxID,props) =>{
-		if(taxID !== 5 && taxID !== 6 && taxID !== 7){
+	getCustomerShippingAddress = (cutomerID, taxID, props) => {
+		if (taxID !== 5 && taxID !== 6 && taxID !== 7) {
 			this.props.customerInvoiceDetailActions.getCustomerShippingAddressbyID(cutomerID).then((res) => {
-				if(res.status === 200){
-					var PlaceofSupply= this.placelist &&
+				if (res.status === 200) {
+					var PlaceofSupply = this.placelist &&
 						selectOptionsFactory.renderOptions(
 							'label',
 							'value',
 							this.placelist,
 							'Place of Supply',).
 							find((option) => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase())
-						if(PlaceofSupply){
+					if (PlaceofSupply) {
 						props.handleChange('placeOfSupplyId')(PlaceofSupply,);
-						this.setState({placeOfSupplyId : PlaceofSupply});
+						this.setState({ placeOfSupplyId: PlaceofSupply });
 						this.formRef.current.setFieldValue('placeOfSupplyId', PlaceofSupply.value, true);
 					}
 				}
@@ -872,101 +872,105 @@ class DetailCustomerInvoice extends React.Component {
 		this.props.customerInvoiceDetailActions
 			.getCompanyById()
 			.then((res) => {
-					if (res.status === 200) {
-						this.setState({
-							isDesignatedZone: res.data.isDesignatedZone,
-							companyVATRegistrationDate : new Date(moment(res.data.vatRegistrationDate).format('MM DD YYYY')),
-						});
-						this.setState({
-							isRegisteredVat: res.data.isRegisteredVat,
-						});
-					}
-				})
+				if (res.status === 200) {
+					this.setState({
+						isDesignatedZone: res.data.isDesignatedZone,
+						companyVATRegistrationDate: new Date(moment(res.data.vatRegistrationDate).format('MM DD YYYY')),
+					});
+					this.setState({
+						isRegisteredVat: res.data.isRegisteredVat,
+					});
+				}
+			})
 			.catch((err) => {
-				console.log(err,"Get Company Type Error");
+				console.log(err, "Get Company Type Error");
 			});
 	};
-	getProductType=(id)=>{
-		if(this.state.customer_taxTreatment_des){
+	getProductType = (id) => {
+		if (this.state.customer_taxTreatment_des) {
 			this.props.customerInvoiceDetailActions
-			.getProductById(id)
-			.then((res) => {
-				if (res.status === 200) {
-					var { vat_list } = this.state;
-					let pt={};
-					var vt=[];
-					pt.id=res.data.productID;
-					pt.type=res.data.productType
-					if(this.state.isRegisteredVat && (this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)){
-						if(this.state.isDesignatedZone ){
-							if(res.data.productType=== "GOODS" ){
-								if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-									vat_list.map(element => {
-										if(element.name=='OUT OF SCOPE'){
-											vt.push(element);
-										}
-									});
-								}
-								if(this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED'){
-									vt=vat_list;
-								}
-							}
-							else if(res.data.productType === "SERVICE"){
-								if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE'){
-									vt=vat_list;
-								}
-								if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-									vat_list.map(element => {
-										if(element.name=='ZERO RATED TAX (0%)'){
-											vt.push(element);
-										}
-									});
-									
-								}	
-							}
-						}else{
-							if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE'){
-								vt=vat_list;
-							}
-							if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-								vat_list.map(element => {
-									if(element.name=='ZERO RATED TAX (0%)'){
-										vt.push(element);
+				.getProductById(id)
+				.then((res) => {
+					if (res.status === 200) {
+						var { vat_list } = this.state;
+						let pt = {};
+						var vt = [];
+						pt.id = res.data.productID;
+						pt.type = res.data.productType
+						if (this.state.isRegisteredVat && (this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)) {
+							if (this.state.isDesignatedZone) {
+								if (res.data.productType === "GOODS") {
+									if (this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des === 'GCC VAT REGISTERED' || this.state.customer_taxTreatment_des === 'GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'NON GCC') {
+										vat_list.map(element => {
+											if (element.name == 'OUT OF SCOPE') {
+												vt.push(element);
+											}
+										});
 									}
-								});
-								
-							}	
+									if (this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED') {
+										vt = vat_list;
+									}
+								}
+								else if (res.data.productType === "SERVICE") {
+									if (this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED FREEZONE') {
+										vt = vat_list;
+									}
+									if (this.state.customer_taxTreatment_des === 'GCC VAT REGISTERED' || this.state.customer_taxTreatment_des === 'GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'NON GCC') {
+										vat_list.map(element => {
+											if (element.name == 'ZERO RATED TAX (0%)') {
+												vt.push(element);
+											}
+										});
+
+									}
+								}
+							} else {
+								if (this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED FREEZONE') {
+									vt = vat_list;
+								}
+								if (this.state.customer_taxTreatment_des === 'GCC VAT REGISTERED' || this.state.customer_taxTreatment_des === 'GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'NON GCC') {
+									vat_list.map(element => {
+										if (element.name == 'ZERO RATED TAX (0%)') {
+											vt.push(element);
+										}
+									});
+
+								}
+							}
+						} else {
+							vt = [{
+								"id": 10,
+								"vat": 0,
+								"name": "N/A"
+							}];
 						}
-					}else{
-						vt=[{
-							"id": 10,
-							"vat": 0,
-							"name": "N/A"
-						}];
+						pt.vat_list = vt;
+						this.setState(prevState => ({
+							producttype: [...prevState.producttype, pt]
+						}));
 					}
-					pt.vat_list=vt;
-					this.setState(prevState => ({
-						producttype: [...prevState.producttype, pt]
-					}));
-				}
-		})
-		.catch((err) => {
-			console.log(err,"Get Product by ID Error");
-		});
-	}
-	
+				})
+				.catch((err) => {
+					console.log(err, "Get Product by ID Error");
+				});
+		}
+
 	};
 	resetVatId = (props) => {
 		this.setState({
 			producttype: [],
 		});
 		let newData = [];
-		const data = this.state.data;
-		data.map((obj,index) => {
-				obj['vatCategoryId'] = '' ;
-				newData.push(obj);
-				return obj;
-			
+		const { data, isRegisteredVat } = this.state;
+		data.map((obj, index) => {
+			if (isRegisteredVat)
+				obj['vatCategoryId'] = '';
+			else
+				obj['vatCategoryId'] = 10;
+			newData.push(obj);
+			if (obj['productId'])
+				this.getProductType(obj['productId'])
+			return obj;
 		})
 		props.setFieldValue('lineItemsString', newData, true);
 		this.updateAmount(newData, props);
@@ -977,10 +981,10 @@ class DetailCustomerInvoice extends React.Component {
 		// 	? [{ id: '', vat: 'Select VAT' }, ...vat_list]
 		// 	: vat_list;
 		let idx;
-		let vat_list=[];
+		let vat_list = [];
 		const product = this.state.producttype.find(element => element.id === row.productId);
-		if(product){
-			vat_list=product.vat_list;
+		if (product) {
+			vat_list = product.vat_list;
 		}
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -994,102 +998,102 @@ class DetailCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<>
-					<Select
-						options={
-							vat_list
-								? selectOptionsFactory.renderOptions(
+						<Select
+							options={
+								vat_list
+									? selectOptionsFactory.renderOptions(
 										'name',
 										'id',
 										vat_list,
 										'VAT',
-								  )
-								: []
-						}
-						value={
-							vat_list &&
-							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'VAT')
-								.find((option) => option.value == row.vatCategoryId)
-						}
-						id="vatCategoryId"
-						placeholder={strings.Select+strings.VAT}
-						// onChange={(e) => {
-						// 	this.selectItem(
-						// 		e.value,
-						// 		row,
-						// 		'vatCategoryId',
-						// 		form,
-						// 		field,
-						// 		props,
-						// 	);
-						// }}
-						onChange={(e) => {
-							if (e.value === '') {
-								props.setFieldValue(
-									'vatCategoryId',
-									'',
-								);
-							} else {
-								this.selectItem(
-									e.value,
-									row,
-									'vatCategoryId',
-									form,
-									field,
-									props,
-								);
-								this.updateAmount(
-									this.state.data,
-									props,
-								);
-						}}
-					}
-					
-						className={`${
-							props.errors.lineItemsString &&
+									)
+									: []
+							}
+							value={
+								vat_list &&
+								selectOptionsFactory
+									.renderOptions('name', 'id', vat_list, 'VAT')
+									.find((option) => option.value == row.vatCategoryId)
+							}
+							id="vatCategoryId"
+							placeholder={strings.Select + strings.VAT}
+							// onChange={(e) => {
+							// 	this.selectItem(
+							// 		e.value,
+							// 		row,
+							// 		'vatCategoryId',
+							// 		form,
+							// 		field,
+							// 		props,
+							// 	);
+							// }}
+							onChange={(e) => {
+								if (e.value === '') {
+									props.setFieldValue(
+										'vatCategoryId',
+										'',
+									);
+								} else {
+									this.selectItem(
+										e.value,
+										row,
+										'vatCategoryId',
+										form,
+										field,
+										props,
+									);
+									this.updateAmount(
+										this.state.data,
+										props,
+									);
+								}
+							}
+							}
+
+							className={`${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
+								? 'is-invalid'
+								: ''
+								}`}
+						/>
+						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
-								? 'is-invalid'
-								: ''
-						}`}
-					/>
-					{props.errors.lineItemsString &&
-                    props.errors.lineItemsString[parseInt(idx, 10)] &&
-                    props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
-                    Object.keys(props.touched).length > 0 &&
-					props.touched.lineItemsString &&
-					props.touched.lineItemsString[parseInt(idx, 10)] &&
-					props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId && 
-                    (
-                   <div className='invalid-feedback'>
-                   {props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId}
-                   </div>
-                     )}
-                   </>
+							props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+							(
+								<div className='invalid-feedback'>
+									{props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId}
+								</div>
+							)}
+					</>
 				)}
 			/>
 		);
 	};
 
-	exchangeRaterevalidate=(exc)=>{
-		let local=[...this.state.data]
+	exchangeRaterevalidate = (exc) => {
+		let local = [...this.state.data]
 		var { product_list } = this.props;
-		
-		let local2=local.map((obj, index) => {
+
+		let local2 = local.map((obj, index) => {
 
 			const result = product_list.find((item) => item.id === obj.productId);
 			return {
-				...obj,unitPrice:result?
-				(parseFloat(result.unitPrice)*(1/exc)).toFixed(2):0
+				...obj, unitPrice: result ?
+					(parseFloat(result.unitPrice) * (1 / exc)).toFixed(2) : 0
 			}
-			
+
 		});
-		
-		this.setState({data:local2},()=>{
+
+		this.setState({ data: local2 }, () => {
 			this.updateAmount(local2);
 		})
 	}
@@ -1099,28 +1103,35 @@ class DetailCustomerInvoice extends React.Component {
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
-		let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
-			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
-			this.formRef.current?.state?.values?.exchangeRate:1
+		let exchangeRate = this.formRef.current?.state?.values?.exchangeRate > 0
+			&& this.formRef.current?.state?.values?.exchangeRate !== "" ?
+			this.formRef.current?.state?.values?.exchangeRate : 1
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = (parseInt(result.unitPrice)*(1/exchangeRate)).toFixed(2);
+				obj['unitPrice'] = (parseInt(result.unitPrice) * (1 / exchangeRate)).toFixed(2);
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
-				obj['unitType']=result.unitType;
-				obj['unitTypeId']=result.unitTypeId;
+				obj['unitType'] = result.unitType;
+				obj['unitTypeId'] = result.unitTypeId;
 				idx = index;
-				this.state.producttype.map(element => {
-					if(element.id===e){
-						const found = element.vat_list.find(element => element.id === result.vatCategoryId);
-						if(!found){
-							obj['vatCategoryId']='';
+				if (this.state.isRegisteredVat) {
+					this.state.producttype.map(element => {
+						if (element.id === e) {
+							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
+							if (!found) {
+								obj['vatCategoryId'] = '';
+							}
+							else {
+								obj['vatCategoryId'] = result.vatCategoryId;
+							}
+							return found;
 						}
-						return found;
-					}
-				});
+					});
+				} else {
+					obj['vatCategoryId'] = 10;
+				}
 			}
 			return obj;
 		});
@@ -1144,6 +1155,7 @@ class DetailCustomerInvoice extends React.Component {
 			parseInt(result.exciseTaxId),
 			true,
 		);
+		this.getProductType(parseInt(e))
 		this.updateAmount(data, props);
 	};
 	renderAddProduct = (cell, rows, props) => {
@@ -1152,7 +1164,7 @@ class DetailCustomerInvoice extends React.Component {
 				color="primary"
 				className="btn-twitter btn-brand icon"
 				onClick={(e, props) => {
-				this.openProductModal(props);
+					this.openProductModal(props);
 				}}
 			>
 				<i className="fas fa-plus"></i>
@@ -1161,20 +1173,16 @@ class DetailCustomerInvoice extends React.Component {
 	};
 	renderProduct = (cell, row, props) => {
 		var { product_list } = this.props;
-		var {data}=this.state;
-		//  productList = product_list.length
-		// 	? [{ id: '', name: 'Select Product' }, ...product_list]
-		// 	: product_list;
-			
-		var product_list1=product_list.filter((obj)=>obj.stockOnHand !=0 )
-		product_list=product_list.filter((row)=>row.stockOnHand !=0 );
-		if(product_list.length>0){
-			if(product_list.length > this.state.producttype.length){
-				product_list.map(element => {
-					this.getProductType(element.id);
-				});
-			}
-		}
+		var { data } = this.state;
+		var product_list1 = product_list.filter((obj) => obj.stockOnHand != 0)
+		product_list = product_list.filter((row) => row.stockOnHand != 0);
+		// if(product_list.length>0){
+		// 	if(product_list.length > this.state.producttype.length){
+		// 		product_list.map(element => {
+		// 			this.getProductType(element.id);
+		// 		});
+		// 	}
+		// }
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1184,7 +1192,7 @@ class DetailCustomerInvoice extends React.Component {
 		});
 
 		// let product_list2=[]
-		
+
 		// product_list1.map(function (o1) {
 		// 	 data.map(function (o2) {
 		// 		if( o1.id !== o2.productId)
@@ -1195,86 +1203,84 @@ class DetailCustomerInvoice extends React.Component {
 		// 		}
 		// });
 		// 	});
-			
+
 		return (
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
 					<>
-					<Select
-						options={
-							product_list1
-								? optionFactory.renderOptions(
+						<Select
+							options={
+								product_list1
+									? optionFactory.renderOptions(
 										'name',
 										'id',
 										product_list1,
 										'Product',
-								  )
-								: []
-						}
-						value={
-							product_list &&
-							selectOptionsFactory
-								.renderOptions('name', 'id', product_list, 'Product')
-								.find((option) => option.value === +row.productId)
-						}
-						id="productId"
-						onChange={(e) => {
-							if (e && e.label !== 'Select Product') {
-								this.selectItem(e.value, row, 'productId', form, field, props);
-								this.prductValue(e.value, row, 'productId', form, field, props);
-								if(this.checkedRow())
-								this.addRow();
+									)
+									: []
 							}
-						}}
-						className={`${
-							props.errors.lineItemsString &&
+							value={
+								product_list &&
+								selectOptionsFactory
+									.renderOptions('name', 'id', product_list, 'Product')
+									.find((option) => option.value === +row.productId)
+							}
+							id="productId"
+							onChange={(e) => {
+								if (e && e.label !== 'Select Product') {
+									this.selectItem(e.value, row, 'productId', form, field, props);
+									this.prductValue(e.value, row, 'productId', form, field, props);
+									if (this.checkedRow())
+										this.addRow();
+								}
+							}}
+							className={`${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].productId
+								? 'is-invalid'
+								: ''
+								}`}
+						/>
+						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].productId
-								? 'is-invalid'
-								: ''
-						}`}
-					/>
-					{props.errors.lineItemsString &&
-                    props.errors.lineItemsString[parseInt(idx, 10)] &&
-                    props.errors.lineItemsString[parseInt(idx, 10)].productId &&
-                    Object.keys(props.touched).length > 0 &&
-					props.touched.lineItemsString &&
-					props.touched.lineItemsString[parseInt(idx, 10)] &&
-					props.touched.lineItemsString[parseInt(idx, 10)].productId && 
-                    (
-                   <div className='invalid-feedback'>
-                   {props.errors.lineItemsString[parseInt(idx, 10)].productId}
-                   </div>
-                     )}
-					  {row['productId'] != '' ? 
-						   <div className='mt-1'>
-						   <Input
-						type="text"
-						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
-						onChange={(e) => {
-							this.selectItem(e.target.value, row, 'description', form, field);
-						}}
-						placeholder={strings.Description}
-						className={`form-control ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].description &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].description
-								? 'is-invalid'
-								: ''
-						}`}
-					/>
-						   </div> : ''}
-					   </>
+							props.touched.lineItemsString[parseInt(idx, 10)].productId &&
+							(
+								<div className='invalid-feedback'>
+									{props.errors.lineItemsString[parseInt(idx, 10)].productId}
+								</div>
+							)}
+						{row['productId'] != '' ?
+							<div className='mt-1'>
+								<Input
+									type="text"
+									maxLength="250"
+									value={row['description'] !== '' ? row['description'] : ''}
+									onChange={(e) => {
+										this.selectItem(e.target.value, row, 'description', form, field);
+									}}
+									placeholder={strings.Description}
+									className={`form-control ${props.errors.lineItemsString &&
+										props.errors.lineItemsString[parseInt(idx, 10)] &&
+										props.errors.lineItemsString[parseInt(idx, 10)].description &&
+										Object.keys(props.touched).length > 0 &&
+										props.touched.lineItemsString &&
+										props.touched.lineItemsString[parseInt(idx, 10)] &&
+										props.touched.lineItemsString[parseInt(idx, 10)].description
+										? 'is-invalid'
+										: ''
+										}`}
+								/>
+							</div> : ''}
+					</>
 				)}
 			/>
 		);
@@ -1291,7 +1297,7 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	renderActions = (cell, rows, props) => {
-		return rows['productId'] != '' ? 
+		return rows['productId'] != '' ?
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon mt-1"
@@ -1302,14 +1308,14 @@ class DetailCustomerInvoice extends React.Component {
 			>
 				<i className="fas fa-trash"></i>
 			</Button> : ''
-		
+
 	};
 
 	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
-			let temp = this.state.data?.[length].productId!==""?
-			this.state.data?.[length].productId:-2;
+			let temp = this.state.data?.[length].productId !== "" ?
+				this.state.data?.[length].productId : -2;
 			if (temp > -1) {
 				return true;
 			} else {
@@ -1325,145 +1331,146 @@ class DetailCustomerInvoice extends React.Component {
 		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		let net_value = 0; 
+		let net_value = 0;
 		let discount_total = 0;
-		let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
-			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
-			this.formRef.current?.state?.values?.exchangeRate:1
+		let exchangeRate = this.formRef.current?.state?.values?.exchangeRate > 0
+			&& this.formRef.current?.state?.values?.exchangeRate !== "" ?
+			this.formRef.current?.state?.values?.exchangeRate : 1
 		data.map((obj) => {
-			let unitprice=obj.unitPrice
+			let unitprice = obj.unitPrice
 			const index =
 				obj.vatCategoryId !== '' && vat_list
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' && index >= 0? vat_list[`${index}`].vat : 0;
+			const vat = index !== '' && index >= 0 ? vat_list[`${index}`].vat : 0;
 
 			//Exclusive case
-			if(this.state.taxType === false){
-				if (obj.discountType === 'PERCENTAGE') {	
-					 net_value =
+			if (this.state.taxType === false) {
+				if (obj.discountType === 'PERCENTAGE') {
+					net_value =
 						((+unitprice -
 							(+((unitprice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  (unitprice * obj.quantity) - net_value
-				if(obj.exciseTaxId !=  0){
-					if(obj.exciseTaxId === 1){
-						const value = +(net_value) / 2 ;
-							net_value = parseFloat(net_value) + parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value) ;
-						}else if (obj.exciseTaxId === 2){
+					var discount = (unitprice * obj.quantity) - net_value
+					if (obj.exciseTaxId != 0) {
+						if (obj.exciseTaxId === 1) {
+							const value = +(net_value) / 2;
+							net_value = parseFloat(net_value) + parseFloat(value);
+							obj.exciseAmount = parseFloat(value);
+						} else if (obj.exciseTaxId === 2) {
 							const value = net_value;
-							net_value = parseFloat(net_value) +  parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value) ;
+							net_value = parseFloat(net_value) + parseFloat(value);
+							obj.exciseAmount = parseFloat(value);
 						}
-				}
-				else{
-					obj.exciseAmount = 0
-				}
+					}
+					else {
+						obj.exciseAmount = 0
+					}
 					var vat_amount =
-					vat === 0 ? 0 :
-					((+net_value  * vat ) / 100);
-				}else{
-					 net_value =
-						((unitprice * obj.quantity) - obj.discount)
-					var discount =  (unitprice * obj.quantity) - net_value
-						if(obj.exciseTaxId !=  0){
-							if(obj.exciseTaxId === 1){
-								const value = +(net_value) / 2 ;
-									net_value = parseFloat(net_value) + parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value) ;
-								}else if (obj.exciseTaxId === 2){
-									const value = net_value;
-									net_value = parseFloat(net_value) +  parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value) ;
-								}
-						}
-						else{
-							obj.exciseAmount = 0
-						}
-						var vat_amount =
 						vat === 0 ? 0 :
-						((+net_value  * vat ) / 100);
-			}
+							((+net_value * vat) / 100);
+				} else {
+					net_value =
+						((unitprice * obj.quantity) - obj.discount)
+					var discount = (unitprice * obj.quantity) - net_value
+					if (obj.exciseTaxId != 0) {
+						if (obj.exciseTaxId === 1) {
+							const value = +(net_value) / 2;
+							net_value = parseFloat(net_value) + parseFloat(value);
+							obj.exciseAmount = parseFloat(value);
+						} else if (obj.exciseTaxId === 2) {
+							const value = net_value;
+							net_value = parseFloat(net_value) + parseFloat(value);
+							obj.exciseAmount = parseFloat(value);
+						}
+					}
+					else {
+						obj.exciseAmount = 0
+					}
+					var vat_amount =
+						vat === 0 ? 0 :
+							((+net_value * vat) / 100);
+				}
 
 			}
 			//Inclusive case
-			else
-			{			
-				if (obj.discountType === 'PERCENTAGE') {	
+			else {
+				if (obj.discountType === 'PERCENTAGE') {
 
 					//net value after removing discount
-					 net_value =
-					((+unitprice -
-						(+((unitprice * obj.discount)) / 100)) * obj.quantity);
+					net_value =
+						((+unitprice -
+							(+((unitprice * obj.discount)) / 100)) * obj.quantity);
 
-				//discount amount
-				var discount =  (unitprice* obj.quantity) - net_value
+					//discount amount
+					var discount = (unitprice * obj.quantity) - net_value
 
-				//vat amount
-				var vat_amount =
-				(vat === 0 ? 0:
-				((+net_value  * (vat/ (100 + vat)*100)) / 100));
+					//vat amount
+					var vat_amount =
+						(vat === 0 ? 0 :
+							((+net_value * (vat / (100 + vat) * 100)) / 100));
 
-				//net value after removing vat for inclusive
-				net_value = net_value - vat_amount
+					//net value after removing vat for inclusive
+					net_value = net_value - vat_amount
 
-				//excise calculation
-				if(obj.exciseTaxId !=  0){
-				if(obj.exciseTaxId === 1){
-					const value = net_value / 3
-					net_value = net_value 
-					obj.exciseAmount = parseFloat(value);
-					}
-				else if (obj.exciseTaxId === 2){
-					const value = net_value / 2
-					obj.exciseAmount = parseFloat(value);
-					net_value = net_value}
-			
+					//excise calculation
+					if (obj.exciseTaxId != 0) {
+						if (obj.exciseTaxId === 1) {
+							const value = net_value / 3
+							net_value = net_value
+							obj.exciseAmount = parseFloat(value);
 						}
-						else{
-							obj.exciseAmount = 0
+						else if (obj.exciseTaxId === 2) {
+							const value = net_value / 2
+							obj.exciseAmount = parseFloat(value);
+							net_value = net_value
 						}
+
 					}
+					else {
+						obj.exciseAmount = 0
+					}
+				}
 
 				else // fixed discount
-						{
-				//net value after removing discount
-				 net_value =
-				((unitprice * obj.quantity) - obj.discount)
+				{
+					//net value after removing discount
+					net_value =
+						((unitprice * obj.quantity) - obj.discount)
 
-				//discount amount
-				var discount =  (unitprice * obj.quantity) - net_value
-						
-				//vat amount
-				var vat_amount =
-				(vat===0 ? 0 :
-				((+net_value  * (vat/ (100 + vat)*100)) / 100));
+					//discount amount
+					var discount = (unitprice * obj.quantity) - net_value
 
-				//net value after removing vat for inclusive
-				net_value = net_value - vat_amount
+					//vat amount
+					var vat_amount =
+						(vat === 0 ? 0 :
+							((+net_value * (vat / (100 + vat) * 100)) / 100));
 
-				//excise calculation
-				if(obj.exciseTaxId !=  0){
-					if(obj.exciseTaxId === 1){
-						const value = net_value / 3
-						net_value = net_value 
-						obj.exciseAmount = parseFloat(value);
+					//net value after removing vat for inclusive
+					net_value = net_value - vat_amount
+
+					//excise calculation
+					if (obj.exciseTaxId != 0) {
+						if (obj.exciseTaxId === 1) {
+							const value = net_value / 3
+							net_value = net_value
+							obj.exciseAmount = parseFloat(value);
 						}
-					else if (obj.exciseTaxId === 2){
-						const value = net_value / 2
-						obj.exciseAmount = parseFloat(value);
-					net_value = net_value}
-							}
-							else{
-								obj.exciseAmount = 0
-							}
+						else if (obj.exciseTaxId === 2) {
+							const value = net_value / 2
+							obj.exciseAmount = parseFloat(value);
+							net_value = net_value
+						}
 					}
+					else {
+						obj.exciseAmount = 0
+					}
+				}
 			}
-			obj.unitPrice=unitprice
+			obj.unitPrice = unitprice
 			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-			discount_total = +discount_total +discount
+				net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+			discount_total = +discount_total + discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
 			total_excise = +(total_excise + obj.exciseAmount)
@@ -1481,10 +1488,10 @@ class DetailCustomerInvoice extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net:  total_net-total_excise,
+						total_net: total_net - total_excise,
 						invoiceVATAmount: total_vat,
-						discount:  discount_total ? discount_total : 0,
-						totalAmount:  total ,
+						discount: discount_total ? discount_total : 0,
+						totalAmount: total,
 						total_excise: total_excise
 					},
 
@@ -1500,7 +1507,7 @@ class DetailCustomerInvoice extends React.Component {
 		const { term } = this.state;
 		const val = term.split('_');
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		
+
 		const values = value
 			? value
 			: props.values.invoiceDate1
@@ -1522,7 +1529,7 @@ class DetailCustomerInvoice extends React.Component {
 		let reader = new FileReader();
 		let file = e.target.files[0];
 		if (file) {
-			reader.onloadend = () => {};
+			reader.onloadend = () => { };
 			reader.readAsDataURL(file);
 			props.setFieldValue('attachmentFile', file, true);
 		}
@@ -1562,45 +1569,43 @@ class DetailCustomerInvoice extends React.Component {
 		formData.append('type', 2);
 		formData.append('taxType', this.state.taxType)
 		formData.append('invoiceId', current_customer_id);
-		formData.append('referenceNumber',invoice_number !== null ? invoice_number : '',);		
-		if(changeShippingAddress && changeShippingAddress==true)
-		{
+		formData.append('referenceNumber', invoice_number !== null ? invoice_number : '',);
+		if (changeShippingAddress && changeShippingAddress == true) {
 			formData.append(
 				'changeShippingAddress',
 				changeShippingAddress !== null ? changeShippingAddress : '',
 			);
 			formData.append(
-			'shippingAddress',
-			shippingAddress !== null ? shippingAddress : '',
-		);
-		formData.append(
-			'shippingCountry',
-			shippingCountryId.value ? shippingCountryId.value : shippingCountryId,
-		);
-		formData.append(
-			'shippingState',
-			shippingStateId.value ? shippingStateId.value : shippingStateId,
-		);
-		formData.append(
-			'shippingCity',
-			shippingCity !== null ? shippingCity : '',
-		);
-		formData.append(
-			'shippingPostZipCode',
-			shippingPostZipCode !== null ? shippingPostZipCode : '',
-		);
-		formData.append(
-			'shippingTelephone',
-			shippingTelephone !== null ? shippingTelephone : '',
-		);
-		formData.append(
-			'shippingFax',
-			shippingFax !== null ? shippingFax : '',
-		);
-	}//
+				'shippingAddress',
+				shippingAddress !== null ? shippingAddress : '',
+			);
+			formData.append(
+				'shippingCountry',
+				shippingCountryId.value ? shippingCountryId.value : shippingCountryId,
+			);
+			formData.append(
+				'shippingState',
+				shippingStateId.value ? shippingStateId.value : shippingStateId,
+			);
+			formData.append(
+				'shippingCity',
+				shippingCity !== null ? shippingCity : '',
+			);
+			formData.append(
+				'shippingPostZipCode',
+				shippingPostZipCode !== null ? shippingPostZipCode : '',
+			);
+			formData.append(
+				'shippingTelephone',
+				shippingTelephone !== null ? shippingTelephone : '',
+			);
+			formData.append(
+				'shippingFax',
+				shippingFax !== null ? shippingFax : '',
+			);
+		}//
 
-		if(this.state.datesChanged === true)
-		{
+		if (this.state.datesChanged === true) {
 			formData.append(
 				'invoiceDate',
 				typeof invoiceDate === 'string'
@@ -1613,7 +1618,7 @@ class DetailCustomerInvoice extends React.Component {
 					? this.state.invoiceDueDate
 					: invoiceDueDate,
 			);
-		}else{
+		} else {
 			formData.append(
 				'invoiceDate',
 				typeof invoiceDate === 'string'
@@ -1628,7 +1633,7 @@ class DetailCustomerInvoice extends React.Component {
 			);
 		}
 		formData.append('exchangeRate', exchangeRate !== null ? exchangeRate : '',);
-		
+
 		formData.append(
 			'receiptNumber',
 			receiptNumber !== null ? receiptNumber : '',
@@ -1642,25 +1647,25 @@ class DetailCustomerInvoice extends React.Component {
 			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
 		);
 		formData.append('notes', notes !== null ? notes : '');
-		formData.append('footNote',footNote? footNote : '');
+		formData.append('footNote', footNote ? footNote : '');
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
-		formData.append('discount',this.state.initValue.discount);
+		formData.append('discount', this.state.initValue.discount);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		// formData.append('exciseType', this.state.checked);
 		formData.append('term', term);
 		//formData.append('placeOfSupplyId',placeOfSupplyId.value);
-		
+
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
-		if (currencyCode ) {
+		if (currencyCode) {
 			formData.append('currencyCode', currencyCode);
 		}
-		
+
 		if (placeOfSupplyId) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);
 		}
 		if (project) {
 			formData.append('projectId', project);
@@ -1668,7 +1673,7 @@ class DetailCustomerInvoice extends React.Component {
 		if (this.uploadFile?.files?.[0]) {
 			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
-		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Updating Invoice..."});
+		this.setState({ loading: true, disableLeavePage: true, loadingMsg: "Updating Invoice..." });
 		this.props.customerInvoiceDetailActions
 			.updateInvoice(formData)
 			.then((res) => {
@@ -1678,7 +1683,7 @@ class DetailCustomerInvoice extends React.Component {
 					res.data ? res.data.message : 'Invoice Updated Successfully'
 				);
 				this.props.history.push('/admin/income/customer-invoice');
-				this.setState({ loading:false,});
+				this.setState({ loading: false, });
 			})
 			.catch((err) => {
 				this.setState({ disabled: false, createDisabled: false, loading: false });
@@ -1724,37 +1729,55 @@ class DetailCustomerInvoice extends React.Component {
 		this.setState({ openProductModal: false });
 	};
 
-	getCurrentProduct = () => {
-		this.props.customerInvoiceActions.getProductList().then((res) => {
+	getCurrentProduct = (newProduct) => {
+		if (newProduct) {
+			let newData = []
+			const { data, isRegisteredVat } = this.state;
+			newData = data.filter((obj) => obj.productId !== "");
+			let exchangeRate = this.formRef.current?.state?.values?.exchangeRate > 0
+				&& this.formRef.current?.state?.values?.exchangeRate !== "" ?
+				this.formRef.current?.state?.values?.exchangeRate : 1
+			// props.setFieldValue('lineItemsString', newData, true);
+			// this.updateAmount(newData, props);
 			this.setState(
 				{
-					data: [
-						{
-							id: 0,
-							description: res.data[0].description,
-							quantity: 1,
-							unitPrice: res.data[0].unitPrice,
-							vatCategoryId: res.data[0].vatCategoryId,
-							subTotal: res.data[0].unitPrice,
-							productId: res.data[0].id,
-						},
+					data: [...newData, {
+						id: this.state.idCount + 1,
+						description: newProduct.description,
+						quantity: 1,
+						discount: 0,
+						unitPrice: (parseFloat(newProduct.unitPrice) * (1 / exchangeRate)).toFixed(2),
+						vatCategoryId: isRegisteredVat ? '' : 10,
+						exciseTaxId: newProduct.exciseTaxId,
+						vatAmount: newProduct.vatAmount ? newProduct.vatAmount : 0,
+						subTotal: newProduct.unitPrice,
+						productId: newProduct.id,
+						discountType: newProduct.discountType,
+						unitType: newProduct.unitType,
+						unitTypeId: newProduct.unitTypeId,
+					},
+
 					],
+					idCount: this.state.idCount + 1,
+
 				},
 				() => {
 					const values = {
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
+					this.addRow();
+					this.getProductType(newProduct.id);
 				},
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
-				res.data[0].unitPrice,
+				newProduct.unitPrice,
 				true,
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitType`,
-				res.data[0].unitType,
+				newProduct.unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -1763,16 +1786,31 @@ class DetailCustomerInvoice extends React.Component {
 				true,
 			);
 			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discount`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discountType`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.vatCategoryId`,
-				res.data[0].vatCategoryId,
+				newProduct.vatCategoryId,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.exciseTaxId`,
+				1,
 				true,
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.productId`,
-				res.data[0].id,
+				newProduct.id,
 				true,
 			);
-		});
+		}
 	};
 
 	getCompanyCurrency = (basecurrency) => {
@@ -1790,18 +1828,18 @@ class DetailCustomerInvoice extends React.Component {
 				);
 				this.setState({ loading: false });
 			});
-	};	
+	};
 
-	setExchange = (value,props) => {
+	setExchange = (value, props) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
-		return obj.currencyCode === value;
+			return obj.currencyCode === value;
 		});
-		if(result[0]){
+		if (result[0]) {
 			this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 			//props.handleChange('exchangeRate')(result[0].exchangeRate,);
 			this.exchangeRaterevalidate(result[0].exchangeRate)
 		}
-		else{
+		else {
 			this.formRef.current.setFieldValue('exchangeRate', '', true);
 			//props.handleChange('exchangeRate')(result[0].exchangeRate,);
 			this.exchangeRaterevalidate('')
@@ -1811,9 +1849,9 @@ class DetailCustomerInvoice extends React.Component {
 	deleteInvoice = () => {
 		const message1 =
 			<text>
-			<b>Delete Customer Invoice?</b>
+				<b>Delete Customer Invoice?</b>
 			</text>
-			const message = 'This customer invoice will be deleted permanently and cannot be recovered. ';
+		const message = 'This customer invoice will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -1830,7 +1868,7 @@ class DetailCustomerInvoice extends React.Component {
 	removeInvoice = () => {
 		this.setState({ disabled1: true });
 		const { current_customer_id } = this.state;
-		this.setState({ loading:true, loadingMsg:"Deleting Invoice..."});
+		this.setState({ loading: true, loadingMsg: "Deleting Invoice..." });
 		this.props.customerInvoiceDetailActions
 			.deleteInvoice(current_customer_id)
 			.then((res) => {
@@ -1840,7 +1878,7 @@ class DetailCustomerInvoice extends React.Component {
 						res.data ? res.data.message : 'Invoice Deleted Successfully'
 					);
 					this.props.history.push('/admin/income/customer-invoice');
-					this.setState({ loading:false,});
+					this.setState({ loading: false, });
 				}
 			})
 			.catch((err) => {
@@ -1861,7 +1899,7 @@ class DetailCustomerInvoice extends React.Component {
 		let customer_currencyCode = 0;
 		let customer_item_currency = ''
 		this.props.customer_list.map(item => {
-			if(item.label.contactId == opt) {
+			if (item.label.contactId == opt) {
 				this.setState({
 					customer_currency: item.label.currency.currencyCode,
 					customer_currency_des: item.label.currency.currencyName,
@@ -1874,12 +1912,12 @@ class DetailCustomerInvoice extends React.Component {
 		})
 		return customer_currencyCode;
 	}
-	getTaxTreatment= (opt) => {
-		
+	getTaxTreatment = (opt) => {
+
 		let customer_taxTreatmentId = 0;
 		let customer_item_taxTreatment = ''
 		this.props.customer_list.map(item => {
-			if(item.label.contactId == opt) {
+			if (item.label.contactId == opt) {
 				this.setState({
 					customer_taxTreatment: item.label.taxTreatment.id,
 					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
@@ -1890,15 +1928,15 @@ class DetailCustomerInvoice extends React.Component {
 				customer_item_taxTreatment = item.label.currency
 			}
 		})
-	
+
 		return customer_taxTreatmentId;
 	}
 
-	rendertotalexcise=()=>{
-		const {initValue}= this.state
-		
-		let val=initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-		
+	rendertotalexcise = () => {
+		const { initValue } = this.state
+
+		let val = initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
 		return parseFloat(val).toFixed(2)
 	}
 
@@ -1907,342 +1945,341 @@ class DetailCustomerInvoice extends React.Component {
 	};
 	getStateListForShippingAddress = (countryCode) => {
 		this.props.customerInvoiceActions.getStateListForShippingAddress(countryCode)
-		.then((res)=>{
-						this.setState({state_list_for_shipping:res})
-		});
+			.then((res) => {
+				this.setState({ state_list_for_shipping: res })
+			});
 	};
 
 	render() {
 		strings.setLanguage(this.state.language);
 
-		const { data, discountOptions, initValue, loading, dialog,param,state_list_for_shipping, taxTreatmentList } = this.state;
+		const { data, isRegisteredVat, initValue, loading, dialog, param, state_list_for_shipping, taxTreatmentList } = this.state;
 
-		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list,country_list,} = this.props;
+		const { project_list, currency_list, currency_convert_list, customer_list, universal_currency_list, country_list, } = this.props;
 
 		let tmpCustomer_list = []
-		const {  loadingMsg } = this.state
+		const { loadingMsg } = this.state
 		customer_list.map(item => {
-			let obj = {label: item.label.contactName, value: item.value}
+			let obj = { label: item.label.contactName, value: item.value }
 			tmpCustomer_list.push(obj)
 		})
 
 		return (
-			loading ==true? <Loader loadingMsg={loadingMsg}/> :
-<div>
-	<div className="detail-customer-invoice-screen">
-				<div className="animated fadeIn">
-					<Row>
-						<Col lg={12} className="mx-auto">
-							<Card>
-								<CardHeader>
-									<Row>
-										<Col lg={12}>
-											<div className="h4 mb-0 d-flex align-items-center">
-												<i className="fas fa-address-book" />
-												<span className="ml-2">{strings.UpdateInvoice}</span>
-											</div>
-										</Col>
-									</Row>
-								</CardHeader>
-								<CardBody>
-									
-									{dialog}
-									{loading ? (
-										<Loader />
-									) : (
+			loading == true ? <Loader loadingMsg={loadingMsg} /> : <div>
+				<div className="detail-customer-invoice-screen">
+					<div className="animated fadeIn">
+						<Row>
+							<Col lg={12} className="mx-auto">
+								<Card>
+									<CardHeader>
 										<Row>
 											<Col lg={12}>
-												<Formik
-													initialValues={this.state.initValue}
-													ref={this.formRef}
-													onSubmit={(values, { resetForm }) => {
-														this.handleSubmit(values);
-													}}
-													validate={(values) => {
-														let errors = {};
-														// if (exist === true) {
-														// 	errors.invoice_number =
-														// 		'Invoice Number Already Exists';
-														// }
-														if (param === true) {
-															errors.discount =
-																'Discount amount Cannot be greater than invoice total amount';
-														}
+												<div className="h4 mb-0 d-flex align-items-center">
+													<i className="fas fa-address-book" />
+													<span className="ml-2">{strings.UpdateInvoice}</span>
+												</div>
+											</Col>
+										</Row>
+									</CardHeader>
+									<CardBody>
 
-														if(this.state.customer_taxTreatment_des!="NON GCC" && this.state.customer_taxTreatment_des!="GCC NON-VAT REGISTERED" && this.state.customer_taxTreatment_des!="GCC VAT REGISTERED")
-														{
-															if (!values.placeOfSupplyId) 
-													       		errors.placeOfSupplyId ='Place of supply is required';
-															if (values.placeOfSupplyId && (values.placeOfSupplyId=="" || (values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")))
-													         	errors.placeOfSupplyId ='Place of supply is required';
-													   	}
+										{dialog}
+										{loading ? (
+											<Loader />
+										) : (
+											<Row>
+												<Col lg={12}>
+													<Formik
+														initialValues={this.state.initValue}
+														ref={this.formRef}
+														onSubmit={(values, { resetForm }) => {
+															this.handleSubmit(values);
+														}}
+														validate={(values) => {
+															let errors = {};
+															// if (exist === true) {
+															// 	errors.invoice_number =
+															// 		'Invoice Number Already Exists';
+															// }
+															if (param === true) {
+																errors.discount =
+																	'Discount amount Cannot be greater than invoice total amount';
+															}
 
-														// if (values.placeOfSupplyId && values.placeOfSupplyId.label &&( values.placeOfSupplyId.label === "Select Place of Supply"))
-														//  {
-														// 	errors.placeOfSupplyId ='Place of supply is required';
-														// }else
-														// if (values.placeOfSupplyId === "")
-														//  {
-														// 	errors.placeOfSupplyId ='Place of supply is required';
-														// }
-														if(values.changeShippingAddress==true){
-															if(values.shippingAddress =="")  errors.shippingAddress ='Shipping address is required';
-														}
-	
-														if(values.changeShippingAddress==true){
-															if(values.shippingCountryId =="")  errors.shippingCountryId ='Country is required';
-														}
-	
-														if(values.changeShippingAddress==true){
-														}
+															if (this.state.customer_taxTreatment_des != "NON GCC" && this.state.customer_taxTreatment_des != "GCC NON-VAT REGISTERED" && this.state.customer_taxTreatment_des != "GCC VAT REGISTERED") {
+																if (!values.placeOfSupplyId)
+																	errors.placeOfSupplyId = 'Place of supply is required';
+																if (values.placeOfSupplyId && (values.placeOfSupplyId == "" || (values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")))
+																	errors.placeOfSupplyId = 'Place of supply is required';
+															}
 
-														if(values.changeShippingAddress==true){
-															if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
-																if (values.shippingPostZipCode == '')
-																	errors.shippingPostZipCode = 'PO box number is required';
-																else if (values.shippingPostZipCode.length < 3)
-																	errors.shippingPostZipCode = 'Please enter 3 to 6 digit PO box number';
-																if(values.shippingStateId =="")  errors.shippingStateId ='Emirate is required';
-																
-															} else {
-																if (values.shippingPostZipCode == '')
-																	errors.shippingPostZipCode = 'Postal code is required';
-																else if (values.shippingPostZipCode.length !== 6)
+															// if (values.placeOfSupplyId && values.placeOfSupplyId.label &&( values.placeOfSupplyId.label === "Select Place of Supply"))
+															//  {
+															// 	errors.placeOfSupplyId ='Place of supply is required';
+															// }else
+															// if (values.placeOfSupplyId === "")
+															//  {
+															// 	errors.placeOfSupplyId ='Place of supply is required';
+															// }
+															if (values.changeShippingAddress == true) {
+																if (values.shippingAddress == "") errors.shippingAddress = 'Shipping address is required';
+															}
+
+															if (values.changeShippingAddress == true) {
+																if (values.shippingCountryId == "") errors.shippingCountryId = 'Country is required';
+															}
+
+															if (values.changeShippingAddress == true) {
+															}
+
+															if (values.changeShippingAddress == true) {
+																if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
+																	if (values.shippingPostZipCode == '')
+																		errors.shippingPostZipCode = 'PO box number is required';
+																	else if (values.shippingPostZipCode.length < 3)
+																		errors.shippingPostZipCode = 'Please enter 3 to 6 digit PO box number';
+																	if (values.shippingStateId == "") errors.shippingStateId = 'Emirate is required';
+
+																} else {
+																	if (values.shippingPostZipCode == '')
+																		errors.shippingPostZipCode = 'Postal code is required';
+																	else if (values.shippingPostZipCode.length !== 6)
 																		errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
-																if(values.shippingStateId =="")  errors.shippingStateId ='State is required';
-																
-															}}
-															let isoutoftock=0
+																	if (values.shippingStateId == "") errors.shippingStateId = 'State is required';
 
-													
-													values.lineItemsString.map((c,i)=>{
-														if(c.quantity>0 && c.productId!=="" ){ 
+																}
+															}
+															let isoutoftock = 0
 
-															let product=this.props.product_list.find((o)=>c.productId===o.id)
-															let stockinhand=product.stockOnHand-values.lineItemsString.reduce((a,c)=>{
-																 return c.productId===product.id ? a+parseInt(c.quantity):a+0
-															},0)
 
-														if( product.stockOnHand!==null &&stockinhand<0 ) 
-														isoutoftock=isoutoftock+1
-														else isoutoftock=isoutoftock+0 
-													
-														} else 
-														isoutoftock=isoutoftock+0
-														
-													})
-												
-													if(isoutoftock>0){
-														errors.outofstock="Some Prod"
-													}
-												
+															values.lineItemsString.map((c, i) => {
+																if (c.quantity > 0 && c.productId !== "") {
+
+																	let product = this.props.product_list.find((o) => c.productId === o.id)
+																	let stockinhand = product.stockOnHand - values.lineItemsString.reduce((a, c) => {
+																		return c.productId === product.id ? a + parseInt(c.quantity) : a + 0
+																	}, 0)
+
+																	if (product.stockOnHand !== null && stockinhand < 0)
+																		isoutoftock = isoutoftock + 1
+																	else isoutoftock = isoutoftock + 0
+
+																} else
+																	isoutoftock = isoutoftock + 0
+
+															})
+
+															if (isoutoftock > 0) {
+																errors.outofstock = "Some Prod"
+															}
+
 															return errors;
-													}}
-													validationSchema={Yup.object().shape({
-														invoice_number: Yup.string().required(
-															' number is required',
-														),
-														contactId: Yup.string().required(
-															'Supplier is required',
-														),
-														term: Yup.string().required('Term is required'),
-														// placeOfSupplyId: Yup.string().required(
-														// 	'Place of supply is required',
-														// ),
-														invoiceDate: Yup.string().required(
-															'Invoice date is required',
-														),
-														invoiceDueDate: Yup.string().required(
-															'Invoice due date is required',
-														),
-														currencyCode: Yup.string().required(
-															'Currency is required',
-														),
-														lineItemsString: Yup.array()
-															.required(
-																'Atleast one invoice sub detail is mandatory',
-															)
-															.of(
-																Yup.object().shape({
-																	// description: Yup.string().required(
-																	// 	'Value is required',
-																	// ),
-																	quantity: Yup.string()
-																		.test(
-																			'quantity',
-																			strings.QuantityGreaterThan0,
-																			(value) => {
-																				if (value > 0 ) {
-																					return true;
-																				} else {
-																					return false;
-																				}
-																			},
-																		).required('Quantity is required'),
-																	unitPrice: Yup.string()
-																		.test(
-																			'Unit Price',
-																			strings.UnitPriceGreaterThan1,
-																			(value) => {
-																				if (value > 1) {
-																					return true;
-																				} else {
-																					return false;
-																				}
-																			},
-																		).required('Unit Price is required'),
-																	vatCategoryId: Yup.string().required(
-																		'VAT is required',
-																	),
-																	productId: Yup.string().required(
-																		'Product is required',
-																	),
-																}),
+														}}
+														validationSchema={Yup.object().shape({
+															invoice_number: Yup.string().required(
+																' number is required',
 															),
-														attachmentFile: Yup.mixed()
-															.test(
-																'fileType',
-																'*Unsupported File Format',
-																(value) => {
-																	value &&
-																		this.setState({
-																			fileName: value.name,
-																		});
-																	if (
-																		!value ||
-																		(value &&
-																			this.supported_format.includes(
-																				value.type,
-																			))
-																	) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																},
-															)
-															.test(
-																'fileSize',
-																'*File size is too large',
-																(value) => {
-																	if (
-																		!value ||
-																		(value && value.size <= this.file_size)
-																	) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																},
+															contactId: Yup.string().required(
+																'Supplier is required',
 															),
-													})}
-												>
-													{(props) => (
-														<Form onSubmit={props.handleSubmit}>
-															<Row>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="invoice_number">
-																			<span className="text-danger">* </span>
-																			{strings.InvoiceNumber}
-																		</Label>
-																		<Input
-																			type="text"
-																			maxLength='50'
-																			id="invoice_number"
-																			name="invoice_number"
-																			placeholder={strings.InvoiceNumber}
-																			disabled
-																			value={props.values.invoice_number}
-																			onChange={(value) => {
-																				props.handleChange('invoice_number')(
-																					value,
-																				);
-																			}}
-																			className={
-																				props.errors.invoice_number &&
-																				props.touched.invoice_number
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.invoice_number &&
-																			props.touched.invoice_number && (
-																				<div className="invalid-feedback">
-																					{props.errors.invoice_number}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
+															term: Yup.string().required('Term is required'),
+															// placeOfSupplyId: Yup.string().required(
+															// 	'Place of supply is required',
+															// ),
+															invoiceDate: Yup.string().required(
+																'Invoice date is required',
+															),
+															invoiceDueDate: Yup.string().required(
+																'Invoice due date is required',
+															),
+															currencyCode: Yup.string().required(
+																'Currency is required',
+															),
+															lineItemsString: Yup.array()
+																.required(
+																	'Atleast one invoice sub detail is mandatory',
+																)
+																.of(
+																	Yup.object().shape({
+																		// description: Yup.string().required(
+																		// 	'Value is required',
+																		// ),
+																		quantity: Yup.string()
+																			.test(
+																				'quantity',
+																				strings.QuantityGreaterThan0,
+																				(value) => {
+																					if (value > 0) {
+																						return true;
+																					} else {
+																						return false;
+																					}
+																				},
+																			).required('Quantity is required'),
+																		unitPrice: Yup.string()
+																			.test(
+																				'Unit Price',
+																				strings.UnitPriceGreaterThan1,
+																				(value) => {
+																					if (value > 1) {
+																						return true;
+																					} else {
+																						return false;
+																					}
+																				},
+																			).required('Unit Price is required'),
+																		vatCategoryId: Yup.string().required(
+																			'VAT is required',
+																		),
+																		productId: Yup.string().required(
+																			'Product is required',
+																		),
+																	}),
+																),
+															attachmentFile: Yup.mixed()
+																.test(
+																	'fileType',
+																	'*Unsupported File Format',
+																	(value) => {
+																		value &&
+																			this.setState({
+																				fileName: value.name,
+																			});
+																		if (
+																			!value ||
+																			(value &&
+																				this.supported_format.includes(
+																					value.type,
+																				))
+																		) {
+																			return true;
+																		} else {
+																			return false;
+																		}
+																	},
+																)
+																.test(
+																	'fileSize',
+																	'*File size is too large',
+																	(value) => {
+																		if (
+																			!value ||
+																			(value && value.size <= this.file_size)
+																		) {
+																			return true;
+																		} else {
+																			return false;
+																		}
+																	},
+																),
+														})}
+													>
+														{(props) => (
+															<Form onSubmit={props.handleSubmit}>
+																<Row>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="invoice_number">
+																				<span className="text-danger">* </span>
+																				{strings.InvoiceNumber}
+																			</Label>
+																			<Input
+																				type="text"
+																				maxLength='50'
+																				id="invoice_number"
+																				name="invoice_number"
+																				placeholder={strings.InvoiceNumber}
+																				disabled
+																				value={props.values.invoice_number}
+																				onChange={(value) => {
+																					props.handleChange('invoice_number')(
+																						value,
+																					);
+																				}}
+																				className={
+																					props.errors.invoice_number &&
+																						props.touched.invoice_number
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.invoice_number &&
+																				props.touched.invoice_number && (
+																					<div className="invalid-feedback">
+																						{props.errors.invoice_number}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
 																</Row>
 																<Row>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="contactId">
-																			<span className="text-danger">* </span>
-																			{strings.Customer}
-																		</Label>
-																		<Select
-																			id="contactId"
-																			name="contactId"
-																			
-																			options={
-																				tmpCustomer_list
-																					? selectOptionsFactory.renderOptions(
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="contactId">
+																				<span className="text-danger">* </span>
+																				{strings.Customer}
+																			</Label>
+																			<Select
+																				id="contactId"
+																				name="contactId"
+
+																				options={
+																					tmpCustomer_list
+																						? selectOptionsFactory.renderOptions(
 																							'label',
 																							'value',
 																							tmpCustomer_list,
 																							'Customer',
-																					  )
-																					: []
-																			}
-																			
-																			value={
-																				tmpCustomer_list &&
-																				tmpCustomer_list.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.contactId,
-																				)
-																			}
-																			onChange={(option) => {
-																				this.resetVatId(props);
-																				if (option && option.value) {
-																					this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
-																					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
-																					this.setExchange(this.getCurrency(option.value),props );
-																					props.handleChange('contactId')(
-																						option.value,
-																					);
-																				} else {
-																					props.handleChange('contactId')('');
+																						)
+																						: []
 																				}
-																				this.getCustomerShippingAddress(option.value,this.getTaxTreatment(option.value),props);
-																			
-																				// this.getCurrentUser(option)
-																			}}
-																			className={
-																				props.errors.contactId &&
-																				props.touched.contactId
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.contactId &&
-																			props.touched.contactId && (
-																				<div className="invalid-feedback">
-																					{props.errors.contactId}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-															
-															<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="taxTreatmentid">
-																		{strings.TaxTreatment}
-																	</Label>
-																	<Select
+
+																				value={
+																					tmpCustomer_list &&
+																					tmpCustomer_list.find(
+																						(option) =>
+																							option.value ===
+																							+props.values.contactId,
+																					)
+																				}
+																				onChange={(option) => {
+																					this.resetVatId(props);
+																					if (option && option.value) {
+																						this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
+																						this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
+																						this.setExchange(this.getCurrency(option.value), props);
+																						props.handleChange('contactId')(
+																							option.value,
+																						);
+																					} else {
+																						props.handleChange('contactId')('');
+																					}
+																					this.getCustomerShippingAddress(option.value, this.getTaxTreatment(option.value), props);
+
+																					// this.getCurrentUser(option)
+																				}}
+																				className={
+																					props.errors.contactId &&
+																						props.touched.contactId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.contactId &&
+																				props.touched.contactId && (
+																					<div className="invalid-feedback">
+																						{props.errors.contactId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	{isRegisteredVat &&
+																		<Col lg={3}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="taxTreatmentid">
+																					{strings.TaxTreatment}
+																				</Label>
+																				<Select
 																					options={
 																						taxTreatmentList
 																							? selectOptionsFactory.renderOptions(
@@ -2273,9 +2310,9 @@ class DetailCustomerInvoice extends React.Component {
 																							)
 																					}
 																					onChange={(option) => {
-																							props.handleChange('taxTreatmentid')(
-																								option,
-																							);
+																						props.handleChange('taxTreatmentid')(
+																							option,
+																						);
 																					}}
 																					className={
 																						props.errors.taxTreatmentid &&
@@ -2284,15 +2321,16 @@ class DetailCustomerInvoice extends React.Component {
 																							: ''
 																					}
 																				/>
-																	{props.errors.taxTreatmentid &&
-																		props.touched.taxTreatmentid && (
-																			<div className="invalid-feedback">
-																				{props.errors.taxTreatmentid}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-																{/* <Col>
+																				{props.errors.taxTreatmentid &&
+																					props.touched.taxTreatmentid && (
+																						<div className="invalid-feedback">
+																							{props.errors.taxTreatmentid}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	}
+																	{/* <Col>
 																	<Label
 																		htmlFor="contactId"
 																		style={{ display: 'block' }}
@@ -2309,577 +2347,572 @@ class DetailCustomerInvoice extends React.Component {
 																		Customer
 																	</Button>
 																</Col> */}
-																<Col lg={3}>
-																{this.state.customer_taxTreatment_des !== "NON GCC" && this.state.customer_taxTreatment_des !== "GCC VAT REGISTERED" && this.state.customer_taxTreatment_des !== "GCC NON-VAT REGISTERED" &&
-																	(	<FormGroup className="mb-3">
-																		<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">* </span>
-																		{/* {this.state.customer_taxTreatment_des &&
+																	<Col lg={3}>
+																		{this.state.customer_taxTreatment_des !== "NON GCC" && this.state.customer_taxTreatment_des !== "GCC VAT REGISTERED" && this.state.customer_taxTreatment_des !== "GCC NON-VAT REGISTERED" &&
+																			(<FormGroup className="mb-3">
+																				<Label htmlFor="placeOfSupplyId">
+																					<span className="text-danger">* </span>
+																					{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
 																		)} */}
-																			{strings.PlaceofSupply}
-																		</Label>
-																		<Select
-																			options={
-																				this.placelist
-																					? selectOptionsFactory.renderOptions(
+																					{strings.PlaceofSupply}
+																				</Label>
+																				<Select
+																					options={
+																						this.placelist
+																							? selectOptionsFactory.renderOptions(
+																								'label',
+																								'value',
+																								this.placelist,
+																								'Place of Supply',
+																							)
+																							: []
+																					}
+																					id="placeOfSupplyId"
+																					name="placeOfSupplyId"
+																					value={
+																						this.placelist &&
+																						selectOptionsFactory.renderOptions(
 																							'label',
 																							'value',
 																							this.placelist,
 																							'Place of Supply',
-																					  )
-																					: []
-																			}
-																			id="placeOfSupplyId"
-																			name="placeOfSupplyId"
-																			value={
-																				this.placelist &&
-																				selectOptionsFactory.renderOptions(
-																					'label',
-																					'value',
-																					this.placelist,
-																					'Place of Supply',
-																			  ).find(
-																										(option) =>
-																											option.value ===
-																											props.values
-																												.placeOfSupplyId.toString(),
-																									)
-																							}
-																							onChange={(options) => {
-																								if (options && options.value) {
-																									props.handleChange(
-																										'placeOfSupplyId',
-																									)(options.value);
-																								} else {
-																									props.handleChange(
-																										'placeOfSupplyId',
-																									)('');
-																								}
-																							}}
-																			className={`${
-																				props.errors.placeOfSupplyId &&
-																				props.touched.placeOfSupplyId
-																					? 'is-invalid'
-																					: ''
-																			}`}
-																		/>
-																		{props.errors.placeOfSupplyId &&
-																			props.touched.placeOfSupplyId && (
-																				<div className="invalid-feedback">
-																					{props.errors.placeOfSupplyId}
-																				</div>
-																			)}
-																	</FormGroup>)}
-																</Col>
-															</Row>
-															<hr />
-															<Row>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="term">
-																			<span className="text-danger">* </span>
-																			{strings.Terms}{' '}
-																			<i
-																			id="UncontrolledTooltipExample"
-																			className="fa fa-question-circle ml-1"
-																		></i>
-																		<UncontrolledTooltip
-																			placement="right"
-																			target="UncontrolledTooltipExample"
-																		>
-																			<p>
-																				{' '}
-																				Terms- The duration given to a buyer for
-																				payment.
-																			</p>
+																						).find(
+																							(option) =>
+																								option.value ===
+																								props.values
+																									.placeOfSupplyId.toString(),
+																						)
+																					}
+																					onChange={(options) => {
+																						if (options && options.value) {
+																							props.handleChange(
+																								'placeOfSupplyId',
+																							)(options.value);
+																						} else {
+																							props.handleChange(
+																								'placeOfSupplyId',
+																							)('');
+																						}
+																					}}
+																					className={`${props.errors.placeOfSupplyId &&
+																						props.touched.placeOfSupplyId
+																						? 'is-invalid'
+																						: ''
+																						}`}
+																				/>
+																				{props.errors.placeOfSupplyId &&
+																					props.touched.placeOfSupplyId && (
+																						<div className="invalid-feedback">
+																							{props.errors.placeOfSupplyId}
+																						</div>
+																					)}
+																			</FormGroup>)}
+																	</Col>
+																</Row>
+																<hr />
+																<Row>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="term">
+																				<span className="text-danger">* </span>
+																				{strings.Terms}{' '}
+																				<i
+																					id="UncontrolledTooltipExample"
+																					className="fa fa-question-circle ml-1"
+																				></i>
+																				<UncontrolledTooltip
+																					placement="right"
+																					target="UncontrolledTooltipExample"
+																				>
+																					<p>
+																						{' '}
+																						Terms- The duration given to a buyer for
+																						payment.
+																					</p>
 
-																			<p>
-																				Net 7 – payment due in 7 days from
-																				invoice date{' '}
-																			</p>
+																					<p>
+																						Net 7 – payment due in 7 days from
+																						invoice date{' '}
+																					</p>
 
-																			<p>
-																				{' '}
-																				Net 10 – payment due in 10 days from
-																				invoice date{' '}
-																			</p>
+																					<p>
+																						{' '}
+																						Net 10 – payment due in 10 days from
+																						invoice date{' '}
+																					</p>
 
-																			<p>
-																				{' '}
-																				Net 30 – payment due in 30 days from
-																				invoice date{' '}
-																			</p>
-																		</UncontrolledTooltip>
-																	</Label>
-																		<Select
-																			options={
-																				this.termList
-																					? selectOptionsFactory.renderOptions(
+																					<p>
+																						{' '}
+																						Net 30 – payment due in 30 days from
+																						invoice date{' '}
+																					</p>
+																				</UncontrolledTooltip>
+																			</Label>
+																			<Select
+																				options={
+																					this.termList
+																						? selectOptionsFactory.renderOptions(
 																							'label',
 																							'value',
 																							this.termList,
 																							'Terms',
-																					  )
-																					: []
-																			}
-																			id="term"
-																			name="term"
-																			placeholder={strings.Select+strings.Terms} 
-																			value={
-																				this.termList &&
-																				this.termList.find(
-																					(option) =>
-																						option.value === props.values.term,
-																				)
-																			}
-																			onChange={(e) => {
-																				if (e.value === '') {
-																					
-																					props.setFieldValue(
-																						'term',
-																						'',
-																					);
-																				} else {
-																					this.setState(
-																						{
-																							term: e.value,
-																						},
-																						() => {
-																							this.setDate(props, '');
-																						},
-																					);
-																					props.handleChange('term')(
-																						e.value,
-																					);
+																						)
+																						: []
 																				}
-																			}}
-																			className={`${
-																				props.errors.term && props.touched.term
-																					? 'is-invalid'
-																					: ''
-																			}`}
-																		/>
-																		{props.errors.term &&
-																			props.touched.term && (
-																				<div className="invalid-feedback">
-																					{props.errors.term}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="date">
-																			<span className="text-danger">* </span>
-																		{strings.InvoiceDate}
-																		</Label>
-																		<DatePicker
-																			id="invoiceDate"
-																			name="invoiceDate"
-																			placeholderText={strings.InvoiceDate}
-																			showMonthDropdown
-																			showYearDropdown
-																			dateFormat="dd-MM-yyyy"
-																			//minDate={new Date()}
-																			dropdownMode="select"
-																			 value={props.values.invoiceDate}
-																			 selected={new Date(props.values.invoiceDate1)} 
-																			
-																			onChange={(value) => {
-																				if((this.state.invoiceDateForVatValidation < this.state.companyVATRegistrationDate && value > this.state.companyVATRegistrationDate ) || (value < this.state.companyVATRegistrationDate && this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)){
-																					this.resetVatId(props);
+																				id="term"
+																				name="term"
+																				placeholder={strings.Select + strings.Terms}
+																				value={
+																					this.termList &&
+																					this.termList.find(
+																						(option) =>
+																							option.value === props.values.term,
+																					)
 																				}
-																				this.setState({invoiceDateForVatValidation : value});
-																				props.handleChange('invoiceDate')(
-																					value
-																				);
-																				this.setDate(props, value);
-																			}}
-																			className={`form-control ${
-																				props.errors.invoiceDate &&
-																				props.touched.invoiceDate
-																					? 'is-invalid'
-																					: ''
-																			}`}
-																		/>
-																		{props.errors.invoiceDate &&
-																			props.touched.invoiceDate && (
-																				<div className="invalid-feedback">
-																					{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate}																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="due_date">
-																			{strings.InvoiceDueDate}
-																		</Label>
-																		<div>
-																			<DatePicker
-																				id="invoiceDueDate"
-																				name="invoiceDueDate"
-																				placeholderText={strings.InvoiceDueDate}
-																				showMonthDropdown
-																				showYearDropdown
-																				disabled
-																				dateFormat="dd-MM-yyyy"
-																				dropdownMode="select"
-																				value={props.values.invoiceDueDate}
-																				onChange={(value) => {
-																					props.handleChange('invoiceDueDate')(
-																						value,
-																					);
+																				onChange={(e) => {
+																					if (e.value === '') {
+
+																						props.setFieldValue(
+																							'term',
+																							'',
+																						);
+																					} else {
+																						this.setState(
+																							{
+																								term: e.value,
+																							},
+																							() => {
+																								this.setDate(props, '');
+																							},
+																						);
+																						props.handleChange('term')(
+																							e.value,
+																						);
+																					}
 																				}}
-																				className={`form-control ${
-																					props.errors.invoiceDueDate &&
-																					props.touched.invoiceDueDate
-																						? 'is-invalid'
-																						: ''
-																				}`}
+																				className={`${props.errors.term && props.touched.term
+																					? 'is-invalid'
+																					: ''
+																					}`}
 																			/>
-																			{props.errors.invoiceDueDate &&
-																				props.touched.invoiceDueDate && (
+																			{props.errors.term &&
+																				props.touched.term && (
 																					<div className="invalid-feedback">
-																					{props.errors.invoiceDueDate}
-																						{/* {props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate} */}
+																						{props.errors.term}
 																					</div>
 																				)}
-																		</div>
-																	</FormGroup>
-																</Col>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="currencyCode">
-																			<span className="text-danger">* </span>
-																			{strings.Currency}
-																		</Label>
-																		<Select
-																		isDisabled={true}
-																		styles={customStyles}
-																			options={
-																				currency_convert_list
-																					? selectCurrencyFactory.renderOptions(
+																		</FormGroup>
+																	</Col>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="date">
+																				<span className="text-danger">* </span>
+																				{strings.InvoiceDate}
+																			</Label>
+																			<DatePicker
+																				id="invoiceDate"
+																				name="invoiceDate"
+																				placeholderText={strings.InvoiceDate}
+																				showMonthDropdown
+																				showYearDropdown
+																				dateFormat="dd-MM-yyyy"
+																				//minDate={new Date()}
+																				dropdownMode="select"
+																				value={props.values.invoiceDate}
+																				selected={new Date(props.values.invoiceDate1)}
+
+																				onChange={(value) => {
+																					if ((this.state.invoiceDateForVatValidation < this.state.companyVATRegistrationDate && value > this.state.companyVATRegistrationDate) || (value < this.state.companyVATRegistrationDate && this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)) {
+																						this.resetVatId(props);
+																					}
+																					this.setState({ invoiceDateForVatValidation: value });
+																					props.handleChange('invoiceDate')(
+																						value
+																					);
+																					this.setDate(props, value);
+																				}}
+																				className={`form-control ${props.errors.invoiceDate &&
+																					props.touched.invoiceDate
+																					? 'is-invalid'
+																					: ''
+																					}`}
+																			/>
+																			{props.errors.invoiceDate &&
+																				props.touched.invoiceDate && (
+																					<div className="invalid-feedback">
+																						{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" : props.errors.invoiceDate}																				</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="due_date">
+																				{strings.InvoiceDueDate}
+																			</Label>
+																			<div>
+																				<DatePicker
+																					id="invoiceDueDate"
+																					name="invoiceDueDate"
+																					placeholderText={strings.InvoiceDueDate}
+																					showMonthDropdown
+																					showYearDropdown
+																					disabled
+																					dateFormat="dd-MM-yyyy"
+																					dropdownMode="select"
+																					value={props.values.invoiceDueDate}
+																					onChange={(value) => {
+																						props.handleChange('invoiceDueDate')(
+																							value,
+																						);
+																					}}
+																					className={`form-control ${props.errors.invoiceDueDate &&
+																						props.touched.invoiceDueDate
+																						? 'is-invalid'
+																						: ''
+																						}`}
+																				/>
+																				{props.errors.invoiceDueDate &&
+																					props.touched.invoiceDueDate && (
+																						<div className="invalid-feedback">
+																							{props.errors.invoiceDueDate}
+																							{/* {props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate} */}
+																						</div>
+																					)}
+																			</div>
+																		</FormGroup>
+																	</Col>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="currencyCode">
+																				<span className="text-danger">* </span>
+																				{strings.Currency}
+																			</Label>
+																			<Select
+																				isDisabled={true}
+																				styles={customStyles}
+																				options={
+																					currency_convert_list
+																						? selectCurrencyFactory.renderOptions(
 																							'currencyName',
 																							'currencyCode',
 																							currency_convert_list,
 																							'Currency',
-																					  )
-																					: []
-																			}
-																			id="currencyCode"
-																			name="currencyCode"
-																			placeholder={strings.Select+strings.Currency}
-																			value={
-																				currency_convert_list &&
-																				selectCurrencyFactory
-																					.renderOptions(
-																						'currencyName',
-																						'currencyCode',
-																						currency_convert_list,
-																						'Currency',
+																						)
+																						: []
+																				}
+																				id="currencyCode"
+																				name="currencyCode"
+																				placeholder={strings.Select + strings.Currency}
+																				value={
+																					currency_convert_list &&
+																					selectCurrencyFactory
+																						.renderOptions(
+																							'currencyName',
+																							'currencyCode',
+																							currency_convert_list,
+																							'Currency',
+																						)
+																						.find(
+																							(option) =>
+																								option.value ===
+																								(this.state.customer_currency ? +this.state.customer_currency : +props.values.currencyCode),
+																						)
+																				}
+																				onChange={(option) =>
+																					props.handleChange('currencyCode')(
+																						option.value,
 																					)
-																					.find(
-																						(option) =>
-																							option.value ===
-																							(this.state.customer_currency ? +this.state.customer_currency : +props.values.currencyCode),
-																					)
-																			}
-																			onChange={(option) =>
-																				props.handleChange('currencyCode')(
-																					option.value,
-																				)
-																			}
-																			className={`${
-																				props.errors.currencyCode &&
-																				props.touched.currency
+																				}
+																				className={`${props.errors.currencyCode &&
+																					props.touched.currency
 																					? 'is-invalid'
 																					: ''
-																			}`}
-																		/>
-																		{props.errors.currencyCode &&
-																			props.touched.currencyCode && (
+																					}`}
+																			/>
+																			{props.errors.currencyCode &&
+																				props.touched.currencyCode && (
+																					<div className="invalid-feedback">
+																						{props.errors.currencyCode}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																</Row>
+																<hr />
+																<Row>
+																	<Col>
+																		<FormGroup check inline className="mb-3">
+																			<div>
+																				<Input
+																					// className="custom-control-input"
+																					type="checkbox"
+																					id="inline-radio1"
+																					name="SMTP-auth"
+																					checked={props.values.changeShippingAddress}
+																					onChange={(value) => {
+																						if (value != null) {
+																							props.handleChange('changeShippingAddress')(
+																								value,
+																							);
+																							props.handleChange('shippingAddress')("");
+																							props.handleChange('shippingCity')("");
+																							props.handleChange('shippingCountryId')("");
+																							props.handleChange('shippingStateId')("");
+																							props.handleChange('shippingTelephone')("");
+																							props.handleChange('shippingPostZipCode')("");
+																							props.handleChange('shippingFax')("");
+																						} else {
+																							props.handleChange('changeShippingAddress')(
+																								'',
+																							);
+																						}
+																					}}
+																				/>
+																				<label htmlFor="inline-radio1">
+																					{strings.noteforchangeaddress}
+																				</label>
+																			</div>
+																		</FormGroup>
+
+																	</Col>
+																</Row>
+
+																<Row style={{ display: props.values.changeShippingAddress === true ? '' : 'none' }}>
+																	<Col md="4">
+																		<FormGroup>
+																			<Label htmlFor="shippingAddress"><span className="text-danger">* </span>
+																				{strings.ShippingAddress}
+																			</Label>
+																			<Input
+																				type="text"
+																				maxLength="100"
+																				id="shippingAddress"
+																				name="shippingAddress"
+																				placeholder={strings.Enter + strings.ShippingAddress}
+																				onChange={(option) => {
+																					if (
+																						option.target.value === '' ||
+																						this.regExAddress.test(
+																							option.target.value,
+																						)
+																					) {
+
+																						props.handleChange('shippingAddress')(
+																							option,
+																						);
+																					}
+																				}}
+																				value={props.values.shippingAddress}
+																				className={
+																					props.errors.shippingAddress &&
+																						props.touched.shippingAddress
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.shippingAddress &&
+																				props.touched.shippingAddress && (
+																					<div className="invalid-feedback">
+																						{props.errors.shippingAddress}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col md="4">
+																		<FormGroup>
+																			<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
+																			<Select
+																				options={
+																					country_list
+																						? selectOptionsFactory.renderOptions(
+																							'countryName',
+																							'countryCode',
+																							country_list,
+																							'Country',
+																						)
+																						: []
+																				}
+																				value={
+																					country_list &&
+																					selectOptionsFactory
+																						.renderOptions(
+																							'countryName',
+																							'countryCode',
+																							country_list,
+																							'Country',
+																						)
+																						.find(
+																							(option) =>
+																								option.value ===
+																								+props.values.shippingCountryId,
+																						)
+																				}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						props.handleChange('shippingCountryId')(option);
+																						this.getStateListForShippingAddress(option.value);
+																					} else {
+																						props.handleChange('shippingCountryId')('');
+																						// this.getStateListForShippingAddress("");
+																					}
+																					props.handleChange('stateId')({
+																						label: 'Select State',
+																						value: '',
+																					});
+																				}}
+																				placeholder={strings.Select + strings.Country}
+																				id="shippingCountryId"
+																				name="shippingCountryId"
+																				className={
+																					props.errors.shippingCountryId &&
+																						props.touched.shippingCountryId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.shippingCountryId &&
+																				props.touched.shippingCountryId && (
+																					<div className="invalid-feedback">
+																						{props.errors.shippingCountryId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col md="4">
+																		<FormGroup>
+																			<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
+																				{/* {strings.StateRegion} */}
+																				{props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion}
+																			</Label>
+																			<Select
+																				options={
+																					state_list_for_shipping
+																						? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							state_list_for_shipping,
+																							props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion,
+																						)
+																						: []
+																				}
+																				value={
+																					state_list_for_shipping.find(
+																						(option) =>
+																							option.value ===
+																							+props.values.shippingStateId,
+																					)
+																				}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						props.handleChange('shippingStateId')(option);
+																					} else {
+																						props.handleChange('shippingStateId')('');
+																					}
+																				}}
+																				placeholder={props.values.shippingCountryId.value == 229 ? strings.Emirate : strings.StateRegion}
+																				id="shippingStateId"
+																				name="shippingStateId"
+																				className={
+																					props.errors.shippingStateId &&
+																						props.touched.shippingStateId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.shippingStateId &&
+																				props.touched.shippingStateId && (
+																					<div className="invalid-feedback">
+																						{props.errors.shippingStateId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																</Row>
+																<Row style={{ display: props.values.changeShippingAddress === true ? '' : 'none' }}>
+																	<Col md="4">
+																		<FormGroup>
+																			<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
+																			<Input
+																				// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
+																				value={props.values.shippingCity}
+																				onChange={(option) => {
+																					if (
+																						option.target.value === '' ||
+																						this.regExCity.test(
+																							option.target.value,
+																						)
+																					) {
+
+																						props.handleChange('shippingCity')(option);
+																					}
+																				}}
+																				placeholder={strings.Location}
+																				id="shippingCity"
+																				name="shippingCity"
+																				type="text"
+																				maxLength="100"
+																				className={
+																					props.errors.shippingCity && props.touched.shippingCity
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.shippingCity && props.touched.shippingCity && (
 																				<div className="invalid-feedback">
-																					{props.errors.currencyCode}
+																					{props.errors.shippingCity}
+																				</div>
+																			)}
+																		</FormGroup>
+																	</Col>
+																	<Col md="4" ><FormGroup>
+
+																		{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?
+																			<Label htmlFor="POBoxNumber">
+																				<span className="text-danger">* </span>{strings.POBoxNumber}
+																			</Label> :
+																			<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
+																		}
+																		<Input
+																			type="text"
+																			maxLength="6"
+																			id="shippingPostZipCode"
+																			name="shippingPostZipCode"
+																			autoComplete="Off"
+																			placeholder={props.values.shippingCountryId && (props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229) ?
+																				strings.Enter + strings.POBoxNumber : strings.Enter + strings.PostZipCode}
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regEx.test(option.target.value)
+																				) {
+																					props.handleChange('shippingPostZipCode')(
+																						option,
+																					);
+																				}
+
+																			}}
+																			value={props.values.shippingPostZipCode}
+																			className={
+																				props.errors.shippingPostZipCode &&
+																					props.touched.shippingPostZipCode
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.shippingPostZipCode &&
+																			props.touched.shippingPostZipCode && (
+																				<div className="invalid-feedback">
+																					{props.errors.shippingPostZipCode}
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>
-																</Row>
-																<hr/>
-														<Row>
-															<Col>
-															<FormGroup check inline className="mb-3">
-																					<div>
-																						<Input
-																							// className="custom-control-input"
-																							type="checkbox"
-																							id="inline-radio1"
-																							name="SMTP-auth"
-																							checked={props.values.changeShippingAddress}
-																							onChange={(value) => {
-																								if(value != null){
-																								props.handleChange('changeShippingAddress')(
-																									value,
-																								);
-																								props.handleChange('shippingAddress')("");
-																								props.handleChange('shippingCity')("");
-																								props.handleChange('shippingCountryId')("");
-																								props.handleChange('shippingStateId')("");
-																								props.handleChange('shippingTelephone')("");
-																								props.handleChange('shippingPostZipCode')("");
-																								props.handleChange('shippingFax')("");
-																								}else{
-																									props.handleChange('changeShippingAddress')(
-																										'',
-																									);
-																								}
-																							}}
-																						/>
-																						<label htmlFor="inline-radio1">
-																						{strings.noteforchangeaddress}
-																					</label>
-																					</div>
-																				</FormGroup>
-														
-                                                                    </Col>
-														</Row>
-														
-														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
-															<Col md="4">
-																<FormGroup>
-																	<Label htmlFor="shippingAddress"><span className="text-danger">* </span>
-																		{strings.ShippingAddress}
-																	</Label>
-																	<Input
-																	type="text"
-																		maxLength="100"
-																		id="shippingAddress"
-																		name="shippingAddress"
-																		placeholder={strings.Enter + strings.ShippingAddress}
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regExAddress.test(
-																					option.target.value,
-																				)
-																			) {
-																				
-																				props.handleChange('shippingAddress')(
-																					option,
-																				);
-																			}
-																		}}
-																		value={props.values.shippingAddress}
-																		className={
-																			props.errors.shippingAddress &&
-																				props.touched.shippingAddress
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.shippingAddress &&
-																		props.touched.shippingAddress && (
-																			<div className="invalid-feedback">
-																				{props.errors.shippingAddress}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-															<Col md="4">
-																<FormGroup>
-																	<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
-																	<Select
-																		options={
-																			country_list
-																				? selectOptionsFactory.renderOptions(
-																					'countryName',
-																					'countryCode',
-																					country_list,
-																					'Country',
-																				)
-																				: []
-																		}
-																		value={
-																			country_list &&
-																				selectOptionsFactory
-																					.renderOptions(
-																						'countryName',
-																						'countryCode',
-																						country_list,
-																						'Country',
-																					)
-																					.find(
-																						(option) =>
-																							option.value ===
-																							+props.values.shippingCountryId,
-																					)
-																		}
-																		onChange={(option) => {
-																			if (option && option.value) {
-																				props.handleChange('shippingCountryId')(option);
-																				this.getStateListForShippingAddress(option.value);
-																			} else {
-																				props.handleChange('shippingCountryId')('');
-																				// this.getStateListForShippingAddress("");
-																			}
-																			props.handleChange('stateId')({
-																				label: 'Select State',
-																				value: '',
-																			});
-																		}}
-																		placeholder={strings.Select + strings.Country}
-																		id="shippingCountryId"
-																		name="shippingCountryId"
-																		className={
-																			props.errors.shippingCountryId &&
-																				props.touched.shippingCountryId
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.shippingCountryId &&
-																		props.touched.shippingCountryId && (
-																			<div className="invalid-feedback">
-																				{props.errors.shippingCountryId}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-															<Col md="4">
-																<FormGroup>
-																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
-																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId.value === 229 ?strings.Emirate : strings.StateRegion}
-																	</Label>
-																	<Select
-																		options={
-																			state_list_for_shipping
-																				? selectOptionsFactory.renderOptions(
-																					'label',
-																					'value',
-																					state_list_for_shipping,
-																					props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion,
-																				)
-																				: []
-																		}
-																		value={
-																			state_list_for_shipping.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.shippingStateId,
-																				)
-																		}
-																		onChange={(option) => {
-																			if (option && option.value) {
-																				props.handleChange('shippingStateId')(option);
-																			} else {
-																				props.handleChange('shippingStateId')('');
-																			}
-																		}}
-																		placeholder={props.values.shippingCountryId.value == 229 ?strings.Emirate : strings.StateRegion}
-																		id="shippingStateId"
-																		name="shippingStateId"
-																		className={
-																			props.errors.shippingStateId &&
-																				props.touched.shippingStateId
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.shippingStateId &&
-																		props.touched.shippingStateId && (
-																			<div className="invalid-feedback">
-																				{props.errors.shippingStateId}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-														</Row>
-														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
-														<Col md="4">
-																<FormGroup>
-																	<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
-																	<Input
-																		// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
-																		value={props.values.shippingCity}
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regExCity.test(
-																					option.target.value,
-																				)
-																			) {
-																				
-																				props.handleChange('shippingCity')(option);
-																			}
-																		}}
-																		placeholder={strings.Location}
-																		id="shippingCity"
-																		name="shippingCity"
-																		type="text"
-																		maxLength="100"
-																		className={
-																			props.errors.shippingCity && props.touched.shippingCity
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.shippingCity && props.touched.shippingCity && (
-																		<div className="invalid-feedback">
-																			{props.errors.shippingCity}
-																		</div>
-																	)}
-																</FormGroup>
-															</Col>
-																			<Col md="4" ><FormGroup>
-																			
-																					{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?
-																					<Label htmlFor="POBoxNumber">
-																						<span className="text-danger">* </span>{strings.POBoxNumber}
-																					</Label>:
-																					<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
-																						}
-																				<Input
-																					type="text"
-																					maxLength="6"
-																					id="shippingPostZipCode"
-																					name="shippingPostZipCode"
-																					autoComplete="Off"
-																					placeholder={props.values.shippingCountryId &&( props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229) ?
-																						strings.Enter + strings.POBoxNumber : strings.Enter + strings.PostZipCode}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regEx.test(option.target.value)
-																						) {
-																							props.handleChange('shippingPostZipCode')(
-																								option,
-																							);
-																						}
+																	</Col>
 
-																					}}
-																					value={props.values.shippingPostZipCode}
-																					className={
-																						props.errors.shippingPostZipCode &&
-																							props.touched.shippingPostZipCode
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingPostZipCode &&
-																					props.touched.shippingPostZipCode && (
-																						<div className="invalid-feedback">
-																							{props.errors.shippingPostZipCode}
-																						</div>
-																					)}
-																			</FormGroup>
-																			</Col>
-
-															{/* <Col md="4">
+																	{/* <Col md="4">
 																<FormGroup>
 																	<Label htmlFor="shippingTelephone">{strings.Telephone}</Label>
 																	<Input
@@ -2958,202 +2991,196 @@ class DetailCustomerInvoice extends React.Component {
 																		)}
 																</FormGroup>
 															</Col> */}
-									
-														</Row>
+
+																</Row>
 																<hr />
 
-																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
-																<Col>
-																<Label htmlFor="currency">
-																		{strings.CurrencyExchangeRate}
-																	</Label>	
-																</Col>
+																<Row style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}>
+																	<Col>
+																		<Label htmlFor="currency">
+																			{strings.CurrencyExchangeRate}
+																		</Label>
+																	</Col>
 																</Row>
-																
-																<Row 
-																 style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}
+
+																<Row
+																	style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}
 																>
-																<Col md={1}>
-																<Input
-																		disabled
-																				id="1"
-																				name="1"
-																				value=	{
-																					1 }
-																				
-																			/>
-																</Col>
-																<Col md={2}>
-																<FormGroup className="mb-3">
-																	{/* <Label htmlFor="exchangeRate">
+																	<Col md={1}>
+																		<Input
+																			disabled
+																			id="1"
+																			name="1"
+																			value={
+																				1}
+
+																		/>
+																	</Col>
+																	<Col md={2}>
+																		<FormGroup className="mb-3">
+																			{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
 																	</Label> */}
-																	<div>
+																			<div>
+																				<Input
+																					disabled
+																					className="form-control"
+																					id="currencyName"
+																					name="currencyName"
+																					placeholder='Select Currency'
+																					value={this.state.customer_currency_des ? this.state.customer_currency_des : props.values.currencyName}
+																					onChange={(value) => {
+																						props.handleChange('currencyName')(
+																							value,
+																						);
+																					}}
+																				/>
+																			</div>
+																		</FormGroup>
+																	</Col>
+																	<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+																	<Col lg={2}>
+																		<FormGroup className="mb-3">
+																			{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																			<div>
+																				<Input
+																					type="number"
+																					//min="0"
+																					maxLength="14,2"
+																					className="form-control"
+																					id="exchangeRate"
+																					name="exchangeRate"
+																					value={props.values.exchangeRate}
+																					onChange={(value) => {
+																						props.handleChange('exchangeRate')(
+																							value,
+																						);
+																						this.exchangeRaterevalidate(parseFloat(value.target.value))
+																					}}
+																				/>
+																			</div>
+																		</FormGroup>
+																	</Col>
+
+																	<Col md={2}>
 																		<Input
-																		disabled	
-																			className="form-control"
+																			disabled
 																			id="currencyName"
 																			name="currencyName"
-																			placeholder='Select Currency'
-																			value={this.state.customer_currency_des ? this.state.customer_currency_des : props.values.currencyName}
-																			onChange={(value) => {
-																				props.handleChange('currencyName')(
-																					value,
-																				);
-																			}}
+																			value={
+																				this.state.basecurrency.currencyName}
+
 																		/>
-																	</div>
-																</FormGroup>
-															</Col>
-															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={2}>
-																<FormGroup className="mb-3">
-																	{/* <Label htmlFor="exchangeRate">
-																		Exchange rate
-																	</Label> */}
-																	<div>
-																		<Input
-																			type="number"
-																			//min="0"
-																			maxLength="14,2"
-																			className="form-control"
-																			id="exchangeRate"
-																			name="exchangeRate"
-																			value={props.values.exchangeRate}
-																			onChange={(value) => {
-																				props.handleChange('exchangeRate')(
-																					value,
-																				);
-																				this.exchangeRaterevalidate(parseFloat(value.target.value))
+																	</Col>
+
+																	<hr />
+																</Row>
+
+																<hr style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }} />
+																<Row className="mb-1">
+																	<Col lg={8}>
+																		<Button
+																			color="primary"
+																			className="btn-square mr-3"
+																			onClick={(e, props) => {
+																				this.openProductModal()
 																			}}
+																		>
+																			<i className="fa fa-plus"></i> {strings.Addproduct}
+																		</Button>
+																	</Col>
+																	<Col>
+
+																		{this.state.taxType === false ?
+																			<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																			<span className='mr-4'>{strings.Exclusive}</span>}
+																		<Switch
+																			value={props.values.taxType}
+																			checked={this.state.taxType}
+																			onChange={(taxType) => {
+
+																				props.handleChange('taxType')(taxType);
+																				this.setState({ taxType }, () => {
+																					this.updateAmount(
+																						this.state.data,
+																						props
+																					)
+																				});
+
+
+																			}}
+
+																			onColor="#2064d8"
+																			onHandleColor="#2693e6"
+																			handleDiameter={25}
+																			uncheckedIcon={false}
+																			checkedIcon={false}
+																			boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																			activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																			height={20}
+																			width={48}
+																			className="react-switch "
 																		/>
-																	</div>
-																</FormGroup>
-															</Col>
-														
-															<Col md={2}>
-															<Input
-																		disabled
-																				id="currencyName"
-																				name="currencyName"
-																				value=	{
-																					this.state.basecurrency.currencyName }
-																				
-																			/>
-														</Col>
-														
-														<hr />
-														</Row>
-														
-															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
-															<Row className="mb-3">
-																<Col lg={8} className="mb-3">
-																	{/* <Button
-																		color="primary"
-																		className={`btn-square mr-3 ${
-																			this.checkedRow() ? `disabled-cursor` : ``
-																		} `}
-																		onClick={this.addRow}
-																		title={
-																			this.checkedRow()
-																				? `Please add detail to add more`
-																				: ''
+																		{this.state.taxType === true ?
+																			<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																			: <span className='ml-4'>{strings.Inclusive}</span>
 																		}
-																		disabled={this.checkedRow() ? true : false}
-																	>
-																		<i className="fa fa-plus"></i> {strings.Addmore}
-																	</Button> */}
-																</Col>
-																<Col  >
-																
-																{this.state.taxType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
-																	<span className='mr-4'>{strings.Exclusive}</span>}
-																<Switch
-																	value={props.values.taxType}
-																	checked={this.state.taxType}
-																	onChange={(taxType) => {
 
-																		props.handleChange('taxType')(taxType);
-																		this.setState({ taxType }, () => {
-																			this.updateAmount(
-																				this.state.data,
-																				props
-																			)
-																		});
+																	</Col>
+																</Row>
 
 
-																	}}
-
-																	onColor="#2064d8"
-																	onHandleColor="#2693e6"
-																	handleDiameter={25}
-																	uncheckedIcon={false}
-																	checkedIcon={false}
-																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-																	height={20}
-																	width={48}
-																	className="react-switch "
-																/>
-																{this.state.taxType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
-																	: <span className='ml-4'>{strings.Inclusive}</span>
-																}
-																
-															</Col>
-															</Row>
-															
-													
-															<Row>
-																{props.errors.lineItemsString &&
-																	typeof props.errors.lineItemsString ===
+																<Row>
+																	{props.errors.lineItemsString &&
+																		typeof props.errors.lineItemsString ===
 																		'string' && (
-																		<div
-																			className={
-																				props.errors.lineItemsString
-																					? 'is-invalid'
-																					: ''
-																			}
-																		>
-																			<div className="invalid-feedback">
-																				{props.errors.lineItemsString}
+																			<div
+																				className={
+																					props.errors.lineItemsString
+																						? 'is-invalid'
+																						: ''
+																				}
+																			>
+																				<div className="invalid-feedback">
+																					{props.errors.lineItemsString}
+																				</div>
 																			</div>
-																		</div>
-																	)}
-																<Col lg={12}>
-																	<BootstrapTable
-																		options={this.options}
-																		data={data}
-																		version="4"
-																		hover
-																		keyField="id"
-																		className="invoice-create-table"
-																	>
-																		<TableHeaderColumn
-																			width="3%"
-																			dataAlign="center"
-																			dataFormat={(cell, rows) =>
-																				this.renderActions(cell, rows, props)
-																			}
-																		></TableHeaderColumn>
-																		<TableHeaderColumn
-																		width="17%"
-																			dataField="product"
-																			dataFormat={(cell, rows) =>
-																				this.renderProduct(cell, rows, props)
-																			}
+																		)}
+																	<Col lg={12}>
+																		<BootstrapTable
+																			options={this.options}
+																			data={data}
+																			version="4"
+																			hover
+																			keyField="id"
+																			className="invoice-create-table"
 																		>
-																			{strings.PRODUCT}
-																		</TableHeaderColumn>
-																		{/* <TableHeaderColumn
+																			<TableHeaderColumn
+																				width="3%"
+																				dataAlign="center"
+																				dataFormat={(cell, rows) =>
+																					this.renderActions(cell, rows, props)
+																				}
+																			></TableHeaderColumn>
+																			<TableHeaderColumn
+																				//	width="17%"
+																				dataField="product"
+																				dataFormat={(cell, rows) =>
+																					this.renderProduct(cell, rows, props)
+																				}
+																			>
+																				{strings.PRODUCT}
+																			</TableHeaderColumn>
+																			{/* <TableHeaderColumn
 																		width="55"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
 																	></TableHeaderColumn> */}
-																		{/* <TableHeaderColumn
+																			{/* <TableHeaderColumn
 																			dataField="description"
 																			dataFormat={(cell, rows) =>
 																				this.renderDescription(
@@ -3165,16 +3192,16 @@ class DetailCustomerInvoice extends React.Component {
 																		>
 																			{strings.DESCRIPTION}
 																		</TableHeaderColumn> */}
-																		<TableHeaderColumn
-																			dataField="quantity"
-																			width="13%"
-																			dataFormat={(cell, rows) =>
-																				this.renderQuantity(cell, rows, props)
-																			}
-																		>
-																			{strings.QUANTITY}
-																		</TableHeaderColumn>
-																		{/* <TableHeaderColumn
+																			<TableHeaderColumn
+																				dataField="quantity"
+																				//width="13%"
+																				dataFormat={(cell, rows) =>
+																					this.renderQuantity(cell, rows, props)
+																				}
+																			>
+																				{strings.QUANTITY}
+																			</TableHeaderColumn>
+																			{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}	<i
@@ -3189,103 +3216,108 @@ class DetailCustomerInvoice extends React.Component {
 																		Units / Measurements
 																	 </UncontrolledTooltip>
 																 </TableHeaderColumn>  */}
-																		<TableHeaderColumn
-																			dataField="unitPrice"
-																			dataFormat={(cell, rows) =>
-																				this.renderUnitPrice(cell, rows, props)
+																			<TableHeaderColumn
+																				dataField="unitPrice"
+																				dataFormat={(cell, rows) =>
+																					this.renderUnitPrice(cell, rows, props)
+																				}
+																			>
+																				{strings.UNITPRICE}
+																			</TableHeaderColumn>
+																			{this.state.discountEnabled == true &&
+																				<TableHeaderColumn
+																					//width="12%"
+																					dataField="discount"
+																					dataFormat={(cell, rows) =>
+																						this.renderDiscount(cell, rows, props)
+																					}
+																				>
+																					{strings.Discount}
+																				</TableHeaderColumn>}
+																			{initValue.total_excise != 0 &&
+																				<TableHeaderColumn
+																					//width="10%"
+																					dataField="exciseTaxId"
+																					dataFormat={(cell, rows) =>
+																						this.renderExcise(cell, rows, props)
+																					}
+																				>
+																					{strings.Excises}
+																					<i
+																						id="ExiseTooltip"
+																						className="fa fa-question-circle ml-1"
+																					></i>
+																					<UncontrolledTooltip
+																						placement="right"
+																						target="ExiseTooltip"
+																					>
+																						Excise dropdown will be enabled only for the excise products
+																					</UncontrolledTooltip>
+																				</TableHeaderColumn>}
+																			{isRegisteredVat &&
+																				<TableHeaderColumn
+																					dataField="vat"
+																					dataFormat={(cell, rows) =>
+																						this.renderVat(cell, rows, props)
+																					}
+																				//width="13%"
+																				>
+																					{strings.VAT}
+																				</TableHeaderColumn>
 																			}
-																		>
-																			{strings.UNITPRICE}
-																		</TableHeaderColumn>
-																		{this.state.discountEnabled == true &&
-																	<TableHeaderColumn
-																		width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																	>
-																		{strings.Discount}
-																	</TableHeaderColumn>}
-																		{initValue.total_excise != 0 &&
-																		<TableHeaderColumn
-																	width="10%"
-																		dataField="exciseTaxId"
-																		dataFormat={(cell, rows) =>
-																			this.renderExcise(cell, rows, props)
-																		}
-																	>
-																	{strings.Excises}
-																	<i
-																			id="ExiseTooltip"
-																			className="fa fa-question-circle ml-1"
-																		></i>
-																		<UncontrolledTooltip
-																			placement="right"
-																			target="ExiseTooltip"
-																		>
-																			Excise dropdown will be enabled only for the excise products
-																		</UncontrolledTooltip>
-																	</TableHeaderColumn> }
-																	<TableHeaderColumn
-																			dataField="vat"
-																			dataFormat={(cell, rows) =>
-																				this.renderVat(cell, rows, props)
+																			{isRegisteredVat &&
+																				<TableHeaderColumn
+																					dataField="vat_amount"
+																					dataFormat={this.renderVatAmount}
+																					className="text-right"
+																					columnClassName="text-right"
+																					formatExtraData={universal_currency_list}
+																				>
+																					{strings.VATAMOUNT}
+																				</TableHeaderColumn>
 																			}
-																			width="13%"
-																		>
-																			{strings.VAT}
-																		</TableHeaderColumn>
-																		<TableHeaderColumn
-                                                                        dataField="vat_amount"
-																		dataFormat={this.renderVatAmount}
-																		className="text-right"
-																		columnClassName="text-right"
-																		formatExtraData={universal_currency_list}
-																	>
-																		{strings.VATAMOUNT}
-																	</TableHeaderColumn>
-																		<TableHeaderColumn
-																			dataField="sub_total"
-																			dataFormat={this.renderSubTotal}
-																			className="text-right"
-																			columnClassName="text-right"
-																			formatExtraData={universal_currency_list}
-																		>
-																			{strings.SUBTOTAL}
-																		</TableHeaderColumn>
-																	</BootstrapTable>
-																</Col>
-															</Row>
-															<Row className="ml-4 ">
-															<Col className=" ml-4">
-																<FormGroup className='pull-right'>
-																<Input
-																	type="checkbox"
-																	id="discountEnabled"
-																	checked={this.state.discountEnabled}
-																	onChange={(option) => {
-																		if(initValue.discount > 0){
-																			this.setState({ discountEnabled: true })
-																		}else{
-																		this.setState({ discountEnabled: !this.state.discountEnabled })}
-																	}}
-																/>
-																<Label>{strings.ApplyLineItemDiscount}</Label>
-																</FormGroup>
-															</Col>
-														</Row>
-															{data.length > 0 && (
-																<Row>
-																	<Col lg={6}>
+																			<TableHeaderColumn
+																				dataField="sub_total"
+																				dataFormat={this.renderSubTotal}
+																				className="text-right"
+																				columnClassName="text-right"
+																				formatExtraData={universal_currency_list}
+																			>
+																				{strings.SUBTOTAL}
+																			</TableHeaderColumn>
+																		</BootstrapTable>
+																	</Col>
+																</Row>
+																<Row className="ml-4 ">
+																	<Col className=" ml-4">
+																		<FormGroup className='pull-right'>
+																			<Input
+																				type="checkbox"
+																				id="discountEnabled"
+																				checked={this.state.discountEnabled}
+																				onChange={(option) => {
+																					if (initValue.discount > 0) {
+																						this.setState({ discountEnabled: true })
+																					} else {
+																						this.setState({ discountEnabled: !this.state.discountEnabled })
+																					}
+																				}}
+																			/>
+																			<Label>{strings.ApplyLineItemDiscount}</Label>
+																		</FormGroup>
+																	</Col>
+																</Row>
+																{data.length > 0 && (
+																	<Row>
+																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																				{strings.ReferenceNumber}
+																					{strings.ReferenceNumber}
 																				</Label>
 																				<Input
 																					type="text"
 																					maxLength="20"
-																					style={{width: "500px"}}
+																					style={{ width: "500px" }}
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
@@ -3301,213 +3333,214 @@ class DetailCustomerInvoice extends React.Component {
 																				)}
 																			</FormGroup>
 																		</Col>
-																	<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
-																		<TextField
-																			type="textarea"
-																			className="textarea form-control"
-																			maxLength="255"
-																			style={{width: "500px"}}
-																			name="notes"
-																			id="notes"
-																			rows="2"
-																			placeholder={strings.DeliveryNotes}
-																			onChange={(option) =>
-																				props.handleChange('notes')(option)
-																			}
-																			value={props.values.notes}
-																		/>
-																	</FormGroup>
-																	<Row>
-																		
-																		<Col lg={6}>
-																			<FormGroup className="mb-3 hideAttachment">
-																				<Field
-																					name="attachmentFile"
-																					render={({ field, form }) => (
-																						<div>
-																							<Label>{strings.ReceiptAttachment}</Label>{' '}
-																							<br />
-																							<Button
-																								color="primary"
-																								onClick={() => {
-																									document
-																										.getElementById('fileInput')
-																										.click();
-																								}}
-																								className="btn-square mr-3"
-																							>
-																								<i className="fa fa-upload"></i>{' '}
-																								{strings.upload}
-																							</Button>
-																							<input
-																								id="fileInput"
-																								ref={(ref) => {
-																									this.uploadFile = ref;
-																								}}
-																								type="file"
-																								style={{ display: 'none' }}
-																								onChange={(e) => {
-																									this.handleFileChange(
-																										e,
-																										props,
-																									);
-																								}}
-																							
-																							/>
-																							{this.state.fileName && (
+																		<Col lg={8}>
+																			<FormGroup className="py-2">
+																				<Label htmlFor="notes">{strings.Notes}</Label><br />
+																				<TextField
+																					type="textarea"
+																					className="textarea form-control"
+																					maxLength="255"
+																					style={{ width: "500px" }}
+																					name="notes"
+																					id="notes"
+																					rows="2"
+																					placeholder={strings.DeliveryNotes}
+																					onChange={(option) =>
+																						props.handleChange('notes')(option)
+																					}
+																					value={props.values.notes}
+																				/>
+																			</FormGroup>
+																			<Row>
+
+																				<Col lg={6}>
+																					<FormGroup className="mb-3 hideAttachment">
+																						<Field
+																							name="attachmentFile"
+																							render={({ field, form }) => (
 																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
+																									<Label>{strings.ReceiptAttachment}</Label>{' '}
+																									<br />
+																									<Button
+																										color="primary"
+																										onClick={() => {
+																											document
+																												.getElementById('fileInput')
+																												.click();
+																										}}
+																										className="btn-square mr-3"
+																									>
+																										<i className="fa fa-upload"></i>{' '}
+																										{strings.upload}
+																									</Button>
+																									<input
+																										id="fileInput"
+																										ref={(ref) => {
+																											this.uploadFile = ref;
+																										}}
+																										type="file"
+																										style={{ display: 'none' }}
+																										onChange={(e) => {
+																											this.handleFileChange(
+																												e,
+																												props,
+																											);
+																										}}
+
+																									/>
+																									{this.state.fileName && (
+																										<div>
+																											<i
+																												className="fa fa-close"
+																												onClick={() =>
+																													this.setState({
+																														fileName: '',
+																													})
+																												}
+																											></i>{' '}
+																											{this.state.fileName}
+																										</div>
+																									)}
 																								</div>
 																							)}
-																						</div>
-																					)}
-																				/>
-																				{props.errors.attachmentFile &&
-																					props.touched.attachmentFile && (
-																						<div className="invalid-file">
-																							{props.errors.attachmentFile}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																	</Row>
-																	<FormGroup className="mb-3 hideAttachment">
-																		<Label htmlFor="receiptAttachmentDescription">
-																			{strings.AttachmentDescription}
-																		</Label>
-																		<br/>
-																		<TextField
-																			type="textarea"
-																			className="textarea form-control"
-																			maxLength="255"
-																			style={{width: "500px"}}
-																			name="receiptAttachmentDescription"
-																			id="receiptAttachmentDescription"
-																			rows="2"
-																			placeholder={strings.ReceiptAttachmentDescription}
-																			onChange={(option) =>
-																				props.handleChange(
-																					'receiptAttachmentDescription',
-																				)(option)
-																			}
-																			value={
-																				props.values
-																					.receiptAttachmentDescription
-																			}
-																		/>
-																	</FormGroup>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="footNote">
-																		{strings.Footnote}
-																		</Label>
-																		<br/>
-																		<TextField
-																			type="textarea"
-																			className="textarea form-control"
-																			maxLength="255"
-																			style={{width: "500px"}}
-																			name="footNote"
-																			id="footNote"
-																			rows="2"
-																			placeholder={strings.PaymentDetails}
-																			onChange={(option) =>
-																				props.handleChange(
-																					'footNote',
-																				)(option)
-																			}
-																			value={
-																				props.values.footNote
-																			}
-																		/>
-																	</FormGroup>
-																</Col>
-																	<Col lg={4}>
-																		<div className="">
-																		{initValue.total_excise > 0 ?
-																		<div className="total-item p-2" >
-																			<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																					{strings.Total_Excise}
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
-																					
-																						{this.state.customer_currency_symbol} &nbsp;
-																						{/* {this.rendertotalexcise()} */}
-																						{initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2})}	
-																					</label>
+																						/>
+																						{props.errors.attachmentFile &&
+																							props.touched.attachmentFile && (
+																								<div className="invalid-file">
+																									{props.errors.attachmentFile}
+																								</div>
+																							)}
+																					</FormGroup>
 																				</Col>
 																			</Row>
-																		</div> : ''}
-																		{this.state.discountEnabled == true ?
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.Discount}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.discount ? initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>: ''}
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.TotalNet}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																						{strings.TotalVat}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																			
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.Total}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
+																			<FormGroup className="mb-3 hideAttachment">
+																				<Label htmlFor="receiptAttachmentDescription">
+																					{strings.AttachmentDescription}
+																				</Label>
+																				<br />
+																				<TextField
+																					type="textarea"
+																					className="textarea form-control"
+																					maxLength="255"
+																					style={{ width: "500px" }}
+																					name="receiptAttachmentDescription"
+																					id="receiptAttachmentDescription"
+																					rows="2"
+																					placeholder={strings.ReceiptAttachmentDescription}
+																					onChange={(option) =>
+																						props.handleChange(
+																							'receiptAttachmentDescription',
+																						)(option)
+																					}
+																					value={
+																						props.values
+																							.receiptAttachmentDescription
+																					}
+																				/>
+																			</FormGroup>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="footNote">
+																					{strings.Footnote}
+																				</Label>
+																				<br />
+																				<TextField
+																					type="textarea"
+																					className="textarea form-control"
+																					maxLength="255"
+																					style={{ width: "500px" }}
+																					name="footNote"
+																					id="footNote"
+																					rows="2"
+																					placeholder={strings.PaymentDetails}
+																					onChange={(option) =>
+																						props.handleChange(
+																							'footNote',
+																						)(option)
+																					}
+																					value={
+																						props.values.footNote
+																					}
+																				/>
+																			</FormGroup>
+																		</Col>
+																		<Col lg={4}>
+																			<div className="">
+																				{initValue.total_excise > 0 ?
+																					<div className="total-item p-2" >
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">
+																									{strings.Total_Excise}
+																								</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">
+
+																									{this.state.customer_currency_symbol} &nbsp;
+																									{/* {this.rendertotalexcise()} */}
+																									{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+																								</label>
+																							</Col>
+																						</Row>
+																					</div> : ''}
+																				{this.state.discountEnabled == true ?
+																					<div className="total-item p-2">
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">
+																									{strings.Discount}
+																								</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">
+																									{this.state.customer_currency_symbol} &nbsp;
+																									{initValue.discount ? initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+																								</label>
+																							</Col>
+																						</Row>
+																					</div> : ''}
+																				<div className="total-item p-2">
+																					<Row>
+																						<Col lg={6}>
+																							<h5 className="mb-0 text-right">
+																								{strings.TotalNet}
+																							</h5>
+																						</Col>
+																						<Col lg={6} className="text-right">
+																							<label className="mb-0">
+																								{this.state.customer_currency_symbol} &nbsp;
+																								{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+																							</label>
+																						</Col>
+																					</Row>
+																				</div>
+																				{isRegisteredVat &&
+																					<div className="total-item p-2">
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">
+																									{strings.TotalVat}
+																								</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">
+																									{this.state.customer_currency_symbol} &nbsp;
+																									{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+																								</label>
+																							</Col>
+																						</Row>
+																					</div>
+																				}
+																				<div className="total-item p-2">
+																					<Row>
+																						<Col lg={6}>
+																							<h5 className="mb-0 text-right">
+																								{strings.Total}
+																							</h5>
+																						</Col>
+																						<Col lg={6} className="text-right">
+																							<label className="mb-0">
+																								{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=	{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={
@@ -3517,126 +3550,128 @@ class DetailCustomerInvoice extends React.Component {
 																							}
 																							/>
 																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
+																								{this.state.customer_currency_symbol} &nbsp;
+																								{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+																							</label>
+																						</Col>
+																					</Row>
+																				</div>
 																			</div>
-																		</div>
-																	</Col>
-																</Row>
-															)}
-															<Row>
-																<Col
-																	lg={12}
-																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
-																>
-																	<FormGroup>
-																		<Button
-																			type="button"
-																			color="danger"
-																			className="btn-square"
-																			disabled1={this.state.disabled1}
-																			onClick={this.deleteInvoice}
-																		>
-																			<i className="fa fa-trash"></i>{' '} {this.state.disabled1
-																			? 'Deleting...'
-																			: strings.Delete }
-																		</Button>
-																	</FormGroup>
-																	<FormGroup className="text-right">
-																		<Button
-																			type="submit"
-																			color="primary"
-																			className="btn-square mr-3"
-																			disabled={this.state.disabled}
-																			onClick={() => {
-																				if(this.state.data.length === 1)
-																					{
-																						console.log(props.errors,"ERRORs")
+																		</Col>
+																	</Row>
+																)}
+																<Row>
+																	<Col
+																		lg={12}
+																		className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
+																	>
+																		<FormGroup>
+																			<Button
+																				type="button"
+																				color="danger"
+																				className="btn-square"
+																				disabled1={this.state.disabled1}
+																				onClick={this.deleteInvoice}
+																			>
+																				<i className="fa fa-trash"></i>{' '} {this.state.disabled1
+																					? 'Deleting...'
+																					: strings.Delete}
+																			</Button>
+																		</FormGroup>
+																		<FormGroup className="text-right">
+																			<Button
+																				type="submit"
+																				color="primary"
+																				className="btn-square mr-3"
+																				disabled={this.state.disabled}
+																				onClick={() => {
+																					if (this.state.data.length === 1) {
+																						console.log(props.errors, "ERRORs")
 																						//	added validation popup	msg
 																						props.handleBlur();
-																						if(props.errors &&  Object.keys(props.errors).length != 0)
+																						if (props.errors && Object.keys(props.errors).length != 0)
 																							this.props.commonActions.fillManDatoryDetails();
 																					}
-																					else
-																					{ 
-																						let newData=[]
+																					else {
+																						let newData = []
 																						const data = this.state.data;
 																						newData = data.filter((obj) => obj.productId !== "");
 																						props.setFieldValue('lineItemsString', newData, true);
 																						this.updateAmount(newData, props);
-													
+
 																						props.handleBlur();
-																						const errors={...props.errors}
+																						const errors = { ...props.errors }
 																						delete errors.lineItemsString
-																						if(errors &&  Object.keys(errors).length != 0)
-																							{
+																						if (errors && Object.keys(errors).length != 0) {
 																							this.props.commonActions.fillManDatoryDetails();
 																						}
 																					}
 																				}
-																			}
-																		>
-																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			{this.state.disabled
-																				? 'Updating...'
-																				: strings.Update}
-																		</Button>
-																		<Button
-																			color="secondary"
-																			className="btn-square"
-																			onClick={() => {
-																				this.props.history.push(
-																					'/admin/income/customer-invoice',
-																				);
-																			}}
-																		>
-																			<i className="fa fa-ban"></i> {this.state.disabled1
-																			? 'Deleting...'
-																			: strings.Cancel }
-																		</Button>
-																	</FormGroup>
-																</Col>
-															</Row>
-														</Form>
-													)}
-												</Formik>
-											</Col>
-										</Row>
-									)}
-								</CardBody>
-							</Card>
-						</Col>
-					</Row>
+																				}
+																			>
+																				<i className="fa fa-dot-circle-o"></i>{' '}
+																				{this.state.disabled
+																					? 'Updating...'
+																					: strings.Update}
+																			</Button>
+																			<Button
+																				color="secondary"
+																				className="btn-square"
+																				onClick={() => {
+																					this.props.history.push(
+																						'/admin/income/customer-invoice',
+																					);
+																				}}
+																			>
+																				<i className="fa fa-ban"></i> {this.state.disabled1
+																					? 'Deleting...'
+																					: strings.Cancel}
+																			</Button>
+																		</FormGroup>
+																	</Col>
+																</Row>
+															</Form>
+														)}
+													</Formik>
+												</Col>
+											</Row>
+										)}
+									</CardBody>
+								</Card>
+							</Col>
+						</Row>
+					</div>
+					<CustomerModal
+						openCustomerModal={this.state.openCustomerModal}
+						closeCustomerModal={(e) => {
+							this.closeCustomerModal(e);
+						}}
+						getCurrentUser={(e) => this.getCurrentUser(e)}
+						createCustomer={this.props.customerInvoiceActions.createCustomer}
+						currency_list={this.props.currency_list}
+						country_list={this.props.country_list}
+						getStateList={this.props.customerInvoiceActions.getStateList}
+					/>
+					<ProductModal
+						openProductModal={this.state.openProductModal}
+						closeProductModal={(e) => {
+							this.closeProductModal(e);
+						}}
+						getCurrentProduct={(e) => {
+							this.props.customerInvoiceActions.getProductList().then(res => {
+								if (res.status === 200)
+									this.getCurrentProduct(res.data[0])
+							})
+						}}
+						createProduct={this.props.productActions.createAndSaveProduct}
+						// vat_list={this.props.vat_list}
+						vat_list={this.state.vat_list}
+						product_category_list={this.props.product_category_list}
+						salesCategory={this.state.salesCategory}
+						purchaseCategory={this.state.purchaseCategory}
+					/>
 				</div>
-				<CustomerModal
-					openCustomerModal={this.state.openCustomerModal}
-					closeCustomerModal={(e) => {
-						this.closeCustomerModal(e);
-					}}
-					getCurrentUser={(e) => this.getCurrentUser(e)}
-					createCustomer={this.props.customerInvoiceActions.createCustomer}
-					currency_list={this.props.currency_list}
-					country_list={this.props.country_list}
-					getStateList={this.props.customerInvoiceActions.getStateList}
-				/>
-				<ProductModal
-					openProductModal={this.state.openProductModal}
-					closeProductModal={(e) => {
-						this.closeProductModal(e);
-					}}
-					getCurrentProduct={(e) => this.getCurrentProduct(e)}
-					createProduct={this.props.productActions.createAndSaveProduct}
-					// vat_list={this.props.vat_list}
-					vat_list={this.state.vat_list}
-					product_category_list={this.props.product_category_list}
-					salesCategory={this.state.salesCategory}
-					purchaseCategory={this.state.purchaseCategory}
-				/>
-			</div>
-			{this.state.disableLeavePage ?"":<LeavePage/>}
+				{this.state.disableLeavePage ? "" : <LeavePage />}
 			</div>
 		);
 	}

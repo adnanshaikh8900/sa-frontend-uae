@@ -307,7 +307,7 @@ class DebitNotes extends React.Component {
 					</label>
 				</div>
 				<div>
-					<label className="font-weight-bold mr-2 ">Remaining Debits </label>
+					<label className="font-weight-bold mr-2 ">Remaining Balance: </label>
 					<label>
 						{row.dueAmount ? row.currencyName + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
 					</label>
@@ -388,7 +388,7 @@ class DebitNotes extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-university" /> {strings.Refund}
+								<i className="fas fa-university" /> {strings.RefundPayment}
 							</DropdownItem>
 						)}
 
@@ -403,7 +403,8 @@ class DebitNotes extends React.Component {
 												contactId: row.contactId, creditNoteId: row.id,
 												debitNoteNumber: row.creditNoteNumber,
 												referenceNumber: row.invoiceNumber,
-												debitAmount: row.dueAmount
+												debitAmount: row.dueAmount,
+												currency:row.currencyName,
 											},
 										);
 									}}
@@ -642,6 +643,14 @@ class DebitNotes extends React.Component {
 		);
 	};
 
+	renderInvoiceNumber = (cell, row) => {
+		return (
+			<>
+				{row.invNumber}
+			</>
+		);
+	};
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -715,7 +724,7 @@ class DebitNotes extends React.Component {
 																		'label',
 																		'value',
 																		tmpCustomer_list,
-																		'Customer',
+																		'Supplier',
 																	)
 																	: []
 															}
@@ -818,17 +827,20 @@ class DebitNotes extends React.Component {
 												<TableHeaderColumn
 													dataField="customerName"
 													className="table-header-bg"
+													dataSort 
 												>
 													{strings.SUPPLIERNAME}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													dataField="invNumber"
+													dataField="invoiceNumber"
+													dataFormat={this.renderInvoiceNumber}
 													dataSort
 													className="table-header-bg"
 												>
 													{strings.InvoiceNumber}
 												</TableHeaderColumn>
 												<TableHeaderColumn
+												    dataField="invoiceDate"
 													dataSort
 													dataFormat={this.debitNoteDate}
 													className="table-header-bg"

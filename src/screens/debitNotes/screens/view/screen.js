@@ -34,6 +34,7 @@ class ViewDebitNote extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			debitNoteDataList: [],
+			applyToInvoiceData: [],
 			debitNoteData: {},
 			totalNet: 0,
 			currencyData: {},
@@ -120,7 +121,23 @@ class ViewDebitNote extends React.Component {
 						);
 					}
 				})
+				this.props.debitNoteViewActions
+				.getAppliedToInvoiceDetails(this.props.location.state.id)
+				.then((res) => {
 
+					if (res.status === 200) {
+						this.setState(
+							{
+								applyToInvoiceData: res.data,
+
+								id: this.props.location.state.id,
+							},
+							() => {
+
+							},
+						);
+					}
+				})
 		}
 	};
 	redirectToSupplierIncoive = (invoice) => {
@@ -179,7 +196,20 @@ class ViewDebitNote extends React.Component {
 									className="close-btn mb-1 btn-lg print-btn-cont"
 
 									onClick={() => {
-										this.props.history.push('/admin/expense/debit-notes');
+
+										if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
+											this.props.history.push('/admin/report/debit-note-details') 
+												
+											
+										// else if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
+										// 	this.props.history.push('/admin/report/debit-note-details');
+										else if (this.props.location.state.SUP_id)
+											this.props.history.push('/admin/expense/supplier-invoice/view', {
+												id: this.props.location.state.SUP_id,
+												status: this.props.location.state.SUP_status,
+											})
+										else
+											this.props.history.push('/admin/expense/debit-notes');
 									}}
 								>
 									<i class="fas fa-times"></i>
@@ -269,6 +299,50 @@ class ViewDebitNote extends React.Component {
 													</tr>
 												);
 											})) : null)}
+								</tbody>
+							</Table>
+						</div>
+					</Card>
+					<div style={{ display: this.state.applyToInvoiceData?.length === 0 ? 'none' : '' }}><strong>{strings.DebitNoteAmountUsedSummary}</strong></div>
+
+					<Card>
+						<div style={{ display: this.state.applyToInvoiceData?.length === 0 ? 'none' : '' }} >
+							<Table  >
+								<thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
+									<tr>
+										<th className="center" style={{ padding: '0.5rem' }}>
+											#
+										</th>
+										<th style={{ padding: '0.5rem' }}>{strings.TransactionType}</th>
+										<th style={{ padding: '0.5rem' }}>{strings.InvoiceNumber}</th>
+										<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+											{strings.Amount}
+										</th>
+
+									</tr>
+								</thead>
+								<tbody className=" table-bordered table-hover">
+									{this.state.applyToInvoiceData &&
+										this.state.applyToInvoiceData.length && (
+											this.state.applyToInvoiceData.map((item, index) => {
+												return (
+													<tr key={index} onClick={() => {
+														this.redirectToSupplierIncoive(item);
+													}}>
+														<td className="center">{index + 1}</td>
+														<td>{item.transactionType}</td>
+														<td>{item.invoiceNumber}</td>
+														<td align="right">{item.totalAmount ? <Currency
+															value={item.totalAmount}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/> : 0}</td>
+													</tr>
+												);
+											}))}
 								</tbody>
 							</Table>
 						</div>

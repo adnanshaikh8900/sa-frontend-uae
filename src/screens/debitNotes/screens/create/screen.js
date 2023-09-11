@@ -48,6 +48,7 @@ const mapStateToProps = (state) => {
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
 		product_list: state.common.product_list,
+		company_details: state.common.company_details,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -82,9 +83,14 @@ class CreateDebitNote extends React.Component {
 			loading: false,
 			customer_currency_symbol: '',
 			disabled: false,
+			disabled1: false,
 			discountOptions: [
-				{ value: 'FIXED', label: '₹' },
+				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: '%' },
+			],
+			exciseTypeOption: [
+				{ value: 'Inclusive', label: 'Inclusive' },
+				{ value: 'Exclusive', label: 'Exclusive' },
 			],
 			disabledDate: true,
 			data: [
@@ -144,6 +150,7 @@ class CreateDebitNote extends React.Component {
 				total_excise: 0,
 				customer_currency_symbol: '',
 				taxTreatmentId: '',
+
 			},
 			currentData: {},
 			contactType: 1,
@@ -165,7 +172,7 @@ class CreateDebitNote extends React.Component {
 			invoiveSelected: false,
 			lockInvoiceDetail: false,
 			disableLeavePage: false,
-			receiptDate:'',
+			receiptDate: '',
 		};
 
 		this.formRef = React.createRef();
@@ -308,7 +315,7 @@ class CreateDebitNote extends React.Component {
 	}
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount === 0 ? this.state.customer_currency_symbol + " " + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol + " " + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount != 0 ? this.state.customer_currency_symbol + " " + row.vatAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol+ " " +  "0.00";
 
 	}
 
@@ -375,10 +382,7 @@ class CreateDebitNote extends React.Component {
 										id="discountType"
 										name="discountType"
 										value={
-											discountOptions &&
-											selectOptionsFactory
-												.renderOptions('label', 'value', discountOptions, 'discount')
-												.find((option) => option.value == row.discountType)
+											discountOptions && discountOptions.find((option) => option.value == row.discountType)
 										}
 										onChange={(e) => {
 											this.selectItem(
@@ -479,15 +483,13 @@ class CreateDebitNote extends React.Component {
 								)
 								: []
 						}
-						value={
-
-							excise_list &&
-							selectOptionsFactory
-								.renderOptions('name', 'id', excise_list, 'Excise')
-								.find((option) => option.value === +row.exciseTaxId)
+						value={row.exciseTaxId ? excise_list && selectOptionsFactory
+							.renderOptions('name', 'id', excise_list, 'Excise')
+							.find((option) => option.value === +row.exciseTaxId)
+							: ''
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select + strings.Vat}
+						placeholder={strings.Select + strings.Excises}
 						onChange={(e) => {
 
 							this.selectItem(
@@ -812,8 +814,12 @@ class CreateDebitNote extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
-		debugger
-		this.setState({ disabled: true, disableLeavePage: true });
+		this.setState({ disableLeavePage: true });
+		if (this.state.createMore === true){
+			this.setState({ disable1: true });
+		} else {
+			this.setState({ disable: true });
+		}
 		const {
 			debitNoteNumber,
 			email,
@@ -869,12 +875,14 @@ class CreateDebitNote extends React.Component {
 		this.props.debitNoteCreateActions
 			.createDebitNote(formData)
 			.then((res) => {
-				this.setState({ disabled: false, loading: false });
+				this.setState({ disabled: false, disabled1: false, loading: false });
 				this.props.commonActions.tostifyAlert('success', strings.DebitNoteCreatedSuccessfully);
 				if (this.state.createMore) {
 					this.props.debitNoteActions.getInvoiceListForDropdown();
 					this.setState(
 						{
+							remainingInvoiceAmount: '',
+							disableLeavePage: false,
 							createMore: false,
 							selectedContact: '',
 							term: '',
@@ -887,6 +895,16 @@ class CreateDebitNote extends React.Component {
 									unitPrice: '',
 									subTotal: 0,
 									productId: '',
+									vatCategoryId: '',
+									exciseTaxId: '',
+									exciseAmount: '',
+									vatAmount: 0,
+									productId: '',
+									isExciseTaxExclusive: '',
+									discountType: 'FIXED',
+									discount: 0,
+									unitType: '',
+									unitTypeId: ''
 								},
 							],
 							initValue: {
@@ -898,6 +916,8 @@ class CreateDebitNote extends React.Component {
 									discount: 0,
 									discountPercentage: '',
 									total_excise: 0,
+									taxTreatmentId: '',
+									currency: '',
 								},
 							},
 						},
@@ -916,7 +936,7 @@ class CreateDebitNote extends React.Component {
 				}
 			})
 			.catch((err) => {
-				this.setState({disableLeavePage: true, disabled: false, loading: false });
+				this.setState({ disableLeavePage: false, disabled: false, disabled1: false, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error', strings.DebitNoteCreatedUnSuccessfully,
 				);
@@ -965,10 +985,10 @@ class CreateDebitNote extends React.Component {
 							label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
 							value: response.data.contactId,
 						}
-						const date=response.data.receiptDate ? new Date(moment(response.data.receiptDate,'YYYY-MM-DD').format()) : new Date();
+						const date = response.data.receiptDate ? new Date(moment(response.data.receiptDate, 'YYYY-MM-DD').format()) : new Date();
 						this.setState({
-							receiptDate : date,
-							debitNoteDate : date,
+							receiptDate: date,
+							debitNoteDate: date,
 							option: custmerName,
 							data: response.data.invoiceLineItems ? response.data.invoiceLineItems : [],
 							taxType: response.data.taxType ? response.data.taxType : false,
@@ -1018,14 +1038,16 @@ class CreateDebitNote extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, receiptDate, initValue, debitNoteExist, lockInvoiceDetail } = this.state;
+		const { data, receiptDate, initValue, debitNoteExist, lockInvoiceDetail, isCreatedWithoutInvoice } = this.state;
 		const {
 			customer_list,
 			invoice_list,
 			universal_currency_list,
 			currency_convert_list,
 			tax_treatment_list,
+			company_details
 		} = this.props;
+		const { isRegisteredVat } = company_details;
 		let tmpCustomer_list = []
 		customer_list.map(item => {
 			let obj = { label: item.label.contactName, value: item.value }
@@ -1064,11 +1086,11 @@ class CreateDebitNote extends React.Component {
 														errors.debitNoteNumber = strings.DebitNoteNumberAlreadyExists;
 													}
 
-													if (!this.state.isCreatedWithoutInvoice && !values.invoiceNumber) {
+													if (!isCreatedWithoutInvoice && !values.invoiceNumber) {
 														errors.invoiceNumber = 'Invoice Number is Required';
 													}
 
-													if ((this.state.isDNWIWithoutProduct ||this.state.isCreatedWithoutInvoice) && !values.debitAmount)
+													if ((this.state.isDNWIWithoutProduct || isCreatedWithoutInvoice) && !values.debitAmount)
 														errors.debitAmount = 'Debit Amount is Required';
 
 													if (this.state.invoiceSelected && (parseFloat(initValue.totalAmount) > parseFloat(this.state.remainingInvoiceAmount))) {
@@ -1082,7 +1104,7 @@ class CreateDebitNote extends React.Component {
 												validationSchema={Yup.object().shape({
 
 													debitNoteNumber: Yup.string().required(strings.DebitNoteNumberIsRequired,),
-													contactId: Yup.string().required('Customer Name is Required',),
+													contactId: Yup.string().required('Supplier Name is Required',),
 													debitNoteDate: Yup.string().required(strings.DebitNoteDateIsRequired,),
 													lineItemsString: Yup.array().required('Atleast one Debit Note sub detail is mandatory',).of(
 														Yup.object().shape({
@@ -1114,15 +1136,15 @@ class CreateDebitNote extends React.Component {
 															</Col>}
 															{!this.state.invoiceSelected && <Col lg={12}>
 																<Checkbox
-																	checked={this.state.isCreatedWithoutInvoice}
+																	checked={isCreatedWithoutInvoice}
 																	onChange={(check) => {
-																		this.setState({ isCreatedWithoutInvoice: !this.state.isCreatedWithoutInvoice })
+																		this.setState({ isCreatedWithoutInvoice: !isCreatedWithoutInvoice })
 																		this.setState({ isDNWIWithoutProduct: !this.state.isDNWIWithoutProduct })
 																	}}
 																/>	{strings.CreateDebitNoteWithoutInvoice}
 															</Col>}
 														</Row><hr /></>}
-														{!this.state.isCreatedWithoutInvoice && (<Row>
+														{!isCreatedWithoutInvoice && (<Row>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoiceNumber"><span className="text-danger">* </span>
@@ -1223,19 +1245,19 @@ class CreateDebitNote extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																		<span className="text-danger">* </span>
-																		{strings.CustomerName}
+																		{strings.SupplierName}
 																	</Label>
 																	<Select
 																		id="contactId"
 																		name="contactId"
-																		placeholder={strings.Select + strings.CustomerName}
+																		placeholder={strings.Select + strings.SupplierName}
 																		options={
 																			tmpCustomer_list
 																				? selectOptionsFactory.renderOptions(
 																					'label',
 																					'value',
 																					tmpCustomer_list,
-																					'Customer',
+																					'Supplier',
 																				)
 																				: []
 																		}
@@ -1266,61 +1288,62 @@ class CreateDebitNote extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="taxTreatmentId">
-																		{strings.TaxTreatment}
-																	</Label>
-																	<Select
-																		options={
-																			tax_treatment_list
-																				? selectOptionsFactory.renderOptions(
-																					'name',
-																					'id',
-																					tax_treatment_list,
-																					'Tax Treatment',
-																				)
-																				: []
-																		}
-																		isDisabled={true}
-																		id="taxTreatmentId"
-																		name="taxTreatmentId"
-																		placeholder={strings.Select + strings.TaxTreatment}
-																		value={props.values.taxTreatmentId?.value ? props.values.taxTreatmentId :
-																			tax_treatment_list &&
-																			selectOptionsFactory
-																				.renderOptions(
-																					'name',
-																					'id',
-																					tax_treatment_list,
-																					'Tax Treatment',
-																				)
-																				.find(
-																					(option) =>
-																						option.label === props.values.taxTreatmentId,
-																				)
-																		}
-																		onChange={(option) => {
-																			props.handleChange('taxTreatmentId')(
-																				option,
-																			);
-																		}}
-																		className={
-																			props.errors.taxTreatmentId &&
-																				props.touched.taxTreatmentId
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.taxTreatmentId &&
-																		props.touched.taxTreatmentId && (
-																			<div className="invalid-feedback">
-																				{props.errors.taxTreatmentId}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-
+															{isRegisteredVat &&
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="taxTreatmentId">
+																			{strings.TaxTreatment}
+																		</Label>
+																		<Select
+																			options={
+																				tax_treatment_list
+																					? selectOptionsFactory.renderOptions(
+																						'name',
+																						'id',
+																						tax_treatment_list,
+																						'Tax Treatment',
+																					)
+																					: []
+																			}
+																			isDisabled={true}
+																			id="taxTreatmentId"
+																			name="taxTreatmentId"
+																			placeholder={strings.Select + strings.TaxTreatment}
+																			value={props.values.taxTreatmentId?.value ? props.values.taxTreatmentId :
+																				tax_treatment_list &&
+																				selectOptionsFactory
+																					.renderOptions(
+																						'name',
+																						'id',
+																						tax_treatment_list,
+																						'Tax Treatment',
+																					)
+																					.find(
+																						(option) =>
+																							option.label === props.values.taxTreatmentId,
+																					)
+																			}
+																			onChange={(option) => {
+																				props.handleChange('taxTreatmentId')(
+																					option,
+																				);
+																			}}
+																			className={
+																				props.errors.taxTreatmentId &&
+																					props.touched.taxTreatmentId
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.taxTreatmentId &&
+																			props.touched.taxTreatmentId && (
+																				<div className="invalid-feedback">
+																					{props.errors.taxTreatmentId}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+															}
 														</Row>
 														<Row>
 
@@ -1339,7 +1362,7 @@ class CreateDebitNote extends React.Component {
 																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		value={props.values.debitNoteDate}
-																		minDate={receiptDate}																				
+																		minDate={receiptDate}
 																		selected={props.values.debitNoteDate}
 																		onChange={(value) => {
 																			props.handleChange('debitNoteDate')(value);
@@ -1444,9 +1467,9 @@ class CreateDebitNote extends React.Component {
 																			placeholder={strings.Enter + " Debit Amount"}
 																			value={props.values.debitAmount}
 																			onChange={(value) => {
-																				props.handleChange('debitAmount')(
-																					value,
-																				);
+																				if ((value.target.value === '' || this.regDecimal.test(value.target.value))
+																					&& parseFloat(value.target.value) !== 0)
+																					props.handleChange('debitAmount')(value,);
 																			}}
 																			className={
 																				props.errors.debitAmount &&
@@ -1466,6 +1489,45 @@ class CreateDebitNote extends React.Component {
 
 														</Row>
 														<hr />
+														{!isCreatedWithoutInvoice && !this.state.isDNWIWithoutProduct && (
+														<Row>
+														<Col lg={8} className="mb-3">
+																		</Col>
+																		<Col>
+																			{this.state.taxType === false ?
+																				<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																				<span className='mr-4'>{strings.Exclusive}</span>}
+																			<Switch
+																				value={props.values.taxType}
+																				checked={this.state.taxType}
+																				disabled
+																				onChange={(taxType) => {
+																					props.handleChange('taxType')(taxType);
+																					this.setState({ taxType }, () => {
+																						this.updateAmount(
+																							this.state.data,
+																							props
+																						)
+																					});
+																				}}
+
+																				onColor="#2064d8"
+																				onHandleColor="#2693e6"
+																				handleDiameter={25}
+																				uncheckedIcon={false}
+																				checkedIcon={false}
+																				boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																				activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																				height={20}
+																				width={48}
+																				className="react-switch "
+																			/>
+																			{this.state.taxType === true ?
+																				<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																				: <span className='ml-4'>{strings.Inclusive}</span>
+																			}
+																		</Col>
+																		</Row>)}
 
 
 
@@ -1569,23 +1631,27 @@ class CreateDebitNote extends React.Component {
 																				</UncontrolledTooltip>
 																			</TableHeaderColumn>
 																		}
-																		<TableHeaderColumn
-																			dataField="vat"
-																			dataFormat={(cell, rows) =>
-																				this.renderVat(cell, rows, props)
-																			}
-																		>
-																			{strings.VAT}
-																		</TableHeaderColumn>
-																		<TableHeaderColumn
-																			dataField="vat_amount"
-																			dataFormat={this.renderVatAmount}
-																			className="text-right"
-																			columnClassName="text-right"
-																			formatExtraData={universal_currency_list}
-																		>
-																			{strings.VATAMOUNT}
-																		</TableHeaderColumn>
+																		{isRegisteredVat &&
+																			<TableHeaderColumn
+																				dataField="vat"
+																				dataFormat={(cell, rows) =>
+																					this.renderVat(cell, rows, props)
+																				}
+																			>
+																				{strings.VAT}
+																			</TableHeaderColumn>
+																		}
+																		{isRegisteredVat &&
+																			<TableHeaderColumn
+																				dataField="vat_amount"
+																				dataFormat={this.renderVatAmount}
+																				className="text-right"
+																				columnClassName="text-right"
+																				formatExtraData={universal_currency_list}
+																			>
+																				{strings.VATAMOUNT}
+																			</TableHeaderColumn>
+																		}
 																		<TableHeaderColumn
 																			dataField="sub_total"
 																			dataFormat={this.renderSubTotal}
@@ -1598,102 +1664,102 @@ class CreateDebitNote extends React.Component {
 																	</BootstrapTable>
 																</Col>
 															</Row>)}
-														{this.state.data.length > 0 ? (
-															<Row>
-																<Col lg={7}>
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="referenceNumber">
-																				{strings.ReferenceNumber}
-																			</Label>
-																			<Input
-																				type="text"
-																				maxLength="20"
-																				id="referenceNumber"
-																				name="referenceNumber"
-																				value={props.values.referenceNumber}
-																				placeholder={strings.ReceiptNumber}
-																				onChange={(value) => {
-																					props.handleChange('referenceNumber')(value);
+														<Row>
+															<Col lg={7}>
+																<Col lg={6}>
+																	{!isCreatedWithoutInvoice && <FormGroup className="mb-3">
+																		<Label htmlFor="referenceNumber">
+																			{strings.ReferenceNumber}
+																		</Label>
+																		<Input
+																			type="text"
+																			maxLength="20"
+																			id="referenceNumber"
+																			name="referenceNumber"
+																			value={props.values.referenceNumber}
+																			placeholder={strings.ReceiptNumber}
+																			onChange={(value) => {
+																				props.handleChange('referenceNumber')(value);
 
-																				}}
-																				className={props.errors.referenceNumber && props.touched.referenceNumber ? "is-invalid" : " "}
-																			/>
-																			{props.errors.referenceNumber && props.touched.referenceNumber && (
-																				<div className="invalid-feedback">{props.errors.referenceNumber}</div>
-																			)}
-																		</FormGroup>
-																		<FormGroup className="py-2">
-																			<Label htmlFor="notes">{strings.Notes}</Label>
-																			<Input
-																				type="textarea"
-																				maxLength="255"
-																				name="notes"
-																				id="notes"
-																				rows="6"
-																				placeholder={strings.Notes}
-																				onChange={(option) =>
-																					props.handleChange('notes')(option)
-																				}
-																				value={props.values.notes}
-																			/>
-																		</FormGroup>
+																			}}
+																			className={props.errors.referenceNumber && props.touched.referenceNumber ? "is-invalid" : " "}
+																		/>
+																		{props.errors.referenceNumber && props.touched.referenceNumber && (
+																			<div className="invalid-feedback">{props.errors.referenceNumber}</div>
+																		)}
+																	</FormGroup>}
+																	<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label>
+																		<Input
+																			type="textarea"
+																			maxLength="255"
+																			name="notes"
+																			id="notes"
+																			rows="6"
+																			placeholder={strings.Notes}
+																			onChange={(option) =>
+																				props.handleChange('notes')(option)
+																			}
+																			value={props.values.notes}
+																		/>
+																	</FormGroup>
 
-																	</Col>
 																</Col>
-																{this.state.isDNWIWithoutProduct === false && (<Col lg={5}>
-																	<div className="">
-																		{initValue.total_excise == 0 ? null : (
-																			<div className="total-item p-2" >
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.TotalExcise}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																		)}
-																		{initValue.totalDiscount == 0 ? null : (
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.Discount}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.totalDiscount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																		)}
-
-																		<div className="total-item p-2">
+															</Col>
+															{this.state.isDNWIWithoutProduct === false && (<Col lg={5}>
+																<div className="">
+																	{initValue.total_excise == 0 ? null : (
+																		<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						{strings.TotalNet}
+																						{strings.TotalExcise}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
 																		</div>
+																	)}
+																	{initValue.totalDiscount == 0 ? null : (
+																		<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																						{strings.Discount}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{initValue.totalDiscount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
+																	)}
+
+																	<div className="total-item p-2">
+																		<Row>
+																			<Col lg={6}>
+																				<h5 className="mb-0 text-right">
+																					{strings.TotalNet}
+																				</h5>
+																			</Col>
+																			<Col lg={6} className="text-right">
+																				<label className="mb-0">
+																					{this.state.customer_currency_symbol} &nbsp;
+																					{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+
+																				</label>
+																			</Col>
+																		</Row>
+																	</div>
+																	{isRegisteredVat &&
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -1709,31 +1775,30 @@ class CreateDebitNote extends React.Component {
 																				</Col>
 																			</Row>
 																		</div>
-
-																		<div className="total-item p-2">
-																			<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																						{strings.Total}
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
-																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																					</label>
-																				</Col>
-																				{props.errors.totalAmount &&
-																					props.touched.totalAmount &&
-																					<Col className="invalid-feedback d-block text-right">
-																						{props.errors.totalAmount}
-																					</Col>}
-																			</Row>
-																		</div>
+																	}
+																	<div className="total-item p-2">
+																		<Row>
+																			<Col lg={6}>
+																				<h5 className="mb-0 text-right">
+																					{strings.Total}
+																				</h5>
+																			</Col>
+																			<Col lg={6} className="text-right">
+																				<label className="mb-0">
+																					{this.state.customer_currency_symbol} &nbsp;
+																					{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																				</label>
+																			</Col>
+																			{props.errors.totalAmount &&
+																				props.touched.totalAmount &&
+																				<Col className="invalid-feedback d-block text-right">
+																					{props.errors.totalAmount}
+																				</Col>}
+																		</Row>
 																	</div>
-																</Col>)}
-															</Row>
-														) : null}
+																</div>
+															</Col>)}
+														</Row>
 														<Row>
 															<Col
 																lg={12}
@@ -1764,7 +1829,7 @@ class CreateDebitNote extends React.Component {
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
-																		disabled={this.state.disabled}
+																		disabled={this.state.disabled1}
 																		onClick={() => {
 																			this.setState(
 																				{
@@ -1776,8 +1841,8 @@ class CreateDebitNote extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i>{' '}
-																		{this.state.disabled
+																		<i className="fa fa-refresh"></i>{' '}
+																		{this.state.disabled1
 																			? 'Creating...'
 																			: strings.CreateandMore}
 																	</Button>

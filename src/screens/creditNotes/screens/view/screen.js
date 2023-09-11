@@ -22,14 +22,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		supplierInvoiceActions: bindActionCreators(
-			SupplierInvoiceActions,
-			dispatch,
-		),
-		supplierInvoiceDetailActions: bindActionCreators(
-			SupplierInvoiceDetailActions,
-			dispatch,
-		),
+		supplierInvoiceActions: bindActionCreators(SupplierInvoiceActions, dispatch),
+		supplierInvoiceDetailActions: bindActionCreators(SupplierInvoiceDetailActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -40,6 +34,7 @@ class ViewCreditNote extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			InvoiceDataList: [],
+			applyToInvoiceData: [],
 			invoiceData: {},
 			totalNet: 0,
 			currencyData: {},
@@ -143,9 +138,27 @@ class ViewCreditNote extends React.Component {
 						);
 					}
 				})
+			this.props.supplierInvoiceDetailActions
+				.getAppliedToInvoiceDetails(this.props.location.state.id)
+				.then((res) => {
+
+					if (res.status === 200) {
+						this.setState(
+							{
+								applyToInvoiceData: res.data,
+
+								id: this.props.location.state.id,
+							},
+							() => {
+
+							},
+						);
+					}
+				})
 
 		}
 	};
+
 	redirectToCustmerIncoive = (invoice) => {
 		this.props.history.push('/admin/income/customer-invoice/view', {
 			id: invoice.invoiceId,
@@ -156,9 +169,11 @@ class ViewCreditNote extends React.Component {
 			TCN_Status: this.props.location.state.status,
 		});
 	}
+
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const { invoiceData, currencyData, InvoiceDataList, contactData } = this.state;
@@ -201,9 +216,18 @@ class ViewCreditNote extends React.Component {
 								<Button
 									type="button"
 									className="close-btn mb-1 btn-lg print-btn-cont"
-
 									onClick={() => {
-										this.props.history.push('/admin/income/credit-notes');
+										if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
+										this.props.history.push('/admin/report/credit-note-details');
+										else if (this.props.location.state.CI_id)
+											this.props.history.push('/admin/income/customer-invoice/view', {
+												id: this.props.location.state.CI_id,
+												status: this.props.location.state.CI_status,
+												contactId: this.props.location.state.CI_contactId
+											})
+										else
+											this.props.history.push('/admin/income/credit-notes');
+
 									}}
 								>
 									<i class="fas fa-times"></i>
@@ -244,13 +268,12 @@ class ViewCreditNote extends React.Component {
 										{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
 										<th style={{ padding: '0.5rem' }}>{strings.InvoiceNumber}</th>
 										<th style={{ padding: '0.5rem' }}>{strings.CustomerName}</th>
-
 										{/* <th className="center" style={{ padding: '0.5rem' }}>
-										Invoice Date
-									</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
-									Invoice Due Date
-									</th> */}
+											Invoice Date
+										</th>
+										<th className="center" style={{ padding: '0.5rem' }}>
+										Invoice Due Date
+										</th> */}
 										<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 											{strings.Total + " " + strings.Amount}
 										</th>
@@ -277,7 +300,6 @@ class ViewCreditNote extends React.Component {
 														<td className="center">{index + 1}</td>
 														<td>{item.invoiceNumber}</td>
 														<td>{item.contactName}</td>
-
 														<td align="right">{item.totalAmount ? <Currency
 															value={item.totalAmount}
 															currencySymbol={
@@ -286,9 +308,7 @@ class ViewCreditNote extends React.Component {
 																	: 'USD'
 															}
 														/> : 0}</td>
-
 														<td align="right">{currencyData?.currencyIsoCode} AED {item.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-
 													</tr>
 												);
 											})) : null)}
@@ -296,6 +316,51 @@ class ViewCreditNote extends React.Component {
 							</Table>
 						</div>
 					</Card>
+					<div style={{ display: this.state.applyToInvoiceData?.length === 0 ? 'none' : '' }}><strong>{strings.CreditNoteAmountUsedSummary}</strong></div>
+
+					<Card>
+						<div style={{ display: this.state.applyToInvoiceData?.length === 0 ? 'none' : '' }} >
+							<Table  >
+								<thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
+									<tr>
+										<th className="center" style={{ padding: '0.5rem' }}>
+											#
+										</th>
+										<th style={{ padding: '0.5rem' }}>{strings.TransactionType}</th>
+										<th style={{ padding: '0.5rem' }}>{strings.InvoiceNumber}</th>
+										<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+											{strings.Amount}
+										</th>
+
+									</tr>
+								</thead>
+								<tbody className=" table-bordered table-hover">
+									{this.state.applyToInvoiceData &&
+										this.state.applyToInvoiceData.length && (
+											this.state.applyToInvoiceData.map((item, index) => {
+												return (
+													<tr key={index} onClick={() => {
+														this.redirectToCustmerIncoive(item);
+													}}>
+														<td className="center">{index + 1}</td>
+														<td>{item.transactionType}</td>
+														<td>{item.invoiceNumber}</td>
+														<td align="right">{item.totalAmount ? <Currency
+															value={item.totalAmount}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/> : 0}</td>
+													</tr>
+												);
+											}))}
+								</tbody>
+							</Table>
+						</div>
+					</Card>
+
 				</div>
 			</div>
 		);

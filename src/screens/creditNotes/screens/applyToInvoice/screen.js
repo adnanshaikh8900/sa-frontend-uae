@@ -19,7 +19,7 @@ import * as CustomerInvoiceDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CustomerInvoiceActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, LeavePage ,Currency} from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -98,9 +98,10 @@ class ApplyToInvoice extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			basecurrency: [],
-			customer_currency: '',
+			customer_currency: this.props.location.state.currency,
 			invoice_list: [],
 			currenttotal: 0,
+			disableLeavePage: false,
 			selectedrowsdata: []
 		};
 
@@ -229,34 +230,40 @@ class ApplyToInvoice extends React.Component {
 	renderDate = (cell, rows) => {
 		return moment(rows.date).format('DD-MM-YYYY');
 	};
-	renderCreditAmount = (cell, row, extraData) => {
-		return (
-			<div>
-				<div>
-
-					<label>
-						{extraData}
-					</label>
-				</div>
-
-
-			</div>);
-	};
-
 	renderCredittaken = (cell, row, extraData) => {
 		return (
 			<div>
-				<div>
-
-					<label>
-						{row.creditstaken || 0}
-					</label>
-				</div>
-
-
-			</div>);
+				<label>
+					<Currency
+						value={row.creditstaken}
+						currencySymbol={this.state.customer_currency}
+					/>
+				</label>
+			</div>
+		);
 	};
-	
+	renderInvoiceDueAmount = (cell, row, extraData) => {
+		return (
+			<div>
+				<label>
+					<Currency
+						value={row.dueAmount}
+						currencySymbol={this.state.customer_currency}
+					/>
+				</label>
+			</div>
+		);
+	};
+	renderAmount = (value) => {
+		console.log(this.state.customer_currency)
+		return (
+			<Currency
+						value={value}
+						currencySymbol={this.state.customer_currency}
+					/>
+		);
+	}
+
 	applyInvoice = (row, selectedrowsdata, selectedRows, currenttotal) => {
 		let tempList = selectedRows;
 		let crtotal
@@ -369,7 +376,7 @@ class ApplyToInvoice extends React.Component {
 
 
 	handleSubmit = (data) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage: true });
 
 		const formData = new FormData();
 		const ids = this.state.selectedRows.map((i) => i.id)
@@ -393,6 +400,8 @@ class ApplyToInvoice extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ disabled: false, disableLeavePage: false });
+
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -467,9 +476,9 @@ class ApplyToInvoice extends React.Component {
 														<Form onSubmit={props.handleSubmit}>
 
 															<Row>
-															<Col lg={12}><h5>{strings.CreditAmount}: {this.props.location.state.creditAmount}</h5></Col>
-															<Col lg={12} style={{fontSize:'12px',color: currenttotal ? 'Green' : cannotsave ? 'red':'inherit' }}>{strings.RemainingCredittAmount}: {currenttotal}<br/></Col>
-															
+																<Col lg={12} className='h5'><span>{strings.CreditAmount}: {this.renderAmount(this.props.location.state.creditAmount)}</span></Col>
+																<Col lg={12} className='mb-1' style={{ fontSize: '12px', color: currenttotal ? 'Green' : cannotsave ? 'red' : 'inherit' }}>{strings.RemainingCredittAmount}: {this.renderAmount(currenttotal)}<br /></Col>
+
 																<Col lg={12}>
 
 																	<BootstrapTable
@@ -497,6 +506,7 @@ class ApplyToInvoice extends React.Component {
 																		<TableHeaderColumn
 																			dataField="referenceNo"
 																			className="table-header-bg"
+																			dataAlign="center"
 																		// dataFormat={(cell, rows) =>
 																		// 	this.renderDescription(
 																		// 		cell,
@@ -511,6 +521,7 @@ class ApplyToInvoice extends React.Component {
 																			dataField='date'
 																			dataFormat={this.renderDate}
 																			className="table-header-bg"
+																			dataAlign="center"
 																		// dataFormat={(cell, rows) =>
 																		// 	this.renderQuantity(cell, rows, props)
 																		// }
@@ -520,9 +531,8 @@ class ApplyToInvoice extends React.Component {
 																		<TableHeaderColumn
 																			dataField="dueAmount"
 																			className="table-header-bg"
-																		// dataFormat={(cell, rows) =>
-																		// 	this.renderUnitPrice(cell, rows, props)
-																		// }
+																			dataAlign="right"
+																			dataFormat={this.renderInvoiceDueAmount}
 																		>
 																			{strings.InvoiceAmount}
 																		</TableHeaderColumn>
@@ -542,6 +552,7 @@ class ApplyToInvoice extends React.Component {
 																			dataFormat={this.renderCredittaken}
 																			formatExtraData={this.props.location.state.creditAmount}
 																			className="table-header-bg"
+																			dataAlign="right"
 																		// dataFormat={(cell, rows) =>
 																		// 	this.renderUnitPrice(cell, rows, props)
 																		// }
@@ -650,7 +661,7 @@ class ApplyToInvoice extends React.Component {
 						</Col>
 					</Row>
 				</div>
-
+				{this.state.disableLeavePage ? "" : <LeavePage />}
 			</div>
 		);
 	}

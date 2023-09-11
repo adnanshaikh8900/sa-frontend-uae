@@ -34,6 +34,7 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
+import Switch from "react-switch";
 import API_ROOT_URL from '../../../../constants/config';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -51,6 +52,7 @@ const mapStateToProps = (state) => {
 		country_list: state.customer_invoice.country_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
+		company_details: state.common.company_details,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -84,8 +86,12 @@ class DetailDebitNote extends React.Component {
 			disabled1: false,
 			customer_currency_symbol: '',
 			discountOptions: [
-				{ value: 'FIXED', label: '₹' },
+				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: '%' },
+			],
+			exciseTypeOption: [
+				{ value: 'Inclusive', label: 'Inclusive' },
+				{ value: 'Exclusive', label: 'Exclusive' },
 			],
 			discount_option: '',
 			data: [],
@@ -114,7 +120,7 @@ class DetailDebitNote extends React.Component {
 			taxType: false,
 			disableLeavePage: false,
 			isCreatedWithoutInvoice: false,
-			receiptDate:'',
+			receiptDate: '',
 		};
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\b]+$/;
@@ -298,15 +304,14 @@ class DetailDebitNote extends React.Component {
 								)
 								: []
 						}
-						value={
-
-							excise_list &&
+						value={row.exciseTaxId ? excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
 								.find((option) => option.value === +row.exciseTaxId)
+							: ''
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select + strings.Vat}
+						placeholder={strings.Select + strings.Excises}
 						onChange={(e) => {
 
 							this.selectItem(
@@ -572,6 +577,7 @@ class DetailDebitNote extends React.Component {
 					<div>
 						<div class="input-group">
 							<Input
+								disabled
 								type="text"
 								min="0"
 								maxLength="14,2"
@@ -608,11 +614,9 @@ class DetailDebitNote extends React.Component {
 									}`}
 							/>
 							<div class="dropdown open input-group-append">
-
-								<div style={{ width: '100px' }}>
+								<div style={{ width: '100%' }}>
 									<Select
-
-
+										isDisabled
 										options={discountOptions}
 										id="discountType"
 										name="discountType"
@@ -831,7 +835,7 @@ class DetailDebitNote extends React.Component {
 		formData.append('isCreatedWIWP', this.state.isDNWIWithoutProduct);
 		formData.append('creditNoteNumber', debitNoteNumber ? debitNoteNumber : '',);
 		formData.append('email', email ? email : '',);
-		formData.append('creditNoteDate', invoiceDate ? moment(invoiceDate, 'DD-MM-YYYY').toDate() : null,);
+		formData.append('creditNoteDate', invoiceDate ? moment(invoiceDate) : new Date());
 		formData.append('referenceNo', referenceNumber !== null ? referenceNumber : '',);
 		formData.append('exchangeRate', exchangeRate ? exchangeRate : 1);
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
@@ -950,7 +954,7 @@ class DetailDebitNote extends React.Component {
 							value: response.data.contactId,
 						}
 						this.setState({
-							receiptDate : response.data.receiptDate ? new Date(moment(response.data.receiptDate,'YYYY-MM-DD').format()) : new Date(),
+							receiptDate: response.data.receiptDate ? new Date(moment(response.data.receiptDate, 'YYYY-MM-DD').format()) : new Date(),
 							option: custmerName,
 							data: response.data.invoiceLineItems ? response.data.invoiceLineItems : [],
 							taxType: response.data.taxType ? response.data.taxType : false,
@@ -997,10 +1001,11 @@ class DetailDebitNote extends React.Component {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, loadingMsg, initValue, loading, dialog ,isCreatedWithoutInvoice} = this.state;
+		const { data, loadingMsg, initValue, loading, dialog, isCreatedWithoutInvoice } = this.state;
 
-		const { tax_treatment_list, invoice_list, currency_convert_list, customer_list, universal_currency_list, vat_list } = this.props;
+		const { tax_treatment_list, invoice_list, currency_convert_list, customer_list, universal_currency_list, company_details } = this.props;
 		let tmpCustomer_list = []
+		const { isRegisteredVat } = company_details;
 
 		customer_list.map(item => {
 			let obj = { label: item.label.contactName, value: item.value }
@@ -1087,7 +1092,7 @@ class DetailDebitNote extends React.Component {
 																				checked={this.state.isDNWIWithoutProduct}
 																				onChange={(check) => {
 																					this.setState({ isDNWIWithoutProduct: !this.state.isDNWIWithoutProduct })
-																					this.getInvoiceDetails(props.values.invoiceNumber?.value ? props.values.invoiceNumber.value : props.values.invoiceNumber )
+																					this.getInvoiceDetails(props.values.invoiceNumber?.value ? props.values.invoiceNumber.value : props.values.invoiceNumber)
 																				}}
 																			/>	{strings.CreateDebitNoteWithoutProduct}
 																		</Col>
@@ -1191,12 +1196,12 @@ class DetailDebitNote extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
 																				<span className="text-danger">* </span>
-																				{strings.CustomerName}
+																				{strings.SupplierName}
 																			</Label>
 																			<Select
 																				id="contactId"
 																				name="contactId"
-																				placeholder={strings.Select + strings.CustomerName}
+																				placeholder={strings.Select + strings.SupplierName}
 																				options={tmpCustomer_list ? tmpCustomer_list : []}
 																				value={props.values.contactId?.values ? props.values.contactId : tmpCustomer_list && tmpCustomer_list.find(obj => obj.value === props.values.contactId)}
 
@@ -1225,7 +1230,7 @@ class DetailDebitNote extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-
+																	{isRegisteredVat &&
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="taxTreatmentId">
@@ -1280,7 +1285,7 @@ class DetailDebitNote extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-
+	}
 																</Row>
 																<Row>
 
@@ -1298,8 +1303,8 @@ class DetailDebitNote extends React.Component {
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
-																				value={props.values.invoiceDate}
-																				minDate={this.state.receiptDate}																				
+																				value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
+																				minDate={this.state.receiptDate}
 																				selected={props.values.invoiceDate}
 																				onChange={(value) => {
 																					props.handleChange('invoiceDate')(value);
@@ -1403,9 +1408,9 @@ class DetailDebitNote extends React.Component {
 																					placeholder={strings.Enter + " Debit Amount"}
 																					value={props.values.debitAmount}
 																					onChange={(value) => {
-																						props.handleChange('debitAmount')(
-																							value,
-																						);
+																						if ((value.target.value === '' || this.regDecimal.test(value.target.value))
+																							&& parseFloat(value.target.value) !== 0)
+																							props.handleChange('debitAmount')(value,);
 																					}}
 																					className={
 																						props.errors.debitAmount &&
@@ -1425,6 +1430,45 @@ class DetailDebitNote extends React.Component {
 
 																</Row>
 																<hr />
+																{!isCreatedWithoutInvoice && !this.state.isDNWIWithoutProduct && (
+																<Row>
+																			<Col lg={8} className="mb-3">
+																			</Col>
+																			<Col>
+																				{this.state.taxType === false ?
+																					<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																					<span className='mr-4'>{strings.Exclusive}</span>}
+																				<Switch
+																					value={props.values.taxType}
+																					checked={this.state.taxType}
+																					disabled
+																					onChange={(taxType) => {
+																						props.handleChange('taxType')(taxType);
+																						this.setState({ taxType }, () => {
+																							this.updateAmount(
+																								this.state.data,
+																								props
+																							)
+																						});
+																					}}
+
+																					onColor="#2064d8"
+																					onHandleColor="#2693e6"
+																					handleDiameter={25}
+																					uncheckedIcon={false}
+																					checkedIcon={false}
+																					boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																					activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																					height={20}
+																					width={48}
+																					className="react-switch "
+																				/>
+																				{this.state.taxType === true ?
+																					<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																					: <span className='ml-4'>{strings.Inclusive}</span>
+																				}
+																			</Col>
+																		</Row>)}
 																{this.state.isDNWIWithoutProduct === false && data && data.length > 0 && (
 																	<Row>
 																		{props.errors.lineItemsString &&
@@ -1459,7 +1503,7 @@ class DetailDebitNote extends React.Component {
 																					}
 																				></TableHeaderColumn>
 																				<TableHeaderColumn
-																					width="20%"
+																					//width="20%"
 																					dataField="product"
 																					dataFormat={(cell, rows) =>
 																						this.renderProduct(cell, rows, props)
@@ -1506,7 +1550,7 @@ class DetailDebitNote extends React.Component {
 																				}
 																				{initValue.total_excise != 0 &&
 																					<TableHeaderColumn
-																						width="10%"
+																						//	width="10%"
 																						dataField="exciseTaxId"
 																						dataFormat={(cell, rows) =>
 																							this.renderExcise(cell, rows, props)
@@ -1525,6 +1569,7 @@ class DetailDebitNote extends React.Component {
 																						</UncontrolledTooltip>
 																					</TableHeaderColumn>
 																				}
+																				{isRegisteredVat &&
 																				<TableHeaderColumn
 																					dataField="vat"
 																					dataFormat={(cell, rows) =>
@@ -1533,6 +1578,8 @@ class DetailDebitNote extends React.Component {
 																				>
 																					{strings.VAT}
 																				</TableHeaderColumn>
+	}
+																	{isRegisteredVat &&
 																				<TableHeaderColumn
 																					dataField="vat_amount"
 																					dataFormat={this.renderVatAmount}
@@ -1542,6 +1589,7 @@ class DetailDebitNote extends React.Component {
 																				>
 																					{strings.VATAMOUNT}
 																				</TableHeaderColumn>
+	}
 																				<TableHeaderColumn
 																					dataField="sub_total"
 																					dataFormat={this.renderSubTotal}
@@ -1554,141 +1602,140 @@ class DetailDebitNote extends React.Component {
 																			</BootstrapTable>
 																		</Col>
 																	</Row>)}
-																{!isCreatedWithoutInvoice ? (
-																	<Row>
-																		<Col lg={7}>
-																			<Col lg={6}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="referenceNumber">
-																						{strings.ReferenceNumber}
-																					</Label>
-																					<Input
-																						type="text"
-																						maxLength="20"
-																						id="referenceNumber"
-																						name="referenceNumber"
-																						value={props.values.referenceNumber}
-																						placeholder={strings.ReceiptNumber}
-																						onChange={(value) => {
-																							props.handleChange('referenceNumber')(value);
+																<Row>
+																	<Col lg={7}>
+																		<Col lg={6}>
+																			{!isCreatedWithoutInvoice && <FormGroup className="mb-3">
+																				<Label htmlFor="referenceNumber">
+																					{strings.ReferenceNumber}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="20"
+																					id="referenceNumber"
+																					name="referenceNumber"
+																					value={props.values.referenceNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('referenceNumber')(value);
 
-																						}}
-																						className={props.errors.referenceNumber && props.touched.referenceNumber ? "is-invalid" : " "}
-																					/>
-																					{props.errors.referenceNumber && props.touched.referenceNumber && (
-																						<div className="invalid-feedback">{props.errors.referenceNumber}</div>
-																					)}
-																				</FormGroup>
-																				<FormGroup className="py-2">
-																					<Label htmlFor="notes">{strings.Notes}</Label>
-																					<Input
-																						type="textarea"
-																						maxLength="255"
-																						name="notes"
-																						id="notes"
-																						rows="6"
-																						placeholder={strings.Notes}
-																						onChange={(option) =>
-																							props.handleChange('notes')(option)
-																						}
-																						value={props.values.notes}
-																					/>
-																				</FormGroup>
+																					}}
+																					className={props.errors.referenceNumber && props.touched.referenceNumber ? "is-invalid" : " "}
+																				/>
+																				{props.errors.referenceNumber && props.touched.referenceNumber && (
+																					<div className="invalid-feedback">{props.errors.referenceNumber}</div>
+																				)}
+																			</FormGroup>}
+																			<FormGroup className="py-2">
+																				<Label htmlFor="notes">{strings.Notes}</Label>
+																				<Input
+																					type="textarea"
+																					maxLength="255"
+																					name="notes"
+																					id="notes"
+																					rows="6"
+																					placeholder={strings.Notes}
+																					onChange={(option) =>
+																						props.handleChange('notes')(option)
+																					}
+																					value={props.values.notes}
+																				/>
+																			</FormGroup>
 
-																			</Col>
 																		</Col>
-																		{this.state.isDNWIWithoutProduct === false && (<Col lg={5}>
-																			<div className="">
-																				{initValue.total_excise != 0 && (
-																					<div className="total-item p-2" >
-																						<Row>
-																							<Col lg={6}>
-																								<h5 className="mb-0 text-right">
-																									{strings.TotalExcise}
-																								</h5>
-																							</Col>
-																							<Col lg={6} className="text-right">
-																								<label className="mb-0">
-																									{this.state.customer_currency_symbol} &nbsp;
-																									{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																								</label>
-																							</Col>
-																						</Row>
-																					</div>
-																				)}
-																				{initValue.totalDiscount != 0 && (
-																					<div className="total-item p-2">
-																						<Row>
-																							<Col lg={6}>
-																								<h5 className="mb-0 text-right">
-																									{strings.Discount}
-																								</h5>
-																							</Col>
-																							<Col lg={6} className="text-right">
-																								<label className="mb-0">
-																									{this.state.customer_currency_symbol} &nbsp;
-																									{initValue.totalDiscount ? initValue.totalDiscount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
-																								</label>
-																							</Col>
-																						</Row>
-																					</div>
-																				)}
-																				<div className="total-item p-2">
+																	</Col>
+																	{this.state.isDNWIWithoutProduct === false && (<Col lg={5}>
+																		<div className="">
+																			{initValue.total_excise != 0 && (
+																				<div className="total-item p-2" >
 																					<Row>
 																						<Col lg={6}>
 																							<h5 className="mb-0 text-right">
-																								{strings.TotalNet}
+																								{strings.TotalExcise}
 																							</h5>
 																						</Col>
 																						<Col lg={6} className="text-right">
 																							<label className="mb-0">
 																								{this.state.customer_currency_symbol} &nbsp;
-																								{initValue.total_net ? initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
+																								{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							</label>
+																						</Col>
+																					</Row>
+																				</div>
+																			)}
+																			{initValue.totalDiscount != 0 && (
+																				<div className="total-item p-2">
+																					<Row>
+																						<Col lg={6}>
+																							<h5 className="mb-0 text-right">
+																								{strings.Discount}
+																							</h5>
+																						</Col>
+																						<Col lg={6} className="text-right">
+																							<label className="mb-0">
+																								{this.state.customer_currency_symbol} &nbsp;
+																								{initValue.totalDiscount ? initValue.totalDiscount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
+																							</label>
+																						</Col>
+																					</Row>
+																				</div>
+																			)}
+																			<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																							{strings.TotalNet}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.total_net ? initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
 
-																							</label>
-																						</Col>
-																					</Row>
-																				</div>
-																				<div className="total-item p-2">
-																					<Row>
-																						<Col lg={6}>
-																							<h5 className="mb-0 text-right">
-																								{strings.TotalVat}
-																							</h5>
-																						</Col>
-																						<Col lg={6} className="text-right">
-																							<label className="mb-0">
-																								{this.state.customer_currency_symbol} &nbsp;
-																								{initValue.totalVatAmount ? initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
-																							</label>
-																						</Col>
-																					</Row>
-																				</div>
-
-																				<div className="total-item p-2">
-																					<Row>
-																						<Col lg={6}>
-																							<h5 className="mb-0 text-right">
-																								{strings.Total}
-																							</h5>
-																						</Col>
-																						<Col lg={6} className="text-right">
-																							<label className="mb-0">
-																								{this.state.customer_currency_symbol} &nbsp;
-																								{initValue.totalAmount ? initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
-																							</label>
-																						</Col>
-																						{props.errors.totalAmount &&
-																							props.touched.totalAmount &&
-																							<Col className="invalid-feedback d-block text-right">
-																								{props.errors.totalAmount}
-																							</Col>}
-																					</Row>
-																				</div>
+																						</label>
+																					</Col>
+																				</Row>
 																			</div>
-																		</Col>)}
-																	</Row>
-																) : null}
+																	{isRegisteredVat &&
+																			<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																							{strings.TotalVat}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.totalVatAmount ? initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
+	}
+																			<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																							{strings.Total}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.totalAmount ? initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
+																						</label>
+																					</Col>
+																					{props.errors.totalAmount &&
+																						props.touched.totalAmount &&
+																						<Col className="invalid-feedback d-block text-right">
+																							{props.errors.totalAmount}
+																						</Col>}
+																				</Row>
+																			</div>
+																		</div>
+																	</Col>)}
+																</Row>
 																<Row>
 																	<Col
 																		lg={12}

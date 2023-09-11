@@ -19,7 +19,7 @@ class Currency extends React.Component {
 			style: 'currency',
 			// minimumFractionDigits:6,
 			currency: currencySymbolMain,
-		}).format(value);
+		}).format(value ? value : 0);
 	}
 }
 

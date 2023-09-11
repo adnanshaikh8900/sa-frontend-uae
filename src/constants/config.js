@@ -17,7 +17,7 @@ export default {
   ACCOUNTANT_MODULE: true,
   REPORTS_MODULE: true,
   MASTER_MODULE: true,
-  INVENTORY_MODULE: true,
+  INVENTORY_MODULE: false,
   PAYROLL_MODULE: true,
 
   EXPENSE_EXPENSES: true,

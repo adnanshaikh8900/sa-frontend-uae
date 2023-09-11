@@ -146,25 +146,45 @@ class DebitNoteTemplate extends Component {
 									{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email}: {contactData.billingEmail}</div>)}
 									{debitNoteData && debitNoteData.taxTreatment && debitNoteData.taxTreatment.includes("NON") == false && (<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {contactData && contactData.vatRegistrationNumber && (contactData.vatRegistrationNumber)}</div>)}
 								</div>
-								<br/>
+								<br />
 								<div>
-									<Table className="table-striped" style={{ width: 'fit-content', border: '1px solid', borderColor: '#c8ced3', float: 'right' }}>
+									<Table className="table-striped" style={{ width: 'fit-content', border: '1px solid', borderColor: '#c8ced3', float: 'right', minWidth: '30%', }}>
 										<thead className="header-row" style={{ fontSize: "12px" }}>
 											<tr>
 												<th>{strings.DebitNoteNo}</th>
 												<th>{strings.DebitNoteDate}</th>
 												<th>{strings.Status}</th>
-												{isCNWithoutProduct && debitNoteData.invoiceId && <th>{strings.ReferenceN}</th>}
-												{isCNWithoutProduct && <th>{strings.DebitAmount}</th>}
+												{debitNoteData.referenceNo && <th>{strings.ReferenceN}</th>}
+												{isCNWithoutProduct && <th style={{ textAlign: 'right' }}>{strings.DebitAmount}</th>}
+												<th>{strings.RemainingBalance}</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr>
-												<td style={{ width: '143px' }}>{debitNoteData.creditNoteNumber}</td>
-												<td style={{ width: '143px' }}>{' '}{moment(debitNoteData.creditNoteDate).format('DD MMM YYYY',)}</td>
-												<td style={{ width: '143px' }}>{debitNoteData.status}</td>
-												{isCNWithoutProduct && debitNoteData.referenceNo && <td style={{ width: '143px' }}>{debitNoteData.invoiceId}</td>}
-												{isCNWithoutProduct && <td style={{ width: '143px' }}>{debitNoteData.totalAmount}</td>}
+												<td>{debitNoteData.creditNoteNumber}</td>
+												<td>{' '}{moment(debitNoteData.creditNoteDate).format('DD-MM-YYYY',)}</td>
+												<td>{debitNoteData.status ? debitNoteData.status === 'Partially Paid' ? 'Partially Debited' : debitNoteData.status : ''}</td>
+												{debitNoteData.referenceNo && <td>{debitNoteData.referenceNo}</td>}
+												{isCNWithoutProduct && <td style={{ textAlign: 'right' }}>
+													<Currency
+														value={debitNoteData.totalAmount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
+												</td>}
+												<td style={{ textAlign: 'right' }}>
+													<Currency
+														value={debitNoteData.dueAmount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
+												</td>
 											</tr>
 										</tbody>
 									</Table>
@@ -191,7 +211,7 @@ class DebitNoteTemplate extends Component {
 											}
 											{debitNoteData.totalExciseTaxAmount != 0 &&
 												<>
-													<th style={{ padding: '0.5rem' }}>{strings.Excise}</th>
+													<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Excise}</th>
 													<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.ExciseAmount}</th>
 												</>
 											}
@@ -212,7 +232,7 @@ class DebitNoteTemplate extends Component {
 														<td className="center">{index + 1}</td>
 														<td><b>{item.productName}</b><br />{item.description}</td>
 														<td style={{ textAlign: 'center' }}>{item.quantity}</td>
-														<td>{item.unitType}	</td>
+														<td style={{ textAlign: 'center' }}>{item.unitType}	</td>
 														<td style={{ textAlign: 'right', width: '10%' }}>
 															<Currency
 																value={item.unitPrice}
@@ -234,7 +254,7 @@ class DebitNoteTemplate extends Component {
 														}
 														{debitNoteData.totalExciseTaxAmount != 0 &&
 															<>
-																<td>{item.exciseTaxId ? this.renderExcise(item) : "-"}</td>
+																<td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item) : "-"}</td>
 																<td style={{ textAlign: 'right' }}>
 																	{
 																		<Currency
@@ -286,13 +306,13 @@ class DebitNoteTemplate extends Component {
 									marginLeft: '2rem'
 								}}
 							>
-								<br />
+								{/* <br />
 								{debitNoteData.referenceNo && (<><h6 className="mb-0 pt-2">
 									<b>{strings.ReferenceNumber}:</b>
 								</h6>
 									<h6 className="mb-0">{debitNoteData.referenceNo}</h6>
-								</>)}
-								<br/>
+								</>)} */}
+								<br />
 								{debitNoteData.notes && (<><h6 className="mb-0 pt-2">
 									<b>{strings.Notes}:</b>
 								</h6>
@@ -496,7 +516,7 @@ class DebitNoteTemplate extends Component {
 								}
 							</div>
 						</div>
-						{(debitNoteData.referenceNo || debitNoteData.notes) && <hr />}
+						{(debitNoteData.referenceNo || debitNoteData.notes) && <br />}
 						<br /><br /><br />
 					</CardBody>
 					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>

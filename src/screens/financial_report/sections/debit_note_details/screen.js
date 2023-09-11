@@ -126,7 +126,7 @@ class DebitNoteDetailsReport extends React.Component {
 		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
 		return dl ?
 		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-		  XLSX.writeFile(wb, fn || ('Tax Credit Note Details Report.'+ (type || 'csv')));
+		  XLSX.writeFile(wb, fn || ('Debit Note Detail Report.'+ (type || 'csv')));
 
 	   }
 
@@ -138,7 +138,7 @@ class DebitNoteDetailsReport extends React.Component {
 		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
 		   return dl ?
 			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-			 XLSX.writeFile(wb, fn || ('Tax Credit Note Details Report.'+ (type || 'xlsx')));
+			 XLSX.writeFile(wb, fn || ('Debit Note Detail Report.'+ (type || 'xlsx')));
    
 	   }
 
@@ -327,7 +327,7 @@ class DebitNoteDetailsReport extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-									fileName="Credit Note Details.pdf"
+									fileName="Debit Note Detail.pdf"
 								>
 							<div style={{	
 									
@@ -375,6 +375,7 @@ class DebitNoteDetailsReport extends React.Component {
 													<tr>
 															<th style={{ padding: '0.5rem', textAlign: 'center', color: 'black' }}>{strings.DebitNote +" "+strings.Number}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.SupplierName}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceNumber}</th>
 															<th style={{ padding: '0.5rem', textAlign: 'center', color: 'black' }}>{strings.DebitNote +" "+strings.Date}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Status}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Amount}
@@ -385,13 +386,25 @@ class DebitNoteDetailsReport extends React.Component {
 												</thead>
 												<tbody className=" table-bordered table-hover">
 													{this.state.data.creditNoteSummaryModelList &&
-														this.state.data.creditNoteSummaryModelList.map((item, index) => {
+														this.state.data.creditNoteSummaryModelList.filter((item) => item.type === 13).map((item, index) => {
 															return (
 																<tr key={index}>
 
 
-																	<td style={{ textAlign: 'center'}}>{item.creditNoteNumber}</td>
+																	<td style={{ textAlign: 'center', color: "#2046DB"}} onClick={() =>
+																		this.props.history.push('/admin/expense/debit-notes/view', {
+																			id: item.id, status: item.status, isCNWithoutProduct: item.isCNWithoutProduct,
+																			gotoReports:true
+																		})}>{item.creditNoteNumber}</td>
 																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
+																	<td style={{ textAlign: 'center', color: "#2046DB"}}
+																	onClick={() =>
+																		this.props.history.push('/admin/expense/supplier-invoice/view', {
+																			id: item.invoiceId, status: item.invoiceStatus,
+																			gotoReports:true
+																		})
+																	}
+																	>{item.invoiceNumber}</td>
 																	<td style={{ textAlign: 'center'}}>{item.creditNoteDate ? (
 																		moment(item.creditNoteDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
@@ -435,18 +448,18 @@ class DebitNoteDetailsReport extends React.Component {
 															<td></td>
 															<td></td>
 															<td></td>
-															{/* <td></td> */}
+															<td></td>
 														</tr>
 
 												</tbody>
 												<tfoot>
 													<tr style={{ border: "3px solid #dfe9f7" }}>
-													<td></td>	<td></td>	<td></td>
+													<td></td>	<td></td>	<td></td>	<td></td>
 													<td style={{ textAlign: 'right', width: '10%' }}><b>{strings.Total}</b></td>
 													<td style={{ textAlign: 'right', width: '15%' }}>
 												
 														<b><Currency
-															value={this.state.data.totalAmount}
+															value={this.state.data.creditNoteSummaryModelList.filter((item) => item.type === 13).reduce((total, item) => total + item.creditNoteTotalAmount, 0)}
 															currencySymbol={
 																universal_currency_list[0]
 																	? universal_currency_list[0].currencyIsoCode
@@ -461,7 +474,7 @@ class DebitNoteDetailsReport extends React.Component {
 														
 													<b>
 													<Currency
-															value={this.state.data.totalBalance}
+															value={this.state.data.creditNoteSummaryModelList.filter((item) => item.type === 13).reduce((total, item) => total + item.balance, 0)}
 															currencySymbol={
 																universal_currency_list[0]
 																	? universal_currency_list[0].currencyIsoCode

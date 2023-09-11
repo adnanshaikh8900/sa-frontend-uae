@@ -681,11 +681,10 @@ class Product extends React.Component {
 
                           						</TableHeaderColumn>  
 												<TableHeaderColumn
-											className="text-right"
+											className="text-right table-header-bg"
 											columnClassName="text-right"
 											width="5%"
 											// dataFormat={this.renderActions}
-											className="table-header-bg"
 										></TableHeaderColumn>
 											</BootstrapTable>
 										</div>

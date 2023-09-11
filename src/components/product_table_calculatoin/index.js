@@ -3,87 +3,161 @@ export const updateAmount = (data, vat_list, taxType) => {
     let total_excise = 0;
     let total = 0;
     let total_vat = 0;
-    let discount = 0;
+    let net_value = 0;
+    let discount_total = 0;
 
-    const totalnetamount = (a) => {
-        total_net = total_net + a
-    }
-    const totalexcise = (a) => {
-        total_excise = total_excise + a
-    }
-    const totalvalt = (a) => {
-        total_vat = total_vat + a
-    }
-    const totalamount = (a) => {
-        total = total + a
-    }
-    const discountamount = (a) => {
-        discount = discount + a
-    }
-    data && data.map((obj) => {
-        let unitprice = parseFloat(obj.unitPrice);
-        var net_value = 0;
-        const index =
-            obj.vatCategoryId !== ''
-                ? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
-                : '';
+    data.map((obj) => {
+        if (obj.productId) {
+            let unitprice = obj.unitPrice;
+            const index =
+                obj.vatCategoryId !== ''
+                    ? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
+                    : '';
+            const vat = index !== '' && vat_list[`${index}`] && index >= 0 ? vat_list[`${index}`].vat : 0;
 
-        const vat = index !== null && index > -1 && vat_list[`${index}`] ? vat_list[`${index}`]?.vat : 0;
+            //Exclusive case
 
-        if (!taxType) {
-            if (obj.discountType === 'PERCENTAGE')
-                net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
-            else
-                net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
+            if (taxType === false) {
+                if (obj.discountType === 'PERCENTAGE') {
+                    net_value =
+                        ((+unitprice -
+                            (+((unitprice * obj.discount)) / 100)) * obj.quantity);
+                    var discount = (unitprice * obj.quantity) - net_value
+                    if (obj.exciseTaxId != 0) {
+                        if (obj.exciseTaxId === 1) {
+                            const value = +(net_value) / 2;
+                            net_value = parseFloat(net_value) + parseFloat(value);
+                            obj.exciseAmount = parseFloat(value);
+                        } else if (obj.exciseTaxId === 2) {
+                            const value = net_value;
+                            net_value = parseFloat(net_value) + parseFloat(value);
+                            obj.exciseAmount = parseFloat(value);
+                        }
+                    }
+                    else {
+                        obj.exciseAmount = 0
+                    }
+                    var vat_amount =
+                        vat === 0 ? 0 :
+                            ((+net_value * vat) / 100);
+                } else {
+                    net_value =
+                        ((unitprice * obj.quantity) - obj.discount)
+                    var discount = (unitprice * obj.quantity) - net_value
+                    if (obj.exciseTaxId != 0) {
+                        if (obj.exciseTaxId === 1) {
+                            const value = +(net_value) / 2;
+                            net_value = parseFloat(net_value) + parseFloat(value);
+                            obj.exciseAmount = parseFloat(value);
+                        } else if (obj.exciseTaxId === 2) {
+                            const value = net_value;
+                            net_value = parseFloat(net_value) + parseFloat(value);
+                            obj.exciseAmount = parseFloat(value);
+                        }
+                    }
+                    else {
+                        obj.exciseAmount = 0
+                    }
+                    var vat_amount =
+                        vat === 0 ? 0 :
+                            ((+net_value * vat) / 100);
+                }
 
-            const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
+            }
+            //Inclusive case
+            else {
+                if (obj.discountType === 'PERCENTAGE') {
 
-            const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 2 : obj.exciseTaxId === 2 ? net_value : 0
-            net_value = parseFloat(net_value) + parseFloat(excisevalue);
-            const vat_amount = vat === 0 ? 0 : ((+net_value * vat) / 100);
+                    //net value after removing discount
+                    net_value =
+                        ((+unitprice -
+                            (+((unitprice * obj.discount)) / 100)) * obj.quantity);
 
-            totalnetamount(net_value - excisevalue)
-            totalexcise(excisevalue)
-            totalvalt(vat_amount)
-            totalamount(vat_amount + net_value)
-            discountamount(discount)
-            obj.subTotal = net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+                    //discount amount
+                    var discount = (unitprice * obj.quantity) - net_value
+
+                    //vat amount
+                    var vat_amount =
+                        (vat === 0 ? 0 :
+                            ((+net_value * (vat / (100 + vat) * 100)) / 100));
+
+                    //net value after removing vat for inclusive
+                    net_value = net_value - vat_amount
+
+                    //excise calculation
+                    if (obj.exciseTaxId != 0) {
+                        if (obj.exciseTaxId === 1) {
+                            const value = net_value / 3
+                            net_value = net_value
+                            obj.exciseAmount = parseFloat(value);
+                        }
+                        else if (obj.exciseTaxId === 2) {
+                            const value = net_value / 2
+                            obj.exciseAmount = parseFloat(value);
+                            net_value = net_value
+                        }
+
+                    }
+                    else {
+                        obj.exciseAmount = 0
+                    }
+                }
+
+                else // fixed discount
+                {
+                    //net value after removing discount
+                    net_value =
+                        ((unitprice * obj.quantity) - obj.discount)
+
+                    //discount amount
+                    var discount = (unitprice * obj.quantity) - net_value
+
+                    //vat amount
+                    var vat_amount =
+                        (vat === 0 ? 0 :
+                            ((+net_value * (vat / (100 + vat) * 100)) / 100));
+
+                    //net value after removing vat for inclusive
+                    net_value = net_value - vat_amount
+
+                    //excise calculation
+                    if (obj.exciseTaxId != 0) {
+                        if (obj.exciseTaxId === 1) {
+                            const value = net_value / 3
+                            net_value = net_value
+                            obj.exciseAmount = parseFloat(value);
+                        }
+                        else if (obj.exciseTaxId === 2) {
+                            const value = net_value / 2
+                            obj.exciseAmount = parseFloat(value);
+                            net_value = net_value
+                        }
+                    }
+                    else {
+                        obj.exciseAmount = 0
+                    }
+                }
+            }
+            obj.unitPrice = unitprice
             obj.vatAmount = vat_amount
-            obj.exciseAmount = excisevalue
-        } else {
-            if (obj.discountType === 'PERCENTAGE')
-                net_value = ((+unitprice - (+((unitprice * parseFloat(obj.discount))) / 100)) * parseInt(obj.quantity));
-            else
-                net_value = ((unitprice * parseInt(obj.quantity)) - parseFloat(obj.discount))
-
-            const discount = (parseFloat(unitprice) * parseInt(obj.quantity)) - net_value;
-            //vat amount
-            const vat_amount =
-                (vat === 0 ? 0 :
-                    ((+net_value * (vat / (100 + vat) * 100)) / 100));
-
-            //net value after removing vat for inclusive
-            net_value = net_value - vat_amount
-            const excisevalue = obj.exciseTaxId === 1 ? +(net_value) / 3 : obj.exciseTaxId === 2 ? net_value / 2 : 0
-
-            totalnetamount(net_value - excisevalue)
-            totalexcise(excisevalue)
-            totalvalt(vat_amount)
-            totalamount(vat_amount + net_value)
-            discountamount(discount)
-            obj.subTotal = net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-            obj.vatAmount = vat_amount
-            obj.exciseAmount = excisevalue
+            obj.subTotal =
+                net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+            discount_total = +discount_total + discount
+            total_net = +(total_net + parseFloat(net_value));
+            total_vat = +(total_vat + vat_amount);
+            total_excise = +(total_excise + obj.exciseAmount)
+            total = total_vat + total_net;
         }
         return obj;
     });
+
     const list = {
         data: data,
-        total_net: total_net ? parseFloat(total_net).toFixed(2) : 0,
-        totalVatAmount: total_vat ? parseFloat(total_vat).toFixed(2) : 0,
-        totalAmount: total ? parseFloat(total).toFixed(2) : 0,
-        total_excise: total_excise ? parseFloat(total_excise).toFixed(2) : 0,
-        discount: discount ? parseFloat(discount).toFixed(2) : 0,
+        total_net: total_net ? parseFloat(parseFloat(total_net).toFixed(2)) - parseFloat(parseFloat(total_excise).toFixed(2)) : 0,
+        totalVatAmount: total_vat ? parseFloat(parseFloat(total_vat).toFixed(2)) : 0,
+        totalAmount: total ? parseFloat(parseFloat(total).toFixed(2)) : 0,
+        total_excise: total_excise ? parseFloat(parseFloat(total_excise).toFixed(2)) : 0,
+        discount: discount_total ? parseFloat(parseFloat(discount_total).toFixed(2)) : 0,
     }
     return list;
 };

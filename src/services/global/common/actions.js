@@ -417,6 +417,28 @@ export const getCompanyDetails = () => {
 		}
 
 		return authApi(data).then((res) => {
+			if (res.status === 200) {
+				dispatch({
+					type: COMMON.COMPANY_DETAILS,
+					payload: {
+						data: res.data,
+					},
+				});
+			}
+			return res
+		}).catch((err) => {
+			throw err
+		})
+	}
+}
+
+export const getByNoteListByInvoiceId = (id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/creditNote/getCreditNoteByInvoiceId?id=${id}`
+		}
+		return authApi(data).then((res) => {
 			return res
 		}).catch((err) => {
 			throw err

@@ -17,7 +17,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Formik, Field } from 'formik';
 import * as DebitNoteApplyToInvoiceActions from './actions';
 import * as DebitNoteActions from '../../actions';
-import { Loader, LeavePage } from 'components';
+import { Loader, LeavePage,Currency } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -79,7 +79,7 @@ class ApplyToSupplierInvoice extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			basecurrency: [],
-			customer_currency: '',
+			customer_currency: this.props.location.state.currency,
 			invoice_list: [],
 			currenttotal: 0,
 			selectedrowsdata: [],
@@ -110,21 +110,6 @@ class ApplyToSupplierInvoice extends React.Component {
 		//   paginationPosition: 'top'
 		// }
 		this.formRef = React.createRef();
-		this.termList = [
-			{ label: 'Net 7 Days', value: 'NET_7' },
-			{ label: 'Net 10 Days', value: 'NET_10' },
-			{ label: 'Net 30 Days', value: 'NET_30' },
-			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
-		];
-		this.placelist = [
-			{ label: 'Abu Dhabi', value: '1' },
-			{ label: 'Dubai', value: '2' },
-			{ label: 'Sharjah', value: '3' },
-			{ label: 'Ajman', value: '4' },
-			{ label: 'Umm Al Quwain', value: '5' },
-			{ label: 'Ras al-Khaimah', value: '6' },
-			{ label: 'Fujairah', value: '7' },
-		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -215,13 +200,33 @@ class ApplyToSupplierInvoice extends React.Component {
 		return (
 			<div>
 				<label>
-					{row.creditstaken || 0}
+					<Currency
+						value={row.creditstaken}
+						currencySymbol={this.state.customer_currency}
+					/>
 				</label>
 			</div>
 		);
 	};
-	renderDebitAmount = () => {
-		return this.props.location.state.debitAmount;
+	renderInvoiceDueAmount = (cell, row, extraData) => {
+		return (
+			<div>
+				<label>
+					<Currency
+						value={row.dueAmount}
+						currencySymbol={this.state.customer_currency}
+					/>
+				</label>
+			</div>
+		);
+	};
+	renderAmount = (value) => {
+		return (
+			<Currency
+						value={value}
+						currencySymbol={this.state.customer_currency}
+					/>
+		);
 	}
 	applyInvoice = (row, selectedrowsdata, selectedRows, currenttotal) => {
 		let tempList = selectedRows;
@@ -397,8 +402,8 @@ class ApplyToSupplierInvoice extends React.Component {
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
 															<Row>
-																<Col lg={12}><h5>{strings.DebitAmount}: {this.renderDebitAmount()}</h5></Col>
-																<Col lg={12} style={{ fontSize: '12px', color: currenttotal ? 'Green' : cannotsave ? 'red' : 'inherit' }}>{strings.RemainingDebitAmount}: {currenttotal}<br /></Col>
+																<Col lg={12} className="h5"><span>{strings.DebitAmount}: {this.renderAmount(this.props.location.state.debitAmount)}</span></Col>
+																<Col lg={12} className="mb-1" style={{ fontSize: '12px', color: currenttotal ? 'Green' : cannotsave ? 'red' : 'inherit' }}>{strings.RemainingDebitAmount}: {this.renderAmount(currenttotal)}<br /></Col>
 																<Col lg={12}>
 																	<BootstrapTable
 																		options={this.options}
@@ -431,6 +436,7 @@ class ApplyToSupplierInvoice extends React.Component {
 																		<TableHeaderColumn
 																			dataAlign='right'
 																			dataField="dueAmount"
+																			dataFormat={this.renderInvoiceDueAmount}
 																			className="table-header-bg"
 																		>
 																			{strings.InvoiceDueAmount}

@@ -519,11 +519,6 @@ const adminRoutes = [
 		component: SupplierInvoice.screen,
 	},
 	Config.EXPENSE_DN &&{
-		path: '/admin/expense/debit-notes',
-		name: 'Debit Notes',
-		component: DebitNotes.screen,
-	},
-	Config.EXPENSE_DN &&{
 		path: '/admin/expense/debit-notes/create',
 		name: 'Add Debit Notes',
 		component: CreateDebitNote.screen,
@@ -547,6 +542,11 @@ const adminRoutes = [
 		path: '/admin/expense/debit-notes/view',
 		name: 'View Debit Notes',
 		component: ViewDebitNote.screen,
+	},
+	Config.EXPENSE_DN &&{
+		path: '/admin/expense/debit-notes',
+		name: 'Debit Notes',
+		component: DebitNotes.screen,
 	},
 	Config.EXPENSE_EXPENSES && {
 		path: '/admin/expense/expense/create',

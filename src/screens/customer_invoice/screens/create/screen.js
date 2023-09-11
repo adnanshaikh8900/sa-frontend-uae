@@ -2753,7 +2753,7 @@ class CreateCustomerInvoice extends React.Component {
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="contactId">
 																					<span className="text-danger">* </span>
-																					{strings.Customer}
+																						{strings.CustomerName}
 																				</Label>
 																				<Select
 																					isDisabled={this.state.isQuotationSelected}

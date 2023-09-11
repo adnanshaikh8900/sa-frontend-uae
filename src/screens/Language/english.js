@@ -104,7 +104,7 @@ const en = {
       SelectPlaceOfSupply: "Select Place of Supply",
       ApplyLineItemDiscount: "  Apply Line Item Discount",
       DeleteCustomerInvoice: "Delete Customer Invoice?",
-      Credit_Note_Created: "( Credit Note Created)",
+      Credit_Note_Created: "(Credit Note Created)",
       CustomerInvoices: "Customer Invoices",
       Overdue: "Overdue",
       DueWithinThisWeek: "Due Within This Week",
@@ -401,6 +401,7 @@ const en = {
       AmountAppliedToTheInvoice:"Amount Applied To The Invoice",
       SomethingWentWrong:"Something Went Wrong",
       DebitNoteCreated:"(Debit Note Created)",
+      DebitNoteAmountUsedSummary: "Debit Note Amount Used Summary",
       
       //AddGoodsReceiveNotes
       CreateGoodsReceivedNote: "Create Goods Received Note",
@@ -736,6 +737,7 @@ const en = {
       RefundFrom: "Refund From",
       RefundNotes: "Notes",
       CreditNoteIssuedonCustomerInvoice: "Credit Note Issued on Customer Invoice:",
+      CreditNoteAmountUsedSummary:"Credit note amount used summary:",
 
       //ImportStatement
       ImportStatement: "Import Statement",

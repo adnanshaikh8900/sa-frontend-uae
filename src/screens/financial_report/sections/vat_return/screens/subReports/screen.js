@@ -328,7 +328,8 @@ class SubReports extends React.Component {
 				enablePivot={true}
 				cellRendererFramework={(params) =>
 					<>
-						{this.renderTaxReturns(params.value, params)}
+						{/* {this.renderTaxReturns(params.value, params)} */}
+						{this.renderDate(params.value, params)}
 					</>
 				}
 			></AgGridColumn>

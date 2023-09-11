@@ -1123,7 +1123,7 @@ class CreditNotes extends React.Component {
 												<TableHeaderColumn
 													//width="22%"
 													dataField="customerName"
-													//	dataSort width="10%"
+													dataSort 
 													className="table-header-bg"
 												>
 													{strings.CUSTOMERNAME}

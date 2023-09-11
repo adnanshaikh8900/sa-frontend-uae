@@ -827,6 +827,7 @@ class DebitNotes extends React.Component {
 												<TableHeaderColumn
 													dataField="customerName"
 													className="table-header-bg"
+													dataSort 
 												>
 													{strings.SUPPLIERNAME}
 												</TableHeaderColumn>
@@ -839,6 +840,7 @@ class DebitNotes extends React.Component {
 													{strings.InvoiceNumber}
 												</TableHeaderColumn>
 												<TableHeaderColumn
+												    dataField="invoiceDate"
 													dataSort
 													dataFormat={this.debitNoteDate}
 													className="table-header-bg"

@@ -391,13 +391,13 @@ class DebitNoteDetailsReport extends React.Component {
 																<tr key={index}>
 
 
-																	<td style={{ textAlign: 'left', color: "#2046DB"}} onClick={() =>
+																	<td style={{ textAlign: 'center', color: "#2046DB"}} onClick={() =>
 																		this.props.history.push('/admin/expense/debit-notes/view', {
 																			id: item.id, status: item.status, isCNWithoutProduct: item.isCNWithoutProduct,
 																			gotoReports:true
 																		})}>{item.creditNoteNumber}</td>
-																	<td style={{ textAlign: 'left'}}>{item.customerName}</td>
-																	<td style={{ textAlign: 'left', color: "#2046DB"}}
+																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
+																	<td style={{ textAlign: 'center', color: "#2046DB"}}
 																	onClick={() =>
 																		this.props.history.push('/admin/expense/supplier-invoice/view', {
 																			id: item.invoiceId, status: item.invoiceStatus,
@@ -405,10 +405,10 @@ class DebitNoteDetailsReport extends React.Component {
 																		})
 																	}
 																	>{item.invoiceNumber}</td>
-																	<td style={{ textAlign: 'left'}}>{item.creditNoteDate ? (
+																	<td style={{ textAlign: 'center'}}>{item.creditNoteDate ? (
 																		moment(item.creditNoteDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
-																		<td style={{ textAlign: 'left' }}>
+																		<td style={{ textAlign: 'center' }}>
 																		{(() => {
 																			if (item.status === 'Partially Paid') {
 																			return 'Partially Credited';

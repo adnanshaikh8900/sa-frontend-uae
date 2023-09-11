@@ -207,6 +207,7 @@ class CreateUser extends React.Component {
 					);
 					if (this.state.createMore) {
 						this.setState({
+							disableLeavePage: false,
 							createMore: false,
 							createDisabled: false
 						});

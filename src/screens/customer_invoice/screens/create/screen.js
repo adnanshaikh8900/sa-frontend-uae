@@ -2074,7 +2074,7 @@ class CreateCustomerInvoice extends React.Component {
 				this.setState({ loading: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Invoice Created Successfully.',
+					res.data ? strings.InvoiceCreatedSuccessfully :  res.data.message,
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -2158,7 +2158,7 @@ class CreateCustomerInvoice extends React.Component {
 
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Invoice Created Unsuccessfully',
+					err && err.data ? err.data.message : 'Invoice Created Unsuccessfully!',
 				);
 			});
 	};

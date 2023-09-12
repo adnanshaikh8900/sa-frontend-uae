@@ -2099,7 +2099,7 @@ class DetailSupplierInvoice extends React.Component {
 																'Invoice number is required',
 															),
 															contactId: Yup.string().required(
-																'Supplier is required',
+																strings.SupplierNameIsRequired
 															),
 															term: Yup.string().required('Term is required'),
 															// placeOfSupplyId: Yup.string().required('Place of Supply is required'),

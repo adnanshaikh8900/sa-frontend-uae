@@ -301,6 +301,7 @@ const en = {
       SupplierInvoice: "Supplier Invoice",
       InvoiceNumberRequired: "Invoice number is required",
       SupplierIsRequired: "Supplier is required",
+      SupplierNameIsRequired :"Supplier Name is required",
 
 
       //Create invoice
@@ -1133,6 +1134,7 @@ const en = {
       Cash: "Cash",
       Accounts: "Accounts",
       CurrentLiabilities: "Current Liabilities",
+      DueBalance:"Due Balance",
 
       //placeholder	
       ReceiptAttachmentDescription: "Receipt Attachment Description",

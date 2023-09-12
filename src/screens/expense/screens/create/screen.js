@@ -1029,7 +1029,7 @@ class CreateExpense extends React.Component {
 																// 	errors.payMode = 'Pay through is required'
 																// }
 
-																if (values.expenseNumber && exist === true ) {
+																if (values.expenseNumber&&exist === true ) {
 																	errors.expenseNumber = 'Expense number already exists'
 																}
 															

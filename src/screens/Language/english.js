@@ -270,7 +270,7 @@ const en = {
       ExpenseType: "Expense Type",
       ActualExpenseAmount: "Actual Expense Amount",
       TaxTreatmentRequired: 'Tax treatment is required',
-      ExpenseNumberRequired:'Expense Number is required',
+      ExpenseNumberRequired: 'Expense Number is required',
       ExpenseCategoryRequired: 'Expense Category is required',
       PaidByRequired: 'Paid by is required',
       AmountIsRequired: 'Amount is required',

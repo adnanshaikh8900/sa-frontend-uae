@@ -1245,7 +1245,7 @@ class CreateBankTransaction extends React.Component {
                             values.coaCategoryId.label === "Expense" &&
                             values.expenseCategory.value !== 34
                           ) {
-                            errors.vatId = "Please select Vat";
+                            errors.vatId = "Payroll is Required";
                           }
                           if (
                             values.payrollListIds === "" &&

@@ -588,12 +588,12 @@ class SupplierInvoice extends React.Component {
 					if (markAsSent === true) {
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'Invoice Status Changed Successfully!',
+							strings.InvoiceStatusChangedSuccessfully
 						);	
 					} else {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Sent Successfully!',
+						strings.InvoiceSentSuccessfully
 					)};
 					this.setState({
 						loading: false,
@@ -629,7 +629,7 @@ class SupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Moved To Draft Successfully!',
+						strings.InvoiceMovedToDraftSuccessfully
 					);
 					this.setState({
 						loading: false,

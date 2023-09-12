@@ -2093,7 +2093,7 @@ class CreateSupplierInvoice extends React.Component {
 				this.setState({ loading: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'New Invoice Created Successfully.',
+					res.data ? strings.InvoiceCreatedSuccessfully : res.data.message ,
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -2554,7 +2554,7 @@ class CreateSupplierInvoice extends React.Component {
 																'Invoice number is required',
 															),
 															contactId: Yup.string().required(
-																strings.SupplierIsRequired
+																strings.SupplierNameIsRequired
 															),
 															// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 															term: Yup.string().required(strings.TermIsRequired
@@ -2702,7 +2702,7 @@ class CreateSupplierInvoice extends React.Component {
 																				isDisabled={this.state.isSelected}
 																				id="contactId"
 																				name="contactId"
-																				placeholder={strings.Select + strings.Supplier}
+																					placeholder={strings.Select + strings.SupplierName}
 																				options={
 																					tmpSupplier_list
 																						? selectOptionsFactory.renderOptions(

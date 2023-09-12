@@ -285,7 +285,7 @@ class RecordSupplierPayment extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Payment Recorded Successfully.',
+					res.data ? res.data.message : strings.PaymentRecordedSuccessfully,
 				);
 				this.props.history.push('/admin/expense/supplier-invoice');
 				this.setState({ loading:false,});

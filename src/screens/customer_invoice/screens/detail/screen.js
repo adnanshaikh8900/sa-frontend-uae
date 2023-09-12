@@ -112,6 +112,7 @@ class DetailCustomerInvoice extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			basecurrency: [],
+			income: true,
 			customer_currency: '',
 			state_list_for_shipping: [],
 			language: window['localStorage'].getItem('language'),
@@ -3663,6 +3664,7 @@ class DetailCustomerInvoice extends React.Component {
 									this.getCurrentProduct(res.data[0])
 							})
 						}}
+						income={this.state.income}
 						createProduct={this.props.productActions.createAndSaveProduct}
 						// vat_list={this.props.vat_list}
 						vat_list={this.state.vat_list}

@@ -171,6 +171,7 @@ class CreateCustomerInvoice extends React.Component {
 			discountAmount: 0,
 			exist: false,
 			prefix: '',
+			income: true,
 			purchaseCategory: [],
 			salesCategory: [],
 			exchangeRate: '',
@@ -4295,6 +4296,7 @@ class CreateCustomerInvoice extends React.Component {
 										this.getCurrentProduct(res.data[0])
 								})
 							}}
+							income={this.state.income}
 							createProduct={this.props.productActions.createAndSaveProduct}
 							vat_list={this.props.vat_list}
 							product_category_list={this.props.product_category_list}

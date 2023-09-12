@@ -141,14 +141,20 @@ class ViewDebitNote extends React.Component {
 		}
 	};
 	redirectToSupplierIncoive = (invoice) => {
-		if (!(invoice.transactionType && invoice.transactionType === 'Refund'))
-			this.props.history.push('/admin/expense/supplier-invoice/view', {
+		if (!(invoice.transactionType && invoice.transactionType === 'Refund'))	{
+			const commonParams = {
 				id: invoice.invoiceId,
 				status: invoice.status,
 				DN_Id: this.props.location.state.id,
 				DN_WithoutPRoduct: this.props.location.state.isCNWithoutProduct,
 				DN_Status: this.props.location.state.status,
-			});
+			}
+			if (this.props.location.state && this.props.location.state.gotoReports) {
+				commonParams.gotoReports = true;
+			}
+			// this.props.history.push('/admin/expense/debit-notes/view', commonParams)
+			this.props.history.push('/admin/expense/supplier-invoice/view', commonParams)
+		}
 	}
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();

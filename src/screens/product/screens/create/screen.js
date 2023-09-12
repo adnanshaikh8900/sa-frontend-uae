@@ -81,6 +81,8 @@ class CreateProduct extends React.Component {
 				salesUnitPrice: '',
 				purchaseUnitPrice: '',
 				productPriceType: [this.props.expense === true ? 'PURCHASE' : 'SALES'],
+				income: this.props.expense === true ? true : false,
+				expense: this.props.income === true ? true : false,
 				salesTransactionCategoryId: { value: 84, label: 'Sales' },
 				purchaseTransactionCategoryId: {
 					value: 49,

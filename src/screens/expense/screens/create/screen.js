@@ -1032,7 +1032,10 @@ class CreateExpense extends React.Component {
 																if (exist === true) {
 																	errors.expenseNumber = 'Expense number already exists'
 																}
-																if (values.expenseCategory === '') {
+																if (values.expenseNumber === '') {
+																	errors.expenseNumber = strings.ExpenseCategoryRequired
+																}
+																if (values.expenseCategory===''){
 																	errors.expenseCategory = 'Expense Category is Required'
 																}
 																if (this.state.currency === true && values.currency === '') {

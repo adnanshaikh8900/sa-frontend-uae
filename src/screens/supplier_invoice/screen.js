@@ -585,10 +585,16 @@ class SupplierInvoice extends React.Component {
 			.postInvoice(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
+					if (markAsSent === true) {
+						this.props.commonActions.tostifyAlert(
+							'success',
+							'Invoice Status Changed Successfully!',
+						);	
+					} else {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Supplier Invoice Posted Successfully',
-					);
+						'Invoice Sent Successfully!',
+					)};
 					this.setState({
 						loading: false,
 					});
@@ -623,7 +629,7 @@ class SupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Supplier Invoice Moved To Draft Successfully',
+						'Invoice Moved To Draft Successfully!',
 					);
 					this.setState({
 						loading: false,
@@ -635,7 +641,7 @@ class SupplierInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Supplier Invoice Moved To Draft Unsuccessfully',
+					err.data ? err.data.message : 'Invoice Moved To Draft Unsuccessfully!',
 				);
 				this.setState({
 					loading: false,

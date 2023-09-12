@@ -2093,7 +2093,7 @@ class CreateSupplierInvoice extends React.Component {
 				this.setState({ loading: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'New Invoice Created Successfully.',
+					res.data ?'Invoice Created Successfully!': res.data.message,
 				);
 				if (this.state.createMore) {
 					this.setState(

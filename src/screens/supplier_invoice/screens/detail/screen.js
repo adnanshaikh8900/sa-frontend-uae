@@ -1739,7 +1739,7 @@ class DetailSupplierInvoice extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Invoice Updated Successfully.',
+					res.data ? 'Invoice Updated Successfully!' : res.data.message ,
 				);
 				this.props.history.push('/admin/expense/supplier-invoice');
 				this.setState({ loading: false, });
@@ -1782,7 +1782,7 @@ class DetailSupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Invoice Deleted Successfully',
+						res.data ? 'Invoice Deleted Successfully!' :  res.data.message,
 					);
 					this.props.history.push('/admin/expense/supplier-invoice');
 					this.setState({ loading: false, });
@@ -1791,7 +1791,7 @@ class DetailSupplierInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Invoice Deleted Unsuccessfully',
+					err && err.data ? err.data.message : 'Invoice Deleted Unsuccessfully!',
 				);
 			});
 	};

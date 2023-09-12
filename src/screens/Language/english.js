@@ -251,6 +251,7 @@ const en = {
       ExpirationDate: "Expiry Date",
       CreateSupplier: "Create Supplier",
       excise: "Excise",
+      CustomerNameIsRequired: 'Customer Name is Required',
       PlaceOfSupplyRequired: 'Place of supply is required',
 
       //Expenses

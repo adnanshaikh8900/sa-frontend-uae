@@ -181,9 +181,9 @@ class ExplainTrasactionDetail extends React.Component {
             bankId: bankId,
             VATReportId: res.data.vatReportResponseModelList
               ? {
-                  label: res.data.vatReportResponseModelList?.[0]?.vatNumber,
-                  value: res.data.vatReportResponseModelList?.[0]?.id,
-                }
+                label: res.data.vatReportResponseModelList?.[0]?.vatNumber,
+                value: res.data.vatReportResponseModelList?.[0]?.id,
+              }
               : {},
             contactName: res.data.contactName ? res.data.contactName : "",
             amount: res.data.amount ? res.data.amount : 0,
@@ -207,18 +207,18 @@ class ExplainTrasactionDetail extends React.Component {
             reference: res.data.reference ? res.data.reference : "",
             exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : "",
             //currencyName: res.data.currencyName ? res.data.currencyName : '',
-            coaCategoryId: res.data.coaCategoryId ? res.data.coaCategoryId === 18 ? {'label' : 'Corporate Tax Payment' , 'value' : 18} : 
+            coaCategoryId: res.data.coaCategoryId ? res.data.coaCategoryId === 18 ? { 'label': 'Corporate Tax Payment', 'value': 18 } :
               parseInt(res.data.coaCategoryId)
               : "",
             invoiceIdList:
               res.data.explainParamList && res.data.explainedInvoiceList
                 ? res.data.explainParamList.map((i, inc) => {
-                    return {
-                      ...i,
-                      ...res.data.explainedInvoiceList[inc],
-                      pp: res.data.explainedInvoiceList[inc].partiallyPaid,
-                    };
-                  })
+                  return {
+                    ...i,
+                    ...res.data.explainedInvoiceList[inc],
+                    pp: res.data.explainedInvoiceList[inc].partiallyPaid,
+                  };
+                })
                 : [],
             transactionCategoryLabel: res.data.transactionCategoryLabel
               ? res.data.transactionCategoryLabel
@@ -267,8 +267,8 @@ class ExplainTrasactionDetail extends React.Component {
           amount: res.data.amount
             ? res.data.amount
               ? res.data.amount +
-                (res.data.explainedInvoiceList?.[0].exchangeGainOrLossAmount ||
-                  0)
+              (res.data.explainedInvoiceList?.[0].exchangeGainOrLossAmount ||
+                0)
               : 0
             : 0,
           currencySymbol: res.data.curruncySymbol
@@ -301,7 +301,7 @@ class ExplainTrasactionDetail extends React.Component {
                   },
                 },
               },
-              () => {}
+              () => { }
             );
           }
           if (res.data.customerId) {
@@ -325,7 +325,7 @@ class ExplainTrasactionDetail extends React.Component {
         "amount",
         res.data.amount
           ? res.data.amount +
-              (res.data.explainedInvoiceList?.[0].exchangeGainOrLossAmount || 0)
+          (res.data.explainedInvoiceList?.[0].exchangeGainOrLossAmount || 0)
           : 0,
         true
       );
@@ -352,9 +352,9 @@ class ExplainTrasactionDetail extends React.Component {
         "VATReportId",
         res.data.vatReportResponseModelList
           ? {
-              label: res.data.vatReportResponseModelList?.[0]?.vatNumber,
-              value: res.data.vatReportResponseModelList?.[0]?.id,
-            }
+            label: res.data.vatReportResponseModelList?.[0]?.vatNumber,
+            value: res.data.vatReportResponseModelList?.[0]?.id,
+          }
           : {},
         true
       );
@@ -378,12 +378,12 @@ class ExplainTrasactionDetail extends React.Component {
         "invoiceIdList",
         res.data.explainParamList && res.data.explainedInvoiceList
           ? res.data.explainParamList.map((i, inc) => {
-              return {
-                ...i,
-                ...res.data.explainedInvoiceList[inc],
-                pp: res.data.explainedInvoiceList[inc].partiallyPaid,
-              };
-            })
+            return {
+              ...i,
+              ...res.data.explainedInvoiceList[inc],
+              pp: res.data.explainedInvoiceList[inc].partiallyPaid,
+            };
+          })
           : [],
         true
       );
@@ -570,17 +570,17 @@ class ExplainTrasactionDetail extends React.Component {
             let categoryList = res.data.categoriesList && res.data.categoriesList.map((category) => {
               let newcategory = category.label;
               let newOption = category.options;
-              if(category.label === 'Other Current Liability'){
+              if (category.label === 'Other Current Liability') {
                 newOption = category.options.filter(obj => obj.label !== 'Payroll Liability')
               }
-              return {label : newcategory , options : newOption }
+              return { label: newcategory, options: newOption }
             })
 
             this.setState(
               {
-                transactionCategoryList: { categoriesList : categoryList , dataList : res.data.dataList},
+                transactionCategoryList: { categoriesList: categoryList, dataList: res.data.dataList },
               },
-              () => {}
+              () => { }
             );
           }
         });
@@ -729,7 +729,7 @@ class ExplainTrasactionDetail extends React.Component {
               {
                 moneyCategoryList: res.data,
               },
-              () => {}
+              () => { }
             );
           }
         });
@@ -916,19 +916,19 @@ class ExplainTrasactionDetail extends React.Component {
       "explainedInvoiceListString",
       invoiceIdList
         ? JSON.stringify(
-            invoiceIdList.map((i) => {
-              return {
-                invoiceId: i.value,
-                invoiceAmount: i.amount,
-                convertedInvoiceAmount: i.convertedInvoiceAmount,
-                explainedAmount: i.explainedAmount,
-                exchangeRate: i.exchangeRate,
-                partiallyPaid: i.pp,
-                nonConvertedInvoiceAmount: i.explainedAmount / i.exchangeRate,
-                convertedToBaseCurrencyAmount: i.convertedToBaseCurrencyAmount,
-              };
-            })
-          )
+          invoiceIdList.map((i) => {
+            return {
+              invoiceId: i.value,
+              invoiceAmount: i.amount,
+              convertedInvoiceAmount: i.convertedInvoiceAmount,
+              explainedAmount: i.explainedAmount,
+              exchangeRate: i.exchangeRate,
+              partiallyPaid: i.pp,
+              nonConvertedInvoiceAmount: i.explainedAmount / i.exchangeRate,
+              convertedToBaseCurrencyAmount: i.convertedToBaseCurrencyAmount,
+            };
+          })
+        )
         : []
     );
 
@@ -937,8 +937,8 @@ class ExplainTrasactionDetail extends React.Component {
       this.setexcessorshortamount().data < 0
         ? 103
         : this.setexcessorshortamount().data > 0
-        ? 79
-        : 0
+          ? 79
+          : 0
     );
     formData.append("exchangeGainOrLoss", this.setexcessorshortamount().data);
 
@@ -956,7 +956,7 @@ class ExplainTrasactionDetail extends React.Component {
         payrollListIds ? JSON.stringify(result1) : ""
       );
     }
-    formData.append("expenseType", this.state.expenseType ?this.state.expenseType:false);
+    formData.append("expenseType", this.state.expenseType ? this.state.expenseType : false);
     this.props.transactionDetailActions
       .updateTransaction(formData)
       .then((res) => {
@@ -982,7 +982,7 @@ class ExplainTrasactionDetail extends React.Component {
     let reader = new FileReader();
     let file = e.target.files[0];
     if (file) {
-      reader.onloadend = () => {};
+      reader.onloadend = () => { };
       reader.readAsDataURL(file);
       props.setFieldValue("attachmentFile", file, true);
     }
@@ -1052,7 +1052,7 @@ class ExplainTrasactionDetail extends React.Component {
     return (
       <Col lg={3}>
         <FormGroup className="mb-3">
-        <Label htmlFor="payrollListIds"><span className="text-danger">* </span>{strings.Payroll}</Label>
+          <Label htmlFor="payrollListIds"><span className="text-danger">* </span>{strings.Payroll}</Label>
           <Select
             isDisabled={
               this.state.initValue
@@ -1149,7 +1149,7 @@ class ExplainTrasactionDetail extends React.Component {
           },
         },
       },
-      () => {}
+      () => { }
     );
     this.formRef.current.setFieldValue("invoiceIdList", option, true);
   };
@@ -1185,12 +1185,11 @@ class ExplainTrasactionDetail extends React.Component {
     }
 
     return {
-      value: `${
-        this.state.bankCurrency?.bankAccountCurrencyIsoCode
-      } ${final.toLocaleString(navigator.language, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}  `,
+      value: `${this.state.bankCurrency?.bankAccountCurrencyIsoCode
+        } ${final.toLocaleString(navigator.language, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}  `,
       data: final.toFixed(2),
     };
   };
@@ -1198,7 +1197,7 @@ class ExplainTrasactionDetail extends React.Component {
     let exchange;
     let convertor =
       this.state.bankCurrency.bankAccountCurrency ===
-      this.state.basecurrency.currencyCode
+        this.state.basecurrency.currencyCode
         ? customerinvoice
         : this.state.bankCurrency.bankAccountCurrency;
     let result = this.props.currency_convert_list.filter((obj) => {
@@ -1411,7 +1410,7 @@ class ExplainTrasactionDetail extends React.Component {
     let reader = new FileReader();
     let file = e.target.files[0];
     if (file) {
-      reader.onloadend = () => {};
+      reader.onloadend = () => { };
       reader.readAsDataURL(file);
       props.setFieldValue("attachment", file, true);
     }
@@ -1558,29 +1557,29 @@ class ExplainTrasactionDetail extends React.Component {
                           <span className="ml-2">
                             {this.props.selectedData.debitCreditFlag === "D"
                               ? strings.Explain +
-                                " " +
-                                strings.Transaction +
-                                " " +
-                                strings.For +
-                                " " +
-                                strings.WithdrawalAmount +
-                                " " +
-                                this.state.bankCurrency
-                                  ?.bankAccountCurrencyIsoCode +
-                                " " +
-                                this.state.amount
+                              " " +
+                              strings.Transaction +
+                              " " +
+                              strings.For +
+                              " " +
+                              strings.WithdrawalAmount +
+                              " " +
+                              this.state.bankCurrency
+                                ?.bankAccountCurrencyIsoCode +
+                              " " +
+                              this.state.amount
                               : strings.Explain +
-                                " " +
-                                strings.Transaction +
-                                " " +
-                                strings.For +
-                                " " +
-                                strings.DepositAmount +
-                                " " +
-                                this.state.bankCurrency
-                                  ?.bankAccountCurrencyIsoCode +
-                                " " +
-                                this.state.amount}
+                              " " +
+                              strings.Transaction +
+                              " " +
+                              strings.For +
+                              " " +
+                              strings.DepositAmount +
+                              " " +
+                              this.state.bankCurrency
+                                ?.bankAccountCurrencyIsoCode +
+                              " " +
+                              this.state.amount}
                           </span>
                         </div>
                       </Col>
@@ -1642,9 +1641,9 @@ class ExplainTrasactionDetail extends React.Component {
                                 if (
                                   this.state.bankCurrency
                                     .bankAccountCurrency !==
-                                    this.state.basecurrency.currencyCode &&
+                                  this.state.basecurrency.currencyCode &&
                                   this.state.basecurrency.currencyCode !==
-                                    ii.currencyCode &&
+                                  ii.currencyCode &&
                                   this.state.bankCurrency
                                     .bankAccountCurrency !== ii.currencyCode
                                 )
@@ -1656,7 +1655,7 @@ class ExplainTrasactionDetail extends React.Component {
                                 values.amount > totalexpaled &&
                                 this.state?.bankCurrency
                                   ?.bankAccountCurrency ===
-                                  values?.invoiceIdList?.[0]?.currencyCode
+                                values?.invoiceIdList?.[0]?.currencyCode
                               ) {
                                 errors.amount = `The transaction amount cannot be greater than the invoice amount.`;
                               }
@@ -1668,7 +1667,7 @@ class ExplainTrasactionDetail extends React.Component {
                                 values.amount < totalexpaled &&
                                 this.state?.bankCurrency
                                   ?.bankAccountCurrency ===
-                                  values?.invoiceIdList?.[0]?.currencyCode &&
+                                values?.invoiceIdList?.[0]?.currencyCode &&
                                 isppselected === 0
                               ) {
                                 errors.amount = `The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `;
@@ -1683,7 +1682,7 @@ class ExplainTrasactionDetail extends React.Component {
                               errors.vatId = "Please select Vat";
                             }
                             if (
-                              values.payrollListIds === "" &&
+                              (values.payrollListIds === "" || !values.payrollListIds || values.payrollListIds?.length === 0) &&
                               values.coaCategoryId.label === "Expense" &&
                               values.expenseCategory.value == 34
                             ) {
@@ -1717,7 +1716,7 @@ class ExplainTrasactionDetail extends React.Component {
                               errors.employeeId = "User is Required";
                             }
                             if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
-                              if(values.expenseCategory && (values.expenseCategory.value === 34 || values.expenseCategory === 34)) {
+                              if (values.expenseCategory && (values.expenseCategory.value === 34 || values.expenseCategory === 34)) {
                                 const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
                                   let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
                                   return sum + num;
@@ -1733,10 +1732,6 @@ class ExplainTrasactionDetail extends React.Component {
                             date: Yup.string().required(
                               "Transaction Date is Required"
                             ),
-                            payrollListIds: Yup.string().required(
-                              "Please select Payroll"
-                            ),
-
                             amount: Yup.string()
                               .required("Transaction Amount is Required")
                               .test(
@@ -1805,39 +1800,39 @@ class ExplainTrasactionDetail extends React.Component {
                                       isDisabled={
                                         this.state.initValue
                                           .explinationStatusEnum ===
-                                          "PARTIAL" ||
+                                        "PARTIAL" ||
                                         this.state.initValue
                                           .explinationStatusEnum === "FULL" ||
                                         this.state.initValue
                                           .explinationStatusEnum ===
-                                          "RECONCILED"
+                                        "RECONCILED"
                                       }
                                       options={
                                         chartOfAccountCategoryList
                                           ? [
-                                              {
-                                                ...chartOfAccountCategoryList[0],
-                                                options:
+                                            {
+                                              ...chartOfAccountCategoryList[0],
+                                              options:
+                                                this.state.initValue
+                                                  .explinationStatusEnum ===
+                                                  "PARTIAL" ||
                                                   this.state.initValue
                                                     .explinationStatusEnum ===
-                                                    "PARTIAL" ||
+                                                  "FULL" ||
                                                   this.state.initValue
                                                     .explinationStatusEnum ===
-                                                    "FULL" ||
-                                                  this.state.initValue
-                                                    .explinationStatusEnum ===
-                                                    "RECONCILED"
-                                                    ? chartOfAccountCategoryList[0]?.options?.filter(
-                                                        (i) => i.value !== 6
-                                                      )
-                                                    : chartOfAccountCategoryList[0]?.options?.filter(
-                                                        (i) =>
-                                                         // i.value !== 6 &&
-                                                          i.value !== 16 &&
-                                                          i.value !== 17
-                                                      ),
-                                              },
-                                            ]
+                                                  "RECONCILED"
+                                                  ? chartOfAccountCategoryList[0]?.options?.filter(
+                                                    (i) => i.value !== 6
+                                                  )
+                                                  : chartOfAccountCategoryList[0]?.options?.filter(
+                                                    (i) =>
+                                                      // i.value !== 6 &&
+                                                      i.value !== 16 &&
+                                                      i.value !== 17
+                                                  ),
+                                            },
+                                          ]
                                           : ""
                                       }
                                       value={
@@ -1906,7 +1901,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       name="coaCategoryId"
                                       className={
                                         props.errors.coaCategoryId &&
-                                        props.touched.coaCategoryId
+                                          props.touched.coaCategoryId
                                           ? "is-invalid"
                                           : ""
                                       }
@@ -1944,11 +1939,10 @@ class ExplainTrasactionDetail extends React.Component {
                                       onChange={(value) =>
                                         props.handleChange("date")(value)
                                       }
-                                      className={`form-control ${
-                                        props.errors.date && props.touched.date
+                                      className={`form-control ${props.errors.date && props.touched.date
                                           ? "is-invalid"
                                           : ""
-                                      }`}
+                                        }`}
                                     />
                                     {props.errors.date &&
                                       props.touched.date && (
@@ -1998,9 +1992,9 @@ class ExplainTrasactionDetail extends React.Component {
                                       }
                                       disabled={
                                         props.values.coaCategoryId?.label ===
-                                          "Vat Claim" ||
+                                        "Vat Claim" ||
                                         props.values.coaCategoryId?.label ===
-                                          "Vat Payment"
+                                        "Vat Payment"
                                       }
                                     />
                                     {props.errors.amount &&
@@ -2015,58 +2009,58 @@ class ExplainTrasactionDetail extends React.Component {
                                 {(props.values.coaCategoryId?.label ===
                                   "Vat Claim" ||
                                   props.values.coaCategoryId?.label ===
-                                    "Vat Payment") && (
-                                  <Col lg={3}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="vatTotalAmount">
-                                        <span className="text-danger">* </span>
-                                        {props.values.coaCategoryId?.label ===
-                                        "Vat Claim"
-                                          ? "Total VAT Reclaimable"
-                                          : "Total VAT Payable"}
-                                      </Label>
-                                      <Input
-                                        type="number"
-                                        min="0"
-                                        disabled
-                                        maxLength="100"
-                                        id="vatTotalAmount"
-                                        name="vatTotalAmount"
-                                        placeholder={
-                                          props.values.coaCategoryId?.label ===
-                                          "Vat Claim"
+                                  "Vat Payment") && (
+                                    <Col lg={3}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="vatTotalAmount">
+                                          <span className="text-danger">* </span>
+                                          {props.values.coaCategoryId?.label ===
+                                            "Vat Claim"
                                             ? "Total VAT Reclaimable"
-                                            : "Total VAT Payable"
-                                        }
-                                        onChange={(option) => {
-                                          if (
-                                            option.target.value === "" ||
-                                            this.regDecimal.test(
-                                              option.target.value
-                                            )
-                                          ) {
-                                            props.handleChange(
-                                              "vatTotalAmount"
-                                            )(option);
+                                            : "Total VAT Payable"}
+                                        </Label>
+                                        <Input
+                                          type="number"
+                                          min="0"
+                                          disabled
+                                          maxLength="100"
+                                          id="vatTotalAmount"
+                                          name="vatTotalAmount"
+                                          placeholder={
+                                            props.values.coaCategoryId?.label ===
+                                              "Vat Claim"
+                                              ? "Total VAT Reclaimable"
+                                              : "Total VAT Payable"
                                           }
-                                        }}
-                                        value={props.values.vatTotalAmount}
-                                        className={
-                                          props.errors.vatTotalAmount &&
-                                          props.touched.vatTotalAmount
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.vatTotalAmount &&
-                                        props.touched.vatTotalAmount && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.vatTotalAmount}
-                                          </div>
-                                        )}
-                                    </FormGroup>
-                                  </Col>
-                                )}
+                                          onChange={(option) => {
+                                            if (
+                                              option.target.value === "" ||
+                                              this.regDecimal.test(
+                                                option.target.value
+                                              )
+                                            ) {
+                                              props.handleChange(
+                                                "vatTotalAmount"
+                                              )(option);
+                                            }
+                                          }}
+                                          value={props.values.vatTotalAmount}
+                                          className={
+                                            props.errors.vatTotalAmount &&
+                                              props.touched.vatTotalAmount
+                                              ? "is-invalid"
+                                              : ""
+                                          }
+                                        />
+                                        {props.errors.vatTotalAmount &&
+                                          props.touched.vatTotalAmount && (
+                                            <div className="invalid-feedback">
+                                              {props.errors.vatTotalAmount}
+                                            </div>
+                                          )}
+                                      </FormGroup>
+                                    </Col>
+                                  )}
                               </Row>
                               {/* {transactionCategoryList.dataList &&
 																props.values.coaCategoryId === 10 && (
@@ -2138,7 +2132,7 @@ class ExplainTrasactionDetail extends React.Component {
 																)} */}
                               {props.values.coaCategoryId &&
                                 props.values.coaCategoryId?.label ===
-                                  "Expense" && (
+                                "Expense" && (
                                   <Row>
                                     <Col lg={3}>
                                       <FormGroup className="mb-3">
@@ -2181,7 +2175,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           name="expenseCategory"
                                           className={
                                             props.errors.expenseCategory &&
-                                            props.touched.expenseCategory
+                                              props.touched.expenseCategory
                                               ? "is-invalid"
                                               : ""
                                           }
@@ -2203,7 +2197,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       )}
                                     {props.values.coaCategoryId &&
                                       props.values.coaCategoryId?.label ===
-                                        "Expense" &&
+                                      "Expense" &&
                                       props.values.expenseCategory !== 34 && (
                                         <Col lg={3}>
                                           <FormGroup className="mb-3">
@@ -2217,22 +2211,22 @@ class ExplainTrasactionDetail extends React.Component {
                                               isDisabled={
                                                 this.state.initValue
                                                   .explinationStatusEnum ===
-                                                  "PARTIAL" ||
+                                                "PARTIAL" ||
                                                 this.state.initValue
                                                   .explinationStatusEnum ===
-                                                  "FULL" ||
+                                                "FULL" ||
                                                 this.state.initValue
                                                   .explinationStatusEnum ===
-                                                  "RECONCILED"
+                                                "RECONCILED"
                                               }
                                               options={
                                                 vat_list
                                                   ? selectOptionsFactory.renderOptions(
-                                                      "name",
-                                                      "id",
-                                                      vat_list,
-                                                      "Tax"
-                                                    )
+                                                    "name",
+                                                    "id",
+                                                    vat_list,
+                                                    "Tax"
+                                                  )
                                                   : []
                                               }
                                               value={
@@ -2269,7 +2263,7 @@ class ExplainTrasactionDetail extends React.Component {
                                               name="vatId"
                                               className={
                                                 props.errors.vatId &&
-                                                props.touched.vatId
+                                                  props.touched.vatId
                                                   ? "is-invalid"
                                                   : ""
                                               }
@@ -2283,87 +2277,87 @@ class ExplainTrasactionDetail extends React.Component {
                                           </FormGroup>
                                         </Col>
                                       )}
-                                  {props.values.coaCategoryId &&
+                                    {props.values.coaCategoryId &&
                                       props.values.coaCategoryId?.label ===
-                                        "Expense" &&
+                                      "Expense" &&
                                       props.values.expenseCategory !== 34 && (
-                                    <Col className="mb-3" lg={3}>
-                                      <Label htmlFor="inline-radio3">
-                                        <span className="text-danger">* </span>
-                                        {strings.ExpenseType}
-                                      </Label>
-                                      <div style={{ display: "flex" }}>
-                                        {this.state.expenseType === false ? (
-                                          <span
-                                            style={{ color: "#0069d9" }}
-                                            className="mr-4"
-                                          >
-                                            <b>{strings.NonClaimable}</b>
-                                          </span>
-                                        ) : (
-                                          <span className="mr-4">
-                                            {strings.NonClaimable}
-                                          </span>
-                                        )}
+                                        <Col className="mb-3" lg={3}>
+                                          <Label htmlFor="inline-radio3">
+                                            <span className="text-danger">* </span>
+                                            {strings.ExpenseType}
+                                          </Label>
+                                          <div style={{ display: "flex" }}>
+                                            {this.state.expenseType === false ? (
+                                              <span
+                                                style={{ color: "#0069d9" }}
+                                                className="mr-4"
+                                              >
+                                                <b>{strings.NonClaimable}</b>
+                                              </span>
+                                            ) : (
+                                              <span className="mr-4">
+                                                {strings.NonClaimable}
+                                              </span>
+                                            )}
 
-                                        <Switch
-                                          checked={this.state.expenseType}
-                                          disabled={explainedstatus}
-                                          onChange={(expenseType) => {
-                                            if (
-                                              this.state.initValue
-                                                .explinationStatusEnum !==
-                                                "PARTIAL" &&
-                                              this.state.initValue
-                                                .explinationStatusEnum !==
-                                                "FULL" &&
-                                              this.state.initValue
-                                                .explinationStatusEnum !==
-                                                "RECONCILED"
-                                            ) {
-                                              props.handleChange("expenseType")(
-                                                expenseType
-                                              );
-                                              this.setState(
-                                                { expenseType },
-                                                () => {}
-                                              );
-                                            }
-                                          }}
-                                          onColor="#2064d8"
-                                          onHandleColor="#2693e6"
-                                          handleDiameter={25}
-                                          uncheckedIcon={false}
-                                          checkedIcon={false}
-                                          boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                          activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                          height={20}
-                                          width={48}
-                                          className="react-switch "
-                                        />
+                                            <Switch
+                                              checked={this.state.expenseType}
+                                              disabled={explainedstatus}
+                                              onChange={(expenseType) => {
+                                                if (
+                                                  this.state.initValue
+                                                    .explinationStatusEnum !==
+                                                  "PARTIAL" &&
+                                                  this.state.initValue
+                                                    .explinationStatusEnum !==
+                                                  "FULL" &&
+                                                  this.state.initValue
+                                                    .explinationStatusEnum !==
+                                                  "RECONCILED"
+                                                ) {
+                                                  props.handleChange("expenseType")(
+                                                    expenseType
+                                                  );
+                                                  this.setState(
+                                                    { expenseType },
+                                                    () => { }
+                                                  );
+                                                }
+                                              }}
+                                              onColor="#2064d8"
+                                              onHandleColor="#2693e6"
+                                              handleDiameter={25}
+                                              uncheckedIcon={false}
+                                              checkedIcon={false}
+                                              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                                              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                              height={20}
+                                              width={48}
+                                              className="react-switch "
+                                            />
 
-                                        {this.state.expenseType === true ? (
-                                          <span
-                                            style={{ color: "#0069d9" }}
-                                            className="ml-4"
-                                          >
-                                            <b>{strings.Claimable}</b>
-                                          </span>
-                                        ) : (
-                                          <span className="ml-4">
-                                            {strings.Claimable}
-                                          </span>
-                                        )}
-                                      </div>
-                                    </Col>
-                                  )}
+                                            {this.state.expenseType === true ? (
+                                              <span
+                                                style={{ color: "#0069d9" }}
+                                                className="ml-4"
+                                              >
+                                                <b>{strings.Claimable}</b>
+                                              </span>
+                                            ) : (
+                                              <span className="ml-4">
+                                                {strings.Claimable}
+                                              </span>
+                                            )}
+                                          </div>
+                                        </Col>
+                                      )}
                                   </Row>
                                 )}
 
-                              
-                            {props.values.coaCategoryId &&
-                              props.values.coaCategoryId?.label === "Expense" &&
-                              props.values?.vatId?.value === 1 && (
+
+                              {props.values.coaCategoryId &&
+                                props.values.coaCategoryId?.label === "Expense" &&
+                                props.values?.vatId?.value === 1 && (
                                   <Row>
                                     <Col lg={3}></Col>
                                     {props.values.expenseCategory &&
@@ -2375,10 +2369,10 @@ class ExplainTrasactionDetail extends React.Component {
                                       )}
                                     {props.values.coaCategoryId &&
                                       props.values.coaCategoryId?.label ===
-                                        "Expense" &&
+                                      "Expense" &&
                                       props.values.expenseCategory &&
                                       props.values.expenseCategory.value !==
-                                        34 && (
+                                      34 && (
                                         <Col lg={3}>
                                           <div style={{ display: "flex" }}>
                                             {!props.values.exclusiveVat ? (
@@ -2401,20 +2395,20 @@ class ExplainTrasactionDetail extends React.Component {
                                                 if (
                                                   this.state.initValue
                                                     .explinationStatusEnum !==
-                                                    "PARTIAL" &&
+                                                  "PARTIAL" &&
                                                   this.state.initValue
                                                     .explinationStatusEnum !==
-                                                    "FULL" &&
+                                                  "FULL" &&
                                                   this.state.initValue
                                                     .explinationStatusEnum !==
-                                                    "RECONCILED"
+                                                  "RECONCILED"
                                                 ) {
                                                   props.handleChange(
                                                     "exclusiveVat"
                                                   )(exclusiveVat);
                                                   this.setState(
                                                     { exclusiveVat },
-                                                    () => {}
+                                                    () => { }
                                                   );
                                                 }
                                                 // if (this.state.expenseType == true)
@@ -2452,23 +2446,23 @@ class ExplainTrasactionDetail extends React.Component {
                                 )}
 
                               <Row>
-                                  {props.values.coaCategoryId &&
-                                      props.values.coaCategoryId?.label ===
-                                        "Expense" &&
-                                      props.values.expenseCategory &&
-                                      props.values.expenseCategory !== 34 && (
+                                {props.values.coaCategoryId &&
+                                  props.values.coaCategoryId?.label ===
+                                  "Expense" &&
+                                  props.values.expenseCategory &&
+                                  props.values.expenseCategory !== 34 && (
                                     <Col>
                                       <Checkbox
                                         id="isReverseChargeEnabled"
                                         disabled={
                                           this.state.initValue
                                             .explinationStatusEnum ===
-                                            "PARTIAL" ||
+                                          "PARTIAL" ||
                                           this.state.initValue
                                             .explinationStatusEnum === "FULL" ||
                                           this.state.initValue
                                             .explinationStatusEnum ===
-                                            "RECONCILED"
+                                          "RECONCILED"
                                         }
                                         checked={props.values.isReverseChargeEnabled}
                                         onChange={(option) => {
@@ -2494,7 +2488,7 @@ class ExplainTrasactionDetail extends React.Component {
                               </Row>
                               {props.values.coaCategoryId &&
                                 props.values.coaCategoryId?.label ===
-                                  "Supplier Invoice" && (
+                                "Supplier Invoice" && (
                                   <Row>
                                     <Col lg={4}>
                                       <FormGroup className="mb-3">
@@ -2510,11 +2504,11 @@ class ExplainTrasactionDetail extends React.Component {
                                           options={
                                             tmpSupplier_list
                                               ? selectOptionsFactory.renderOptions(
-                                                  "label",
-                                                  "value",
-                                                  tmpSupplier_list,
-                                                  "Supplier Name"
-                                                )
+                                                "label",
+                                                "value",
+                                                tmpSupplier_list,
+                                                "Supplier Name"
+                                              )
                                               : []
                                           }
                                           onChange={(option) => {
@@ -2538,17 +2532,17 @@ class ExplainTrasactionDetail extends React.Component {
                                           value={
                                             explainedstatus
                                               ? {
-                                                  value: props.values.vendorId,
-                                                  label:
-                                                    this.state?.initValue
-                                                      ?.contactName,
-                                                }
+                                                value: props.values.vendorId,
+                                                label:
+                                                  this.state?.initValue
+                                                    ?.contactName,
+                                              }
                                               : tmpSupplier_list &&
-                                                tmpSupplier_list.find(
-                                                  (option) =>
-                                                    option.value ===
-                                                    +props.values.vendorId
-                                                )
+                                              tmpSupplier_list.find(
+                                                (option) =>
+                                                  option.value ===
+                                                  +props.values.vendorId
+                                              )
                                           }
                                           placeholder={
                                             strings.Select +
@@ -2558,7 +2552,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           name="vendorId"
                                           className={
                                             props.errors.vendorId &&
-                                            props.touched.vendorId
+                                              props.touched.vendorId
                                               ? "is-invalid"
                                               : ""
                                           }
@@ -2567,7 +2561,7 @@ class ExplainTrasactionDetail extends React.Component {
                                     </Col>
                                     {props.values.coaCategoryId &&
                                       props.values.coaCategoryId?.label ===
-                                        "Supplier Invoice" &&
+                                      "Supplier Invoice" &&
                                       props.values.vendorId && (
                                         <Col lg={4}>
                                           <FormGroup className="mb-3">
@@ -2581,13 +2575,13 @@ class ExplainTrasactionDetail extends React.Component {
                                               isDisabled={
                                                 this.state.initValue
                                                   .explinationStatusEnum ===
-                                                  "PARTIAL" ||
+                                                "PARTIAL" ||
                                                 this.state.initValue
                                                   .explinationStatusEnum ===
-                                                  "FULL" ||
+                                                "FULL" ||
                                                 this.state.initValue
                                                   .explinationStatusEnum ===
-                                                  "RECONCILED"
+                                                "RECONCILED"
                                               }
                                               styles={customStyles}
                                               isMulti
@@ -2617,21 +2611,21 @@ class ExplainTrasactionDetail extends React.Component {
                                               }}
                                               value={
                                                 supplier_invoice_list_state &&
-                                                props.values.invoiceIdList &&
-                                                supplier_invoice_list_state.find(
-                                                  (option) =>
-                                                    option.value ===
-                                                    +props.values.invoiceIdList.map(
-                                                      (item) => item.id
-                                                    )
-                                                )
+                                                  props.values.invoiceIdList &&
+                                                  supplier_invoice_list_state.find(
+                                                    (option) =>
+                                                      option.value ===
+                                                      +props.values.invoiceIdList.map(
+                                                        (item) => item.id
+                                                      )
+                                                  )
                                                   ? supplier_invoice_list_state.find(
-                                                      (option) =>
-                                                        option.value ===
-                                                        +props.values.invoiceIdList.map(
-                                                          (item) => item.id
-                                                        )
-                                                    )
+                                                    (option) =>
+                                                      option.value ===
+                                                      +props.values.invoiceIdList.map(
+                                                        (item) => item.id
+                                                      )
+                                                  )
                                                   : props.values.invoiceIdList
                                               }
                                               placeholder={
@@ -2642,7 +2636,7 @@ class ExplainTrasactionDetail extends React.Component {
                                               name="invoiceIdList"
                                               className={
                                                 props.errors.invoiceIdList &&
-                                                props.touched.invoiceIdList
+                                                  props.touched.invoiceIdList
                                                   ? "is-invalid"
                                                   : ""
                                               }
@@ -2705,7 +2699,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           options={
                                             transactionCategoryList.dataList[0]
                                               ? transactionCategoryList
-                                                  .dataList[0].options
+                                                .dataList[0].options
                                               : []
                                           }
                                           isDisabled={explainedstatus}
@@ -2730,19 +2724,19 @@ class ExplainTrasactionDetail extends React.Component {
                                           value={
                                             explainedstatus
                                               ? {
-                                                  value:
-                                                    props.values.customerId,
-                                                  label:
-                                                    this.state?.initValue
-                                                      ?.contactName,
-                                                }
+                                                value:
+                                                  props.values.customerId,
+                                                label:
+                                                  this.state?.initValue
+                                                    ?.contactName,
+                                              }
                                               : transactionCategoryList
-                                                  .dataList[0] &&
-                                                transactionCategoryList.dataList[0].options.find(
-                                                  (option) =>
-                                                    option.value ===
-                                                    +props.values.customerId
-                                                )
+                                                .dataList[0] &&
+                                              transactionCategoryList.dataList[0].options.find(
+                                                (option) =>
+                                                  option.value ===
+                                                  +props.values.customerId
+                                              )
                                           }
                                           placeholder={
                                             strings.Select +
@@ -2752,7 +2746,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           name="customerId"
                                           className={
                                             props.errors.customerId &&
-                                            props.touched.customerId
+                                              props.touched.customerId
                                               ? "is-invalid"
                                               : ""
                                           }
@@ -2806,21 +2800,21 @@ class ExplainTrasactionDetail extends React.Component {
                                           }}
                                           value={
                                             customer_invoice_list_state &&
-                                            props.values.invoiceIdList &&
-                                            customer_invoice_list_state.find(
-                                              (option) =>
-                                                option.value ===
-                                                +props.values.invoiceIdList.map(
-                                                  (item) => item.id
-                                                )
-                                            )
+                                              props.values.invoiceIdList &&
+                                              customer_invoice_list_state.find(
+                                                (option) =>
+                                                  option.value ===
+                                                  +props.values.invoiceIdList.map(
+                                                    (item) => item.id
+                                                  )
+                                              )
                                               ? customer_invoice_list_state.find(
-                                                  (option) =>
-                                                    option.value ===
-                                                    +props.values.invoiceIdList.map(
-                                                      (item) => item.id
-                                                    )
-                                                )
+                                                (option) =>
+                                                  option.value ===
+                                                  +props.values.invoiceIdList.map(
+                                                    (item) => item.id
+                                                  )
+                                              )
                                               : props.values.invoiceIdList
                                           }
                                           placeholder={
@@ -2831,7 +2825,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           name="invoiceIdList"
                                           className={
                                             props.errors.invoiceIdList &&
-                                            props.touched.invoiceIdList
+                                              props.touched.invoiceIdList
                                               ? "is-invalid"
                                               : ""
                                           }
@@ -2878,15 +2872,15 @@ class ExplainTrasactionDetail extends React.Component {
                                   )}
                                 {props.values.coaCategoryId &&
                                   props.values.coaCategoryId?.label !==
-                                    "Expense" &&
+                                  "Expense" &&
                                   props.values.coaCategoryId?.label !==
-                                    "Supplier Invoice" &&
+                                  "Supplier Invoice" &&
                                   props.values.coaCategoryId?.label !==
-                                    "Sales" &&
+                                  "Sales" &&
                                   props.values.coaCategoryId?.label !==
-                                    "Vat Payment" &&
+                                  "Vat Payment" &&
                                   props.values.coaCategoryId?.label !==
-                                    "Vat Claim" && (
+                                  "Vat Claim" && (
                                     <Col lg={4}>
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="transactionCategoryId">
@@ -2919,20 +2913,20 @@ class ExplainTrasactionDetail extends React.Component {
                                             });
                                             if (
                                               option.label !==
-                                                "Salaries and Employee Wages" &&
+                                              "Salaries and Employee Wages" &&
                                               option.label !==
-                                                "Owners Drawing" &&
+                                              "Owners Drawing" &&
                                               option.label !== "Dividend" &&
                                               option.label !==
-                                                "Owners Current Account" &&
+                                              "Owners Current Account" &&
                                               option.label !==
-                                                "Share Premium" &&
+                                              "Share Premium" &&
                                               option.label !==
-                                                "Employee Advance" &&
+                                              "Employee Advance" &&
                                               option.label !==
-                                                "Employee Reimbursements" &&
+                                              "Employee Reimbursements" &&
                                               option.label !==
-                                                "Director Loan Account" &&
+                                              "Director Loan Account" &&
                                               option.label !== "Owners Equity"
                                             ) {
                                             }
@@ -3049,7 +3043,7 @@ class ExplainTrasactionDetail extends React.Component {
                                   (props.values.coaCategoryId?.label ===
                                     "Vat Payment" ||
                                     props.values.coaCategoryId?.label ===
-                                      "Vat Claim") && (
+                                    "Vat Claim") && (
                                     <Col lg={4}>
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="currencyCode">
@@ -3097,7 +3091,7 @@ class ExplainTrasactionDetail extends React.Component {
                                 {transactionCategoryList.dataList &&
                                   (props.values.coaCategoryId.value === 6 ||
                                     props.values.coaCategoryId.value ===
-                                      12) && (
+                                    12) && (
                                     <Col lg={4}>
                                       <FormGroup className="mb-3">
                                         <span className="text-danger">* </span>
@@ -3135,7 +3129,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           name="employeeId"
                                           className={
                                             props.errors.employeeId &&
-                                            props.touched.employeeId
+                                              props.touched.employeeId
                                               ? "is-invalid"
                                               : ""
                                           }
@@ -3273,7 +3267,7 @@ class ExplainTrasactionDetail extends React.Component {
                                 (props.values.coaCategoryId?.label ===
                                   "Sales" ||
                                   props.values.coaCategoryId?.label ===
-                                    "Supplier Invoice") && (
+                                  "Supplier Invoice") && (
                                   <>
                                     {props.values?.invoiceIdList.length > 0 && (
                                       <Row
@@ -3303,29 +3297,29 @@ class ExplainTrasactionDetail extends React.Component {
                                         {this.state?.bankCurrency
                                           ?.bankAccountCurrencyIsoCode !==
                                           props.values.curreancyname && (
-                                          <Col lg={2}>
-                                            <FormGroup className="mb-3">
-                                              <div>
-                                                <span className="font-weight-bold">
-                                                  Currency Rate
-                                                </span>
-                                              </div>
-                                            </FormGroup>
-                                          </Col>
-                                        )}
+                                            <Col lg={2}>
+                                              <FormGroup className="mb-3">
+                                                <div>
+                                                  <span className="font-weight-bold">
+                                                    Currency Rate
+                                                  </span>
+                                                </div>
+                                              </FormGroup>
+                                            </Col>
+                                          )}
                                         {this.state?.bankCurrency
                                           ?.bankAccountCurrencyIsoCode !==
                                           props.values.curreancyname && (
-                                          <Col lg={2}>
-                                            <FormGroup className="mb-3">
-                                              <div>
-                                                <span className="font-weight-bold">
-                                                  Amount
-                                                </span>
-                                              </div>
-                                            </FormGroup>
-                                          </Col>
-                                        )}
+                                            <Col lg={2}>
+                                              <FormGroup className="mb-3">
+                                                <div>
+                                                  <span className="font-weight-bold">
+                                                    Amount
+                                                  </span>
+                                                </div>
+                                              </FormGroup>
+                                            </Col>
+                                          )}
                                         <Col lg={1}>
                                           <FormGroup
                                             className="font-weight-bold "
@@ -3376,82 +3370,79 @@ class ExplainTrasactionDetail extends React.Component {
                                                 disabled
                                                 id="1"
                                                 name="1"
-                                                value={`${
-                                                  props.values.curreancyname
-                                                } ${
-                                                  i.convertedInvoiceAmount /
+                                                value={`${props.values.curreancyname
+                                                  } ${i.convertedInvoiceAmount /
                                                   i.exchangeRate
-                                                } `}
+                                                  } `}
                                               />
                                             </Col>
 
                                             {this.state?.bankCurrency
                                               ?.bankAccountCurrencyIsoCode !==
                                               props.values.curreancyname && (
-                                              <Col lg={2}>
-                                                <FormGroup className="mb-3">
-                                                  <div>
-                                                    <Input
-                                                      className="form-control"
-                                                      id="exchangeRate"
-                                                      style={{
-                                                        textAlign: "right",
-                                                      }}
-                                                      disabled={true}
-                                                      name="exchangeRate"
-                                                      type="number"
-                                                      value={i.exchangeRate}
-                                                      onChange={(value) => {
-                                                        let local2 = [
-                                                          ...props.values
-                                                            ?.invoiceIdList,
-                                                        ].map((i) => {
-                                                          return {
-                                                            ...i,
-                                                            exchangeRate:
-                                                              value.target
-                                                                .value,
-                                                          };
-                                                        });
-                                                        this.setexchnagedamount(
-                                                          local2
-                                                        );
-                                                      }}
-                                                    />
-                                                  </div>
-                                                </FormGroup>
-                                              </Col>
-                                            )}
+                                                <Col lg={2}>
+                                                  <FormGroup className="mb-3">
+                                                    <div>
+                                                      <Input
+                                                        className="form-control"
+                                                        id="exchangeRate"
+                                                        style={{
+                                                          textAlign: "right",
+                                                        }}
+                                                        disabled={true}
+                                                        name="exchangeRate"
+                                                        type="number"
+                                                        value={i.exchangeRate}
+                                                        onChange={(value) => {
+                                                          let local2 = [
+                                                            ...props.values
+                                                              ?.invoiceIdList,
+                                                          ].map((i) => {
+                                                            return {
+                                                              ...i,
+                                                              exchangeRate:
+                                                                value.target
+                                                                  .value,
+                                                            };
+                                                          });
+                                                          this.setexchnagedamount(
+                                                            local2
+                                                          );
+                                                        }}
+                                                      />
+                                                    </div>
+                                                  </FormGroup>
+                                                </Col>
+                                              )}
                                             {this.state?.bankCurrency
                                               ?.bankAccountCurrencyIsoCode !==
                                               props.values.curreancyname && (
-                                              <Col lg={2}>
-                                                <FormGroup className="mb-3">
-                                                  <div>
-                                                    <Input
-                                                      className="form-control"
-                                                      id="exchangeRate"
-                                                      style={{
-                                                        textAlign: "right",
-                                                      }}
-                                                      name="exchangeRate"
-                                                      disabled
-                                                      value={`${
-                                                        this.state.bankCurrency
-                                                          ?.bankAccountCurrencyIsoCode
-                                                      } ${i.convertedInvoiceAmount?.toLocaleString(
-                                                        navigator.language,
-                                                        {
-                                                          minimumFractionDigits: 2,
-                                                          maximumFractionDigits: 2,
-                                                        }
-                                                      )} `}
-                                                      onChange={(value) => {}}
-                                                    />
-                                                  </div>
-                                                </FormGroup>
-                                              </Col>
-                                            )}
+                                                <Col lg={2}>
+                                                  <FormGroup className="mb-3">
+                                                    <div>
+                                                      <Input
+                                                        className="form-control"
+                                                        id="exchangeRate"
+                                                        style={{
+                                                          textAlign: "right",
+                                                        }}
+                                                        name="exchangeRate"
+                                                        disabled
+                                                        value={`${this.state.bankCurrency
+                                                            ?.bankAccountCurrencyIsoCode
+                                                          } ${i.convertedInvoiceAmount?.toLocaleString(
+                                                            navigator.language,
+                                                            {
+                                                              minimumFractionDigits: 2,
+                                                              maximumFractionDigits: 2,
+                                                            }
+                                                          )} `}
+                                                        onChange={(value) => { }}
+                                                      />
+                                                    </div>
+                                                  </FormGroup>
+                                                </Col>
+                                              )}
                                             <Col lg={1}>
                                               <FormGroup
                                                 className="mb-3"
@@ -3465,21 +3456,21 @@ class ExplainTrasactionDetail extends React.Component {
                                                   <Input
                                                     disabled={
                                                       props.values?.amount -
-                                                        props.values?.invoiceIdList?.reduce(
-                                                          (accu, curr, index) =>
-                                                            accu +
-                                                            (this.state
-                                                              .initValue
-                                                              .explinationStatusEnum !==
-                                                              "PARTIAL" &&
+                                                      props.values?.invoiceIdList?.reduce(
+                                                        (accu, curr, index) =>
+                                                          accu +
+                                                          (this.state
+                                                            .initValue
+                                                            .explinationStatusEnum !==
+                                                            "PARTIAL" &&
                                                             this.state.initValue
                                                               .explinationStatusEnum !==
-                                                              "FULL"
-                                                              ? curr.dueAmount
-                                                              : curr.amount) *
-                                                              curr.exchangeRate,
-                                                          0
-                                                        ) >=
+                                                            "FULL"
+                                                            ? curr.dueAmount
+                                                            : curr.amount) *
+                                                          curr.exchangeRate,
+                                                        0
+                                                      ) >=
                                                       0
                                                     }
                                                     type="checkbox"
@@ -3492,10 +3483,10 @@ class ExplainTrasactionDetail extends React.Component {
                                                       if (
                                                         this.state.initValue
                                                           .explinationStatusEnum !==
-                                                          "PARTIAL" &&
+                                                        "PARTIAL" &&
                                                         this.state.initValue
                                                           .explinationStatusEnum !==
-                                                          "FULL"
+                                                        "FULL"
                                                       )
                                                         this.onppclick(
                                                           e.target.checked,
@@ -3518,17 +3509,16 @@ class ExplainTrasactionDetail extends React.Component {
                                                     }}
                                                     name="exchangeRate"
                                                     disabled
-                                                    value={`${
-                                                      this.state.bankCurrency
+                                                    value={`${this.state.bankCurrency
                                                         ?.bankAccountCurrencyIsoCode
-                                                    } ${i.explainedAmount?.toLocaleString(
-                                                      navigator.language,
-                                                      {
-                                                        minimumFractionDigits: 2,
-                                                        maximumFractionDigits: 2,
-                                                      }
-                                                    )} `}
-                                                    onChange={(value) => {}}
+                                                      } ${i.explainedAmount?.toLocaleString(
+                                                        navigator.language,
+                                                        {
+                                                          minimumFractionDigits: 2,
+                                                          maximumFractionDigits: 2,
+                                                        }
+                                                      )} `}
+                                                    onChange={(value) => { }}
                                                   />
                                                   {i.explainedAmount === 0 && (
                                                     <div
@@ -3551,122 +3541,121 @@ class ExplainTrasactionDetail extends React.Component {
 
                                     {props.values?.invoiceIdList?.length >
                                       0 && (
-                                      <>
-                                        <Row
-                                          style={{
-                                            display: "flex",
-                                            justifyContent: "flex-end",
-                                            marginLeft: "20px",
-                                          }}
-                                        >
-                                          <Col lg={4}>
-                                            <Input
-                                              disabled
-                                              id="total"
-                                              name="total"
-                                              style={{ textAlign: "right" }}
-                                              value={"Total Explained Amount ="}
-                                            />
-                                          </Col>
+                                        <>
+                                          <Row
+                                            style={{
+                                              display: "flex",
+                                              justifyContent: "flex-end",
+                                              marginLeft: "20px",
+                                            }}
+                                          >
+                                            <Col lg={4}>
+                                              <Input
+                                                disabled
+                                                id="total"
+                                                name="total"
+                                                style={{ textAlign: "right" }}
+                                                value={"Total Explained Amount ="}
+                                              />
+                                            </Col>
 
-                                          <Col lg={2}>
-                                            <Input
-                                              disabled
-                                              id="total"
-                                              name="total"
-                                              style={{ textAlign: "right" }}
-                                              value={`${
-                                                this.state.bankCurrency
-                                                  ?.bankAccountCurrencyIsoCode
-                                              } ${props.values?.invoiceIdList
-                                                ?.reduce(
-                                                  (accu, curr, index) =>
-                                                    accu + curr.explainedAmount,
-                                                  0
-                                                )
-                                                .toLocaleString(
-                                                  navigator.language,
-                                                  {
-                                                    minimumFractionDigits: 2,
-                                                    maximumFractionDigits: 2,
-                                                  }
-                                                )}  `}
-                                            />
-                                          </Col>
-                                        </Row>
-                                        {this.setexcessorshortamount().data !==
-                                          0 &&
-                                          this.state?.bankCurrency
-                                            ?.bankAccountCurrencyIsoCode !==
+                                            <Col lg={2}>
+                                              <Input
+                                                disabled
+                                                id="total"
+                                                name="total"
+                                                style={{ textAlign: "right" }}
+                                                value={`${this.state.bankCurrency
+                                                    ?.bankAccountCurrencyIsoCode
+                                                  } ${props.values?.invoiceIdList
+                                                    ?.reduce(
+                                                      (accu, curr, index) =>
+                                                        accu + curr.explainedAmount,
+                                                      0
+                                                    )
+                                                    .toLocaleString(
+                                                      navigator.language,
+                                                      {
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2,
+                                                      }
+                                                    )}  `}
+                                              />
+                                            </Col>
+                                          </Row>
+                                          {this.setexcessorshortamount().data !==
+                                            0 &&
+                                            this.state?.bankCurrency
+                                              ?.bankAccountCurrencyIsoCode !==
                                             props.values.curreancyname && (
-                                            <Row
-                                              style={{
-                                                display: "flex",
-                                                justifyContent: "flex-end",
-                                                marginLeft: "20px",
-                                                marginTop: "10px",
-                                              }}
-                                            >
-                                              {
-                                                <Col lg={5}>
-                                                  <Select
-                                                    options={[
-                                                      {
-                                                        label: "Currency Gain ",
-                                                        value: 79,
-                                                      },
-                                                      {
-                                                        label: "Currency Loss",
-                                                        value: 103,
-                                                      },
-                                                    ]}
-                                                    isDisabled={true}
-                                                    value={
-                                                      this.setexcessorshortamount()
-                                                        .data < 0
-                                                        ? {
+                                              <Row
+                                                style={{
+                                                  display: "flex",
+                                                  justifyContent: "flex-end",
+                                                  marginLeft: "20px",
+                                                  marginTop: "10px",
+                                                }}
+                                              >
+                                                {
+                                                  <Col lg={5}>
+                                                    <Select
+                                                      options={[
+                                                        {
+                                                          label: "Currency Gain ",
+                                                          value: 79,
+                                                        },
+                                                        {
+                                                          label: "Currency Loss",
+                                                          value: 103,
+                                                        },
+                                                      ]}
+                                                      isDisabled={true}
+                                                      value={
+                                                        this.setexcessorshortamount()
+                                                          .data < 0
+                                                          ? {
                                                             label:
                                                               "Currency Loss",
                                                             value: 103,
                                                           }
-                                                        : {
+                                                          : {
                                                             label:
                                                               "Currency Gain ",
                                                             value: 103,
                                                           }
+                                                      }
+                                                    />
+                                                  </Col>
+                                                }
+
+                                                <Col lg={4}>
+                                                  <Input
+                                                    disabled
+                                                    id="total"
+                                                    style={{ textAlign: "right" }}
+                                                    name="total"
+                                                    value={
+                                                      "Total Excess/Short Amount ="
                                                     }
                                                   />
                                                 </Col>
-                                              }
 
-                                              <Col lg={4}>
-                                                <Input
-                                                  disabled
-                                                  id="total"
-                                                  style={{ textAlign: "right" }}
-                                                  name="total"
-                                                  value={
-                                                    "Total Excess/Short Amount ="
-                                                  }
-                                                />
-                                              </Col>
-
-                                              <Col lg={2}>
-                                                <Input
-                                                  disabled
-                                                  id="total"
-                                                  name="total"
-                                                  style={{ textAlign: "right" }}
-                                                  value={
-                                                    this.setexcessorshortamount()
-                                                      .value
-                                                  }
-                                                />
-                                              </Col>
-                                            </Row>
-                                          )}
-                                      </>
-                                    )}
+                                                <Col lg={2}>
+                                                  <Input
+                                                    disabled
+                                                    id="total"
+                                                    name="total"
+                                                    style={{ textAlign: "right" }}
+                                                    value={
+                                                      this.setexcessorshortamount()
+                                                        .value
+                                                    }
+                                                  />
+                                                </Col>
+                                              </Row>
+                                            )}
+                                        </>
+                                      )}
                                   </>
                                 )}
 
@@ -3816,7 +3805,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           options={
                                             transactionCategoryList.dataList
                                               ? transactionCategoryList
-                                                  .dataList[0].options
+                                                .dataList[0].options
                                               : []
                                           }
                                           value={
@@ -3845,7 +3834,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           name="employeeId"
                                           className={
                                             props.errors.employeeId &&
-                                            props.touched.employeeId
+                                              props.touched.employeeId
                                               ? "is-invalid"
                                               : ""
                                           }
@@ -3862,7 +3851,7 @@ class ExplainTrasactionDetail extends React.Component {
                                   ?.bankAccountCurrency !== 150 &&
                                 props.values.coaCategoryId?.label !== "Sales" &&
                                 props.values.coaCategoryId?.label !==
-                                  "Supplier Invoice" && (
+                                "Supplier Invoice" && (
                                   <Row>
                                     <Col>
                                       <Label htmlFor="currency">
@@ -3876,7 +3865,7 @@ class ExplainTrasactionDetail extends React.Component {
                                   ?.bankAccountCurrency !== 150 &&
                                 props.values.coaCategoryId?.label !== "Sales" &&
                                 props.values.coaCategoryId?.label !==
-                                  "Supplier Invoice" && (
+                                "Supplier Invoice" && (
                                   <Row>
                                     <Col lg={1}>
                                       <Input
@@ -3924,13 +3913,13 @@ class ExplainTrasactionDetail extends React.Component {
                                             disabled={
                                               this.state.initValue
                                                 .explinationStatusEnum ===
-                                                "PARTIAL" ||
+                                              "PARTIAL" ||
                                               this.state.initValue
                                                 .explinationStatusEnum ===
-                                                "FULL" ||
+                                              "FULL" ||
                                               this.state.initValue
                                                 .explinationStatusEnum ===
-                                                "RECONCILED"
+                                              "RECONCILED"
                                             }
                                             type="number"
                                             min="0"
@@ -3970,10 +3959,10 @@ class ExplainTrasactionDetail extends React.Component {
                               {(props.values?.coaCategoryId?.label ===
                                 "Sales" ||
                                 props.values?.coaCategoryId?.label ===
-                                  "Supplier Invoice") &&
+                                "Supplier Invoice") &&
                                 props.values.curreancyname !==
-                                  this.state?.bankCurrency
-                                    ?.bankAccountCurrencyIsoCode &&
+                                this.state?.bankCurrency
+                                  ?.bankAccountCurrencyIsoCode &&
                                 props.values.curreancyname &&
                                 this.state?.bankCurrency
                                   ?.bankAccountCurrencyIsoCode &&
@@ -4001,9 +3990,9 @@ class ExplainTrasactionDetail extends React.Component {
                                             name="currencyName"
                                             value={
                                               props.values.curreancyname ===
-                                              "AED"
+                                                "AED"
                                                 ? this.state?.bankCurrency
-                                                    ?.bankAccountCurrencyIsoCode
+                                                  ?.bankAccountCurrencyIsoCode
                                                 : props.values.curreancyname
                                             }
                                             onChange={(value) => {
@@ -4058,7 +4047,7 @@ class ExplainTrasactionDetail extends React.Component {
                                         value={
                                           props.values.curreancyname !== "AED"
                                             ? this.state?.bankCurrency
-                                                ?.bankAccountCurrencyIsoCode
+                                              ?.bankAccountCurrencyIsoCode
                                             : props.values.curreancyname
                                         }
                                       />
@@ -4239,63 +4228,63 @@ class ExplainTrasactionDetail extends React.Component {
                               <Row>
                                 {this.state.initValue.explinationStatusEnum !==
                                   "RECONCILED" && (
-                                  <Col lg={12} className="mt-5">
-                                    <FormGroup className="text-left">
-                                      {this.state.initValue
-                                        .explinationStatusEnum !== "FULL" &&
-                                      this.state.initValue
-                                        .explinationStatusEnum !== "PARTIAL" ? (
-                                        <div>
-                                          <Button
-                                            type="button"
-                                            color="primary"
-                                            className="btn-square mr-3"
-                                            onClick={props.handleSubmit}
-                                          >
-                                            <i className="fa fa-dot-circle-o"></i>{" "}
-                                            {strings.Explain}
-                                          </Button>
-
-                                          {this.state.initValue
-                                            .explinationStatusEnum ==
-                                            +"NOT_EXPLAIN" ||
+                                    <Col lg={12} className="mt-5">
+                                      <FormGroup className="text-left">
+                                        {this.state.initValue
+                                          .explinationStatusEnum !== "FULL" &&
                                           this.state.initValue
-                                            .explinationStatusEnum !== null ? (
+                                            .explinationStatusEnum !== "PARTIAL" ? (
+                                          <div>
                                             <Button
-                                              color="secondary"
-                                              className="btn-square"
+                                              type="button"
+                                              color="primary"
+                                              className="btn-square mr-3"
+                                              onClick={props.handleSubmit}
+                                            >
+                                              <i className="fa fa-dot-circle-o"></i>{" "}
+                                              {strings.Explain}
+                                            </Button>
+
+                                            {this.state.initValue
+                                              .explinationStatusEnum ==
+                                              +"NOT_EXPLAIN" ||
+                                              this.state.initValue
+                                                .explinationStatusEnum !== null ? (
+                                              <Button
+                                                color="secondary"
+                                                className="btn-square"
+                                                onClick={() =>
+                                                  this.closeTransaction(
+                                                    this.state.initValue
+                                                      .transactionId
+                                                  )
+                                                }
+                                              >
+                                                <i className="fa fa-ban"></i>{" "}
+                                                {strings.Delete}
+                                              </Button>
+                                            ) : (
+                                              ""
+                                            )}
+                                          </div>
+                                        ) : (
+                                          <div>
+                                            <Button
+                                              type="button"
+                                              color="primary"
+                                              className="btn-square mr-3"
+                                              disabled={this.props.data.isCTNCreated}
                                               onClick={() =>
-                                                this.closeTransaction(
+                                                this.UnexplainTransaction(
                                                   this.state.initValue
                                                     .transactionId
                                                 )
                                               }
                                             >
-                                              <i className="fa fa-ban"></i>{" "}
-                                              {strings.Delete}
+                                              <i className="fa fa-dot-circle-o"></i>{" "}
+                                              {strings.Unexplain}
                                             </Button>
-                                          ) : (
-                                            ""
-                                          )}
-                                        </div>
-                                      ) : (
-                                        <div>
-                                          <Button
-                                            type="button"
-                                            color="primary"
-                                            className="btn-square mr-3"
-                                            disabled={this.props.data.isCTNCreated}
-                                            onClick={() =>
-                                              this.UnexplainTransaction(
-                                                this.state.initValue
-                                                  .transactionId
-                                              )
-                                            }
-                                          >
-                                            <i className="fa fa-dot-circle-o"></i>{" "}
-                                            {strings.Unexplain}
-                                          </Button>
-                                          {/* {this.state.initValue.explinationStatusEnum !== "PARTIAL"&&	this.state.initValue.explinationStatusEnum !== null
+                                            {/* {this.state.initValue.explinationStatusEnum !== "PARTIAL"&&	this.state.initValue.explinationStatusEnum !== null
 																						&&(
 																								<Button
 																									color="secondary"
@@ -4305,11 +4294,11 @@ class ExplainTrasactionDetail extends React.Component {
 																									<i className="fa fa-dot-circle-o"></i>{' '}
 																						{strings.Update}
 																					</Button>)} */}
-                                        </div>
-                                      )}
-                                    </FormGroup>
-                                  </Col>
-                                )}
+                                          </div>
+                                        )}
+                                      </FormGroup>
+                                    </Col>
+                                  )}
                               </Row>
                             </Form>
                           )}

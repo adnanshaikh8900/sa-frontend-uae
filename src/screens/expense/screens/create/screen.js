@@ -1029,15 +1029,10 @@ class CreateExpense extends React.Component {
 																// 	errors.payMode = 'Pay through is required'
 																// }
 
-																if (exist === true) {
+																if (values.expenseNumber && exist === true ) {
 																	errors.expenseNumber = 'Expense number already exists'
 																}
-																if (values.expenseNumber === '') {
-																	errors.expenseNumber = strings.ExpenseCategoryRequired
-																}
-																if (values.expenseCategory===''){
-																	errors.expenseCategory = 'Expense Category is Required'
-																}
+															
 																if (this.state.currency === true && values.currency === '') {
 																	errors.currency = 'Currency is required';
 																}
@@ -1056,7 +1051,7 @@ class CreateExpense extends React.Component {
 															}}
 															validationSchema={Yup.object().shape({
 																expenseNumber: Yup.string().required(
-																	'Expense  is required',
+																	strings.ExpenseNumberRequired
 																),
 																expenseCategory: Yup.string().required(
 																	strings.ExpenseCategoryRequired

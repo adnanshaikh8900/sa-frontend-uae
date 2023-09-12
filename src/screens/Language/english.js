@@ -251,6 +251,7 @@ const en = {
       ExpirationDate: "Expiry Date",
       CreateSupplier: "Create Supplier",
       excise: "Excise",
+      CustomerNameIsRequired: 'Customer Name is Required',
       PlaceOfSupplyRequired: 'Place of supply is required',
 
       //Expenses
@@ -270,7 +271,8 @@ const en = {
       ExpenseType: "Expense Type",
       ActualExpenseAmount: "Actual Expense Amount",
       TaxTreatmentRequired: 'Tax treatment is required',
-      ExpenseCategoryRequired: 'Expense number is required',
+      ExpenseNumberRequired: 'Expense Number is required',
+      ExpenseCategoryRequired: 'Expense Category is required',
       PaidByRequired: 'Paid by is required',
       AmountIsRequired: 'Amount is required',
       TaxPeriodIsRequired:"Tax Period is required",

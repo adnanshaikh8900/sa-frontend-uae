@@ -280,6 +280,9 @@ class RFQTemplate extends Component {
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
 									<th style={{ padding: '0.5rem' }}>{strings.ProductNameAndDescription}</th>
 									<th className="text-center" style={{ padding: '0.5rem' }}>{strings.Quantity}</th>
+									<th className="text-center" style={{ padding: '0.5rem' }}>
+										{strings.UnitType}
+									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.UnitCost}</th>
 
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
@@ -316,7 +319,8 @@ class RFQTemplate extends Component {
 												<td className="center">{index + 1}</td>
 												<td><b>{item.productName}</b><br/><br />{item.description}</td>
 												<td  style={{ textAlign: 'center' }}>{item.quantity}<br/><br/>
-												<b style={{fontSize:"10.5px"}}>{item.unitType}</b>	
+												</td>
+												<td  style={{ textAlign: 'center' }}>{item.unitType}<br/><br/>
 												</td>
 												<td style={{ textAlign: 'right', width: '10%' }}>
 												

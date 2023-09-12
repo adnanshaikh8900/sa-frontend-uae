@@ -1220,6 +1220,15 @@ const en = {
       select_approver: "Select Approver",
       action: "Actions",
 
+      //Toastify Messages
+      InvoiceCreatedSuccessfully: 'Invoice Created Successfully!',
+      InvoiceUpdatedSuccessfully: 'Invoice Updated Successfully!',
+      InvoiceDeletedSuccessfully: 'Invoice Deleted Successfully!',
+      PaymentRecordedSuccessfully: 'Payment Recorded Successfully!',
+      InvoiceStatusChangedSuccessfully: 'Invoice Status Changed Successfully!',
+      InvoiceSentSuccessfully: 'Invoice Sent Successfully!',
+      InvoiceMovedToDraftSuccessfully: 'Invoice Moved To Draft Successfully!',
+
       //Line Item
       ProductIsRequired: "Product is Required",
       QuantityGreaterThan0: 'Quantity should be greater than 0',

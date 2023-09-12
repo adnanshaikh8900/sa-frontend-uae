@@ -80,7 +80,7 @@ class CreateProduct extends React.Component {
 				productType: 'GOODS',
 				salesUnitPrice: '',
 				purchaseUnitPrice: '',
-				productPriceType: ['SALES'],
+				productPriceType: [this.props.expense === true ? 'PURCHASE' : 'SALES'],
 				salesTransactionCategoryId: { value: 84, label: 'Sales' },
 				purchaseTransactionCategoryId: {
 					value: 49,
@@ -431,11 +431,11 @@ try {
 			}
 		});
 	
-	console.log(this.state.employeeCode)
+	// console.log(this.state.employeeCode)
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { vat_list, product_category_list,supplier_list,inventory_account_list} = this.props;
+		const { vat_list, product_category_list,supplier_list,inventory_account_list, income} = this.props;
 		const { initValue, purchaseCategory, salesCategory,inventoryAccount,exciseTaxList,unitTypeList } = this.state;
 		const { loading, loadingMsg } = this.state
 		let tmpSupplier_list = []
@@ -445,8 +445,8 @@ try {
 			tmpSupplier_list.push(obj)
 		})
 
-		//console.log(this.state.ReOrderLevel)
-		//console.log(this.state.PurchaseQuantity)
+		// console.log(this.state)
+		// console.log(this.props)
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div>
@@ -1250,26 +1250,29 @@ try {
 																				id="productPriceTypeOne"
 																				name="productPriceTypeOne"
 																				onChange={(event) => {
-																					if (
-																						props.values.productPriceType.includes(
-																							'SALES',
-																						)
-																					) {
-																						const nextValue = props.values.productPriceType.filter(
-																							(value) => value !== 'SALES',
-																						);
-																						props.setFieldValue(
-																							'productPriceType',
-																							nextValue,
-																						);
+																					if (income === true) {
 																					} else {
-																						const nextValue = props.values.productPriceType.concat(
-																							'SALES',
-																						);
-																						props.setFieldValue(
-																							'productPriceType',
-																							nextValue,
-																						);
+																						if (
+																							props.values.productPriceType.includes(
+																								'SALES',
+																							)
+																						) {
+																							const nextValue = props.values.productPriceType.filter(
+																								(value) => value !== 'SALES',
+																							);
+																							props.setFieldValue(
+																								'productPriceType',
+																								nextValue,
+																							);
+																						} else {
+																							const nextValue = props.values.productPriceType.concat(
+																								'SALES',
+																							);
+																							props.setFieldValue(
+																								'productPriceType',
+																								nextValue,
+																							);
+																						}
 																					}
 																				}}
 																				checked={props.values.productPriceType.includes(
@@ -1452,27 +1455,30 @@ try {
 																				maxLength="14,2"
 																				name="productPriceTypetwo"
 																				onChange={(event) => {
-																					if (
-																						props.values.productPriceType.includes(
-																							'PURCHASE',
-																						)
-																					) {
-																						const nextValue = props.values.productPriceType.filter(
-																							(value) => value !== 'PURCHASE',
-																						);
-																						props.setFieldValue(
-																							'productPriceType',
-																							nextValue,
-																						);
+																					if (income === false) {
 																					} else {
-																						const nextValue = props.values.productPriceType.concat(
-																							'PURCHASE',
-																						);
-																						console.log(nextValue);
-																						props.setFieldValue(
-																							'productPriceType',
-																							nextValue,
-																						);
+																						if (
+																							props.values.productPriceType.includes(
+																								'PURCHASE',
+																							)
+																						) {
+																							const nextValue = props.values.productPriceType.filter(
+																								(value) => value !== 'PURCHASE',
+																							);
+																							props.setFieldValue(
+																								'productPriceType',
+																								nextValue,
+																							);
+																						} else {
+																							const nextValue = props.values.productPriceType.concat(
+																								'PURCHASE',
+																							);
+																							// console.log(nextValue);
+																							props.setFieldValue(
+																								'productPriceType',
+																								nextValue,
+																							);
+																						}
 																					}
 																				}}
 																				checked={props.values.productPriceType.includes(

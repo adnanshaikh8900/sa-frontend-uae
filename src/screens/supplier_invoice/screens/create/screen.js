@@ -172,6 +172,7 @@ class CreateSupplierInvoice extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
+			expense: true,
 			exchangeRate: "",
 			basecurrency: [],
 			language: window['localStorage'].getItem('language'),
@@ -3906,6 +3907,7 @@ class CreateSupplierInvoice extends React.Component {
 									this.getCurrentProduct(res.data[0]);
 							});
 						}}
+						expense={this.state.expense}
 						createProduct={this.props.ProductActions.createAndSaveProduct}
 						vat_list={this.props.vat_list}
 						product_category_list={this.props.product_category_list}

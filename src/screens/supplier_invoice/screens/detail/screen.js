@@ -111,6 +111,7 @@ class DetailSupplierInvoice extends React.Component {
 			fileName: '',
 			purchaseCategory: [],
 			basecurrency: [],
+			expense: true,
 			supplier_currency: '',
 			disabled: false,
 			disabled1: false,
@@ -3263,6 +3264,7 @@ class DetailSupplierInvoice extends React.Component {
 									this.getCurrentProduct(res.data[0]);
 							});
 						}}
+						expense={this.state.expense}
 						createProduct={this.props.ProductActions.createAndSaveProduct}
 						vat_list={this.state.vat_list}
 						product_category_list={this.props.product_category_list}

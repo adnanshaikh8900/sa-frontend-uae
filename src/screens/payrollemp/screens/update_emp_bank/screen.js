@@ -583,12 +583,11 @@ class UpdateEmployeeBank extends React.Component {
                                                                                 color="secondary"
                                                                                 className="btn-square"
                                                                                 onClick={() => {
+                                                                                    this.props.history.push('/admin/master/employee/viewEmployee',
+                                                                                    { id: this.state.current_employee_id })
                                                                                     // this.props.history.push(
-                                                                                    //     '/admin/payroll/employee',
+                                                                                    //     '/admin/master/employee',
                                                                                     // );
-                                                                                    this.props.history.push(
-                                                                                        '/admin/master/employee',
-                                                                                    );
                                                                                 }}
                                                                             >
                                                                                 <i className="fa fa-ban"></i> {strings.Cancel}

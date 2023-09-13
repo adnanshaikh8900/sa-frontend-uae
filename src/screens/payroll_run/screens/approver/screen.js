@@ -17,6 +17,7 @@ import {
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
+import * as Yup from "yup";
 import { ConfirmDeleteModal, LeavePage, Loader } from 'components';
 import { CommonActions } from 'services/global'
 import * as EmployeeActions from '../../actions';
@@ -910,7 +911,17 @@ class PayrollApproverScreen extends React.Component {
 																	this.addEmployee(values)
 
 																}}
-
+																validationSchema={Yup.object().shape({
+																	comment: Yup.string()
+								  								  .required("Reason is required"),
+								  							})}
+								  							validate={(values) => {
+								  								let errors = {};
+								  								if (this.state.comment && !values.comment) {
+								  								  errors.comment = 'Reason is required';
+								  								}
+								  							return errors;
+								  							}}	
 															>
 																{(props) => (
 
@@ -1091,10 +1102,19 @@ class PayrollApproverScreen extends React.Component {
 
 															initialValues={this.state}
 															onSubmit={(values, { resetForm }) => {
-																this.addEmployee(values, resetForm)
-
+																this.handleSubmit(values, resetForm)
 															}}
-
+															validationSchema={Yup.object().shape({
+																comment: Yup.string()
+																	.required("Reason is required"),
+															})}
+															validate={(values) => {
+															  let errors = {};
+															  if (this.state.comment == "") {
+																	errors.comment = 'Reason is required';
+															  }
+														  return errors;
+															}}	
 														>
 															{(props) => (
 
@@ -1113,7 +1133,7 @@ class PayrollApproverScreen extends React.Component {
 																							<Label htmlFor="payrollSubject">
 																								{this.state.status == "Approved" || this.state.status == "Voided" ?
 																									"Reason for voiding the payroll" :
-																									"Reason for  rejecting the payroll"}
+																									"Reason for rejecting the payroll"}
 																							</Label>
 																							<Input
 																								// className="mt-4 pull-right"
@@ -1123,40 +1143,37 @@ class PayrollApproverScreen extends React.Component {
 																								name="comment"
 																								value={this.state.comment}
 																								disabled={this.state.status == "Voided" ? true : false}
-																								placeholder={strings.Enter + " reason "}
+																								placeholder={strings.Enter + "reason"}
 																								onChange={(event) => {
+																									props.handleChange('comment')(event.target.value);
 																									this.setState({
 																										comment: event.target.value
 																									})
 
 																								}}
-																								className={props.errors.comment && props.touched.comment ? "is-invalid" : ""}
+																								className={props.errors.comment ? "is-invalid" : ''}
 																							/>
+																							{props.errors.comment && (
+																								<div className="invalid-feedback">
+																									{props.errors.comment}
+																								</div>
+																							)}
 																						</div>
-
 																					)
-
-
 																				}
-																				{props.errors.comment && props.touched.comment && (
-																					<div className="invalid-feedback">
-																						{props.errors.comment}
-																					</div>
-																				)}
+																				
 																				{this.state.status && this.state.status === "Submitted" && this.props.location?.state?.user !== 'Generator' &&
 																					<Button
 																						color="primary"
 																						className="btn-square mt-4 "
 																						onClick={() => {
-																							if (this.state.comment == "")
-																								toast.error("Please Enter Reason")
-																							else
+																							props.handleSubmit();
+																							if (this.state.comment == "") {
+																							this.props.commonActions.fillManDatoryDetails();
+																							}else{
 																								this.rejectPayroll()
-																						}
-																						}
-																						title={
-																							this.state.comment == "" ? "Please Enter Reason" : ""
-																						}
+																							}
+																						}}
 																					>
 																						<i class="fas fa-user-times mr-1"></i>
 
@@ -1171,10 +1188,12 @@ class PayrollApproverScreen extends React.Component {
 																						className="btn-square mt-4 "
 																						type="button"
 																						onClick={() => {
-																							if (this.state.comment == "")
-																								toast.error("Please Enter Reason")
-																							else
+																							props.handleSubmit();
+																							if (this.state.comment == "") {
+																							this.props.commonActions.fillManDatoryDetails();
+																							}else{
 																								this.voidPayroll()
+																							}
 																						}}
 																					>
 																						<i class="fas fa-user-times mr-1"></i>

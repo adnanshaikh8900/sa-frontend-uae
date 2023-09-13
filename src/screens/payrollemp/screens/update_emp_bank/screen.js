@@ -64,7 +64,7 @@ class UpdateEmployeeBank extends React.Component {
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExNum = /^[0-9]+$/;
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
-        this.regexIban=/^AE\d{2}\s?\d{3}\d{16}$/;
+        this.regexIban = /^AE\d{2}\s?\d{3}\d{16}$/;
 
         this.formRef = React.createRef();
     }
@@ -104,7 +104,7 @@ class UpdateEmployeeBank extends React.Component {
                                     : '',
                             iban:
                                 res.data.iban && res.data.iban !== null
-                                    ?res.data.iban.replace("AE", "")
+                                    ? res.data.iban.replace("AE", "")
                                     : '',
                             swiftCode:
                                 res.data.swiftCode && res.data.swiftCode !== null
@@ -127,12 +127,12 @@ class UpdateEmployeeBank extends React.Component {
                 }
             }).catch((err) => {
                 this.setState({ loading: false })
-                // this.props.history.push('/admin/payroll/employee')
-                this.props.history.push('/admin/master/employee')
+                this.props.history.push('/admin/master/employee/viewEmployee',
+                    { id: this.props.location.state.id })
             })
         } else {
-            // this.props.history.push('/admin/payroll/employee')
-            this.props.history.push('/admin/master/employee')
+            this.props.history.push('/admin/master/employee/viewEmployee',
+                { id: this.props.location.state.id })
         }
     }
 
@@ -191,7 +191,7 @@ class UpdateEmployeeBank extends React.Component {
         );
         formData.append(
             'iban',
-            iban !== null ? "AE"+iban : '',
+            iban !== null ? "AE" + iban : '',
         );
         // formData.append(
         //     'bankName',
@@ -227,7 +227,8 @@ class UpdateEmployeeBank extends React.Component {
                     res.data ? res.data.message : 'Employee Bank Updated Successfully'
                 )
                 // this.props.history.push('/admin/payroll/employee')
-                this.props.history.push('/admin/master/employee')
+                this.props.history.push('/admin/master/employee/viewEmployee',
+                    { id: this.props.location.state.id })
                 this.setState({ loading: false, });
             }
         }).catch((err) => {
@@ -331,7 +332,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                             onChange={(event) => {
                                                                                                 const inputValue = event.target.value;
                                                                                                 if (/^[A-Za-z\s]+$/.test(inputValue)) {
-                                                                                                props.handleChange('accountHolderName')(inputValue);
+                                                                                                    props.handleChange('accountHolderName')(inputValue);
                                                                                                 }
                                                                                             }}
                                                                                             className={props.errors.accountHolderName && props.touched.accountHolderName ? "is-invalid" : ""}
@@ -358,7 +359,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                                 ) {
                                                                                                     const inputValue = option.target.value;
                                                                                                     if (/^[0-9]+$/.test(inputValue)) {
-                                                                                                    props.handleChange('accountNumber')(inputValue);
+                                                                                                        props.handleChange('accountNumber')(inputValue);
                                                                                                     }
                                                                                                     this.existForAccountNumber(option.target.value);
                                                                                                 }
@@ -477,33 +478,33 @@ class UpdateEmployeeBank extends React.Component {
                                                                                 <Col md="4">
                                                                                     <FormGroup>
                                                                                         <Label htmlFor="select"> <span className="text-danger">* </span>{strings.IBANNumber}</Label>
-                                                                                       <div style={{display:"flex"}}>
-                                                                                         <Input
-                                                                                         disabled
-                                                                                          style={{width:"25%"}}
-                                                                                          value="AE"
-                                                                                          />
-                                                                                        <Input
-                                                                                            type="text"
-                                                                                            id="iban"
-                                                                                            name="iban"
-                                                                                            //length excluding "AE" is 21 and including "AE" 23
-                                                                                            maxLength="21"
-                                                                                            value={props.values.iban}
-                                                                                            placeholder={strings.Enter + strings.IBANNumber}
-                                                                                            onChange={(option) => {
-                                                                                                if (
-                                                                                                    option.target.value === '' ||
-                                                                                                    this.regEx.test(option.target.value)
-                                                                                                ) {
-                                                                                                    props.handleChange('iban')(
-                                                                                                        option,
-                                                                                                    );
-                                                                                                }
-                                                                                            }}
+                                                                                        <div style={{ display: "flex" }}>
+                                                                                            <Input
+                                                                                                disabled
+                                                                                                style={{ width: "25%" }}
+                                                                                                value="AE"
+                                                                                            />
+                                                                                            <Input
+                                                                                                type="text"
+                                                                                                id="iban"
+                                                                                                name="iban"
+                                                                                                //length excluding "AE" is 21 and including "AE" 23
+                                                                                                maxLength="21"
+                                                                                                value={props.values.iban}
+                                                                                                placeholder={strings.Enter + strings.IBANNumber}
+                                                                                                onChange={(option) => {
+                                                                                                    if (
+                                                                                                        option.target.value === '' ||
+                                                                                                        this.regEx.test(option.target.value)
+                                                                                                    ) {
+                                                                                                        props.handleChange('iban')(
+                                                                                                            option,
+                                                                                                        );
+                                                                                                    }
+                                                                                                }}
 
-                                                                                            className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
-                                                                                        /></div>
+                                                                                                className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
+                                                                                            /></div>
                                                                                         {props.errors.iban && props.touched.iban && (
                                                                                             <div className="invalid-feedback d-block">{props.errors.iban}</div>
                                                                                         )}
@@ -583,12 +584,8 @@ class UpdateEmployeeBank extends React.Component {
                                                                                 color="secondary"
                                                                                 className="btn-square"
                                                                                 onClick={() => {
-                                                                                    // this.props.history.push(
-                                                                                    //     '/admin/payroll/employee',
-                                                                                    // );
-                                                                                    this.props.history.push(
-                                                                                        '/admin/master/employee',
-                                                                                    );
+                                                                                    this.props.history.push('/admin/master/employee/viewEmployee',
+                                                                                        { id: this.props.location.state.id })
                                                                                 }}
                                                                             >
                                                                                 <i className="fa fa-ban"></i> {strings.Cancel}

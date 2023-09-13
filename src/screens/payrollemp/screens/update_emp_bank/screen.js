@@ -227,7 +227,9 @@ class UpdateEmployeeBank extends React.Component {
                     res.data ? res.data.message : 'Employee Bank Updated Successfully'
                 )
                 // this.props.history.push('/admin/payroll/employee')
-                this.props.history.push('/admin/master/employee')
+                // this.props.history.push('/admin/master/employee')
+                this.props.history.push('/admin/master/employee/viewEmployee',
+                { id: this.state.current_employee_id })
                 this.setState({ loading: false, });
             }
         }).catch((err) => {

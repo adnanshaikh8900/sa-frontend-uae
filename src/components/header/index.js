@@ -135,6 +135,13 @@ class Header extends Component {
 							>
 								<i className="fas fa-users"></i> {strings.Role}
 							</DropdownItem>
+							<DropdownItem
+								onClick={() =>
+									this.props.history.push('/admin/settings/payrollsettings')
+								}
+							>
+								<i className="fas fa-money-check-alt"></i> {strings.PayrollSettings}
+							</DropdownItem>
 							{config.SETTING_THEME && <DropdownItem
                                 onClick={() =>
                                     this.props.history.push('/admin/settings/template')

@@ -47,7 +47,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		payRollActions: bindActionCreators(PayRollActions, dispatch),
-		commonActions: bindActionCreators(CommonActions, dispatch),
+		commonactions: bindActionCreators(CommonActions, dispatch),
 	};
 };
 // const customStyles = {
@@ -91,7 +91,8 @@ class PayrollRun extends React.Component {
 			current_employee: '',
 			lop: '',
 			disableCreating: true,
-			disableCreatePayroll: false
+			disableCreatePayroll: false,
+			sifEnabled: true,
 		};
 
 		this.options = {
@@ -120,7 +121,6 @@ class PayrollRun extends React.Component {
 		this.setState({ payroll_employee_list1: nextProps.payroll_employee_list })
 	}
 	componentDidMount = () => {
-
 		this.props.payRollActions.getUserAndRole();
 		this.initializeData();
 		this.disableCreatePayroll()
@@ -171,7 +171,7 @@ class PayrollRun extends React.Component {
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
 		console.log(userLabel, userValue, parseInt(row.payrollApprover))
 		if ((userLabel === "Payroll Generator" && userValue === parseInt(row.generatedBy)) && (row.status !== "Draft" && row.status !== "Rejected")) {
-			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id , user:'Generator' })
+			this.props.history.push('/admin/payroll/ViewPayroll', { id: row.id, user: 'Generator' })
 		} else if ((userLabel === "Payroll Generator" && userValue === parseInt(row.generatedBy)) && (row.status === "Draft" || row.status === "Rejected")) {
 			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 		} else if ((userValue === row.payrollApprover && userLabel === "Payroll Approver") && (row.status !== "Draft")) {
@@ -263,7 +263,7 @@ class PayrollRun extends React.Component {
 			tempList = Object.assign([], this.state.selectedRows);
 			tempList.push(row.employeeId);
 		} else {
-			// if(isSelected==true) {	this.props.commonActions.tostifyAlert(
+			// if(isSelected==true) {	this.props.commonactions.tostifyAlert(
 			// 	'success',"Salary for \""+row.employeeName+'\" has ALREADY GENERATED',
 			// );}
 
@@ -360,7 +360,7 @@ class PayrollRun extends React.Component {
 				}
 			});
 		}
-		// this.props.commonActions.tostifyAlert(
+		// this.props.commonactions.tostifyAlert(
 		// 	'info',"Salary for below Employees has already generated  : "+EmployeeNames,
 		// );
 		// paidList.map((e)=>{
@@ -420,7 +420,7 @@ class PayrollRun extends React.Component {
 	// 			),
 	// 		});
 	// 	} else {
-	// 		this.props.commonActions.tostifyAlert(
+	// 		this.props.commonactions.tostifyAlert(
 	// 			'info',
 	// 			'Please select the rows of the table and try again.',
 	// 		);
@@ -451,7 +451,7 @@ class PayrollRun extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.initializeData();
-					this.props.commonActions.tostifyAlert(
+					this.props.commonactions.tostifyAlert(
 						'success',
 						'Salary Generated Successfully',
 					);
@@ -463,7 +463,7 @@ class PayrollRun extends React.Component {
 				}
 			})
 			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
+				this.props.commonactions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
@@ -637,17 +637,12 @@ class PayrollRun extends React.Component {
 	}
 
 	disableCreatePayroll = () => {
-
 		this.props.payRollActions.getCompanyDetails().then((res) => {
 			if (res.status == 200) {
-
+				let sifEnabled = res.data.generateSif;
 				let companyNumber = res.data.companyNumber ? res.data.companyNumber : "";
 				let companyBankCode = res.data.companyBankCode ? res.data.companyBankCode : "";
-
-				if (companyNumber == "" || companyBankCode == "")
-					this.setState({ disableCreatePayroll: true });
-				else
-					this.setState({ disableCreatePayroll: false });
+				this.setState({ disableCreatePayroll: companyNumber == "" || companyBankCode == "" ? true : false, sifEnabled: sifEnabled });
 			}
 		});
 
@@ -663,6 +658,7 @@ class PayrollRun extends React.Component {
 			filterData,
 			csvData,
 			view,
+			sifEnabled,
 		} = this.state;
 		const {
 			payroll_employee_list,
@@ -686,7 +682,7 @@ class PayrollRun extends React.Component {
 									<Row>
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
-												<i class="fas fa-money-check-alt"></i>
+												<i className="fas fa-money-check-alt"></i>
 												<span className="ml-2">{strings.payrolls}</span>
 											</div>
 										</Col>
@@ -721,18 +717,16 @@ class PayrollRun extends React.Component {
 
 																	<Button
 																		color="primary"
-																		// disabled={this.state.disableCreatePayroll==true?true:false}
-																		title={this.state.disableCreatePayroll == true ? "Please Create Company Details" : ""}
+																		title={this.state.disableCreatePayroll == true && sifEnabled ? "Please Create Company Details" : ""}
 																		className="btn-square mt-2 pull-right"
 																		onClick={() => {
-																			if (this.state.disableCreatePayroll == true) {
+																			if (this.state.disableCreatePayroll && sifEnabled) {
 																				toast.success("Please Create Company Details From Payroll-config");
 																				this.props.history.push('/admin/payroll/config', { tabNo: "4" })
 																			}
 																			else
 																				this.props.history.push('/admin/payroll/payrollrun/createPayrollList')
-																		}
-																		}
+																		}}
 																	>
 																		<i className="fas fa-plus mr-1" />
 

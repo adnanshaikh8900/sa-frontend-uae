@@ -123,7 +123,7 @@ class PayrollSettings extends React.Component {
 																{strings.SifPayroll}
 															</Label>
 															<br />
-															<br/>
+															<br />
 
 															<FormGroup check inline>
 																<div className="custom-radio custom-control">

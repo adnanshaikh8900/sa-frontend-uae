@@ -1205,7 +1205,8 @@ class CustomerInvoice extends React.Component {
 											<TableHeaderColumn
 												dataField="customerName"
 												tdStyle={{ whiteSpace: 'normal' }}
-												//	dataSort width="10%"
+												dataSort 
+												//width="10%"
 												className="table-header-bg"
 											>
 												{strings.CUSTOMERNAME}

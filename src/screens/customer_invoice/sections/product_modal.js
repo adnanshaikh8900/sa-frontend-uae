@@ -103,7 +103,7 @@ class ProductModal extends React.Component {
 			}
 		});
 	
-	console.log(this.state.employeeCode)
+	// console.log(this.state.employeeCode)
 	}
 
 	componentDidMount = () => {
@@ -233,12 +233,15 @@ class ProductModal extends React.Component {
 		const {
 			openProductModal,
 			closeProductModal,
+			income,
+			expense,
 			vat_list,
 			product_category_list,
 			salesCategory,
 			purchaseCategory,
 		} = this.props;
 		const { initValue } = this.state;
+		// console.log("income ---- ", income);
 		return (
 			<div className="contact-modal-screen">
 				<Modal
@@ -252,7 +255,9 @@ class ProductModal extends React.Component {
 					closeModal={(e) => {
 						closeProductModal(e);
 					}}
-				isParentComponentPresent={true}
+					isParentComponentPresent={true}
+					income={income === true ? income : false}
+					expense={expense === true ? expense : false}
 				/>
 				</Modal>
 			</div>

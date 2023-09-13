@@ -189,7 +189,7 @@ class InvoiceTemplate extends Component {
 									{invoiceData.referenceNo && 
 									<div className="mb-1 ml-2"><b>{strings.ReferenceN}: </b>{console.log(invoiceData) || invoiceData.referenceNo}</div>}
 									<div className="mb-1 ml-2"><b>{strings.TaxCreditDate}: </b>
-										{moment(invoiceData.creditNoteDate, 'YYYY-MM-DD').format('DD MMM YYYY')}
+										{moment(invoiceData.creditNoteDate, 'YYYY-MM-DD').format('DD-MM-YYYY')}
 									</div>
 									<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderInvoiceStatus(status)}</div>
 								</div>

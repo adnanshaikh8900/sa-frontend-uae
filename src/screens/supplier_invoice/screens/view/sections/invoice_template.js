@@ -338,9 +338,9 @@ class InvoiceTemplate extends Component {
 									{invoiceData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo}: </b>{invoiceData.receiptNumber}</div>)}
 									<div className="mb-1 ml-2"><b>
 											{strings.InvoiceDate }: </b>	{' '}
-												{moment(invoiceData.invoiceDate).format('DD MMM YYYY')}
+												{moment(invoiceData.invoiceDate).format('DD-MM-YYYY')}
 												</div>
-												<div className="mb-1 ml-2"><b>{strings.DueDate }: </b>	{moment(invoiceData.invoiceDueDate).format('DD MMM YYYY')}
+												<div className="mb-1 ml-2"><b>{strings.DueDate }: </b>	{moment(invoiceData.invoiceDueDate).format('DD-MM-YYYY')}
 												</div>
 												<div className="mb-1 ml-2"><b>{strings.Terms}: </b>{this.getTerms(invoiceData.term)}
 												</div>

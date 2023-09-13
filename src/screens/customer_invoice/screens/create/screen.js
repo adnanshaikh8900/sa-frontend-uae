@@ -171,6 +171,7 @@ class CreateCustomerInvoice extends React.Component {
 			discountAmount: 0,
 			exist: false,
 			prefix: '',
+			income: true,
 			purchaseCategory: [],
 			salesCategory: [],
 			exchangeRate: '',
@@ -2074,7 +2075,7 @@ class CreateCustomerInvoice extends React.Component {
 				this.setState({ loading: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Invoice Created Successfully.',
+					res.data ? strings.InvoiceCreatedSuccessfully :  res.data.message,
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -2158,7 +2159,7 @@ class CreateCustomerInvoice extends React.Component {
 
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Invoice Created Unsuccessfully',
+					err && err.data ? err.data.message : 'Invoice Created Unsuccessfully!',
 				);
 			});
 	};
@@ -4296,6 +4297,7 @@ class CreateCustomerInvoice extends React.Component {
 										this.getCurrentProduct(res.data[0])
 								})
 							}}
+							income={this.state.income}
 							createProduct={this.props.productActions.createAndSaveProduct}
 							vat_list={this.props.vat_list}
 							product_category_list={this.props.product_category_list}

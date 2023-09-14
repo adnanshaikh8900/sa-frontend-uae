@@ -2081,9 +2081,9 @@ class DetailCustomerInvoice extends React.Component {
 																' number is required',
 															),
 															contactId: Yup.string().required(
-																'Supplier is required',
+																'Customer name is required',
 															),
-															term: Yup.string().required('Term is required'),
+															term: Yup.string().required('Terms is required'),
 															// placeOfSupplyId: Yup.string().required(
 															// 	'Place of supply is required',
 															// ),
@@ -2230,7 +2230,7 @@ class DetailCustomerInvoice extends React.Component {
 																							'label',
 																							'value',
 																							tmpCustomer_list,
-																							'Customer',
+																							'Customer Name',
 																						)
 																						: []
 																				}

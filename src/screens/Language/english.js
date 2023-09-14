@@ -213,7 +213,7 @@ const en = {
       ShippingDetails: "Shipping Details",
       ContactAddressDetails: "Contact Address Details",
       ShippingAddressIsSameAsBillingAddress: "Shipping Address Is Same As Billing Address",
-      TermIsRequired: 'Term is required',
+      TermIsRequired: 'Terms is required',
       InvoiceNumberRequired: "Invoice number is required",
       InvoiceDateRequired: "Invoice date is required",
 

@@ -2595,10 +2595,10 @@ class CreateCustomerInvoice extends React.Component {
 																	'Invoice number is required',
 																),
 																contactId: Yup.string().required(
-																	strings.CustomerIsRequired
+																	strings.CustomerNameIsRequired
 																),
 																// placeOfSupplyId: Yup.string().required('Place of supply is required'),
-																term: Yup.string().required(strings.TernIsRequired),
+																term: Yup.string().required(strings.TermIsRequired),
 																currency: Yup.string().required(
 																	strings.CurrencyIsRequired
 																),
@@ -2761,7 +2761,7 @@ class CreateCustomerInvoice extends React.Component {
 																					isDisabled={this.state.isQuotationSelected}
 																					id="contactId"
 																					name="contactId"
-																					placeholder={strings.Select + strings.Customer}
+																					placeholder={strings.Select + strings.CustomerName}
 																					options={
 																						tmpCustomer_list
 																							? selectOptionsFactory.renderOptions(

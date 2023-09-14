@@ -51,7 +51,7 @@ export const defaultState = (currency) => {
           },
           {
             value: 12,
-            label: "Money Paid To User",
+            label: "Money Paid To Employee",
           },
           {
             value: 13,
@@ -108,7 +108,7 @@ export const defaultState = (currency) => {
           },
           {
             value: 6,
-            label: "Money Received From User",
+            label: "Money Received From Employee",
           },
           {
             value: 7,

@@ -128,6 +128,8 @@ class CreateEmployeePayroll extends React.Component {
             createMore: false,
             nameDesigExist: false,
             idDesigExist: false,
+            sifEnabled: true,
+            otherDetails: false,
             initValue: {
                 designationName: '',
                 firstName: '',
@@ -218,6 +220,7 @@ class CreateEmployeePayroll extends React.Component {
             ]
         }
         this.formRef = React.createRef();
+        this.formRefPersonal = React.createRef();
         this.regEx = /^[0-9\d]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExAlpha =/^[A-Za-z\s]+$/;
@@ -290,6 +293,17 @@ class CreateEmployeePayroll extends React.Component {
         this.props.designationActions.getParentDesignationList();
         this.getEmployeeCode();
         this.getStateList(this.state.initValue.countryId.value ? this.state.initValue.countryId.value : '');
+        this.props.createPayrollEmployeeActions.getCompanyById()
+            .then((res) => {
+                this.setState({
+                    sifEnabled: res.data.generateSif,
+                })
+                if (res.data.generateSif == true) {
+                    this.setState({
+                        otherDetails: true,
+                    })
+                }
+            });
         // this.props.createPayrollEmployeeActions.getInvoicePrefix().then((response) => {
         // 	this.setState({prefixData:response.data
         // });
@@ -301,7 +315,6 @@ class CreateEmployeePayroll extends React.Component {
             name: value,
         };
         this.props.commonActions.checkValidation(data).then((response) => {
-            console.log(response);
             if (response.data === 'Designation name already exists') {
                 this.setState({
                     nameDesigExist: true,
@@ -319,7 +332,6 @@ class CreateEmployeePayroll extends React.Component {
             name: value,
         };
         this.props.commonActions.checkValidation(data).then((response) => {
-            console.log(response);
             if (response.data === 'Designation ID already exists') {
                 this.setState({
                     idDesigExist: true,
@@ -370,6 +382,7 @@ class CreateEmployeePayroll extends React.Component {
                     },
                 });
                 this.formRef.current.setFieldValue('employeeCode', res.data, true, this.employeeValidationCheck(res.data));
+                this.formRefPersonal.current.setFieldValue('employeeCode', res.data, true, this.employeeValidationCheck(res.data));
             }
         });
 
@@ -716,6 +729,8 @@ class CreateEmployeePayroll extends React.Component {
             employeeDesignationId,
             dob,
             // bloodGroup,
+            employeeCode,
+            dateOfJoining,
             gender,
             maritalStatus,
             salaryRoleId,
@@ -824,6 +839,13 @@ class CreateEmployeePayroll extends React.Component {
         if (gender && gender.value) {
             formData.append('gender', gender.value);
         }
+        if (this.state.sifEnabled == false) {
+            formData.append(
+                'employeeCode',
+                employeeCode != null ? employeeCode : '',
+            )
+            formData.append('dateOfJoining', dateOfJoining ? moment(dateOfJoining).format('DD-MM-YYYY') : '')
+        }
 
         // if (parentId && parentId.value) {
         //     formData.append('parentId', parentId.value);
@@ -859,7 +881,11 @@ class CreateEmployeePayroll extends React.Component {
                             this.props.history.push(`/admin/expense/expense/create`)
                             // this.setState({ loading:false,});                     
                         }
-                        this.toggle(0, '2')
+                        if (this.state.sifEnabled == false) {
+                            this.toggle(0, '4')
+                        } else {
+                            this.toggle(0, '2')
+                        }
 
                         const formData1 = new FormData();
                         formData1.append('employee', this.state.employeeid)
@@ -887,7 +913,11 @@ class CreateEmployeePayroll extends React.Component {
                         'success',
                         res.data ? res.data.message : 'Employee Updated Successfully!'
                     )
-                    this.toggle(0, '2')
+                    if (this.state.sifEnabled == false) {
+                        this.toggle(0, '4')
+                    } else {
+                        this.toggle(0, '2')
+                    }
                     this.renderActionForState(this.state.employeeid)
                     // this.setState({ loading:false,});   
 
@@ -1206,7 +1236,6 @@ class CreateEmployeePayroll extends React.Component {
 
         const monthlySalary = CTC1 / 12
         const componentTotal1 = monthlySalary - totalFixedSalary;
-        console.log(componentTotal1, "%$componentTotal")
 
         if (Fixed_Allowance != null) {
             Fixed_Allowance.map((obj) => {
@@ -1229,7 +1258,6 @@ class CreateEmployeePayroll extends React.Component {
                 list: locallist
 
             })
-        console.log(this.state.componentTotal, "componentTotal")
     }
     render() {
         strings.setLanguage(this.state.language);
@@ -1272,26 +1300,30 @@ class CreateEmployeePayroll extends React.Component {
                                                 {strings.BasicDetails}
                                             </NavLink>
                                         </NavItem>
-                                        <NavItem>
-                                            <NavLink
-                                                active={this.state.activeTab[0] === '2'}
-                                            // onClick={() => {
-                                            //     this.toggle(0, '2');
-                                            // }}
-                                            >
-                                                {strings.Employment}
-                                            </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                            <NavLink
-                                                active={this.state.activeTab[0] === '3'}
-                                            // onClick={() => {
-                                            //     this.toggle(0, '3');
-                                            // }}
-                                            >
-                                                {strings.FinancialDetails}
-                                            </NavLink>
-                                        </NavItem>
+                                        {this.state.sifEnabled &&
+                                            <NavItem>
+                                                <NavLink
+                                                    active={this.state.activeTab[0] === '2'}
+                                                // onClick={() => {
+                                                    //     this.toggle(0, '2');
+                                                    // }}
+                                                    >
+                                                    {strings.Employment}
+                                                </NavLink>
+                                            </NavItem>
+                                        }
+                                        {this.state.sifEnabled &&
+                                            <NavItem>
+                                                <NavLink
+                                                    active={this.state.activeTab[0] === '3'}
+                                                // onClick={() => {
+                                                //     this.toggle(0, '3');
+                                                // }}
+                                                >
+                                                    {strings.FinancialDetails}
+                                                </NavLink>
+                                            </NavItem>
+                                        }
                                         <NavItem>
                                             <NavLink
                                                 active={this.state.activeTab[0] === '4'}
@@ -1316,6 +1348,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                 <Row>
                                                                     <Col lg={12}>
                                                                         <Formik
+                                                                            ref={this.formRefPersonal}
                                                                             initialValues={this.state.initValue}
                                                                             onSubmit={(values, { resetForm }) => {
                                                                                 this.handleSubmit(values, resetForm)
@@ -1331,62 +1364,59 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 if (values.mobileNumber && values.mobileNumber.length !== 12) {
                                                                                     errors.mobileNumber = 'Invalid mobile number'
                                                                                 }
-                                                                                if (values.emergencyContactNumber1 && values.emergencyContactNumber1.length !== 12) {
-                                                                                    errors.emergencyContactNumber1 = 'Invalid mobile number'
-                                                                                }
-                                                                                // if (checkmobileNumberParam1 === true) {
-                                                                                //     errors.emergencyContactNumber1 =
-                                                                                //     'Invalid mobile number';
-                                                                                // }
-
-                                                                                //  if (checkmobileNumberParam2 === true) {
-                                                                                //         errors.emergencyContactNumber2 =
-                                                                                //         'Invalid mobile number';
-                                                                                // }
                                                                                 if (this.state.emailExist == true) {
                                                                                     errors.email = 'Email already exists';
-                                                                                }
-                                                                                if (values.gender && values.gender.label && values.gender.label === "Select Gender") {
-                                                                                    errors.gender =
-                                                                                        'Gender is required';
-                                                                                }
-                                                                                if (values.maritalStatus && values.maritalStatus.label && values.maritalStatus.label === "Select Marital Status") {
-                                                                                    errors.maritalStatus =
-                                                                                        'Marital status is required';
                                                                                 }
                                                                                 if (values.employeeDesignationId && values.employeeDesignationId.label && values.employeeDesignationId.label === "Select Employee Designation") {
                                                                                     errors.employeeDesignationId =
                                                                                         'Designation is required';
                                                                                 }
-                                                                                if (values.salaryRoleId && values.salaryRoleId.label && values.salaryRoleId.label === "Select Salary Role") {
-                                                                                    errors.salaryRoleId =
-                                                                                        'Salary role is required';
-                                                                                }
-                                                                                if (this.underAge(values.dob))
+                                                                                if (this.underAge(values.dob)) {
                                                                                     errors.dob =
                                                                                         'Age should be more than 14 years';
-
-                                                                                // if( values.stateId ===''){
-                                                                                //     errors.stateId =
-                                                                                //     'State is required';
-                                                                                // }
-
-                                                                                if (values.countryId == 229 || values.countryId.value == 229) {
-                                                                                    if (values.stateId == "")
-                                                                                        errors.stateId = 'Emirate is required';
-                                                                                } else {
-                                                                                    if (values.stateId == "")
-                                                                                        errors.stateId = 'State is required';
-
                                                                                 }
+                                                                                if (this.state.sifEnabled == true) {
+                                                                                    if (values.gender && values.gender.label && values.gender.label === "Select Gender") {
+                                                                                        errors.gender =
+                                                                                            'Gender is required';
+                                                                                    }
+                                                                                    if (values.maritalStatus && values.maritalStatus.label && values.maritalStatus.label === "Select Marital Status") {
+                                                                                        errors.maritalStatus =
+                                                                                            'Marital status is required';
+                                                                                    }
+                                                                                    if (values.salaryRoleId && values.salaryRoleId.label && values.salaryRoleId.label === "Select Salary Role") {
+                                                                                        errors.salaryRoleId =
+                                                                                            'Salary role is required';
+                                                                                    }
+                                                                                    if (values.emergencyContactNumber1 && values.emergencyContactNumber1.length !== 12) {
+                                                                                        errors.emergencyContactNumber1 = 'Invalid mobile number'
+                                                                                    }
+                                                                                    // if( values.stateId ===''){
+                                                                                    //     errors.stateId =
+                                                                                    //     'State is required';
+                                                                                    // }
 
+                                                                                    if (values.countryId == 229 || values.countryId.value == 229) {
+                                                                                        if (values.stateId == "")
+                                                                                            errors.stateId = 'Emirate is required';
+                                                                                    } else {
+                                                                                        if (values.stateId == "")
+                                                                                            errors.stateId = 'State is required';
+
+                                                                                    }
+                                                                                } else {
+                                                                                    if (exist === true && values.employeeCode != "") {
+                                                                                        errors.employeeCode =
+                                                                                            'Employee unique id already exists';
+                                                                                    }
+                                                                                }
                                                                                 // if (param === true) {
                                                                                 // 	errors.discount =
                                                                                 // 		'Discount amount Cannot be greater than Invoice Total Amount';
                                                                                 // }
                                                                                 return errors;
                                                                             }}
-                                                                            validationSchema={Yup.object().shape({
+                                                                            validationSchema={this.state.sifEnabled == true ? Yup.object().shape({
                                                                                 firstName: Yup.string()
                                                                                     .required("First name is required"),
                                                                                 lastName: Yup.string()
@@ -1428,8 +1458,24 @@ class CreateEmployeePayroll extends React.Component {
                                                                                     }),
                                                                                 emergencyContactRelationship1: Yup.string()
                                                                                     .required('Relationship 1 is required'),
-
-
+                                                                            }) : 
+                                                                            Yup.object().shape({
+                                                                            firstName: Yup.string()
+                                                                                .required("First name is required"),
+                                                                            lastName: Yup.string()
+                                                                                .required("Last name is required"),
+                                                                            email: Yup.string()
+                                                                                .required("Valid email required").email('Invalid Email'),
+                                                                            mobileNumber: Yup.string()
+                                                                                .required("Mobile number is required"),
+                                                                            employeeCode: Yup.string()
+                                                                                .required("Employee unique id is required"),
+                                                                            dateOfJoining: Yup.date()
+                                                                                .required('Date of joining is required'),
+                                                                            dob: Yup.date()
+                                                                                .required('DOB is required'),
+                                                                            employeeDesignationId: Yup.string()
+                                                                                .required('Designation is required'),
                                                                             })}
                                                                         >
                                                                             {(props) => (
@@ -1478,7 +1524,7 @@ class CreateEmployeePayroll extends React.Component {
 
                                                                                                         <div>
                                                                                                             <FormGroup check inline>
-                                                                                                                <span className="text-danger">* </span>{strings.Status} &nbsp; &nbsp;
+                                                                                                                <span className="text-danger">* </span>{ strings.Status} &nbsp; &nbsp;
                                                                                                                 <div className="custom-radio custom-control">
                                                                                                                     <input
                                                                                                                         className="custom-control-input"
@@ -1783,6 +1829,7 @@ class CreateEmployeePayroll extends React.Component {
 
 
                                                                                             <Row>
+                                                                                                {this.state.sifEnabled == true ?
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
                                                                                                         <Label htmlFor="gender"><span className="text-danger">* </span>{strings.Gender}</Label>
@@ -1817,9 +1864,48 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                             </div>
                                                                                                         )}
                                                                                                     </FormGroup>
+                                                                                                </Col> : 
+                                                                                                <Col md="4">
+                                                                                                    <FormGroup>
+                                                                                                        <Label htmlFor="select"><span className="text-danger">* </span>{strings.employee_unique_id}
+                                                                                                            <i id="employeeCodeTooltip"
+                                                                                                                className="fa fa-question-circle ml-1"
+                                                                                                            ></i>
+                                                                                                            <UncontrolledTooltip
+                                                                                                                placement="right"
+                                                                                                                target="employeeCodeTooltip"
+                                                                                                            >
+                                                                                                                Employee Unique Id system is designed by the organization
+                                                                                                                to identify the employee from a group of employees and his work details.
+                                                                                                                i.e. Its Internal ID designed for Identifying Employee.
+                                                                                                            </UncontrolledTooltip>
+                                                                                                        </Label>
+                                                                                                        <Input
+                                                                                                            type="text"
+                                                                                                            maxLength="14"
+                                                                                                            // minLength="14"
+                                                                                                            autoComplete='off'
+                                                                                                            id="employeeCode"
+                                                                                                            name="employeeCode"
+                                                                                                            value={props.values.employeeCode}
+                                                                                                            placeholder={strings.Enter + strings.EmployeeCode}
+                                                                                                            onChange={(option) => {
+                                                                                                                if (option.target.value === '' || this.regExEmpUniqueId.test(option.target.value)) {
+                                                                                                                    props.handleChange('employeeCode')(option)
+                                                                                                                    this.employeeValidationCheck(option.target.value)
+                                                                                                                }
+                                                                                                            }}
+                                                                                                            className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
+                                                                                                        />
+                                                                                                        {props.errors.employeeCode && props.touched.employeeCode && (
+                                                                                                            <div className="invalid-feedback">{props.errors.employeeCode}</div>
+                                                                                                        )}
+                                                                                                    </FormGroup>
                                                                                                 </Col>
+                                                                                                }
 
                                                                                                 <Col md="4">
+                                                                                                {this.state.sifEnabled == true ?
                                                                                                     <FormGroup>
                                                                                                         <Label htmlFor="maritalStatus"><span className="text-danger">* </span>{strings.maritalStatus}</Label>
                                                                                                         <Select
@@ -1853,6 +1939,31 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                             </div>
                                                                                                         )}
                                                                                                     </FormGroup>
+                                                                                                    :
+                                                                                                    <FormGroup className="mb-3">
+                                                                                                        <Label htmlFor="dateOfJoining"><span className="text-danger">* </span>{strings.DateOfJoining}</Label>
+                                                                                                        <DatePicker
+                                                                                                            className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
+                                                                                                            id="dateOfJoining"
+                                                                                                            name="dateOfJoining"
+                                                                                                            placeholderText={strings.Select + strings.DateOfJoining}
+                                                                                                            showMonthDropdown
+                                                                                                            showYearDropdown
+                                                                                                            dateFormat="dd-MM-yyyy"
+                                                                                                            dropdownMode="select"
+                                                                                                            // maxDate={new Date()}
+                                                                                                            autoComplete={"off"}
+                                                                                                            selected={props.values.dateOfJoining}
+                                                                                                            value={props.values.dateOfJoining}
+                                                                                                            onChange={(value) => {
+                                                                                                                props.handleChange("dateOfJoining")(value)
+                                                                                                            }}
+                                                                                                        />
+                                                                                                        {props.errors.dateOfJoining && props.touched.dateOfJoining && (
+                                                                                                            <div className="invalid-feedback">{props.errors.dateOfJoining}</div>
+                                                                                                        )}
+                                                                                                    </FormGroup>
+                                                                                                    }
                                                                                                 </Col>
 
                                                                                                 {/* <Col md="4">
@@ -1952,7 +2063,104 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                     </div>
                                                                                                 </Col>
                                                                                             </Row>
+                                                                                            {this.state.sifEnabled == false &&
+                                                                                            <Row>
+                                                                                                <Col md="4">
+                                                                                                    <FormGroup>
+                                                                                                        <Input
+                                                                                                        className='ml-0'
+                                                                                                        type="checkbox"
+                                                                                                        id="inline-checkbox1"
+                                                                                                        name="otherDetails"
+                                                                                                        checked={this.state.otherDetails}
+                                                                                                        onChange={() => {
+                                                                                                            this.setState(prevState => ({
+                                                                                                                otherDetails: !prevState.otherDetails
+                                                                                                            }));
+                                                                                                        }}
+                                                                                                        />
+                                                                                                        <Label className='ml-4' htmlFor="otherDetails">{strings.Other+" "+strings.Details}</Label>
+                                                                                                    </FormGroup>
+                                                                                                </Col>
+                                                                                            </Row>
+                                                                                            }
+                                                                                            {this.state.otherDetails == true &&
+                                                                                            <>
+                                                                                            {this.state.sifEnabled == false && 
+                                                                                                <Row>
+                                                                                                    <Col md="4">
+                                                                                                        <FormGroup>
+                                                                                                            <Label htmlFor="gender">{strings.Gender}</Label>
+                                                                                                            <Select
 
+                                                                                                                options={
+                                                                                                                    this.gender
+                                                                                                                        ? selectOptionsFactory.renderOptions(
+                                                                                                                            'label',
+                                                                                                                            'value',
+                                                                                                                            this.gender,
+                                                                                                                            'Gender',
+                                                                                                                        )
+                                                                                                                        : []
+                                                                                                                }
+                                                                                                                id="gender"
+                                                                                                                name="gender"
+                                                                                                                placeholder={strings.Select + strings.Gender}
+                                                                                                                value={this.state.gender}
+                                                                                                                onChange={(value) => {
+                                                                                                                    props.handleChange('gender')(value);
+
+                                                                                                                }}
+                                                                                                                className={`${props.errors.gender && props.touched.gender
+                                                                                                                    ? 'is-invalid'
+                                                                                                                    : ''
+                                                                                                                    }`}
+                                                                                                            />
+                                                                                                            {props.errors.gender && props.touched.gender && (
+                                                                                                                <div className="invalid-feedback">
+                                                                                                                    {props.errors.gender}
+                                                                                                                </div>
+                                                                                                            )}
+                                                                                                        </FormGroup>
+                                                                                                    </Col>
+
+                                                                                                    <Col md="4">
+                                                                                                        <FormGroup>
+                                                                                                            <Label htmlFor="maritalStatus">{strings.maritalStatus}</Label>
+                                                                                                            <Select
+
+                                                                                                                options={
+                                                                                                                    this.maritalStatus
+                                                                                                                        ? selectOptionsFactory.renderOptions(
+                                                                                                                            'label',
+                                                                                                                            'value',
+                                                                                                                            this.maritalStatus,
+                                                                                                                            'Marital Status',
+                                                                                                                        )
+                                                                                                                        : []
+                                                                                                                }
+                                                                                                                id="maritalStatus"
+                                                                                                                name="maritalStatus"
+                                                                                                                placeholder={strings.Select + strings.maritalStatus}
+                                                                                                                value={props.values.maritalStatus}
+                                                                                                                onChange={(option) => {
+                                                                                                                    props.handleChange('maritalStatus')(option);
+                                                                                                                    this.setState({ maritalStatus: option.value })
+                                                                                                                }}
+                                                                                                                className={`${props.errors.maritalStatus && props.touched.maritalStatus
+                                                                                                                    ? 'is-invalid'
+                                                                                                                    : ''
+                                                                                                                    }`}
+                                                                                                            />
+                                                                                                            {props.errors.maritalStatus && props.touched.maritalStatus && (
+                                                                                                                <div className="invalid-feedback">
+                                                                                                                    {props.errors.maritalStatus}
+                                                                                                                </div>
+                                                                                                            )}
+                                                                                                        </FormGroup>
+                                                                                                    </Col>
+                                                                                                </Row>
+                                                                                            }
                                                                                             <Row>
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
@@ -2052,7 +2260,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                             <Row className="row-wrapper">
                                                                                                 <Col md="8">
                                                                                                     <FormGroup>
-                                                                                                        <Label htmlFor="gender"><span className="text-danger">* </span> {strings.PresentAddress} </Label>
+                                                                                                        <Label htmlFor="gender">{this.state.sifEnabled == true && <span className="text-danger">* </span>} {strings.PresentAddress} </Label>
                                                                                                         <Input
                                                                                                             type="text"
                                                                                                             maxLength="100"
@@ -2165,7 +2373,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                             <Row className="row-wrapper">
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
-                                                                                                        <Label htmlFor="countryId"><span className="text-danger">* </span>{strings.Country}</Label>
+                                                                                                        <Label htmlFor="countryId">{this.state.sifEnabled == true && <span className="text-danger">* </span>}{strings.Country}</Label>
                                                                                                         <Select
                                                                                                             //  isDisabled
                                                                                                             options={
@@ -2211,7 +2419,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 </Col>
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
-                                                                                                        <Label htmlFor="stateId"><span className="text-danger">* </span>
+                                                                                                        <Label htmlFor="stateId">{this.state.sifEnabled == true && <span className="text-danger">* </span>}
                                                                                                             {props.values.countryId.value === 229 ? strings.Emirate : strings.StateRegion}
 
                                                                                                         </Label>
@@ -2377,7 +2585,7 @@ class CreateEmployeePayroll extends React.Component {
 
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
-                                                                                                        <Label htmlFor="emergencyContactName1"><span className="text-danger">* </span>{strings.ContactName1}</Label>
+                                                                                                        <Label htmlFor="emergencyContactName1">{this.state.sifEnabled == true && <span className="text-danger">* </span>}{strings.ContactName1}</Label>
                                                                                                         <Input
                                                                                                             type="text"
                                                                                                             maxLength="100"
@@ -2400,7 +2608,7 @@ class CreateEmployeePayroll extends React.Component {
 
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
-                                                                                                        <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span> {strings.ContactNumber1} </Label>
+                                                                                                        <Label htmlFor="emergencyContactNumber1">{this.state.sifEnabled == true && <span className="text-danger">* </span>} {strings.ContactNumber1} </Label>
                                                                                                         <div className={
                                                                                                             props.errors.emergencyContactNumber1 &&
                                                                                                                 props.touched.emergencyContactNumber1
@@ -2441,7 +2649,7 @@ class CreateEmployeePayroll extends React.Component {
 
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
-                                                                                                        <Label htmlFor="emergencyContactRelationship1"> <span className="text-danger">* </span>{strings.Relationship1} </Label>
+                                                                                                        <Label htmlFor="emergencyContactRelationship1">{this.state.sifEnabled == true && <span className="text-danger">* </span>}{strings.Relationship1} </Label>
                                                                                                         <Input
                                                                                                             type="text"
                                                                                                             maxLength="100"
@@ -2544,6 +2752,8 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 </Col>
 
                                                                                             </Row>
+                                                                                            </>
+                                                                                            }
                                                                                         </Col>
 
                                                                                     </Row>
@@ -3866,7 +4076,11 @@ class CreateEmployeePayroll extends React.Component {
                                                             <div className="table-wrapper mb-4" style={{ width: "100%" }}>
                                                                 <Button name="button" color="primary" className="btn-square"
                                                                     onClick={() => {
-                                                                        this.toggle(0, '3')
+                                                                        if (this.state.sifEnabled == false) {
+                                                                            this.toggle(0, '1')
+                                                                        } else {
+                                                                            this.toggle(0, '3')
+                                                                        }
                                                                     }}
 
                                                                 >

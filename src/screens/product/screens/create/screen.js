@@ -760,7 +760,7 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productName">
-																			<span className="text-danger">* </span>{strings.Name}
+																			<span className="text-danger">* </span>{strings.ProductName}
 																		</Label>
 																		<Input
 																			type="text"

@@ -836,6 +836,7 @@ const en = {
       No: "No",
       note: "Note: Please select atleast 1 module",
       AddNewUsers: "Add New Users",
+      NewUsers: "New Users",
       UserName: "User Name",
       DOB: "DOB",
       RoleName: "Role Name",

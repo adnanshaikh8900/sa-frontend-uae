@@ -41,7 +41,7 @@ const mapStateToProps = (state) => {
 		state_list: state.contact.state_list,
 		employees_for_dropdown: state.payrollRun.employees_for_dropdown,
 		approver_dropdown_list: state.payrollRun.approver_dropdown_list,
-		// employee_list:state.payrollEmployee.payroll_employee_list,
+		company_details: state.common.company_details,
 		employee_list: state.payrollEmployee.employee_list_dropdown,
 
 	})
@@ -424,55 +424,8 @@ class PayrollApproverScreen extends React.Component {
 
 	getPayrollEmployeeList = () => {
 
-		// const cols = [
-		// 	{
-		// 		label:'Employee No',
-		// 		dataSort:true,
-		// 		width:'',
-		// 		key:'empNo'
-		// 	},
-		// 	{
-		// 		label:'Employee Name',
-		// 		dataSort:true,
-		// 		width:'',
-		// 		key:'name'
-
-		// 	},
-		// 	{
-		// 		label:'LOP',
-		// 		dataSort:true,
-		// 		width:'8%',
-		// 		key:'lop_days'
-		// 	},
-		// 	{
-		// 		label:'Paid Days',
-		// 		dataSort:true,
-		// 		width:'12%',
-		// 		key:'payble_days'
-		// 	},
-		// 	{
-		// 		label:'Gross Pay',
-		// 		dataSort:true,
-		// 		width:'',
-		// 		key:'package'
-		// 	},
-
-		// 	{
-		// 		label:'Deductions',
-		// 		dataSort:true,
-		// 		width:'',
-		// 		key:'deductions'
-		// 	},
-		// 	{
-		// 		label:'Net Pay',
-		// 		dataSort:true,
-		// 		width:'12%',
-		// 		key:'net_pay'
-
-		// 	}
-
-		// ]
-
+		const { generateSif } = this.props.company_details;
+		
 		const cols = [
 			{
 				label: 'Employee No',
@@ -546,7 +499,7 @@ class PayrollApproverScreen extends React.Component {
 						<Label> Status : <span style={{ fontSize: "larger" }}>  {this.renderStatus(this.state.status)}</span></Label>
 					</Col>
 					<Col>
-						{this.state.status && (this.state.status === "Approved" || this.state.status === "Paid" || this.state.status === "Partially Paid") ?
+						{generateSif && this.state.status && (this.state.status === "Approved" || this.state.status === "Paid" || this.state.status === "Partially Paid") ?
 							(
 								<Button
 									type="button"
@@ -865,7 +818,6 @@ class PayrollApproverScreen extends React.Component {
 	};
 	render() {
 		strings.setLanguage(this.state.language);
-
 		const { employee_list, approver_dropdown_list } = this.props
 		const { loading, initValue, dialog } = this.state
 		return (

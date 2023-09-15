@@ -148,6 +148,7 @@ class CreateChartAccount extends React.Component {
 					if (this.state.createMore) {
 						this.setState({
 							createMore: false,
+							disableLeavePage:false,
 						});
 						resetForm();
 						

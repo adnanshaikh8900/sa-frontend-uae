@@ -217,7 +217,7 @@ class CreateChartAccount extends React.Component {
 													// 		'Chart of account name is already exist';
 													// }
 													if (!values.transactionCategoryName) {
-														errors.transactionCategoryName = 'Name is required';
+														errors.transactionCategoryName = 'Chart Of Account Name is required';
 													}
 													else if (this.state.exist === true) {
 														errors.transactionCategoryName =
@@ -234,7 +234,7 @@ class CreateChartAccount extends React.Component {
 													// 	.min(2, 'Name is too Short!')
 													// 	.max(50, 'Name is too Long!'),
 													chartOfAccount: Yup.string().required(
-														'Type is required',
+														'Account Type is required',
 													),
 												})}
 											>

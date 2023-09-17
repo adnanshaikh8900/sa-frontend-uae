@@ -915,6 +915,10 @@ class CreateEmployeePayroll extends React.Component {
                 ? this.state.initValue.employeeCode
                 : ""
             );
+            formData1.append(
+              "dateOfJoining",
+              dateOfJoining ? moment(dateOfJoining).format("DD-MM-YYYY") : ""
+            );
             this.props.createPayrollEmployeeActions
               .saveEmployment(formData1)
               .then((res) => {
@@ -940,6 +944,26 @@ class CreateEmployeePayroll extends React.Component {
         .updateEmployeePersonal(formData)
         .then((res) => {
           if (res.status === 200) {
+            const formData1 = new FormData();
+            formData1.append("id", this.state.employeeid);
+            formData1.append("employee", this.state.employeeid);
+            formData1.append(
+              "employeeCode",
+              this.state.initValue.employeeCode != null
+                ? this.state.initValue.employeeCode
+                : ""
+            );
+            formData1.append(
+              "dateOfJoining",
+              dateOfJoining ? moment(dateOfJoining).format("DD-MM-YYYY") : ""
+            );
+            this.props.detailEmployeeEmployementAction
+              .updateEmployment(formData1)
+              .then((res) => {
+                // if (res.status == 200)
+                console.log(res)
+                  this.renderActionForState(this.state.employeeid);
+              });
             this.props.commonActions.tostifyAlert(
               "success",
               res.data ? res.data.message : "Employee Updated Successfully!"

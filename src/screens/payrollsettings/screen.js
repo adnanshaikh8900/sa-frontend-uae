@@ -73,7 +73,8 @@ class PayrollSettings extends React.Component {
 		this.setState({ loading: false, disableLeavePage: true });
 		this.props.payrollActions.getPayrollSettings(this.state.sifEnabled).then((res) => {
 			if (res.status === 200) {
-				toast.success("Payroll Settings Saved Successfully")
+				toast.success("Payroll Settings Saved Successfully");
+				this.props.commonActions.getCompanyDetails();
 				this.props.history.push(config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice');
 			}
 		}).catch((err) => {

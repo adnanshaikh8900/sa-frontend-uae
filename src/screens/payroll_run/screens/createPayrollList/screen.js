@@ -559,23 +559,26 @@ class CreatePayrollList extends React.Component {
 		)
 	}
 	updateAmounts = (row, value) => {
-		let newData = [...this.state.allPayrollEmployee]
+		if (value > 30) {
+			value = 30;
+		}
+	
+		let newData = [...this.state.allPayrollEmployee];
 		newData = newData.map((data) => {
 			if (row.id === data.id) {
 				data.lopDay = value;
-				data.noOfDays = 30 - value
-				data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2)
+				data.noOfDays = 30 - value;
+				data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2);
 				let deduction = data.noOfDays == 0 ? 0 : data.deduction;
-
-				data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-				data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (deduction || 0)
+	
+				data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2);
+				data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (deduction || 0);
 			}
-			data.payrollId = this.state.payroll_id
-			data.salaryDate = this.state.payrollDate
-			return data
-
-		})
-		this.setState({ allPayrollEmployee: newData })
+			data.payrollId = this.state.payroll_id;
+			data.salaryDate = this.state.payrollDate;
+			return data;
+		});
+		this.setState({ allPayrollEmployee: newData });
 	}
 	generate = () => {
 		const formData = new FormData();

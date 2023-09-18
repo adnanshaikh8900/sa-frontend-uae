@@ -213,7 +213,7 @@ const en = {
       ShippingDetails: "Shipping Details",
       ContactAddressDetails: "Contact Address Details",
       ShippingAddressIsSameAsBillingAddress: "Shipping Address Is Same As Billing Address",
-      TermIsRequired: 'Term is required',
+      TermIsRequired: 'Terms is required',
       InvoiceNumberRequired: "Invoice number is required",
       InvoiceDateRequired: "Invoice date is required",
 
@@ -836,6 +836,7 @@ const en = {
       No: "No",
       note: "Note: Please select atleast 1 module",
       AddNewUsers: "Add New Users",
+      NewUsers: "New Users",
       UserName: "User Name",
       DOB: "DOB",
       RoleName: "Role Name",
@@ -1230,6 +1231,11 @@ const en = {
       InvoiceStatusChangedSuccessfully: 'Invoice Status Changed Successfully!',
       InvoiceSentSuccessfully: 'Invoice Sent Successfully!',
       InvoiceMovedToDraftSuccessfully: 'Invoice Moved To Draft Successfully!',
+
+
+      //Payroll Settings
+      PayrollSettings: 'Payroll Settings',
+      SifPayroll: 'Would you like to generate a Salary Information File (SIF) for the payroll?',
 
       //Line Item
       ProductIsRequired: "Product is Required",

@@ -251,7 +251,8 @@ class UpdateSalaryComponent extends React.Component {
                     'success',
                     'Employee Updated Successfully.'
                 )
-                this.props.history.push('/admin/master/employee')
+                this.props.history.push('/admin/master/employee/viewEmployee',
+                { id: this.props.location.state.id })
                 this.setState({ loading: false, });
             }
         }).catch((err) => {
@@ -1081,9 +1082,8 @@ class UpdateSalaryComponent extends React.Component {
                                                                                 color="secondary"
                                                                                 className="btn-square"
                                                                                 onClick={() => {
-                                                                                    this.props.history.push(
-                                                                                        '/admin/master/employee',
-                                                                                    );
+                                                                                    this.props.history.push('/admin/master/employee/viewEmployee',
+                                                                                    { id: this.props.location.state.id })
                                                                                 }}
                                                                             >
                                                                                 <i className="fa fa-ban"></i> {strings.Cancel}

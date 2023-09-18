@@ -178,6 +178,7 @@ class CreateQuotation extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
+			income: true,
 			exist: false,
 			param: false,
 			loadingMsg: "Loading...",
@@ -3380,6 +3381,7 @@ class CreateQuotation extends React.Component {
 							this.props.supplierInvoiceActions.getProductList();
 							this.getCurrentProduct(e);
 						}}
+						income={this.state.income}
 						createProduct={this.props.ProductActions.createAndSaveProduct}
 						vat_list={this.props.vat_list}
 						product_category_list={this.props.product_category_list}

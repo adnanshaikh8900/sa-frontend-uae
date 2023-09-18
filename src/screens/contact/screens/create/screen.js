@@ -820,7 +820,7 @@ class CreateContact extends React.Component {
 																					id="email"
 																					name="email"
 																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.EmailAddress}
+																					placeholder={strings.Enter + strings.EmailAddres}
 																					onChange={(option) => {
 																						props.handleChange('email')(option);
 																						// this.emailvalidationCheck(option.target.value)

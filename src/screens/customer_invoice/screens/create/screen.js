@@ -42,7 +42,7 @@ const mapStateToProps = (state) => {
 	return {
 		currency_list: state.customer_invoice.currency_list,
 		vat_list: state.customer_invoice.vat_list,
-		product_list: state.customer_invoice.product_list,
+		product_list: state.common.product_list,
 		customer_list: state.customer_invoice.customer_list,
 		excise_list: state.customer_invoice.excise_list,
 		country_list: state.customer_invoice.country_list,
@@ -171,6 +171,7 @@ class CreateCustomerInvoice extends React.Component {
 			discountAmount: 0,
 			exist: false,
 			prefix: '',
+			income: true,
 			purchaseCategory: [],
 			salesCategory: [],
 			exchangeRate: '',
@@ -843,7 +844,6 @@ class CreateCustomerInvoice extends React.Component {
 
 							}
 							if (this.state.data.length > 0) {
-								this.updateAmount(this.state.data);
 								const { data } = this.state;
 								const idCount =
 									data.length > 0
@@ -858,13 +858,18 @@ class CreateCustomerInvoice extends React.Component {
 										: 0;
 								this.setState({
 									idCount,
+								},()=>{
+									debugger
+								this.updateAmount(this.state.data);
+								//this.setExchange(res.data.currencyCode);
+
 								});
 								this.formRef.current.setFieldValue('contactId', res.data.contactId, true);
 								this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 								this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.contactId), true);
 								this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.contactId), true);
 								this.formRef.current.setFieldValue('term', term, true);
-								// this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+								this.formRef.current.setFieldValue('exchangeRate',  res.data.exchangeRate, true);
 								// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 								// this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
 								// this.setDate(undefined, '');
@@ -880,7 +885,6 @@ class CreateCustomerInvoice extends React.Component {
 								this.formRef.current.setFieldValue('invoiceDate1', values, true);
 								this.formRef.current.setFieldValue('invoiceDueDate', date1, true);
 								// this.formRef.current.setFieldValue('invoiceDate1',values, true);
-								this.setExchange(this.getCurrency(res.data.contactId));
 								this.addRow();
 							} else {
 								this.setState({
@@ -894,6 +898,7 @@ class CreateCustomerInvoice extends React.Component {
 			});
 	}
 	componentDidMount = () => {
+		this.getInitialData();
 		this.props.customerInvoiceActions
 			.getTaxTreatment()
 			.then((res) => {
@@ -918,7 +923,6 @@ class CreateCustomerInvoice extends React.Component {
 		this.props.customerInvoiceActions.getVatList();
 		if (this.props.location.state && this.props.location.state.quotationId)
 			this.getQuotationDetails(this.props.location.state.quotationId);
-		this.getInitialData();
 		this.getCompanyType();
 		if (this.props.location.state && this.props.location.state.contactData) {
 			this.getCurrentUser(this.props.location.state.contactData);
@@ -945,7 +949,7 @@ class CreateCustomerInvoice extends React.Component {
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		this.props.customerInvoiceActions.getCountryList();
 		this.props.customerInvoiceActions.getExciseList();
-		this.props.customerInvoiceActions.getProductList();
+		this.props.commonActions.getProductList();
 		this.props.productActions.getProductCategoryList();
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
 			this.setState({
@@ -1218,7 +1222,6 @@ class CreateCustomerInvoice extends React.Component {
 			.getCompanyById()
 			.then((res) => {
 				if (res.status === 200) {
-					console.log(res, "COMPANY");
 					this.setState({
 						isDesignatedZone: res.data.isDesignatedZone,
 						companyVATRegistrationDate: new Date(moment(res.data.vatRegistrationDate).format('MM DD YYYY')),
@@ -1336,7 +1339,6 @@ class CreateCustomerInvoice extends React.Component {
 		if (row.productId && row.vatCategoryId) {
 			row.vatCategoryId = typeof (row.vatCategoryId) === 'string' ? parseInt(row.vatCategoryId) : row.vatCategoryId;
 		}
-		console.log(row.vatCategoryId, row)
 		return (
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}
@@ -1501,7 +1503,7 @@ class CreateCustomerInvoice extends React.Component {
 			const result = product_list.find((item) => item.id === obj.productId);
 			return {
 				...obj, unitPrice: result ?
-					(parseFloat(result.unitPrice) * (1 / exc)).toFixed(2) : 0
+					parseFloat((parseFloat(result.unitPrice) * (1 / exc)).toFixed(2)) : 0
 			}
 
 		});
@@ -2073,7 +2075,7 @@ class CreateCustomerInvoice extends React.Component {
 				this.setState({ loading: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Invoice Created Successfully.',
+					res.data ? strings.InvoiceCreatedSuccessfully :  res.data.message,
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -2157,7 +2159,7 @@ class CreateCustomerInvoice extends React.Component {
 
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Invoice Created Unsuccessfully',
+					err && err.data ? err.data.message : 'Invoice Created Unsuccessfully!',
 				);
 			});
 	};
@@ -2593,10 +2595,10 @@ class CreateCustomerInvoice extends React.Component {
 																	'Invoice number is required',
 																),
 																contactId: Yup.string().required(
-																	strings.CustomerIsRequired
+																	strings.CustomerNameIsRequired
 																),
 																// placeOfSupplyId: Yup.string().required('Place of supply is required'),
-																term: Yup.string().required(strings.TernIsRequired),
+																term: Yup.string().required(strings.TermIsRequired),
 																currency: Yup.string().required(
 																	strings.CurrencyIsRequired
 																),
@@ -2759,7 +2761,7 @@ class CreateCustomerInvoice extends React.Component {
 																					isDisabled={this.state.isQuotationSelected}
 																					id="contactId"
 																					name="contactId"
-																					placeholder={strings.Select + strings.Customer}
+																					placeholder={strings.Select + strings.CustomerName}
 																					options={
 																						tmpCustomer_list
 																							? selectOptionsFactory.renderOptions(
@@ -4295,6 +4297,7 @@ class CreateCustomerInvoice extends React.Component {
 										this.getCurrentProduct(res.data[0])
 								})
 							}}
+							income={this.state.income}
 							createProduct={this.props.productActions.createAndSaveProduct}
 							vat_list={this.props.vat_list}
 							product_category_list={this.props.product_category_list}

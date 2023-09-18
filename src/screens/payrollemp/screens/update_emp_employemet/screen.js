@@ -122,11 +122,13 @@ class UpdateEmployeeEmployment extends React.Component {
             }).catch((err) => {
                 this.setState({ loading: false })
                 // this.props.history.push('/admin/payroll/employee')
-                this.props.history.push('/admin/master/employee')
+                this.props.history.push('/admin/master/employee/viewEmployee',
+                { id: this.props.location.state.id })
             })
         } else {
             // this.props.history.push('/admin/payroll/employee')
-            this.props.history.push('/admin/master/employee')
+            this.props.history.push('/admin/master/employee/viewEmployee',
+                { id: this.props.location.state.id })
         }
     }
 
@@ -188,7 +190,8 @@ class UpdateEmployeeEmployment extends React.Component {
                      res.data ? res.data.message :'Employee Updated Successfully'
                      )
                 // this.props.history.push('/admin/payroll/employee')
-                this.props.history.push('/admin/master/employee')
+                this.props.history.push('/admin/master/employee/viewEmployee',
+                { id: this.props.location.state.id })
                 this.setState({ loading:false,});
             }
         }).catch((err) => {
@@ -654,12 +657,11 @@ laborCardIdValidationCheck = (value) => {
                                                                         color="secondary"
                                                                         className="btn-square"
                                                                         onClick={() => {
+                                                                            this.props.history.push('/admin/master/employee/viewEmployee',
+                                                                            { id: this.props.location.state.id })
                                                                             // this.props.history.push(
-                                                                            //     '/admin/payroll/employee',
+                                                                            //     '/admin/master/employee',
                                                                             // );
-                                                                            this.props.history.push(
-                                                                                '/admin/master/employee',
-                                                                            );
                                                                         }}
                                                                     >
                                                                         <i className="fa fa-ban"></i> {strings.Cancel}

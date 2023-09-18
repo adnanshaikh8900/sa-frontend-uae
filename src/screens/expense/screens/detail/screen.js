@@ -134,19 +134,13 @@ class DetailExpense extends React.Component {
 			disableLeavePage: false
 		};
 		this.placelist = [
-			{ label: 'Alberta', value: '1' },
-			{ label: 'British Columbia', value: '2' },
-			{ label: 'Manitoba', value: '3' },
-			{ label: 'New Brunswick', value: '4' },
-			{ label: 'Newfoundland and Labrador', value: '5' },
-			{ label: 'Northwest Territories', value: '6' },
-			{ label: 'Nova Scotia', value: '7' },
-			{ label: 'Nunavut', value: '8' },
-			{ label: 'Ontario', value: '9' },
-			{ label: 'Prince Edward Island', value: '10' },
-			{ label: 'Quebec', value: '11' },
-			{ label: 'Saskatchewan', value: '12' },
-			{ label: 'Yukon', value: '13' },
+			{ label: 'Abu Dhabi', value: '1' },
+			{ label: 'Dubai', value: '2' },
+			{ label: 'Sharjah', value: '3' },
+			{ label: 'Ajman', value: '4' },
+			{ label: 'Umm Al Quwain', value: '5' },
+			{ label: 'Ras Al-Khaimah', value: '6' },
+			{ label: 'Fujairah', value: '7' },
 		];
 		this.file_size = 1024000;
 		this.regEx = /^[0-9\b]+$/;
@@ -583,7 +577,7 @@ class DetailExpense extends React.Component {
 					this.setState({ showPlacelist: false })
 				} else
 					if (option?.value === 7) {
-						let placeOfSupplyId = this.state.placelist.find(
+						let placeOfSupplyId = this.placelist.find(
 							(option) =>
 								option.label === this.state.userStateName,
 						);

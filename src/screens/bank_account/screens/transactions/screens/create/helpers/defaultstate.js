@@ -18,7 +18,7 @@ export const defaultState = (currency) => {
       attachment: "",
       customerId: "",
       invoiceIdList: [],
-      payrollListIds: "",
+      payrollListIds: [],
       vatId: "",
       expenseCategory: "",
       vendorId: "",

@@ -378,7 +378,7 @@ class InvoiceDetails extends React.Component {
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Invoice+" "+strings.Due+" "+strings.Date}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Status}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.InvoiceAmount}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.RemainingBalance}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}> {strings.RemainingBalance}</th>
 													</tr>
 												</thead>
 												<tbody className=" table-bordered table-hover">

@@ -439,6 +439,9 @@ class UpdatePayroll extends React.Component {
 	}
 
 	updateAmounts = (row, value) => {
+		if (value > 30) {
+			value = 30;
+		}
 		let newData = [...this.state.allPayrollEmployee]
 		newData = newData.map((data) => {
 			if (row.id === data.id) {
@@ -714,7 +717,7 @@ class UpdatePayroll extends React.Component {
 												type="number"
 												min={30 - this.state.paidDays}
 												step="0.5"
-												max={30}
+												max={this.state.paidDays}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}

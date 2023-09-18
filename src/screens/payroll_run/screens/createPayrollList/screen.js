@@ -1101,15 +1101,15 @@ class CreatePayrollList extends React.Component {
 																							if (props.errors && Object.keys(props.errors).length != 0)
 																								this.props.commonActions.fillManDatoryDetails();
 
-																							if (this.state.submitButton)
-																								toast.error(` Please select approver for payroll submission !`)
-																							else
-																								if (!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length != 0) {
-																									this.setState({ apiSelector: "createAndSubmitPayroll" })
-																									props.handleSubmit()
-																								}
-																								else
-																									toast.error(` Please select at least one employee for payroll creation !`)
+																							// if (this.state.submitButton)
+																							// 	toast.error(` Please select approver for payroll submission !`)
+																							// else
+																							// 	if (!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length != 0) {
+																							// 		this.setState({ apiSelector: "createAndSubmitPayroll" })
+																							// 		props.handleSubmit()
+																							// 	}
+																							// 	else
+																							// 		toast.error(` Please select at least one employee for payroll creation !`)
 																						})
 
 																					}}

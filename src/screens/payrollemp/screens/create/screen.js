@@ -903,6 +903,7 @@ class CreateEmployeePayroll extends React.Component {
             }
             if (this.state.sifEnabled == false) {
               this.toggle(0, "4");
+              this.getSalaryComponentByEmployeeId();
             } else {
               this.toggle(0, "2");
             }
@@ -970,6 +971,7 @@ class CreateEmployeePayroll extends React.Component {
             );
             if (this.state.sifEnabled == false) {
               this.toggle(0, "4");
+              this.getSalaryComponentByEmployeeId();
             } else {
               this.toggle(0, "2");
             }

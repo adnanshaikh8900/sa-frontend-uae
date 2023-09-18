@@ -439,6 +439,9 @@ class UpdatePayroll extends React.Component {
 	}
 
 	updateAmounts = (row, value) => {
+		if (value > 30) {
+			value = 30;
+		}
 		let newData = [...this.state.allPayrollEmployee]
 		newData = newData.map((data) => {
 			if (row.id === data.id) {
@@ -637,45 +640,38 @@ class UpdatePayroll extends React.Component {
 		const cols = [
 			{
 				label: 'Employee No',
-				dataSort: true,
 				width: '',
 				key: 'empCode'
 			},
 			{
 				label: 'Employee Name',
-				dataSort: true,
 				width: '',
 				key: 'empName'
 
 			},
 			{
 				label: 'LOP',
-				dataSort: true,
 				width: '8%',
 				key: 'lopDay'
 			},
 			{
 				label: 'Paid Days',
-				dataSort: true,
 				width: '12%',
 				key: 'noOfDays'
 			},
 			{
 				label: 'Gross Pay',
-				dataSort: true,
 				width: '',
 				key: 'grossPay'
 			},
 
 			{
 				label: 'Deductions',
-				dataSort: true,
 				width: '',
 				key: 'deduction'
 			},
 			{
 				label: 'Net Pay',
-				dataSort: true,
 				width: '12%',
 				key: 'netPay'
 
@@ -714,7 +710,7 @@ class UpdatePayroll extends React.Component {
 												type="number"
 												min={30 - this.state.paidDays}
 												step="0.5"
-												max={30}
+												max={this.state.paidDays}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}

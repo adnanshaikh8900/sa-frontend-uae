@@ -13,6 +13,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip,
 } from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import Select from 'react-select'
@@ -797,10 +798,11 @@ class CreatePayrollList extends React.Component {
 																		.required("Payroll subject is required"),
 																	payrollDate: Yup.string()
 																		.required("Payroll date is required"),
-																	// payrollApprover: Yup.string()
-																	// 	.required("Payroll Approver is required"),
+																	 payrollApprover: Yup.string()
+																	 	.required("Payroll Approver is required"),
 																})}
 																validate={(values) => {
+																	//console.log("valuses = ",values);
 																	// let status = false
 																	let errors = {};
 																	if (this.state.payrollApproverRequired && !values.payrollApprover) {
@@ -955,6 +957,17 @@ class CreatePayrollList extends React.Component {
 																					<Label htmlFor="payrollApprover">
 																						<span className="text-danger">* </span>
 																						{strings.payroll_approver}
+																						<i
+																				id="payrollApprovertip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="payrollApprovertip"
+																			>
+																			 It is mandatory to have an approver for payroll submission. Otherwise, it is not mandatory.
+																			</UncontrolledTooltip>
+																		
 																					</Label>
 																					<Select
 																						id="payrollApprover"

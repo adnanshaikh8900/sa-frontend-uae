@@ -1245,7 +1245,7 @@ class CreateBankTransaction extends React.Component {
                             values.coaCategoryId.label === "Expense" &&
                             values.expenseCategory.value !== 34
                           ) {
-                            errors.vatId = "Please select Vat";
+                            errors.vatId = "Payroll is Required";
                           }
                           if (
                             (values.payrollListIds === "" || !values.payrollListIds || values.payrollListIds?.length === 0) &&
@@ -1386,7 +1386,7 @@ class CreateBankTransaction extends React.Component {
                           ),
                           reference: Yup.string().max(20),
                           transactionAmount: Yup.string()
-                            .required("Transaction Amount is Required")
+                            .required("Amount is Required")
                             .test(
                               "transactionAmount",
                               "Transaction Amount Must Be Greater Than 0",

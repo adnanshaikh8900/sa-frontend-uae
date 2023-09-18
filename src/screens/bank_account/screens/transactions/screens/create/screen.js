@@ -1248,7 +1248,7 @@ class CreateBankTransaction extends React.Component {
                             errors.vatId = "Payroll is Required";
                           }
                           if (
-                            values.payrollListIds === "" &&
+                            (values.payrollListIds === "" || !values.payrollListIds || values.payrollListIds?.length === 0) &&
                             values.coaCategoryId.label === "Expense" &&
                             values.expenseCategory.value == 34
                           ) {
@@ -1833,9 +1833,7 @@ class CreateBankTransaction extends React.Component {
                                             : []
                                         }
                                         onChange={(option) => {
-                                          props.handleChange("expenseCategory")(
-                                            option
-                                          );
+                                          props.handleChange("expenseCategory")(option,);
                                         }}
                                         id="expenseCategory"
                                         name="expenseCategory"

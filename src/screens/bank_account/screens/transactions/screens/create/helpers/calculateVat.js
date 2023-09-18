@@ -3,7 +3,6 @@ export const calculateVAT = (
   vatId,
   exclusiveVat,
 ) => {
-  debugger
   let list='';
   if (transactionAmount && vatId === 1 && exclusiveVat) {
     let transactionVatAmount = 0;

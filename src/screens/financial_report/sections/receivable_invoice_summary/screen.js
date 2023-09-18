@@ -350,7 +350,7 @@ class ReceivableInvoiceSummary extends React.Component {
 														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
 														{strings.InvoiceAmount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Balance}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.RemainingBalance}</th>
 
 													</tr>
 												</thead>

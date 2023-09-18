@@ -1386,7 +1386,7 @@ class CreateBankTransaction extends React.Component {
                           ),
                           reference: Yup.string().max(20),
                           transactionAmount: Yup.string()
-                            .required("Transaction Amount is Required")
+                            .required("Amount is Required")
                             .test(
                               "transactionAmount",
                               "Transaction Amount Must Be Greater Than 0",

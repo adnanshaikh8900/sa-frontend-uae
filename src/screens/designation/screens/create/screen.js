@@ -122,7 +122,7 @@ class CreateDesignation extends React.Component {
   };
 
   handleSubmit = (data, resetForm) => {
-    this.setState({ disabled: true, disableLeavePage: false });
+    this.setState({ disabled: true,disableLeavePage: false });
     const {
       designationName,
       designationId,

@@ -964,7 +964,7 @@ class CreatePayrollList extends React.Component {
 																				placement="right"
 																				target="payrollApprovertip"
 																			>
-																					It is mandatory to have an approver for payroll submission. Otherwise, it is not mandatory.
+																				It is mandatory to have an approver for payroll submission. Otherwise, it is not mandatory.
 																			</UncontrolledTooltip>
 																		
 																					</Label>

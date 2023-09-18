@@ -11,7 +11,8 @@ import {
     FormGroup,
     Label,
     Row,
-    Col
+    Col,
+    UncontrolledTooltip
 } from 'reactstrap'
 import { Loader, LeavePage, ImageUploader } from 'components'
 import Select from 'react-select'
@@ -66,6 +67,8 @@ class UpdateEmployeePersonal extends React.Component {
             userPhoto: [],
             imageState: true,
             showIcon: false,
+            sifEnabled: true,
+            otherDetails: true,
             userPhotoFile: {},
             current_employee_id: null,
             checkmobileNumberParam: false,
@@ -82,6 +85,7 @@ class UpdateEmployeePersonal extends React.Component {
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
         this.regExAddress = /^[a-zA-Z0-9\s\D,'-/ ]+$/;
+        this.regExEmpUniqueId = /[a-zA-Z0-9,-/ ]+$/;
         this.formRef = React.createRef();
 
         this.gender = [
@@ -125,6 +129,11 @@ class UpdateEmployeePersonal extends React.Component {
         });
     };
     componentDidMount = () => {
+        this.props.createPayrollEmployeeActions.getCompanyById().then((res) => {
+            this.setState({
+              sifEnabled: res.data.generateSif,
+            });
+          });
         if (this.props.location.state && this.props.location.state.id) {
             this.props.detailEmployeePersonalAction.getEmployeeById(this.props.location.state.id).then((res) => {
                 this.props.createPayrollEmployeeActions.getCountryList();
@@ -169,7 +178,14 @@ class UpdateEmployeePersonal extends React.Component {
                             dob: res.data.dob
                                 ? moment(res.data.dob).format('DD-MM-YYYY')
                                 : '',
+                            dateOfJoining: res.data.dateOfJoining
+                                ? moment(res.data.dateOfJoining, 'DD-MM-YYYY').toDate()
+                                : '',
                             gender: res.data.gender ? res.data.gender : '',
+                            employeeCode:
+                                res.data.employeeCode && res.data.employeeCode !== null
+                                    ? res.data.employeeCode
+                                    : '',
                             presentAddress:
                                 res.data.presentAddress && res.data.presentAddress !== null
                                     ? res.data.presentAddress
@@ -282,6 +298,31 @@ class UpdateEmployeePersonal extends React.Component {
         }
     }
 
+    employeeValidationCheck = (value) => {
+        const data = {
+            moduleType: 15,
+            name: value,
+        };
+        this.props.createPayrollEmployeeActions
+            .checkValidation(data)
+            .then((response) => {
+                if (response.data === 'Employee Code Already Exists') {
+                    this.setState(
+                        {
+                            exist: true,
+                        },
+                        
+                        () => {},
+                    );
+                
+                } else {
+                    this.setState({
+                        exist: false,
+                    });
+                }
+            });
+    };
+
     designationNamevalidationCheck = (value) => {
         const data = {
             moduleType: 26,
@@ -375,11 +416,13 @@ class UpdateEmployeePersonal extends React.Component {
             emergencyContactName2,
             emergencyContactRelationship2,
             poBoxNumber,
-            PostZipCode
-
+            PostZipCode,
+            dateOfJoining,
+            employeeCode,
         } = data;
 
         let formData = new FormData();
+        let formData1 = new FormData();
         formData.append('id', current_employee_id);
         formData.append('salaryRoleId', salaryRoleId);
         formData.append(
@@ -483,6 +526,14 @@ class UpdateEmployeePersonal extends React.Component {
                     'success',
                     res.data ? res.data.message : 'Employee Updated Successfully'
                 )
+                if (this.state.sifEnabled == false) {
+                    formData1.append('id', current_employee_id);
+                    formData1.append('employee', current_employee_id);
+                    formData1.append("employeeCode", employeeCode != null ? employeeCode : "");
+                    formData1.append('dateOfJoining', dateOfJoining ? moment(dateOfJoining).format('DD-MM-YYYY') : '');
+                    this.props.detailEmployeePersonalAction
+                    .updateEmployment(formData1).then((res) => {console.log(res)})
+                }
                 // this.props.history.push('/admin/payroll/employee')
                 this.props.history.push('/admin/master/employee/viewEmployee',
                 { id: this.props.location.state.id })
@@ -538,7 +589,7 @@ class UpdateEmployeePersonal extends React.Component {
 
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, loadingMsg, initValue, dialog, checkmobileNumberParam, checkmobileNumberParam1, checkmobileNumberParam2 } = this.state
+        const { loading, loadingMsg, initValue, dialog, checkmobileNumberParam, checkmobileNumberParam1, checkmobileNumberParam2,exist } = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown, salary_role_dropdown } = this.props
 
         return (
@@ -574,88 +625,66 @@ class UpdateEmployeePersonal extends React.Component {
                                                                 if (this.state.emailExist == true) {
                                                                     errors.email = 'Email already exists';
                                                                 }
-
-                                                                // if (checkmobileNumberParam === true) {
-                                                                // errors.mobileNumber =
-                                                                // 'Invalid mobile number';
-                                                                // }
-
-
-                                                                // if (checkmobileNumberParam1 === true) {
-                                                                //     errors.emergencyContactNumber1 =
-                                                                //     'Invalid mobile number';
-                                                                //     }
-
-                                                                //     if (checkmobileNumberParam2 === true) {
-                                                                //         errors.emergencyContactNumber2 =
-                                                                //         'Invalid mobile number';
-                                                                //         }
+                                                                if (exist === true  && values.employeeCode!="") {
+                                                                    errors.employeeCode =
+                                                                    'Employee unique id already exists';
+                                                                }
 
                                                                 if (values.employeeDesignationId && values.employeeDesignationId.label && values.employeeDesignationId.label === "Select Employee Designation") {
                                                                     errors.employeeDesignationId =
                                                                         'Designation is required';
                                                                 }
 
-                                                                // if (values.salaryRoleId && values.salaryRoleId.label && values.salaryRoleId.label === "Select Salary Role") {
-                                                                //     errors.salaryRoleId =
-                                                                //     'Salary role is required';
-                                                                // }
                                                                 if (this.underAge(values.dob))
                                                                     errors.dob = 'Age should be more than 14 years';
                                                                 if (values.dob === '') {
                                                                     errors.dob = 'Date of birth is required';
 
                                                                 }
-                                                                if (values.maritalStatus.value === '') {
-                                                                    errors.maritalStatus = 'Marital status is required';
-                                                                }
-                                                                if (values.mobileNumber && values.mobileNumber.length !== 12) {
-                                                                    errors.mobileNumber = 'Invalid mobile number'
-                                                                }
-                                                                if (values.emergencyContactNumber1 && values.emergencyContactNumber1.length !== 12) {
-                                                                    errors.emergencyContactNumber1 = 'Invalid mobile number'
-                                                                }
-                                                                if (values.countryId == 229 || values.countryId.value == 229) {
-                                                                    if (values.stateId == "")
-                                                                        errors.stateId = 'Emirate is required';
-                                                                } else {
-                                                                    if (values.stateId == "")
-                                                                        errors.stateId = 'State is required';
+                                                                if (this.state.sifEnabled == true) {
 
+                                                                    if (values.maritalStatus.value === '') {
+                                                                        errors.maritalStatus = 'Marital status is required';
+                                                                    }
+                                                                    if (values.mobileNumber && values.mobileNumber.length !== 12) {
+                                                                        errors.mobileNumber = 'Invalid mobile number'
+                                                                    }
+                                                                    if (values.emergencyContactNumber1 && values.emergencyContactNumber1.length !== 12) {
+                                                                        errors.emergencyContactNumber1 = 'Invalid mobile number'
+                                                                    }
+                                                                    if (values.countryId == 229 || values.countryId.value == 229) {
+                                                                        if (values.stateId == "")
+                                                                        errors.stateId = 'Emirate is required';
+                                                                    } else {
+                                                                        if (values.stateId == "")
+                                                                        errors.stateId = 'State is required';
+                                                                    }
                                                                 }
                                                                 return errors;
                                                             }}
-                                                            validationSchema={Yup.object().shape({
+                                                            validationSchema={
+                                                                this.state.sifEnabled == true
+                                                                  ? Yup.object().shape({
                                                                 firstName: Yup.string()
                                                                     .required("first name is required"),
                                                                 lastName: Yup.string()
                                                                     .required("Last name is required"),
                                                                 email: Yup.string()
                                                                     .required("Valid email Required").email('Invalid Email'),
-                                                                // salaryRoleId: Yup.string()
-                                                                //     .required(" Employee role is required"),
                                                                 dob: Yup.string()
                                                                     .required('DOB is required'),
                                                                 presentAddress: Yup.string()
                                                                     .required("Present address is required"),
-                                                                // pincode: Yup.string()
-                                                                // .required("Pin code is required"),
                                                                 countryId: Yup.string()
                                                                     .required("Country is required"),
                                                                 stateId: Yup.string()
                                                                     .required("State is required"),
-                                                                // city: Yup.string()
-                                                                // .required("City is required"),
                                                                 gender: Yup.string()
                                                                     .required("Gender is required"),
                                                                 maritalStatus: Yup.string()
                                                                     .required('Marital status is required'),
-                                                                // active: Yup.string()
-                                                                //     .required('status is required'),
                                                                 employeeDesignationId: Yup.string()
                                                                     .required('Designation is required'),
-                                                                // salaryRoleId : Yup.string()
-                                                                // .required('Salary role is required'),
                                                                 mobileNumber: Yup.string()
                                                                     .required('Mobile number is required'),
                                                                 emergencyContactName1: Yup.string()
@@ -668,8 +697,34 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     }),
                                                                 emergencyContactRelationship1: Yup.string()
                                                                     .required('Relationship 1 is required'),
-
-                                                            })}
+                                                            }) : Yup.object().shape({
+                                                                firstName: Yup.string().required(
+                                                                  "First name is required"
+                                                                ),
+                                                                lastName: Yup.string().required(
+                                                                  "Last name is required"
+                                                                ),
+                                                                email: Yup.string()
+                                                                  .required("Valid email required")
+                                                                  .email("Invalid Email"),
+                                                                mobileNumber: Yup.string().required(
+                                                                  "Mobile number is required"
+                                                                ),
+                                                                employeeCode: Yup.string().required(
+                                                                  "Employee unique id is required"
+                                                                ),
+                                                                dateOfJoining: Yup.date().required(
+                                                                  "Date of joining is required"
+                                                                ),
+                                                                dob: Yup.date().required(
+                                                                  "DOB is required"
+                                                                ),
+                                                                employeeDesignationId:
+                                                                  Yup.string().required(
+                                                                    "Designation is required"
+                                                                  ),
+                                                              })
+                                                            }
 
                                                         >
                                                             {(props) => (
@@ -952,10 +1007,259 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                             </Row>
 
+                                                                            {this.state.sifEnabled == false && 
+                                                                                <Row>
+                                                                                    <Col md="4">
+                                                                                        <FormGroup>
+                                                                                            <Label htmlFor="select">
+                                                                                            <span className="text-danger">
+                                                                                                *{" "}
+                                                                                            </span>
+                                                                                            {
+                                                                                                strings.employee_unique_id
+                                                                                            }
+                                                                                            <i
+                                                                                                id="employeeCodeTooltip"
+                                                                                                className="fa fa-question-circle ml-1"
+                                                                                            ></i>
+                                                                                            <UncontrolledTooltip
+                                                                                                placement="right"
+                                                                                                target="employeeCodeTooltip"
+                                                                                            >
+                                                                                                Employee Unique Id
+                                                                                                system is designed by
+                                                                                                the organization to
+                                                                                                identify the employee
+                                                                                                from a group of
+                                                                                                employees and his work
+                                                                                                details. i.e. Its
+                                                                                                Internal ID designed for
+                                                                                                Identifying Employee.
+                                                                                            </UncontrolledTooltip>
+                                                                                            </Label>
+                                                                                            <Input
+                                                                                            type="text"
+                                                                                            maxLength="14"
+                                                                                            // minLength="14"
+                                                                                            autoComplete="off"
+                                                                                            id="employeeCode"
+                                                                                            name="employeeCode"
+                                                                                            value={
+                                                                                                props.values
+                                                                                                .employeeCode
+                                                                                            }
+                                                                                            placeholder={
+                                                                                                strings.Enter +
+                                                                                                strings.EmployeeCode
+                                                                                            }
+                                                                                            disabled
+                                                                                            onChange={(option) => {
+                                                                                                if (
+                                                                                                option.target
+                                                                                                    .value === "" ||
+                                                                                                this.regExEmpUniqueId.test(
+                                                                                                    option.target.value
+                                                                                                )
+                                                                                                ) {
+                                                                                                props.handleChange(
+                                                                                                    "employeeCode"
+                                                                                                )(option);
+                                                                                                this.employeeValidationCheck(
+                                                                                                    option.target.value
+                                                                                                );
+                                                                                                }
+                                                                                            }}
+                                                                                            className={
+                                                                                                props.errors
+                                                                                                .employeeCode &&
+                                                                                                props.touched
+                                                                                                .employeeCode
+                                                                                                ? "is-invalid"
+                                                                                                : ""
+                                                                                            }
+                                                                                            />
+                                                                                            {props.errors
+                                                                                            .employeeCode &&
+                                                                                            props.touched
+                                                                                                .employeeCode && (
+                                                                                                <div className="invalid-feedback">
+                                                                                                {
+                                                                                                    props.errors
+                                                                                                    .employeeCode
+                                                                                                }
+                                                                                                </div>
+                                                                                            )}
+                                                                                        </FormGroup>
+                                                                                        </Col>
+
+                                                                                        <Col md="4">
+                                                                                            <FormGroup className="mb-3">
+                                                                                                <Label htmlFor="dateOfJoining">
+                                                                                                    <span className="text-danger">
+                                                                                                        *{" "}
+                                                                                                    </span>
+                                                                                                    {strings.DateOfJoining}
+                                                                                                </Label>
+                                                                                                <DatePicker
+                                                                                                className={`form-control ${
+                                                                                                    props.errors
+                                                                                                    .dateOfJoining &&
+                                                                                                    props.touched
+                                                                                                    .dateOfJoining
+                                                                                                    ? "is-invalid"
+                                                                                                    : ""
+                                                                                                }`}
+                                                                                                id="dateOfJoining"
+                                                                                                name="dateOfJoining"
+                                                                                                placeholderText={
+                                                                                                    strings.Select +
+                                                                                                    strings.DateOfJoining
+                                                                                                }
+                                                                                                showMonthDropdown
+                                                                                                showYearDropdown
+                                                                                                dateFormat="dd-MM-yyyy"
+                                                                                                dropdownMode="select"
+                                                                                                // maxDate={new Date()}
+                                                                                                autoComplete={"off"}
+                                                                                                selected={
+                                                                                                    props.values
+                                                                                                    .dateOfJoining
+                                                                                                }
+                                                                                                value={
+                                                                                                    props.values
+                                                                                                    .dateOfJoining
+                                                                                                }
+                                                                                                onChange={(value) => {
+                                                                                                    props.handleChange(
+                                                                                                    "dateOfJoining"
+                                                                                                    )(value);
+                                                                                                }}
+                                                                                                />
+                                                                                                {props.errors.dateOfJoining &&
+                                                                                                props.touched.dateOfJoining && (
+                                                                                                    <div className="invalid-feedback">
+                                                                                                    {
+                                                                                                        props.errors
+                                                                                                        .dateOfJoining
+                                                                                                    }
+                                                                                                    </div>
+                                                                                                )}
+                                                                                            </FormGroup>
+                                                                                        </Col>
+
+                                                                                        <Col md="4">
+                                                                                            <div style={{ display: "flex" }}>
+                                                                                                <div style={{ width: "55%" }}>
+                                                                                                    <FormGroup>
+                                                                                                        <Label htmlFor="employeeDesignationId" className='overflow-hidden text-truncate'><span className="text-danger">* </span>{strings.Designation}</Label>
+                                                                                                        <Select
+                                                                                                            options={
+                                                                                                                designation_dropdown
+                                                                                                                    ? selectOptionsFactory.renderOptions(
+                                                                                                                        'label',
+                                                                                                                        'value',
+                                                                                                                        designation_dropdown,
+                                                                                                                        'Employee Designation',
+                                                                                                                    )
+                                                                                                                    : []
+                                                                                                            }
+                                                                                                            id="employeeDesignationId"
+                                                                                                            name="employeeDesignationId"
+                                                                                                            placeholder={strings.Designation}
+                                                                                                            value={designation_dropdown
+                                                                                                                && selectOptionsFactory.renderOptions(
+                                                                                                                    'label',
+                                                                                                                    'value',
+                                                                                                                    designation_dropdown,
+                                                                                                                    'employeeDesignationId',
+                                                                                                                ).find(
+                                                                                                                    (option) =>
+                                                                                                                        option.value ===
+                                                                                                                        +props.values.employeeDesignationId,
+                                                                                                                )}
+                                                                                                            // onChange={(value) => {
+                                                                                                            //     props.handleChange('employeeDesignationId')(value);
+                                                                                                            // }}
+                                                                                                            // value={this.state.salaryDesignation}
+                                                                                                            onChange={(value) => {
+                                                                                                                props.handleChange('employeeDesignationId')(value);
+                                                                                                                props.handleChange('salaryRoleId')(1);
+                                                                                                            }}
+                                                                                                            className={`${props.errors.employeeDesignationId && props.touched.employeeDesignationId
+                                                                                                                ? 'is-invalid'
+                                                                                                                : ''
+                                                                                                                }`}
+                                                                                                        />
+                                                                                                        {props.errors.employeeDesignationId && props.touched.employeeDesignationId && (
+                                                                                                            <div className="invalid-feedback">
+                                                                                                                {props.errors.employeeDesignationId}
+                                                                                                            </div>
+                                                                                                        )}
+                                                                                                    </FormGroup>
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    <Label
+                                                                                                        htmlFor="employeeDesignationId"
+                                                                                                        style={{ display: 'block' }}
+                                                                                                    >
+                                                                                                    </Label>
+                                                                                                    <Button
+                                                                                                        type="button"
+                                                                                                        color="primary"
+                                                                                                        className="btn-square mt-4 pull-right overflow-hidden text-truncate"
+                                                                                                        onClick={(e, props) => {
+                                                                                                            this.openDesignationModal(props);
+                                                                                                        }}
+                                                                                                    >
+                                                                                                        <i className="fa fa-plus"></i> {strings.AddDesignation}
+                                                                                                    </Button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </Col>
+                                                                                </Row>
+                                                                            }
+
+                                                                            {this.state.sifEnabled == false &&
+                                                                                <Row>
+                                                                                    <Col md="4">
+                                                                                        <FormGroup>
+                                                                                            <Input
+                                                                                            className="ml-0"
+                                                                                            type="checkbox"
+                                                                                            id="inline-checkbox1"
+                                                                                            name="otherDetails"
+                                                                                            checked={
+                                                                                                this.state.otherDetails
+                                                                                            }
+                                                                                            onChange={() => {
+                                                                                                this.setState(
+                                                                                                (prevState) => ({
+                                                                                                    otherDetails:
+                                                                                                    !prevState.otherDetails,
+                                                                                                })
+                                                                                                );
+                                                                                            }}
+                                                                                            />
+                                                                                            <Label
+                                                                                            className="ml-4"
+                                                                                            htmlFor="otherDetails"
+                                                                                            >
+                                                                                            {strings.Other +
+                                                                                                " " +
+                                                                                                strings.Details}
+                                                                                            </Label>
+                                                                                        </FormGroup>
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            }
+
+                                                                            {this.state.otherDetails == true && <>
                                                                             <Row>
                                                                                 <Col md="4">
                                                                                     <FormGroup>
-                                                                                        <Label htmlFor="gender"><span className="text-danger">* </span>{strings.Gender}</Label>
+                                                                                        <Label htmlFor="gender">
+                                                                                            {this.state.sifEnabled == true && (<span className="text-danger">*{" "}</span>)}
+                                                                                        {strings.Gender}</Label>
                                                                                         <Select
 
                                                                                             options={
@@ -996,7 +1300,7 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                                 <Col md="4">
                                                                                     <FormGroup>
-                                                                                        <Label htmlFor="maritalStatus"><span className="text-danger">* </span>{strings.maritalStatus}</Label>
+                                                                                        <Label htmlFor="maritalStatus">{this.state.sifEnabled == true && (<span className="text-danger">*{" "}</span>)}{strings.maritalStatus}</Label>
                                                                                         <Select
 
                                                                                             options={
@@ -1079,6 +1383,7 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                             </FormGroup>
                                                                         </Col> */}
+                                                                            {this.state.sifEnabled == true &&
                                                                                 <Col md="4">
                                                                                     <FormGroup>
                                                                                         <Label htmlFor="parentId"> {strings.ReportsTo}</Label>
@@ -1125,7 +1430,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                         )}
                                                                                     </FormGroup>
                                                                                 </Col>
+                                                                            }
 
+                                                                            {this.state.sifEnabled == true && <>
                                                                                 <Col md="4">
                                                                                     <FormGroup>
                                                                                         <Label htmlFor="employeeDesignationId"><span className="text-danger">* </span>{strings.Designation}</Label>
@@ -1192,8 +1499,60 @@ class UpdateEmployeePersonal extends React.Component {
                                                                             >
                                                                                 <i className="fa fa-plus"></i> {strings.AddDesignation}
 															                </Button>
-                                                                        </Col>
+                                                                            </Col>
+                                                                            </>}
                                                                             </Row>
+
+                                                                            {this.state.sifEnabled == false &&
+                                                                                <Row>
+                                                                                    <Col md="4">
+                                                                                        <FormGroup>
+                                                                                            <Label htmlFor="parentId"> {strings.ReportsTo}</Label>
+                                                                                            <Select
+
+                                                                                                options={
+                                                                                                    employee_list_dropdown.data
+                                                                                                        ? selectOptionsFactory.renderOptions(
+                                                                                                            'label',
+                                                                                                            'value',
+                                                                                                            employee_list_dropdown.data,
+                                                                                                            'Employee',
+                                                                                                        )
+                                                                                                        : []
+                                                                                                }
+                                                                                                id="parentId"
+                                                                                                name="parentId"
+                                                                                                placeholder={strings.Select + strings.SuperiorEmployeeName}
+                                                                                                value={employee_list_dropdown.data
+                                                                                                    && selectOptionsFactory.renderOptions(
+                                                                                                        'label',
+                                                                                                        'value',
+                                                                                                        employee_list_dropdown.data,
+                                                                                                        'Employee',
+                                                                                                    )
+                                                                                                        .find(
+                                                                                                            (option) =>
+                                                                                                                option.value ===
+                                                                                                                +props.values.parentId,
+                                                                                                        )}
+                                                                                                onChange={(value) => {
+                                                                                                    props.handleChange('parentId')(value);
+
+                                                                                                }}
+                                                                                                className={`${props.errors.parentId && props.touched.parentId
+                                                                                                    ? 'is-invalid'
+                                                                                                    : ''
+                                                                                                    }`}
+                                                                                            />
+                                                                                            {props.errors.parentId && props.touched.parentId && (
+                                                                                                <div className="invalid-feedback">
+                                                                                                    {props.errors.parentId}
+                                                                                                </div>
+                                                                                            )}
+                                                                                        </FormGroup>
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            }
                                                                             <Row>
                                                                                 {/* <Col md="4">
                                                                             <FormGroup>
@@ -1255,7 +1614,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                             <Row className="row-wrapper">
                                                                                 <Col md="8">
                                                                                     <FormGroup>
-                                                                                        <Label htmlFor="gender"><span className="text-danger">* </span> {strings.PresentAddress} </Label>
+                                                                                        <Label htmlFor="gender">{this.state.sifEnabled == true && (<span className="text-danger">*{" "}</span>)}{strings.PresentAddress} </Label>
                                                                                         <Input
                                                                                             type="text"
                                                                                             maxLength="100"
@@ -1373,7 +1732,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                             <Row className="row-wrapper">
                                                                                 <Col md="4">
                                                                                     <FormGroup>
-                                                                                        <Label htmlFor="countryId"><span className="text-danger">* </span>{strings.Country}</Label>
+                                                                                        <Label htmlFor="countryId">{this.state.sifEnabled == true && (<span className="text-danger">*{" "}</span>)}{strings.Country}</Label>
                                                                                         <Select
                                                                                             //  isDisabled
                                                                                             options={
@@ -1431,7 +1790,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 </Col>
                                                                                 <Col md="4">
                                                                                     <FormGroup>
-                                                                                        <Label htmlFor="stateId"><span className="text-danger">* </span>
+                                                                                        <Label htmlFor="stateId">{this.state.sifEnabled == true && (<span className="text-danger">*{" "}</span>)}
                                                                                             {props.values.countryId == 229 || props.values.countryId.value === 229 ? strings.Emirate : strings.StateRegion}</Label>
                                                                                         <Select
 
@@ -1593,7 +1952,7 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                                 <Col md="4">
                                                                                     <FormGroup>
-                                                                                        <Label htmlFor="emergencyContactName1"><span className="text-danger">* </span>{strings.ContactName1}</Label>
+                                                                                        <Label htmlFor="emergencyContactName1">{this.state.sifEnabled == true && (<span className="text-danger">*{" "}</span>)}{strings.ContactName1}</Label>
                                                                                         <Input
                                                                                             type="text"
                                                                                             maxLength="26"
@@ -1616,7 +1975,7 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                                 <Col md="4">
                                                                                     <FormGroup>
-                                                                                        <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span>{strings.ContactNumber1} </Label>
+                                                                                        <Label htmlFor="emergencyContactNumber1">{this.state.sifEnabled == true && (<span className="text-danger">*{" "}</span>)}{strings.ContactNumber1} </Label>
                                                                                         <div className={
                                                                                             props.errors.emergencyContactNumber1 &&
                                                                                                 props.touched.emergencyContactNumber1
@@ -1654,7 +2013,7 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                                 <Col md="4">
                                                                                     <FormGroup>
-                                                                                        <Label htmlFor="emergencyContactRelationship1"><span className="text-danger">* </span> {strings.Relationship1} </Label>
+                                                                                        <Label htmlFor="emergencyContactRelationship1">{this.state.sifEnabled == true && (<span className="text-danger">*{" "}</span>)}{strings.Relationship1} </Label>
                                                                                         <Input
                                                                                             type="text"
                                                                                             maxLength="26"
@@ -1779,7 +2138,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 </Col>
 
                                                                             </Row>
-
+                                                                            </>}
                                                                         </Col>
                                                                     </Row>
                                                                     <Row className='pull-right'>

@@ -640,45 +640,38 @@ class UpdatePayroll extends React.Component {
 		const cols = [
 			{
 				label: 'Employee No',
-				dataSort: true,
 				width: '',
 				key: 'empCode'
 			},
 			{
 				label: 'Employee Name',
-				dataSort: true,
 				width: '',
 				key: 'empName'
 
 			},
 			{
 				label: 'LOP',
-				dataSort: true,
 				width: '8%',
 				key: 'lopDay'
 			},
 			{
 				label: 'Paid Days',
-				dataSort: true,
 				width: '12%',
 				key: 'noOfDays'
 			},
 			{
 				label: 'Gross Pay',
-				dataSort: true,
 				width: '',
 				key: 'grossPay'
 			},
 
 			{
 				label: 'Deductions',
-				dataSort: true,
 				width: '',
 				key: 'deduction'
 			},
 			{
 				label: 'Net Pay',
-				dataSort: true,
 				width: '12%',
 				key: 'netPay'
 

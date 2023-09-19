@@ -77,7 +77,8 @@ class UpdateEmployeePersonal extends React.Component {
             loadingMsg: "Loading....",
             disableLeavePage: false,
             emailExist: false,
-            openDesignationModal: false
+            openDesignationModal: false,
+            newDesig: false
         }
 
         this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -329,7 +330,6 @@ class UpdateEmployeePersonal extends React.Component {
             name: value,
         };
         this.props.commonActions.checkValidation(data).then((response) => {
-            console.log(response);
             if (response.data === 'Designation name already exists') {
                 this.setState({
                     nameDesigExist: true,
@@ -347,7 +347,6 @@ class UpdateEmployeePersonal extends React.Component {
             name: value,
         };
         this.props.commonActions.checkValidation(data).then((response) => {
-            console.log(response);
             if (response.data === 'Designation ID already exists') {
                 this.setState({
                     idDesigExist: true,
@@ -373,11 +372,13 @@ class UpdateEmployeePersonal extends React.Component {
     getCurrentUser = (data) => {
         this.props.createPayrollEmployeeActions.getEmployeeDesignationForDropdown().then((res) => {
             if (res.status === 200) {
+                const lastOption = res.data[res.data.length - 1]
                 this.setState({
                     initValue: {
                         ...this.state.initValue,
-                        ...{ employeeDesignationId: res.data.designationName },
+                        ...{ employeeDesignationId: lastOption.value },
                     },
+                    newDesig: true,
                 });
             }
         });
@@ -532,7 +533,7 @@ class UpdateEmployeePersonal extends React.Component {
                     formData1.append("employeeCode", employeeCode != null ? employeeCode : "");
                     formData1.append('dateOfJoining', dateOfJoining ? moment(dateOfJoining).format('DD-MM-YYYY') : '');
                     this.props.detailEmployeePersonalAction
-                    .updateEmployment(formData1).then((res) => {console.log(res)})
+                    .updateEmployment(formData1)
                 }
                 // this.props.history.push('/admin/payroll/employee')
                 this.props.history.push('/admin/master/employee/viewEmployee',
@@ -692,7 +693,6 @@ class UpdateEmployeePersonal extends React.Component {
                                                                 ,
                                                                 emergencyContactNumber1: Yup.string()
                                                                     .required("Contact number is required").test('not smame', 'Please Enter Another Mobile Number', (value) => {
-                                                                        console.log(value !== this.state.masterPhoneNumber)
                                                                         return value !== this.state.masterPhoneNumber
                                                                     }),
                                                                 emergencyContactRelationship1: Yup.string()
@@ -1166,7 +1166,17 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                             id="employeeDesignationId"
                                                                                                             name="employeeDesignationId"
                                                                                                             placeholder={strings.Designation}
-                                                                                                            value={designation_dropdown
+                                                                                                            value={ this.state.newDesig === true ? (designation_dropdown
+                                                                                                                && selectOptionsFactory.renderOptions(
+                                                                                                                    'label',
+                                                                                                                    'value',
+                                                                                                                    designation_dropdown,
+                                                                                                                    'employeeDesignationId',
+                                                                                                                ).find(
+                                                                                                                    (option) =>
+                                                                                                                        parseFloat(option.value) ===
+                                                                                                                        this.state.initValue.employeeDesignationId,
+                                                                                                                )) : designation_dropdown
                                                                                                                 && selectOptionsFactory.renderOptions(
                                                                                                                     'label',
                                                                                                                     'value',
@@ -1182,7 +1192,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                             // }}
                                                                                                             // value={this.state.salaryDesignation}
                                                                                                             onChange={(value) => {
-                                                                                                                props.handleChange('employeeDesignationId')(value);
+                                                                                                                this.setState({newDesig: false})
+                                                                                                                props.handleChange('employeeDesignationId')(value.value);
                                                                                                                 props.handleChange('salaryRoleId')(1);
                                                                                                             }}
                                                                                                             className={`${props.errors.employeeDesignationId && props.touched.employeeDesignationId
@@ -1451,7 +1462,17 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             id="employeeDesignationId"
                                                                                             name="employeeDesignationId"
                                                                                             placeholder={strings.Designation}
-                                                                                            value={designation_dropdown
+                                                                                            value={ this.state.newDesig === true ? (designation_dropdown
+                                                                                                && selectOptionsFactory.renderOptions(
+                                                                                                    'label',
+                                                                                                    'value',
+                                                                                                    designation_dropdown,
+                                                                                                    'employeeDesignationId',
+                                                                                                ).find(
+                                                                                                    (option) =>
+                                                                                                        parseFloat(option.value) ===
+                                                                                                        this.state.initValue.employeeDesignationId,
+                                                                                                )) : designation_dropdown
                                                                                                 && selectOptionsFactory.renderOptions(
                                                                                                     'label',
                                                                                                     'value',
@@ -1467,6 +1488,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             // }}
                                                                                             // value={this.state.salaryDesignation}
                                                                                             onChange={(value) => {
+                                                                                                this.setState({newDesig: false})
                                                                                                 props.handleChange('employeeDesignationId')(value);
                                                                                                 props.handleChange('salaryRoleId')(1);
                                                                                             }}

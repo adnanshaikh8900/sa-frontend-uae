@@ -72,7 +72,6 @@ class SalaryComponentDeduction extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
         if (prevState.selectedData !== nextProps.selectedData  ) {
 	
-			console.log('muyts',nextProps.selectedData)
 		 return { 
 			selectedData :nextProps.selectedData,
 			  };
@@ -192,7 +191,6 @@ class SalaryComponentDeduction extends React.Component {
 			salary_component_dropdown,
 			// country_list,
 		} = this.props;
-		console.log(salary_structure_dropdown)
 		const { initValue } = this.state;
 		return (
 			<div style={{ width: "250px" }}>

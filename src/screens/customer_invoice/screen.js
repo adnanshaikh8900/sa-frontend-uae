@@ -1154,10 +1154,10 @@ class CustomerInvoice extends React.Component {
 											</Row>
 										</div>
 										<Row>
-											<div style={{ width: "1650px", padding: "15px" }}>
+											<div style={{ width: "1560px"}}>
 												<Button
 													color="primary"
-													className="btn-square pull-right mb-2"
+													className="btn-square pull-right"
 													style={{ marginBottom: '10px' }}
 													onClick={() =>
 														this.props.history.push(

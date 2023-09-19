@@ -427,7 +427,7 @@ class ViewEmployee extends React.Component {
 																	className="btn-square pull-right mb-2"
 																	style={{ marginBottom: '10px' }}
 																	onClick={() =>
-																		this.props.history.push(`/admin/master/employee/updateEmployeeEmployement`,
+																		this.props.history.push(`/admin/master/employee/updateEmployeeEmployment`,
 																			{ id: this.state.current_employee_id })
 
 																	}

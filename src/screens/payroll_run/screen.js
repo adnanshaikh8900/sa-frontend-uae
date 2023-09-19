@@ -719,6 +719,7 @@ class PayrollRun extends React.Component {
 																		color="primary"
 																		title={this.state.disableCreatePayroll == true && sifEnabled ? "Please Create Company Details" : ""}
 																		className="btn-square mt-2 pull-right"
+																		style={{ padding : '5px' , margin : "1px"}}
 																		onClick={() => {
 																			if (this.state.disableCreatePayroll && sifEnabled) {
 																				toast.success("Please Create Company Details From Payroll-config");

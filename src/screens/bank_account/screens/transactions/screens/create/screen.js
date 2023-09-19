@@ -136,27 +136,27 @@ class CreateBankTransaction extends React.Component {
           true
         );
       });
-    
-      const paginationData = {
-        pageNo: '',
-        pageSize: '',
-        paginationDisable: true,
-      };
-      const sortingData = {
-        order: '',
-        sortingCol: '',
-      };
-      const postData = { ...paginationData, ...sortingData };
-    
+
+    const paginationData = {
+      pageNo: '',
+      pageSize: '',
+      paginationDisable: true,
+    };
+    const sortingData = {
+      order: '',
+      sortingCol: '',
+    };
+    const postData = { ...paginationData, ...sortingData };
+
     this.props.transactionCreateActions.getAllPayrollList(postData)
-    .then((res) => {
+      .then((res) => {
         this.setState(
           {
             payrolldata: res.data
           },
-          () => {}
+          () => { }
         );
-    })
+      })
 
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.setState({ id: this.props.location.state.bankAccountId, });
@@ -647,7 +647,7 @@ class CreateBankTransaction extends React.Component {
                 ? UnPaidPayrolls_List
                 : []
             }
-            placeholder={strings.Select+strings.Payroll}
+            placeholder={strings.Select + strings.Payroll}
             id="payrollListIds"
             onChange={(option) => {
               this.state.selectedPayrollListBank = []
@@ -1245,14 +1245,14 @@ class CreateBankTransaction extends React.Component {
                             values.coaCategoryId.label === "Expense" &&
                             values.expenseCategory.value !== 34
                           ) {
-                            errors.vatId = "Payroll is Required";
+                            errors.vatId = "Please select vat";
                           }
                           if (
                             (values.payrollListIds === "" || !values.payrollListIds || values.payrollListIds?.length === 0) &&
                             values.coaCategoryId.label === "Expense" &&
                             values.expenseCategory.value == 34
                           ) {
-                            errors.vatId = "Please select Payroll";
+                            errors.vatId = "Payroll is Required";
                           }
                           if (
                             values.coaCategoryId.value === 2 ||
@@ -1353,7 +1353,7 @@ class CreateBankTransaction extends React.Component {
                               errors.transactionAmount = strings.AmountShouldBeLessThanOrEqualToTheBalanceDue;
                           }
                           if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
-                            if (values.expenseCategory && values.expenseCategory.value === 34) {
+                            if (values.expenseCategory && values.expenseCategory.value === 34 && values.payrollListIds && values.payrollListIds?.length > 0) {
                               const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
                                 let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
                                 return sum + num;
@@ -1366,18 +1366,16 @@ class CreateBankTransaction extends React.Component {
                           if (!values.transactionDate) {
                             errors.transactionDate = "Transaction Date is Required";
                           }
-                          if (values.transactionDate)
-                            {
-                              this.state.selectedPayrollListBank.map((i) => {
-                                const dateObject = new Date(i.runDate);
-                                let payrollDate1 = moment(dateObject).format('DD-MM-YYYY')
-                                if (moment(values.transactionDate).format('DD-MM-YYYY') < payrollDate1)
-                                {
-                                  errors.transactionDate =
-                                    "Transaction Date cannot be earlier than the payroll approval date.";
-                                }
-                              })
-                            }
+                          if (values.transactionDate) {
+                            this.state.selectedPayrollListBank.map((i) => {
+                              const dateObject = new Date(i.runDate);
+                              let payrollDate1 = moment(dateObject).format('DD-MM-YYYY')
+                              if (moment(values.transactionDate).format('DD-MM-YYYY') < payrollDate1) {
+                                errors.transactionDate =
+                                  "Transaction Date cannot be earlier than the payroll approval date.";
+                              }
+                            })
+                          }
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({

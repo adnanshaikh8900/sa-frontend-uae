@@ -1052,12 +1052,13 @@ class CreateEmployeePayroll extends React.Component {
       .getEmployeeDesignationForDropdown()
       .then((res) => {
         if (res.status === 200) {
-          this.setState({
-            initValue: {
-              ...this.state.initValue,
-              ...{ employeeDesignationId: res.data.designationName },
-            },
-          });
+          const lastOption = res.data[res.data.length - 1]
+            this.setState({
+                initValue: {
+                    ...this.state.initValue,
+                    ...{ employeeDesignationId: lastOption.value },
+                },
+            });
         }
       });
   };

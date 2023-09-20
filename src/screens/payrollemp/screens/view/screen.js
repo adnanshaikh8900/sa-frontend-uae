@@ -416,13 +416,12 @@ class ViewEmployee extends React.Component {
 											<Card style={{ height: '621px' }}>
 												<div >
 													<CardBody className='m-4'>
-
-														<Row>
+														{generateSif && <Row>
 															<Col>
 																<label> <b>{strings.EmployementDetails} </b></label>
 															</Col>
 															<Col>
-																{generateSif && <Button
+																<Button
 																	color="primary"
 																	className="btn-square pull-right mb-2"
 																	style={{ marginBottom: '10px' }}
@@ -433,9 +432,9 @@ class ViewEmployee extends React.Component {
 																	}
 																>
 																	<i class="far fa-edit"></i>
-																</Button>}
+																</Button>
 															</Col>
-														</Row>
+														</Row>}
 
 														<div className='text-center'>
 
@@ -483,14 +482,17 @@ class ViewEmployee extends React.Component {
 																	>
 																		Date of Joining
 																	</UncontrolledTooltip>  &nbsp;{this.state.EmployeeDetails.dateOfJoining ? this.state.EmployeeDetails.dateOfJoining : '-'}</span></div>
-																<div className='mt-2 mb-2' >
-																	<UncontrolledTooltip
-																		placement="left"
-																		target="department"
-																	>
-																		Department
-																	</UncontrolledTooltip>
-																	<span id="department"> <i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</span></div>
+																{generateSif &&
+																	<div className='mt-2 mb-2' >
+																		<UncontrolledTooltip
+																			placement="left"
+																			target="department"
+																		>
+																			Department
+																		</UncontrolledTooltip>
+																		<span id="department"> <i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</span>
+																	</div>
+																}
 															</div>
 														</div>
 														<hr></hr>

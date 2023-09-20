@@ -563,7 +563,7 @@ class CreatePayrollList extends React.Component {
 		if (value > 30) {
 			value = 30;
 		}
-	
+
 		let newData = [...this.state.allPayrollEmployee];
 		newData = newData.map((data) => {
 			if (row.id === data.id) {
@@ -571,7 +571,7 @@ class CreatePayrollList extends React.Component {
 				data.noOfDays = 30 - value;
 				data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2);
 				let deduction = data.noOfDays == 0 ? 0 : data.deduction;
-	
+
 				data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2);
 				data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (deduction || 0);
 			}
@@ -798,11 +798,10 @@ class CreatePayrollList extends React.Component {
 																		.required("Payroll subject is required"),
 																	payrollDate: Yup.string()
 																		.required("Payroll date is required"),
-																	 payrollApprover: Yup.string()
-																	 	.required("Payroll Approver is required"),
+																	// payrollApprover: Yup.string()
+																	// 	.required("Payroll Approver is required"),
 																})}
 																validate={(values) => {
-																	//console.log("valuses = ",values);
 																	// let status = false
 																	let errors = {};
 																	if (this.state.payrollApproverRequired && !values.payrollApprover) {
@@ -921,27 +920,27 @@ class CreatePayrollList extends React.Component {
 																						{strings.pay_period}
 																					</Label>
 																					<div className={props.errors.startDate
-																							? 'startError'
-																							: ''
-																							}>
-																					<DateRangePicker
-																						displayFormat="DD-MM-YYYY"
-																						endDate={this.state.endDate}
-																						endDateId="endDate"
-																						focusedInput={this.state.focusedInput}
-																						isOutsideRange={
-																							() => null
-																							// day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
-																						}
-																						onDatesChange={this.handleDateChange}
-																						onFocusChange={this.handleFocusChange}
-																						startDate={this.state.startDate}
-																						startDateId="startDate"
+																						? 'startError'
+																						: ''
+																					}>
+																						<DateRangePicker
+																							displayFormat="DD-MM-YYYY"
+																							endDate={this.state.endDate}
+																							endDateId="endDate"
+																							focusedInput={this.state.focusedInput}
+																							isOutsideRange={
+																								() => null
+																								// day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+																							}
+																							onDatesChange={this.handleDateChange}
+																							onFocusChange={this.handleFocusChange}
+																							startDate={this.state.startDate}
+																							startDateId="startDate"
 																						// className={`form-control ${props.errors.startDate
 																						// 	? 'is-invalid'
 																						// 	: ''
 																						// 	}`}
-																					/>
+																						/>
 																					</div>
 																					{props.errors.startDate && (
 																						<div className="invalid-feedback">
@@ -958,16 +957,16 @@ class CreatePayrollList extends React.Component {
 																						<span className="text-danger">* </span>
 																						{strings.payroll_approver}
 																						<i
-																				id="payrollApprovertip"
-																				className="fa fa-question-circle ml-1"
-																			></i>
-																			<UncontrolledTooltip
-																				placement="right"
-																				target="payrollApprovertip"
-																			>
-																			 It is mandatory to have an approver for payroll submission. Otherwise, it is not mandatory.
-																			</UncontrolledTooltip>
-																		
+																							id="payrollApprovertip"
+																							className="fa fa-question-circle ml-1"
+																						></i>
+																						<UncontrolledTooltip
+																							placement="right"
+																							target="payrollApprovertip"
+																						>
+																							It is mandatory to have an approver for payroll submission. Otherwise, it is not mandatory.
+																						</UncontrolledTooltip>
+
 																					</Label>
 																					<Select
 																						id="payrollApprover"
@@ -1096,21 +1095,19 @@ class CreatePayrollList extends React.Component {
 																					color="primary"
 																					className="btn-square pull-right"
 																					onClick={() => {
-																						this.setState({ payrollApproverRequired: false }, () => {
+																						this.setState({ payrollApproverRequired: true }, () => {
 																							//  added validation popup  msg                                                                
 																							props.handleBlur();
 																							if (props.errors && Object.keys(props.errors).length != 0)
 																								this.props.commonActions.fillManDatoryDetails();
 
-																							//   if (this.state.submitButton)
-																							//   	toast.error(` Please select approver for payroll submission !`)
-																							 else
-																								if (!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0) {
-																							 		this.setState({ apiSelector: "createAndSubmitPayroll" })
+																							if (!this.state.submitButton)
+																								if (this.state.selectedRows && this.state.selectedRows.length != 0) {
+																									this.setState({ apiSelector: "createAndSubmitPayroll" })
 																									props.handleSubmit()
-																							 	}
-																							 	// else
-																							 	// 	toast.error(` Please select at least one employee for payroll creation !`)
+																								}
+																								else
+																									toast.error(` Please select at least one employee for payroll creation !`)
 																						})
 
 																					}}

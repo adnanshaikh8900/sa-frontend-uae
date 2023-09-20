@@ -2345,7 +2345,7 @@ class CreateCreditNote extends React.Component {
 																					service
 																				</UncontrolledTooltip>
 																			</TableHeaderColumn>
-																			{props.values.lineItemsString.map(i => (i.discount != 0 ? (
+																			{initValue.discount && (
 																				<TableHeaderColumn
 																					width="12%"
 																					dataField="discount"
@@ -2355,8 +2355,7 @@ class CreateCreditNote extends React.Component {
 																				>
 																					{strings.DisCount}
 																				</TableHeaderColumn>
-																			) : null))
-																			}
+																			)}
 																			{initValue.total_excise != 0 ?
 																				<TableHeaderColumn
 																					width="10%"

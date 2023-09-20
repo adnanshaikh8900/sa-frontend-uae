@@ -27,9 +27,6 @@ const mapStateToProps = (state) => {
 		version: state.common.version,
 	};
 };
-
-
-
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),

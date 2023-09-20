@@ -155,6 +155,7 @@ class CreateEmployeePayroll extends React.Component {
       idDesigExist: false,
       sifEnabled: true,
       otherDetails: false,
+      newDesig: false,
       initValue: {
         designationName: "",
         firstName: "",
@@ -903,6 +904,7 @@ class CreateEmployeePayroll extends React.Component {
             }
             if (this.state.sifEnabled == false) {
               this.toggle(0, "4");
+              this.getSalaryComponentByEmployeeId();
             } else {
               this.toggle(0, "2");
             }
@@ -961,7 +963,6 @@ class CreateEmployeePayroll extends React.Component {
               .updateEmployment(formData1)
               .then((res) => {
                 // if (res.status == 200)
-                console.log(res)
                   this.renderActionForState(this.state.employeeid);
               });
             this.props.commonActions.tostifyAlert(
@@ -970,6 +971,7 @@ class CreateEmployeePayroll extends React.Component {
             );
             if (this.state.sifEnabled == false) {
               this.toggle(0, "4");
+              this.getSalaryComponentByEmployeeId();
             } else {
               this.toggle(0, "2");
             }
@@ -1050,12 +1052,14 @@ class CreateEmployeePayroll extends React.Component {
       .getEmployeeDesignationForDropdown()
       .then((res) => {
         if (res.status === 200) {
-          this.setState({
-            initValue: {
-              ...this.state.initValue,
-              ...{ employeeDesignationId: res.data.designationName },
-            },
-          });
+          const lastOption = res.data[res.data.length - 1]
+            this.setState({
+                initValue: {
+                    ...this.state.initValue,
+                    ...{ employeeDesignationId: lastOption.value },
+                },
+                newDesig: true,
+            });
         }
       });
   };
@@ -2477,11 +2481,29 @@ class CreateEmployeePayroll extends React.Component {
                                                           strings.Select +
                                                           strings.Designation
                                                         }
-                                                        value={
-                                                          this.state
-                                                            .salaryDesignation
-                                                        }
+                                                        value={ this.state.newDesig === true ? (designation_dropdown
+                                                          && selectOptionsFactory.renderOptions(
+                                                              'label',
+                                                              'value',
+                                                              designation_dropdown,
+                                                              'employeeDesignationId',
+                                                          ).find(
+                                                              (option) =>
+                                                                  parseFloat(option.value) ===
+                                                                  this.state.initValue.employeeDesignationId,
+                                                          )) : designation_dropdown
+                                                          && selectOptionsFactory.renderOptions(
+                                                              'label',
+                                                              'value',
+                                                              designation_dropdown,
+                                                              'employeeDesignationId',
+                                                          ).find(
+                                                              (option) =>
+                                                                  option.value ===
+                                                                  +props.values.employeeDesignationId,
+                                                          )}
                                                         onChange={(value) => {
+                                                          this.setState({newDesig: false})
                                                           props.handleChange(
                                                             "employeeDesignationId"
                                                           )(value);

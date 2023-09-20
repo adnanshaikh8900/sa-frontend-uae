@@ -1068,7 +1068,7 @@ class CreditNotes extends React.Component {
 												</Row>
 											</div>
 											<Row>
-												<div style={{ width: "1650px", padding: "15px" }}>
+												<div style={{ width: "1560px" }}>
 													<Button
 														color="primary"
 														className="btn-square pull-right mb-2"

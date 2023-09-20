@@ -124,6 +124,7 @@ class DetailQuotation extends React.Component {
       fileName: "",
       purchaseCategory: [],
       basecurrency: [],
+			income: true,
       supplier_currency: "",
       disabled: false,
       disabled1: false,
@@ -3503,6 +3504,7 @@ class DetailQuotation extends React.Component {
               this.props.supplierInvoiceActions.getProductList();
               this.getCurrentProduct(e);
             }}
+            income={this.state.income}
             createProduct={this.props.ProductActions.createAndSaveProduct}
             vat_list={this.props.vat_list}
             product_category_list={this.props.product_category_list}

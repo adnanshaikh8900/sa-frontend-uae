@@ -178,6 +178,7 @@ class CreateQuotation extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
+			income: true,
 			exist: false,
 			param: false,
 			loadingMsg: "Loading...",
@@ -539,8 +540,6 @@ class CreateQuotation extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.getCompanyCurrency();
-
-
 					this.purchaseCategory();
 					this.setState(
 						{
@@ -574,6 +573,7 @@ class CreateQuotation extends React.Component {
 									? res.data.totalAmount
 									: 0,
 								total_net: 0,
+								exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : 1,
 								notes: res.data.notes
 									? res.data.notes
 									: '',
@@ -645,7 +645,7 @@ class CreateQuotation extends React.Component {
 								).find((option) => option.value == res.data.customerId)
 								this.formRef.current.setFieldValue('customerId', customer, true);
 								this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
-								// this.formRef.current.setFieldValue('quotationNumber', res.data.quotationNumber, true);
+								this.formRef.current.setFieldValue('exchangeRate', res.data.exchangeRate? res.data.exchangeRate: 1, true);
 								// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 								// this.formRef.current.setFieldValue('attachmentDescription',  res.data.attachmentDescription, true);
 								const { data } = this.state;
@@ -654,6 +654,7 @@ class CreateQuotation extends React.Component {
 										? Math.max.apply(
 											Math,
 											data.map((item) => {
+												this.getProductType(item['productId'])
 												return item.id;
 											}),
 										)
@@ -678,7 +679,6 @@ class CreateQuotation extends React.Component {
 		this.props.requestForQuotationAction.getVatList();
 		this.getInitialData();
 		this.getCompanyType();
-
 		if (this.props.location.state && this.props.location.state.contactData)
 			this.getCurrentUser(this.props.location.state.contactData);
 		if (this.props.location.state && this.props.location.state.parentId)
@@ -2193,7 +2193,7 @@ class CreateQuotation extends React.Component {
 																	'Invoice number is required',
 																),
 																customerId: Yup.string().required(
-																	strings.CustomerIsRequired
+																	strings.CustomerNameIsRequired
 																),
 																// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 
@@ -3380,6 +3380,7 @@ class CreateQuotation extends React.Component {
 							this.props.supplierInvoiceActions.getProductList();
 							this.getCurrentProduct(e);
 						}}
+						income={this.state.income}
 						createProduct={this.props.ProductActions.createAndSaveProduct}
 						vat_list={this.props.vat_list}
 						product_category_list={this.props.product_category_list}

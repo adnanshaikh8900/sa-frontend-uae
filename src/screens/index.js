@@ -211,6 +211,7 @@ import ARAgingReport from './financial_report/sections/ar_aging_report'
 import SubReports from './financial_report/sections/vat_return/screens/subReports'
 import NotesSettings from './notesSetting'
 import DebitNoteDetailsReport from './financial_report/sections/debit_note_details'
+import PayrollSettings from './payrollsettings';
 export {
 	LogIn,
 	LogInTwo,
@@ -404,4 +405,5 @@ export {
 	ApplyToSupplierInvoice,
 	ViewDebitNote,
 	DebitNoteDetailsReport,
+	PayrollSettings,
 };

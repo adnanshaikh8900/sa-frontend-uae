@@ -13,6 +13,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip,
 } from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import Select from 'react-select'
@@ -559,23 +560,26 @@ class CreatePayrollList extends React.Component {
 		)
 	}
 	updateAmounts = (row, value) => {
-		let newData = [...this.state.allPayrollEmployee]
+		if (value > 30) {
+			value = 30;
+		}
+	
+		let newData = [...this.state.allPayrollEmployee];
 		newData = newData.map((data) => {
 			if (row.id === data.id) {
 				data.lopDay = value;
-				data.noOfDays = 30 - value
-				data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2)
+				data.noOfDays = 30 - value;
+				data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2);
 				let deduction = data.noOfDays == 0 ? 0 : data.deduction;
-
-				data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-				data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (deduction || 0)
+	
+				data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2);
+				data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (deduction || 0);
 			}
-			data.payrollId = this.state.payroll_id
-			data.salaryDate = this.state.payrollDate
-			return data
-
-		})
-		this.setState({ allPayrollEmployee: newData })
+			data.payrollId = this.state.payroll_id;
+			data.salaryDate = this.state.payrollDate;
+			return data;
+		});
+		this.setState({ allPayrollEmployee: newData });
 	}
 	generate = () => {
 		const formData = new FormData();
@@ -794,10 +798,11 @@ class CreatePayrollList extends React.Component {
 																		.required("Payroll subject is required"),
 																	payrollDate: Yup.string()
 																		.required("Payroll date is required"),
-																	// payrollApprover: Yup.string()
-																	// 	.required("Payroll Approver is required"),
+																	 payrollApprover: Yup.string()
+																	 	.required("Payroll Approver is required"),
 																})}
 																validate={(values) => {
+																	//console.log("valuses = ",values);
 																	// let status = false
 																	let errors = {};
 																	if (this.state.payrollApproverRequired && !values.payrollApprover) {
@@ -952,6 +957,17 @@ class CreatePayrollList extends React.Component {
 																					<Label htmlFor="payrollApprover">
 																						<span className="text-danger">* </span>
 																						{strings.payroll_approver}
+																						<i
+																				id="payrollApprovertip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="payrollApprovertip"
+																			>
+																			 It is mandatory to have an approver for payroll submission. Otherwise, it is not mandatory.
+																			</UncontrolledTooltip>
+																		
 																					</Label>
 																					<Select
 																						id="payrollApprover"
@@ -1086,15 +1102,15 @@ class CreatePayrollList extends React.Component {
 																							if (props.errors && Object.keys(props.errors).length != 0)
 																								this.props.commonActions.fillManDatoryDetails();
 
-																							if (this.state.submitButton)
-																								toast.error(` Please select approver for payroll submission !`)
-																							else
-																								if (!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length != 0) {
-																									this.setState({ apiSelector: "createAndSubmitPayroll" })
-																									props.handleSubmit()
-																								}
-																								else
-																									toast.error(` Please select at least one employee for payroll creation !`)
+																							// if (this.state.submitButton)
+																							// 	toast.error(` Please select approver for payroll submission !`)
+																							// else
+																							// 	if (!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length != 0) {
+																							// 		this.setState({ apiSelector: "createAndSubmitPayroll" })
+																							// 		props.handleSubmit()
+																							// 	}
+																							// 	else
+																							// 		toast.error(` Please select at least one employee for payroll creation !`)
 																						})
 
 																					}}

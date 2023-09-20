@@ -213,7 +213,7 @@ const en = {
       ShippingDetails: "Shipping Details",
       ContactAddressDetails: "Contact Address Details",
       ShippingAddressIsSameAsBillingAddress: "Shipping Address Is Same As Billing Address",
-      TermIsRequired: 'Term is required',
+      TermIsRequired: 'Terms is required',
       InvoiceNumberRequired: "Invoice number is required",
       InvoiceDateRequired: "Invoice date is required",
 
@@ -251,6 +251,7 @@ const en = {
       ExpirationDate: "Expiry Date",
       CreateSupplier: "Create Supplier",
       excise: "Excise",
+      CustomerNameIsRequired: 'Customer Name is Required',
       PlaceOfSupplyRequired: 'Place of supply is required',
 
       //Expenses
@@ -270,7 +271,8 @@ const en = {
       ExpenseType: "Expense Type",
       ActualExpenseAmount: "Actual Expense Amount",
       TaxTreatmentRequired: 'Tax treatment is required',
-      ExpenseCategoryRequired: 'Expense number is required',
+      ExpenseNumberRequired: 'Expense Number is required',
+      ExpenseCategoryRequired: 'Expense Category is required',
       PaidByRequired: 'Paid by is required',
       AmountIsRequired: 'Amount is required',
       TaxPeriodIsRequired:"Tax Period is required",
@@ -299,6 +301,7 @@ const en = {
       SupplierInvoice: "Supplier Invoice",
       InvoiceNumberRequired: "Invoice number is required",
       SupplierIsRequired: "Supplier is required",
+      SupplierNameIsRequired :"Supplier Name is required",
 
 
       //Create invoice
@@ -833,6 +836,7 @@ const en = {
       No: "No",
       note: "Note: Please select atleast 1 module",
       AddNewUsers: "Add New Users",
+      NewUsers: "New Users",
       UserName: "User Name",
       DOB: "DOB",
       RoleName: "Role Name",
@@ -1131,6 +1135,7 @@ const en = {
       Cash: "Cash",
       Accounts: "Accounts",
       CurrentLiabilities: "Current Liabilities",
+      DueBalance:"Due Balance",
 
       //placeholder	
       ReceiptAttachmentDescription: "Receipt Attachment Description",
@@ -1217,6 +1222,20 @@ const en = {
       create: "Create",
       select_approver: "Select Approver",
       action: "Actions",
+
+      //Toastify Messages
+      InvoiceCreatedSuccessfully: 'Invoice Created Successfully!',
+      InvoiceUpdatedSuccessfully: 'Invoice Updated Successfully!',
+      InvoiceDeletedSuccessfully: 'Invoice Deleted Successfully!',
+      PaymentRecordedSuccessfully: 'Payment Recorded Successfully!',
+      InvoiceStatusChangedSuccessfully: 'Invoice Status Changed Successfully!',
+      InvoiceSentSuccessfully: 'Invoice Sent Successfully!',
+      InvoiceMovedToDraftSuccessfully: 'Invoice Moved To Draft Successfully!',
+
+
+      //Payroll Settings
+      PayrollSettings: 'Payroll Settings',
+      SifPayroll: 'Would you like to generate a Salary Information File (SIF) for the payroll?',
 
       //Line Item
       ProductIsRequired: "Product is Required",

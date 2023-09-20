@@ -1090,7 +1090,7 @@ sendMail = (row,MarkAsSent) => {
 										</Row>
 									</div>
 									<Row>
-									<div style={{width:"1650px", padding: "15px"}}>
+									<div style={{width:"1560px"}}>
 									<Button
 										color="primary"
 										style={{ marginBottom: '10px' }}

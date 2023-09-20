@@ -112,6 +112,7 @@ class DetailCustomerInvoice extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			basecurrency: [],
+			income: true,
 			customer_currency: '',
 			state_list_for_shipping: [],
 			language: window['localStorage'].getItem('language'),
@@ -1680,7 +1681,7 @@ class DetailCustomerInvoice extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Invoice Updated Successfully'
+					res.data ?  strings.InvoiceUpdatedSuccessfully : res.data.message , 
 				);
 				this.props.history.push('/admin/income/customer-invoice');
 				this.setState({ loading: false, });
@@ -1689,7 +1690,7 @@ class DetailCustomerInvoice extends React.Component {
 				this.setState({ disabled: false, createDisabled: false, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Invoice Updated Unsuccessfully'
+					err.data ? err.data.message : 'Invoice Updated Unsuccessfully!'
 				);
 			});
 	};
@@ -1875,7 +1876,7 @@ class DetailCustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Invoice Deleted Successfully'
+						res.data ? strings.InvoiceDeletedSuccessfully : res.data.message ,
 					);
 					this.props.history.push('/admin/income/customer-invoice');
 					this.setState({ loading: false, });
@@ -1884,7 +1885,7 @@ class DetailCustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Invoice Deleted Unsuccessfully'
+					err.data ? err.data.message : 'Invoice Deleted Unsuccessfully!'
 				);
 			});
 	};
@@ -2080,9 +2081,9 @@ class DetailCustomerInvoice extends React.Component {
 																' number is required',
 															),
 															contactId: Yup.string().required(
-																'Supplier is required',
+																'Customer name is required',
 															),
-															term: Yup.string().required('Term is required'),
+															term: Yup.string().required('Terms is required'),
 															// placeOfSupplyId: Yup.string().required(
 															// 	'Place of supply is required',
 															// ),
@@ -2229,7 +2230,7 @@ class DetailCustomerInvoice extends React.Component {
 																							'label',
 																							'value',
 																							tmpCustomer_list,
-																							'Customer',
+																							'Customer Name',
 																						)
 																						: []
 																				}
@@ -3663,6 +3664,7 @@ class DetailCustomerInvoice extends React.Component {
 									this.getCurrentProduct(res.data[0])
 							})
 						}}
+						income={this.state.income}
 						createProduct={this.props.productActions.createAndSaveProduct}
 						// vat_list={this.props.vat_list}
 						vat_list={this.state.vat_list}

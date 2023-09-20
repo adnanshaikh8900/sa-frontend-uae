@@ -1795,14 +1795,14 @@ class CreateCreditNote extends React.Component {
 																			<Select
 																				id="contactId"
 																				name="contactId"
-																				placeholder={strings.Select + strings.CustomerName}
+																				// placeholder={strings.Select + strings.CustomerName}
 																				options={
 																					tmpCustomer_list
 																						? selectOptionsFactory.renderOptions(
 																							'label',
 																							'value',
 																							tmpCustomer_list,
-																							'Customer',
+																							'Customer Name',
 																						)
 																						: []
 																				}
@@ -1812,7 +1812,7 @@ class CreateCreditNote extends React.Component {
 																						'label',
 																						'value',
 																						tmpCustomer_list,
-																						'Customer',
+																						'Customer Name',
 																					).find(obj => obj.value === props.values.contactId)
 																				}
 

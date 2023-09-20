@@ -111,6 +111,7 @@ class DetailSupplierInvoice extends React.Component {
 			fileName: '',
 			purchaseCategory: [],
 			basecurrency: [],
+			expense: true,
 			supplier_currency: '',
 			disabled: false,
 			disabled1: false,
@@ -1739,7 +1740,7 @@ class DetailSupplierInvoice extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Invoice Updated Successfully.',
+					res.data ? strings.InvoiceUpdatedSuccessfully : res.data.message ,
 				);
 				this.props.history.push('/admin/expense/supplier-invoice');
 				this.setState({ loading: false, });
@@ -1782,7 +1783,7 @@ class DetailSupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Invoice Deleted Successfully',
+						res.data ? strings.InvoiceDeletedSuccessfully :  res.data.message,
 					);
 					this.props.history.push('/admin/expense/supplier-invoice');
 					this.setState({ loading: false, });
@@ -1791,7 +1792,7 @@ class DetailSupplierInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Invoice Deleted Unsuccessfully',
+					err && err.data ? err.data.message : 'Invoice Deleted Unsuccessfully!',
 				);
 			});
 	};
@@ -2099,7 +2100,7 @@ class DetailSupplierInvoice extends React.Component {
 																'Invoice number is required',
 															),
 															contactId: Yup.string().required(
-																'Supplier is required',
+																strings.SupplierNameIsRequired
 															),
 															term: Yup.string().required('Term is required'),
 															// placeOfSupplyId: Yup.string().required('Place of Supply is required'),
@@ -3263,6 +3264,7 @@ class DetailSupplierInvoice extends React.Component {
 									this.getCurrentProduct(res.data[0]);
 							});
 						}}
+						expense={this.state.expense}
 						createProduct={this.props.ProductActions.createAndSaveProduct}
 						vat_list={this.state.vat_list}
 						product_category_list={this.props.product_category_list}

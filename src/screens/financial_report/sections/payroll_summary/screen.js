@@ -441,7 +441,7 @@ class PayrollSummaryReport extends React.Component {
 																		moment(item.runDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
 																	<td style={{ textAlign: 'center' }}>{item.status}</td>
-																	<td className='pl-0 pr-0'  style={{ textAlign: 'right' }}>{this.renderPayrolltotalAmount(item)}</td>
+																	<td style={{ textAlign: 'right' }}>{this.renderPayrolltotalAmount(item)}</td>
 																	{/* <td style={{ textAlign: 'right' }}>
 																		<Currency
 																			value={item.totalInvoiceAmount}

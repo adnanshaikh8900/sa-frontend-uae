@@ -215,7 +215,8 @@ import {
 	ExciseTaxAuditReport,
 	ViewFtaExciseAuditReport,
 	SubReports,
-	NotesSettings
+	NotesSettings,
+	PayrollSettings,
 } from 'screens';
 import Config from '../constants/config'
 const adminRoutes = [
@@ -606,7 +607,7 @@ const adminRoutes = [
 		component: UpdateEmployeeBank.screen,
 	},
 	Config.MASTER_EMPLOYEE && {
-		path: '/admin/master/employee/updateEmployeeEmployement',
+		path: '/admin/master/employee/updateEmployeeEmployment',
 		name: 'Update Employee',
 		component: UpdateEmployeeEmployment.screen,
 	},
@@ -1122,6 +1123,11 @@ const adminRoutes = [
 		path: '/admin/settings/notesSettings',
 		name: 'Save Note Settings',
 		component: NotesSettings.screen,
+	},
+	{
+		path: '/admin/settings/payrollsettings',
+		name: 'Save Payroll Settings',
+		component: PayrollSettings.screen,
 	},
 
 	Config.SETTING_IMPORT && {

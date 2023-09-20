@@ -35,6 +35,7 @@ import { amountFormat } from 'screens/bank_account/screens/transactions/screens/
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
+		company_details: state.common.company_details,
 	};
 };
 
@@ -167,30 +168,30 @@ class ViewEmployee extends React.Component {
 										Deduction: res.data.salarySlipResult.Deduction,
 									});
 								}
-							let payPeriod = this.state.selectedData.payPeriod
-							const [startDateString, endDateString] = payPeriod.split("-");
-							const startDate = startDateString.trim();
-							const endDate = endDateString.trim();
-							const postData = {
-								employeeId: this.props.location.state.id,
-								startDate: moment(startDate).format('DD/MM/YYYY'),
-								endDate: moment(endDate).format('DD/MM/YYYY'),
-							};
-							this.props.employeeViewActions
-								.getEmployeeTransactions(postData)
-								.then((res) => {
-									if (res.status === 200) {
-										this.setState({
-											transactionList: res.data,
-										});
-									}
-								})
-								.catch((err) => {
-									this.props.commonActions.tostifyAlert(
-										'error',
-										err && err.data ? err.data.message : 'Something Went Wrong',
-									);
-								})
+								let payPeriod = this.state.selectedData.payPeriod
+								const [startDateString, endDateString] = payPeriod.split("-");
+								const startDate = startDateString.trim();
+								const endDate = endDateString.trim();
+								const postData = {
+									employeeId: this.props.location.state.id,
+									startDate: moment(startDate).format('DD/MM/YYYY'),
+									endDate: moment(endDate).format('DD/MM/YYYY'),
+								};
+								this.props.employeeViewActions
+									.getEmployeeTransactions(postData)
+									.then((res) => {
+										if (res.status === 200) {
+											this.setState({
+												transactionList: res.data,
+											});
+										}
+									})
+									.catch((err) => {
+										this.props.commonActions.tostifyAlert(
+											'error',
+											err && err.data ? err.data.message : 'Something Went Wrong',
+										);
+									})
 							})
 							.catch((err) => {
 								this.props.commonActions.tostifyAlert(
@@ -236,7 +237,6 @@ class ViewEmployee extends React.Component {
 									// 	startDate: moment(startDate).format('DD/MM/YYYY'),
 									// 	endDate: moment(endDate).format('DD/MM/YYYY'),
 									// };
-									// console.log(postData);
 									toast.success("Payslip Sent Successfully")
 								}
 							})
@@ -345,6 +345,7 @@ class ViewEmployee extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { profile } = this.props;
+		const { generateSif } = this.props.company_details;
 		return (
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">
@@ -421,20 +422,18 @@ class ViewEmployee extends React.Component {
 																<label> <b>{strings.EmployementDetails} </b></label>
 															</Col>
 															<Col>
-																<Button
+																{generateSif && <Button
 																	color="primary"
 																	className="btn-square pull-right mb-2"
 																	style={{ marginBottom: '10px' }}
 																	onClick={() =>
-																		// this.props.history.push(`/admin/payroll/employee/updateEmployeeEmployement`,
-																		// { id: this.state.current_employee_id })
-																		this.props.history.push(`/admin/master/employee/updateEmployeeEmployement`,
+																		this.props.history.push(`/admin/master/employee/updateEmployeeEmployment`,
 																			{ id: this.state.current_employee_id })
 
 																	}
 																>
 																	<i class="far fa-edit"></i>
-																</Button>
+																</Button>}
 															</Col>
 														</Row>
 
@@ -536,15 +535,15 @@ class ViewEmployee extends React.Component {
 
 																<Row> <Col className='mt-2 mb-2'>{strings.MobileNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.mobileNumber ? this.state.EmployeeDetails.mobileNumber : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{(this.state.EmployeeDetails.presentAddress ? this.state.EmployeeDetails.presentAddress : " ") + ' , ' + (this.state.EmployeeDetails.city ? this.state.EmployeeDetails.city : '') + ' , ' +
-																	(this.state.EmployeeDetails.stateName ? this.state.EmployeeDetails.stateName : ' ') + ' , ' + (this.state.EmployeeDetails.countryName ? this.state.EmployeeDetails.countryName : '') + ' , ' + (this.state.EmployeeDetails.pincode ? this.state.EmployeeDetails.pincode : ' ')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{(this.state.EmployeeDetails.presentAddress ? this.state.EmployeeDetails.presentAddress : "") + (this.state.EmployeeDetails.city ? this.state.EmployeeDetails.city + ' , ' : '') +
+																	(this.state.EmployeeDetails.stateName ? this.state.EmployeeDetails.stateName + ' , ' : '') + (this.state.EmployeeDetails.countryName ? this.state.EmployeeDetails.countryName : '') + (this.state.EmployeeDetails.pincode ? this.state.EmployeeDetails.pincode + ' , ' : '')}</Col></Row>
 
 															</div>
 														</CardBody>
 													</div>
 												</Card>
 
-												<Card style={{ width: '650px' }}>
+												{generateSif && <Card style={{ width: '650px' }}>
 													<div>
 														<CardBody className='m-4' style={{ height: '250px', width: '600px' }}>
 															<div>
@@ -583,9 +582,10 @@ class ViewEmployee extends React.Component {
 															</div>
 														</CardBody>
 													</div>
-												</Card>
+												</Card>}
 											</div>
-										</CardGroup>			</div>
+										</CardGroup>
+									</div>
 								</TabPane>
 
 

@@ -43,6 +43,7 @@ import * as PayrollRun from '../payroll_run/actions';
 const mapStateToProps = (state) => {
 	return {
 		designation_list: state.employeeDesignation.designation_list,
+		company_details: state.common.company_details,
 		salaryStructure_list: state.salaryStructure.salaryStructure_list,
 		salaryRole_list: state.salaryRoles.salaryRole_list,
 		profile: state.auth.profile,
@@ -77,6 +78,7 @@ class PayrollConfigurations extends React.Component {
 			initValue: {
 				companyBankCode: '',
 				companyNumber: '',
+			    generateSif:true,
 			},
 			current_employee_id: '',
 		};
@@ -518,6 +520,7 @@ class PayrollConfigurations extends React.Component {
 		console.log(this.state.Fixed)
 		const { loading, dialog, initValue } = this.state;
 		const { salaryRole_list, salaryStructure_list, designation_list } = this.props;
+		const { generateSif } = this.props.company_details;
 		return (
 			loading == true ? <Loader /> :
 				<div>
@@ -568,13 +571,13 @@ class PayrollConfigurations extends React.Component {
 											</NavLink>
 										</NavItem>
 										<NavItem>
-											<NavLink
+											{generateSif && <NavLink
 												active={this.state.activeTab[0] === '4'}
 												onClick={() => {
 													this.toggle(0, '4');
 												}}
 											>{strings.CompanyDetails}
-											</NavLink>
+											</NavLink>}
 										</NavItem>
 									</Nav>
 									<TabContent activeTab={this.state.activeTab[0]}>

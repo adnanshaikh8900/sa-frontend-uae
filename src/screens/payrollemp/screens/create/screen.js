@@ -858,13 +858,6 @@ class CreateEmployeePayroll extends React.Component {
     if (gender && gender.value) {
       formData.append("gender", gender.value);
     }
-    if (this.state.sifEnabled == false) {
-      formData.append("employeeCode", employeeCode != null ? employeeCode : "");
-      formData.append(
-        "dateOfJoining",
-        dateOfJoining ? moment(dateOfJoining).format("DD-MM-YYYY") : ""
-      );
-    }
 
     // if (parentId && parentId.value) {
     //     formData.append('parentId', parentId.value);
@@ -911,12 +904,13 @@ class CreateEmployeePayroll extends React.Component {
 
             const formData1 = new FormData();
             formData1.append("employee", this.state.employeeid);
-            formData1.append(
-              "employeeCode",
-              this.state.initValue.employeeCode != null
-                ? this.state.initValue.employeeCode
-                : ""
-            );
+            formData1.append("employeeCode", employeeCode != null ? employeeCode : "");
+            // formData1.append(
+            //   "employeeCode",
+            //   this.state.initValue.employeeCode != null
+            //     ? this.state.initValue.employeeCode
+            //     : ""
+            // );
             formData1.append(
               "dateOfJoining",
               dateOfJoining ? moment(dateOfJoining).format("DD-MM-YYYY") : ""
@@ -949,12 +943,7 @@ class CreateEmployeePayroll extends React.Component {
             const formData1 = new FormData();
             formData1.append("id", this.state.employeeid);
             formData1.append("employee", this.state.employeeid);
-            formData1.append(
-              "employeeCode",
-              this.state.initValue.employeeCode != null
-                ? this.state.initValue.employeeCode
-                : ""
-            );
+            formData1.append("employeeCode", employeeCode != null ? employeeCode : "");
             formData1.append(
               "dateOfJoining",
               dateOfJoining ? moment(dateOfJoining).format("DD-MM-YYYY") : ""

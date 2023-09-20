@@ -851,10 +851,17 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             name="firstName"
                                                                                             value={props.values.firstName}
                                                                                             placeholder={strings.Enter + strings.FirstName}
-                                                                                            onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value))
-                                                                                                option = upperFirst(option.target.value)
-                                                                                                 { props.handleChange('firstName')(option) }
+                                                                                                onChange={(option) => {
+                                                                                                    if (
+                                                                                                        option.target.value === '' ||
+                                                                                                        this.regExAlpha.test(
+                                                                                                            option.target.value,
+                                                                                                        )
+                                                                                                    ) {
+
+                                                                                                        let option1 = upperFirst(option.target.value)
+                                                                                                        props.handleChange('firstName')(option1);
+                                                                                                    }
                                                                                             }}
                                                                                             className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
                                                                                         />
@@ -872,11 +879,18 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             name="middleName"
                                                                                             value={props.values.middleName}
                                                                                             placeholder={strings.Enter + strings.MiddleName}
-                                                                                            onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value)) 
-                                                                                                option = upperFirst(option.target.value)
-                                                                                                { props.handleChange('middleName')(option) }
-                                                                                            }}
+                                                                                                onChange={(option) => {
+                                                                                                    if (
+                                                                                                        option.target.value === '' ||
+                                                                                                        this.regExAlpha.test(
+                                                                                                            option.target.value,
+                                                                                                        )
+                                                                                                    ) {
+
+                                                                                                        let option1 = upperFirst(option.target.value)
+                                                                                                        props.handleChange('middleName')(option1);
+                                                                                                    }
+                                                                                                }}
                                                                                             className={props.errors.middleName && props.touched.middleName ? "is-invalid" : ""}
                                                                                         />
                                                                                         {props.errors.middleName && props.touched.firstName && (
@@ -893,11 +907,18 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             name="lastName"
                                                                                             value={props.values.lastName}
                                                                                             placeholder={strings.Enter + strings.LastName}
-                                                                                            onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value))
-                                                                                                option = upperFirst(option.target.value)
-                                                                                                 { props.handleChange('lastName')(option) }
-                                                                                            }}
+                                                                                                onChange={(option) => {
+                                                                                                    if (
+                                                                                                        option.target.value === '' ||
+                                                                                                        this.regExAlpha.test(
+                                                                                                            option.target.value,
+                                                                                                        )
+                                                                                                    ) {
+
+                                                                                                        let option1 = upperFirst(option.target.value)
+                                                                                                        props.handleChange('lastName')(option1);
+                                                                                                    }
+                                                                                                }}
                                                                                             className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
                                                                                         />
                                                                                         {props.errors.lastName && props.touched.lastName && (

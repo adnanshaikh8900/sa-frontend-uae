@@ -155,6 +155,7 @@ class CreateEmployeePayroll extends React.Component {
       idDesigExist: false,
       sifEnabled: true,
       otherDetails: false,
+      newDesig: false,
       initValue: {
         designationName: "",
         firstName: "",
@@ -857,13 +858,6 @@ class CreateEmployeePayroll extends React.Component {
     if (gender && gender.value) {
       formData.append("gender", gender.value);
     }
-    if (this.state.sifEnabled == false) {
-      formData.append("employeeCode", employeeCode != null ? employeeCode : "");
-      formData.append(
-        "dateOfJoining",
-        dateOfJoining ? moment(dateOfJoining).format("DD-MM-YYYY") : ""
-      );
-    }
 
     // if (parentId && parentId.value) {
     //     formData.append('parentId', parentId.value);
@@ -910,12 +904,13 @@ class CreateEmployeePayroll extends React.Component {
 
             const formData1 = new FormData();
             formData1.append("employee", this.state.employeeid);
-            formData1.append(
-              "employeeCode",
-              this.state.initValue.employeeCode != null
-                ? this.state.initValue.employeeCode
-                : ""
-            );
+            formData1.append("employeeCode", employeeCode != null ? employeeCode : "");
+            // formData1.append(
+            //   "employeeCode",
+            //   this.state.initValue.employeeCode != null
+            //     ? this.state.initValue.employeeCode
+            //     : ""
+            // );
             formData1.append(
               "dateOfJoining",
               dateOfJoining ? moment(dateOfJoining).format("DD-MM-YYYY") : ""
@@ -948,12 +943,7 @@ class CreateEmployeePayroll extends React.Component {
             const formData1 = new FormData();
             formData1.append("id", this.state.employeeid);
             formData1.append("employee", this.state.employeeid);
-            formData1.append(
-              "employeeCode",
-              this.state.initValue.employeeCode != null
-                ? this.state.initValue.employeeCode
-                : ""
-            );
+            formData1.append("employeeCode", employeeCode != null ? employeeCode : "");
             formData1.append(
               "dateOfJoining",
               dateOfJoining ? moment(dateOfJoining).format("DD-MM-YYYY") : ""
@@ -962,7 +952,6 @@ class CreateEmployeePayroll extends React.Component {
               .updateEmployment(formData1)
               .then((res) => {
                 // if (res.status == 200)
-                console.log(res)
                   this.renderActionForState(this.state.employeeid);
               });
             this.props.commonActions.tostifyAlert(
@@ -1052,12 +1041,14 @@ class CreateEmployeePayroll extends React.Component {
       .getEmployeeDesignationForDropdown()
       .then((res) => {
         if (res.status === 200) {
-          this.setState({
-            initValue: {
-              ...this.state.initValue,
-              ...{ employeeDesignationId: res.data.designationName },
-            },
-          });
+          const lastOption = res.data[res.data.length - 1]
+            this.setState({
+                initValue: {
+                    ...this.state.initValue,
+                    ...{ employeeDesignationId: lastOption.value },
+                },
+                newDesig: true,
+            });
         }
       });
   };
@@ -2479,11 +2470,29 @@ class CreateEmployeePayroll extends React.Component {
                                                           strings.Select +
                                                           strings.Designation
                                                         }
-                                                        value={
-                                                          this.state
-                                                            .salaryDesignation
-                                                        }
+                                                        value={ this.state.newDesig === true ? (designation_dropdown
+                                                          && selectOptionsFactory.renderOptions(
+                                                              'label',
+                                                              'value',
+                                                              designation_dropdown,
+                                                              'employeeDesignationId',
+                                                          ).find(
+                                                              (option) =>
+                                                                  parseFloat(option.value) ===
+                                                                  this.state.initValue.employeeDesignationId,
+                                                          )) : designation_dropdown
+                                                          && selectOptionsFactory.renderOptions(
+                                                              'label',
+                                                              'value',
+                                                              designation_dropdown,
+                                                              'employeeDesignationId',
+                                                          ).find(
+                                                              (option) =>
+                                                                  option.value ===
+                                                                  +props.values.employeeDesignationId,
+                                                          )}
                                                         onChange={(value) => {
+                                                          this.setState({newDesig: false})
                                                           props.handleChange(
                                                             "employeeDesignationId"
                                                           )(value);
@@ -3756,11 +3765,11 @@ class CreateEmployeePayroll extends React.Component {
                                                     </FormGroup>
                                                   </Col>
                                                 </Row>
+                                                <span style={{fontWeight:'bold'}}>Note: Employees cannot be deleted once a transaction has been recorded for them.</span>
                                               </>
                                             )}
                                           </Col>
                                         </Row>
-
                                         <Row>
                                           <Col lg={12} className="mt-5">
                                             <Button

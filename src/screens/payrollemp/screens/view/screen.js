@@ -330,7 +330,7 @@ class ViewEmployee extends React.Component {
 		return image;
 	}
 	renderSalaryDate = (cell, row) => {
-		let salaryDateString = moment(row.salaryDate).format('DD/MM/YYYY')
+		let salaryDateString = moment(row.salaryDate).format('DD-MM-YYYY')
 		return salaryDateString
 	}
 	getEmployeeInviteEmail = () => {
@@ -427,7 +427,7 @@ class ViewEmployee extends React.Component {
 																	className="btn-square pull-right mb-2"
 																	style={{ marginBottom: '10px' }}
 																	onClick={() =>
-																		this.props.history.push(`/admin/master/employee/updateEmployeeEmployement`,
+																		this.props.history.push(`/admin/master/employee/updateEmployeeEmployment`,
 																			{ id: this.state.current_employee_id })
 
 																	}
@@ -535,8 +535,8 @@ class ViewEmployee extends React.Component {
 
 																<Row> <Col className='mt-2 mb-2'>{strings.MobileNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.mobileNumber ? this.state.EmployeeDetails.mobileNumber : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{(this.state.EmployeeDetails.presentAddress ? this.state.EmployeeDetails.presentAddress : " ") + ' , ' + (this.state.EmployeeDetails.city ? this.state.EmployeeDetails.city : '') + ' , ' +
-																	(this.state.EmployeeDetails.stateName ? this.state.EmployeeDetails.stateName : ' ') + ' , ' + (this.state.EmployeeDetails.countryName ? this.state.EmployeeDetails.countryName : '') + ' , ' + (this.state.EmployeeDetails.pincode ? this.state.EmployeeDetails.pincode : ' ')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{(this.state.EmployeeDetails.presentAddress ? this.state.EmployeeDetails.presentAddress : "") + (this.state.EmployeeDetails.city ? this.state.EmployeeDetails.city + ' , ' : '') +
+																	(this.state.EmployeeDetails.stateName ? this.state.EmployeeDetails.stateName + ' , ' : '') + (this.state.EmployeeDetails.countryName ? this.state.EmployeeDetails.countryName : '') + (this.state.EmployeeDetails.pincode ? this.state.EmployeeDetails.pincode + ' , ' : '')}</Col></Row>
 
 															</div>
 														</CardBody>

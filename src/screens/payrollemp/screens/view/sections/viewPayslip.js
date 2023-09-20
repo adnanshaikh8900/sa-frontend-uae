@@ -25,6 +25,7 @@ const mapStateToProps = (state) => {
 	return {
 
 		contact_list: state.request_for_quotation.contact_list,
+		company_details: state.common.company_details,
 
 	};
 
@@ -64,6 +65,8 @@ class PaySlipModal extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
+			generateSif:true,
+
 		};
 	}
 
@@ -131,6 +134,7 @@ class PaySlipModal extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { openModal, closeModal, id, companyData,empData ,bankDetails,salaryDate,currencyData, transactionList} = this.props;
+		  const { generateSif } = this.props.company_details;
 		return (
 			<div className="contact-modal-screen">
 				<Modal isOpen={openModal} className="modal-success contact-modal">
@@ -304,6 +308,7 @@ class PaySlipModal extends React.Component {
 																	</Row>
 															</div>
 														</Col>
+														{generateSif &&
 														<Col style={{ width: '185%',border: '1px solid', borderColor: '#c8ced3' }}>
 															<div
 																style={{
@@ -326,7 +331,7 @@ class PaySlipModal extends React.Component {
 																<Row> <Col className='mt-2 mb-2'>{strings.IBanNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.iban ? bankDetails.iban : ('-')}</Col></Row>
 
 															</div>
-														</Col>
+														</Col>}
 													</div>
 													<div
 														style={{

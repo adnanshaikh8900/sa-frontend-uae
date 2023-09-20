@@ -76,8 +76,6 @@ class PayrollModal extends React.Component {
             
             
             {
-			console.log('getDerivedStateFromProps state changed',nextProps.selectedData.salaryDetailAsNoOfDaysMap);
-			console.log('muyts',nextProps.lop)
 		           return {
 		 	selectedData :nextProps.selectedData,
 			 employeename :nextProps.employeename,
@@ -141,8 +139,6 @@ class PayrollModal extends React.Component {
         let noOfDays = 0;
         noOfDays = 30-option;
         this.props.updateParentLop(option,noOfDays)
-        console.log(option,"option.value")
-        console.log(this.state.lop,"lop.value")
       }
 
   updateDays = (lop1) => {

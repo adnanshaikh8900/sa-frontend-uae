@@ -3765,11 +3765,11 @@ class CreateEmployeePayroll extends React.Component {
                                                     </FormGroup>
                                                   </Col>
                                                 </Row>
+                                                <span style={{fontWeight:'bold'}}>Note: Employees cannot be deleted once a transaction has been recorded for them.</span>
                                               </>
                                             )}
                                           </Col>
                                         </Row>
-
                                         <Row>
                                           <Col lg={12} className="mt-5">
                                             <Button

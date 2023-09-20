@@ -1187,7 +1187,12 @@ class PayrollConfigurations extends React.Component {
 																								props.handleBlur();
 																								if (props.errors && Object.keys(props.errors).length != 0)
 																									this.props.commonActions.fillManDatoryDetails();
-																							}}
+																							
+																							this.props.history.push(
+																								'/admin/payroll/payroll-run',
+																							);
+																	}}
+																							
 																						>
 																							<i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
 																								? 'Saving...'

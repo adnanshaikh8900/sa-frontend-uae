@@ -13,6 +13,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip
 } from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import Select from 'react-select'
@@ -1153,6 +1154,16 @@ class UpdatePayroll extends React.Component {
 																						<span className="text-danger">* </span>
 																						{strings.payroll_approver}
 																					</Label>
+																						<i
+																							id="payrollApprovertip"
+																							className="fa fa-question-circle ml-1"
+																						></i>
+																						<UncontrolledTooltip
+																							placement="right"
+																							target="payrollApprovertip"
+																						>
+																							It is mandatory to have an approver for payroll submission. Otherwise, it is not mandatory.
+																						</UncontrolledTooltip>
 																					<Select
 																						isDisabled={this.disable() ? true : false}
 																						// styles={customStyles}

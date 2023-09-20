@@ -3477,7 +3477,6 @@ class CreateSupplierInvoice extends React.Component {
 																				/>
 																				<Label>{strings.IsReverseCharge}</Label>
 																			</FormGroup> : ''}
-
 																	</Col>
 
 																	<Col className=" ml-4">

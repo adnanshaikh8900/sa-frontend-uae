@@ -607,7 +607,7 @@ const adminRoutes = [
 		component: UpdateEmployeeBank.screen,
 	},
 	Config.MASTER_EMPLOYEE && {
-		path: '/admin/master/employee/updateEmployeeEmployement',
+		path: '/admin/master/employee/updateEmployeeEmployment',
 		name: 'Update Employee',
 		component: UpdateEmployeeEmployment.screen,
 	},

@@ -1786,23 +1786,19 @@ class CreateEmployeePayroll extends React.Component {
                                                       strings.Enter +
                                                       strings.FirstName
                                                     }
-                                                    onChange={(option) => {
-                                                      if (
-                                                        option.target.value ===
-                                                          "" ||
-                                                        this.regExAlpha.test(
-                                                          option.target.value
-                                                        )
-                                                      )
-                                                        option = upperFirst(
-                                                          option.target.value
-                                                        );
-                                                      {
-                                                        props.handleChange(
-                                                          "firstName"
-                                                        )(option);
-                                                      }
-                                                    }}
+                                                        onChange={(option) => {
+                                                          if (
+                                                            option.target.value === '' ||
+                                                            this.regExAlpha.test(
+                                                              option.target.value,
+                                                            )
+                                                          ) {
+
+                                                            let option1 = upperFirst(option.target.value)
+                                                            props.handleChange('firstName')(option1);
+                                                          }
+                                                        }}
+                                                    
                                                     className={
                                                       props.errors.firstName &&
                                                       props.touched.firstName
@@ -1835,23 +1831,19 @@ class CreateEmployeePayroll extends React.Component {
                                                       strings.Enter +
                                                       strings.MiddleName
                                                     }
-                                                    onChange={(option) => {
-                                                      if (
-                                                        option.target.value ===
-                                                          "" ||
-                                                        this.regExAlpha.test(
-                                                          option.target.value
-                                                        )
-                                                      )
-                                                        option = upperFirst(
-                                                          option.target.value
-                                                        );
-                                                      {
-                                                        props.handleChange(
-                                                          "middleName"
-                                                        )(option);
-                                                      }
-                                                    }}
+                                                        onChange={(option) => {
+                                                          if (
+                                                            option.target.value === '' ||
+                                                            this.regExAlpha.test(
+                                                              option.target.value,
+                                                            )
+                                                          ) {
+
+                                                            let option1 = upperFirst(option.target.value)
+                                                            props.handleChange('middleName')(option1);
+                                                          }
+                                                        }}
+                                                    
                                                     className={
                                                       props.errors.middleName &&
                                                       props.touched.middleName
@@ -1890,23 +1882,18 @@ class CreateEmployeePayroll extends React.Component {
                                                       strings.Enter +
                                                       strings.LastName
                                                     }
-                                                    onChange={(option) => {
-                                                      if (
-                                                        option.target.value ===
-                                                          "" ||
-                                                        this.regExAlpha.test(
-                                                          option.target.value
-                                                        )
-                                                      )
-                                                        option = upperFirst(
-                                                          option.target.value
-                                                        );
-                                                      {
-                                                        props.handleChange(
-                                                          "lastName"
-                                                        )(option);
-                                                      }
-                                                    }}
+                                                        onChange={(option) => {
+                                                          if (
+                                                            option.target.value === '' ||
+                                                            this.regExAlpha.test(
+                                                              option.target.value,
+                                                            )
+                                                          ) {
+
+                                                            let option1 = upperFirst(option.target.value)
+                                                            props.handleChange('lastName')(option1);
+                                                          }
+                                                        }}
                                                     className={
                                                       props.errors.lastName &&
                                                       props.touched.lastName

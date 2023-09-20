@@ -1075,6 +1075,7 @@ class ExplainTrasactionDetail extends React.Component {
                 : []
             }
             id="payrollListIds"
+            placeholder={strings.Select + strings.Payroll}
             onChange={(option) => {
               props.handleChange("payrollListIds")(option);
               this.payrollList(option);

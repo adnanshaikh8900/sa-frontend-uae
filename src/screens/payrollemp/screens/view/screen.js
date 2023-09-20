@@ -330,7 +330,7 @@ class ViewEmployee extends React.Component {
 		return image;
 	}
 	renderSalaryDate = (cell, row) => {
-		let salaryDateString = moment(row.salaryDate).format('DD/MM/YYYY')
+		let salaryDateString = moment(row.salaryDate).format('DD-MM-YYYY')
 		return salaryDateString
 	}
 	getEmployeeInviteEmail = () => {

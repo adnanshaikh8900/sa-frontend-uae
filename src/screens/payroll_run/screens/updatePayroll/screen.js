@@ -166,7 +166,6 @@ class UpdatePayroll extends React.Component {
 				//	 
 				let payPeriodString = res.data.payPeriod;
 				let dateArray = payPeriodString.split('-')
-
 				this.setState({
 					loading: false,
 
@@ -197,8 +196,8 @@ class UpdatePayroll extends React.Component {
 					// 	onSelect: this.onRowSelect,
 					// 	onSelectAll: this.onSelectAll,
 					// },
-					startDate: moment(dateArray[0]),
-					endDate: moment(dateArray[1])
+					startDate: moment(dateArray[0],'DD/MM/YYYY'),
+					endDate: moment(dateArray[1],'DD/MM/YYYY')
 
 				}
 				)
@@ -320,7 +319,6 @@ class UpdatePayroll extends React.Component {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
 			})
 	}
-
 	handleSubmit = (data, resetForm) => {
 
 		this.setState({ disabled: true, disableLeavePage: true });
@@ -332,9 +330,8 @@ class UpdatePayroll extends React.Component {
 			endDate
 		} = data;
 		let employeeListIds = this.state.selectedRows ? this.state.selectedRows : '';
-
 		let diff = Math.abs(parseInt((startDate - endDate) / (1000 * 60 * 60 * 24), 10)) + 1
-		let string = moment(this.state.startDate).format('MM/DD/YYYY') + '-' + moment(this.state.endDate).format('MM/DD/YYYY')
+		let string = moment(this.state.startDate).format('DD/MM/YYYY') + '-' + moment(this.state.endDate).format('DD/MM/YYYY')
 		// this.setState({payPeriod:diff});
 		this.setState({ payPeriod: string });
 		const formData = new FormData();
@@ -533,7 +530,7 @@ class UpdatePayroll extends React.Component {
 								if (empList && empList?.length > 0) {
 									let flag = true;
 									empList.map(obj => {
-										if (obj.payPeriod.includes(moment(date).format("MM/DD/YYYY"))) {
+										if (obj.payPeriod.includes(moment(date).format("DD/MM/YYYY"))) {
 											flag = false;
 										}
 									})
@@ -956,6 +953,7 @@ class UpdatePayroll extends React.Component {
 			onSelect: this.onRowSelect,
 			onSelectAll: this.onSelectAll,
 		}
+		console.log(this.state.payPeriod)
 		var today = new Date();
 		return (
 			loading == true ? <Loader /> :
@@ -1196,7 +1194,6 @@ class UpdatePayroll extends React.Component {
 																								: []
 																						}
 																						onChange={(option) => {
-																							debugger
 																							if (option && option.value) {
 																								this.setState({ payrollApproverRequired: false, userId: option.value, payrollApprover: option.value, submitButton: false })
 																							} else

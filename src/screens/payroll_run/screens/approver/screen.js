@@ -135,7 +135,7 @@ class PayrollApproverScreen extends React.Component {
 			if (res.status === 200) {
 				//pay period date format 
 				let dateArr = res.data.payPeriod.split("-");
-				let payPeriodString = moment(dateArr[0]).format('DD-MM-YYYY') + " - " + moment(dateArr[1]).format('DD-MM-YYYY')
+				let payPeriodString = dateArr[0].replaceAll('/','-') + " - " + dateArr[1].replaceAll('/','-')
 
 				this.setState({
 					loading: false,
@@ -251,6 +251,7 @@ class PayrollApproverScreen extends React.Component {
 			startDate: startDate,
 			endDate: endDate,
 		};
+		debugger
 		this.props.createPayrollActions
 			.approveAndRunPayroll(postData)
 			.then((res) => {

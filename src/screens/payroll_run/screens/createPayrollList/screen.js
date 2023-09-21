@@ -147,7 +147,7 @@ class CreatePayrollList extends React.Component {
 		const diffTime = Math.abs(startDate - endDate);
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 		this.setState({ paidDays: diffDays });
-		this.getAllPayrollEmployee(startDate)
+		this.getAllPayrollEmployee(startDate, endDate)
 		console.log(diffDays)
 	}
 
@@ -236,7 +236,7 @@ class CreatePayrollList extends React.Component {
 
 		let diff = Math.abs(parseInt((startDate - endDate) / (1000 * 60 * 60 * 24), 10)) + 1
 
-		let string = moment(this.state.startDate).format('MM/DD/YYYY') + '-' + moment(this.state.endDate).format('MM/DD/YYYY')
+		let string = moment(this.state.startDate).format('DD/MM/YYYY') + '-' + moment(this.state.endDate).format('DD/MM/YYYY')
 		this.setState({ payPeriod: string });
 		const formData = new FormData();
 		if (payrollSubject === undefined) { formData.append('payrollSubject', this.state.payrollSubject ? this.state.payrollSubject : null) }
@@ -330,7 +330,7 @@ class CreatePayrollList extends React.Component {
 			}
 		});
 	}
-	getAllPayrollEmployee = (startDate) => {
+	getAllPayrollEmployee = (startDate, endDate) => {
 		var employeePayPeriodlList = [];
 		var activeEmployee = [];
 		this.props.employeeActions.getEmployeeListWithDetails().then((response) => {
@@ -338,6 +338,7 @@ class CreatePayrollList extends React.Component {
 				employeePayPeriodlList = response.data;
 				//maintaining new state
 				let date = startDate ? startDate : this.state.startDate;
+				endDate = endDate ? endDate : this.state.endDate;
 				let month = moment(date).format("MMMM");
 				this.props.createPayrollActions.getAllPayrollEmployee(moment(date).format("DD/MM/YYYY")).then((res) => {
 					if (res.status === 200) {
@@ -370,7 +371,7 @@ class CreatePayrollList extends React.Component {
 							if (empList && empList?.length > 0) {
 								let flag = true;
 								empList.map(obj => {
-									if (obj.payPeriod.includes(moment(date).format("MM/DD/YYYY"))) {
+									if (obj.payPeriod.includes(moment(date).format("DD/MM/YYYY"))) {
 										flag = false;
 									}
 								})

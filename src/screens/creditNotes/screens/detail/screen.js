@@ -2182,7 +2182,7 @@ class DetailCreditNote extends React.Component {
 																					>
 																						{strings.UNITPRICE}
 																					</TableHeaderColumn>
-																					{props.values.lineItemsString.map(i => (i.discount != 0 ? (
+																					{initValue.discount != 0 ?
 																						<TableHeaderColumn
 																							width="12%"
 																							dataField="discount"
@@ -2192,7 +2192,7 @@ class DetailCreditNote extends React.Component {
 																						>
 																							{strings.DisCount}
 																						</TableHeaderColumn>
-																					) : null))
+																						: null
 																					}
 																					{props.values.lineItemsString.map(i => (i.exciseAmount != 0 ? (
 																						<TableHeaderColumn

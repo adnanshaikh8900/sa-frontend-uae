@@ -524,12 +524,12 @@ class CreateCreditNote extends React.Component {
 
 	setExchange = (value) => {
 
-		let result = this.props.currency_convert_list.find((obj) => {
+		let result = this.props.currency_convert_list ? this.props.currency_convert_list.find((obj) => {
 			return obj.currencyCode === value;
-		});
+		}):'';
 
 
-		this.formRef.current.setFieldValue('exchangeRate', result.exchangeRate, true);
+		this.formRef.current.setFieldValue('exchangeRate', result?.exchangeRate, true);
 	};
 
 	setCurrency = (value) => {
@@ -2345,7 +2345,7 @@ class CreateCreditNote extends React.Component {
 																					service
 																				</UncontrolledTooltip>
 																			</TableHeaderColumn>
-																			{initValue.discount && (
+																			{initValue.discount != 0 ?
 																				<TableHeaderColumn
 																					width="12%"
 																					dataField="discount"
@@ -2355,7 +2355,8 @@ class CreateCreditNote extends React.Component {
 																				>
 																					{strings.DisCount}
 																				</TableHeaderColumn>
-																			)}
+																				: null
+																			}
 																			{initValue.total_excise != 0 ?
 																				<TableHeaderColumn
 																					width="10%"

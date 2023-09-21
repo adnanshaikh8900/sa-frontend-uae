@@ -113,6 +113,7 @@ class CreatePayrollList extends React.Component {
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regExAlphaNumeric = /^[a-zA-Z0-9\s]+$/;
 
 		this.options = {
 			// onRowClick: this.goToDetail,
@@ -857,7 +858,7 @@ class CreatePayrollList extends React.Component {
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
-																								this.regExBoth.test(
+																								this.regExAlphaNumeric.test(
 																									option.target.value,
 																								)
 																							)

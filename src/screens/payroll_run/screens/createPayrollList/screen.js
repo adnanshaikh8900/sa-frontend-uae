@@ -855,12 +855,12 @@ class CreatePayrollList extends React.Component {
 																						maxLength="100"
 																						placeholder={strings.Enter + strings.pay_subject}
 																						onChange={(option) => {
-																							if (
-																								option.target.value === '' ||
-																								this.regExBoth.test(
-																									option.target.value,
-																								)
-																							)
+																							// if (
+																							// 	option.target.value === '' ||
+																							// 	this.regExBoth.test(
+																							// 		option.target.value,
+																							// 	)
+																							// )
 																								props.handleChange('payrollSubject')(option.target.value);
 																							this.validatePayrollSubjectName(option.target.value)
 

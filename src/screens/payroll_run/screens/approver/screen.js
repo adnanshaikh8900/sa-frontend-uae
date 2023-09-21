@@ -1079,7 +1079,7 @@ class PayrollApproverScreen extends React.Component {
 																		<Col>
 
 																			<FormGroup>
-																				{this.state.status && (this.state.status === "Rejected" || this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Draft") ?
+																				{this.state.status && (this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Draft") ?
 																					'' : (
 																						<div>
 
@@ -1095,7 +1095,7 @@ class PayrollApproverScreen extends React.Component {
 																								id="comment"
 																								name="comment"
 																								value={this.state.comment}
-																								disabled={this.state.status == "Voided" ? true : false}
+																								disabled={this.state.status == "Voided" || this.state.status === "Rejected" ? true : false}
 																								placeholder={strings.Enter + "reason"}
 																								onChange={(event) => {
 																									props.handleChange('comment')(event.target.value);

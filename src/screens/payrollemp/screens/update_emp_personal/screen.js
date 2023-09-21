@@ -987,7 +987,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             /></div>
                                                                                         {props.errors.mobileNumber &&
                                                                                             props.touched.mobileNumber && (
-                                                                                                <div style={{ color: "red" }}>
+                                                                                                    <div style={{ color: "#f86c6b", fontSize: '0.71rem', marginTop: '0.25rem'}}>
                                                                                                     {props.errors.mobileNumber}
                                                                                                 </div>
                                                                                             )}

@@ -113,6 +113,7 @@ class CreatePayrollList extends React.Component {
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regExAlphaNumeric = /^[a-zA-Z0-9\s]+$/;
 
 		this.options = {
 			// onRowClick: this.goToDetail,
@@ -855,12 +856,12 @@ class CreatePayrollList extends React.Component {
 																						maxLength="100"
 																						placeholder={strings.Enter + strings.pay_subject}
 																						onChange={(option) => {
-																							// if (
-																							// 	option.target.value === '' ||
-																							// 	this.regExBoth.test(
-																							// 		option.target.value,
-																							// 	)
-																							// )
+																							if (
+																								option.target.value === '' ||
+																								this.regExAlphaNumeric.test(
+																									option.target.value,
+																								)
+																							)
 																								props.handleChange('payrollSubject')(option.target.value);
 																							this.validatePayrollSubjectName(option.target.value)
 

@@ -350,25 +350,25 @@ class PayrollApproverScreen extends React.Component {
 			'name',
 			name != null ? name : '',
 		)
-		this.props.salaryStructureCreateActions
-			.createSalaryStructure(formData)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						'New Salary Structure Created Successfully')
-					if (this.state.createMore) {
-						this.setState({
-							createMore: false
-						})
-						// resetForm(this.state.initValue)
-					} else {
-						this.props.history.push('/admin/payroll/config', { tabNo: '2' })
-					}
-				}
-			}).catch((err) => {
-				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-			})
+		// this.props.salaryStructureCreateActions
+		// 	.createSalaryStructure(formData)
+		// 	.then((res) => {
+		// 		if (res.status === 200) {
+		// 			this.props.commonActions.tostifyAlert(
+		// 				'success',
+		// 				'New Salary Structure Created Successfully')
+		// 			if (this.state.createMore) {
+		// 				this.setState({
+		// 					createMore: false
+		// 				})
+		// 				// resetForm(this.state.initValue)
+		// 			} else {
+		// 				this.props.history.push('/admin/payroll/config', { tabNo: '2' })
+		// 			}
+		// 		}
+		// 	}).catch((err) => {
+		// 		this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+		// 	})
 	}
 	setDate = (props, value) => {
 		const { term } = this.state;

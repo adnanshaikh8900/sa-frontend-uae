@@ -70,7 +70,7 @@ class ViewEmployee extends React.Component {
 			current_employee_id: '',
 			transactionList: [],
 			dialog: null,
-
+			isEmployeeDeletable: true,
 		};
 
 
@@ -270,6 +270,7 @@ class ViewEmployee extends React.Component {
 									? this.state.userPhoto.concat(res.data.profileImageBinary)
 									: [],
 								loading: false,
+								isEmployeeDeletable: res.data.isEmployeeDeletable,
 							},
 							() => {
 
@@ -400,7 +401,7 @@ class ViewEmployee extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { profile } = this.props;
 		const { generateSif } = this.props.company_details;
-		const {dialog} = this.state;
+		const { dialog, isEmployeeDeletable } = this.state;
 		return (
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">
@@ -836,7 +837,7 @@ class ViewEmployee extends React.Component {
 							</Row>
 							<Row>
 								<Col>
-									<FormGroup>
+									{isEmployeeDeletable && <FormGroup>
 										<Button
 											type="button"
 											name="button"
@@ -849,7 +850,7 @@ class ViewEmployee extends React.Component {
 												? 'Deleting...'
 												: strings.Delete}
 										</Button>
-									</FormGroup>
+									</FormGroup>}
 								</Col>
 							</Row>
 						</CardBody>

@@ -5015,6 +5015,14 @@ class CreateEmployeePayroll extends React.Component {
                       onSubmit={(values, { resetForm }) => {
                         this.handleSubmitForSalary(values, resetForm);
                       }}
+                      validate={(values) => {
+                          let errors = {}
+                          // console.log(values)
+                          if (this.state.CTC != (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )) {
+                            errors.grossEarning = "Gross Earnings should be equal to CTC"
+                          }
+                          return errors;
+                      }}
                       validationSchema={Yup.object().shape({
                         CTC: Yup.string()
                           .required("CTC is required")
@@ -5801,6 +5809,15 @@ class CreateEmployeePayroll extends React.Component {
                                     </tr>
                                   </tbody>
                                 </Table>
+                                {props.errors.grossEarning && (
+                                  <div style={{width: '133%'}}>
+                                      <div className='pull-right'>
+                                          <div className='invalid-feedback d-block' style={{fontSize: 'medium'}}>
+                                              {props.errors.grossEarning}
+                                          </div>
+                                      </div>
+                                  </div>
+                                )}
                               </Col>
                               <Col lg={9}>
                                 <Row className="ml-2 mt-4">

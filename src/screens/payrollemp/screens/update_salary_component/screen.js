@@ -67,6 +67,7 @@ class UpdateSalaryComponent extends React.Component {
             openSalaryComponentDeduction: false,
             loadingMsg: "Loading....",
             disableLeavePage: false,
+            varEarn: false,
             ctcTypeOption: this.props.location.state.ctcTypeOption ? this.props.location.state.ctcTypeOption : { label: "MONTHLY", value: 2 },
             ctcType: this.props.location.state.ctcTypeOption ? this.props.location.state.ctcTypeOption.label : "MONTHLY",
             ctcTypeList: [
@@ -226,6 +227,61 @@ class UpdateSalaryComponent extends React.Component {
 
             });
     }
+
+    totalEarnings = () => {
+        const totalMonthlyAmount = Object.values(this.state.Fixed).reduce((total, item) => {
+          if (typeof item.monthlyAmount == 'string') {
+            total += parseFloat(item.monthlyAmount);
+          } else {
+            total += item.monthlyAmount
+          }
+          return total;
+        }, 0);
+        const totalMonthlyEarnings = totalMonthlyAmount ? totalMonthlyAmount : 0
+        return totalMonthlyEarnings;
+    }
+    totalYearEarnings = () => {
+        const totalYearlyAmount = Object.values(this.state.Fixed).reduce((total, item) => {
+          if (typeof item.yearlyAmount == 'string') {
+            total += parseFloat(item.yearlyAmount);
+          } else {
+            total += item.yearlyAmount
+          }
+          return total;
+        }, 0);
+        const totalYearlyEarnings = totalYearlyAmount ? totalYearlyAmount : 0
+        return totalYearlyEarnings;
+    }
+    totalDeductions = () => {
+      const totalMonthlyDeduction = Object.values(this.state.Deduction).reduce((total, item) => {
+        if (typeof item.monthlyAmount == 'string') {
+          total += parseFloat(item.monthlyAmount);
+        } else {
+          total += item.monthlyAmount
+        }
+        return total;
+      }, 0);
+      const totalMonthlyDeductions = totalMonthlyDeduction ? totalMonthlyDeduction : 0
+      return totalMonthlyDeductions;
+    }
+    totalYearDeductions = () => {
+      const totalYearlyDeduction = Object.values(this.state.Deduction).reduce((total, item) => {
+        if (typeof item.yearlyAmount == 'string') {
+          total += parseFloat(item.yearlyAmount);
+        } else {
+          total += item.yearlyAmount
+        }
+        return total;
+      }, 0);
+      const totalYearlyDeductions = totalYearlyDeduction ? totalYearlyDeduction : 0
+      return totalYearlyDeductions;
+    }
+    grossEarnings = () => {
+      const grossEarning = (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 )
+      // this.setState({grossSalarys : grossEarning})
+      return grossEarning;
+    }
+
     // Create or Edit VAT
     handleSubmit = (data) => {
 
@@ -240,7 +296,7 @@ class UpdateSalaryComponent extends React.Component {
         let formData = new FormData();
         formData.append('employee', current_employee_id)
         formData.append('employeeId', this.props.location.state.id ? this.props.location.state.id : "");
-        formData.append('grossSalary', CTC != null ? CTC : '')
+        formData.append('grossSalary', (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 ))
         formData.append('ctcType', this.state.ctcTypeOption.label ? this.state.ctcTypeOption.label : "ANNUALLY")
 
         formData.append('salaryComponentString', JSON.stringify(this.state.list));
@@ -286,8 +342,8 @@ class UpdateSalaryComponent extends React.Component {
                 totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
             }
             else if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
-                var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-                var salaryAnnulay = salaryMonthy * 12;
+                var salaryAnnulay = CTC * (obj.formula / 100);
+                var salaryMonthy = salaryAnnulay / 12;
                 obj.monthlyAmount = salaryMonthy;
                 obj.yearlyAmount = salaryAnnulay;
                 totalFixedSalary = totalFixedSalary + salaryMonthy;
@@ -422,8 +478,8 @@ class UpdateSalaryComponent extends React.Component {
                     if (newFormula === '') { obj.formula = '0'; }
                     else { obj.formula = newFormula; }
                 }
-                var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-                var salaryAnnulay = salaryMonthy * 12;
+                var salaryAnnulay = basicSalaryMonthy * (obj.formula / 100);
+                var salaryMonthy = salaryAnnulay * 12;
                 obj.monthlyAmount = salaryMonthy;
                 obj.yearlyAmount = salaryAnnulay;
                 totalFixedSalary = totalFixedSalary + salaryMonthy;
@@ -554,12 +610,20 @@ class UpdateSalaryComponent extends React.Component {
                                                 <Loader></Loader>
                                             ) : (
                                                 <Row>
-                                                    <Col lg={8}>
+                                                    <Col>
                                                         <Formik
                                                             initialValues={initValue}
                                                             ref={this.formRef}
                                                             onSubmit={(values) => {
                                                                 this.handleSubmit(values)
+                                                            }}
+                                                            validate={(values) => {
+                                                                let errors = {}
+                                                                // console.log(values)
+                                                                    if (this.state.CTC != (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )) {
+                                                                        errors.grossEarning = "Gross Earnings should be equal to CTC"
+                                                                    }
+                                                                return errors;
                                                             }}
                                                             validationSchema={Yup.object().shape({
                                                                 CTC: Yup.string()
@@ -582,13 +646,14 @@ class UpdateSalaryComponent extends React.Component {
                                                         >
                                                             {(props) => (
                                                                 <Form onSubmit={props.handleSubmit} name="simpleForm">
-
+                                                                    <div style={{ width: "100%" }}>
                                                                     <div style={{ textAlign: "center" }}>
-                                                                        <FormGroup className="mt-3" style={{ textAlign: "center", display: "inline-grid" }} >
-                                                                            <Label><span className="text-danger">*</span>  {strings.CosttoCompany}  ( CTC )
-                                                                                : </Label>
-                                                                            <div style={{ display: "flex" }}>
-                                                                                <div>
+                                                                        <FormGroup className="mt-3" style={{ textAlign: "center", display: "grid" }} >
+                                                                            <div style={{ display: "flex", textAlign: "center", justifyContent: 'center' }}>
+                                                                                <h4 style={{ width: "30%", display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignContent: 'center' }} className="mb-0">
+                                                                                    <span className="text-danger">*</span>  {strings.CosttoCompany}  ( CTC ) : 
+                                                                                </h4>
+                                                                                <div style={{ width: "20%", paddingRight: "2%" }}>
                                                                                     <Input
                                                                                         type="text"
                                                                                         id="CTC"
@@ -612,7 +677,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                         <div className="invalid-feedback">{props.errors.CTC}</div>
                                                                                     )}
                                                                                 </div>
-                                                                                <div style={{ width: "-webkit-fill-available" }}>
+                                                                                <div style={{ width: "20%" }}>
                                                                                     <Select
                                                                                         options={this.state.ctcTypeList}
                                                                                         id="ctcTypeOption"
@@ -626,34 +691,21 @@ class UpdateSalaryComponent extends React.Component {
                                                                                     />
                                                                                 </div>
                                                                             </div>
-
                                                                         </FormGroup>
                                                                     </div>
+                                                                    </div>
+                                                                        <Row>
+                                                                            <Col lg={9}>
+                                                                                <Row className="ml-2">
+                                                                                <h4>{strings.Earnings}</h4>
+                                                                                </Row>
 
-                                                                    <Row>
-                                                                        <Col lg={8}>
-                                                                            <Row className='ml-2'>
-                                                                                <h4>{strings.FixedEarnings}</h4>
-
-                                                                                <Button
-                                                                                    color="link"
-                                                                                    className=" mr-3 mb-3"
-                                                                                    onClick={(e, props) => {
-                                                                                        this.openSalaryComponentFixed(props);
-                                                                                        this.renderActionForState()
-                                                                                    }}
-                                                                                >
-                                                                                    <i className="fa fa-plus"></i>  {strings.AddFixed}
-                                                                                </Button>
-
-                                                                            </Row>
-
-                                                                            <Table className="text-center" style={{ border: "1px solid #c8ced3", width: '150%' }} >
-                                                                                <thead style={{ border: "1px solid #c8ced3" }}>
-                                                                                    <tr style={{ border: "1px solid #c8ced3", background: '#dfe9f7', color: "Black" }}>
+                                                                            <Table className="text-center" style={{ width: '133%' }} >
+                                                                                <thead>
+                                                                                    <tr style={{ background: '#dfe9f7', color: "Black" }}>
                                                                                         {this.state.Fixed ? this.columnHeader1.map((column, index) => {
                                                                                             return (
-                                                                                                <th>
+                                                                                                <th style={{ border: "3px solid #c8ced3" }}>
                                                                                                     {column.label}
                                                                                                 </th>
                                                                                             );
@@ -666,10 +718,10 @@ class UpdateSalaryComponent extends React.Component {
                                                                                     ).map((item) => (
                                                                                         <tr>
                                                                                             {/* <td >{item.id}</td> */}
-                                                                                            <td style={{ border: "1px solid #c8ced3" }} >{item.description}</td>
+                                                                                            <td style={{ border: "3px solid #c8ced3" }} >{item.description}</td>
                                                                                             {item.formula ?
                                                                                                 (
-                                                                                                    <td style={{ border: "1px solid #c8ced3" }}>
+                                                                                                    <td style={{ border: "3px solid #c8ced3" }}>
                                                                                                         <Input
                                                                                                             type="number"
                                                                                                             min="0"
@@ -691,13 +743,13 @@ class UpdateSalaryComponent extends React.Component {
 
                                                                                                             }}
                                                                                                         />
-                                                                                                        {item.description !== 'Basic SALARY' ? (' % of Basic') : (' % of CTC')}
+                                                                                                        {' % of CTC'}
                                                                                                     </td>
                                                                                                 ) : (
-                                                                                                    <td style={{ border: "1px solid #c8ced3" }}>{strings.FixedAmount}</td>)
+                                                                                                    <td style={{ border: "3px solid #c8ced3" }}>{strings.FixedAmount}</td>)
                                                                                             }
                                                                                             {item.formula ?
-                                                                                                (<td style={{ border: "1px solid #c8ced3" }}
+                                                                                                (<td style={{ border: "3px solid #c8ced3" }}
                                                                                                 >
                                                                                                     <Input
                                                                                                         disabled={true}
@@ -713,7 +765,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                 </td>
 
                                                                                                 ) : (
-                                                                                                    <td style={{ border: "1px solid #c8ced3" }} >
+                                                                                                    <td style={{ border: "3px solid #c8ced3" }} >
                                                                                                         <Input
                                                                                                             maxLength="8"
                                                                                                             type="text"
@@ -730,18 +782,18 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                 )}
 
                                                                                             {item.formula ?
-                                                                                                (<td style={{ border: "1px solid  #c8ced3" }} >
+                                                                                                (<td style={{ border: "3px solid  #c8ced3" }} >
 
                                                                                                     {item.yearlyAmount ? item.yearlyAmount.toLocaleString() : 0.00}
                                                                                                 </td>
 
                                                                                                 ) : (
-                                                                                                    <td style={{ border: "1px solid  #c8ced3" }} >
+                                                                                                    <td style={{ border: "3px solid  #c8ced3" }} >
 
                                                                                                         {item.flatAmount ? item.flatAmount * 12 : 0.00}
                                                                                                     </td>
                                                                                                 )}
-                                                                                            <td>
+                                                                                            <td style={{border: 'none'}}>
                                                                                                 {item.description !== "Basic SALARY" ? (
                                                                                                     <Button
                                                                                                         color='link'
@@ -756,11 +808,36 @@ class UpdateSalaryComponent extends React.Component {
                                                                                         </tr>
 
                                                                                     )) : ""}
+                                                                                    <tr>
+                                                                                        <td colSpan={4} style={{ border: "3px solid  #c8ced3" }}>
+                                                                                        <Button
+                                                                                            color="link"
+                                                                                            className="pull-left"
+                                                                                            onClick={(e, props) => {
+                                                                                                this.openSalaryComponentFixed(props);
+                                                                                                this.renderActionForState()
+                                                                                            }}
+                                                                                        >
+                                                                                            <i className="fa fa-plus"></i>  {strings.AddEarnings}
+                                                                                        </Button>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr style={{background: "#dfe9f7", color: "Black" }}>
+                                                                                        <td colSpan={2} style={{border: "3px solid #c8ced3"}}>
+                                                                                            <b className="pull-left">{strings.TotalEarnings+' (A):'}</b>
+                                                                                        </td>
+                                                                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                            {this.totalEarnings()}
+                                                                                        </b></td>
+                                                                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                            {this.totalYearEarnings()}
+                                                                                        </b></td>
+                                                                                    </tr>
                                                                                 </tbody>
                                                                             </Table>
 
                                                                         </Col>
-                                                                        <Col lg={8}>
+                                                                        {this.state.varEarn === true && <Col lg={8}>
                                                                             <Row className='ml-2'>
                                                                                 <h4>{strings.VariableEarnings}</h4>
                                                                                 <Button
@@ -885,30 +962,21 @@ class UpdateSalaryComponent extends React.Component {
                                                                                 </tbody>
                                                                             </Table>
 
-                                                                        </Col>
+                                                                        </Col>}
                                                                         <Col lg={8}>
-                                                                            <Row className='ml-2'>
-                                                                                <h4>{strings.Deductions}</h4>
-                                                                                <Button
-                                                                                    color="link"
-                                                                                    className=" mr-3 mb-3"
-                                                                                    onClick={(e, props) => {
-                                                                                        this.openSalaryComponentDeduction(props);
-                                                                                        this.renderActionForState()
-                                                                                    }}
-                                                                                >
-                                                                                    <i className="fa fa-plus"></i>  {strings.AddDeduction}
-                                                                                </Button></Row>
-                                                                            <Table className="text-center" style={{ border: "1px solid #c8ced3", width: '150%' }}>
-                                                                                <thead style={{ border: "1px solid #c8ced3" }}>
-                                                                                    <tr style={{ border: "1px solid #c8ced3", background: '#dfe9f7', color: "Black" }}>
-                                                                                        {this.state.Deduction ? this.columnHeader1.map((column, index) => {
+                                                                        <Row className="ml-2 mt-4">
+                                                                            <h4>{strings.Deductions}</h4>
+                                                                            </Row>
+                                                                            <Table className="text-center" style={{ width: '150%' }}>
+                                                                                <thead>
+                                                                                    <tr style={{ background: '#dfe9f7', color: "Black" }}>
+                                                                                        {this.columnHeader1.map((column, index) => {
                                                                                             return (
-                                                                                                <th>
+                                                                                                <th style={{ border: "3px solid #c8ced3" }}>
                                                                                                     {column.label}
                                                                                                 </th>
                                                                                             );
-                                                                                        }) : ""}
+                                                                                        })}
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
@@ -918,10 +986,10 @@ class UpdateSalaryComponent extends React.Component {
                                                                                         ).map((item) => (
                                                                                             <tr>
                                                                                                 {/* <td >{item.id}</td> */}
-                                                                                                <td style={{ border: "1px solid #c8ced3" }} >{item.description}</td>
+                                                                                                <td style={{ border: "3px solid #c8ced3" }} >{item.description}</td>
                                                                                                 {item.formula ?
                                                                                                     (
-                                                                                                        <td style={{ border: "1px solid #c8ced3" }}>
+                                                                                                        <td style={{ border: "3px solid #c8ced3" }}>
                                                                                                             <Input
                                                                                                                 type="number"
                                                                                                                 // min="0"
@@ -940,13 +1008,13 @@ class UpdateSalaryComponent extends React.Component {
 
 
                                                                                                                 }}
-                                                                                                            />{' '}% of Basic
+                                                                                                            />{' '}% of CTC
                                                                                                         </td >
                                                                                                     ) : (
-                                                                                                        <td style={{ border: "1px solid #c8ced3" }}>{strings.FixedAmount}</td>)
+                                                                                                        <td style={{ border: "3px solid #c8ced3" }}>{strings.FixedAmount}</td>)
                                                                                                 }
                                                                                                 {item.formula ?
-                                                                                                    (<td style={{ border: "1px solid #c8ced3" }} >
+                                                                                                    (<td style={{ border: "3px solid #c8ced3" }} >
                                                                                                         <Input
                                                                                                             disabled={true}
                                                                                                             type="text"
@@ -957,7 +1025,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                     </td>
 
                                                                                                     ) : (
-                                                                                                        <td style={{ border: "1px solid #c8ced3" }} >
+                                                                                                        <td style={{ border: "3px solid #c8ced3" }} >
                                                                                                             <Input
                                                                                                                 maxLength="8"
                                                                                                                 type="text"
@@ -974,17 +1042,17 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                     )}
 
                                                                                                 {item.formula ?
-                                                                                                    (<td style={{ border: "1px solid  #c8ced3" }} >
+                                                                                                    (<td style={{ border: "3px solid  #c8ced3" }} >
 
                                                                                                         {item.yearlyAmount.toLocaleString()}
                                                                                                     </td>
 
                                                                                                     ) : (
-                                                                                                        <td style={{ border: "1px solid  #c8ced3" }} >
+                                                                                                        <td style={{ border: "3px solid  #c8ced3" }} >
                                                                                                             {item.flatAmount * 12}
                                                                                                         </td>
                                                                                                     )}
-                                                                                                <td>
+                                                                                                <td style={{borderTop: "0px"}}>
                                                                                                     <Button
                                                                                                         color='link'
 
@@ -998,12 +1066,102 @@ class UpdateSalaryComponent extends React.Component {
                                                                                         ))) : (
                                                                                         " "
                                                                                     )}
+                                                                                    <tr>
+                                                                                        <td colSpan={4} style={{ border: "3px solid  #c8ced3" }}>
+                                                                                        <Button
+                                                                                            color="link"
+                                                                                            className="pull-left"
+                                                                                            onClick={(e, props) => {
+                                                                                                this.openSalaryComponentDeduction(props);
+                                                                                                this.renderActionForState()
+                                                                                            }}
+                                                                                        >
+                                                                                            <i className="fa fa-plus"></i>  {strings.AddDeduction}
+                                                                                        </Button>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr style={{background: "#dfe9f7", color: "Black" }}>
+                                                                                        <td colSpan={2} style={{border: "3px solid #c8ced3"}}>
+                                                                                        <b className="pull-left">{strings.Total+' '+strings.Deductions+' (B):'}</b>
+                                                                                        </td>
+                                                                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                        {typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 }
+                                                                                        </b></td>
+                                                                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                        {typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 }
+                                                                                        </b></td>
+                                                                                    </tr>
                                                                                 </tbody>
                                                                             </Table>
-
                                                                         </Col>
-                                                                        <Col lg={8}>
-                                                                            <Table className="text-center" style={{ border: "1px solid #c8ced3", width: '150%' }}>
+
+
+                                                                        <Col lg={9}>
+                                                                            <Row className="ml-2 mt-4">
+                                                                            <h4>{strings.Gross+' '+strings.Earnings+':'}</h4>
+                                                                            </Row>
+                                                                            <Table
+                                                                            className="text-center"
+                                                                            style={{
+                                                                                width: "133%",
+                                                                                marginBottom: "0px"
+                                                                            }}
+                                                                            >
+                                                                            <tbody>
+                                                                                <tr style={{background: "#dfe9f7", color: "Black" }}>
+                                                                                <td colSpan={2} style={{border: "3px solid #c8ced3", width: "50%"}}>
+                                                                                    <b className="pull-left">{strings.Gross+' '+strings.Earnings+' (C):'}</b>
+                                                                                    <b className="pull-right">{'(A + B)'}</b>
+                                                                                </td>
+                                                                                <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                    {this.grossEarnings()}
+                                                                                </b></td>
+                                                                                <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                    {(this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )}
+                                                                                </b></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                            </Table>
+                                                                            {props.errors.grossEarning && (
+                                                                                <div style={{width: '133%'}}>
+                                                                                    <div className='pull-right'>
+                                                                                        <div className='invalid-feedback d-block' style={{fontSize: 'medium'}}>
+                                                                                            {props.errors.grossEarning}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            )}
+                                                                        </Col>
+                                                                        <Col lg={9}>
+                                                                            <Row className="ml-2 mt-4">
+                                                                            <h4>{strings.TotalNetPay+':'}</h4>
+                                                                            </Row>
+                                                                            <Table
+                                                                            className="text-center"
+                                                                            style={{
+                                                                                width: "133%",
+                                                                            }}
+                                                                            >
+                                                                            <tbody>
+                                                                                <tr style={{background: "#dfe9f7", color: "Black" }}>
+                                                                                <td colSpan={2} style={{border: "3px solid #c8ced3", width: "50%"}}>
+                                                                                    <b className="pull-left">{strings.TotalNetPay+':'}</b>
+                                                                                    <b className="pull-right">{'(C - B)'}</b>
+                                                                                </td>
+                                                                                <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                    {(this.totalEarnings())}
+                                                                                </b></td>
+                                                                                <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                    {(this.totalYearEarnings())}
+                                                                                </b></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                            </Table>
+                                                                        </Col>
+
+
+                                                                        {/* <Col lg={8}>
+                                                                            <Table className="text-center" style={{ border: "1px solid #c8ced3", width: '150%' }}> */}
                                                                                 {/* <thead style={{border:"1px solid #dfe9f7"}}>
                                                                       <tr style={{border:"1px solid #dfe9f7",    background: '#dfe9f7',color:"Black"}}>
                                                                         {this.columnHeader1.map((column, index) => {
@@ -1015,7 +1173,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                         })}
                                                                     </tr>
                                                                 </thead> */}
-                                                                                <tbody>
+                                                                                {/* <tbody>
                                                                                     {this.state.Fixed_Allowance ? (
                                                                                         Object.values(
                                                                                             this.state.Fixed_Allowance,
@@ -1034,7 +1192,7 @@ class UpdateSalaryComponent extends React.Component {
 
                                                                         </Col>
                                                                         <Col lg={8}>
-                                                                            <Table className="text-center" style={{ border: "1px solid #c8ced3", width: '150%' }}>
+                                                                            <Table className="text-center" style={{ border: "1px solid #c8ced3", width: '150%' }}> */}
                                                                                 {/* <thead style={{border:"1px solid #c8ced3"}}>
                                                                       <tr style={{border:"1px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
                                                                         {this.columnHeader1.map((column, index) => {
@@ -1046,7 +1204,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                         })}
                                                                     </tr>
                                                                 </thead>  */}
-                                                                                <tbody>
+                                                                                {/* <tbody>
                                                                                     <Row >
                                                                                         <Col className="p-2" >{"Company Cost"}</Col>
                                                                                         <Col className="p-2"  > {"-"} </Col>
@@ -1056,7 +1214,7 @@ class UpdateSalaryComponent extends React.Component {
 
                                                                                 </tbody>
                                                                             </Table>
-                                                                        </Col>
+                                                                        </Col> */}
                                                                     </Row>
 
 

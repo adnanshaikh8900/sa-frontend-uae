@@ -25,6 +25,7 @@ const mapStateToProps = (state) => {
 	return {
 
 		contact_list: state.request_for_quotation.contact_list,
+		company_details: state.common.company_details,
 
 	};
 
@@ -52,18 +53,20 @@ const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
-	//   currency: true,
-	  ignoreDecimal: false,
-	  ignoreZeroCurrency: false,
-	  doNotAddOnly: false,
+		//   currency: true,
+		ignoreDecimal: false,
+		ignoreZeroCurrency: false,
+		doNotAddOnly: false,
 	}
-  });
+});
 class PaySlipModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
+			generateSif: true,
+
 		};
 	}
 
@@ -72,11 +75,11 @@ class PaySlipModal extends React.Component {
 			return {
 				prefixData: nextProps.prefixData,
 				selectedData: nextProps.selectedData,
-				Fixed:nextProps.Fixed,
-				FixedAllowance:nextProps.FixedAllowance,
-				Deduction:nextProps.Deduction,
-				Variable:nextProps.Variable,
-				transactionList:nextProps.transactionList
+				Fixed: nextProps.Fixed,
+				FixedAllowance: nextProps.FixedAllowance,
+				Deduction: nextProps.Deduction,
+				Variable: nextProps.Variable,
+				transactionList: nextProps.transactionList
 			};
 		}
 		// else if(prevState.totalAmount !== nextProps.totalAmount)
@@ -121,25 +124,26 @@ class PaySlipModal extends React.Component {
 	}
 
 	renderPayperiod = (payPeriod) => {
-		let dateArr=payPeriod ? payPeriod.split("-"):[];
-				let  startDate= moment(dateArr[0]).format('DD-MM-YYYY')
-				let	 endDate=moment(dateArr[1]).format('DD-MM-YYYY')
-		
-		return(<>{startDate} <b> To </b>{endDate}</>) ;
+		let dateArr = payPeriod ? payPeriod.split("-") : [];
+		let startDate = moment(dateArr[0]).format('DD-MM-YYYY')
+		let endDate = moment(dateArr[1]).format('DD-MM-YYYY')
+
+		return (<>{startDate} <b> To </b>{endDate}</>);
 	};
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal, id, companyData,empData ,bankDetails,salaryDate,currencyData, transactionList} = this.props;
+		const { openModal, closeModal, id, companyData, empData, bankDetails, salaryDate, currencyData, transactionList } = this.props;
+		const { generateSif } = this.props.company_details;
 		return (
 			<div className="contact-modal-screen">
 				<Modal isOpen={openModal} className="modal-success contact-modal">
-					<ModalBody style={{padding: "15px 0px 0px 0px"}}>
-						<div className="view-invoice-screen" style={{padding:" 0px 1px"}}>
+					<ModalBody style={{ padding: "15px 0px 0px 0px" }}>
+						<div className="view-invoice-screen" style={{ padding: " 0px 1px" }}>
 							<div className="animated fadeIn">
 								<Row>
 									<Col lg={12} className="mx-auto">
-										<div className="pull-right" style={{ display: "inline-flex" ,marginRight:"2%",marginBottom:"1%"}}>
+										<div className="pull-right" style={{ display: "inline-flex", marginRight: "2%", marginBottom: "1%" }}>
 
 											<Button
 												size='lg'
@@ -167,9 +171,9 @@ class PaySlipModal extends React.Component {
 												}}
 											>
 												<i className="fa fa-print"></i>
-												</Button>
+											</Button>
 											<Button
-											size='lg'
+												size='lg'
 												type="button"
 												className=" print-btn-cont"
 												style={{ color: "black" }}
@@ -178,17 +182,17 @@ class PaySlipModal extends React.Component {
 												}}
 											>
 												X
-										</Button>
+											</Button>
 										</div>
 										<div className="mt-3">
 											<PDFExport
 												ref={(component) => (this.pdfExportComponent = component)}
 												scale={0.8}
 												paperSize="A3"
-												fileName={"Payslip of "+salaryDate+".pdf"}
+												fileName={"Payslip of " + salaryDate + ".pdf"}
 											>
-											
-												<CardBody  id="section-to-print" style={{}}>
+
+												<CardBody id="section-to-print" style={{}}>
 													<div className="text-center"
 														style={{
 															width: '100%',
@@ -197,76 +201,76 @@ class PaySlipModal extends React.Component {
 															padding: '7px', borderColor: '#c8ced3'
 														}}
 													>
-														
+
+														<div
+															style={{
+																width: '100%',
+																display: 'flex',
+																// border:'1px solid',
+																// padding:'7px',borderColor:'#c8ced3'
+															}}
+														>
+															<div style={{ width: '20%', marginTop: '3.5rem' }}>
+																<div className="companyDetails"
+																	style={{ textAlign: " left" }}
+																>
+																	<img
+																		src={
+																			companyData &&
+																				companyData.company &&
+																				companyData.company.companyLogo
+																				? 'data:image/jpg;base64,' +
+																				companyData.company.companyLogo
+																				: logo
+																		}
+																		className=""
+																		alt=""
+																		style={{ width: '200px' }}
+																	/>
+
+																</div>
+
+															</div>
 															<div
 																style={{
-																	width: '100%',
+																	width: '80%',
 																	display: 'flex',
-																	// border:'1px solid',
-																	// padding:'7px',borderColor:'#c8ced3'
+																	flexDirection: 'column',
+																	justifyContent: 'left',
 																}}
 															>
-																<div style={{ width: '20%', marginTop: '3.5rem' }}>
-																	<div className="companyDetails"
-																	style={{textAlign:" left"}}
-																	>
-																	<img
-																	src={
-																		companyData &&
-																			companyData.company &&
-																			companyData.company.companyLogo
-																			? 'data:image/jpg;base64,' +
-																			companyData.company.companyLogo
-																			: logo
-																	}
-																	className=""
-																	alt=""
-																	style={{ width: '200px' }}
-																/>
+																<div
+																	className='mr-1'
+																	style={{
+																		// width: '97%',
+																		textAlign: 'right',
 
-								</div>
-
-							</div>
-							<div
-								style={{
-									width: '80%',
-									display: 'flex',
-									flexDirection: 'column',
-									justifyContent: 'left',
-								}}
-							>
-								<div
-								className='mr-1'
-								style={{
-									// width: '97%',
-									textAlign: 'right',
-
-								}}>
-									<div style={{ marginTop: '0.5rem' }}>
-									<div className="mb-1 ml-2" style={{     fontSize: "1.75rem"}} ><b>	{strings.Payslip}</b> ( {this.state.selectedData.salaryMonth+" )"}</div><br/>
-										<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.company.companyName}</b></div>
-										<div className="mb-1 ml-2">{companyData.company.companyAddressLine1}</div>
-										<div className="mb-1 ml-2">{companyData.company.companyAddressLine2}</div>
-										{companyData.company.companyCountryCode.countryCode==229 ?
-																	(strings.POBox+" : "):
-																	""}  {companyData.company.companyPoBoxNumber} ,&nbsp;
-										{companyData &&(companyData.company.companyStateCode.stateName ? companyData
-											.company.companyStateCode.stateName + " , " : "")}
-										{companyData &&(companyData.company.companyCountryCode.countryName ? companyData.company.companyCountryCode.countryName : "")}
-										{/* {companyData.company.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.company.companyRegistrationNumber}</div>)}
+																	}}>
+																	<div style={{ marginTop: '0.5rem' }}>
+																		<div className="mb-1 ml-2" style={{ fontSize: "1.75rem" }} ><b>	{strings.Payslip}</b> ( {this.state.selectedData.salaryMonth + " )"}</div><br />
+																		<div className="mb-1 ml-2" style={{ fontSize: "22px" }}><b>{companyData.company.companyName}</b></div>
+																		<div className="mb-1 ml-2">{companyData.company.companyAddressLine1}</div>
+																		<div className="mb-1 ml-2">{companyData.company.companyAddressLine2}</div>
+																		{companyData.company.companyCountryCode.countryCode == 229 ?
+																			(strings.POBox + " : ") :
+																			""}  {companyData.company.companyPoBoxNumber} ,&nbsp;
+																		{companyData && (companyData.company.companyStateCode.stateName ? companyData
+																			.company.companyStateCode.stateName + " , " : "")}
+																		{companyData && (companyData.company.companyCountryCode.countryName ? companyData.company.companyCountryCode.countryName : "")}
+																		{/* {companyData.company.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.company.companyRegistrationNumber}</div>)}
 										{companyData.company.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.company.vatNumber}</div>)}
 										<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.company.phoneNumber ? "+" + companyData.company.phoneNumber : '')}</div>
 										{companyData.company.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.company.emailAddress}</div>)} */}
-									</div>
-		
+																	</div>
 
-								</div>
-							</div>
-						</div>
-														
 
+																</div>
+															</div>
 														</div>
-													
+
+
+													</div>
+
 													<div
 														style={{
 															width: '100%',
@@ -278,55 +282,56 @@ class PaySlipModal extends React.Component {
 															borderBottom: '1px solid', borderColor: '#c8ced3'
 														}}
 													>
-														<Col style={{ width: '185%',border: '1px solid', borderColor: '#c8ced3' }}>
+														<Col style={{ width: '100%', maxWidth: '50%', border: '1px solid', borderColor: '#c8ced3' }}>
 															<div
 																style={{
 																	width: '95%',
 																	margin: '0.5rem',
-																	
+
 																}}
 															>
-																
+
 																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.employee_unique_id} </Col><Col className='mt-2 mb-2'>: &nbsp;{empData.employeeCode !== '' ? empData.employeeCode : ('-')}</Col>
 																</Row>
 																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.EmployeeName} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.employeename !== '' ? this.state.selectedData.employeename : ('-')}</Col></Row>
 																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.Designation} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.designation !== '' ? this.state.selectedData.designation : ('-')}</Col></Row>
 
-																	{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.email ? this.state.selectedData.email : ('-')}</Col></Row>				 */}
+																{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.email ? this.state.selectedData.email : ('-')}</Col></Row>				 */}
 
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.dateOfJoining !== '' ?  moment(this.state.selectedData.dateOfJoining).format("DD-MM-YYYY")  : ('-')}</Col>
-																	</Row>
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayPeriod} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payPeriod !== '' ? this.renderPayperiod(this.state.selectedData.payPeriod) : ('-')}</Col>
-																	</Row>
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payDate !== '' ? moment(this.state.selectedData.payDate).format("DD-MM-YYYY") : ('-')}</Col>
-																	</Row>
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.LOPDays} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.lopDays !== '' ? this.state.selectedData.lopDays : ('-')}</Col>
-																	</Row>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.dateOfJoining !== '' ? moment(this.state.selectedData.dateOfJoining).format("DD-MM-YYYY") : ('-')}</Col>
+																</Row>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayPeriod} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payPeriod !== '' ? this.renderPayperiod(this.state.selectedData.payPeriod) : ('-')}</Col>
+																</Row>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payDate !== '' ? moment(this.state.selectedData.payDate).format("DD-MM-YYYY") : ('-')}</Col>
+																</Row>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.LOPDays} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.lopDays !== '' ? this.state.selectedData.lopDays : ('-')}</Col>
+																</Row>
 															</div>
 														</Col>
-														<Col style={{ width: '185%',border: '1px solid', borderColor: '#c8ced3' }}>
-															<div
-																style={{
-																	width: '95%',
-																	margin: '0.5rem',
-																	
-																}}
-															>
-									
-															<Row> <Col className='mt-2 mb-2'>{strings.BankHolderName} </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.accountHolderName ?
-																	bankDetails.accountHolderName : ('-')}</Col></Row>
+														{generateSif &&
+															<Col style={{ width: '185%', border: '1px solid', borderColor: '#c8ced3' }}>
+																<div
+																	style={{
+																		width: '95%',
+																		margin: '0.5rem',
+
+																	}}
+																>
+
+																	<Row> <Col className='mt-2 mb-2'>{strings.BankHolderName} </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.accountHolderName ?
+																		bankDetails.accountHolderName : ('-')}</Col></Row>
 
 
-																<Row> <Col className='mt-2 mb-2'>{strings.AccountNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.accountNumber  ? bankDetails.accountNumber : ('-')}</Col></Row>
+																	<Row> <Col className='mt-2 mb-2'>{strings.AccountNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.accountNumber ? bankDetails.accountNumber : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.BankName}</Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.bankName ? bankDetails.bankName : ('-')}</Col></Row>
+																	<Row> <Col className='mt-2 mb-2'>{strings.BankName}</Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.bankName ? bankDetails.bankName : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.Branch}</Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.branch ? bankDetails.branch : ('-')}</Col></Row>
+																	<Row> <Col className='mt-2 mb-2'>{strings.Branch}</Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.branch ? bankDetails.branch : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.IBanNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.iban ? bankDetails.iban : ('-')}</Col></Row>
+																	<Row> <Col className='mt-2 mb-2'>{strings.IBanNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.iban ? bankDetails.iban : ('-')}</Col></Row>
 
-															</div>
-														</Col>
+																</div>
+															</Col>}
 													</div>
 													<div
 														style={{
@@ -350,84 +355,84 @@ class PaySlipModal extends React.Component {
 																	</tr>
 																</thead>
 																<tbody className=" table-bordered table-hover">
-															{this.state.Fixed &&
-															this.state.Fixed &&
-															this.state.Fixed.map((item, index) => {
-																	return (
-																		<tr key={index}>
-																			{/* <td className="center">{index + 1}</td> */}
-																			<td>{item.componentName}</td>
-																			<td style={{ textAlign:'right' }}>
-																				
-																				{/* {item.componentValue} */}
-																				<Currency
-																				value={item.componentValue}
-																				currencySymbol={
-																					'AED'
-																			   }
-																				/>
-																				</td>
-																			
-																		</tr>
-																	);
-																})}
-																{this.state.FixedAllowance &&
-															this.state.FixedAllowance &&
-															this.state.FixedAllowance.map((item, index) => {
-																	return (
-																		<tr key={index}>
-																			{/* <td className="center">{index + 1}</td> */}
-																			<td>{item.componentName}</td>
-																			<td style={{ textAlign:'right' }}>
-																				{/* {item.componentValue} */}
-																				<Currency
-																				value={item.componentValue}
-																				currencySymbol={
-																					 'AED'
-																				}
-																				/>
-																				</td>
-																			
-																		</tr>
-																	);
-																})}
-																
-																{this.state.Variable &&
-															this.state.Variable &&
-															this.state.Variable.map((item, index) => {
-																	return (
-																		<tr key={index}>
-																			{/* <td className="center">{index + 1}</td> */}
-																			<td>{item.componentName}</td>
-																			<td style={{ textAlign:'right' }}>
+																	{this.state.Fixed &&
+																		this.state.Fixed &&
+																		this.state.Fixed.map((item, index) => {
+																			return (
+																				<tr key={index}>
+																					{/* <td className="center">{index + 1}</td> */}
+																					<td>{item.componentName}</td>
+																					<td style={{ textAlign: 'right' }}>
+
+																						{/* {item.componentValue} */}
+																						<Currency
+																							value={item.componentValue}
+																							currencySymbol={
+																								'AED'
+																							}
+																						/>
+																					</td>
+
+																				</tr>
+																			);
+																		})}
+																	{this.state.FixedAllowance &&
+																		this.state.FixedAllowance &&
+																		this.state.FixedAllowance.map((item, index) => {
+																			return (
+																				<tr key={index}>
+																					{/* <td className="center">{index + 1}</td> */}
+																					<td>{item.componentName}</td>
+																					<td style={{ textAlign: 'right' }}>
+																						{/* {item.componentValue} */}
+																						<Currency
+																							value={item.componentValue}
+																							currencySymbol={
+																								'AED'
+																							}
+																						/>
+																					</td>
+
+																				</tr>
+																			);
+																		})}
+
+																	{this.state.Variable &&
+																		this.state.Variable &&
+																		this.state.Variable.map((item, index) => {
+																			return (
+																				<tr key={index}>
+																					{/* <td className="center">{index + 1}</td> */}
+																					<td>{item.componentName}</td>
+																					<td style={{ textAlign: 'right' }}>
+																						<Currency
+																							value={item.componentValue}
+																							currencySymbol={
+																								'AED'
+																							}
+																						/></td>
+
+																				</tr>
+																			);
+																		})}
+																</tbody>
+																<tfoot className="table-header-bg table-bordered table-hover">
+																	<tr>
+																		{/* <td></td> */}
+																		<td><b>{strings.Gross + " " + strings.Earnings}</b></td>
+																		<td style={{ textAlign: 'right' }}>
 																			<Currency
-																				value={item.componentValue}
-																				currencySymbol={
-																					'AED'
-																			   }
-																				/></td>
-																			
-																		</tr>
-																	);
-																})}
-														</tbody>
-														<tfoot  className="table-header-bg table-bordered table-hover">
-															<tr>
-																{/* <td></td> */}
-																<td><b>{strings.Gross+" "+strings.Earnings}</b></td>
-																<td style={{ textAlign:'right' }}>
-																<Currency
 																				value={this.state.selectedData.earnings}
 																				currencySymbol={
 																					'AED'
-																			   }
-																				/>
-																</td>
-															</tr>
-														</tfoot>
+																				}
+																			/>
+																		</td>
+																	</tr>
+																</tfoot>
 															</Table>
 														</div>
-														<div className=""  style={{ width: "50%" }}>
+														<div className="" style={{ width: "50%" }}>
 															<Table  >
 																<thead className="table-header-bg">
 																	<tr>
@@ -440,47 +445,47 @@ class PaySlipModal extends React.Component {
 
 																	</tr>
 																</thead>
-														<tbody className=" table-bordered table-hover">
-															{this.state.Deduction &&
-															this.state.Deduction &&
-															this.state.Deduction.map((item, index) => {
-																	return (
-																		<tr key={index}>
-																			{/* <td className="center">{index + 1}</td> */}
-																			<td>{item.componentName}</td>
-																			<td style={{ textAlign:'right' }}>
+																<tbody className=" table-bordered table-hover">
+																	{this.state.Deduction &&
+																		this.state.Deduction &&
+																		this.state.Deduction.map((item, index) => {
+																			return (
+																				<tr key={index}>
+																					{/* <td className="center">{index + 1}</td> */}
+																					<td>{item.componentName}</td>
+																					<td style={{ textAlign: 'right' }}>
+																						<Currency
+																							value={item.componentValue}
+																							currencySymbol={
+																								'AED'
+																							}
+																						/>
+																					</td>
+
+																				</tr>
+																			);
+																		})}
+																</tbody>
+																<tfoot className="table-header-bg table-bordered table-hover">
+																	<tr>
+																		{/* <td></td> */}
+																		<td><b>{strings.Total + " " + strings.Deductions}</b></td>
+																		<td style={{ textAlign: 'right' }}>
 																			<Currency
-																				value={item.componentValue}
-																				currencySymbol={
-																					'AED'
-																			   }
-																				/>
-																				</td>
-																			
-																		</tr>
-																	);
-																})}
-														</tbody>
-														<tfoot  className="table-header-bg table-bordered table-hover">
-															<tr>
-																{/* <td></td> */}
-																<td><b>{strings.Total+" "+strings.Deductions}</b></td>
-																<td style={{textAlign:'right' }}>
-																<Currency
 																				value={this.state.selectedData.deductions ? this.state.selectedData.deductions : 0}
 																				currencySymbol={
 																					'AED'
-																			   }
-																				/>
-																	</td>
-															</tr>
-														</tfoot>
+																				}
+																			/>
+																		</td>
+																	</tr>
+																</tfoot>
 															</Table>
 
 														</div>
 
 													</div>
-													
+
 													<div className="text-center"
 														style={{
 															width: '100%',
@@ -490,105 +495,105 @@ class PaySlipModal extends React.Component {
 															backgroundColor: "#e4f8ff"
 														}}
 													>
-														<h5> {strings.Salary+" "+strings.Payable+" (A):"} <b>
-														<Currency
-																				value={this.state.selectedData.netPay}
-																				currencySymbol={
-																					'AED'
-																			   }
-																				/>
-															</b>
+														<h5> {strings.Salary + " " + strings.Payable + " (A):"} <b>
+															<Currency
+																value={this.state.selectedData.netPay}
+																currencySymbol={
+																	'AED'
+																}
+															/>
+														</b>
 														</h5>
-														<h5>	
-															 {/* (	{	upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} ) */}
-														 {/* {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay))).replace("POINT","AND")) : " -" } */}
+														<h5>
+															{/* (	{	upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} ) */}
+															{/* {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay))).replace("POINT","AND")) : " -" } */}
 														</h5>
 													</div>
 
 													{/* Transaction Table start */}
 													<div className='mt-3'>
-													<Table >
-														<thead className="table-header-bg table-bordered">
-															<tr>
-																<th style={{ padding: '0.5rem' }} className='text-center'>#</th>
-																<th style={{ padding: '0.5rem' }} className='text-center'>{strings.TransactionDate}</th>
-																<th style={{ padding: '0.5rem' }} className='text-center'>{strings.TransactionType}</th>
-																<th style={{ padding: '0.5rem' }} className='text-center'>{strings.Category}</th>
-																<th style={{ padding: '0.5rem' }} className='text-center'>{strings.Amount}</th>
-															</tr>
-														</thead>
-														<tbody className=" table-bordered table-hover">
-														{ this.props.transactionList ? (
-																		Object.values(
-																			this.props.transactionList
-																		).map((item, index) => (
-																			item.amount === 0 ? "" :
+														<Table >
+															<thead className="table-header-bg table-bordered">
+																<tr>
+																	<th style={{ padding: '0.5rem' }} className='text-center'>#</th>
+																	<th style={{ padding: '0.5rem' }} className='text-center'>{strings.TransactionDate}</th>
+																	<th style={{ padding: '0.5rem' }} className='text-center'>{strings.TransactionType}</th>
+																	<th style={{ padding: '0.5rem' }} className='text-center'>{strings.Category}</th>
+																	<th style={{ padding: '0.5rem' }} className='text-center'>{strings.Amount}</th>
+																</tr>
+															</thead>
+															<tbody className=" table-bordered table-hover">
+																{this.props.transactionList ? (
+																	Object.values(
+																		this.props.transactionList
+																	).map((item, index) => (
+																		item.amount === 0 ? "" :
 																			<tr key={index}>
 																				<td className='text-center'>{index + 1}</td>
 																				<td>{moment(item.transactionDate).format('DD-MM-YYYY')}</td>
 																				<td>{item.transactionType}</td>
 																				<td>{item.category ? item.category.split('-')[0] : ''}</td>
 																				<td className='text-right'><Currency
-																				value={item.amount ? item.amount : 0}
-																				currencySymbol={
-																					'AED'
-																			   }
+																					value={item.amount ? item.amount : 0}
+																					currencySymbol={
+																						'AED'
+																					}
 																				/></td>
 																			</tr>
-														))) : ''}
-															<tr>
-																<td className='p-3'></td>
-																<td className='p-3'></td>
-																<td className='p-3'></td>
-																<td className='p-3'></td>
-																<td className='p-3'></td>
-															</tr>
-															<tr>
-																<td className='table-header-bg text-right' colSpan={4}><b>{strings.Total + ' (B):'}</b></td>
-																<td className='table-header-bg text-right'><b><Currency
-																	value={Object.values(this.props.transactionList).reduce(
+																	))) : ''}
+																<tr>
+																	<td className='p-3'></td>
+																	<td className='p-3'></td>
+																	<td className='p-3'></td>
+																	<td className='p-3'></td>
+																	<td className='p-3'></td>
+																</tr>
+																<tr>
+																	<td className='table-header-bg text-right' colSpan={4}><b>{strings.Total + ' (B):'}</b></td>
+																	<td className='table-header-bg text-right'><b><Currency
+																		value={Object.values(this.props.transactionList).reduce(
+																			(sum, item) => sum + (item.amount || 0),
+																			0
+																		)}
+																		currencySymbol={
+																			'AED'
+																		}
+																	/></b>
+																	</td>
+																</tr>
+															</tbody>
+														</Table>
+														<div className="text-center"
+															style={{
+																width: '100%',
+
+																border: 'solid 1px', borderColor: '#c8ced3',
+																fontSize: "12px",
+																backgroundColor: "#e4f8ff"
+															}}
+														>
+															<h5> {strings.TotalNet + " " + strings.Payable + " (A+B):"} <b>
+																<Currency
+																	value={this.state.selectedData.netPay + Object.values(this.props.transactionList).reduce(
 																		(sum, item) => sum + (item.amount || 0),
 																		0
 																	)}
 																	currencySymbol={
 																		'AED'
-																		}
-																	/></b>
-																</td>
-															</tr>
-														</tbody>
-													</Table>
-													<div className="text-center"
-														style={{
-															width: '100%',
-
-															border: 'solid 1px', borderColor: '#c8ced3',
-															fontSize: "12px",
-															backgroundColor: "#e4f8ff"
-														}}
-													>
-														<h5> {strings.TotalNet+" "+strings.Payable+" (A+B):"} <b>
-														<Currency
-															value={this.state.selectedData.netPay + Object.values(this.props.transactionList).reduce(
-																(sum, item) => sum + (item.amount || 0),
-																0
-															)}
-															currencySymbol={
-																'AED'
-															}
-														/>
+																	}
+																/>
 															</b>
-														</h5>
-														<h5>	
-															 {/* (	{	upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} ) */}
-														 {/* {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay))).replace("POINT","AND")) : " -" } */}
-														</h5>
-													</div>
+															</h5>
+															<h5>
+																{/* (	{	upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} ) */}
+																{/* {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay))).replace("POINT","AND")) : " -" } */}
+															</h5>
+														</div>
 													</div>
 													{/* Transaction Table end */}
-													
+
 												</CardBody>
-												<div className="text-center" style={{color:"#979b9f",    margin: "20px"}}>{strings.PayslipNote}</div>
+												<div className="text-center" style={{ color: "#979b9f", margin: "20px" }}>{strings.PayslipNote}</div>
 											</PDFExport>
 										</div>
 									</Col>

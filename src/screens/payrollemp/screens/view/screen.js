@@ -14,9 +14,11 @@ import {
 	Table,
 	Button,
 	UncontrolledTooltip,
+	FormGroup,
 } from 'reactstrap';
 import * as EmployeeViewActions from "./actions"
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import { ConfirmDeleteModal } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
@@ -66,7 +68,9 @@ class ViewEmployee extends React.Component {
 			FixedAllowance: [],
 			CTC: '',
 			current_employee_id: '',
-			transactionList: []
+			transactionList: [],
+			dialog: null,
+			isEmployeeDeletable: true,
 		};
 
 
@@ -266,6 +270,7 @@ class ViewEmployee extends React.Component {
 									? this.state.userPhoto.concat(res.data.profileImageBinary)
 									: [],
 								loading: false,
+								isEmployeeDeletable: res.data.isEmployeeDeletable,
 							},
 							() => {
 
@@ -320,6 +325,56 @@ class ViewEmployee extends React.Component {
 			this.props.history.push('/admin/master/employee');
 		}
 	};
+	deleteEmployee = () => {
+		const { current_employee_id } = this.state;
+		const message1 =
+			<text>
+				<b>Delete Employee?</b>
+			</text>
+		const message = 'This Employee will be deleted permanently and cannot be recovered. ';
+		this.setState({
+			dialog: (
+				<ConfirmDeleteModal
+					isOpen={true}
+					okHandler={this.removeEmployee}
+					cancelHandler={this.removeDialog}
+					message1={message1}
+					message={message}
+				/>
+			),
+
+		});
+	};
+	removeEmployee = () => {
+		this.setState({ disabled1: true });
+		const { current_employee_id } = this.state;
+		this.setState({ loading: true, loadingMsg: "Deleting Employee..." });
+		this.props.employeeViewActions
+			.deleteEmployee(current_employee_id)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						res.data ? res.data.message : 'Employee Deleted Successfully!',
+					);
+
+					this.props.history.push('/admin/master/employee');
+					this.setState({ loading: false, });
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err.data ? err.data.message : 'Employee Deleted Unsuccessfully',
+				);
+			});
+	};
+
+	removeDialog = () => {
+		this.setState({
+			dialog: null,
+		});
+	};
 	getPhoto = () => {
 		// let image ="data:image/png;base64, "+ this.state.userPhoto[0];
 		let image = this.state.userPhoto.length !== 0
@@ -330,7 +385,7 @@ class ViewEmployee extends React.Component {
 		return image;
 	}
 	renderSalaryDate = (cell, row) => {
-		let salaryDateString = moment(row.salaryDate).format('DD/MM/YYYY')
+		let salaryDateString = moment(row.salaryDate).format('DD-MM-YYYY')
 		return salaryDateString
 	}
 	getEmployeeInviteEmail = () => {
@@ -346,11 +401,12 @@ class ViewEmployee extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { profile } = this.props;
 		const { generateSif } = this.props.company_details;
+		const { dialog, isEmployeeDeletable } = this.state;
 		return (
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">
+					{dialog}
 					<Card>
-
 						<CardBody>
 							<Row>
 								<Col>
@@ -416,13 +472,12 @@ class ViewEmployee extends React.Component {
 											<Card style={{ height: '621px' }}>
 												<div >
 													<CardBody className='m-4'>
-
-														<Row>
+														{generateSif && <Row>
 															<Col>
 																<label> <b>{strings.EmployementDetails} </b></label>
 															</Col>
 															<Col>
-																{generateSif && <Button
+																<Button
 																	color="primary"
 																	className="btn-square pull-right mb-2"
 																	style={{ marginBottom: '10px' }}
@@ -433,9 +488,9 @@ class ViewEmployee extends React.Component {
 																	}
 																>
 																	<i class="far fa-edit"></i>
-																</Button>}
+																</Button>
 															</Col>
-														</Row>
+														</Row>}
 
 														<div className='text-center'>
 
@@ -483,14 +538,17 @@ class ViewEmployee extends React.Component {
 																	>
 																		Date of Joining
 																	</UncontrolledTooltip>  &nbsp;{this.state.EmployeeDetails.dateOfJoining ? this.state.EmployeeDetails.dateOfJoining : '-'}</span></div>
-																<div className='mt-2 mb-2' >
-																	<UncontrolledTooltip
-																		placement="left"
-																		target="department"
-																	>
-																		Department
-																	</UncontrolledTooltip>
-																	<span id="department"> <i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</span></div>
+																{generateSif &&
+																	<div className='mt-2 mb-2' >
+																		<UncontrolledTooltip
+																			placement="left"
+																			target="department"
+																		>
+																			Department
+																		</UncontrolledTooltip>
+																		<span id="department"> <i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</span>
+																	</div>
+																}
 															</div>
 														</div>
 														<hr></hr>
@@ -772,7 +830,29 @@ class ViewEmployee extends React.Component {
 								</TabPane>
 
 							</TabContent>
-
+							<Row>
+								<Col>
+									<p><b>Note:</b> Employees cannot be deleted once a transaction has beed created for them</p>
+								</Col>
+							</Row>
+							<Row>
+								<Col>
+									{isEmployeeDeletable && <FormGroup>
+										<Button
+											type="button"
+											name="button"
+											color="danger"
+											className="btn-square"
+											disabled1={this.state.disabled1}
+											onClick={this.deleteEmployee}
+										>
+											<i className="fa fa-trash"></i> {this.state.disabled1
+												? 'Deleting...'
+												: strings.Delete}
+										</Button>
+									</FormGroup>}
+								</Col>
+							</Row>
 						</CardBody>
 					</Card>
 				</div>

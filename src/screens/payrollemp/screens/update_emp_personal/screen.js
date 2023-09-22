@@ -177,7 +177,7 @@ class UpdateEmployeePersonal extends React.Component {
                                     ? res.data.salaryRoleId
                                     : '',
                             dob: res.data.dob
-                                ? moment(res.data.dob).format('DD-MM-YYYY')
+                                ? res.data.dob
                                 : '',
                             dateOfJoining: res.data.dateOfJoining
                                 ? moment(res.data.dateOfJoining, 'DD-MM-YYYY').toDate()
@@ -442,7 +442,7 @@ class UpdateEmployeePersonal extends React.Component {
             'email',
             email !== null ? email : '',
         );
-        formData.append('dob', dob ? dob : '');
+        formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
         formData.append('gender', gender);
 
         // formData.append('bloodGroup', bloodGroup);
@@ -548,6 +548,7 @@ class UpdateEmployeePersonal extends React.Component {
         })
     }
     underAge = (birthday) => {
+        birthday=moment(birthday).format('DD-MM-YYYY')
         let dateArray = birthday.split("-")
         let birthdate = dateArray[1] + "/" + dateArray[0] + "/" + dateArray[2]
         // set current day on 01:00:00 hours GMT+0100 (CET)
@@ -560,12 +561,14 @@ class UpdateEmployeePersonal extends React.Component {
         else
             return false;
     }
-    selectedDate = (props) => {
+    selectedDate = (dob) => {
 
-        if (props.values.dob && props.values.dob != "") {
-            let date = props.values.dob.split("-")
+        if (dob && dob != "") {
+            let date = dob.split("-")
             let d = date[1] + "/" + date[0] + "/" + date[2]
+            // console.log(new Date(moment(props.values.dob,'DD-MM-YYYY').format('MM-DD-YYYY')));
             return new Date(d);
+            // return new Date(moment(props.values.dob,'DD-MM-YYYY').format('MM-DD-YYYY'));
         }
         else
             return new Date()
@@ -622,6 +625,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                 this.handleSubmit(values)
                                                             }}
                                                             validate={(values) => {
+                                                                console.log(values)
                                                                 let errors = {};
                                                                 if (this.state.emailExist == true) {
                                                                     errors.email = 'Email already exists';
@@ -851,10 +855,17 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             name="firstName"
                                                                                             value={props.values.firstName}
                                                                                             placeholder={strings.Enter + strings.FirstName}
-                                                                                            onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value))
-                                                                                                option = upperFirst(option.target.value)
-                                                                                                 { props.handleChange('firstName')(option) }
+                                                                                                onChange={(option) => {
+                                                                                                    if (
+                                                                                                        option.target.value === '' ||
+                                                                                                        this.regExAlpha.test(
+                                                                                                            option.target.value,
+                                                                                                        )
+                                                                                                    ) {
+
+                                                                                                        let option1 = upperFirst(option.target.value)
+                                                                                                        props.handleChange('firstName')(option1);
+                                                                                                    }
                                                                                             }}
                                                                                             className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
                                                                                         />
@@ -872,11 +883,18 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             name="middleName"
                                                                                             value={props.values.middleName}
                                                                                             placeholder={strings.Enter + strings.MiddleName}
-                                                                                            onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value)) 
-                                                                                                option = upperFirst(option.target.value)
-                                                                                                { props.handleChange('middleName')(option) }
-                                                                                            }}
+                                                                                                onChange={(option) => {
+                                                                                                    if (
+                                                                                                        option.target.value === '' ||
+                                                                                                        this.regExAlpha.test(
+                                                                                                            option.target.value,
+                                                                                                        )
+                                                                                                    ) {
+
+                                                                                                        let option1 = upperFirst(option.target.value)
+                                                                                                        props.handleChange('middleName')(option1);
+                                                                                                    }
+                                                                                                }}
                                                                                             className={props.errors.middleName && props.touched.middleName ? "is-invalid" : ""}
                                                                                         />
                                                                                         {props.errors.middleName && props.touched.firstName && (
@@ -893,11 +911,18 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             name="lastName"
                                                                                             value={props.values.lastName}
                                                                                             placeholder={strings.Enter + strings.LastName}
-                                                                                            onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regExAlpha.test(option.target.value))
-                                                                                                option = upperFirst(option.target.value)
-                                                                                                 { props.handleChange('lastName')(option) }
-                                                                                            }}
+                                                                                                onChange={(option) => {
+                                                                                                    if (
+                                                                                                        option.target.value === '' ||
+                                                                                                        this.regExAlpha.test(
+                                                                                                            option.target.value,
+                                                                                                        )
+                                                                                                    ) {
+
+                                                                                                        let option1 = upperFirst(option.target.value)
+                                                                                                        props.handleChange('lastName')(option1);
+                                                                                                    }
+                                                                                                }}
                                                                                             className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
                                                                                         />
                                                                                         {props.errors.lastName && props.touched.lastName && (
@@ -964,7 +989,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             /></div>
                                                                                         {props.errors.mobileNumber &&
                                                                                             props.touched.mobileNumber && (
-                                                                                                <div style={{ color: "red" }}>
+                                                                                                    <div style={{ color: "#f86c6b", fontSize: '0.71rem', marginTop: '0.25rem'}}>
                                                                                                     {props.errors.mobileNumber}
                                                                                                 </div>
                                                                                             )}
@@ -985,11 +1010,11 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             autoComplete={"off"}
                                                                                             dateFormat="dd-MM-yyyy"
                                                                                             dropdownMode="select"
-                                                                                            selected={this.selectedDate(props)}
-                                                                                            value={props.values.dob}
+                                                                                            selected={this.selectedDate(moment(props.values.dob).format('DD-MM-YYYY'))}
+                                                                                            value={moment(props.values.dob,'DD-MM-YYYY').toDate()}
                                                                                             onChange={(value) => {
                                                                                                 if (value) {
-                                                                                                    props.handleChange("dob")(moment(value).format("DD-MM-YYYY"))
+                                                                                                    props.handleChange("dob")(value)
                                                                                                 } else {
                                                                                                     props.handleChange("dob")('')
 

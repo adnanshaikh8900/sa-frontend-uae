@@ -87,6 +87,20 @@ import {
 //   }
 
 
+export const deleteEmployee = (id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'delete',
+		url: `/rest/employee/delete?id=${id}`,
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
   export const getEmployeeInviteEmail = (_id) => {
 	return (dispatch) => {
 	  let data = {

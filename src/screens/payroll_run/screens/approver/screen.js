@@ -135,7 +135,7 @@ class PayrollApproverScreen extends React.Component {
 			if (res.status === 200) {
 				//pay period date format 
 				let dateArr = res.data.payPeriod.split("-");
-				let payPeriodString = moment(dateArr[0]).format('DD-MM-YYYY') + " - " + moment(dateArr[1]).format('DD-MM-YYYY')
+				let payPeriodString = dateArr[0].replaceAll('/','-') + " - " + dateArr[1].replaceAll('/','-')
 
 				this.setState({
 					loading: false,
@@ -251,6 +251,7 @@ class PayrollApproverScreen extends React.Component {
 			startDate: startDate,
 			endDate: endDate,
 		};
+		debugger
 		this.props.createPayrollActions
 			.approveAndRunPayroll(postData)
 			.then((res) => {
@@ -349,25 +350,25 @@ class PayrollApproverScreen extends React.Component {
 			'name',
 			name != null ? name : '',
 		)
-		this.props.salaryStructureCreateActions
-			.createSalaryStructure(formData)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						'New Salary Structure Created Successfully')
-					if (this.state.createMore) {
-						this.setState({
-							createMore: false
-						})
-						// resetForm(this.state.initValue)
-					} else {
-						this.props.history.push('/admin/payroll/config', { tabNo: '2' })
-					}
-				}
-			}).catch((err) => {
-				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-			})
+		// this.props.salaryStructureCreateActions
+		// 	.createSalaryStructure(formData)
+		// 	.then((res) => {
+		// 		if (res.status === 200) {
+		// 			this.props.commonActions.tostifyAlert(
+		// 				'success',
+		// 				'New Salary Structure Created Successfully')
+		// 			if (this.state.createMore) {
+		// 				this.setState({
+		// 					createMore: false
+		// 				})
+		// 				// resetForm(this.state.initValue)
+		// 			} else {
+		// 				this.props.history.push('/admin/payroll/config', { tabNo: '2' })
+		// 			}
+		// 		}
+		// 	}).catch((err) => {
+		// 		this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+		// 	})
 	}
 	setDate = (props, value) => {
 		const { term } = this.state;
@@ -1078,8 +1079,9 @@ class PayrollApproverScreen extends React.Component {
 																		<Col>
 
 																			<FormGroup>
-																				{this.state.status && (this.state.status === "Rejected" || this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Draft") ?
+																				{this.state.status && (this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Draft") ?
 																					'' : (
+																						this.state.status &&( this.state.status === "Submitted" || this.state.status === "Rejected" || this.state.status === "Approved")&& this.props.location?.state?.user !== 'Generator' &&
 																						<div>
 
 																							<Label htmlFor="payrollSubject">
@@ -1094,7 +1096,7 @@ class PayrollApproverScreen extends React.Component {
 																								id="comment"
 																								name="comment"
 																								value={this.state.comment}
-																								disabled={this.state.status == "Voided" ? true : false}
+																								disabled={this.state.status == "Voided" || this.state.status === "Rejected" ? true : false}
 																								placeholder={strings.Enter + "reason"}
 																								onChange={(event) => {
 																									props.handleChange('comment')(event.target.value);

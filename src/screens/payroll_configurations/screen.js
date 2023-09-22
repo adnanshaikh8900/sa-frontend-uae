@@ -78,7 +78,7 @@ class PayrollConfigurations extends React.Component {
 			initValue: {
 				companyBankCode: '',
 				companyNumber: '',
-			    generateSif:true,
+				generateSif: true,
 			},
 			current_employee_id: '',
 		};
@@ -486,7 +486,6 @@ class PayrollConfigurations extends React.Component {
 	toggle = (tabPane, tab) => {
 		const newArray = this.state.activeTab.slice();
 		newArray[parseInt(tabPane, 10)] = tab;
-		console.log(tab);
 		this.setState({
 			activeTab: newArray,
 		});
@@ -504,7 +503,10 @@ class PayrollConfigurations extends React.Component {
 						'success',
 						'Company Details Saved Successfully',
 					);
-					// this.props.closeModal(false);				
+					// this.props.closeModal(false);	
+					this.props.history.push(
+						'/admin/payroll/payroll-run',
+					);			
 				}
 			})
 			.catch((err) => {
@@ -517,7 +519,6 @@ class PayrollConfigurations extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		console.log(this.state.Fixed)
 		const { loading, dialog, initValue } = this.state;
 		const { salaryRole_list, salaryStructure_list, designation_list } = this.props;
 		const { generateSif } = this.props.company_details;
@@ -1188,6 +1189,7 @@ class PayrollConfigurations extends React.Component {
 																								if (props.errors && Object.keys(props.errors).length != 0)
 																									this.props.commonActions.fillManDatoryDetails();
 																							}}
+
 																						>
 																							<i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
 																								? 'Saving...'

@@ -67,11 +67,11 @@ class UpdateSalaryComponent extends React.Component {
             openSalaryComponentDeduction: false,
             loadingMsg: "Loading....",
             disableLeavePage: false,
-            ctcTypeOption: this.props.location.state.ctcTypeOption ? this.props.location.state.ctcTypeOption : { label: "ANNUALLY", value: 1 },
-            ctcType: this.props.location.state.ctcTypeOption ? this.props.location.state.ctcTypeOption.label : "ANNUALLY",
+            ctcTypeOption: this.props.location.state.ctcTypeOption ? this.props.location.state.ctcTypeOption : { label: "MONTHLY", value: 2 },
+            ctcType: this.props.location.state.ctcTypeOption ? this.props.location.state.ctcTypeOption.label : "MONTHLY",
             ctcTypeList: [
-                { label: "ANNUALLY", value: 1 },
                 { label: "MONTHLY", value: 2 },
+                { label: "ANNUALLY", value: 1 },
             ]
         }
 
@@ -588,19 +588,6 @@ class UpdateSalaryComponent extends React.Component {
                                                                             <Label><span className="text-danger">*</span>  {strings.CosttoCompany}  ( CTC )
                                                                                 : </Label>
                                                                             <div style={{ display: "flex" }}>
-                                                                                <div style={{ width: "-webkit-fill-available" }}>
-                                                                                    <Select
-                                                                                        options={this.state.ctcTypeList}
-                                                                                        id="ctcTypeOption"
-                                                                                        name="ctcTypeOption"
-                                                                                        className="mr-2"
-                                                                                        value={this.state.ctcTypeOption}
-                                                                                        onChange={(e) => {
-                                                                                            this.setState({ ctcTypeOption: e, ctcType: e.label })
-                                                                                            this.updateSalary(e.label == "ANNUALLY" ? props.values.CTC : parseFloat(props.values.CTC) * 12);
-                                                                                        }}
-                                                                                    />
-                                                                                </div>
                                                                                 <div>
                                                                                     <Input
                                                                                         type="text"
@@ -623,7 +610,21 @@ class UpdateSalaryComponent extends React.Component {
                                                                                     />
                                                                                     {props.errors.CTC && props.touched.CTC && (
                                                                                         <div className="invalid-feedback">{props.errors.CTC}</div>
-                                                                                    )}</div>
+                                                                                    )}
+                                                                                </div>
+                                                                                <div style={{ width: "-webkit-fill-available" }}>
+                                                                                    <Select
+                                                                                        options={this.state.ctcTypeList}
+                                                                                        id="ctcTypeOption"
+                                                                                        name="ctcTypeOption"
+                                                                                        className="mr-2"
+                                                                                        value={this.state.ctcTypeOption}
+                                                                                        onChange={(e) => {
+                                                                                            this.setState({ ctcTypeOption: e, ctcType: e.label })
+                                                                                            this.updateSalary(e.label == "ANNUALLY" ? props.values.CTC : parseFloat(props.values.CTC) * 12);
+                                                                                        }}
+                                                                                    />
+                                                                                </div>
                                                                             </div>
 
                                                                         </FormGroup>

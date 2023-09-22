@@ -65,7 +65,7 @@ class SalaryComponentDeduction extends React.Component {
 		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 		this.type = [
 			{ label: 'Flat Amount', value: 1 },
-			{ label: '% of Basic', value: 2 }
+			{ label: '% of CTC', value: 2 }
 		];
 	}
 
@@ -215,18 +215,24 @@ class SalaryComponentDeduction extends React.Component {
 									if (values.type=="") {
 										errors.type = 'Type is required';
 									}
-									if (values.flatAmount=="") {
-										errors.flatAmount = 'Flat amount is required';
-									}else if (values.flatAmount==0) {
+									// if (values.flatAmount=="") {
+									// 	errors.flatAmount = 'Flat amount is required';
+									// }else if (values.flatAmount==0) {
+									// 	errors.flatAmount="Flat Amount should be greater than zero"
+									// }
+
+									if(values.type.label && values.type.label ==="% of CTC" && values.formula==""){
+										errors.formula="Percentage is required"
+									}else
+									if(values.type.label && values.type.label ==="% of CTC" && values.formula==0){
+										errors.formula="Percentage should be greater than zero"
+									}else
+									if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount==""){
+										errors.flatAmount="Flat Amount is required"
+									}else
+									if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount==0){
 										errors.flatAmount="Flat Amount should be greater than zero"
 									}
-
-									// if(values.type.label && values.type.label ==="% of Basic" && values.formula==""){
-									// 	errors.formula="Percentage is required"
-									// }else
-									// if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount==""){
-									// 	errors.flatAmount="Flat Amount is required"
-									// }
 						}
 						else if(this.state.selectDisable===true && (!values.id || values.id.label== "Select Type")){
 							   errors.id="Component is required"
@@ -388,12 +394,11 @@ class SalaryComponentDeduction extends React.Component {
 
 									
 										</Row>
-										{/* <Row>
+										<Row>
 											<Col md="8">
 												<FormGroup>
 													<Label htmlFor="gender">	<span className="text-danger">* </span>{strings.Type}</Label>
 													<Select
-														isDisabled
 														options={
 															this.type
 																? selectOptionsFactory.renderOptions(
@@ -434,7 +439,7 @@ class SalaryComponentDeduction extends React.Component {
 													)}
 												</FormGroup>
 											</Col>
-										</Row> */}
+										</Row>
 
 
 										<Row style={{ display: props.values.type.value !== 2 ? 'none' : '' }}>

@@ -566,7 +566,9 @@ class UpdateEmployeePersonal extends React.Component {
         if (dob && dob != "") {
             let date = dob.split("-")
             let d = date[1] + "/" + date[0] + "/" + date[2]
+            // console.log(new Date(moment(props.values.dob,'DD-MM-YYYY').format('MM-DD-YYYY')));
             return new Date(d);
+            // return new Date(moment(props.values.dob,'DD-MM-YYYY').format('MM-DD-YYYY'));
         }
         else
             return new Date()

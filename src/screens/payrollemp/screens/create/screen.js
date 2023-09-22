@@ -156,6 +156,8 @@ class CreateEmployeePayroll extends React.Component {
       sifEnabled: true,
       otherDetails: false,
       newDesig: false,
+      varEarn: false,
+      grossSalarys: 0,
       initValue: {
         designationName: "",
         firstName: "",
@@ -237,11 +239,11 @@ class CreateEmployeePayroll extends React.Component {
       emailExist: false,
       loadingMsg: "Loading...",
       disableLeavePage: false,
-      ctcTypeOption: { label: "ANNUALLY", value: 1 },
-      ctcType: "ANNUALLY",
+      ctcTypeOption: { label: "MONTHLY", value: 2 },
+      ctcType: "MONTHLY",
       ctcTypeList: [
-        { label: "ANNUALLY", value: 1 },
         { label: "MONTHLY", value: 2 },
+        { label: "ANNUALLY", value: 1 },
       ],
     };
     this.formRef = React.createRef();
@@ -378,6 +380,7 @@ class CreateEmployeePayroll extends React.Component {
       .getSalaryComponentByEmployeeId(this.state.employeeid)
       .then((res) => {
         if (res.status === 200) {
+          console.log('Salary Component = ',res.data)
           this.setState({
             Fixed: res.data.salaryComponentResult.Fixed,
             Variable: res.data.salaryComponentResult.Variable,
@@ -511,7 +514,8 @@ class CreateEmployeePayroll extends React.Component {
 
     const formData = new FormData();
     formData.append("employee", this.state.employeeid);
-    formData.append("grossSalary", CTC != null ? CTC : "");
+    formData.append("grossSalary", (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 ));
+    formData.append("totalNetPay", this.totalEarnings());
     formData.append(
       "ctcType",
       this.state.ctcTypeOption.label
@@ -543,6 +547,59 @@ class CreateEmployeePayroll extends React.Component {
         );
       });
   };
+  totalEarnings = () => {
+    const totalMonthlyAmount = Object.values(this.state.Fixed).reduce((total, item) => {
+      if (typeof item.monthlyAmount == 'string') {
+        total += parseFloat(item.monthlyAmount);
+      } else {
+        total += item.monthlyAmount
+      }
+      return total;
+    }, 0);
+    const totalMonthlyEarnings = totalMonthlyAmount ? totalMonthlyAmount : 0
+    return totalMonthlyEarnings;
+  }
+  totalYearEarnings = () => {
+    const totalYearlyAmount = Object.values(this.state.Fixed).reduce((total, item) => {
+      if (typeof item.yearlyAmount == 'string') {
+        total += parseFloat(item.yearlyAmount);
+      } else {
+        total += item.yearlyAmount
+      }
+      return total;
+    }, 0);
+    const totalYearlyEarnings = totalYearlyAmount ? totalYearlyAmount : 0
+    return totalYearlyEarnings;
+  }
+  totalDeductions = () => {
+    const totalMonthlyDeduction = Object.values(this.state.Deduction).reduce((total, item) => {
+      if (typeof item.monthlyAmount == 'string') {
+        total += parseFloat(item.monthlyAmount);
+      } else {
+        total += item.monthlyAmount
+      }
+      return total;
+    }, 0);
+    const totalMonthlyDeductions = totalMonthlyDeduction ? totalMonthlyDeduction : 0
+    return totalMonthlyDeductions;
+  }
+  totalYearDeductions = () => {
+    const totalYearlyDeduction = Object.values(this.state.Deduction).reduce((total, item) => {
+      if (typeof item.yearlyAmount == 'string') {
+        total += parseFloat(item.yearlyAmount);
+      } else {
+        total += item.yearlyAmount
+      }
+      return total;
+    }, 0);
+    const totalYearlyDeductions = totalYearlyDeduction ? totalYearlyDeduction : 0
+    return totalYearlyDeductions;
+  }
+  grossEarnings = () => {
+    const grossEarning = (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 )
+    // this.setState({grossSalarys : grossEarning})
+    return grossEarning;
+  }
   removeComponent = (ComponentId) => {
     this.props.detailSalaryComponentAction
       .deleteSalaryComponentRow(this.state.employeeid, ComponentId)
@@ -1059,7 +1116,6 @@ class CreateEmployeePayroll extends React.Component {
     const Variable = this.state.Variable;
     const Deduction = this.state.Deduction;
     const FixedAllowance = this.state.FixedAllowance;
-
     var locallist = [];
     var basicSalaryAnnulay = 0;
     var basicSalaryMonthy = 0;
@@ -1077,8 +1133,8 @@ class CreateEmployeePayroll extends React.Component {
         obj.description != "Basic SALARY" &&
         obj.formula.length > 0
       ) {
-        var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-        var salaryAnnulay = salaryMonthy * 12;
+        var salaryAnnulay = CTC * (obj.formula / 100);
+        var salaryMonthy = salaryAnnulay / 12;
         obj.monthlyAmount = salaryMonthy;
         obj.yearlyAmount = salaryAnnulay;
         totalFixedSalary = totalFixedSalary + salaryMonthy;
@@ -1122,8 +1178,8 @@ class CreateEmployeePayroll extends React.Component {
           obj.description != "Basic SALARY" &&
           obj.formula.length > 0
         ) {
-          var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-          var salaryAnnulay = salaryMonthy * 12;
+          var salaryAnnulay = CTC * (obj.formula / 100)
+          var salaryMonthy = salaryAnnulay / 12;
           obj.monthlyAmount = salaryMonthy;
           obj.yearlyAmount = salaryAnnulay;
           totalFixedSalary = totalFixedSalary + salaryMonthy;
@@ -1211,8 +1267,8 @@ class CreateEmployeePayroll extends React.Component {
             obj.formula = newFormula;
           }
         }
-        var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-        var salaryAnnulay = salaryMonthy * 12;
+        var salaryAnnulay = CTC1 * (obj.formula / 100);
+        var salaryMonthy = salaryAnnulay / 12;
         obj.monthlyAmount = salaryMonthy;
         obj.yearlyAmount = salaryAnnulay;
         totalFixedSalary = totalFixedSalary + salaryMonthy;
@@ -1284,8 +1340,8 @@ class CreateEmployeePayroll extends React.Component {
               obj.formula = newFormula;
             }
           }
-          var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-          var salaryAnnulay = salaryMonthy * 12;
+          var salaryAnnulay = CTC * (obj.formula / 100)
+          var salaryMonthy = salaryAnnulay / 12;
           obj.monthlyAmount = salaryMonthy;
           obj.yearlyAmount = salaryAnnulay;
           totalFixedSalary = totalFixedSalary + salaryMonthy;
@@ -4989,54 +5045,22 @@ class CreateEmployeePayroll extends React.Component {
                                 className="mt-3"
                                 style={{
                                   textAlign: "center",
-                                  display: "inline-grid",
+                                  display: "grid",
                                 }}
                               >
-                                <Label>
-                                  <span className="text-danger">* </span> Cost
-                                  To Company ( CTC )
-                                  {/* <i				id="CtcTooltip"
-																				className="fa fa-question-circle ml-1"
-																			></i>
-																			<UncontrolledTooltip
-																				placement="right"
-																				target="CtcTooltip"
-																			>
-																				Cost To Company -  It indicates the total amount of expenses an company (organisation) spends on an employee during one year.
-																			</UncontrolledTooltip> */}
-                                  :{" "}
-                                </Label>
-                                <div style={{ display: "flex" }}>
-                                  <div
-                                    style={{ width: "-webkit-fill-available" }}
-                                  >
-                                    <Select
-                                      options={this.state.ctcTypeList}
-                                      id="ctcTypeOption"
-                                      name="ctcTypeOption"
-                                      className="mr-2"
-                                      value={this.state.ctcTypeOption}
-                                      onChange={(e) => {
-                                        this.setState({
-                                          ctcTypeOption: e,
-                                          ctcType: e.label,
-                                        });
-                                        this.updateSalary(
-                                          e.label == "ANNUALLY"
-                                            ? props.values.CTC
-                                            : parseFloat(props.values.CTC) * 12
-                                        );
-                                      }}
-                                    />
-                                  </div>
-                                  <div>
+                                <div style={{ display: "flex", textAlign: "center", justifyContent: 'center' }}>
+                                <h4 style={{ width: "30%", display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignContent: 'center' }} className="mb-0">
+                                  <span className="text-danger">*{" "}</span>Cost
+                                  To Company ( CTC ) : {" "}
+                                </h4>
+                                  <div style={{ width: "20%", paddingRight: "2%" }}>
                                     <Input
                                       type="text"
                                       id="CTC"
                                       size="30"
                                       name="CTC"
                                       maxLength="10"
-                                      style={{ textAlign: "center" }}
+                                      style={{ textAlign: "center"}}
                                       value={props.values.CTC}
                                       placeholder={
                                         this.state.ctcType == "MONTHLY"
@@ -5070,6 +5094,28 @@ class CreateEmployeePayroll extends React.Component {
                                       </div>
                                     )}
                                   </div>
+                                  <div
+                                    style={{ width: "20%" }}
+                                  >
+                                    <Select
+                                      options={this.state.ctcTypeList}
+                                      id="ctcTypeOption"
+                                      name="ctcTypeOption"
+                                      className="mr-2"
+                                      value={this.state.ctcTypeOption}
+                                      onChange={(e) => {
+                                        this.setState({
+                                          ctcTypeOption: e,
+                                          ctcType: e.label,
+                                        });
+                                        this.updateSalary(
+                                          e.label == "ANNUALLY"
+                                            ? props.values.CTC
+                                            : parseFloat(props.values.CTC) * 12
+                                        );
+                                      }}
+                                    />
+                                  </div>
                                 </div>
                               </FormGroup>
                             </div>
@@ -5078,34 +5124,18 @@ class CreateEmployeePayroll extends React.Component {
                             <Row className="m-4">
                               <Col lg={9}>
                                 <Row className="ml-2">
-                                  <h4>{strings.FixedEarnings}</h4>
-
-                                  <Button
-                                    color="link"
-                                    className=" mr-3 mb-3"
-                                    onClick={(e, props) => {
-                                      this.openSalaryComponentFixed(props);
-                                      this.renderActionForState();
-                                    }}
-                                  >
-                                    <i className="fa fa-plus"></i>{" "}
-                                    {strings.AddFixed}
-                                  </Button>
+                                  <h4>{strings.Earnings}</h4>
                                 </Row>
 
                                 <Table
                                   className="text-center"
                                   style={{
-                                    border: "3px solid #c8ced3",
                                     width: "133%",
                                   }}
                                 >
-                                  <thead
-                                    style={{ border: "3px solid #c8ced3" }}
-                                  >
+                                  <thead>
                                     <tr
                                       style={{
-                                        border: "3px solid #c8ced3",
                                         background: "#dfe9f7",
                                         color: "Black",
                                       }}
@@ -5113,7 +5143,7 @@ class CreateEmployeePayroll extends React.Component {
                                       {this.state.Fixed
                                         ? this.columnHeader1.map(
                                             (column, index) => {
-                                              return <th>{column.label}</th>;
+                                              return <th style={{border: "3px solid #c8ced3"}}>{column.label}</th>;
                                             }
                                           )
                                         : ""}
@@ -5139,7 +5169,8 @@ class CreateEmployeePayroll extends React.Component {
                                             >
                                               <Input
                                                 type="number"
-                                                min="0"
+                                                min="1"
+                                                max="100"
                                                 size="30"
                                                 style={{ textAlign: "center" }}
                                                 id="formula"
@@ -5164,10 +5195,7 @@ class CreateEmployeePayroll extends React.Component {
                                                   }
                                                 }}
                                               />
-                                              {item.description !==
-                                              "Basic SALARY"
-                                                ? " % of Basic"
-                                                : " % of CTC"}
+                                              {" % of CTC"}
                                             </td>
                                           ) : (
                                             <td
@@ -5266,7 +5294,7 @@ class CreateEmployeePayroll extends React.Component {
                                                 : 0.0}
                                             </td>
                                           )}
-                                          <td>
+                                          <td style={{border: 'none'}}>
                                             {item.description !==
                                             "Basic SALARY" ? (
                                               <Button
@@ -5284,10 +5312,36 @@ class CreateEmployeePayroll extends React.Component {
                                         </tr>
                                       )
                                     )}
+                                    <tr>
+                                      <td colSpan={4} style={{ border: "3px solid  #c8ced3" }}>
+                                        <Button
+                                          color="link"
+                                          className="pull-left"
+                                          onClick={(e, props) => {
+                                            this.openSalaryComponentFixed(props);
+                                            this.renderActionForState();
+                                          }}
+                                        >
+                                          <i className="fa fa-plus"></i>{" "}
+                                          {strings.AddEarnings}
+                                        </Button>
+                                      </td>
+                                    </tr>
+                                    <tr style={{background: "#dfe9f7", color: "Black" }}>
+                                      <td colSpan={2} style={{border: "3px solid #c8ced3"}}>
+                                        <b className="pull-left">{strings.TotalEarnings+' (A):'}</b>
+                                      </td>
+                                      <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                        {this.totalEarnings()}
+                                      </b></td>
+                                      <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                        {this.totalYearEarnings()}
+                                      </b></td>
+                                    </tr>
                                   </tbody>
                                 </Table>
                               </Col>
-                              <Col lg={9}>
+                              {this.state.varEarn === true && <Col lg={9}>
                                 <Row className="ml-2">
                                   <h4> {strings.VariableEarnings}</h4>
                                   <Button
@@ -5381,7 +5435,7 @@ class CreateEmployeePayroll extends React.Component {
                                                   )}
                                                   id=""
                                                 />{" "}
-                                                % of Basic
+                                                % of CTC
                                               </td>
                                             ) : (
                                               <td
@@ -5512,46 +5566,24 @@ class CreateEmployeePayroll extends React.Component {
                                     )}
                                   </tbody>
                                 </Table>
-                              </Col>
+                              </Col>}
                               <Col lg={9}>
-                                <Row className="ml-2">
-                                  <h4> {strings.Deductions}</h4>
-                                  <Button
-                                    color="link"
-                                    className=" mr-3 mb-3"
-                                    onClick={(e, props) => {
-                                      this.openSalaryComponentDeduction(props);
-                                      this.renderActionForState();
-                                    }}
-                                  >
-                                    <i className="fa fa-plus"></i>{" "}
-                                    {strings.AddDeduction}
-                                  </Button>
+                                <Row className="ml-2 mt-4">
+                                  <h4>{strings.Deductions}</h4>
                                 </Row>
                                 <Table
                                   className="text-center"
                                   style={{
-                                    border: "3px solid #c8ced3",
                                     width: "133%",
                                   }}
                                 >
-                                  <thead
-                                    style={{ border: "3px solid #c8ced3" }}
-                                  >
-                                    <tr
-                                      style={{
-                                        border: "3px solid #c8ced3",
-                                        background: "#dfe9f7",
-                                        color: "Black",
-                                      }}
-                                    >
-                                      {this.state.Deduction
-                                        ? this.columnHeader1.map(
-                                            (column, index) => {
-                                              return <th>{column.label}</th>;
-                                            }
-                                          )
-                                        : ""}
+                                  <thead>
+                                    <tr>
+                                        {this.columnHeader1.map(
+                                          (column, index) => {
+                                            return <th style={{border: "3px solid #c8ced3", background: "#dfe9f7", color: "Black"}}>{column.label}</th>;
+                                          }
+                                        )}
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -5559,7 +5591,6 @@ class CreateEmployeePayroll extends React.Component {
                                       ? Object.values(this.state.Deduction).map(
                                           (item) => (
                                             <tr>
-                                              {/* <td >{item.id}</td> */}
                                               <td
                                                 style={{
                                                   border: "3px solid #c8ced3",
@@ -5598,7 +5629,7 @@ class CreateEmployeePayroll extends React.Component {
                                                       }
                                                     }}
                                                   />{" "}
-                                                  {strings.basic_percent}
+                                                  % of CTC
                                                 </td>
                                               ) : (
                                                 <td
@@ -5699,7 +5730,7 @@ class CreateEmployeePayroll extends React.Component {
                                                   {item.flatAmount * 12}
                                                 </td>
                                               )}
-                                              <td>
+                                              <td style={{borderTop: "0px"}}>
                                                 {}
                                                 <Button
                                                   color="link"
@@ -5716,17 +5747,95 @@ class CreateEmployeePayroll extends React.Component {
                                           )
                                         )
                                       : " "}
+                                      <tr>
+                                        <td colSpan={4} style={{ border: "3px solid  #c8ced3" }}>
+                                          <Button
+                                            color="link"
+                                            className="pull-left"
+                                            onClick={(e, props) => {
+                                              this.openSalaryComponentDeduction(props);
+                                              this.renderActionForState();
+                                            }}
+                                          >
+                                            <i className="fa fa-plus"></i>{" "}
+                                            {strings.AddDeduction}
+                                          </Button>
+                                        </td>
+                                      </tr>
+                                      <tr style={{background: "#dfe9f7", color: "Black" }}>
+                                        <td colSpan={2} style={{border: "3px solid #c8ced3"}}>
+                                          <b className="pull-left">{strings.Total+' '+strings.Deductions+' (B):'}</b>
+                                        </td>
+                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                          {typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 }
+                                        </b></td>
+                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                          {typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 }
+                                        </b></td>
+                                      </tr>
                                   </tbody>
                                 </Table>
                               </Col>
                               <Col lg={9}>
+                                <Row className="ml-2 mt-4">
+                                  <h4>{strings.Gross+' '+strings.Earnings+':'}</h4>
+                                </Row>
+                                <Table
+                                  className="text-center"
+                                  style={{
+                                    width: "133%",
+                                  }}
+                                >
+                                  <tbody>
+                                    <tr style={{background: "#dfe9f7", color: "Black" }}>
+                                      <td colSpan={2} style={{border: "3px solid #c8ced3", width: "50%"}}>
+                                        <b className="pull-left">{strings.Gross+' '+strings.Earnings+' (C):'}</b>
+                                        <b className="pull-right">{'(A + B)'}</b>
+                                      </td>
+                                      <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                        {this.grossEarnings()}
+                                      </b></td>
+                                      <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                        {(this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )}
+                                      </b></td>
+                                    </tr>
+                                  </tbody>
+                                </Table>
+                              </Col>
+                              <Col lg={9}>
+                                <Row className="ml-2 mt-4">
+                                  <h4>{strings.TotalNetPay+':'}</h4>
+                                </Row>
+                                <Table
+                                  className="text-center"
+                                  style={{
+                                    width: "133%",
+                                  }}
+                                >
+                                  <tbody>
+                                    <tr style={{background: "#dfe9f7", color: "Black" }}>
+                                      <td colSpan={2} style={{border: "3px solid #c8ced3", width: "50%"}}>
+                                        <b className="pull-left">{strings.TotalNetPay+':'}</b>
+                                        <b className="pull-right">{'(C - B)'}</b>
+                                      </td>
+                                      <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                        {(this.totalEarnings())}
+                                      </b></td>
+                                      <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                        {(this.totalYearEarnings())}
+                                      </b></td>
+                                    </tr>
+                                  </tbody>
+                                </Table>
+                              </Col>
+                              {/* <Col lg={9}>
                                 <Table
                                   className="text-center"
                                   style={{
                                     border: "3px solid #c8ced3",
                                     width: "133%",
                                   }}
-                                >
+                                > */}
                                   {/* <thead style={{border:"3px solid #dfe9f7"}}>
                                                                       <tr style={{border:"3px solid #dfe9f7",    background: '#dfe9f7',color:"Black"}}>
                                                                         {this.columnHeader1.map((column, index) => {
@@ -5738,7 +5847,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                         })}
                                                                     </tr>
                                                                 </thead> */}
-                                  <tbody>
+                                  {/* <tbody>
                                     {this.state.FixedAllowance
                                       ? Object.values(
                                           this.state.FixedAllowance
@@ -5787,7 +5896,7 @@ class CreateEmployeePayroll extends React.Component {
                                     border: "3px solid #c8ced3",
                                     width: "133%",
                                   }}
-                                >
+                                > */}
                                   {/* <thead style={{border:"3px solid #c8ced3"}}>
                                                                       <tr style={{border:"3px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
                                                                         {this.columnHeader1.map((column, index) => {
@@ -5801,7 +5910,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                     
                                                                 </thead>  */}
 
-                                  <tbody>
+                                  {/* <tbody>
                                     <Row>
                                       <Col className="p-2">
                                         {"Company Cost"}
@@ -5836,7 +5945,7 @@ class CreateEmployeePayroll extends React.Component {
                                     </Row>
                                   </tbody>
                                 </Table>
-                              </Col>
+                              </Col> */}
                             </Row>
                             <div
                               className="table-wrapper mb-4"

@@ -65,7 +65,7 @@ class SalaryComponentFixed extends React.Component {
 		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 		this.type = [
 			{ label: 'Flat Amount', value: 1 },
-			{ label: '% of Basic', value: 2 }
+			{ label: '% of CTC', value: 2 }
 		];
 	}
 
@@ -198,7 +198,7 @@ class SalaryComponentFixed extends React.Component {
 										errors.type = 'Type is required';
 									}
 
-									if(values.type.label && values.type.label ==="% of Basic" && values.formula==""){
+									if(values.type.label && values.type.label ==="% of CTC" && values.formula==""){
 										errors.formula="Percentage is required"
 									}else
 									if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount==""){
@@ -235,10 +235,10 @@ class SalaryComponentFixed extends React.Component {
 								>
 									<CardHeader toggle={this.toggleDanger}>
 										<Row>
-											<Col lg={12}>
+											<Col>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="nav-icon fas fa-id-card-alt" />
-													<span className="ml-2">{strings.CreateFixedComponent}</span>
+													<span className="ml-2">{strings.CreateAnEarningComponent}</span>
 												</div>
 											</Col>
 										</Row>

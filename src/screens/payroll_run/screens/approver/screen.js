@@ -1081,7 +1081,7 @@ class PayrollApproverScreen extends React.Component {
 																			<FormGroup>
 																				{this.state.status && (this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Draft") ?
 																					'' : (
-																						this.state.status &&( this.state.status === "Submitted" || this.state.status === "Rejected" )&& this.props.location?.state?.user !== 'Generator' &&
+																						this.state.status &&( this.state.status === "Submitted" || this.state.status === "Rejected" || this.state.status === "Approved")&& this.props.location?.state?.user !== 'Generator' &&
 																						<div>
 
 																							<Label htmlFor="payrollSubject">

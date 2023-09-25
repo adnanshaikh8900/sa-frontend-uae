@@ -496,6 +496,8 @@ class CreateCustomerInvoice extends React.Component {
 			return obj.currencyCode === value;
 		});
 		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+		this.setState({customer_currency_des: result[0].currencyName })
+		this.setState({customer_currency_symbol :result[0].currencyIsoCode })
 	};
 
 	validationCheck = (value) => {
@@ -3137,7 +3139,7 @@ class CreateCustomerInvoice extends React.Component {
 																					{strings.Currency}
 																				</Label>
 																				<Select
-																					isDisabled={true}
+																					
 																					styles={customStyles}
 																					placeholder={strings.Select + strings.Currency}
 																					options={
@@ -3180,6 +3182,7 @@ class CreateCustomerInvoice extends React.Component {
 																						props.handleChange('currency')(option);
 																						this.setExchange(option.value);
 																						this.setCurrency(option.value)
+																						this.setState({customer_currency: option.value})
 																					}}
 
 																				/>

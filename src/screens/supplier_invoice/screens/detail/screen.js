@@ -194,6 +194,7 @@ class DetailSupplierInvoice extends React.Component {
 				.getInvoiceById(this.props.location.state.id)
 				.then((res) => {
 					if (res.status === 200) {
+						
 						this.getCompanyCurrency();
 						this.props.supplierInvoiceActions.getSupplierList(
 							this.state.contactType,
@@ -289,6 +290,10 @@ class DetailSupplierInvoice extends React.Component {
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								isReverseChargeEnabled: res.data.isReverseChargeEnabled ? true : false,
 								loading: false,
+								supplier_currency: res.data.currencyCode ? res.data.currencyCode : '',
+								supplier_currency_des: res.data.currencyName ? res.data.currencyName : '',
+								supplier_currency_symbol: res.data.currencyIsoCode ? res.data.currencyIsoCode : '',
+								supplier_currencyCode : res.data.currencyCode ? res.data.currencyCode : '',
 							},
 							() => {
 								if (this.state.data.length > 0) {
@@ -318,7 +323,9 @@ class DetailSupplierInvoice extends React.Component {
 							},
 						);
 
-						this.getCurrency(res.data.contactId)
+					//	this.getCurrency(res.data.contactId)
+					
+					
 
 					}
 				});
@@ -1643,6 +1650,24 @@ class DetailSupplierInvoice extends React.Component {
 		);
 	};
 
+	setExchange = (value) => {
+		let result = this.props.currency_convert_list.filter((obj) => {
+			return obj.currencyCode === value;
+		});
+		if (result && result[0] && result[0].exchangeRate)
+			this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+			this.exchangeRaterevalidate(result[0].exchangeRate)
+	};
+
+	setCurrency = (value) => {
+		let result = this.props.currency_convert_list.filter((obj) => {
+			return obj.currencyCode === value;
+		});
+		this.setState({supplier_currency_des: result[0].currencyName })
+		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+		this.setState({supplier_currency_symbol :result[0].currencyIsoCode })
+	};
+
 	handleSubmit = (data) => {
 		this.setState({ disabled: true, disableLeavePage: true });
 		const { current_supplier_id, term } = this.state;
@@ -1979,7 +2004,7 @@ class DetailSupplierInvoice extends React.Component {
 
 	getCurrency = (opt) => {
 		let supplier_currencyCode = 0;
-
+alert("calling get currency")
 		this.props.supplier_list.map(item => {
 			if (item.label.contactId == opt) {
 				this.setState({
@@ -2555,7 +2580,7 @@ class DetailSupplierInvoice extends React.Component {
 																				{strings.Currency}
 																			</Label>
 																			<Select
-																				isDisabled={true}
+																				
 																				styles={customStyles}
 																				options={
 																					currency_convert_list
@@ -2582,11 +2607,15 @@ class DetailSupplierInvoice extends React.Component {
 																							(option) =>
 																								option.value ===
 																								(this.state.supplier_currency ? +this.state.supplier_currency : +props.values.currencyCode),
+																								//(this.state.currencyCode ? +this.state.currencyCode : +props.values.currencyCode),
 																						)
 																				}
-																				onChange={(option) =>
+																				onChange={(option) => {
 																					props.handleChange('currencyCode')(option)
-																				}
+																					this.setExchange(option.value)
+																					this.setCurrency(option.value)
+																					this.setState({supplier_currency: option.value})
+																				} }
 																				className={`${props.errors.currencyCode &&
 																					props.touched.currencyCode
 																					? 'is-invalid'
@@ -3194,7 +3223,6 @@ class DetailSupplierInvoice extends React.Component {
 																				onClick={() => {
 
 																					if (this.state.data.length === 1) {
-																						console.log(props.errors, "ERRORs")
 																						//	added validation popup	msg
 																						props.handleBlur();
 																						if (props.errors && Object.keys(props.errors).length != 0)

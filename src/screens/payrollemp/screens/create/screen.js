@@ -1122,23 +1122,37 @@ class CreateEmployeePayroll extends React.Component {
     var totalFixedSalary = 0;
     Fixed.map((obj) => {
       locallist.push(obj);
-      if (obj.formula != null && obj.description === "Basic SALARY") {
-        basicSalaryAnnulay = CTC1 * (obj.formula / 100);
-        basicSalaryMonthy = basicSalaryAnnulay / 12;
-        obj.monthlyAmount = basicSalaryMonthy;
-        obj.yearlyAmount = basicSalaryAnnulay;
-        totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
-      } else if (
-        obj.formula != null &&
-        obj.description != "Basic SALARY" &&
-        obj.formula.length > 0
-      ) {
-        var salaryAnnulay = CTC * (obj.formula / 100);
+      // if (obj.formula != null && obj.description === "Basic SALARY") {
+      //   basicSalaryAnnulay = CTC1 * (obj.formula / 100);
+      //   basicSalaryMonthy = basicSalaryAnnulay / 12;
+      //   obj.monthlyAmount = basicSalaryMonthy;
+      //   obj.yearlyAmount = basicSalaryAnnulay;
+      //   totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
+      // } else if (
+      //   obj.formula != null &&
+      //   obj.description != "Basic SALARY" &&
+      //   obj.formula.length > 0
+      // ) {
+      //   var salaryAnnulay = CTC * (obj.formula / 100);
+      //   var salaryMonthy = salaryAnnulay / 12;
+      //   obj.monthlyAmount = salaryMonthy;
+      //   obj.yearlyAmount = salaryAnnulay;
+      //   totalFixedSalary = totalFixedSalary + salaryMonthy;
+      // } else if (obj.flatAmount != null) {
+      //   var salaryMonthy = obj.flatAmount;
+      //   obj.monthlyAmount = salaryMonthy;
+      //   obj.yearlyAmount = salaryMonthy * 12;
+      //   totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+      // }
+      // return obj;
+      if (obj.formula != null && obj.formula.length > 0) {
+        var salaryAnnulay = CTC1 * (obj.formula / 100);
         var salaryMonthy = salaryAnnulay / 12;
         obj.monthlyAmount = salaryMonthy;
         obj.yearlyAmount = salaryAnnulay;
         totalFixedSalary = totalFixedSalary + salaryMonthy;
-      } else if (obj.flatAmount != null) {
+      }
+      else  {
         var salaryMonthy = obj.flatAmount;
         obj.monthlyAmount = salaryMonthy;
         obj.yearlyAmount = salaryMonthy * 12;
@@ -1234,49 +1248,27 @@ class CreateEmployeePayroll extends React.Component {
     var totalFixedSalary = 0;
     Fixed.map((obj) => {
       locallist.push(obj);
-      if (obj.formula != null && obj.description === "Basic SALARY") {
-        if (newFormula !== undefined && obj.id === id) {
-          if (newFormula === "") {
-            obj.formula = "0";
-          } else {
-            obj.formula = newFormula;
+      if (obj.formula != null && obj.formula.length > 0) {
+          if (newFormula !== undefined && obj.id === id) {
+              if (newFormula === '') { obj.formula = '0'; }
+              else { obj.formula = newFormula; }
           }
-        }
 
-        basicSalaryAnnulay = CTC1 * (obj.formula / 100);
-        basicSalaryMonthy = basicSalaryAnnulay / 12;
-        obj.monthlyAmount = basicSalaryMonthy;
-        obj.yearlyAmount = basicSalaryAnnulay;
-        totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
-      } else if (
-        obj.formula != null &&
-        obj.description != "Basic SALARY" &&
-        obj.formula.length > 0
-      ) {
-        if (newFormula !== undefined && obj.id === id) {
-          if (newFormula === "") {
-            obj.formula = "0";
-          } else {
-            obj.formula = newFormula;
+          var salaryAnnulay = CTC1 * (obj.formula / 100);
+          var salaryMonthy = salaryAnnulay / 12;
+          obj.monthlyAmount = salaryMonthy;
+          obj.yearlyAmount = salaryAnnulay;
+          totalFixedSalary = totalFixedSalary + salaryMonthy;
+      }
+      else  {
+          if (newFlatAmount !== undefined && obj.id === id) {
+              if (newFlatAmount === '') { obj.flatAmount = '0'; }
+              else { obj.flatAmount = newFlatAmount; }
           }
-        }
-        var salaryAnnulay = CTC1 * (obj.formula / 100);
-        var salaryMonthy = salaryAnnulay / 12;
-        obj.monthlyAmount = salaryMonthy;
-        obj.yearlyAmount = salaryAnnulay;
-        totalFixedSalary = totalFixedSalary + salaryMonthy;
-      } else if (obj.flatAmount != null) {
-        if (newFlatAmount !== undefined && obj.id === id) {
-          if (newFlatAmount === "") {
-            obj.flatAmount = "0";
-          } else {
-            obj.flatAmount = newFlatAmount;
-          }
-        }
-        var salaryMonthy = obj.flatAmount;
-        obj.monthlyAmount = salaryMonthy;
-        obj.yearlyAmount = salaryMonthy * 12;
-        totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+          var salaryMonthy = obj.flatAmount;
+          obj.monthlyAmount = salaryMonthy;
+          obj.yearlyAmount = salaryMonthy * 12;
+          totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
       }
       return obj;
     });
@@ -5272,6 +5264,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                             props.handleChange('type')(value);
                                                                             if (value.value == 1) {
                                                                                 item.formula = ""
+                                                                                item.flatAmount = "1"
                                                                                 this.updateSalary(this.state.CTC)
                                                                             } else {
                                                                                 item.formula = "1"
@@ -5793,6 +5786,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                               props.handleChange('type')(value);
                                                                               if (value.value == 1) {
                                                                                   item.formula = ""
+                                                                                  item.flatAmount = "1"
                                                                                   this.updateSalary(this.state.CTC)
                                                                               } else {
                                                                                   item.formula = "1"

@@ -2004,7 +2004,6 @@ class DetailSupplierInvoice extends React.Component {
 
 	getCurrency = (opt) => {
 		let supplier_currencyCode = 0;
-alert("calling get currency")
 		this.props.supplier_list.map(item => {
 			if (item.label.contactId == opt) {
 				this.setState({
@@ -2611,7 +2610,7 @@ alert("calling get currency")
 																						)
 																				}
 																				onChange={(option) => {
-																					props.handleChange('currencyCode')(option)
+																					props.handleChange('currencyCode')(option.value)
 																					this.setExchange(option.value)
 																					this.setCurrency(option.value)
 																					this.setState({supplier_currency: option.value})

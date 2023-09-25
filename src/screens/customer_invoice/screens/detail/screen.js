@@ -333,6 +333,10 @@ class DetailCustomerInvoice extends React.Component {
 								term: res.data.term ? res.data.term : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								loading: false,
+								customer_currency: res.data.currencyCode ? res.data.currencyCode : '',
+								customer_currency_des: res.data.currencyName ? res.data.currencyName : '',
+								customer_currency_symbol: res.data.currencyIsoCode ? res.data.currencyIsoCode : '',
+								customer_currencyCode : res.data.currencyCode ? res.data.currencyCode : '',
 							},
 							() => {
 								if (this.state.initValue && this.state.initValue.changeShippingAddress && this.state.initValue.shippingCountryId) {
@@ -365,7 +369,7 @@ class DetailCustomerInvoice extends React.Component {
 								}
 							},
 						);
-						this.getCurrency(res.data.contactId)
+						//this.getCurrency(res.data.contactId)
 					}
 				});
 		} else {
@@ -1846,6 +1850,14 @@ class DetailCustomerInvoice extends React.Component {
 			this.exchangeRaterevalidate('')
 		}
 	};
+	setCurrency = (value) => {
+		let result = this.props.currency_convert_list.filter((obj) => {
+			return obj.currencyCode === value;
+		});
+		this.setState({customer_currency_des: result[0].currencyName })
+		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+		this.setState({customer_currency_symbol :result[0].currencyIsoCode })
+	};
 
 	deleteInvoice = () => {
 		const message1 =
@@ -2593,7 +2605,7 @@ class DetailCustomerInvoice extends React.Component {
 																				{strings.Currency}
 																			</Label>
 																			<Select
-																				isDisabled={true}
+																				
 																				styles={customStyles}
 																				options={
 																					currency_convert_list
@@ -2623,11 +2635,13 @@ class DetailCustomerInvoice extends React.Component {
 																								(this.state.customer_currency ? +this.state.customer_currency : +props.values.currencyCode),
 																						)
 																				}
-																				onChange={(option) =>
-																					props.handleChange('currencyCode')(
-																						option.value,
-																					)
-																				}
+																				onChange={(option) => {
+																					props.handleChange('currencyCode')(option.value)
+																					this.setExchange(option.value)
+																					this.setCurrency(option.value)
+																					this.setState({customer_currency: option.value})
+																																									
+																				} }
 																				className={`${props.errors.currencyCode &&
 																					props.touched.currency
 																					? 'is-invalid'

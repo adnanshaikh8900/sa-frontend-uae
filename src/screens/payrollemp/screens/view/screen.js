@@ -254,6 +254,7 @@ class ViewEmployee extends React.Component {
 
 	closeModal = (res) => {
 		this.setState({ openModal: false });
+		this.initializeData();
 	};
 
 	initializeData = () => {

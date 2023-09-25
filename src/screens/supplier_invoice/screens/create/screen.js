@@ -1984,15 +1984,16 @@ class CreateSupplierInvoice extends React.Component {
 		});
 		if (result && result[0] && result[0].exchangeRate)
 			this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		this.exchangeRaterevalidate(result[0].exchangeRate)
+			this.exchangeRaterevalidate(result[0].exchangeRate)
 	};
 
 	setCurrency = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-
+		this.setState({supplier_currency_des: result[0].currencyName })
 		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+		this.setState({supplier_currency_symbol :result[0].currencyIsoCode })
 	};
 
 	updateAmount = (data, props, addrowinfo) => {
@@ -3095,7 +3096,7 @@ class CreateSupplierInvoice extends React.Component {
 																				{strings.Currency}
 																			</Label>
 																			<Select
-																				isDisabled={true}
+																				
 																				placeholder={strings.Select + strings.Currency}
 																				styles={customStyles}
 																				options={
@@ -3129,6 +3130,7 @@ class CreateSupplierInvoice extends React.Component {
 																					props.handleChange('currency')(option);
 																					this.setExchange(option.value);
 																					this.setCurrency(option.value)
+																					this.setState({supplier_currency: option.value})
 																				}}
 																				className={`${props.errors.currency &&
 																					props.touched.currency
@@ -3793,7 +3795,6 @@ class CreateSupplierInvoice extends React.Component {
 																				className="btn-square mr-3"
 																				disabled={this.state.disabled}
 																				onClick={() => {
-																					console.log(props.errors, "ERRORs")
 																					if (this.state.data.length === 1) {
 																						//	added validation popup	msg
 																						props.handleBlur();
@@ -3828,7 +3829,6 @@ class CreateSupplierInvoice extends React.Component {
 																				disabled={this.state.disabled}
 																				onClick={() => {
 																					if (this.state.data.length === 1) {
-																						console.log(props.errors, "ERRORs")
 																						//  added validation popup  msg
 																						props.handleBlur();
 																						if (props.errors && Object.keys(props.errors).length != 0)

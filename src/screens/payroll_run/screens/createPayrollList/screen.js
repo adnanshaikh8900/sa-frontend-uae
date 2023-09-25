@@ -363,7 +363,7 @@ class CreatePayrollList extends React.Component {
 							data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2)
 							data.perDaySal = data.originalGrossPay / 30
 
-							data.lopDay = 30 - tmpPaidDay;
+							data.lopDay = 0;
 							data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
 							data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
 
@@ -477,7 +477,7 @@ class CreatePayrollList extends React.Component {
 											<Input
 												className="spinboxDisable"
 												type="number"
-												min={30 - this.state.paidDays}
+												min={0}
 												step="0.5"
 												max={this.state.paidDays}
 												id="lopDay"
@@ -565,12 +565,12 @@ class CreatePayrollList extends React.Component {
 		if (value > 30) {
 			value = 30;
 		}
-
+		let tmpPaidDay = this.state.paidDays > 30 ? 30 : (this.state.paidDays == 28 ? 30 : this.state.paidDays)
 		let newData = [...this.state.allPayrollEmployee];
 		newData = newData.map((data) => {
 			if (row.id === data.id) {
 				data.lopDay = value;
-				data.noOfDays = 30 - value;
+				data.noOfDays = parseFloat(tmpPaidDay) - value;
 				data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2);
 				let deduction = data.noOfDays == 0 ? 0 : data.deduction;
 

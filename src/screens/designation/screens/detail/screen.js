@@ -262,7 +262,7 @@ class DetailDesignation extends React.Component {
                                 if (parseInt(values.designationId) === 0) {
                                   errors.designationId =
                                     "Enter valid designation ID";
-                                }else if (this.state.idExist === true || values.designationId === '1' || values.designationId === '2' || values.designationId === '3' || values.designationId === '4') {
+                                } else if (this.state.idExist === true || parseInt(values.designationId) === 1 || parseInt(values.designationId) === 2 || parseInt(values.designationId) === 3 || parseInt(values.designationId) === 4) {
                                   errors.designationId =
                                     "Designation ID already exist";
                                 }

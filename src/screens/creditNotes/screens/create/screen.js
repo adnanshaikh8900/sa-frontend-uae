@@ -1660,7 +1660,8 @@ class CreateCreditNote extends React.Component {
 																			/>	{strings.CreateCreditNoteWithoutProduct}
 																		</Col>
 																	</Row>
-																	{this.state.invoiceSelected == false && (<Row  >
+																	
+																	{/* {this.state.invoiceSelected == false && (<Row  > hidden for time being as journel entries are wrong 
 																		<Col lg={4}>
 																			<Checkbox
 																				checked={this.state.isCreatedWithoutInvoice}
@@ -1670,8 +1671,7 @@ class CreateCreditNote extends React.Component {
 																				}}
 																			/>	{strings.CreateCreditNoteWithoutInvoice}
 																		</Col>
-																	</Row>)}
-																	<hr />
+																	</Row>)} */}
 																</div>}
 																<Row>
 																	{!this.state.isCreatedWithoutInvoice && (<Col lg={3}>

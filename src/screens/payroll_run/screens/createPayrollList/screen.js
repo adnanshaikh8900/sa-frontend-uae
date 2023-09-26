@@ -149,7 +149,6 @@ class CreatePayrollList extends React.Component {
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 		this.setState({ paidDays: diffDays });
 		this.getAllPayrollEmployee(startDate, endDate)
-		console.log(diffDays)
 	}
 
 	tableApiCallsOnStatus = () => {
@@ -372,7 +371,15 @@ class CreatePayrollList extends React.Component {
 							if (empList && empList?.length > 0) {
 								let flag = true;
 								empList.map(obj => {
-									if (obj.payPeriod.includes(moment(date).format("DD/MM/YYYY"))) {
+									let payStartDate = moment(moment(obj.payPeriod.split('-')[0].replaceAll('/', '-'), 'DD-MM-YYYY').toDate());
+									let payEndDate = moment(moment(obj.payPeriod.split('-')[1].replaceAll('/', '-'), 'DD-MM-YYYY').toDate());
+									let startDate = moment(date)
+									endDate = moment(date)
+									if (obj.employeeId === 10000){
+										debugger
+										console.log(moment(payStartDate), moment(date).subtract(1, "days"), moment(payEndDate), moment(endDate).add(1, "days"))
+									}
+									if ((payStartDate.isBefore(endDate) && payStartDate.isAfter(startDate)) || (payStartDate.isSame(startDate) || payStartDate.isSame(endDate))){
 										flag = false;
 									}
 								})

@@ -1135,7 +1135,7 @@ class CreateDebitNote extends React.Component {
 																	}}
 																/>	{strings.CreateDebitNoteWithoutProduct}
 															</Col>}
-															{!this.state.invoiceSelected && <Col lg={12}>
+															{/* {!this.state.invoiceSelected && <Col lg={12}>  hidden for time being as journel entries are wrong 
 																<Checkbox
 																	checked={isCreatedWithoutInvoice}
 																	onChange={(check) => {
@@ -1143,8 +1143,8 @@ class CreateDebitNote extends React.Component {
 																		this.setState({ isDNWIWithoutProduct: !this.state.isDNWIWithoutProduct })
 																	}}
 																/>	{strings.CreateDebitNoteWithoutInvoice}
-															</Col>}
-														</Row><hr /></>}
+															</Col>} */}
+														</Row></>}
 														{!isCreatedWithoutInvoice && (<Row>
 															<Col lg={3}>
 																<FormGroup className="mb-3">

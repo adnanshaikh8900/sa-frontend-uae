@@ -1224,9 +1224,10 @@ class CreateSupplierInvoice extends React.Component {
 			});
 	};
 	addProductToProductVatList = (productId) => {
+		debugger
 		const { isRegisteredVat, customer_taxTreatment_des, isReverseChargeEnabled, isDesignatedZone } = this.state;
 		const { product_list } = this.props;
-		const product = product_list && product_list.length > 1 ? product_list.find((obj) => obj.id === productId) : '';
+		const product = product_list && product_list.length > 0 ? product_list.find((obj) => obj.id === productId) : '';
 		if (product) {
 			var vat_list = [
 				{
@@ -1260,7 +1261,9 @@ class CreateSupplierInvoice extends React.Component {
 			const productType = product.productType;
 			pt.id = product.id;
 			pt.type = productType;
+			debugger
 			if (isRegisteredVat && (this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)) {
+				debugger
 				if (isDesignatedZone) {
 					if (this.state.isReverseChargeEnabled) {
 						if (productType === "GOODS") {

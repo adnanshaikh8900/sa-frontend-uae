@@ -245,6 +245,7 @@ class CreateEmployeePayroll extends React.Component {
         { label: "MONTHLY", value: 2 },
         { label: "ANNUALLY", value: 1 },
       ],
+      disabledPersonalDetailNextButton:false,
     };
     this.formRef = React.createRef();
     this.formRefPersonal = React.createRef();
@@ -818,7 +819,7 @@ class CreateEmployeePayroll extends React.Component {
 
   handleSubmit = (data, resetForm) => {
     // this.setState({ loading:true, loadingMsg:"Creating Employee Basic Details..."});
-    this.setState({ disabled: true, disableLeavePage: true });
+    this.setState({ disabledPersonalDetailNextButton : true, disableLeavePage: true });
     const {
       firstName,
       middleName,
@@ -988,7 +989,7 @@ class CreateEmployeePayroll extends React.Component {
           if (err.data && err.data.message !== undefined) {
             error = err.data.message ? err.data.message : err.data;
           }
-          this.setState({ disabled: false, loading: false });
+          this.setState({ disabledPersonalDetailNextButton: false, loading: false });
           this.props.commonActions.tostifyAlert("error", error);
         });
     } else {
@@ -3806,17 +3807,17 @@ class CreateEmployeePayroll extends React.Component {
                                               // onClick={() => {
                                               //     this.toggle(0, '2')
                                               // }}
+                                              disabled={this.state.disabledPersonalDetailNextButton}
                                               onClick={() => {
                                                 //  added validation popup  msg
                                                 props.handleBlur();
-                                                if (
-                                                  props.errors &&
+                                                if (props.errors &&
                                                   Object.keys(props.errors)
                                                     .length != 0
                                                 )
                                                   this.props.commonActions.fillManDatoryDetails();
                                                 this.setState(
-                                                  { createMore: false },
+                                                  { createMore: false,},
                                                   () => {
                                                     props.handleSubmit();
                                                   }

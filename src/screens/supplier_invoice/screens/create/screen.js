@@ -1224,7 +1224,6 @@ class CreateSupplierInvoice extends React.Component {
 			});
 	};
 	addProductToProductVatList = (productId) => {
-		debugger
 		const { isRegisteredVat, customer_taxTreatment_des, isReverseChargeEnabled, isDesignatedZone } = this.state;
 		const { product_list } = this.props;
 		const product = product_list && product_list.length > 0 ? product_list.find((obj) => obj.id === productId) : '';

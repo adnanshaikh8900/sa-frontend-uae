@@ -329,26 +329,26 @@ class UpdateSalaryComponent extends React.Component {
         const Fixed_Allowance = this.state.Fixed_Allowance
 
         var locallist = []
-        var basicSalaryAnnulay = 0;
-        var basicSalaryMonthy = 0;
+        // var basicSalaryAnnulay = 0;
+        // var basicSalaryMonthy = 0;
         var totalFixedSalary = 0;
         Fixed.map((obj) => {
             locallist.push(obj);
-            if (obj.formula != null && obj.description === "Basic SALARY") {
-                basicSalaryAnnulay = (CTC1 * (obj.formula / 100));
-                basicSalaryMonthy = (basicSalaryAnnulay) / 12;
-                obj.monthlyAmount = basicSalaryMonthy;
-                obj.yearlyAmount = basicSalaryAnnulay;
-                totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
-            }
-            else if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+            // if (obj.formula != null && obj.description === "Basic SALARY") {
+            //     basicSalaryAnnulay = (CTC1 * (obj.formula / 100));
+            //     basicSalaryMonthy = (basicSalaryAnnulay) / 12;
+            //     obj.monthlyAmount = basicSalaryMonthy;
+            //     obj.yearlyAmount = basicSalaryAnnulay;
+            //     totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
+            // }
+            if (obj.formula != null && obj.formula.length > 0) {
                 var salaryAnnulay = CTC1 * (obj.formula / 100);
                 var salaryMonthy = salaryAnnulay / 12;
                 obj.monthlyAmount = salaryMonthy;
                 obj.yearlyAmount = salaryAnnulay;
                 totalFixedSalary = totalFixedSalary + salaryMonthy;
             }
-            else if (obj.flatAmount != null) {
+            else  {
                 var salaryMonthy = obj.flatAmount;
                 obj.monthlyAmount = salaryMonthy;
                 obj.yearlyAmount = salaryMonthy * 12;
@@ -439,36 +439,37 @@ class UpdateSalaryComponent extends React.Component {
         const Variable = this.state.Variable
         const Deduction = this.state.Deduction
         const Fixed_Allowance = this.state.Fixed_Allowance
-
+        
         var locallist = []
-        var basicSalaryAnnulay = 0;
-        var basicSalaryMonthy = 0;
+        // var basicSalaryAnnulay = 0;
+        // var basicSalaryMonthy = 0;
         var totalFixedSalary = 0;
         Fixed.map((obj) => {
             locallist.push(obj);
-            if (obj.formula != null && obj.description === "Basic SALARY") {
+            // if (obj.formula != null && obj.description === "Basic SALARY") {
+            //     if (newFormula !== undefined && obj.id === id) {
+            //         if (newFormula === '') { obj.formula = '0'; }
+            //         else { obj.formula = newFormula; }
+            //     }
+            //     basicSalaryAnnulay = (CTC1 * (obj.formula / 100));
+            //     basicSalaryMonthy = (basicSalaryAnnulay) / 12;
+            //     obj.monthlyAmount = basicSalaryMonthy;
+            //     obj.yearlyAmount = basicSalaryAnnulay;
+            //     totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
+            // }
+            if (obj.formula != null && obj.formula.length > 0) {
                 if (newFormula !== undefined && obj.id === id) {
                     if (newFormula === '') { obj.formula = '0'; }
                     else { obj.formula = newFormula; }
                 }
-                basicSalaryAnnulay = (CTC1 * (obj.formula / 100));
-                basicSalaryMonthy = (basicSalaryAnnulay) / 12;
-                obj.monthlyAmount = basicSalaryMonthy;
-                obj.yearlyAmount = basicSalaryAnnulay;
-                totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
-            }
-            else if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
-                if (newFormula !== undefined && obj.id === id) {
-                    if (newFormula === '') { obj.formula = '0'; }
-                    else { obj.formula = newFormula; }
-                }
+
                 var salaryAnnulay = CTC1 * (obj.formula / 100);
                 var salaryMonthy = salaryAnnulay / 12;
                 obj.monthlyAmount = salaryMonthy;
                 obj.yearlyAmount = salaryAnnulay;
                 totalFixedSalary = totalFixedSalary + salaryMonthy;
             }
-            else if (obj.flatAmount != null) {
+            else  {
                 if (newFlatAmount !== undefined && obj.id === id) {
                     if (newFlatAmount === '') { obj.flatAmount = '0'; }
                     else { obj.flatAmount = newFlatAmount; }
@@ -751,7 +752,9 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                             size="30"
                                                                                                             style={{ textAlign: "center" }}
                                                                                                             onChange={(option) => {
-                                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) {
+                                                                                                                     props.handleChange('flatAmount')(option)
+                                                                                                                     }
                                                                                                                 this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
                                                                                                             }}
                                                                                                             value={item.flatAmount}
@@ -787,6 +790,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                                             props.handleChange('type')(value);
                                                                                                                             if (value.value == 1) {
                                                                                                                                 item.formula = ""
+                                                                                                                                item.flatAmount = "1"
                                                                                                                                 this.updateSalary(this.state.CTC)
                                                                                                                             } else {
                                                                                                                                 item.formula = "1"
@@ -1138,6 +1142,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                                                     props.handleChange('type')(value);
                                                                                                                                     if (value.value == 1) {
                                                                                                                                         item.formula = ""
+                                                                                                                                        item.flatAmount = "1"
                                                                                                                                         this.updateSalary(this.state.CTC)
                                                                                                                                     } else {
                                                                                                                                         item.formula = "1"

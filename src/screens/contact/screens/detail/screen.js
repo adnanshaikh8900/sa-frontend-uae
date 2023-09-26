@@ -1162,7 +1162,7 @@ class DetailContact extends React.Component {
 																						type="email"
 																						id="email"
 																						name="email"
-																						placeholder={strings.Enter + strings.EmailAddress}
+																						placeholder={strings.Enter + strings.EmailAddres}
 																						onChange={(option) => {
 																							props.handleChange('email')(option);
 																							// this.emailvalidationCheck(option.target.value)

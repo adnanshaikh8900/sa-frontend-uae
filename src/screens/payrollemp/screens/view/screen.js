@@ -254,6 +254,7 @@ class ViewEmployee extends React.Component {
 
 	closeModal = (res) => {
 		this.setState({ openModal: false });
+		this.initializeData();
 	};
 
 	initializeData = () => {
@@ -832,7 +833,7 @@ class ViewEmployee extends React.Component {
 							</TabContent>
 							<Row>
 								<Col>
-									<p><b>Note:</b> Employees cannot be deleted once a transaction has beed created for them</p>
+									<p><b>Note:</b> Employees cannot be deleted once a transaction has been created for them</p>
 								</Col>
 							</Row>
 							<Row>

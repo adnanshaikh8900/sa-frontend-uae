@@ -806,6 +806,7 @@ class Profile extends React.Component {
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
 			});
+		window.location.reload();
 	};
 
 	handlePasswordSubmit = (data,resetForm) => {

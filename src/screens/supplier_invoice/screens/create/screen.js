@@ -1224,9 +1224,10 @@ class CreateSupplierInvoice extends React.Component {
 			});
 	};
 	addProductToProductVatList = (productId) => {
+		debugger
 		const { isRegisteredVat, customer_taxTreatment_des, isReverseChargeEnabled, isDesignatedZone } = this.state;
 		const { product_list } = this.props;
-		const product = product_list && product_list.length > 1 ? product_list.find((obj) => obj.id === productId) : '';
+		const product = product_list && product_list.length > 0 ? product_list.find((obj) => obj.id === productId) : '';
 		if (product) {
 			var vat_list = [
 				{
@@ -1260,7 +1261,9 @@ class CreateSupplierInvoice extends React.Component {
 			const productType = product.productType;
 			pt.id = product.id;
 			pt.type = productType;
+			debugger
 			if (isRegisteredVat && (this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)) {
+				debugger
 				if (isDesignatedZone) {
 					if (this.state.isReverseChargeEnabled) {
 						if (productType === "GOODS") {
@@ -1984,15 +1987,16 @@ class CreateSupplierInvoice extends React.Component {
 		});
 		if (result && result[0] && result[0].exchangeRate)
 			this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		this.exchangeRaterevalidate(result[0].exchangeRate)
+			this.exchangeRaterevalidate(result[0].exchangeRate)
 	};
 
 	setCurrency = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-
+		this.setState({supplier_currency_des: result[0].currencyName })
 		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+		this.setState({supplier_currency_symbol :result[0].currencyIsoCode })
 	};
 
 	updateAmount = (data, props, addrowinfo) => {
@@ -3095,7 +3099,7 @@ class CreateSupplierInvoice extends React.Component {
 																				{strings.Currency}
 																			</Label>
 																			<Select
-																				isDisabled={true}
+																				
 																				placeholder={strings.Select + strings.Currency}
 																				styles={customStyles}
 																				options={
@@ -3129,6 +3133,7 @@ class CreateSupplierInvoice extends React.Component {
 																					props.handleChange('currency')(option);
 																					this.setExchange(option.value);
 																					this.setCurrency(option.value)
+																					this.setState({supplier_currency: option.value})
 																				}}
 																				className={`${props.errors.currency &&
 																					props.touched.currency
@@ -3793,7 +3798,6 @@ class CreateSupplierInvoice extends React.Component {
 																				className="btn-square mr-3"
 																				disabled={this.state.disabled}
 																				onClick={() => {
-																					console.log(props.errors, "ERRORs")
 																					if (this.state.data.length === 1) {
 																						//	added validation popup	msg
 																						props.handleBlur();
@@ -3828,7 +3832,6 @@ class CreateSupplierInvoice extends React.Component {
 																				disabled={this.state.disabled}
 																				onClick={() => {
 																					if (this.state.data.length === 1) {
-																						console.log(props.errors, "ERRORs")
 																						//  added validation popup  msg
 																						props.handleBlur();
 																						if (props.errors && Object.keys(props.errors).length != 0)

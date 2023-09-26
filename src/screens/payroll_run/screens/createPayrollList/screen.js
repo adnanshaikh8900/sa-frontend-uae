@@ -149,7 +149,6 @@ class CreatePayrollList extends React.Component {
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 		this.setState({ paidDays: diffDays });
 		this.getAllPayrollEmployee(startDate, endDate)
-		console.log(diffDays)
 	}
 
 	tableApiCallsOnStatus = () => {
@@ -363,7 +362,7 @@ class CreatePayrollList extends React.Component {
 							data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2)
 							data.perDaySal = data.originalGrossPay / 30
 
-							data.lopDay = 30 - tmpPaidDay;
+							data.lopDay = 0;
 							data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
 							data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
 
@@ -372,7 +371,15 @@ class CreatePayrollList extends React.Component {
 							if (empList && empList?.length > 0) {
 								let flag = true;
 								empList.map(obj => {
-									if (obj.payPeriod.includes(moment(date).format("DD/MM/YYYY"))) {
+									let payStartDate = moment(moment(obj.payPeriod.split('-')[0].replaceAll('/', '-'), 'DD-MM-YYYY').toDate());
+									let payEndDate = moment(moment(obj.payPeriod.split('-')[1].replaceAll('/', '-'), 'DD-MM-YYYY').toDate());
+									let startDate = moment(date)
+									endDate = moment(date)
+									if (obj.employeeId === 10000){
+										debugger
+										console.log(moment(payStartDate), moment(date).subtract(1, "days"), moment(payEndDate), moment(endDate).add(1, "days"))
+									}
+									if ((payStartDate.isBefore(endDate) && payStartDate.isAfter(startDate)) || (payStartDate.isSame(startDate) || payStartDate.isSame(endDate))){
 										flag = false;
 									}
 								})
@@ -477,7 +484,7 @@ class CreatePayrollList extends React.Component {
 											<Input
 												className="spinboxDisable"
 												type="number"
-												min={30 - this.state.paidDays}
+												min={0}
 												step="0.5"
 												max={this.state.paidDays}
 												id="lopDay"
@@ -565,12 +572,12 @@ class CreatePayrollList extends React.Component {
 		if (value > 30) {
 			value = 30;
 		}
-
+		let tmpPaidDay = this.state.paidDays > 30 ? 30 : (this.state.paidDays == 28 ? 30 : this.state.paidDays)
 		let newData = [...this.state.allPayrollEmployee];
 		newData = newData.map((data) => {
 			if (row.id === data.id) {
 				data.lopDay = value;
-				data.noOfDays = 30 - value;
+				data.noOfDays = parseFloat(tmpPaidDay) - value;
 				data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2);
 				let deduction = data.noOfDays == 0 ? 0 : data.deduction;
 

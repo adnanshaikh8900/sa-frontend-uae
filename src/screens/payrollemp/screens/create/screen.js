@@ -25,7 +25,7 @@ import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import { FormGroup, Button } from "reactstrap";
 import DatePicker from "react-datepicker";
-import { Formik } from "formik";
+import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import { LeavePage, ImageUploader, Loader } from "components";
 import { CommonActions } from "services/global";
@@ -245,6 +245,7 @@ class CreateEmployeePayroll extends React.Component {
         { label: "MONTHLY", value: 2 },
         { label: "ANNUALLY", value: 1 },
       ],
+      disabledPersonalDetailNextButton:false,
     };
     this.formRef = React.createRef();
     this.formRefPersonal = React.createRef();
@@ -255,6 +256,11 @@ class CreateEmployeePayroll extends React.Component {
     this.regExQualification = /^[a-zA-Z,-/ ]+$/;
     this.regExQualificationYear = /^[0-9,'-]+$/;
     this.regExEmpUniqueId = /[a-zA-Z0-9,-/ ]+$/;
+    this.regDec1 = /^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
+    this.type = [
+      { label: 'Flat Amount', value: 1 },
+      { label: '% of CTC', value: 2 }
+    ];
 
     this.gender = [
       { label: "Male", value: "Male" },
@@ -380,7 +386,6 @@ class CreateEmployeePayroll extends React.Component {
       .getSalaryComponentByEmployeeId(this.state.employeeid)
       .then((res) => {
         if (res.status === 200) {
-          console.log('Salary Component = ',res.data)
           this.setState({
             Fixed: res.data.salaryComponentResult.Fixed,
             Variable: res.data.salaryComponentResult.Variable,
@@ -516,13 +521,9 @@ class CreateEmployeePayroll extends React.Component {
     formData.append("employee", this.state.employeeid);
     formData.append("grossSalary", (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 ));
     formData.append("totalNetPay", this.totalEarnings());
-    formData.append(
-      "ctcType",
-      this.state.ctcTypeOption.label
-        ? this.state.ctcTypeOption.label
-        : "ANNUALLY"
-    );
+    formData.append("ctcType", this.state.ctcTypeOption.label ? this.state.ctcTypeOption.label : "ANNUALLY" );
     formData.append("salaryComponentString", JSON.stringify(this.state.list));
+    
     this.setState({ loading: true, loadingMsg: "Creating New Employee..." });
     this.props.createPayrollEmployeeActions
       .saveSalaryComponent(formData)
@@ -818,7 +819,7 @@ class CreateEmployeePayroll extends React.Component {
 
   handleSubmit = (data, resetForm) => {
     // this.setState({ loading:true, loadingMsg:"Creating Employee Basic Details..."});
-    this.setState({ disabled: true, disableLeavePage: true });
+    this.setState({ disabledPersonalDetailNextButton : true, disableLeavePage: true });
     const {
       firstName,
       middleName,
@@ -988,7 +989,7 @@ class CreateEmployeePayroll extends React.Component {
           if (err.data && err.data.message !== undefined) {
             error = err.data.message ? err.data.message : err.data;
           }
-          this.setState({ disabled: false, loading: false });
+          this.setState({ disabledPersonalDetailNextButton: false, loading: false });
           this.props.commonActions.tostifyAlert("error", error);
         });
     } else {
@@ -1102,10 +1103,11 @@ class CreateEmployeePayroll extends React.Component {
             this.setState({
                 initValue: {
                     ...this.state.initValue,
-                    ...{ employeeDesignationId: lastOption.value },
+                    ...{ employeeDesignationId: lastOption },
                 },
                 newDesig: true,
             });
+          this.formRefPersonal.current.setFieldValue('employeeDesignationId', this.state.initValue.employeeDesignationId)
         }
       });
   };
@@ -1122,54 +1124,66 @@ class CreateEmployeePayroll extends React.Component {
     var totalFixedSalary = 0;
     Fixed.map((obj) => {
       locallist.push(obj);
-      if (obj.formula != null && obj.description === "Basic SALARY") {
-        basicSalaryAnnulay = CTC1 * (obj.formula / 100);
-        basicSalaryMonthy = basicSalaryAnnulay / 12;
-        obj.monthlyAmount = basicSalaryMonthy;
-        obj.yearlyAmount = basicSalaryAnnulay;
-        totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
-      } else if (
-        obj.formula != null &&
-        obj.description != "Basic SALARY" &&
-        obj.formula.length > 0
-      ) {
-        var salaryAnnulay = CTC * (obj.formula / 100);
+      // if (obj.formula != null && obj.description === "Basic SALARY") {
+      //   basicSalaryAnnulay = CTC1 * (obj.formula / 100);
+      //   basicSalaryMonthy = basicSalaryAnnulay / 12;
+      //   obj.monthlyAmount = basicSalaryMonthy;
+      //   obj.yearlyAmount = basicSalaryAnnulay;
+      //   totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
+      // } else if (
+      //   obj.formula != null &&
+      //   obj.description != "Basic SALARY" &&
+      //   obj.formula.length > 0
+      // ) {
+      //   var salaryAnnulay = CTC * (obj.formula / 100);
+      //   var salaryMonthy = salaryAnnulay / 12;
+      //   obj.monthlyAmount = salaryMonthy;
+      //   obj.yearlyAmount = salaryAnnulay;
+      //   totalFixedSalary = totalFixedSalary + salaryMonthy;
+      // } else if (obj.flatAmount != null) {
+      //   var salaryMonthy = obj.flatAmount;
+      //   obj.monthlyAmount = salaryMonthy;
+      //   obj.yearlyAmount = salaryMonthy * 12;
+      //   totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+      // }
+      // return obj;
+      if (obj.formula != null && obj.formula.length > 0) {
+        var salaryAnnulay = CTC1 * (obj.formula / 100);
         var salaryMonthy = salaryAnnulay / 12;
         obj.monthlyAmount = salaryMonthy;
         obj.yearlyAmount = salaryAnnulay;
         totalFixedSalary = totalFixedSalary + salaryMonthy;
-      } else if (obj.flatAmount != null) {
+      }
+      else  {
         var salaryMonthy = obj.flatAmount;
         obj.monthlyAmount = salaryMonthy;
         obj.yearlyAmount = salaryMonthy * 12;
         totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
       }
-
       return obj;
     });
-    if (Variable != null) {
-      Variable.map((obj) => {
-        locallist.push(obj);
-        if (
-          obj.formula != null &&
-          obj.description != "Basic SALARY" &&
-          obj.formula.length > 0
-        ) {
-          var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-          var salaryAnnulay = salaryMonthy * 12;
-          obj.monthlyAmount = salaryMonthy;
-          obj.yearlyAmount = salaryAnnulay;
-          totalFixedSalary = totalFixedSalary + salaryMonthy;
-        } else if (obj.flatAmount != null) {
-          var salaryMonthy = obj.flatAmount;
-          obj.monthlyAmount = salaryMonthy;
-          obj.yearlyAmount = salaryMonthy * 12;
-          totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
-        }
-
-        return obj;
-      });
-    }
+    // if (Variable != null) {
+    //   Variable.map((obj) => {
+    //     locallist.push(obj);
+    //     if (
+    //       obj.formula != null &&
+    //       obj.description != "Basic SALARY" &&
+    //       obj.formula.length > 0
+    //     ) {
+    //       var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
+    //       var salaryAnnulay = salaryMonthy * 12;
+    //       obj.monthlyAmount = salaryMonthy;
+    //       obj.yearlyAmount = salaryAnnulay;
+    //       totalFixedSalary = totalFixedSalary + salaryMonthy;
+    //     } else if (obj.flatAmount != null) {
+    //       var salaryMonthy = obj.flatAmount;
+    //       obj.monthlyAmount = salaryMonthy;
+    //       obj.yearlyAmount = salaryMonthy * 12;
+    //       totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+    //     }
+    //     return obj;
+    //   });
+    // }
     if (Deduction != null) {
       Deduction.map((obj) => {
         locallist.push(obj);
@@ -1189,7 +1203,6 @@ class CreateEmployeePayroll extends React.Component {
           obj.yearlyAmount = salaryMonthy * 12;
           // totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
         }
-
         return obj;
       });
     }
@@ -1197,17 +1210,16 @@ class CreateEmployeePayroll extends React.Component {
     const monthlySalary = CTC1 / 12;
     const componentTotal1 = monthlySalary - totalFixedSalary;
 
-    if (FixedAllowance != null) {
-      FixedAllowance.map((obj) => {
-        locallist.push(obj);
-        if (obj.flatAmount != null) {
-          obj.monthlyAmount = componentTotal1;
-          obj.yearlyAmount = componentTotal1 * 12;
-        }
-
-        return obj;
-      });
-    }
+    // if (FixedAllowance != null) {
+    //   FixedAllowance.map((obj) => {
+    //     locallist.push(obj);
+    //     if (obj.flatAmount != null) {
+    //       obj.monthlyAmount = componentTotal1;
+    //       obj.yearlyAmount = componentTotal1 * 12;
+    //     }
+    //     return obj;
+    //   });
+    // }
 
     this.setState({
       componentTotal: componentTotal1,
@@ -1227,8 +1239,6 @@ class CreateEmployeePayroll extends React.Component {
   };
 
   updateSalary1 = (CTC1, newFormula, id, newFlatAmount) => {
-    const CTC = this.state.CTC;
-
     const Fixed = this.state.Fixed;
     const Variable = this.state.Variable;
     const Deduction = this.state.Deduction;
@@ -1240,91 +1250,66 @@ class CreateEmployeePayroll extends React.Component {
     var totalFixedSalary = 0;
     Fixed.map((obj) => {
       locallist.push(obj);
-
-      if (obj.formula != null && obj.description === "Basic SALARY") {
-        if (newFormula !== undefined && obj.id === id) {
-          if (newFormula === "") {
-            obj.formula = "0";
-          } else {
-            obj.formula = newFormula;
-          }
-        }
-
-        basicSalaryAnnulay = CTC1 * (obj.formula / 100);
-        basicSalaryMonthy = basicSalaryAnnulay / 12;
-        obj.monthlyAmount = basicSalaryMonthy;
-        obj.yearlyAmount = basicSalaryAnnulay;
-        totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
-      } else if (
-        obj.formula != null &&
-        obj.description != "Basic SALARY" &&
-        obj.formula.length > 0
-      ) {
-        if (newFormula !== undefined && obj.id === id) {
-          if (newFormula === "") {
-            obj.formula = "0";
-          } else {
-            obj.formula = newFormula;
-          }
-        }
-        var salaryAnnulay = CTC1 * (obj.formula / 100);
-        var salaryMonthy = salaryAnnulay / 12;
-        obj.monthlyAmount = salaryMonthy;
-        obj.yearlyAmount = salaryAnnulay;
-        totalFixedSalary = totalFixedSalary + salaryMonthy;
-      } else if (obj.flatAmount != null) {
-        if (newFlatAmount !== undefined && obj.id === id) {
-          if (newFlatAmount === "") {
-            obj.flatAmount = "0";
-          } else {
-            obj.flatAmount = newFlatAmount;
-          }
-        }
-        var salaryMonthy = obj.flatAmount;
-        obj.monthlyAmount = salaryMonthy;
-        obj.yearlyAmount = salaryMonthy * 12;
-        totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
-      }
-
-      return obj;
-    });
-    if (Variable != null) {
-      Variable.map((obj) => {
-        locallist.push(obj);
-        if (
-          obj.formula != null &&
-          obj.description != "Basic SALARY" &&
-          obj.formula.length > 0
-        ) {
+      if (obj.formula != null && obj.formula.length > 0) {
           if (newFormula !== undefined && obj.id === id) {
-            if (newFormula === "") {
-              obj.formula = "0";
-            } else {
-              obj.formula = newFormula;
-            }
+              if (newFormula === '') { obj.formula = '0'; }
+              else { obj.formula = newFormula; }
           }
-          var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-          var salaryAnnulay = salaryMonthy * 12;
+
+          var salaryAnnulay = CTC1 * (obj.formula / 100);
+          var salaryMonthy = salaryAnnulay / 12;
           obj.monthlyAmount = salaryMonthy;
           obj.yearlyAmount = salaryAnnulay;
           totalFixedSalary = totalFixedSalary + salaryMonthy;
-        } else if (obj.flatAmount != null) {
+      }
+      else  {
           if (newFlatAmount !== undefined && obj.id === id) {
-            if (newFlatAmount === "") {
-              obj.flatAmount = "0";
-            } else {
-              obj.flatAmount = newFlatAmount;
-            }
+              if (newFlatAmount === '') { obj.flatAmount = '0'; }
+              else { obj.flatAmount = newFlatAmount; }
           }
           var salaryMonthy = obj.flatAmount;
           obj.monthlyAmount = salaryMonthy;
           obj.yearlyAmount = salaryMonthy * 12;
           totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
-        }
-
-        return obj;
-      });
-    }
+      }
+      return obj;
+    });
+    // if (Variable != null) {
+    //   Variable.map((obj) => {
+    //     locallist.push(obj);
+    //     if (
+    //       obj.formula != null &&
+    //       obj.description != "Basic SALARY" &&
+    //       obj.formula.length > 0
+    //     ) {
+    //       if (newFormula !== undefined && obj.id === id) {
+    //         if (newFormula === "") {
+    //           obj.formula = "0";
+    //         } else {
+    //           obj.formula = newFormula;
+    //         }
+    //       }
+    //       var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
+    //       var salaryAnnulay = salaryMonthy * 12;
+    //       obj.monthlyAmount = salaryMonthy;
+    //       obj.yearlyAmount = salaryAnnulay;
+    //       totalFixedSalary = totalFixedSalary + salaryMonthy;
+    //     } else if (obj.flatAmount != null) {
+    //       if (newFlatAmount !== undefined && obj.id === id) {
+    //         if (newFlatAmount === "") {
+    //           obj.flatAmount = "0";
+    //         } else {
+    //           obj.flatAmount = newFlatAmount;
+    //         }
+    //       }
+    //       var salaryMonthy = obj.flatAmount;
+    //       obj.monthlyAmount = salaryMonthy;
+    //       obj.yearlyAmount = salaryMonthy * 12;
+    //       totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+    //     }
+    //     return obj;
+    //   });
+    // }
     if (Deduction != null) {
       Deduction.map((obj) => {
         locallist.push(obj);
@@ -1340,7 +1325,7 @@ class CreateEmployeePayroll extends React.Component {
               obj.formula = newFormula;
             }
           }
-          var salaryAnnulay = CTC * (obj.formula / 100)
+          var salaryAnnulay = CTC1 * (obj.formula / 100)
           var salaryMonthy = salaryAnnulay / 12;
           obj.monthlyAmount = salaryMonthy;
           obj.yearlyAmount = salaryAnnulay;
@@ -1358,7 +1343,6 @@ class CreateEmployeePayroll extends React.Component {
           obj.yearlyAmount = salaryMonthy * 12;
           // totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
         }
-
         return obj;
       });
     }
@@ -1366,17 +1350,16 @@ class CreateEmployeePayroll extends React.Component {
     const monthlySalary = CTC1 / 12;
     const componentTotal1 = monthlySalary - totalFixedSalary;
 
-    if (Fixed_Allowance != null) {
-      Fixed_Allowance.map((obj) => {
-        locallist.push(obj);
-        if (obj.flatAmount != null) {
-          obj.monthlyAmount = componentTotal1;
-          obj.yearlyAmount = componentTotal1 * 12;
-        }
-
-        return obj;
-      });
-    }
+    // if (Fixed_Allowance != null) {
+    //   Fixed_Allowance.map((obj) => {
+    //     locallist.push(obj);
+    //     if (obj.flatAmount != null) {
+    //       obj.monthlyAmount = componentTotal1;
+    //       obj.yearlyAmount = componentTotal1 * 12;
+    //     }
+    //     return obj;
+    //   });
+    // }
 
     this.setState({
       componentTotal: componentTotal1,
@@ -1384,6 +1367,7 @@ class CreateEmployeePayroll extends React.Component {
       list: locallist,
     });
   };
+
   render() {
     strings.setLanguage(this.state.language);
     const {
@@ -2513,17 +2497,7 @@ class CreateEmployeePayroll extends React.Component {
                                                           strings.Select +
                                                           strings.Designation
                                                         }
-                                                        value={ this.state.newDesig === true ? (designation_dropdown
-                                                          && selectOptionsFactory.renderOptions(
-                                                              'label',
-                                                              'value',
-                                                              designation_dropdown,
-                                                              'employeeDesignationId',
-                                                          ).find(
-                                                              (option) =>
-                                                                  parseFloat(option.value) ===
-                                                                  this.state.initValue.employeeDesignationId,
-                                                          )) : designation_dropdown
+                                                        value={ designation_dropdown
                                                           && selectOptionsFactory.renderOptions(
                                                               'label',
                                                               'value',
@@ -2532,7 +2506,7 @@ class CreateEmployeePayroll extends React.Component {
                                                           ).find(
                                                               (option) =>
                                                                   option.value ===
-                                                                  +props.values.employeeDesignationId,
+                                                                  +props.values.employeeDesignationId.value,
                                                           )}
                                                         onChange={(value) => {
                                                           this.setState({newDesig: false})
@@ -3833,17 +3807,17 @@ class CreateEmployeePayroll extends React.Component {
                                               // onClick={() => {
                                               //     this.toggle(0, '2')
                                               // }}
+                                              disabled={this.state.disabledPersonalDetailNextButton}
                                               onClick={() => {
                                                 //  added validation popup  msg
                                                 props.handleBlur();
-                                                if (
-                                                  props.errors &&
+                                                if (props.errors &&
                                                   Object.keys(props.errors)
                                                     .length != 0
                                                 )
                                                   this.props.commonActions.fillManDatoryDetails();
                                                 this.setState(
-                                                  { createMore: false },
+                                                  { createMore: false,},
                                                   () => {
                                                     props.handleSubmit();
                                                   }
@@ -5015,6 +4989,14 @@ class CreateEmployeePayroll extends React.Component {
                       onSubmit={(values, { resetForm }) => {
                         this.handleSubmitForSalary(values, resetForm);
                       }}
+                      validate={(values) => {
+                        let errors = {}
+                          if (this.state.CTC != (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )) {
+                            errors.grossEarning = "Gross Earnings should be equal to CTC"
+                          }
+                          // console.log(errors)
+                        return errors;
+                      }}
                       validationSchema={Yup.object().shape({
                         CTC: Yup.string()
                           .required("CTC is required")
@@ -5126,7 +5108,6 @@ class CreateEmployeePayroll extends React.Component {
                                 <Row className="ml-2">
                                   <h4>{strings.Earnings}</h4>
                                 </Row>
-
                                 <Table
                                   className="text-center"
                                   style={{
@@ -5161,7 +5142,7 @@ class CreateEmployeePayroll extends React.Component {
                                           >
                                             {item.description}
                                           </td>
-                                          {item.formula ? (
+                                          {/* {item.formula ? (
                                             <td
                                               style={{
                                                 border: "3px solid #c8ced3",
@@ -5206,7 +5187,95 @@ class CreateEmployeePayroll extends React.Component {
                                               {" "}
                                               {strings.FixedAmount}
                                             </td>
-                                          )}
+                                          )} */}
+                                          <td style={{ border: "3px solid #c8ced3" }}>
+                                            <Field
+                                                // name={`lineItemsString.${idx}.discountType`}
+                                                render={({ field, form }) => (
+                                                    <div>
+                                                        <div class="input-group">
+                                                            {item.formula ? 
+                                                            <Input
+                                                                type="number"
+                                                                min="0"
+                                                                max="99"
+                                                                step="0.01"
+                                                                size="30"
+                                                                maxLength={2}
+                                                                style={{ textAlign: "center" }}
+                                                                id="formula"
+                                                                name="formula"
+                                                                value={item.formula}
+                                                                // onChange={(e)=>{this.handleChange(e)}}   
+                                                                onChange={(option) => {
+                                                                    if (option.target.value === '' || this.regDec1.test(option.target.value)) {
+                                                                        props.handleChange('formula')(option)
+                                                                        this.updateSalary1(this.state.CTC, option.target.value, item.id);
+                                                                    }
+                                                                }}
+                                                            /> : 
+                                                            <Input
+                                                            maxLength="8"
+                                                            type="text"
+                                                            size="30"
+                                                            style={{ textAlign: "center" }}
+                                                            onChange={(option) => {
+                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
+                                                            }}
+                                                            value={item.flatAmount}
+                                                            id='' />
+                                                            }
+                                                            <div class="dropdown open input-group-append">
+                                                                <div style={{ width: '200px' }}>
+                                                                    <Select
+                                                                        options={
+                                                                            this.type
+                                                                                ? selectOptionsFactory.renderOptions(
+                                                                                    'label',
+                                                                                    'value',
+                                                                                    this.type,
+                                                                                    'Type',
+                                                                                )
+                                                                                : []
+                                                                        }
+                                                                        id="type"
+                                                                        name="type"
+                                                                        placeholder={strings.Select+strings.Type}
+                                                                        value={
+                                                                            this.type
+                                                                                && selectOptionsFactory.renderOptions(
+                                                                                    'label',
+                                                                                    'value',
+                                                                                    this.type,
+                                                                                    'Type',
+                                                                                ).find((option) => ( item.formula == "" ?
+                                                                                    option.value == 1 : option.value == 2))
+                                                                        }
+                                                                        onChange={(value) => {
+                                                                            props.handleChange('type')(value);
+                                                                            if (value.value == 1) {
+                                                                                item.formula = ""
+                                                                                item.flatAmount = "1"
+                                                                                this.updateSalary(this.state.CTC)
+                                                                            } else {
+                                                                                item.formula = "1"
+                                                                                item.flatAmount = ""
+                                                                                this.updateSalary(this.state.CTC)
+                                                                            }
+                                                                        }}
+                                                                        className={`${props.errors.type && props.touched.type
+                                                                            ? 'is-invalid'
+                                                                            : ''
+                                                                            }`}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            />
+                                          </td>
                                           {item.formula ? (
                                             <td
                                               style={{
@@ -5214,7 +5283,7 @@ class CreateEmployeePayroll extends React.Component {
                                               }}
                                             >
                                               <Input
-                                                disabled={true}
+                                                disabled
                                                 type="text"
                                                 size="30"
                                                 style={{ textAlign: "center" }}
@@ -5239,6 +5308,7 @@ class CreateEmployeePayroll extends React.Component {
                                               }}
                                             >
                                               <Input
+                                                disabled
                                                 type="text"
                                                 size="30"
                                                 style={{ textAlign: "center" }}
@@ -5598,7 +5668,7 @@ class CreateEmployeePayroll extends React.Component {
                                               >
                                                 {item.description}
                                               </td>
-                                              {item.formula ? (
+                                              {/* {item.formula ? (
                                                 <td
                                                   style={{
                                                     border: "3px solid #c8ced3",
@@ -5639,7 +5709,95 @@ class CreateEmployeePayroll extends React.Component {
                                                 >
                                                   {strings.FixedAmount}
                                                 </td>
-                                              )}
+                                              )} */}
+                                              <td style={{ border: "3px solid #c8ced3" }}>
+                                                <Field
+                                                  // name={`lineItemsString.${idx}.discountType`}
+                                                  render={({ field, form }) => (
+                                                      <div>
+                                                          <div class="input-group">
+                                                              {item.formula ? 
+                                                              <Input
+                                                                  type="number"
+                                                                  min="0"
+                                                                  max="99"
+                                                                  step="0.01"
+                                                                  size="30"
+                                                                  maxLength={2}
+                                                                  style={{ textAlign: "center" }}
+                                                                  id="formula"
+                                                                  name="formula"
+                                                                  value={item.formula}
+                                                                  // onChange={(e)=>{this.handleChange(e)}}   
+                                                                  onChange={(option) => {
+                                                                      if (option.target.value === '' || this.regDec1.test(option.target.value)) {
+                                                                          props.handleChange('formula')(option)
+                                                                          this.updateSalary1(this.state.CTC, option.target.value, item.id);
+                                                                      }
+                                                                  }}
+                                                              /> : 
+                                                              <Input
+                                                              maxLength="8"
+                                                              type="text"
+                                                              size="30"
+                                                              style={{ textAlign: "center" }}
+                                                              onChange={(option) => {
+                                                                  if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                  this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
+                                                              }}
+                                                              value={item.flatAmount}
+                                                              id='' />
+                                                              }
+                                                              <div class="dropdown open input-group-append">
+                                                                  <div style={{ width: '200px' }}>
+                                                                      <Select
+                                                                          options={
+                                                                              this.type
+                                                                                  ? selectOptionsFactory.renderOptions(
+                                                                                      'label',
+                                                                                      'value',
+                                                                                      this.type,
+                                                                                      'Type',
+                                                                                  )
+                                                                                  : []
+                                                                          }
+                                                                          id="type"
+                                                                          name="type"
+                                                                          placeholder={strings.Select+strings.Type}
+                                                                          value={
+                                                                              this.type
+                                                                                  && selectOptionsFactory.renderOptions(
+                                                                                      'label',
+                                                                                      'value',
+                                                                                      this.type,
+                                                                                      'Type',
+                                                                                  ).find((option) => ( item.formula == "" ?
+                                                                                      option.value == 1 : option.value == 2))
+                                                                          }
+                                                                          onChange={(value) => {
+                                                                              props.handleChange('type')(value);
+                                                                              if (value.value == 1) {
+                                                                                  item.formula = ""
+                                                                                  item.flatAmount = "1"
+                                                                                  this.updateSalary(this.state.CTC)
+                                                                              } else {
+                                                                                  item.formula = "1"
+                                                                                  item.flatAmount = ""
+                                                                                  this.updateSalary(this.state.CTC)
+                                                                              }
+                                                                          }}
+                                                                          className={`${props.errors.type && props.touched.type
+                                                                              ? 'is-invalid'
+                                                                              : ''
+                                                                              }`}
+                                                                      />
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  )}
+                                                />
+                                              </td>
                                               {item.formula ? (
                                                 <td
                                                   style={{
@@ -5647,7 +5805,7 @@ class CreateEmployeePayroll extends React.Component {
                                                   }}
                                                 >
                                                   <Input
-                                                    disabled={true}
+                                                    disabled
                                                     type="text"
                                                     size="30"
                                                     style={{
@@ -5669,6 +5827,7 @@ class CreateEmployeePayroll extends React.Component {
                                                   }}
                                                 >
                                                   <Input
+                                                    disabled
                                                     type="text"
                                                     size="30"
                                                     style={{
@@ -5801,6 +5960,15 @@ class CreateEmployeePayroll extends React.Component {
                                     </tr>
                                   </tbody>
                                 </Table>
+                                {props.errors.grossEarning && (
+                                  <div style={{width: '133%'}}>
+                                      <div className='pull-right'>
+                                          <div className='invalid-feedback d-block' style={{fontSize: 'medium'}}>
+                                              {props.errors.grossEarning}
+                                          </div>
+                                      </div>
+                                  </div>
+                                )}
                               </Col>
                               <Col lg={9}>
                                 <Row className="ml-2 mt-4">

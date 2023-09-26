@@ -334,14 +334,12 @@ class SalaryComponentFixed extends React.Component {
 												</FormGroup>
 											</Col>
 
-									
 											</Row>
 											<Row>
 											<Col md="8">
 												<FormGroup>
 													<Label htmlFor="type"><span className="text-danger">* </span>{strings.Type}</Label>
 													<Select
-
 														options={
 															this.type
 																? selectOptionsFactory.renderOptions(
@@ -358,7 +356,6 @@ class SalaryComponentFixed extends React.Component {
 														value={this.state.gender}
 														onChange={(value) => {
 															props.handleChange('type')(value);
-
 														}}
 														className={`${props.errors.type && props.touched.type
 															? 'is-invalid'
@@ -373,7 +370,6 @@ class SalaryComponentFixed extends React.Component {
 												</FormGroup>
 											</Col>
 										</Row>
-
 
 										<Row style={{ display: props.values.type.value !== 2 ? 'none' : '' }}>
 											<Col lg={8}>
@@ -467,7 +463,6 @@ class SalaryComponentFixed extends React.Component {
 						}}
 					</Formik>
 				</Modal>
-
 			</div>
 		);
 	}

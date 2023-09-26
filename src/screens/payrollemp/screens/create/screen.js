@@ -1106,6 +1106,7 @@ class CreateEmployeePayroll extends React.Component {
                 },
                 newDesig: true,
             });
+          this.formRefPersonal.current.setFieldValue('employeeDesignationId', this.state.initValue.employeeDesignationId)
         }
       });
   };
@@ -2495,17 +2496,7 @@ class CreateEmployeePayroll extends React.Component {
                                                           strings.Select +
                                                           strings.Designation
                                                         }
-                                                        value={ this.state.newDesig === true ? (designation_dropdown
-                                                          && selectOptionsFactory.renderOptions(
-                                                              'label',
-                                                              'value',
-                                                              designation_dropdown,
-                                                              'employeeDesignationId',
-                                                          ).find(
-                                                              (option) =>
-                                                                  parseFloat(option.value) ===
-                                                                  this.state.initValue.employeeDesignationId,
-                                                          )) : designation_dropdown
+                                                        value={ designation_dropdown
                                                           && selectOptionsFactory.renderOptions(
                                                               'label',
                                                               'value',

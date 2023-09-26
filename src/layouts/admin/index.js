@@ -53,6 +53,7 @@ class AdminLayout extends React.Component {
 		super(props);
 		this.state = {
 			// language: window['localStorage'].getItem('language'),
+			registeredVat: true,
 		};
 	}
 
@@ -63,7 +64,8 @@ class AdminLayout extends React.Component {
 			this.props.authActions
 				.checkAuthStatus()
 				.then((response) => {
-					this.props.commonActions.getCompanyDetails();
+					this.props.commonActions.getCompanyDetails().then((res) => {
+						this.setState({ registeredVat: res.data.isRegisteredVat })});
 					this.props.commonActions.getRoleList(response.data.role.roleCode);
 				})
 				.catch((err) => {
@@ -172,15 +174,35 @@ class AdminLayout extends React.Component {
 		}
 
 		var finalArray = { items: [] };
-		user_role_list.forEach((p) => {
-			filterPaths(finalArray, p.moduleName);
-		});
-		var correctSequence = navigation.items.map(item => item.name)
-		finalArray.items = correctSequence.reduce((arr, name) => {
-			let ele = finalArray.items.find(item => item.name == name)
-			if (ele) arr.push(ele);
-			return arr;
-		}, [])
+
+user_role_list.forEach((p) => {
+  filterPaths(finalArray, p.moduleName);
+});
+
+var correctSequence = navigation.items.map(item => item.name);
+
+finalArray.items = correctSequence.reduce((arr, name) => {
+  // Create a copy of the finalArray.items array before filtering it.
+  const filteredItems = finalArray.items.slice();
+
+  // Filter the copied array.
+  filteredItems.filter((item) => {
+    if (item.name === 'Master') {
+		console.log(this.state);
+		if (this.state.registeredVat === false) {
+			item.children = item.children.filter((i) => i.name !== "VAT Category");
+			
+		}
+    }
+    return item;
+  });
+
+  // Find the element in the filtered array that matches the current name.
+  const ele = filteredItems.find((item) => item.name === name);
+  if (ele) arr.push(ele);
+
+  return arr;
+}, []);
 	
 
 		return (
@@ -215,7 +237,7 @@ class AdminLayout extends React.Component {
             							draggable
 									/>
 									<Switch>
-										{adminRoutes?.map((prop, key) => {
+										{console.log(this.state) || adminRoutes?.map((prop, key) => {
 											if (prop?.redirect){
 												return (
 													<Redirect

@@ -175,34 +175,31 @@ class AdminLayout extends React.Component {
 
 		var finalArray = { items: [] };
 
-user_role_list.forEach((p) => {
-  filterPaths(finalArray, p.moduleName);
-});
+		user_role_list.forEach((p) => {
+		filterPaths(finalArray, p.moduleName);
+		});
 
-var correctSequence = navigation.items.map(item => item.name);
+		var correctSequence = navigation.items.map(item => item.name);
 
-finalArray.items = correctSequence.reduce((arr, name) => {
-  // Create a copy of the finalArray.items array before filtering it.
-  const filteredItems = finalArray.items.slice();
+		finalArray.items = correctSequence.reduce((arr, name) => {
+		const filteredItems = finalArray.items.slice();
 
-  // Filter the copied array.
-  filteredItems.filter((item) => {
-    if (item.name === 'Master') {
-		console.log(this.state);
-		if (this.state.registeredVat === false) {
-			item.children = item.children.filter((i) => i.name !== "VAT Category");
-			
-		}
-    }
-    return item;
-  });
+		filteredItems.filter((item) => {
+			if (item.name === 'Master') {
+				console.log(this.state);
+				if (this.state.registeredVat === false) {
+					item.children = item.children.filter((i) => i.name !== "VAT Category");
+					
+				}
+			}
+			return item;
+		});
 
-  // Find the element in the filtered array that matches the current name.
-  const ele = filteredItems.find((item) => item.name === name);
-  if (ele) arr.push(ele);
+		const ele = filteredItems.find((item) => item.name === name);
+		if (ele) arr.push(ele);
 
-  return arr;
-}, []);
+		return arr;
+		}, []);
 	
 
 		return (

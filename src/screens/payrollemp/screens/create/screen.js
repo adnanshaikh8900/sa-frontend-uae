@@ -1102,7 +1102,7 @@ class CreateEmployeePayroll extends React.Component {
             this.setState({
                 initValue: {
                     ...this.state.initValue,
-                    ...{ employeeDesignationId: lastOption.value },
+                    ...{ employeeDesignationId: lastOption },
                 },
                 newDesig: true,
             });
@@ -2505,7 +2505,7 @@ class CreateEmployeePayroll extends React.Component {
                                                           ).find(
                                                               (option) =>
                                                                   option.value ===
-                                                                  +props.values.employeeDesignationId,
+                                                                  +props.values.employeeDesignationId.value,
                                                           )}
                                                         onChange={(value) => {
                                                           this.setState({newDesig: false})

@@ -374,12 +374,15 @@ class CreatePayrollList extends React.Component {
 									let payStartDate = moment(moment(obj.payPeriod.split('-')[0].replaceAll('/', '-'), 'DD-MM-YYYY').toDate());
 									let payEndDate = moment(moment(obj.payPeriod.split('-')[1].replaceAll('/', '-'), 'DD-MM-YYYY').toDate());
 									let startDate = moment(date)
-									endDate = moment(date)
-									if (obj.employeeId === 10000){
-										debugger
-										console.log(moment(payStartDate), moment(date).subtract(1, "days"), moment(payEndDate), moment(endDate).add(1, "days"))
-									}
-									if ((payStartDate.isBefore(endDate) && payStartDate.isAfter(startDate)) || (payStartDate.isSame(startDate) || payStartDate.isSame(endDate))){
+									endDate = moment(endDate)
+									
+									if ((startDate.isBefore(payEndDate) && startDate.isAfter(payStartDate)) || (startDate.isSame(payStartDate) || startDate.isSame(payEndDate))){
+										flag = false;
+									}else if ((endDate.isBefore(payEndDate) && endDate.isAfter(payStartDate)) || (endDate.isSame(payStartDate) || endDate.isSame(payEndDate))){
+										flag = false;
+									}else if ((payStartDate.isBefore(endDate) && payStartDate.isAfter(startDate)) || (payStartDate.isSame(startDate) || payStartDate.isSame(endDate))){
+										flag = false;
+									}else if ((payEndDate.isBefore(endDate) && payEndDate.isAfter(startDate)) || (payEndDate.isSame(startDate) || payEndDate.isSame(endDate))){
 										flag = false;
 									}
 								})

@@ -212,7 +212,7 @@ class SalaryComponentDeduction extends React.Component {
 									if (values.description=="") {
 										errors.description = 'Component name is required';
 									}
-									if (values.type=="") {
+									if (values.type.label && values.type.value=="") {
 										errors.type = 'Type is required';
 									}
 									// if (values.flatAmount=="") {
@@ -419,10 +419,10 @@ class SalaryComponentDeduction extends React.Component {
 																this.type,
 																'Type',
 															).find(
-																   (option) =>
-																	   option.value ===
-																	   +props.values.type.value,
-															   )}
+																(option) =>
+																	option.value ===
+																	+props.values.type.value,
+															)}
 														onChange={(value) => {
 															props.handleChange('type')(value);
 

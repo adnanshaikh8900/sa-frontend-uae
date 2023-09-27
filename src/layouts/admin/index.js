@@ -186,7 +186,6 @@ class AdminLayout extends React.Component {
 
 		filteredItems.filter((item) => {
 			if (item.name === 'Master') {
-				console.log(this.state);
 				if (this.state.registeredVat === false) {
 					item.children = item.children.filter((i) => i.name !== "VAT Category");
 					
@@ -234,7 +233,7 @@ class AdminLayout extends React.Component {
             							draggable
 									/>
 									<Switch>
-										{console.log(this.state) || adminRoutes?.map((prop, key) => {
+										{adminRoutes?.map((prop, key) => {
 											if (prop?.redirect){
 												return (
 													<Redirect

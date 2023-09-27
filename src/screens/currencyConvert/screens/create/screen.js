@@ -237,9 +237,9 @@ class CreateCurrencyConvert extends React.Component {
 															strings.ExchangeRateRequired)
 														.test(
 														'exchangeRate',
-															'Exchange rate should be greater than 0.1',
+															'Exchange rate should be greater than 0',
 														(value) => {
-															if (value > 0.1) {
+															if (value > 0) {
 																return true;
 															} else {
 																return false;

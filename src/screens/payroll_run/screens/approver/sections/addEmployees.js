@@ -112,7 +112,6 @@ class AddEmployeesModal extends React.Component {
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		if (prevState.employee_list !== nextProps.employee_list) {
-			console.log('getDerivedStateFromProps state changed', nextProps.selectedData);
 			return {
 				prefixData: nextProps.prefixData,
 				employee_list: nextProps.employee_list,
@@ -322,8 +321,6 @@ class AddEmployeesModal extends React.Component {
 		const { initValue, contentState, data, loading, selectedRows } = this.state;
 
 		let tmpSupplier_list = []
-		console.log(payroll_employee_list, "Variable")
-
 		return (
 			<div className="contact-modal-screen">
 				<Modal isOpen={openModal} className="modal-success contact-modal">

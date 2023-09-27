@@ -2245,7 +2245,24 @@ class DetailCreditNote extends React.Component {
 																					</TableHeaderColumn>
 																				</BootstrapTable>
 																			</Col>
-																		</Row></>)}
+																		</Row>
+																		{initValue.discount != 0 &&
+																			<Row className="ml-4 ">
+																				<Col className=" ml-4">
+																					<FormGroup className='pull-right'>
+																						<Input
+																							type="checkbox"
+																							id="discountEnabled"
+																							checked={initValue.discount != 0 ? true : false}
+																							value={initValue.discount != 0 ? true : false}
+																						/>
+																						<Label>{strings.ApplyLineItemDiscount}</Label>
+																					</FormGroup>
+																				</Col>
+																			</Row>
+																		}
+																	</>
+																)}
 																{this.state.invoiceNumber ? (
 																	<Row>
 																		<Col lg={8}>

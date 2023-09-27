@@ -152,7 +152,7 @@ class ViewEmployee extends React.Component {
 						const postData = {
 							id: this.props.location.state.id,
 							salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'),
-							sendMail: true,
+							sendMail: false,
 							startDate: '',
 							endDate: '',
 						};

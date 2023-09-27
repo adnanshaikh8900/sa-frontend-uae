@@ -86,7 +86,7 @@ let strings = new LocalizedStrings(data);
 class CreateBankTransaction extends React.Component {
   constructor(props) {
     super(props);
-    this.state = defaultState(this.props.location.state?.currency);
+    this.state = defaultState(this.props.location.state?.currency, this.props.location.state?.isRegisteredVat);
 
     this.file_size = 1024000;
     this.supported_format = [
@@ -113,6 +113,25 @@ class CreateBankTransaction extends React.Component {
         this.setState({ COACList: response.data });
       });
     this.getCorporateTaxList();
+  
+    this.props.commonActions.getCompanyDetails().then((res) => {
+      if (res.status === 200) {
+        const isRegisteredVat = res.data.isRegisteredVat;
+        
+        this.props.history.replace({
+          pathname: this.props.location.pathname,
+          state: {
+            ...this.props.location.state,
+            isRegisteredVat: isRegisteredVat,
+          },
+        });
+  
+        this.setState({
+          companyDetails: res.data,
+          isRegisteredVat: isRegisteredVat,
+        });
+      }
+    });
   };
 
   initializeData = () => {
@@ -440,7 +459,6 @@ class CreateBankTransaction extends React.Component {
         report ? JSON.stringify([report]) : ""
       );
     }
-    debugger
     this.props.transactionCreateActions
       .createTransaction(formData)
       .then((res) => {
@@ -1106,6 +1124,7 @@ class CreateBankTransaction extends React.Component {
   };
   render() {
     strings.setLanguage(this.state.language);
+    console.log(this.props.location.state);
     const {
       initValue,
       id,

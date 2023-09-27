@@ -285,21 +285,19 @@ class PayrollRun extends React.Component {
 	};
 	renderPayrolltotalAmount = (cell, row) => {
 		return (
-			<div style={{ fontSize: "11px" }}>
-				{row.totalAmountPayroll != null && (<div>
-					<label className="font-weight-bold mr-2 ">{strings.Payroll + " " + strings.Amount}: </label>
-					<label>
-						{row.totalAmountPayroll === 0 ? "AED " + row.totalAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : "AED " + row.totalAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+			<div>
+			 <div>
+			 <label className="font-weight-bold mr-2 ">{strings.Payroll + " " + strings.Amount}: </label>
+			<label>
+				{row.totalAmountPayroll === 0 ? "AED " + row.totalAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : "AED " + row.totalAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 
-					</label>
-				</div>)}
-
+			</label>
+				</div>
 				{row.dueAmountPayroll != null && (<div style={{ display: row.dueAmountPayroll === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
 					<label>{row.dueAmountPayroll === 0 ? row.dueAmountPayroll + " " + row.dueAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : "AED " + row.dueAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
 				</div>)}
-
-			</div>);
+                </div>);
 	};
 	renderEmployeeCount = (cell, row) => {
 		let employeeCount = row.employeeCount ? row.employeeCount : '-'

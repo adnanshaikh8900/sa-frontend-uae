@@ -92,7 +92,7 @@ class UpdateSalaryComponent extends React.Component {
             { label: 'Component Name', value: 'Component Name', sort: false },
             { label: 'Calculation Type', value: 'Calculation Type', sort: false },
             { label: 'Monthly', value: 'Monthly', sort: false },
-            { label: 'Annualy', value: 'Annualy', sort: false },
+            { label: 'Annually', value: 'Annualy', sort: false },
         ];
     }
 
@@ -285,6 +285,11 @@ class UpdateSalaryComponent extends React.Component {
       const grossEarning = (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 )
       // this.setState({grossSalarys : grossEarning})
       return grossEarning;
+    }
+    grossYearEarnings = () => {
+      const grossYearEarning = (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )
+      // this.setState({grossSalarys : grossEarning})
+      return grossYearEarning;
     }
 
     // Create or Edit VAT
@@ -890,10 +895,26 @@ class UpdateSalaryComponent extends React.Component {
                                                                                             <b className="pull-left">{strings.TotalEarnings+' (A):'}</b>
                                                                                         </td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                            {this.totalEarnings()}
+                                                                                        {this.totalEarnings()
+                                                                                            ? this.totalEarnings().toLocaleString(
+                                                                                                navigator.language,
+                                                                                                {
+                                                                                                minimumFractionDigits: 2,
+                                                                                                maximumFractionDigits: 2,
+                                                                                                }
+                                                                                            )
+                                                                                            : 0.0}
                                                                                         </b></td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                            {this.totalYearEarnings()}
+                                                                                        {this.totalYearEarnings()
+                                                                                            ? this.totalYearEarnings().toLocaleString(
+                                                                                                navigator.language,
+                                                                                                {
+                                                                                                minimumFractionDigits: 2,
+                                                                                                maximumFractionDigits: 2,
+                                                                                                }
+                                                                                            )
+                                                                                            : 0.0}
                                                                                         </b></td>
                                                                                     </tr>
                                                                                 </tbody>
@@ -1235,10 +1256,26 @@ class UpdateSalaryComponent extends React.Component {
                                                                                         <b className="pull-left">{strings.Total+' '+strings.Deductions+' (B):'}</b>
                                                                                         </td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                        {typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 }
+                                                                                        {typeof this.state.Deduction === 'object' ? (this.totalDeductions()
+                                                                                            ? this.totalDeductions().toLocaleString(
+                                                                                                navigator.language,
+                                                                                                {
+                                                                                                minimumFractionDigits: 2,
+                                                                                                maximumFractionDigits: 2,
+                                                                                                }
+                                                                                            )
+                                                                                            : 0.0) : 0 }
                                                                                         </b></td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                        {typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 }
+                                                                                        {typeof this.state.Deduction === 'object' ? (this.totalYearDeductions()
+                                                                                            ? this.totalYearDeductions().toLocaleString(
+                                                                                                navigator.language,
+                                                                                                {
+                                                                                                minimumFractionDigits: 2,
+                                                                                                maximumFractionDigits: 2,
+                                                                                                }
+                                                                                            )
+                                                                                            : 0.0) : 0 }
                                                                                         </b></td>
                                                                                     </tr>
                                                                                 </tbody>
@@ -1267,7 +1304,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                     {this.grossEarnings()}
                                                                                 </b></td>
                                                                                 <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                    {(this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )}
+                                                                                    {this.grossYearEarnings()}
                                                                                 </b></td>
                                                                                 </tr>
                                                                             </tbody>
@@ -1299,10 +1336,26 @@ class UpdateSalaryComponent extends React.Component {
                                                                                     <b className="pull-right">{'(C - B)'}</b>
                                                                                 </td>
                                                                                 <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                    {(this.totalEarnings())}
+                                                                                {this.totalEarnings()
+                                                                                    ? this.totalEarnings().toLocaleString(
+                                                                                        navigator.language,
+                                                                                        {
+                                                                                        minimumFractionDigits: 2,
+                                                                                        maximumFractionDigits: 2,
+                                                                                        }
+                                                                                    )
+                                                                                    : 0.0}
                                                                                 </b></td>
                                                                                 <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                    {(this.totalYearEarnings())}
+                                                                                {this.totalYearEarnings()
+                                                                                ? this.totalYearEarnings().toLocaleString(
+                                                                                    navigator.language,
+                                                                                    {
+                                                                                    minimumFractionDigits: 2,
+                                                                                    maximumFractionDigits: 2,
+                                                                                    }
+                                                                                )
+                                                                                : 0.0}
                                                                                 </b></td>
                                                                                 </tr>
                                                                             </tbody>

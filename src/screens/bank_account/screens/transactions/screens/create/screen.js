@@ -1124,7 +1124,6 @@ class CreateBankTransaction extends React.Component {
   };
   render() {
     strings.setLanguage(this.state.language);
-    console.log(this.props.location.state);
     const {
       initValue,
       id,

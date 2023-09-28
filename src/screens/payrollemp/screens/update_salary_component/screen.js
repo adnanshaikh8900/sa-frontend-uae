@@ -69,6 +69,7 @@ class UpdateSalaryComponent extends React.Component {
             loadingMsg: "Loading....",
             disableLeavePage: false,
             varEarn: false,
+            errorMsg: false,
             ctcTypeOption: this.props.location.state.ctcTypeOption ? this.props.location.state.ctcTypeOption : { label: "MONTHLY", value: 2 },
             ctcType: this.props.location.state.ctcTypeOption ? this.props.location.state.ctcTypeOption.label : "MONTHLY",
             ctcTypeList: [
@@ -328,6 +329,7 @@ class UpdateSalaryComponent extends React.Component {
 
 
     updateSalary = (CTC1) => {
+        this.setState({ errorMsg: false })
         const Fixed = this.state.Fixed
         const Variable = this.state.Variable
         const Deduction = this.state.Deduction
@@ -440,6 +442,7 @@ class UpdateSalaryComponent extends React.Component {
     }
 
     updateSalary1 = (CTC1, newFormula, id, newFlatAmount) => {
+        this.setState({ errorMsg: false })
         const Fixed = this.state.Fixed
         const Variable = this.state.Variable
         const Deduction = this.state.Deduction
@@ -597,12 +600,13 @@ class UpdateSalaryComponent extends React.Component {
                                                                 this.handleSubmit(values)
                                                             }}
                                                             validate={(values) => {
-                                                                let errors = {}
-                                                                // console.log(values)
-                                                                    if (this.state.CTC != (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )) {
-                                                                        errors.grossEarning = "Gross Earnings should be equal to CTC"
-                                                                    }
-                                                                return errors;
+                                                              let errors = {}
+                                                                if (this.state.errorMsg && this.state.CTC && (parseFloat(this.state.CTC) != parseFloat((this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )))) {
+                                                                  errors.grossEarning = "Gross Earnings should be equal to CTC"
+                                                                } else {
+                                                                  errors = {}
+                                                                }
+                                                              return errors;
                                                             }}
                                                             validationSchema={Yup.object().shape({
                                                                 CTC: Yup.string()
@@ -823,9 +827,15 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                         type="text"
                                                                                                         size="30"
                                                                                                         style={{ textAlign: "center" }}
-                                                                                                        value={item.monthlyAmount ? item.monthlyAmount.toLocaleString() : 0.00}
+                                                                                                        value={item.monthlyAmount ? (item.monthlyAmount.toLocaleString(
+                                                                                                            navigator.language,
+                                                                                                            {
+                                                                                                              minimumFractionDigits: 2,
+                                                                                                              maximumFractionDigits: 2,
+                                                                                                            }
+                                                                                                          )) : 0.0}
                                                                                                         id=''
-                                                                                                        isDisabled={true}
+                                                                                                        // isDisabled={true}
                                                                                                     />
                                                                                                     {/* {item.monthlyAmount ?  item.monthlyAmount.toLocaleString() : 0.00} */}
 
@@ -844,7 +854,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                                 this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
 
                                                                                                             }}
-                                                                                                            value={item.flatAmount}
+                                                                                                            value={item.flatAmount ? item.flatAmount : 0}
                                                                                                             id='' />
                                                                                                     </td>
                                                                                                 )}
@@ -852,13 +862,21 @@ class UpdateSalaryComponent extends React.Component {
                                                                                             {item.formula ?
                                                                                                 (<td style={{ border: "3px solid  #c8ced3" }} >
 
-                                                                                                    {item.yearlyAmount ? item.yearlyAmount.toLocaleString() : 0.00}
+                                                                                                    {item.yearlyAmount ? (item.yearlyAmount
+                                                                                                        ? item.yearlyAmount.toLocaleString(
+                                                                                                        navigator.language,
+                                                                                                        {
+                                                                                                            minimumFractionDigits: 2,
+                                                                                                            maximumFractionDigits: 2,
+                                                                                                        }
+                                                                                                        )
+                                                                                                        : 0.0) : 0}
                                                                                                 </td>
 
                                                                                                 ) : (
                                                                                                     <td style={{ border: "3px solid  #c8ced3" }} >
 
-                                                                                                        {item.flatAmount ? item.flatAmount * 12 : 0.00}
+                                                                                                        {item.flatAmount ? item.flatAmount * 12 : 0.0}
                                                                                                     </td>
                                                                                                 )}
                                                                                             <td style={{border: 'none'}}>
@@ -1190,7 +1208,13 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                             type="text"
                                                                                                             size="30"
                                                                                                             style={{ textAlign: "center" }}
-                                                                                                            value={item.monthlyAmount.toLocaleString()}
+                                                                                                            value={item.monthlyAmount ? (item.monthlyAmount.toLocaleString(
+                                                                                                                navigator.language,
+                                                                                                                {
+                                                                                                                  minimumFractionDigits: 2,
+                                                                                                                  maximumFractionDigits: 2,
+                                                                                                                }
+                                                                                                              )) : 0}
                                                                                                         />
                                                                                                     </td>
 
@@ -1207,7 +1231,13 @@ class UpdateSalaryComponent extends React.Component {
 
                                                                                                                 }}
                                                                                                                 style={{ textAlign: "center" }}
-                                                                                                                value={item.flatAmount}
+                                                                                                                value={item.flatAmount ? (item.flatAmount.toLocaleString(
+                                                                                                                    navigator.language,
+                                                                                                                    {
+                                                                                                                      minimumFractionDigits: 2,
+                                                                                                                      maximumFractionDigits: 2,
+                                                                                                                    }
+                                                                                                                  )) : 0}
                                                                                                                 id='' />
                                                                                                         </td>
                                                                                                     )}
@@ -1215,12 +1245,18 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                 {item.formula ?
                                                                                                     (<td style={{ border: "3px solid  #c8ced3" }} >
 
-                                                                                                        {item.yearlyAmount.toLocaleString()}
+                                                                                                        {item.yearlyAmount ? (item.yearlyAmount.toLocaleString(
+                                                                                                            navigator.language,
+                                                                                                            {
+                                                                                                            minimumFractionDigits: 2,
+                                                                                                            maximumFractionDigits: 2,
+                                                                                                            }
+                                                                                                        )) : 0}
                                                                                                     </td>
 
                                                                                                     ) : (
                                                                                                         <td style={{ border: "3px solid  #c8ced3" }} >
-                                                                                                            {item.flatAmount * 12}
+                                                                                                            {item.flatAmount ? (item.flatAmount * 12) : 0}
                                                                                                         </td>
                                                                                                     )}
                                                                                                 <td style={{borderTop: "0px"}}>
@@ -1301,15 +1337,31 @@ class UpdateSalaryComponent extends React.Component {
                                                                                     <b className="pull-right">{'(A + B)'}</b>
                                                                                 </td>
                                                                                 <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                    {this.grossEarnings()}
+                                                                                {this.grossEarnings()
+                                                                                    ? this.grossEarnings().toLocaleString(
+                                                                                        navigator.language,
+                                                                                        {
+                                                                                            minimumFractionDigits: 2,
+                                                                                            maximumFractionDigits: 2,
+                                                                                        }
+                                                                                        )
+                                                                                    : 0.0}
                                                                                 </b></td>
                                                                                 <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                    {this.grossYearEarnings()}
+                                                                                {this.grossYearEarnings()
+                                                                                    ? this.grossYearEarnings().toLocaleString(
+                                                                                        navigator.language,
+                                                                                        {
+                                                                                            minimumFractionDigits: 2,
+                                                                                            maximumFractionDigits: 2,
+                                                                                        }
+                                                                                        )
+                                                                                    : 0.0}
                                                                                 </b></td>
                                                                                 </tr>
                                                                             </tbody>
                                                                             </Table>
-                                                                            {props.errors.grossEarning && (
+                                                                            {this.state.errorMsg && props.errors.grossEarning && (
                                                                                 <div style={{width: '133%'}}>
                                                                                     <div className='pull-right'>
                                                                                         <div className='invalid-feedback d-block' style={{fontSize: 'medium'}}>
@@ -1429,10 +1481,14 @@ class UpdateSalaryComponent extends React.Component {
                                                                                 className="btn-square mr-3"
                                                                                 disabled={this.state.disabled}
                                                                                 onClick={() => {
+                                                                                    this.setState({ errorMsg: true })
                                                                                     //	added validation popup	msg
                                                                                     props.handleBlur();
-                                                                                    if (props.errors && Object.keys(props.errors).length != 0)
+                                                                                    if (
+                                                                                        props.errors == {} && Object.keys(props.errors) == [] && Object.keys(props.errors) != 'grossEarning'
+                                                                                    ) {
                                                                                         this.props.commonActions.fillManDatoryDetails();
+                                                                                    }
                                                                                 }}
                                                                             >
                                                                                 <i className="fa fa-dot-circle-o"></i>{' '}

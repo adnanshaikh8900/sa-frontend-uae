@@ -6201,12 +6201,14 @@ class CreateEmployeePayroll extends React.Component {
                                   //  added validation popup  msg
                                   props.handleBlur();
                                   if (
-                                    props.errors && Object.keys(props.errors) != 'grossEarning'
-                                    )
-                                    this.props.commonActions.fillManDatoryDetails();
-                                  this.setState({ createMore: false }, () => {
-                                    props.handleSubmit();
-                                  });
+                                    props.errors == {} && Object.keys(props.errors) == [] && Object.keys(props.errors) != 'grossEarning'
+                                    ) {
+                                      this.props.commonActions.fillManDatoryDetails();
+                                    } else {
+                                      this.setState({ createMore: false }, () => {
+                                        props.handleSubmit();
+                                      });
+                                    }
                                 }}
                               >
                                 <i className="fa fa-dot-circle-o"></i>{" "}

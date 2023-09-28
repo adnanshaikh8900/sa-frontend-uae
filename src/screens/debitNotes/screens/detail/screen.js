@@ -271,7 +271,7 @@ class DetailDebitNote extends React.Component {
 						this.formRef.current.setFieldValue('remainingInvoiceAmount', res.data.remainingInvoiceAmount, true);
 						this.formRef.current.setFieldValue('currency', res.data.currencyCode ? res.data.currencyCode : '', true);
 						this.formRef.current.setFieldValue('invoiceNumber', res.data.invoiceId ? res.data.invoiceId : '', true);
-
+						this.getInvoiceDetails(this.state.initValue.invoiceNumber.value)
 					}
 				});
 		} else {

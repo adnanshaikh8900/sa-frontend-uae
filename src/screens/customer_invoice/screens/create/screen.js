@@ -496,8 +496,8 @@ class CreateCustomerInvoice extends React.Component {
 			return obj.currencyCode === value;
 		});
 		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
-		this.setState({customer_currency_des: result[0].currencyName })
-		this.setState({customer_currency_symbol :result[0].currencyIsoCode })
+		this.setState({ customer_currency_des: result[0].currencyName })
+		this.setState({ customer_currency_symbol: result[0].currencyIsoCode })
 	};
 
 	validationCheck = (value) => {
@@ -860,10 +860,9 @@ class CreateCustomerInvoice extends React.Component {
 										: 0;
 								this.setState({
 									idCount,
-								},()=>{
-									debugger
-								this.updateAmount(this.state.data);
-								//this.setExchange(res.data.currencyCode);
+								}, () => {
+									this.updateAmount(this.state.data);
+									//this.setExchange(res.data.currencyCode);
 
 								});
 								this.formRef.current.setFieldValue('contactId', res.data.contactId, true);
@@ -871,7 +870,7 @@ class CreateCustomerInvoice extends React.Component {
 								this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.contactId), true);
 								this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.contactId), true);
 								this.formRef.current.setFieldValue('term', term, true);
-								this.formRef.current.setFieldValue('exchangeRate',  res.data.exchangeRate, true);
+								this.formRef.current.setFieldValue('exchangeRate', res.data.exchangeRate, true);
 								// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 								// this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
 								// this.setDate(undefined, '');
@@ -1239,90 +1238,88 @@ class CreateCustomerInvoice extends React.Component {
 	};
 	getProductType = (id) => {
 		if (this.state.customer_taxTreatment_des) {
-			this.props.customerInvoiceCreateActions
-				.getProductById(id)
-				.then((res) => {
-					if (res.status === 200) {
-						var { vat_list } = this.props;
-						let pt = {};
-						var vt = [];
-						pt.id = res.data.productID;
-						pt.type = res.data.productType
-						if (this.state.isRegisteredVat && (this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)) {
-							if (this.state.isDesignatedZone) {
-								if (res.data.productType === "GOODS") {
-									if (this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des === 'GCC VAT REGISTERED' || this.state.customer_taxTreatment_des === 'GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'NON GCC') {
-										vat_list.map(element => {
-											if (element.name == 'OUT OF SCOPE') {
-												vt.push(element);
-											}
-										});
+			const { product_list } = this.props;
+			const product = product_list.find(obj => obj.id === id);
+			if (product) {
+				var { vat_list } = this.props;
+				let pt = {};
+				var vt = [];
+				pt.id = product.id;
+				pt.type = product.productType
+				if (this.state.isRegisteredVat && (this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)) {
+					if (this.state.isDesignatedZone) {
+						if (product.productType === "GOODS") {
+							if (this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des === 'GCC VAT REGISTERED' || this.state.customer_taxTreatment_des === 'GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'NON GCC') {
+								vat_list.map(element => {
+									if (element.name == 'OUT OF SCOPE') {
+										vt.push(element);
 									}
-									if (this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED') {
-										vt = vat_list;
-									}
-								}
-								else if (res.data.productType === "SERVICE") {
-									if (this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED FREEZONE') {
-										vt = vat_list;
-									}
-									if (this.state.customer_taxTreatment_des === 'GCC VAT REGISTERED' || this.state.customer_taxTreatment_des === 'GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'NON GCC') {
-										vat_list.map(element => {
-											if (element.name == 'ZERO RATED TAX (0%)') {
-												vt.push(element);
-											}
-										});
-
-									}
-								}
-							} else {
-								if (this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED FREEZONE') {
-									vt = vat_list;
-								}
-								if (this.state.customer_taxTreatment_des === 'GCC VAT REGISTERED' || this.state.customer_taxTreatment_des === 'GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'NON GCC') {
-									vat_list.map(element => {
-										if (element.name == 'ZERO RATED TAX (0%)') {
-											vt.push(element);
-										}
-									});
-								}
+								});
 							}
-						} else {
-							vt = [{
-								"id": 10,
-								"vat": 0,
-								"name": "N/A"
-							}];
+							if (this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED') {
+								vt = vat_list;
+							}
 						}
-						pt.vat_list = vt;
-						this.setState(prevState => ({
-							producttype: [...prevState.producttype, pt]
-						}));
+						else if (product.productType === "SERVICE") {
+							if (this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED FREEZONE') {
+								vt = vat_list;
+							}
+							if (this.state.customer_taxTreatment_des === 'GCC VAT REGISTERED' || this.state.customer_taxTreatment_des === 'GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'NON GCC') {
+								vat_list.map(element => {
+									if (element.name == 'ZERO RATED TAX (0%)') {
+										vt.push(element);
+									}
+								});
+
+							}
+						}
+					} else {
+						if (this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des === 'UAE NON-VAT REGISTERED FREEZONE') {
+							vt = vat_list;
+						}
+						if (this.state.customer_taxTreatment_des === 'GCC VAT REGISTERED' || this.state.customer_taxTreatment_des === 'GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des === 'NON GCC') {
+							vat_list.map(element => {
+								if (element.name == 'ZERO RATED TAX (0%)') {
+									vt.push(element);
+								}
+							});
+						}
 					}
-				})
-				.catch((err) => {
-					console.log(err, "Get Product by ID Error");
-				});
+				} else {
+					vt = [{
+						"id": 10,
+						"vat": 0,
+						"name": "N/A"
+					}];
+				}
+				pt.vat_list = vt;
+				this.setState(prevState => ({
+					producttype: [...prevState.producttype, pt]
+				}));
+				return pt;
+			}
+
 		}
 	};
 	resetVatId = (props) => {
 		this.setState({
 			producttype: [],
+		}, () => {
+			let newData = [];
+			const { data, isRegisteredVat } = this.state;
+			data.map((obj, index) => {
+				if (isRegisteredVat)
+					obj['vatCategoryId'] = '';
+				else
+					obj['vatCategoryId'] = 10;
+				newData.push(obj);
+				if (obj['productId'])
+					this.getProductType(obj['productId'])
+				return obj;
+			})
+			props.setFieldValue('lineItemsString', newData, true);
+			this.updateAmount(newData, props);
 		});
-		let newData = [];
-		const { data, isRegisteredVat } = this.state;
-		data.map((obj, index) => {
-			if (isRegisteredVat)
-				obj['vatCategoryId'] = '';
-			else
-				obj['vatCategoryId'] = 10;
-			newData.push(obj);
-			if (obj['productId'])
-				this.getProductType(obj['productId'])
-			return obj;
-		})
-		props.setFieldValue('lineItemsString', newData, true);
-		this.updateAmount(newData, props);
 	};
 	renderVat = (cell, row, props) => {
 		//	const { vat_list } = this.props;
@@ -1358,10 +1355,10 @@ class CreateCustomerInvoice extends React.Component {
 									: []
 							}
 							value={
-								vat_list &&
-								selectOptionsFactory
-									.renderOptions('name', 'id', vat_list, 'VAT')
-									.find((option) => option.value === row.vatCategoryId)
+								vat_list ?
+									selectOptionsFactory
+										.renderOptions('name', 'id', vat_list, 'VAT')
+										.find((option) => option.value === row.vatCategoryId) : ''
 							}
 							id="vatCategoryId"
 							placeholder={strings.Select + strings.VAT}
@@ -1520,6 +1517,7 @@ class CreateCustomerInvoice extends React.Component {
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
+		const producttype = this.getProductType(parseInt(e));
 		let exchangeRate = this.formRef.current?.state?.values?.exchangeRate > 0
 			&& this.formRef.current?.state?.values?.exchangeRate !== "" ?
 			this.formRef.current?.state?.values?.exchangeRate : 1
@@ -1534,18 +1532,14 @@ class CreateCustomerInvoice extends React.Component {
 				obj['unitTypeId'] = result.unitTypeId;
 				idx = index;
 				if (this.state.isRegisteredVat) {
-					this.state.producttype.map(element => {
-						if (element.id === e) {
-							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
-							if (!found) {
-								obj['vatCategoryId'] = '';
-							}
-							else {
-								obj['vatCategoryId'] = result.vatCategoryId;
-							}
-							return found;
+					if (producttype) {
+						if (producttype.id === parseInt(e)) {
+							obj['vatCategoryId'] = result.vatCategoryId;
 						}
-					});
+						else {
+							obj['vatCategoryId'] = '';
+						}
+					}
 				} else {
 					obj['vatCategoryId'] = 10;
 				}
@@ -1585,7 +1579,6 @@ class CreateCustomerInvoice extends React.Component {
 			result.discountType,
 			true,
 		);
-		this.getProductType(parseInt(e))
 		this.updateAmount(data, props);
 	};
 
@@ -1599,13 +1592,6 @@ class CreateCustomerInvoice extends React.Component {
 	renderProduct = (cell, row, props) => {
 		var { product_list } = this.props;
 		product_list = product_list.filter((row) => row.stockOnHand != 0)
-		// if (product_list.length > 0) {
-		// 	if (product_list.length > this.state.producttype.length) {
-		// 		product_list.map(element => {
-		// 			this.getProductType(element.id);
-		// 		});
-		// 	}
-		// }
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -2077,7 +2063,7 @@ class CreateCustomerInvoice extends React.Component {
 				this.setState({ loading: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? strings.InvoiceCreatedSuccessfully :  res.data.message,
+					res.data ? strings.InvoiceCreatedSuccessfully : res.data.message,
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -2757,7 +2743,7 @@ class CreateCustomerInvoice extends React.Component {
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="contactId">
 																					<span className="text-danger">* </span>
-																						{strings.CustomerName}
+																					{strings.CustomerName}
 																				</Label>
 																				<Select
 																					isDisabled={this.state.isQuotationSelected}
@@ -3139,7 +3125,6 @@ class CreateCustomerInvoice extends React.Component {
 																					{strings.Currency}
 																				</Label>
 																				<Select
-																					
 																					styles={customStyles}
 																					placeholder={strings.Select + strings.Currency}
 																					options={
@@ -3182,7 +3167,7 @@ class CreateCustomerInvoice extends React.Component {
 																						props.handleChange('currency')(option);
 																						this.setExchange(option.value);
 																						this.setCurrency(option.value)
-																						this.setState({customer_currency: option.value})
+																						this.setState({ customer_currency: option.value })
 																					}}
 
 																				/>

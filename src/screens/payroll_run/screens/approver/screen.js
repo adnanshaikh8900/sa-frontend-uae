@@ -251,7 +251,6 @@ class PayrollApproverScreen extends React.Component {
 			startDate: startDate,
 			endDate: endDate,
 		};
-		debugger
 		this.props.createPayrollActions
 			.approveAndRunPayroll(postData)
 			.then((res) => {

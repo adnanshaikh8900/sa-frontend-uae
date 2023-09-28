@@ -263,9 +263,9 @@ class DetailCurrencyConvert extends React.Component {
                                 'Exchange rate is required',
 								).test(
 									'exchangeRate',
-									'Exchange rate should be greater than 1',
+									'Exchange rate should be greater than 0',
 									(value) => {
-										if (value > 1) {
+										if (value > 0) {
 											return true;
 										} else {
 											return false;

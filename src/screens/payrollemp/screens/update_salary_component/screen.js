@@ -1485,7 +1485,6 @@ class UpdateSalaryComponent extends React.Component {
                                                                                     //	added validation popup	msg
                                                                                     props.handleBlur();
                                                                                     if (props.errors && Object.keys(props.errors) != 'grossEarning') {
-                                                                                        console.log(props.errors);
                                                                                         this.props.commonActions.fillManDatoryDetails();
                                                                                     }
                                                                                 }}

@@ -4983,16 +4983,11 @@ class CreateEmployeePayroll extends React.Component {
                       }}
                       validate={(values) => {
                         let errors = {}
-                          // console.log('CTC = ', parseFloat(this.state.CTC));
-                          // console.log('Other Earnings = ', parseFloat((this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )));
-                          if (this.state.CTC && (parseFloat(this.state.CTC) != parseFloat((this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )))) {
+                          if (this.state.errorMsg && this.state.CTC && (parseFloat(this.state.CTC) != parseFloat((this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )))) {
                             errors.grossEarning = "Gross Earnings should be equal to CTC"
-                            // console.log('in if ---');
                           } else {
-                            // console.log('in else ---');
                             errors = {}
                           }
-                          console.log('errors = ', errors);
                         return errors;
                       }}
                       validationSchema={Yup.object().shape({
@@ -5329,7 +5324,7 @@ class CreateEmployeePayroll extends React.Component {
                                                     );
                                                   }
                                                 }}
-                                                value={item.flatAmount}
+                                                value={item.flatAmount ? item.flatAmount : 0}
                                                 id=""
                                               />
                                             </td>
@@ -6202,12 +6197,11 @@ class CreateEmployeePayroll extends React.Component {
                                 color="primary"
                                 className="btn-square mr-5 pull-right"
                                 onClick={() => {
-                                  // this.state.errorMsg === false ? props.errors = {} : props.errors = props.errors
                                   this.setState({ errorMsg: true })
                                   //  added validation popup  msg
                                   props.handleBlur();
                                   if (
-                                    props.errors
+                                    props.errors && Object.keys(props.errors) != 'grossEarning'
                                     )
                                     this.props.commonActions.fillManDatoryDetails();
                                   this.setState({ createMore: false }, () => {

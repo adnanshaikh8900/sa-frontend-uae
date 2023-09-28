@@ -833,10 +833,10 @@ class BalanceSheet extends React.Component {
 															{strings.Total+" "+strings.FixedAssets}
 														</td>
 														<td className="text-right pt-1 pb-1 bld">
-															{this.state.data['totalfixedAssets'] ? (
+															{this.state.data['totalFixedAssets'] ? (
 																<Currency
 																	value={this.state.data[
-																		'totalfixedAssets'
+																		'totalFixedAssets'
 																	]   }
 																	currencySymbol={
 																		universal_currency_list[0]

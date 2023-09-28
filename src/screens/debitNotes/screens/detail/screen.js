@@ -178,7 +178,7 @@ class DetailDebitNote extends React.Component {
 								taxType: res.data.taxType ? res.data.taxType : false,
 								isCreatedWithoutInvoice: res.data.invoiceId ? false : true,
 								debitNoteId: this.props.location.state.id,
-								isReverseChargeEnabled: res?.data.isReverseChargeEnabled,
+								isReverseChargeEnabled: res.data.isReverseChargeEnabled,
 								initValue: {
 									invoiceNumber: res.data.invoiceId ? { value: res.data.invoiceId, label: res.data.invoiceNumber } : '',
 									receiptAttachmentDescription: res.data
@@ -271,7 +271,7 @@ class DetailDebitNote extends React.Component {
 						this.formRef.current.setFieldValue('remainingInvoiceAmount', res.data.remainingInvoiceAmount, true);
 						this.formRef.current.setFieldValue('currency', res.data.currencyCode ? res.data.currencyCode : '', true);
 						this.formRef.current.setFieldValue('invoiceNumber', res.data.invoiceId ? res.data.invoiceId : '', true);
-
+						this.getInvoiceDetails(this.state.initValue.invoiceNumber.value)
 					}
 				});
 		} else {
@@ -860,6 +860,7 @@ class DetailDebitNote extends React.Component {
 			formData.append('totalAmount', this.state.initValue.totalAmount);
 			formData.append('discount', this.state.initValue.totalDiscount);
 			formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
+			formData.append('isReverseChargeEnabled', this.state.isReverseChargeEnabled);
 		}
 		if (contactId) {
 			formData.append('contactId', contactId.value ? contactId.value : contactId);
@@ -1606,21 +1607,20 @@ class DetailDebitNote extends React.Component {
 																</Row>)}
 																{this.state.isDNWIWithoutProduct === false && data && data.length > 0 && isRegisteredVat && <Row>
 																	<Col className="ml-4">
-																		{(isDesignatedZone && props.values.taxTreatmentId !== 'UAE NON-VAT REGISTERED' && props.values.taxTreatmentId !== 'UAE NON-VAT REGISTERED FREEZONE' && props.values.taxTreatmentId !== 'UAE VAT REGISTERED' && props.values.taxTreatmentId !== 'UAE VAT REGISTERED FREEZONE')
-																			|| (!isDesignatedZone && props.values.taxTreatmentId !== 'UAE VAT REGISTERED FREEZONE')
+																		{this.state.isReverseChargeEnabled === true 
+																			// && (isDesignatedZone && props.values.taxTreatmentId !== 'UAE NON-VAT REGISTERED' && props.values.taxTreatmentId !== 'UAE NON-VAT REGISTERED FREEZONE' && props.values.taxTreatmentId !== 'UAE VAT REGISTERED' && props.values.taxTreatmentId !== 'UAE VAT REGISTERED FREEZONE')
+																			// || (!isDesignatedZone && props.values.taxTreatmentId !== 'UAE VAT REGISTERED FREEZONE')
 																			? <FormGroup className="mb-3">
-
 																				<Input
 																					type="checkbox"
 																					id="isReverseChargeEnabled"
-																					checked={isReverseChargeEnabled}
-																					value={isReverseChargeEnabled}
+																					checked={this.state.isReverseChargeEnabled}
+																					value={this.state.isReverseChargeEnabled}
 																					onChange={(e) => {
 																						this.setState({
 																							isReverseChargeEnabled: isReverseChargeEnabled,
 																						})
 																					}}
-
 																				/>
 																				<Label>{strings.IsReverseCharge}</Label>
 																			</FormGroup> : ''}

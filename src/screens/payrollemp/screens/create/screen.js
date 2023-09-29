@@ -598,11 +598,11 @@ class CreateEmployeePayroll extends React.Component {
     return totalYearlyDeductions;
   }
   grossEarnings = () => {
-    const grossEarning = (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 )
+    const grossEarning = (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0)
     return grossEarning;
   }
   grossYearEarnings = () => {
-    const grossYearEarning = (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )
+    const grossYearEarning = (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0)
     return grossYearEarning;
   }
   removeComponent = (ComponentId) => {
@@ -979,8 +979,10 @@ class CreateEmployeePayroll extends React.Component {
             this.props.createPayrollEmployeeActions
               .saveEmployment(formData1)
               .then((res) => {
-                if (res.status == 200)
+                if (res.status == 200) {
+                  this.setState({ disabledPersonalDetailNextButton: false });
                   this.renderActionForState(this.state.employeeid);
+                }
               });
           }
         })
@@ -1254,15 +1256,15 @@ class CreateEmployeePayroll extends React.Component {
     Fixed.map((obj) => {
       locallist.push(obj);
       if (obj.formula != null && obj.formula.length > 0) {
-          if (newFormula !== undefined && obj.id === id) {
-              if (newFormula === '') { obj.formula = '0'; }
-              else { obj.formula = newFormula; }
-          }
-          var salaryAnnulay = CTC1 * (obj.formula / 100);
-          var salaryMonthy = salaryAnnulay / 12;
-          obj.monthlyAmount = salaryMonthy;
-          obj.yearlyAmount = salaryAnnulay;
-          totalFixedSalary = totalFixedSalary + salaryMonthy;
+        if (newFormula !== undefined && obj.id === id) {
+          if (newFormula === '') { obj.formula = '0'; }
+          else { obj.formula = newFormula; }
+        }
+        var salaryAnnulay = CTC1 * (obj.formula / 100);
+        var salaryMonthy = salaryAnnulay / 12;
+        obj.monthlyAmount = salaryMonthy;
+        obj.yearlyAmount = salaryAnnulay;
+        totalFixedSalary = totalFixedSalary + salaryMonthy;
       }
       else {
         if (newFlatAmount !== undefined && obj.id === id) {
@@ -4528,15 +4530,13 @@ class CreateEmployeePayroll extends React.Component {
                                                       strings.AccountHolderName
                                                     }
                                                     onChange={(option) => {
-                                                      if (
-                                                        option.target.value ===
-                                                        "" ||
+                                                      if (option.target.value === "" ||
                                                         this.regExAlpha.test(
                                                           option.target.value
                                                         )
                                                       ) {
                                                         props.handleChange("accountHolderName")(option);
-                                                        this.setState({ accountHolderName: option })
+                                                        this.setState({ accountHolderName: option.target.value })
                                                       }
                                                     }}
                                                     className={
@@ -4983,11 +4983,11 @@ class CreateEmployeePayroll extends React.Component {
                       }}
                       validate={(values) => {
                         let errors = {}
-                          if (this.state.errorMsg && this.state.CTC && (parseFloat(this.state.CTC) != parseFloat((this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 )))) {
-                            errors.grossEarning = "Gross Earnings should be equal to CTC"
-                          } else {
-                            errors = {}
-                          }
+                        if (this.state.errorMsg && this.state.CTC && (parseFloat(this.state.CTC) != parseFloat((this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0)))) {
+                          errors.grossEarning = "Gross Earnings should be equal to CTC"
+                        } else {
+                          errors = {}
+                        }
                         return errors;
                       }}
                       validationSchema={Yup.object().shape({
@@ -5396,25 +5396,25 @@ class CreateEmployeePayroll extends React.Component {
                                       </td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.totalEarnings()
-                                            ? this.totalEarnings().toLocaleString(
-                                                navigator.language,
-                                                {
-                                                  minimumFractionDigits: 2,
-                                                  maximumFractionDigits: 2,
-                                                }
-                                              )
-                                            : 0.0}
+                                          ? this.totalEarnings().toLocaleString(
+                                            navigator.language,
+                                            {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                            }
+                                          )
+                                          : 0.0}
                                       </b></td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.totalYearEarnings()
-                                            ? this.totalYearEarnings().toLocaleString(
-                                                navigator.language,
-                                                {
-                                                  minimumFractionDigits: 2,
-                                                  maximumFractionDigits: 2,
-                                                }
-                                              )
-                                            : 0.0}
+                                          ? this.totalYearEarnings().toLocaleString(
+                                            navigator.language,
+                                            {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                            }
+                                          )
+                                          : 0.0}
                                       </b></td>
                                     </tr>
                                   </tbody>
@@ -5719,244 +5719,244 @@ class CreateEmployeePayroll extends React.Component {
                                                   {strings.FixedAmount}
                                                 </td>
                                               )} */}
-                                              <td style={{ border: "3px solid #c8ced3" }}>
-                                                <Field
-                                                  // name={`lineItemsString.${idx}.discountType`}
-                                                  render={({ field, form }) => (
-                                                      <div>
-                                                          <div class="input-group">
-                                                              {item.formula ? 
-                                                              <Input
-                                                                  type="number"
-                                                                  min="0"
-                                                                  max="99"
-                                                                  step="0.01"
-                                                                  size="30"
-                                                                  maxLength={2}
-                                                                  style={{ textAlign: "center" }}
-                                                                  id="formula"
-                                                                  name="formula"
-                                                                  value={item.formula}
-                                                                  // onChange={(e)=>{this.handleChange(e)}}   
-                                                                  onChange={(option) => {
-                                                                      if (option.target.value === '' || this.regDec1.test(option.target.value)) {
-                                                                          props.handleChange('formula')(option)
-                                                                          this.updateSalary1(this.state.CTC, option.target.value, item.id);
-                                                                      }
-                                                                  }}
-                                                              /> : 
-                                                              <Input
-                                                              maxLength="8"
-                                                              type="text"
-                                                              size="30"
-                                                              style={{ textAlign: "center" }}
-                                                              onChange={(option) => {
-                                                                  if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                  this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
-                                                              }}
-                                                              value={item.flatAmount}
-                                                              id='' />
+                                            <td style={{ border: "3px solid #c8ced3" }}>
+                                              <Field
+                                                // name={`lineItemsString.${idx}.discountType`}
+                                                render={({ field, form }) => (
+                                                  <div>
+                                                    <div class="input-group">
+                                                      {item.formula ?
+                                                        <Input
+                                                          type="number"
+                                                          min="0"
+                                                          max="99"
+                                                          step="0.01"
+                                                          size="30"
+                                                          maxLength={2}
+                                                          style={{ textAlign: "center" }}
+                                                          id="formula"
+                                                          name="formula"
+                                                          value={item.formula}
+                                                          // onChange={(e)=>{this.handleChange(e)}}   
+                                                          onChange={(option) => {
+                                                            if (option.target.value === '' || this.regDec1.test(option.target.value)) {
+                                                              props.handleChange('formula')(option)
+                                                              this.updateSalary1(this.state.CTC, option.target.value, item.id);
+                                                            }
+                                                          }}
+                                                        /> :
+                                                        <Input
+                                                          maxLength="8"
+                                                          type="text"
+                                                          size="30"
+                                                          style={{ textAlign: "center" }}
+                                                          onChange={(option) => {
+                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                            this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
+                                                          }}
+                                                          value={item.flatAmount}
+                                                          id='' />
+                                                      }
+                                                      <div class="dropdown open input-group-append">
+                                                        <div style={{ width: '200px' }}>
+                                                          <Select
+                                                            options={
+                                                              this.type
+                                                                ? selectOptionsFactory.renderOptions(
+                                                                  'label',
+                                                                  'value',
+                                                                  this.type,
+                                                                  'Type',
+                                                                )
+                                                                : []
+                                                            }
+                                                            id="type"
+                                                            name="type"
+                                                            placeholder={strings.Select + strings.Type}
+                                                            value={
+                                                              this.type
+                                                              && selectOptionsFactory.renderOptions(
+                                                                'label',
+                                                                'value',
+                                                                this.type,
+                                                                'Type',
+                                                              ).find((option) => (item.formula == "" ?
+                                                                option.value == 1 : option.value == 2))
+                                                            }
+                                                            onChange={(value) => {
+                                                              props.handleChange('type')(value);
+                                                              if (value.value == 1) {
+                                                                item.formula = ""
+                                                                item.flatAmount = "1"
+                                                                this.updateSalary(this.state.CTC)
+                                                              } else {
+                                                                item.formula = "1"
+                                                                item.flatAmount = ""
+                                                                this.updateSalary(this.state.CTC)
                                                               }
-                                                              <div class="dropdown open input-group-append">
-                                                                  <div style={{ width: '200px' }}>
-                                                                      <Select
-                                                                          options={
-                                                                              this.type
-                                                                                  ? selectOptionsFactory.renderOptions(
-                                                                                      'label',
-                                                                                      'value',
-                                                                                      this.type,
-                                                                                      'Type',
-                                                                                  )
-                                                                                  : []
-                                                                          }
-                                                                          id="type"
-                                                                          name="type"
-                                                                          placeholder={strings.Select + strings.Type}
-                                                                          value={
-                                                                              this.type
-                                                                                  && selectOptionsFactory.renderOptions(
-                                                                                      'label',
-                                                                                      'value',
-                                                                                      this.type,
-                                                                                      'Type',
-                                                                                  ).find((option) => ( item.formula == "" ?
-                                                                                      option.value == 1 : option.value == 2))
-                                                                          }
-                                                                          onChange={(value) => {
-                                                                              props.handleChange('type')(value);
-                                                                              if (value.value == 1) {
-                                                                                  item.formula = ""
-                                                                                  item.flatAmount = "1"
-                                                                                  this.updateSalary(this.state.CTC)
-                                                                              } else {
-                                                                                  item.formula = "1"
-                                                                                  item.flatAmount = ""
-                                                                                  this.updateSalary(this.state.CTC)
-                                                                              }
-                                                                          }}
-                                                                          className={`${props.errors.type && props.touched.type
-                                                                              ? 'is-invalid'
-                                                                              : ''
-                                                                              }`}
-                                                                      />
-                                                                  </div>
-                                                              </div>
-                                                          </div>
+                                                            }}
+                                                            className={`${props.errors.type && props.touched.type
+                                                              ? 'is-invalid'
+                                                              : ''
+                                                              }`}
+                                                          />
+                                                        </div>
                                                       </div>
-                                                  )}
-                                                />
-                                              </td>
-                                              {item.formula ? (
-                                                <td
+                                                    </div>
+                                                  </div>
+                                                )}
+                                              />
+                                            </td>
+                                            {item.formula ? (
+                                              <td
+                                                style={{
+                                                  border: "3px solid #c8ced3",
+                                                }}
+                                              >
+                                                <Input
+                                                  disabled
+                                                  type="text"
+                                                  size="30"
                                                   style={{
-                                                    border: "3px solid #c8ced3",
+                                                    textAlign: "center",
                                                   }}
-                                                >
-                                                  <Input
-                                                    disabled
-                                                    type="text"
-                                                    size="30"
-                                                    style={{
-                                                      textAlign: "center",
-                                                    }}
-                                                    value={item.monthlyAmount ? (item.monthlyAmount.toLocaleString(
-                                                      navigator.language,
-                                                      {
-                                                        minimumFractionDigits: 2,
-                                                        maximumFractionDigits: 2,
-                                                      }
-                                                    )) : 0}
-                                                  />
-                                                </td>
-                                              ) : (
-                                                <td
-                                                  style={{
-                                                    border: "3px solid #c8ced3",
-                                                  }}
-                                                >
-                                                  <Input
-                                                    disabled
-                                                    type="text"
-                                                    size="30"
-                                                    style={{
-                                                      textAlign: "center",
-                                                    }}
-                                                    onChange={(option) => {
-                                                      if (
-                                                        option.target.value ===
-                                                          "" ||
-                                                        this.regEx.test(
-                                                          option.target.value
-                                                        )
-                                                      ) {
-                                                        props.handleChange(
-                                                          "formula"
-                                                        )(option);
-                                                        this.updateSalary1(
-                                                          this.state.CTC,
-                                                          undefined,
-                                                          item.id,
-                                                          option.target.value
-                                                        );
-                                                      }
-                                                    }}
-                                                    value={item.flatAmount ? (item.flatAmount.toLocaleString(
-                                                      navigator.language,
-                                                      {
-                                                        minimumFractionDigits: 2,
-                                                        maximumFractionDigits: 2,
-                                                      }
-                                                    )) : 0}
-                                                    id=""
-                                                  />
-                                                </td>
-                                              )}
-
-                                              {item.formula ? (
-                                                <td
-                                                  style={{
-                                                    border:
-                                                      "3px solid  #c8ced3",
-                                                  }}
-                                                >
-                                                  {item.yearlyAmount ? (item.yearlyAmount.toLocaleString(
+                                                  value={item.monthlyAmount ? (item.monthlyAmount.toLocaleString(
                                                     navigator.language,
                                                     {
                                                       minimumFractionDigits: 2,
                                                       maximumFractionDigits: 2,
                                                     }
                                                   )) : 0}
-                                                </td>
-                                              ) : (
-                                                <td
-                                                  style={{
-                                                    border:
-                                                      "3px solid  #c8ced3",
-                                                  }}
-                                                >
-                                                  {item.flatAmount ? (item.flatAmount * 12) : 0}
-                                                </td>
-                                              )}
-                                              <td style={{borderTop: "0px"}}>
-                                                {}
-                                                <Button
-                                                  color="link"
-                                                  onClick={() => {
-                                                    this.removeComponent(
-                                                      item.id
-                                                    );
-                                                  }}
-                                                >
-                                                  <i class="far fa-times-circle"></i>
-                                                </Button>
+                                                />
                                               </td>
-                                            </tr>
-                                          )
+                                            ) : (
+                                              <td
+                                                style={{
+                                                  border: "3px solid #c8ced3",
+                                                }}
+                                              >
+                                                <Input
+                                                  disabled
+                                                  type="text"
+                                                  size="30"
+                                                  style={{
+                                                    textAlign: "center",
+                                                  }}
+                                                  onChange={(option) => {
+                                                    if (
+                                                      option.target.value ===
+                                                      "" ||
+                                                      this.regEx.test(
+                                                        option.target.value
+                                                      )
+                                                    ) {
+                                                      props.handleChange(
+                                                        "formula"
+                                                      )(option);
+                                                      this.updateSalary1(
+                                                        this.state.CTC,
+                                                        undefined,
+                                                        item.id,
+                                                        option.target.value
+                                                      );
+                                                    }
+                                                  }}
+                                                  value={item.flatAmount ? (item.flatAmount.toLocaleString(
+                                                    navigator.language,
+                                                    {
+                                                      minimumFractionDigits: 2,
+                                                      maximumFractionDigits: 2,
+                                                    }
+                                                  )) : 0}
+                                                  id=""
+                                                />
+                                              </td>
+                                            )}
+
+                                            {item.formula ? (
+                                              <td
+                                                style={{
+                                                  border:
+                                                    "3px solid  #c8ced3",
+                                                }}
+                                              >
+                                                {item.yearlyAmount ? (item.yearlyAmount.toLocaleString(
+                                                  navigator.language,
+                                                  {
+                                                    minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2,
+                                                  }
+                                                )) : 0}
+                                              </td>
+                                            ) : (
+                                              <td
+                                                style={{
+                                                  border:
+                                                    "3px solid  #c8ced3",
+                                                }}
+                                              >
+                                                {item.flatAmount ? (item.flatAmount * 12) : 0}
+                                              </td>
+                                            )}
+                                            <td style={{ borderTop: "0px" }}>
+                                              { }
+                                              <Button
+                                                color="link"
+                                                onClick={() => {
+                                                  this.removeComponent(
+                                                    item.id
+                                                  );
+                                                }}
+                                              >
+                                                <i class="far fa-times-circle"></i>
+                                              </Button>
+                                            </td>
+                                          </tr>
                                         )
+                                      )
                                       : " "}
-                                      <tr>
-                                        <td colSpan={4} style={{ border: "3px solid  #c8ced3" }}>
-                                          <Button
-                                            color="link"
-                                            className="pull-left"
-                                            onClick={(e, props) => {
-                                              this.openSalaryComponentDeduction(props);
-                                              this.renderActionForState();
-                                            }}
-                                          >
-                                            <i className="fa fa-plus"></i>{" "}
-                                            {strings.AddDeduction}
-                                          </Button>
-                                        </td>
-                                      </tr>
-                                      <tr style={{background: "#dfe9f7", color: "Black" }}>
-                                        <td colSpan={2} style={{border: "3px solid #c8ced3"}}>
-                                          <b className="pull-left">{strings.Total+' '+strings.Deductions+' (B):'}</b>
-                                        </td>
-                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                          {typeof this.state.Deduction === 'object' ? (this.totalDeductions()
-                                            ? this.totalDeductions().toLocaleString(
-                                                navigator.language,
-                                                {
-                                                  minimumFractionDigits: 2,
-                                                  maximumFractionDigits: 2,
-                                                }
-                                              )
-                                            : 0.0) : 0 }
-                                        </b></td>
-                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                          {typeof this.state.Deduction === 'object' ? (this.totalYearDeductions()
-                                            ? this.totalYearDeductions().toLocaleString(
-                                                navigator.language,
-                                                {
-                                                  minimumFractionDigits: 2,
-                                                  maximumFractionDigits: 2,
-                                                }
-                                              )
-                                            : 0.0) : 0 }
-                                        </b></td>
-                                      </tr>
+                                    <tr>
+                                      <td colSpan={4} style={{ border: "3px solid  #c8ced3" }}>
+                                        <Button
+                                          color="link"
+                                          className="pull-left"
+                                          onClick={(e, props) => {
+                                            this.openSalaryComponentDeduction(props);
+                                            this.renderActionForState();
+                                          }}
+                                        >
+                                          <i className="fa fa-plus"></i>{" "}
+                                          {strings.AddDeduction}
+                                        </Button>
+                                      </td>
+                                    </tr>
+                                    <tr style={{ background: "#dfe9f7", color: "Black" }}>
+                                      <td colSpan={2} style={{ border: "3px solid #c8ced3" }}>
+                                        <b className="pull-left">{strings.Total + ' ' + strings.Deductions + ' (B):'}</b>
+                                      </td>
+                                      <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                        {typeof this.state.Deduction === 'object' ? (this.totalDeductions()
+                                          ? this.totalDeductions().toLocaleString(
+                                            navigator.language,
+                                            {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                            }
+                                          )
+                                          : 0.0) : 0}
+                                      </b></td>
+                                      <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                        {typeof this.state.Deduction === 'object' ? (this.totalYearDeductions()
+                                          ? this.totalYearDeductions().toLocaleString(
+                                            navigator.language,
+                                            {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                            }
+                                          )
+                                          : 0.0) : 0}
+                                      </b></td>
+                                    </tr>
                                   </tbody>
                                 </Table>
                               </Col>
@@ -5979,35 +5979,35 @@ class CreateEmployeePayroll extends React.Component {
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.grossEarnings()
                                           ? this.grossEarnings().toLocaleString(
-                                              navigator.language,
-                                              {
-                                                minimumFractionDigits: 2,
-                                                maximumFractionDigits: 2,
-                                              }
-                                            )
+                                            navigator.language,
+                                            {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                            }
+                                          )
                                           : 0.0}
                                       </b></td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.grossYearEarnings()
-                                            ? this.grossYearEarnings().toLocaleString(
-                                                navigator.language,
-                                                {
-                                                  minimumFractionDigits: 2,
-                                                  maximumFractionDigits: 2,
-                                                }
-                                              )
-                                            : 0.0}
+                                          ? this.grossYearEarnings().toLocaleString(
+                                            navigator.language,
+                                            {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                            }
+                                          )
+                                          : 0.0}
                                       </b></td>
                                     </tr>
                                   </tbody>
                                 </Table>
                                 {this.state.errorMsg === true && props.errors.grossEarning && (
-                                  <div style={{width: '133%'}}>
-                                      <div className='pull-right'>
-                                          <div className='invalid-feedback d-block' style={{fontSize: 'medium'}}>
-                                              {props.errors.grossEarning}
-                                          </div>
+                                  <div style={{ width: '133%' }}>
+                                    <div className='pull-right'>
+                                      <div className='invalid-feedback d-block' style={{ fontSize: 'medium' }}>
+                                        {props.errors.grossEarning}
                                       </div>
+                                    </div>
                                   </div>
                                 )}
                               </Col>
@@ -6029,25 +6029,25 @@ class CreateEmployeePayroll extends React.Component {
                                       </td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.totalEarnings()
-                                            ? this.totalEarnings().toLocaleString(
-                                                navigator.language,
-                                                {
-                                                  minimumFractionDigits: 2,
-                                                  maximumFractionDigits: 2,
-                                                }
-                                              )
-                                            : 0.0}
+                                          ? this.totalEarnings().toLocaleString(
+                                            navigator.language,
+                                            {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                            }
+                                          )
+                                          : 0.0}
                                       </b></td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.totalYearEarnings()
-                                            ? this.totalYearEarnings().toLocaleString(
-                                                navigator.language,
-                                                {
-                                                  minimumFractionDigits: 2,
-                                                  maximumFractionDigits: 2,
-                                                }
-                                              )
-                                            : 0.0}
+                                          ? this.totalYearEarnings().toLocaleString(
+                                            navigator.language,
+                                            {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                            }
+                                          )
+                                          : 0.0}
                                       </b></td>
                                     </tr>
                                   </tbody>
@@ -6202,13 +6202,13 @@ class CreateEmployeePayroll extends React.Component {
                                   props.handleBlur();
                                   if (
                                     props.errors == {} && Object.keys(props.errors) == [] && Object.keys(props.errors) != 'grossEarning'
-                                    ) {
-                                      this.props.commonActions.fillManDatoryDetails();
-                                    } else {
-                                      this.setState({ createMore: false }, () => {
-                                        props.handleSubmit();
-                                      });
-                                    }
+                                  ) {
+                                    this.props.commonActions.fillManDatoryDetails();
+                                  } else {
+                                    this.setState({ createMore: false }, () => {
+                                      props.handleSubmit();
+                                    });
+                                  }
                                 }}
                               >
                                 <i className="fa fa-dot-circle-o"></i>{" "}

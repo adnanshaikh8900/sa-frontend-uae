@@ -125,8 +125,8 @@ class PaySlipModal extends React.Component {
 
 	renderPayperiod = (payPeriod) => {
 		let dateArr = payPeriod ? payPeriod.split("-") : [];
-		let startDate = moment(dateArr[0]).format('DD-MM-YYYY')
-		let endDate = moment(dateArr[1]).format('DD-MM-YYYY')
+		let startDate = dateArr[0] ? dateArr[0].replaceAll('/','-') : ''
+		let endDate = dateArr[1] ? dateArr[1].replaceAll('/','-') : ''
 
 		return (<>{startDate} <b> To </b>{endDate}</>);
 	};

@@ -196,8 +196,8 @@ class UpdatePayroll extends React.Component {
 					// 	onSelect: this.onRowSelect,
 					// 	onSelectAll: this.onSelectAll,
 					// },
-					startDate: moment(dateArray[0],'DD/MM/YYYY'),
-					endDate: moment(dateArray[1],'DD/MM/YYYY')
+					startDate: moment(dateArray[0], 'DD/MM/YYYY'),
+					endDate: moment(dateArray[1], 'DD/MM/YYYY')
 
 				}
 				)
@@ -709,7 +709,7 @@ class UpdatePayroll extends React.Component {
 												type="number"
 												min={0}
 												step="0.5"
-												max={this.state.paidDays}
+												max={this.state.paidDays - 1}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}
@@ -1153,16 +1153,16 @@ class UpdatePayroll extends React.Component {
 																						<span className="text-danger">* </span>
 																						{strings.payroll_approver}
 																					</Label>
-																						<i
-																							id="payrollApprovertip"
-																							className="fa fa-question-circle ml-1"
-																						></i>
-																						<UncontrolledTooltip
-																							placement="right"
-																							target="payrollApprovertip"
-																						>
-																							It is mandatory to have an approver for payroll submission. Otherwise, it is not mandatory.
-																						</UncontrolledTooltip>
+																					<i
+																						id="payrollApprovertip"
+																						className="fa fa-question-circle ml-1"
+																					></i>
+																					<UncontrolledTooltip
+																						placement="right"
+																						target="payrollApprovertip"
+																					>
+																						It is mandatory to have an approver for payroll submission. Otherwise, it is not mandatory.
+																					</UncontrolledTooltip>
 																					<Select
 																						isDisabled={this.disable() ? true : false}
 																						// styles={customStyles}

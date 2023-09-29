@@ -979,8 +979,10 @@ class CreateEmployeePayroll extends React.Component {
             this.props.createPayrollEmployeeActions
               .saveEmployment(formData1)
               .then((res) => {
-                if (res.status == 200)
+                if (res.status == 200) {
+                  this.setState({ disabledPersonalDetailNextButton: false });
                   this.renderActionForState(this.state.employeeid);
+                }
               });
           }
         })

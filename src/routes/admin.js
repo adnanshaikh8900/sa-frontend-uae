@@ -192,6 +192,8 @@ import {
 	DetailSalaryStructure,
 	DetailSalaryTemplate,
 	DetailDesignation,
+	DetailSalaryComponent,
+	CreateSalaryComponent,
 	ApplyToInvoice,
 	Refund,
 	UpdateEmployeeEmployment,
@@ -703,6 +705,16 @@ const adminRoutes = [
 		path: '/admin/payroll/config/detailEmployeeDesignation',
 		name: 'Update Employee Designation',
 		component: DetailDesignation.screen,
+	},
+	Config.PAYROLL_PC && {
+		path: '/admin/payroll/config/salary-component/create',
+		name: 'Add Salary Component',
+		component: CreateSalaryComponent.screen,
+	},
+	Config.PAYROLL_PC && {
+		path: '/admin/payroll/config/salary-component/detail',
+		name: 'Update Salary Component',
+		component: DetailSalaryComponent.screen,
 	},
 	Config.PAYROLL_MODULE && {
 		path: '/admin/payroll/employeeDesignation',

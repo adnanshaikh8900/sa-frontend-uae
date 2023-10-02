@@ -968,6 +968,7 @@ const en = {
       AnnualCTC: "Annual CTC",
       CreateSalaryRole: "Create Salary Role",
       UpdateSalaryRole: "Update Salary Role",
+      CreateSalaryComponent: "Create Salary Componeny",
       CreateDesignation: "Create Designation",
       CreateDeductionComponent: "Create Deduction Component",
       Component: "Component",

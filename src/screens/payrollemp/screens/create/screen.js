@@ -5101,7 +5101,7 @@ class CreateEmployeePayroll extends React.Component {
                             <Row className="m-4">
                               <Col lg={9}>
                                 <Row className="ml-2">
-                                  <h4>{strings.Earnings}</h4>
+                                  <h4>{strings.Earnings+":"}</h4>
                                 </Row>
                                 <Table
                                   className="text-center"
@@ -5650,7 +5650,7 @@ class CreateEmployeePayroll extends React.Component {
                               </Col>}
                               <Col lg={9}>
                                 <Row className="ml-2 mt-4">
-                                  <h4>{strings.Deductions}</h4>
+                                  <h4>{strings.Deductions+":"}</h4>
                                 </Row>
                                 <Table
                                   className="text-center"

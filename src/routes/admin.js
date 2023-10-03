@@ -707,12 +707,12 @@ const adminRoutes = [
 		component: DetailDesignation.screen,
 	},
 	Config.PAYROLL_PC && {
-		path: '/admin/payroll/config/salary-component/create',
+		path: '/admin/payroll/config/createSalaryComponent',
 		name: 'Add Salary Component',
 		component: CreateSalaryComponent.screen,
 	},
 	Config.PAYROLL_PC && {
-		path: '/admin/payroll/config/salary-component/detail',
+		path: '/admin/payroll/config/detailSalaryComponent',
 		name: 'Update Salary Component',
 		component: DetailSalaryComponent.screen,
 	},

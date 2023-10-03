@@ -81,6 +81,7 @@ class PayrollConfigurations extends React.Component {
 				generateSif: true,
 			},
 			current_employee_id: '',
+			salaryList: [],
 		};
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
@@ -176,6 +177,13 @@ class PayrollConfigurations extends React.Component {
 			}
 		}).catch((err) => {
 			this.setState({ loading: false })
+			this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+		})
+		this.props.salaryStructureActions.getSalaryList().then((res) => {
+			if (res.status === 200) {
+				this.setState({ salaryList: res.data })
+			}
+		}).catch((err) => {
 			this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
 		})
 	}
@@ -280,6 +288,29 @@ class PayrollConfigurations extends React.Component {
 							className="btn btn-sm pdf-btn"
 							onClick={(e,) => {
 								this.props.history.push('/admin/payroll/config/detailEmployeeDesignation', { id: row.id })
+							}}
+						>
+							<i class="far fa-edit fa-lg"></i>
+						</Button>)
+					}
+				</div>
+
+			</Row>
+
+
+		);
+	}
+
+	goToDetailForSalaryComponent = (cell, row) => {
+		return (
+			<Row>
+				<div>
+					{row.id == 1 ? ""
+						:
+						(<Button
+							className="btn btn-sm pdf-btn"
+							onClick={(e,) => {
+								this.props.history.push('/admin/payroll/config/detailSalaryComponent', { id: row.id })
 							}}
 						>
 							<i class="far fa-edit fa-lg"></i>
@@ -519,7 +550,7 @@ class PayrollConfigurations extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, dialog, initValue } = this.state;
+		const { loading, dialog, initValue, salaryList } = this.state;
 		const { salaryRole_list, salaryStructure_list, designation_list } = this.props;
 		const { generateSif } = this.props.company_details;
 		return (
@@ -1278,28 +1309,28 @@ class PayrollConfigurations extends React.Component {
 																		<BootstrapTable
 																			selectRow={this.selectRowProp}
 																			search={false}
-																			options={this.designationoptions}
-																			data={designation_list && designation_list.data ? designation_list.data : []}
+																		//	options={this.designationoptions}
+																			data={this.state.salaryList && this.state.salaryList ? this.state.salaryList : []}
 																			version="4"
 																			hover
-																			pagination={designation_list && designation_list.count > 0 ? true : false}
+																			//pagination={designation_list && designation_list.count > 0 ? true : false}
 																			keyField="id"
 																			remote
 
-																			fetchInfo={{ dataTotalSize: designation_list.count ? designation_list.count : 0 }}
+																		 	//fetchInfo={{ dataTotalSize: salaryList.count ? salaryList.count : 0 }}
 																			className="SalaryComponent-list-table"
 																			trClassName="cursor-pointer"
 																			ref={(node) => this.table = node}
 																		>
 																			<TableHeaderColumn
 																				className="table-header-bg"
-																				dataField="componentId"
+																				dataField="id"
 																			>
 																				{strings.ComponentId}
 																			</TableHeaderColumn>
 																			<TableHeaderColumn
 																				className="table-header-bg"
-																				dataField="componentName"
+																				dataField="description"
 
 																			>
 																				{strings.ComponentName}
@@ -1322,7 +1353,7 @@ class PayrollConfigurations extends React.Component {
 																				className="table-header-bg"
 																				dataField="componentName"
 
-																				dataFormat={this.goToDetailForDesignations}
+																				dataFormat={this.goToDetailForSalaryComponent}
 																			>
 
 																			</TableHeaderColumn>

@@ -151,11 +151,11 @@ class UpdatePayroll extends React.Component {
 
 	};
 	calculatePayperioad = (startDate, endDate) => {
-
+		let month = moment(startDate).format("MMMM");
 		// let diffDays=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1
 		const diffTime = Math.abs(startDate - endDate);
-		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-
+		let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+		diffDays = diffDays > 30 ? 30 : month == "February" ? 30 : diffDays;
 		this.setState({ paidDays: diffDays });
 		this.getAllPayrollEmployee(startDate);
 	}
@@ -440,7 +440,7 @@ class UpdatePayroll extends React.Component {
 		if (value > 30) {
 			value = 30;
 		}
-		let tmpPaidDay = this.state.paidDays > 30 ? 30 : (this.state.paidDays == 28 ? 30 : this.state.paidDays)
+		let tmpPaidDay = this.state.paidDays;
 		let newData = [...this.state.allPayrollEmployee]
 		newData = newData.map((data) => {
 			if (row.id === data.id) {
@@ -514,7 +514,7 @@ class UpdatePayroll extends React.Component {
 								// data.originalGrossPay=data.grossPay		
 								// data.perDaySal=data.originalGrossPay / data.noOfDays			
 								let tmpPaidDay = this.state.paidDays > 30 ? 30 :
-									(this.state.paidDays == 28 && month == "February" ? 30 : this.state.paidDays)
+									(month == "February" ? 30 : this.state.paidDays)
 								if (this.state.checkForLopSetting === true) data.noOfDays = tmpPaidDay
 
 								data.originalDeduction = data.deduction

@@ -177,7 +177,9 @@ import UpdateEmployeeEmployment from './payrollemp/screens/update_emp_employemet
 import UpdateSalaryComponent from './payrollemp/screens/update_salary_component'
 import Designation from './designation'
 import CreateDesignation from './designation/screens/create'
+import CreateSalaryComponent from './salary_component/screens/create'
 import DetailSalaryStructure from './salaryStructure/screens/detail'
+import DetailSalaryComponent from './salary_component/screens/detail'
 import DetailSalaryTemplate from './salaryTemplate/screens/detail'
 import DetailDesignation from './designation/screens/detail'
 import DetailCreditNote from './creditNotes/screens/detail'
@@ -357,6 +359,8 @@ export {
 	DetailSalaryStructure,
 	DetailSalaryTemplate,
 	DetailDesignation,
+	DetailSalaryComponent,
+	CreateSalaryComponent,
 	CreditNotes,
 	CreateCreditNote,
 	DetailCreditNote,
@@ -406,4 +410,5 @@ export {
 	ViewDebitNote,
 	DebitNoteDetailsReport,
 	PayrollSettings,
+
 };

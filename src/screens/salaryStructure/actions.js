@@ -29,3 +29,19 @@ export const getSalaryStructureList = (obj) => {
     })
   }
 }
+
+export const getSalaryList = () => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/payroll/getSalaryList`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+

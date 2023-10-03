@@ -1028,10 +1028,12 @@ class CreateEmployeePayroll extends React.Component {
               this.toggle(0, "2");
             }
             this.renderActionForState(this.state.employeeid);
-            // this.setState({ loading:false,});
+            this.setState({ disabledPersonalDetailNextButton: false });
+
           }
         })
         .catch((err) => {
+          this.setState({ disabledPersonalDetailNextButton: false,loading: false });
           this.props.commonActions.tostifyAlert(
             "error",
             err.data ? err.data.mesg : "Employee Updated Unsuccessfully"

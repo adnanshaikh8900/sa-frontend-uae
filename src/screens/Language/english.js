@@ -1268,5 +1268,10 @@ const en = {
       QuantityGreaterThan0: 'Quantity should be greater than 0',
       UnitPriceGreaterThan1: 'Unit price should be greater than 1',
       VATIsRequired: 'VAT is required',
+
+      //Salary Component
+      NewSalaryComponent: "New Salary Component",
+      ComponentId: "Component ID",
+      ComponentType: "Component Type"
 }
 export { en }

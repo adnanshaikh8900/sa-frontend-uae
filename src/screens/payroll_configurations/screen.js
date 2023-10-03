@@ -506,7 +506,7 @@ class PayrollConfigurations extends React.Component {
 					// this.props.closeModal(false);	
 					this.props.history.push(
 						'/admin/payroll/payroll-run',
-					);			
+					);
 				}
 			})
 			.catch((err) => {
@@ -579,6 +579,16 @@ class PayrollConfigurations extends React.Component {
 												}}
 											>{strings.CompanyDetails}
 											</NavLink>}
+										</NavItem>
+										<NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '5'}
+												onClick={() => {
+													this.toggle(0, '5');
+												}}
+											>
+												{strings.SalaryComponent}
+											</NavLink>
 										</NavItem>
 									</Nav>
 									<TabContent activeTab={this.state.activeTab[0]}>
@@ -1219,6 +1229,109 @@ class PayrollConfigurations extends React.Component {
 														}
 													</CardBody>
 													{/* </Card> */}
+												</div>
+											</div>
+										</TabPane>
+										<TabPane tabId="5">
+											<div className="employee-screen">
+												<div className="animated fadeIn">
+													<CardHeader>
+														<Row>
+															<Col lg={12}>
+																<div className="h4 mb-0 d-flex align-items-center">
+																	<i className="nav-icon fas fa-money-check-alt" />
+																	<span className="ml-2">{strings.SalaryComponent}</span>
+																</div>
+															</Col>
+														</Row>
+													</CardHeader>
+													<CardBody>
+														{
+															loading ?
+																<Row>
+																	<Col lg={12}>
+																		<Loader />
+																	</Col>
+																</Row>
+																:
+																<Row>
+																	<Col lg={12}>
+																		<div className="d-flex justify-content-end">
+																			<ButtonGroup size="sm">
+
+
+																				<div style={{ width: "1650px" }}>
+																					<Button
+																						color="primary"
+																						className="btn-square pull-right mb-2 mr-2"
+																						style={{ marginBottom: '10px' }}
+																						onClick={() => this.props.history.push(`/admin/payroll/config/createSalaryComponent`)}
+
+																					>
+																						<i className="fas fa-plus mr-1" />
+																						{strings.NewSalaryComponent}
+																					</Button>
+																				</div>
+																			</ButtonGroup>
+																		</div>
+
+																		<BootstrapTable
+																			selectRow={this.selectRowProp}
+																			search={false}
+																			options={this.designationoptions}
+																			data={designation_list && designation_list.data ? designation_list.data : []}
+																			version="4"
+																			hover
+																			pagination={designation_list && designation_list.count > 0 ? true : false}
+																			keyField="id"
+																			remote
+
+																			fetchInfo={{ dataTotalSize: designation_list.count ? designation_list.count : 0 }}
+																			className="SalaryComponent-list-table"
+																			trClassName="cursor-pointer"
+																			ref={(node) => this.table = node}
+																		>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="componentId"
+																			>
+																				{strings.ComponentId}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="componentName"
+
+																			>
+																				{strings.ComponentName}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="componentType"
+
+																			>
+																				{strings.ComponentType}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="calculationType"
+
+																			>
+																				{strings.calculation_type}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="componentName"
+
+																				dataFormat={this.goToDetailForDesignations}
+																			>
+
+																			</TableHeaderColumn>
+
+																		</BootstrapTable>
+																	</Col>
+																</Row>
+														}
+													</CardBody>
 												</div>
 											</div>
 										</TabPane>

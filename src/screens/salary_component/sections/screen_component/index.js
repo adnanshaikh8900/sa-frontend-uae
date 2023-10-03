@@ -58,7 +58,7 @@ class ScreenComponent extends React.Component {
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z ]+$/;
-    this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
   }
 
   componentDidMount = () => {
@@ -211,9 +211,9 @@ class ScreenComponent extends React.Component {
                         {(props) => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
-                              <Col lg={10}>
+                              <Col lg={12}>
                                 <Row className="row-wrapper">
-                                  <Col lg={4}>
+                                  <Col lg={3}>
                                     <FormGroup>
                                       <Label htmlFor="componentId"><span className="text-danger">* </span>{strings.ComponentID}</Label>
                                       <Input
@@ -236,7 +236,7 @@ class ScreenComponent extends React.Component {
                                       )}
                                     </FormGroup>
                                   </Col>
-                                  <Col lg={4}>
+                                  <Col lg={3}>
                                     <FormGroup>
                                       <Label htmlFor="componentName"><span className="text-danger">* </span>{strings.ComponentName}</Label>
                                       <Input
@@ -262,7 +262,7 @@ class ScreenComponent extends React.Component {
                                 </Row>
                                 <hr />
                                 <Row>
-                                  <Col lg={4}>
+                                  <Col lg={3}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="componentType">
                                         <span className="text-danger">* </span>
@@ -327,7 +327,7 @@ class ScreenComponent extends React.Component {
                                 </Row>
                                 <hr />
                                 <Row>
-                                  <Col lg={4}>
+                                  <Col lg={3}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="calculationType">
                                         <span className="text-danger">* </span>
@@ -380,7 +380,7 @@ class ScreenComponent extends React.Component {
                                   </Col>
                                 </Row>
                                 <Row>
-                                  <Col lg={4}>
+                                  <Col lg={3}>
                                     {props.values.calculationType === 'Percent of CTC' ?
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="ctcPercent">
@@ -415,7 +415,6 @@ class ScreenComponent extends React.Component {
                                               {props.errors.ctcPercent}
                                             </div>
                                           )}
-
                                       </FormGroup> :
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="flatAmount">
@@ -423,9 +422,9 @@ class ScreenComponent extends React.Component {
                                           {strings.FlatAmount}
                                         </Label>
                                         <Input
-                                          type='number'
+                                          type='text'
+                                          maxLength="14,2"
                                           min={1}
-                                          step={0.01}
                                           value={props.values.flatAmount}
                                           onChange={(option) => {
                                             if (option.target.value === '' || this.regDecimal.test(option.target.value)) {

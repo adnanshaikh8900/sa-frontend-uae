@@ -659,6 +659,18 @@ class CreateBankTransaction extends React.Component {
     this.formRef.current.setFieldValue("payrollListIds", option, true);
   };
 
+  getPayrollAmount = (option) => {
+    const amounts = option && option.map((i) => {
+      const startIndex = i.label.indexOf("(");
+      const endIndex = i.label.indexOf(")");
+      const amountString = i.label.slice(startIndex + 1, endIndex);
+      const amount = parseFloat(amountString);
+      return amount;
+    });
+    const totalAmount = amounts && amounts.reduce((sum, amount) => sum + amount, 0);
+    this.formRef.current.setFieldValue("transactionAmount", totalAmount)
+  }
+
   getPayrollList = (UnPaidPayrolls_List, props) => {
     return (
       <Col lg={3}>
@@ -675,12 +687,16 @@ class CreateBankTransaction extends React.Component {
             placeholder={strings.Select + strings.Payroll}
             id="payrollListIds"
             onChange={(option) => {
+
               this.state.selectedPayrollListBank = []
               props.handleChange("payrollListIds")(option);
               this.payrollList(option);
+              this.getPayrollAmount(option);
+              (!option && this.formRef.current.setFieldValue("transactionAmount", "" )) 
               // let selectedPayroll1 = []
               if (option) {
                 option.map((i) => {
+                  
                   const selectedPayroll = this.state.payrolldata.find((el) => el.id === i.value)
                   this.state.selectedPayrollListBank.push(selectedPayroll)
                   const uniqueArray = [];

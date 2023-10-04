@@ -559,17 +559,22 @@ class CreateBankTransaction extends React.Component {
     const data = {
       amount: amount,
       id: option,
+      currency:
+      this.state?.bankCurrency?.bankAccountCurrency 
+          ? this.state?.bankCurrency?.bankAccountCurrency
+          : 0,
+      bankId: this.props.location.state.bankAccountId,
     };
     this.props.transactionActions.getCustomerInvoiceList(data);
   };
 
   getSuggestionInvoicesFotVend = (option, amount, invoice_list) => {
-    const data = {
+      const data = {
       amount: amount,
       id: option,
       currency:
-        this.state.invoiceCurrency && invoice_list != null
-          ? this.state.invoiceCurrency
+      this.state.bankCurrency?.bankAccountCurrency 
+          ? this.state.bankCurrency?.bankAccountCurrency
           : 0,
       bankId: this.props.location.state.bankAccountId,
     };
@@ -614,6 +619,7 @@ class CreateBankTransaction extends React.Component {
         // this.setExchange(this.state.bankCurrency.bankAccountCurrency);
       }
     );
+
   };
 
   getVendorInvoiceCurrency = (opt, props) => {
@@ -639,6 +645,7 @@ class CreateBankTransaction extends React.Component {
         //this.setExchange(this.state.bankCurrency.bankAccountCurrency);
       }
     );
+    
   };
   payrollList = (option) => {
     this.setState({
@@ -1044,8 +1051,8 @@ class CreateBankTransaction extends React.Component {
       amount: amount,
       id: option.value,
       currency:
-        this.state.invoiceCurrency && invoice_list != null
-          ? this.state.invoiceCurrency
+      this.state?.bankCurrency?.bankAccountCurrency 
+          ? this.state?.bankCurrency?.bankAccountCurrency
           : 0,
       bankId: this.props.location.state.bankAccountId,
     };
@@ -2177,7 +2184,7 @@ class CreateBankTransaction extends React.Component {
                                                 : []
                                             }
                                             onChange={(option) => {
-                                              if (option === null) {
+                                                if (option === null) {
                                                 this.getSuggestionInvoicesFotVend(
                                                   props.values.vendorId.value,
                                                   props.values
@@ -2476,6 +2483,12 @@ class CreateBankTransaction extends React.Component {
                                               option,
                                               props.values.transactionAmount
                                             );
+
+                                            this.getSuggestionInvoicesFotCust(
+                                              option.value,
+                                              props.values.transactionAmount
+                                            );
+                                        
                                           }}
                                         />
                                         {props.errors.customerId &&
@@ -2523,6 +2536,10 @@ class CreateBankTransaction extends React.Component {
                                               props.values.transactionAmount,
                                               option
                                             );
+                                            // this.getSuggestionInvoicesFotCust(
+                                            //   option.value,
+                                            //   props.values.transactionAmount
+                                            // );
                                           }
 
                                           this.setexchnagedamount(option);

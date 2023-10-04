@@ -628,7 +628,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                             validate={(values) => {
                                                                 console.log(values)
                                                                 let errors = {};
-                                                                if (this.state.emailExist == true) {
+                                                                if (this.state.emailExist === true && values.email !== '') {
                                                                     errors.email = 'Email already exists';
                                                                 }
                                                                 if (exist === true  && values.employeeCode!="") {
@@ -676,7 +676,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                 lastName: Yup.string()
                                                                     .required("Last name is required"),
                                                                 email: Yup.string()
-                                                                    .required("Valid email Required").email('Invalid Email'),
+                                                                    .required("Email is Required").email('Invalid Email'),
                                                                 dob: Yup.string()
                                                                     .required('DOB is required'),
                                                                 presentAddress: Yup.string()

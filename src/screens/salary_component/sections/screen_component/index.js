@@ -17,7 +17,7 @@ import {
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import Select from 'react-select';
-import { LeavePage } from 'components';
+import { LeavePage, ConfirmDeleteModal, Loader } from 'components';
 import { selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global'
 import * as SalaryComponentActions from '../../actions';
@@ -54,11 +54,12 @@ class ScreenComponent extends React.Component {
         ctcPercent: 1,
         flatAmount: 1,
       },
+      enableDelete: true,
     }
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z ]+$/;
-		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+    this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
   }
 
   componentDidMount = () => {
@@ -66,7 +67,13 @@ class ScreenComponent extends React.Component {
   };
 
   initializeData = () => {
-    this.props.salaryComponentActions.getParentDesignationList();
+    if (this.props.componentID && !this.props.isCreated) {
+      // this.props.employeeActions.getEmployeeCountForDesignation(this.props.location.state.id).then(res => {
+      //   if (res.status === 200) {
+      //     this.setState({ enableDelete: res.data && res.data > 0 ? false : true })
+      //   }
+      // })
+    }
 
   };
   componentNamevalidationCheck = (value) => {
@@ -104,46 +111,99 @@ class ScreenComponent extends React.Component {
     });
   };
 
+  delete = () => {
+    const message1 =
+      <text>
+        <b>Delete Designation ?</b>
+      </text>
+    const message = 'This designation will be deleted permanently and cannot be recovered. ';
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={this.remove}
+        cancelHandler={this.removeDialog}
+        message={message}
+        message1={message1}
+      />
+    })
+  }
+
+  remove = () => {
+    const { current_salary_role_id } = this.state;
+    this.props.designationDetailActions.deleteDesignation(current_salary_role_id).then((res) => {
+      if (res.status === 200) {
+        this.setState({ disableLeavePage: true })
+        this.props.commonActions.tostifyAlert('success', 'Designation Deleted Successfully !')
+        this.props.history.push('/admin/payroll/config', { tabNo: '3' })
+      }
+
+    }).catch((err) => {
+      /**
+       * “already exists http status code” 
+       *  The appropriate status code for "Already Exists" would be 
+       * '409 Conflict'
+       */
+      if (err.status === 409) {
+        this.setState({ disableLeavePage: true })
+        this.props.commonActions.tostifyAlert('error', 'Designation can\'t be deleted, you need to delete employee first.')
+        this.props.history.push('/admin/payroll/config', { tabNo: '3' })
+      }
+      else
+        this.props.commonActions.tostifyAlert('error', 'Something Went Wrong')
+    })
+  }
+
+  removeDialog = () => {
+    this.setState({
+      dialog: null
+    })
+  }
   handleSubmit = (data, resetForm) => {
     this.setState({ disabled: true, disableLeavePage: true });
     const {
       componentName,
       componentId,
-      componentType
+      componentType,
+      flatAmount,
+      ctcPercent
     } = data;
 
     const formData = new FormData();
 
-    // if(!this.state.idExist && !this.state.nameExist){
+    formData.append('salaryStructure', 2)
+    formData.append('description', componentName != null ? componentName : '',)
+    formData.append('flatAmount', flatAmount != null ? flatAmount : '',)
+    formData.append('formula', ctcPercent != null ? ctcPercent : '',)
     formData.append('componentId', componentId != null ? componentId : '',)
     formData.append('componentName', componentName != null ? componentName : '',);
-    formData.append('parentId', componentType ? componentType.value ? componentType.value : componentType : '');
+    formData.append('componentType', componentType ? componentType.value ? componentType.value : componentType : '');
 
-    // this.props.employeeDesignationCreateAction
-    //   .createEmployeeDesignation(formData)
-    //   .then((res) => {
-    //     if (res.status === 200) {
-    //       this.props.commonActions.tostifyAlert(
-    //         'success',
-    //         'New Employee Designation Created Successfully')
-    //       if (this.state.createMore) {
-    //         this.setState({
-    //           createMore: false
-    //         })
-    //         resetForm(this.state.initValue)
-    //       } else {
-    //         this.props.history.push('/admin/payroll/config', { tabNo: '3' })
-    //       }
-    //     }
-    //   }).catch((err) => {
-    //     this.setState({ disabled: false, disableLeavePage: false });
-    //     this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-    //   })
+    this.props.salaryComponentActions
+      .saveSalaryComponent(formData)
+      .then((res) => {
+        if (res.status === 200) {
+          this.props.commonActions.tostifyAlert(
+            'success',
+            'New Employee Designation Created Successfully')
+          if (this.state.createMore) {
+            this.setState({
+              createMore: false
+            })
+            resetForm(this.state.initValue)
+          } else {
+            this.props.history.push('/admin/payroll/config', { tabNo: '3' })
+          }
+        }
+      }).catch((err) => {
+        this.setState({ disabled: false, disableLeavePage: false });
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+      })
   }
 
   render() {
     strings.setLanguage(this.state.language);
-    const { componentType, state_list, componentType_list } = this.props
+    const { componentType, isCreated, componentType_list } = this.props
+    const { enableDelete } = this.state;
 
 
     return (
@@ -461,9 +521,16 @@ class ScreenComponent extends React.Component {
                               </Col>
                             </Row>
                             <Row>
-                              <Col lg={12} className="mt-5">
+                              <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                                <FormGroup>
+                                  {enableDelete && !isCreated && <Button type="button" name="button" color="danger" className="btn-square"
+                                    onClick={this.delete}
+                                  >
+                                    <i className="fa fa-trash"></i> {strings.Delete}
+                                  </Button>}
+                                </FormGroup>
                                 <FormGroup className="text-right">
-                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                  {isCreated ? <><Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
                                     //  added validation popup  msg                                                                
                                     props.handleBlur();
                                     if (props.errors && Object.keys(props.errors).length != 0)
@@ -474,18 +541,28 @@ class ScreenComponent extends React.Component {
                                   }}>
                                     <i className="fa fa-dot-circle-o"></i>  {strings.Create}
                                   </Button>
-                                  <Button name="button" color="primary" className="btn-square mr-3"
-                                    onClick={() => {
-                                      //  added validation popup  msg                                                                
-                                      props.handleBlur();
-                                      if (props.errors && Object.keys(props.errors).length != 0)
-                                        this.props.commonActions.fillManDatoryDetails();
-                                      this.setState({ createMore: true }, () => {
-                                        props.handleSubmit()
-                                      })
-                                    }}>
-                                    <i className="fa fa-refresh"></i>  {strings.CreateandMore}
-                                  </Button>
+                                    <Button name="button" color="primary" className="btn-square mr-3"
+                                      onClick={() => {
+                                        //  added validation popup  msg                                                                
+                                        props.handleBlur();
+                                        if (props.errors && Object.keys(props.errors).length != 0)
+                                          this.props.commonActions.fillManDatoryDetails();
+                                        this.setState({ createMore: true }, () => {
+                                          props.handleSubmit()
+                                        })
+                                      }}>
+                                      <i className="fa fa-refresh"></i>  {strings.CreateandMore}
+                                    </Button></> :
+                                    <Button type="button" color="primary" className="btn-square mr-3"
+                                      //disabled={!props.dirty}
+                                      onClick={() => {
+                                        this.setState({ createMore: false }, () => {
+                                          props.handleSubmit()
+                                        })
+                                      }}>
+                                      <i className="fa fa-dot-circle-o"></i> {strings.Update}
+                                    </Button>
+                                  }
                                   <Button color="secondary" className="btn-square"
                                     onClick={() => { this.props.history.push('/admin/payroll/config', { tabNo: '3' }) }}>
                                     <i className="fa fa-ban"></i>  {strings.Cancel}
@@ -494,8 +571,7 @@ class ScreenComponent extends React.Component {
                               </Col>
                             </Row>
                           </Form>
-                        )
-                        }
+                        )}
                       </Formik>
                     </Col>
                   </Row>

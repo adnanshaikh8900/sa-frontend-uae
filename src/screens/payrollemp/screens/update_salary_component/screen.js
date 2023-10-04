@@ -178,10 +178,12 @@ class UpdateSalaryComponent extends React.Component {
                 }
             }).catch((err) => {
                 this.setState({ loading: false })
-                this.props.history.push('/admin/master/employee')
+                this.props.history.push('/admin/master/employee/viewEmployee',
+                { id: this.props.location.state.id })
             })
         } else {
-            this.props.history.push('/admin/master/employee')
+            this.props.history.push('/admin/master/employee/viewEmployee',
+            { id: this.props.location.state.id })
         }
     }
     openSalaryComponentFixed = (props) => {

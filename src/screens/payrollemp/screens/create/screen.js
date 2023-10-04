@@ -520,7 +520,11 @@ class CreateEmployeePayroll extends React.Component {
 
     const formData = new FormData();
     formData.append("employee", this.state.employeeid);
-    formData.append("grossSalary", (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0));
+    if (this.state.ctcTypeOption.label == "ANNUALLY") {
+      formData.append('grossSalary', (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 ))
+    } else {
+      formData.append('grossSalary', (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 ))
+    }
     formData.append("totalNetPay", this.totalEarnings());
     formData.append("ctcType", this.state.ctcTypeOption.label ? this.state.ctcTypeOption.label : "ANNUALLY");
     formData.append("salaryComponentString", JSON.stringify(this.state.list));
@@ -1584,7 +1588,7 @@ class CreateEmployeePayroll extends React.Component {
                                             "Last name is required"
                                           ),
                                           email: Yup.string()
-                                            .required("Valid email required")
+                                            .required("Email is required")
                                             .email("Invalid Email"),
                                           mobileNumber: Yup.string().required(
                                             "Mobile number is required"

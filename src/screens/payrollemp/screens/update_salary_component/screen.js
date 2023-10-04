@@ -287,7 +287,11 @@ class UpdateSalaryComponent extends React.Component {
         let formData = new FormData();
         formData.append('employee', current_employee_id)
         formData.append('employeeId', this.props.location.state.id ? this.props.location.state.id : "");
-        formData.append('grossSalary', (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0))
+        if (this.state.ctcTypeOption.label == "ANNUALLY") {
+            formData.append('grossSalary', (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 ))
+        } else {
+            formData.append('grossSalary', (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 ))
+        }
         formData.append("totalNetPay", this.totalEarnings());
         formData.append('ctcType', this.state.ctcTypeOption.label ? this.state.ctcTypeOption.label : "ANNUALLY")
         formData.append('salaryComponentString', JSON.stringify(this.state.list));

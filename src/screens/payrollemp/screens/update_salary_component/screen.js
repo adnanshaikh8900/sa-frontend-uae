@@ -168,22 +168,27 @@ class UpdateSalaryComponent extends React.Component {
                     const fixedLength = this.state.Fixed ? this.state.Fixed?.length : 0
                     const deductionLength = this.state.Deduction ? this.state.Deduction?.length : 0
                     if (resFixedLength > fixedLength) {
-                       this.state.Fixed.push(res.data.salaryComponentResult.Fixed[resFixedLength - 1])
+                        this.state.Fixed.push(res.data.salaryComponentResult.Fixed[resFixedLength - 1])
                     }
-                    if(resDeductionLength > deductionLength){
-                       this.state.Deduction.push(res.data.salaryComponentResult.Deduction[resDeductionLength - 1])
+                    if (resDeductionLength > deductionLength) {
+                        if (this.state.Deduction)
+                            this.state.Deduction.push(res.data.salaryComponentResult.Deduction[resDeductionLength - 1])
+                        else
+                            this.setState({
+                                Deduction: [res.data.salaryComponentResult.Deduction[resDeductionLength - 1]]
+                            })
                     }
-                    
+
                     this.updateSalary1(this.state.CTC)
                 }
             }).catch((err) => {
                 this.setState({ loading: false })
                 this.props.history.push('/admin/master/employee/viewEmployee',
-                { id: this.props.location.state.id })
+                    { id: this.props.location.state.id })
             })
         } else {
             this.props.history.push('/admin/master/employee/viewEmployee',
-            { id: this.props.location.state.id })
+                { id: this.props.location.state.id })
         }
     }
     openSalaryComponentFixed = (props) => {
@@ -290,9 +295,9 @@ class UpdateSalaryComponent extends React.Component {
         formData.append('employee', current_employee_id)
         formData.append('employeeId', this.props.location.state.id ? this.props.location.state.id : "");
         if (this.state.ctcTypeOption.label == "ANNUALLY") {
-            formData.append('grossSalary', (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 ))
+            formData.append('grossSalary', (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0))
         } else {
-            formData.append('grossSalary', (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 ))
+            formData.append('grossSalary', (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0))
         }
         formData.append("totalNetPay", this.totalEarnings());
         formData.append('ctcType', this.state.ctcTypeOption.label ? this.state.ctcTypeOption.label : "ANNUALLY")

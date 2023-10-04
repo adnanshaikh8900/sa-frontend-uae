@@ -12,6 +12,7 @@ import {
 	ModalBody,
 	ModalFooter,
 	ButtonGroup,
+	UncontrolledTooltip
 } from 'reactstrap';
 
 import DatePicker from 'react-datepicker'
@@ -39,10 +40,16 @@ class SalaryComponentDeduction extends React.Component {
 				employeeId:'',
 				salaryStructure: 1,
 				type: {value:1},
+				ctcPercent: 1,
 				flatAmount: 1,
+				percentOfCTC: 1,
 				email: '',
 				dob: new Date(),
+				componentId: '',
 				description: '',
+				componentType: 'Deduction',
+				isActive:false,
+				calculationType: 'Percent Of CTC',
 				formula:'',
 				// data: [
 				// 	{
@@ -95,9 +102,13 @@ class SalaryComponentDeduction extends React.Component {
 		const {
 			id,
 			salaryStructure,
+			componentId,
+			componentType= 'Deduction',
+			isActive= false,
 			description,
 			formula,
 			flatAmount
+			
 		} = data;
 
 
@@ -112,6 +123,10 @@ class SalaryComponentDeduction extends React.Component {
 		formData.append(
 			'description',
 			description != null ? description : '',
+		)
+		formData.append(
+			'componentId',
+			componentId != null ? componentId : '',
 		)
 		formData.append(
 			'formula',
@@ -209,12 +224,18 @@ class SalaryComponentDeduction extends React.Component {
 							let errors = {};
 							if(this.state.addNewDisabled===true)
 							{	
+								if (values.componentId == "") {
+									errors.componentId = 'Component ID is required';
+								}
 									if (values.description=="") {
 										errors.description = 'Component name is required';
 									}
-									if (values.type.label && values.type.value=="") {
-										errors.type = 'Type is required';
-									}
+								if (values.calculationType === 'Percent Of CTC' && !values.ctcPercent) {
+									errors.ctcPercent = strings.PercentOfCTCIsRequired
+								}
+									// if (values.type.label && values.type.value=="") {
+									// 	errors.type = 'Type is required';
+									// }
 									// if (values.flatAmount=="") {
 									// 	errors.flatAmount = 'Flat amount is required';
 									// }else if (values.flatAmount==0) {
@@ -303,6 +324,7 @@ class SalaryComponentDeduction extends React.Component {
 											</Col>
 										</Row>
 									</CardHeader>
+									<br></br>
 									<ModalBody>
 									{ this.state.selectDisable &&(<Row>
 											<Col lg={8}>
@@ -366,11 +388,34 @@ class SalaryComponentDeduction extends React.Component {
 											{/* <div className="text-center"><h5> Create New Component</h5></div> */}
 											{/* </Col>
 										</Row> */}
+										
 
 										{this.state.showDetails &&
 										(<div id="moreDetails">
-										<Row>
-											<Col lg={8}>
+											<Row className="row-wrapper">
+												<Col>
+													<FormGroup className="mb-3">
+														<Label htmlFor="componentId">
+															<span className="text-danger">* </span>{strings.ComponentID}
+														</Label>
+														<Input
+															type="text"
+															id="componentId"
+															name="componentId"
+															value={props.values.componentId}
+															placeholder={strings.Enter + strings.ComponentID}
+															onChange={(option) => {
+																if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('componentId')(option) }
+															}}
+															className={props.errors.componentId && props.touched.componentId ? "is-invalid" : ""}
+														/>
+														{props.errors.componentId && props.touched.componentId && (
+															<div className="invalid-feedback">{props.errors.componentId}</div>
+														)}
+													</FormGroup>
+												</Col>
+										
+											<Col>
 												<FormGroup className="mb-3">
 													<Label htmlFor="salaryStructure">
 													<span className="text-danger">* </span>{strings.ComponentName}
@@ -394,7 +439,8 @@ class SalaryComponentDeduction extends React.Component {
 
 									
 										</Row>
-										<Row>
+										<hr/>
+										{/* <Row>
 											<Col md="8">
 												<FormGroup>
 													<Label htmlFor="gender">	<span className="text-danger">* </span>{strings.Type}</Label>
@@ -468,8 +514,8 @@ class SalaryComponentDeduction extends React.Component {
 													)}
 												</FormGroup>
 											</Col>
-										</Row>
-										<Row  style={{ display: props.values.type.value !== 1 ? 'none' : '' }}>
+										</Row> */}
+										{/* <Row  style={{ display: props.values.type.value !== 1 ? 'none' : '' }}>
 											<Col lg={8}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="flatAmount">
@@ -493,7 +539,193 @@ class SalaryComponentDeduction extends React.Component {
 												</FormGroup>
 											</Col>
 
-										</Row>
+										</Row> */}
+
+
+											
+											<Row>
+												<Col>
+													<FormGroup className="mb-3">
+														<Label htmlFor="componentType">
+															<span className="text-danger">* </span>
+															{strings.ComponentType}
+															<i
+																id="componentTypeTooltip"
+																className="fa fa-question-circle ml-1"
+															></i>
+															<UncontrolledTooltip
+																placement="right"
+																target="componentTypeTooltip"
+															>
+																{strings.ComponentTypeTooltip}
+															</UncontrolledTooltip> 
+															&nbsp;&nbsp;
+															<i className="fas fa-lock"></i>
+														</Label>
+														<br></br>
+														<FormGroup check inline>
+															<div className="custom-radio custom-control">
+																<input
+																	className="custom-control-input"
+																	type="radio"
+																	id="componentType-inline-radio1"
+																	name="componentType-inline-radio1"
+																	checked={!props.values.componentType}
+																	value={true}
+																	onChange={(value) => {
+																		if (
+																			props.values.componentType === 'Earning'
+																		) {
+																			this.setState({
+																				componentType: 'Earning',
+																				isActive: true
+																			});
+																		}
+																	}}
+																/>
+																<label
+																	className="custom-control-label"
+																	htmlFor="componentType-inline-radio1"
+																>
+																	{strings.Earning}
+																</label>
+															</div>
+														</FormGroup>
+														<FormGroup check inline>
+															<div className="custom-radio custom-control">
+																<input
+																	className="custom-control-input"
+																	type="radio"
+																	id="componentType-inline-radio2"
+																	name="componentType-inline-radio2"
+																	checked={props.values.componentType === 'Deduction'}
+																	value={false}
+																	onChange={(value) => {
+																		if (
+																			props.values.componentType === 'Deduction'
+																		) {
+																			this.setState({
+																				componentType: 'Deduction',
+																				isActive: false
+																			});
+																		}
+																	}}
+																/>
+																<label
+																	className="custom-control-label"
+																	htmlFor="componentType-inline-radio2"
+																>
+																	{strings.Deduction}
+																</label>
+															</div>
+														</FormGroup>
+
+													</FormGroup>
+												</Col>
+											</Row>
+											<br></br>
+											<hr />
+											<Row>
+												<Col>
+													
+													<FormGroup className="mb-3">
+														<Label htmlFor="calculationType">
+															<span className="text-danger">* </span>
+															{strings.CalculationType}
+														</Label>
+														<br />
+														<FormGroup check inline>
+															<div className="custom-radio custom-control">
+																<input
+																	className="custom-control-input"
+																	type="radio"
+																	id="calculationType-inline-radio1"
+																	name="calculationType-inline-radio1"
+																	checked={props.values.calculationType === 'Percent Of CTC'}
+																	value={props.values.calculationType}
+																	onChange={(value) => {
+																		props.handleChange('calculationType')('Percent Of CTC')
+																	}}
+																/>
+																<label
+																	className="custom-control-label"
+																	htmlFor="calculationType-inline-radio1"
+																>
+																	{strings.PercentOfCTC}
+																</label>
+															</div>
+														</FormGroup>
+														<FormGroup check inline>
+															<div className="custom-radio custom-control">
+																<input
+																	className="custom-control-input"
+																	type="radio"
+																	id="calculationType-inline-radio2"
+																	name="calculationType-inline-radio2"
+																	value={props.values.calculationType}
+																	checked={props.values.calculationType === 'Flat Amount'}
+																	onChange={(value) => {
+																		props.handleChange('calculationType')('Flat Amount')
+																	}}
+																/>
+																<label
+																	className="custom-control-label"
+																	htmlFor="calculationType-inline-radio2"
+																>
+																	{strings.FlatAmount}
+																</label>
+															</div>
+														</FormGroup>
+													</FormGroup>
+												</Col>
+											</Row>
+										<br></br><br></br>
+											
+											<Row>
+												<Col md={6}>
+													<FormGroup className="mb-3">
+														<Label htmlFor="ctcPercent">
+															<span className="text-danger">* </span>
+															{strings.PercentOfCTC}
+														</Label>
+														<Input
+															type='number'
+															min={1}
+															max={100}
+															style={{ display: 'inline' }}
+															value={props.values.ctcPercent}
+															onChange={(option) => {
+																if (option.target.value > 0 && option.target.value < 101) {
+																	props.handleChange('ctcPercent')(option,);
+																} else if (option.target.value === '') {
+																	props.handleChange('ctcPercent')('');
+																}
+															}}
+															placeholder={strings.Enter + strings.PercentOfCTC}
+															id="ctcPercent"
+															name="ctcPercent"
+															className={
+																props.errors.ctcPercent &&
+																	props.touched.ctcPercent
+																	? 'is-invalid'
+																	: ''
+															}
+														/>
+														{props.errors.ctcPercent &&
+															props.touched.ctcPercent && (
+																<div className="invalid-feedback">
+																	{props.errors.ctcPercent}
+																</div>
+															)}
+													</FormGroup>
+												</Col>
+											</Row>
+											<hr />
+											<Row>
+												<Col>
+													<p><strong>Note:</strong> {strings.SalaryComponentCreateNote}</p>
+												</Col>
+											</Row>
 										<Row>
 										<IconButton 
 										aria-label="delete"

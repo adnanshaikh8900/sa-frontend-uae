@@ -406,6 +406,37 @@ class CreateEmployeePayroll extends React.Component {
         );
       });
   };
+  getSalaryComponentAdded = () => {
+    this.props.createPayrollEmployeeActions
+      .getSalaryComponentByEmployeeId(this.state.employeeid)
+      .then((res) => {
+        if (res.status === 200) {
+          const resFixedLength = res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed?.length : 0;
+          const resDeductionLength = res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction?.length : 0;
+          const fixedLength = this.state.Fixed ? this.state.Fixed?.length : 0
+          const deductionLength = this.state.Deduction ? this.state.Deduction?.length : 0
+          if (resFixedLength > fixedLength) {
+            this.state.Fixed.push(res.data.salaryComponentResult.Fixed[resFixedLength - 1])
+          }
+          if (resDeductionLength > deductionLength) {
+            if (this.state.Deduction)
+              this.state.Deduction.push(res.data.salaryComponentResult.Deduction[resDeductionLength - 1])
+            else
+              this.setState({
+                Deduction: [res.data.salaryComponentResult.Deduction[resDeductionLength - 1]]
+              })
+          }
+        }
+        this.updateSalary(this.state.CTC);
+      })
+      .catch((err) => {
+        this.setState({ loading: false });
+        this.props.commonActions.tostifyAlert(
+          "error",
+          err && err.data ? err.data.message : "Something Went Wrong"
+        );
+      });
+  }
   uploadImage = (picture, file) => {
     this.setState({
       userPhoto: picture,
@@ -614,7 +645,9 @@ class CreateEmployeePayroll extends React.Component {
       .deleteSalaryComponentRow(this.state.employeeid, ComponentId)
       .then((res) => {
         if (res.status === 200) {
-          this.getSalaryComponentByEmployeeId();
+          const fixed = this.state.Fixed.filter(obj => obj.id !== ComponentId);
+          const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== ComponentId) : '';
+          this.setState({ Fixed: fixed, Deduction: deduction })
         }
       })
       .catch((err) => {
@@ -1032,10 +1065,12 @@ class CreateEmployeePayroll extends React.Component {
               this.toggle(0, "2");
             }
             this.renderActionForState(this.state.employeeid);
-            // this.setState({ loading:false,});
+            this.setState({ disabledPersonalDetailNextButton: false });
+
           }
         })
         .catch((err) => {
+          this.setState({ disabledPersonalDetailNextButton: false, loading: false });
           this.props.commonActions.tostifyAlert(
             "error",
             err.data ? err.data.mesg : "Employee Updated Unsuccessfully"
@@ -1083,7 +1118,7 @@ class CreateEmployeePayroll extends React.Component {
   };
   closeSalaryComponentFixed = (res) => {
     this.setState({ openSalaryComponentFixed: false });
-    this.getSalaryComponentByEmployeeId();
+    this.getSalaryComponentAdded();
     // this.updateSalary();
   };
   openSalaryComponentVariable = (props) => {
@@ -1091,7 +1126,7 @@ class CreateEmployeePayroll extends React.Component {
   };
   closeSalaryComponentVariable = (res) => {
     this.setState({ openSalaryComponentVariable: false });
-    this.getSalaryComponentByEmployeeId();
+    this.getSalaryComponentAdded();
     //   this.updateSalary();
   };
   openSalaryComponentDeduction = (props) => {
@@ -1099,7 +1134,7 @@ class CreateEmployeePayroll extends React.Component {
   };
   closeSalaryComponentDeduction = (res) => {
     this.setState({ openSalaryComponentDeduction: false });
-    this.getSalaryComponentByEmployeeId();
+    this.getSalaryComponentAdded();
     //this.updateSalary();
   };
 
@@ -1124,38 +1159,11 @@ class CreateEmployeePayroll extends React.Component {
   updateSalary = (CTC1) => {
     this.setState({ errorMsg: false })
     const Fixed = this.state.Fixed;
-    // const Variable = this.state.Variable;
     const Deduction = this.state.Deduction;
-    // const FixedAllowance = this.state.FixedAllowance;
     var locallist = [];
-    // var basicSalaryAnnulay = 0;
-    // var basicSalaryMonthy = 0;
     var totalFixedSalary = 0;
     Fixed.map((obj) => {
       locallist.push(obj);
-      // if (obj.formula != null && obj.description === "Basic SALARY") {
-      //   basicSalaryAnnulay = CTC1 * (obj.formula / 100);
-      //   basicSalaryMonthy = basicSalaryAnnulay / 12;
-      //   obj.monthlyAmount = basicSalaryMonthy;
-      //   obj.yearlyAmount = basicSalaryAnnulay;
-      //   totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
-      // } else if (
-      //   obj.formula != null &&
-      //   obj.description != "Basic SALARY" &&
-      //   obj.formula.length > 0
-      // ) {
-      //   var salaryAnnulay = CTC * (obj.formula / 100);
-      //   var salaryMonthy = salaryAnnulay / 12;
-      //   obj.monthlyAmount = salaryMonthy;
-      //   obj.yearlyAmount = salaryAnnulay;
-      //   totalFixedSalary = totalFixedSalary + salaryMonthy;
-      // } else if (obj.flatAmount != null) {
-      //   var salaryMonthy = obj.flatAmount;
-      //   obj.monthlyAmount = salaryMonthy;
-      //   obj.yearlyAmount = salaryMonthy * 12;
-      //   totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
-      // }
-      // return obj;
       if (obj.formula != null && obj.formula.length > 0) {
         var salaryAnnulay = CTC1 * (obj.formula / 100);
         var salaryMonthy = salaryAnnulay / 12;
@@ -1171,29 +1179,7 @@ class CreateEmployeePayroll extends React.Component {
       }
       return obj;
     });
-    // if (Variable != null) {
-    //   Variable.map((obj) => {
-    //     locallist.push(obj);
-    //     if (
-    //       obj.formula != null &&
-    //       obj.description != "Basic SALARY" &&
-    //       obj.formula.length > 0
-    //     ) {
-    //       var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-    //       var salaryAnnulay = salaryMonthy * 12;
-    //       obj.monthlyAmount = salaryMonthy;
-    //       obj.yearlyAmount = salaryAnnulay;
-    //       totalFixedSalary = totalFixedSalary + salaryMonthy;
-    //     } else if (obj.flatAmount != null) {
-    //       var salaryMonthy = obj.flatAmount;
-    //       obj.monthlyAmount = salaryMonthy;
-    //       obj.yearlyAmount = salaryMonthy * 12;
-    //       totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
-    //     }
-    //     return obj;
-    //   });
-    // }
-    if (Deduction != null) {
+    if (Deduction != null || Deduction?.length > 0) {
       Deduction.map((obj) => {
         locallist.push(obj);
         if (
@@ -5051,15 +5037,13 @@ class CreateEmployeePayroll extends React.Component {
                                           option.target.value === "" ||
                                           this.regEx.test(option.target.value)
                                         ) {
+                                          const ctc = option.target.value ? this.state.ctcType == "ANNUALLY" ? parseInt(option.target.value) : parseFloat(option.target.value) * 12 : 0;
                                           props.handleChange("CTC")(option);
+                                          this.setState({ CTC: ctc })
+                                          this.updateSalary(ctc);
                                         }
 
-                                        this.updateSalary(
-                                          this.state.ctcType == "ANNUALLY"
-                                            ? option.target.value
-                                            : parseFloat(option.target.value) *
-                                            12
-                                        );
+
                                       }}
                                       className={
                                         props.errors.CTC && props.touched.CTC
@@ -5103,7 +5087,7 @@ class CreateEmployeePayroll extends React.Component {
                             <Row className="m-4">
                               <Col lg={9}>
                                 <Row className="ml-2">
-                                  <h4>{strings.Earnings+":"}</h4>
+                                  <h4>{strings.Earnings + ":"}</h4>
                                 </Row>
                                 <Table
                                   className="text-center"
@@ -5139,52 +5123,6 @@ class CreateEmployeePayroll extends React.Component {
                                           >
                                             {item.description}
                                           </td>
-                                          {/* {item.formula ? (
-                                            <td
-                                              style={{
-                                                border: "3px solid #c8ced3",
-                                              }}
-                                            >
-                                              <Input
-                                                type="number"
-                                                min="1"
-                                                max="100"
-                                                size="30"
-                                                style={{ textAlign: "center" }}
-                                                id="formula"
-                                                name="formula"
-                                                value={item.formula}
-                                                onChange={(option) => {
-                                                  if (
-                                                    option.target.value ===
-                                                      "" ||
-                                                    this.regEx.test(
-                                                      option.target.value
-                                                    )
-                                                  ) {
-                                                    props.handleChange(
-                                                      "formula"
-                                                    )(option);
-                                                    this.updateSalary1(
-                                                      this.state.CTC,
-                                                      option.target.value,
-                                                      item.id
-                                                    );
-                                                  }
-                                                }}
-                                              />
-                                              {" % of CTC"}
-                                            </td>
-                                          ) : (
-                                            <td
-                                              style={{
-                                                border: "3px solid #c8ced3",
-                                              }}
-                                            >
-                                              {" "}
-                                              {strings.FixedAmount}
-                                            </td>
-                                          )} */}
                                           <td style={{ border: "3px solid #c8ced3" }}>
                                             <Field
                                               // name={`lineItemsString.${idx}.discountType`}
@@ -5652,7 +5590,7 @@ class CreateEmployeePayroll extends React.Component {
                               </Col>}
                               <Col lg={9}>
                                 <Row className="ml-2 mt-4">
-                                  <h4>{strings.Deductions+":"}</h4>
+                                  <h4>{strings.Deductions + ":"}</h4>
                                 </Row>
                                 <Table
                                   className="text-center"

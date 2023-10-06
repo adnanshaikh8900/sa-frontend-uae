@@ -90,7 +90,7 @@ class UpdateEmployeeBank extends React.Component {
                             accountHolderName:
                                 res.data.accountHolderName && res.data.accountHolderName !== null
                                     ? res.data.accountHolderName
-                                    : '',
+                                    : res.data.fullName ? res.data.fullName : '',
                             agentId: res.data.agentId && res.data.agentId !== null
                                 ? res.data.agentId
                                 : '',

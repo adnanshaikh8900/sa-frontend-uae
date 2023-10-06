@@ -144,9 +144,11 @@ class CreatePayrollList extends React.Component {
 
 	};
 	calculatePayperioad = (startDate, endDate) => {
+		let month = moment(startDate).format("MMMM");
 		// let diffDays=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1
 		const diffTime = Math.abs(startDate - endDate);
-		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+		let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+		diffDays = diffDays > 30 ? 30 : month == "February" ? 30 : diffDays;
 		this.setState({ paidDays: diffDays });
 		this.getAllPayrollEmployee(startDate, endDate)
 	}
@@ -342,57 +344,63 @@ class CreatePayrollList extends React.Component {
 				let month = moment(date).format("MMMM");
 				this.props.createPayrollActions.getAllPayrollEmployee(moment(date).format("DD/MM/YYYY")).then((res) => {
 					if (res.status === 200) {
+						debugger;
+
 						this.setState({
 							allPayrollEmployee: res.data
-						})
+						}, () => {
 
-						let newData = [...this.state.allPayrollEmployee]
-						newData = newData.map((data) => {
-
-
-							/** if month is of 31 days and 28days so its will be treated as 30 days only , 
-							* need to handle this in future release */
-							//for  month wise case handling ,need to add switch in future 
-							let tmpPaidDay = this.state.paidDays > 30 ? 30 :
-								(this.state.paidDays == 28 && month == "February" ? 30 : this.state.paidDays)
-							data.noOfDays = tmpPaidDay
-							data.originalNoOfDays = tmpPaidDay
-							data.originalGrossPay = data.grossPay
-							data.originalDeduction = data.deduction
-							data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2)
-							data.perDaySal = data.originalGrossPay / 30
-
-							data.lopDay = 0;
-							data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-							data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+							let newData = [...this.state.allPayrollEmployee]
+							newData = newData.map((data) => {
 
 
-							const empList = employeePayPeriodlList.filter(obj => obj.employeeId === data.id)
-							if (empList && empList?.length > 0) {
-								let flag = true;
-								empList.map(obj => {
-									let payStartDate = moment(moment(obj.payPeriod.split('-')[0].replaceAll('/', '-'), 'DD-MM-YYYY').toDate());
-									let payEndDate = moment(moment(obj.payPeriod.split('-')[1].replaceAll('/', '-'), 'DD-MM-YYYY').toDate());
-									let startDate = moment(date)
-									endDate = moment(date)
-									if (obj.employeeId === 10000){
-										debugger
-										console.log(moment(payStartDate), moment(date).subtract(1, "days"), moment(payEndDate), moment(endDate).add(1, "days"))
+								/** if month is of 31 days and 28days so its will be treated as 30 days only , 
+								* need to handle this in future release */
+								//for  month wise case handling ,need to add switch in future 
+								let tmpPaidDay = this.state.paidDays > 30 ? 30 :
+									(month == "February" ? 30 : this.state.paidDays)
+								data.noOfDays = tmpPaidDay
+								data.originalNoOfDays = tmpPaidDay
+								data.originalGrossPay = data.grossPay
+								data.originalDeduction = data.deduction
+								data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2)
+								data.perDaySal = data.originalGrossPay / 30
+
+								data.lopDay = 0;
+								data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+								data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+
+
+								const empList = employeePayPeriodlList.filter(obj => obj.employeeId === data.id)
+								if (empList && empList?.length > 0) {
+									let flag = true;
+									empList.map(obj => {
+										let payStartDate = moment(moment(obj.payPeriod.split('-')[0].replaceAll('/', '-'), 'DD-MM-YYYY').toDate());
+										let payEndDate = moment(moment(obj.payPeriod.split('-')[1].replaceAll('/', '-'), 'DD-MM-YYYY').toDate());
+										let startDate = moment(date)
+										endDate = moment(endDate)
+										if ((startDate.isBefore(payEndDate) && startDate.isAfter(payStartDate)) || (startDate.isSame(payStartDate) || startDate.isSame(payEndDate))) {
+											flag = false;
+										} else if ((endDate.isBefore(payEndDate) && endDate.isAfter(payStartDate)) || (endDate.isSame(payStartDate) || endDate.isSame(payEndDate))) {
+											flag = false;
+										} else if ((payStartDate.isBefore(endDate) && payStartDate.isAfter(startDate)) || (payStartDate.isSame(startDate) || payStartDate.isSame(endDate))) {
+											flag = false;
+										} else if ((payEndDate.isBefore(endDate) && payEndDate.isAfter(startDate)) || (payEndDate.isSame(startDate) || payEndDate.isSame(endDate))) {
+											flag = false;
+										}
+									})
+									if (flag) {
+										activeEmployee.push(data)
 									}
-									if ((payStartDate.isBefore(endDate) && payStartDate.isAfter(startDate)) || (payStartDate.isSame(startDate) || payStartDate.isSame(endDate))){
-										flag = false;
-									}
-								})
-								if (flag) {
+								} else {
 									activeEmployee.push(data)
 								}
-							} else {
-								activeEmployee.push(data)
-							}
-							return data
-						})
-						this.setState({
-							allPayrollEmployee: activeEmployee
+								return data
+							})
+							this.setState({
+								allPayrollEmployee: activeEmployee
+							})
+
 						})
 					}
 				})
@@ -486,7 +494,7 @@ class CreatePayrollList extends React.Component {
 												type="number"
 												min={0}
 												step="0.5"
-												max={this.state.paidDays}
+												max={this.state.paidDays - 1}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}
@@ -572,7 +580,7 @@ class CreatePayrollList extends React.Component {
 		if (value > 30) {
 			value = 30;
 		}
-		let tmpPaidDay = this.state.paidDays > 30 ? 30 : (this.state.paidDays == 28 ? 30 : this.state.paidDays)
+		let tmpPaidDay = this.state.paidDays;
 		let newData = [...this.state.allPayrollEmployee];
 		newData = newData.map((data) => {
 			if (row.id === data.id) {

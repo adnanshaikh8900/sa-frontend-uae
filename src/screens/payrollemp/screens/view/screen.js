@@ -152,7 +152,7 @@ class ViewEmployee extends React.Component {
 						const postData = {
 							id: this.props.location.state.id,
 							salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'),
-							sendMail: true,
+							sendMail: false,
 							startDate: '',
 							endDate: '',
 						};
@@ -661,14 +661,14 @@ class ViewEmployee extends React.Component {
 																	amountFormat(this.state.CTC, 'AED')
 																	:
 																	amountFormat(parseFloat(this.state.CTC) * 12, 'AED')
-																: ''}</h3></div></Col>
+																: amountFormat(0.00, 'AED')}</h3></div></Col>
 														<Col><h5> {strings.MonthlyIncome} </h5>
 															<div> <h3>{this.state.CTC ?
 																this.state.EmployeeDetails.ctcType == "ANNUALLY" ?
 																	amountFormat(this.state.CTC / 12, 'AED')
 																	:
 																	amountFormat(this.state.CTC, 'AED')
-																: ''}</h3></div></Col>
+																: amountFormat(0.00, 'AED')}</h3></div></Col>
 														<Col>
 															<Button
 																className={`btn-square pull-right mb-2 mr-3 ${this.disable() ? `disabled-cursor` : ``
@@ -752,7 +752,7 @@ class ViewEmployee extends React.Component {
 																		))) : (<tr></tr>)}
 																</tbody>
 																<tfoot>
-																	{this.state.FixedAllowance ? (
+																	{/* {this.state.FixedAllowance ? (
 																		Object.values(
 																			this.state.FixedAllowance
 																		).map((item) => (
@@ -761,7 +761,7 @@ class ViewEmployee extends React.Component {
 																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.monthlyAmount ? amountFormat(item.monthlyAmount, "AED") : ''}</td>
 																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.yearlyAmount ? amountFormat(item.yearlyAmount, "AED") : ''}</td>
 																			</tr>
-																		))) : (<tr></tr>)}
+																		))) : (<tr></tr>)} */}
 																	<tr style={{ border: "3px solid #dfe9f7" }}>
 																		<td className="text-left"><h5><b> {strings.CosttoCompany}</b></h5></td>
 																		<td className="text-right"><h5>{this.state.CTC ? this.state.EmployeeDetails.ctcType == "ANNUALLY" ? amountFormat(this.state.CTC / 12, "AED") : amountFormat(this.state.CTC, "AED") : ''}</h5></td>

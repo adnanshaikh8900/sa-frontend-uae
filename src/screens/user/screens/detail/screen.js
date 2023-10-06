@@ -37,6 +37,7 @@ const mapStateToProps = (state) => {
 	return {
 		role_list: state.user.role_list,
 		employee_list: state.user.employee_list,
+		profile: state.auth.profile,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -330,10 +331,10 @@ class DetailUser extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, dialog, timezone, current_user_id, loadingMsg } = this.state;
-		const { role_list, employee_list } = this.props;
+		const { role_list, employee_list, profile } = this.props;
 		const { isPasswordShown, enableDelete } = this.state;
-		console.log(enableDelete);
-
+		const current_loggin_user_roleId = profile?.role.roleCode;
+		console.log(current_loggin_user_roleId);
 		let active_roles_list = [];
 		role_list && role_list.length !== 0 && role_list.map(row => {
 			if (row.isActive == true) { active_roles_list.push(row) }
@@ -574,7 +575,7 @@ class DetailUser extends React.Component {
 																							type="email"
 																							id="email"
 																							name="email"
-																							disabled="true"
+																							disabled={current_loggin_user_roleId !== 1}
 																							placeholder={strings.Enter + strings.EmailID}
 																							value={props.values.email}
 																							onChange={(value) => {

@@ -526,7 +526,7 @@ class CreateCreditNote extends React.Component {
 
 		let result = this.props.currency_convert_list ? this.props.currency_convert_list.find((obj) => {
 			return obj.currencyCode === value;
-		}):'';
+		}) : '';
 
 
 		this.formRef.current.setFieldValue('exchangeRate', result?.exchangeRate, true);
@@ -1297,7 +1297,7 @@ class CreateCreditNote extends React.Component {
 				}
 			})
 			.catch((err) => {
-				this.setState({ disabled: false,loading:false,disableLeavePage: false  });
+				this.setState({ disabled: false, loading: false, disableLeavePage: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'New Tax Credit Note Created Unsuccessfully.',
@@ -1660,7 +1660,7 @@ class CreateCreditNote extends React.Component {
 																			/>	{strings.CreateCreditNoteWithoutProduct}
 																		</Col>
 																	</Row>
-																	
+
 																	{/* {this.state.invoiceSelected == false && (<Row  > hidden for time being as journel entries are wrong 
 																		<Col lg={4}>
 																			<Checkbox
@@ -1915,7 +1915,7 @@ class CreateCreditNote extends React.Component {
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
-																				minDate={new Date(moment(this.state.receiptDate,'YYYY-MM-DD').format())}																				
+																				minDate={new Date(moment(this.state.receiptDate, 'YYYY-MM-DD').format())}
 																				dropdownMode="select"
 																				value={props.values.creditNoteDate}
 																				selected={props.values.creditNoteDate}
@@ -2207,97 +2207,97 @@ class CreateCreditNote extends React.Component {
 																<i className="fa fa-plus"></i> {strings.Addproduct}
 															</Button>
 														</Col> */}
-														{this.state.isCreatedWIWP === false && (
-													<>
-														<Row>
-														<Col lg={8} className="mb-3">
-																		</Col>
-																		<Col>
-																			{this.state.taxType === false ?
-																				<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
-																				<span className='mr-4'>{strings.Exclusive}</span>}
-																			<Switch
-																				value={props.values.taxType}
-																				checked={this.state.taxType}
-																				disabled
-																				onChange={(taxType) => {
-																					props.handleChange('taxType')(taxType);
-																					this.setState({ taxType }, () => {
-																						this.updateAmount(
-																							this.state.data,
-																							props
-																						)
-																					});
-																				}}
+																{this.state.isCreatedWIWP === false && (
+																	<>
+																		<Row>
+																			<Col lg={8} className="mb-3">
+																			</Col>
+																			<Col>
+																				{this.state.taxType === false ?
+																					<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																					<span className='mr-4'>{strings.Exclusive}</span>}
+																				<Switch
+																					value={props.values.taxType}
+																					checked={this.state.taxType}
+																					disabled
+																					onChange={(taxType) => {
+																						props.handleChange('taxType')(taxType);
+																						this.setState({ taxType }, () => {
+																							this.updateAmount(
+																								this.state.data,
+																								props
+																							)
+																						});
+																					}}
 
-																				onColor="#2064d8"
-																				onHandleColor="#2693e6"
-																				handleDiameter={25}
-																				uncheckedIcon={false}
-																				checkedIcon={false}
-																				boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-																				activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-																				height={20}
-																				width={48}
-																				className="react-switch "
-																			/>
-																			{this.state.taxType === true ?
-																				<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
-																				: <span className='ml-4'>{strings.Inclusive}</span>
-																			}
-																		</Col>
+																					onColor="#2064d8"
+																					onHandleColor="#2693e6"
+																					handleDiameter={25}
+																					uncheckedIcon={false}
+																					checkedIcon={false}
+																					boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																					activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																					height={20}
+																					width={48}
+																					className="react-switch "
+																				/>
+																				{this.state.taxType === true ?
+																					<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																					: <span className='ml-4'>{strings.Inclusive}</span>
+																				}
+																			</Col>
 																		</Row>
 
-																
-																<Row>
-																	{props.errors.lineItemsString &&
-																		typeof props.errors.lineItemsString ===
-																		'string' && (
-																			<div
-																				className={
-																					props.errors.lineItemsString
-																						? 'is-invalid'
-																						: ''
-																				}
-																			>
-																				<div className="invalid-feedback">
-																					{props.errors.lineItemsString}
-																				</div>
-																			</div>
-																		)}
-																	<Col lg={12}>
-																		<BootstrapTable
-																			options={this.options}
-																			data={data}
-																			version="4"
-																			hover
-																			keyField="id"
-																			className="invoice-create-table"
-																		>
-																			<TableHeaderColumn
-																				width="55"
-																				dataAlign="center"
-																				dataFormat={(cell, rows) =>
-																					this.renderActions(cell, rows, props)
-																				}
-																			></TableHeaderColumn>
-																			<TableHeaderColumn
-																				dataField="product"
-																				width="20%"
-																				dataFormat={(cell, rows) =>
-																					this.renderProduct(cell, rows, props)
-																				}
-																			>
-																				{strings.PRODUCT}
-																			</TableHeaderColumn>
-																			{/* <TableHeaderColumn
+
+																		<Row>
+																			{props.errors.lineItemsString &&
+																				typeof props.errors.lineItemsString ===
+																				'string' && (
+																					<div
+																						className={
+																							props.errors.lineItemsString
+																								? 'is-invalid'
+																								: ''
+																						}
+																					>
+																						<div className="invalid-feedback">
+																							{props.errors.lineItemsString}
+																						</div>
+																					</div>
+																				)}
+																			<Col lg={12}>
+																				<BootstrapTable
+																					options={this.options}
+																					data={data}
+																					version="4"
+																					hover
+																					keyField="id"
+																					className="invoice-create-table"
+																				>
+																					<TableHeaderColumn
+																						width="55"
+																						dataAlign="center"
+																						dataFormat={(cell, rows) =>
+																							this.renderActions(cell, rows, props)
+																						}
+																					></TableHeaderColumn>
+																					<TableHeaderColumn
+																						dataField="product"
+																						width="20%"
+																						dataFormat={(cell, rows) =>
+																							this.renderProduct(cell, rows, props)
+																						}
+																					>
+																						{strings.PRODUCT}
+																					</TableHeaderColumn>
+																					{/* <TableHeaderColumn
 																				width="55"
 																				dataAlign="center"
 																				dataFormat={(cell, rows) =>
 																					this.renderAddProduct(cell, rows, props)
 																				}
 																			></TableHeaderColumn> */}
-																			{/* <TableHeaderColumn
+																					{/* <TableHeaderColumn
 																				dataField="description"
 																				dataFormat={(cell, rows) =>
 																					this.renderDescription(cell, rows, props)
@@ -2305,15 +2305,15 @@ class CreateCreditNote extends React.Component {
 																			>
 																				{strings.DESCRIPTION}
 																			</TableHeaderColumn> */}
-																			<TableHeaderColumn
-																				dataField="quantity"
-																				dataFormat={(cell, rows) =>
-																					this.renderQuantity(cell, rows, props)
-																				}
-																			>
-																				{strings.QUANTITY}
-																			</TableHeaderColumn>
-																			{/* <TableHeaderColumn
+																					<TableHeaderColumn
+																						dataField="quantity"
+																						dataFormat={(cell, rows) =>
+																							this.renderQuantity(cell, rows, props)
+																						}
+																					>
+																						{strings.QUANTITY}
+																					</TableHeaderColumn>
+																					{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}
@@ -2326,60 +2326,60 @@ class CreateCreditNote extends React.Component {
 																	 >
 																		Units / Measurements</UncontrolledTooltip>
 																		</TableHeaderColumn> */}
-																			<TableHeaderColumn
-																				dataField="unitPrice"
-																				dataFormat={(cell, rows) =>
-																					this.renderUnitPrice(cell, rows, props)
-																				}
-																			>
-																				{strings.UNITPRICE}
-																				<i
-																					id="UnitPriceTooltip"
-																					className="fa fa-question-circle ml-1"
-																				></i>
-																				<UncontrolledTooltip
-																					placement="right"
-																					target="UnitPriceTooltip"
-																				>
-																					Unit Price – Price of a single product or
-																					service
-																				</UncontrolledTooltip>
-																			</TableHeaderColumn>
-																			{initValue.discount != 0 ?
-																				<TableHeaderColumn
-																					width="12%"
-																					dataField="discount"
-																					dataFormat={(cell, rows) =>
-																						this.renderDiscount(cell, rows, props)
-																					}
-																				>
-																					{strings.DisCount}
-																				</TableHeaderColumn>
-																				: null
-																			}
-																			{initValue.total_excise != 0 ?
-																				<TableHeaderColumn
-																					width="10%"
-																					dataField="exciseTaxId"
-																					dataFormat={(cell, rows) =>
-																						this.renderExcise(cell, rows, props)
-																					}
-																				>
-																					{strings.Excises}
-																					<i
-																						id="ExiseTooltip"
-																						className="fa fa-question-circle ml-1"
-																					></i>
-																					<UncontrolledTooltip
-																						placement="right"
-																						target="ExiseTooltip"
+																					<TableHeaderColumn
+																						dataField="unitPrice"
+																						dataFormat={(cell, rows) =>
+																							this.renderUnitPrice(cell, rows, props)
+																						}
 																					>
-																						Excise dropdown will be enabled only for the excise products
-																					</UncontrolledTooltip>
-																				</TableHeaderColumn>
-																				: null
-																			}
-																			{/* <TableHeaderColumn
+																						{strings.UNITPRICE}
+																						<i
+																							id="UnitPriceTooltip"
+																							className="fa fa-question-circle ml-1"
+																						></i>
+																						<UncontrolledTooltip
+																							placement="right"
+																							target="UnitPriceTooltip"
+																						>
+																							Unit Price – Price of a single product or
+																							service
+																						</UncontrolledTooltip>
+																					</TableHeaderColumn>
+																					{initValue.discount != 0 ?
+																						<TableHeaderColumn
+																							width="12%"
+																							dataField="discount"
+																							dataFormat={(cell, rows) =>
+																								this.renderDiscount(cell, rows, props)
+																							}
+																						>
+																							{strings.DisCount}
+																						</TableHeaderColumn>
+																						: null
+																					}
+																					{initValue.total_excise != 0 ?
+																						<TableHeaderColumn
+																							width="10%"
+																							dataField="exciseTaxId"
+																							dataFormat={(cell, rows) =>
+																								this.renderExcise(cell, rows, props)
+																							}
+																						>
+																							{strings.Excises}
+																							<i
+																								id="ExiseTooltip"
+																								className="fa fa-question-circle ml-1"
+																							></i>
+																							<UncontrolledTooltip
+																								placement="right"
+																								target="ExiseTooltip"
+																							>
+																								Excise dropdown will be enabled only for the excise products
+																							</UncontrolledTooltip>
+																						</TableHeaderColumn>
+																						: null
+																					}
+																					{/* <TableHeaderColumn
 																				width="12%"
 																				dataField="discount"
 																				dataFormat={(cell, rows) =>
@@ -2388,36 +2388,52 @@ class CreateCreditNote extends React.Component {
 																			>
 																				{strings.DisCount}
 																			</TableHeaderColumn> */}
-																			<TableHeaderColumn
-																				dataField="vat"
-																				dataFormat={(cell, rows) =>
-																					this.renderVat(cell, rows, props)
-																				}
-																			>
-																				{strings.VAT}
-																			</TableHeaderColumn>
-																			<TableHeaderColumn
-																				dataField="vat_amount"
-																				dataFormat={this.renderVatAmount}
-																				className="text-right"
-																				columnClassName="text-right"
-																				formatExtraData={universal_currency_list}
-																			>
-																				{strings.VATAMOUNT}
-																			</TableHeaderColumn>
-																			<TableHeaderColumn
-																				dataField="sub_total"
-																				dataFormat={this.renderSubTotal}
-																				className="text-right"
-																				columnClassName="text-right"
-																				formatExtraData={universal_currency_list}
-																			>
-																				{strings.SUBTOTAL}
-																			</TableHeaderColumn>
-																		</BootstrapTable>
-																	</Col>
-																</Row></>)}
-
+																					<TableHeaderColumn
+																						dataField="vat"
+																						dataFormat={(cell, rows) =>
+																							this.renderVat(cell, rows, props)
+																						}
+																					>
+																						{strings.VAT}
+																					</TableHeaderColumn>
+																					<TableHeaderColumn
+																						dataField="vat_amount"
+																						dataFormat={this.renderVatAmount}
+																						className="text-right"
+																						columnClassName="text-right"
+																						formatExtraData={universal_currency_list}
+																					>
+																						{strings.VATAMOUNT}
+																					</TableHeaderColumn>
+																					<TableHeaderColumn
+																						dataField="sub_total"
+																						dataFormat={this.renderSubTotal}
+																						className="text-right"
+																						columnClassName="text-right"
+																						formatExtraData={universal_currency_list}
+																					>
+																						{strings.SUBTOTAL}
+																					</TableHeaderColumn>
+																				</BootstrapTable>
+																			</Col>
+																		</Row>
+																		{initValue.discount != 0 &&
+																			<Row className="ml-4 ">
+																				<Col className=" ml-4">
+																					<FormGroup className='pull-right'>
+																						<Input
+																							type="checkbox"
+																							id="discountEnabled"
+																							checked={initValue.discount != 0 ? true : false}
+																							value={initValue.discount != 0 ? true : false}
+																						/>
+																						<Label>{strings.ApplyLineItemDiscount}</Label>
+																					</FormGroup>
+																				</Col>
+																			</Row>
+																		}
+																	</>
+																)}
 																{this.state.data[0].id != 0 ? (
 																	<Row>
 																		<Col lg={8}>

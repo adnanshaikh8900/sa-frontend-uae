@@ -376,10 +376,11 @@ class UpdateEmployeePersonal extends React.Component {
                 this.setState({
                     initValue: {
                         ...this.state.initValue,
-                        ...{ employeeDesignationId: lastOption.value },
+                        ...{ employeeDesignationId: lastOption },
                     },
                     newDesig: true,
                 });
+                this.formRefPersonal.current.setFieldValue('employeeDesignationId', this.state.initValue.employeeDesignationId)
             }
         });
     };
@@ -627,7 +628,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                             validate={(values) => {
                                                                 console.log(values)
                                                                 let errors = {};
-                                                                if (this.state.emailExist == true) {
+                                                                if (this.state.emailExist === true && values.email !== '') {
                                                                     errors.email = 'Email already exists';
                                                                 }
                                                                 if (exist === true  && values.employeeCode!="") {
@@ -675,7 +676,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                 lastName: Yup.string()
                                                                     .required("Last name is required"),
                                                                 email: Yup.string()
-                                                                    .required("Valid email Required").email('Invalid Email'),
+                                                                    .required("Email is Required").email('Invalid Email'),
                                                                 dob: Yup.string()
                                                                     .required('DOB is required'),
                                                                 presentAddress: Yup.string()
@@ -1191,17 +1192,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                             id="employeeDesignationId"
                                                                                                             name="employeeDesignationId"
                                                                                                             placeholder={strings.Designation}
-                                                                                                            value={ this.state.newDesig === true ? (designation_dropdown
-                                                                                                                && selectOptionsFactory.renderOptions(
-                                                                                                                    'label',
-                                                                                                                    'value',
-                                                                                                                    designation_dropdown,
-                                                                                                                    'employeeDesignationId',
-                                                                                                                ).find(
-                                                                                                                    (option) =>
-                                                                                                                        parseFloat(option.value) ===
-                                                                                                                        this.state.initValue.employeeDesignationId,
-                                                                                                                )) : designation_dropdown
+                                                                                                            value={ designation_dropdown
                                                                                                                 && selectOptionsFactory.renderOptions(
                                                                                                                     'label',
                                                                                                                     'value',
@@ -1218,7 +1209,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                             // value={this.state.salaryDesignation}
                                                                                                             onChange={(value) => {
                                                                                                                 this.setState({newDesig: false})
-                                                                                                                props.handleChange('employeeDesignationId')(value.value);
+                                                                                                                props.handleChange('employeeDesignationId')(value);
                                                                                                                 props.handleChange('salaryRoleId')(1);
                                                                                                             }}
                                                                                                             className={`${props.errors.employeeDesignationId && props.touched.employeeDesignationId

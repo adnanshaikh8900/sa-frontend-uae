@@ -81,6 +81,7 @@ class PayrollConfigurations extends React.Component {
 				generateSif: true,
 			},
 			current_employee_id: '',
+			salaryList: [],
 		};
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
@@ -176,6 +177,13 @@ class PayrollConfigurations extends React.Component {
 			}
 		}).catch((err) => {
 			this.setState({ loading: false })
+			this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+		})
+		this.props.salaryStructureActions.getSalaryList().then((res) => {
+			if (res.status === 200) {
+				this.setState({ salaryList: res.data })
+			}
+		}).catch((err) => {
 			this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
 		})
 	}
@@ -280,6 +288,29 @@ class PayrollConfigurations extends React.Component {
 							className="btn btn-sm pdf-btn"
 							onClick={(e,) => {
 								this.props.history.push('/admin/payroll/config/detailEmployeeDesignation', { id: row.id })
+							}}
+						>
+							<i class="far fa-edit fa-lg"></i>
+						</Button>)
+					}
+				</div>
+
+			</Row>
+
+
+		);
+	}
+
+	goToDetailForSalaryComponent = (cell, row) => {
+		return (
+			<Row>
+				<div>
+					{row.id == 1 ? ""
+						:
+						(<Button
+							className="btn btn-sm pdf-btn"
+							onClick={(e,) => {
+								this.props.history.push('/admin/payroll/config/detailSalaryComponent', { id: row.id })
 							}}
 						>
 							<i class="far fa-edit fa-lg"></i>
@@ -506,7 +537,7 @@ class PayrollConfigurations extends React.Component {
 					// this.props.closeModal(false);	
 					this.props.history.push(
 						'/admin/payroll/payroll-run',
-					);			
+					);
 				}
 			})
 			.catch((err) => {
@@ -519,7 +550,7 @@ class PayrollConfigurations extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, dialog, initValue } = this.state;
+		const { loading, dialog, initValue, salaryList } = this.state;
 		const { salaryRole_list, salaryStructure_list, designation_list } = this.props;
 		const { generateSif } = this.props.company_details;
 		return (
@@ -579,6 +610,16 @@ class PayrollConfigurations extends React.Component {
 												}}
 											>{strings.CompanyDetails}
 											</NavLink>}
+										</NavItem>
+										<NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '5'}
+												onClick={() => {
+													this.toggle(0, '5');
+												}}
+											>
+												{strings.SalaryComponent}
+											</NavLink>
 										</NavItem>
 									</Nav>
 									<TabContent activeTab={this.state.activeTab[0]}>
@@ -1219,6 +1260,109 @@ class PayrollConfigurations extends React.Component {
 														}
 													</CardBody>
 													{/* </Card> */}
+												</div>
+											</div>
+										</TabPane>
+										<TabPane tabId="5">
+											<div className="employee-screen">
+												<div className="animated fadeIn">
+													<CardHeader>
+														<Row>
+															<Col lg={12}>
+																<div className="h4 mb-0 d-flex align-items-center">
+																	<i className="nav-icon fas fa-money-check-alt" />
+																	<span className="ml-2">{strings.SalaryComponent}</span>
+																</div>
+															</Col>
+														</Row>
+													</CardHeader>
+													<CardBody>
+														{
+															loading ?
+																<Row>
+																	<Col lg={12}>
+																		<Loader />
+																	</Col>
+																</Row>
+																:
+																<Row>
+																	<Col lg={12}>
+																		<div className="d-flex justify-content-end">
+																			<ButtonGroup size="sm">
+
+
+																				<div style={{ width: "1650px" }}>
+																					<Button
+																						color="primary"
+																						className="btn-square pull-right mb-2 mr-2"
+																						style={{ marginBottom: '10px' }}
+																						onClick={() => this.props.history.push(`/admin/payroll/config/createSalaryComponent`)}
+
+																					>
+																						<i className="fas fa-plus mr-1" />
+																						{strings.NewSalaryComponent}
+																					</Button>
+																				</div>
+																			</ButtonGroup>
+																		</div>
+
+																		<BootstrapTable
+																			selectRow={this.selectRowProp}
+																			search={false}
+																		//	options={this.designationoptions}
+																			data={this.state.salaryList && this.state.salaryList ? this.state.salaryList : []}
+																			version="4"
+																			hover
+																			//pagination={designation_list && designation_list.count > 0 ? true : false}
+																			keyField="id"
+																			remote
+
+																		 	//fetchInfo={{ dataTotalSize: salaryList.count ? salaryList.count : 0 }}
+																			className="SalaryComponent-list-table"
+																			trClassName="cursor-pointer"
+																			ref={(node) => this.table = node}
+																		>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="id"
+																			>
+																				{strings.ComponentId}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="description"
+
+																			>
+																				{strings.ComponentName}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="componentType"
+
+																			>
+																				{strings.ComponentType}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="calculationType"
+
+																			>
+																				{strings.calculation_type}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				className="table-header-bg"
+																				dataField="componentName"
+
+																				dataFormat={this.goToDetailForSalaryComponent}
+																			>
+
+																			</TableHeaderColumn>
+
+																		</BootstrapTable>
+																	</Col>
+																</Row>
+														}
+													</CardBody>
 												</div>
 											</div>
 										</TabPane>

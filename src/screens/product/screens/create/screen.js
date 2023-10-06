@@ -783,7 +783,7 @@ try {
 																					option.target.value,
 																				);
 																			}}
-																			onBlur={handleBlur}
+																			// onBlur={handleBlur}
 																			value={props.values.productName}
 																			placeholder={strings.Enter+strings.ProductName}
 																			className={

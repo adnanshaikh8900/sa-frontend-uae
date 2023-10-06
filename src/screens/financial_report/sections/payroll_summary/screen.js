@@ -176,8 +176,8 @@ class PayrollSummaryReport extends React.Component {
 	renderPayperiod = (row) => {
 		let dateArr=row.payPeriod ? row.payPeriod.split("-"):[];
 
-				let  startDate= moment(dateArr[0]).format('DD-MM-YYYY')
-				let	 endDate=moment(dateArr[1]).format('DD-MM-YYYY')
+				let  startDate= dateArr[0].replaceAll('/','-')
+				let	 endDate=dateArr[1].replaceAll('/','-')
 		
 		return(
 			// <div>{startDate}<b>&nbsp;to&nbsp;</b>{endDate}</div>

@@ -216,7 +216,7 @@ class CreateDebitNote extends React.Component {
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -847,6 +847,7 @@ class CreateDebitNote extends React.Component {
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append('type', 13);
+		formData.append('isReverseChargeEnabled', this.state.isReverseChargeEnabled);
 		if (this.state.isDNWIWithoutProduct === true)
 			formData.append('totalAmount', debitAmount);
 
@@ -1666,21 +1667,20 @@ class CreateDebitNote extends React.Component {
 														</Row>)}
 														{this.state.isDNWIWithoutProduct === false && data && data.length > 0 && isRegisteredVat && <Row>
 															<Col className="ml-4">
-																{(isDesignatedZone && props.values.taxTreatmentId.label !== 'UAE NON-VAT REGISTERED' && props.values.taxTreatmentId.label !== 'UAE NON-VAT REGISTERED FREEZONE' && props.values.taxTreatmentId.label !== 'UAE VAT REGISTERED' && props.values.taxTreatmentId.label !== 'UAE VAT REGISTERED FREEZONE')
-																	|| (!isDesignatedZone && props.values.taxTreatmentId.label !== 'UAE VAT REGISTERED FREEZONE')
+																{this.state.isReverseChargeEnabled === true 
+																	// && (isDesignatedZone && props.values.taxTreatmentId.label !== 'UAE NON-VAT REGISTERED' && props.values.taxTreatmentId.label !== 'UAE NON-VAT REGISTERED FREEZONE' && props.values.taxTreatmentId.label !== 'UAE VAT REGISTERED' && props.values.taxTreatmentId.label !== 'UAE VAT REGISTERED FREEZONE')
+																	// || (!isDesignatedZone && props.values.taxTreatmentId.label !== 'UAE VAT REGISTERED FREEZONE')
 																	? <FormGroup className="mb-3">
-
 																		<Input
 																			type="checkbox"
 																			id="isReverseChargeEnabled"
-																			checked={isReverseChargeEnabled}
-																			value={isReverseChargeEnabled}
+																			checked={this.state.isReverseChargeEnabled}
+																			value={this.state.isReverseChargeEnabled}
 																			onChange={(e) => {
 																				this.setState({
 																					isReverseChargeEnabled: isReverseChargeEnabled,
 																				})
 																			}}
-
 																		/>
 																		<Label>{strings.IsReverseCharge}</Label>
 																	</FormGroup> : ''}

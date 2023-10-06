@@ -387,7 +387,9 @@ class UpdateSalaryComponent extends React.Component {
             if (res.status === 200) {
                 const fixed = this.state.Fixed.filter(obj => obj.id !== ComponentId);
                 const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== ComponentId) : '';
-                this.setState({ Fixed: fixed, Deduction: deduction })
+                this.setState({ Fixed: fixed, Deduction: deduction },()=>{
+                    this.updateSalary(this.state.CTC);
+                })
             }
         }).catch((err) => {
             this.props.commonActions.tostifyAlert('error', err.data.message)

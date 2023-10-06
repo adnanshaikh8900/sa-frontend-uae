@@ -158,10 +158,8 @@ class UpdateSalaryComponent extends React.Component {
         }
     }
     getSalaryComponentByEmployeeId = () => {
-
         if (this.props.location.state && this.props.location.state.id) {
             this.props.detailSalaryComponentAction.getSalaryComponentByEmployeeId(this.props.location.state.id).then((res) => {
-
                 if (res.status === 200) {
                     const resFixedLength = res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed?.length : 0;
                     const resDeductionLength = res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction?.length : 0;
@@ -349,7 +347,7 @@ class UpdateSalaryComponent extends React.Component {
             return obj;
         });
 
-        if (Deduction != null) {
+        if (Deduction && Deduction?.length > 0) {
             Deduction.map((obj) => {
                 locallist.push(obj);
                 if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
@@ -432,7 +430,7 @@ class UpdateSalaryComponent extends React.Component {
             return obj;
         });
 
-        if (Deduction != null) {
+        if (Deduction && Deduction?.length > 0) {
             Deduction.map((obj) => {
                 locallist.push(obj);
                 if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {

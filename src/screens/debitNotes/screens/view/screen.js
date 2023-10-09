@@ -339,8 +339,8 @@ class ViewDebitNote extends React.Component {
 														<td className="center">{index + 1}</td>
 														<td>{item.transactionType}</td>
 														<td>{item.invoiceNumber}</td>
-														<td align="right">{item.totalAmount ? <Currency
-															value={item.totalAmount}
+														<td align="right">{debitNoteData.totalAmount ? <Currency
+															value={debitNoteData.totalAmount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode

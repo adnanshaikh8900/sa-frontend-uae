@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch) => {
   })
 }
 let strings = new LocalizedStrings(data);
-class ScreenComponent extends React.Component {
+class SalaryComponentScreen extends React.Component {
 
   constructor(props) {
     super(props)
@@ -49,7 +49,7 @@ class ScreenComponent extends React.Component {
       initValue: {
         componentId: '',
         componentName: '',
-        componentType: 'Earning',
+        componentType: this.props.ComponentType ? this.props.ComponentType : 'Earning',
         calculationType: 'Percent of CTC',
         ctcPercent: 1,
         flatAmount: 1,
@@ -159,6 +159,7 @@ class ScreenComponent extends React.Component {
     })
   }
   handleSubmit = (data, resetForm) => {
+    debugger
     this.setState({ disabled: true, disableLeavePage: true });
     const {
       componentName,
@@ -169,13 +170,10 @@ class ScreenComponent extends React.Component {
     } = data;
 
     const formData = new FormData();
-
-    formData.append('salaryStructure', 2)
     formData.append('description', componentName != null ? componentName : '',)
     formData.append('flatAmount', flatAmount != null ? flatAmount : '',)
     formData.append('formula', ctcPercent != null ? ctcPercent : '',)
     formData.append('componentId', componentId != null ? componentId : '',)
-    formData.append('componentName', componentName != null ? componentName : '',);
     formData.append('componentType', componentType ? componentType.value ? componentType.value : componentType : '');
 
     this.props.salaryComponentActions
@@ -202,7 +200,7 @@ class ScreenComponent extends React.Component {
 
   render() {
     strings.setLanguage(this.state.language);
-    const { componentType, isCreated, componentType_list } = this.props
+    const { ComponentType, isCreated, salaryStructureModalCard } = this.props
     const { enableDelete } = this.state;
 
 
@@ -273,7 +271,7 @@ class ScreenComponent extends React.Component {
                             <Row>
                               <Col lg={12}>
                                 <Row className="row-wrapper">
-                                  <Col lg={3}>
+                                  <Col lg={4}>
                                     <FormGroup>
                                       <Label htmlFor="componentId"><span className="text-danger">* </span>{strings.ComponentID}</Label>
                                       <Input
@@ -296,7 +294,7 @@ class ScreenComponent extends React.Component {
                                       )}
                                     </FormGroup>
                                   </Col>
-                                  <Col lg={3}>
+                                  <Col lg={4}>
                                     <FormGroup>
                                       <Label htmlFor="componentName"><span className="text-danger">* </span>{strings.ComponentName}</Label>
                                       <Input
@@ -322,7 +320,7 @@ class ScreenComponent extends React.Component {
                                 </Row>
                                 <hr />
                                 <Row>
-                                  <Col lg={3}>
+                                  <Col lg={12}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="componentType">
                                         <span className="text-danger">* </span>
@@ -342,6 +340,7 @@ class ScreenComponent extends React.Component {
                                       <FormGroup check inline>
                                         <div className="custom-radio custom-control">
                                           <input
+                                            disabled={ComponentType}
                                             className="custom-control-input"
                                             type="radio"
                                             id="componentType-inline-radio1"
@@ -363,6 +362,7 @@ class ScreenComponent extends React.Component {
                                       <FormGroup check inline>
                                         <div className="custom-radio custom-control">
                                           <input
+                                            disabled={ComponentType}
                                             className="custom-control-input"
                                             type="radio"
                                             id="componentType-inline-radio2"
@@ -387,7 +387,7 @@ class ScreenComponent extends React.Component {
                                 </Row>
                                 <hr />
                                 <Row>
-                                  <Col lg={3}>
+                                  <Col lg={12}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="calculationType">
                                         <span className="text-danger">* </span>
@@ -440,7 +440,7 @@ class ScreenComponent extends React.Component {
                                   </Col>
                                 </Row>
                                 <Row>
-                                  <Col lg={3}>
+                                  <Col lg={4}>
                                     {props.values.calculationType === 'Percent of CTC' ?
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="ctcPercent">
@@ -530,18 +530,19 @@ class ScreenComponent extends React.Component {
                                   </Button>}
                                 </FormGroup>
                                 <FormGroup className="text-right">
-                                  {isCreated ? <><Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
-                                    //  added validation popup  msg                                                                
-                                    props.handleBlur();
-                                    if (props.errors && Object.keys(props.errors).length != 0)
-                                      this.props.commonActions.fillManDatoryDetails();
-                                    this.setState({ createMore: false }, () => {
-                                      props.handleSubmit()
-                                    })
-                                  }}>
-                                    <i className="fa fa-dot-circle-o"></i>  {strings.Create}
-                                  </Button>
-                                    <Button name="button" color="primary" className="btn-square mr-3"
+                                  {isCreated ? <>
+                                    <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                      //  added validation popup  msg                                                                
+                                      props.handleBlur();
+                                      if (props.errors && Object.keys(props.errors).length != 0)
+                                        this.props.commonActions.fillManDatoryDetails();
+                                      this.setState({ createMore: false }, () => {
+                                        props.handleSubmit()
+                                      })
+                                    }}>
+                                      <i className="fa fa-dot-circle-o"></i>  {strings.Create}
+                                    </Button>
+                                    {!salaryStructureModalCard && <Button name="button" color="primary" className="btn-square mr-3"
                                       onClick={() => {
                                         //  added validation popup  msg                                                                
                                         props.handleBlur();
@@ -552,7 +553,8 @@ class ScreenComponent extends React.Component {
                                         })
                                       }}>
                                       <i className="fa fa-refresh"></i>  {strings.CreateandMore}
-                                    </Button></> :
+                                    </Button>}
+                                  </> :
                                     <Button type="button" color="primary" className="btn-square mr-3"
                                       //disabled={!props.dirty}
                                       onClick={() => {
@@ -564,7 +566,12 @@ class ScreenComponent extends React.Component {
                                     </Button>
                                   }
                                   <Button color="secondary" className="btn-square"
-                                    onClick={() => { this.props.history.push('/admin/payroll/config', { tabNo: '3' }) }}>
+                                    onClick={() => {
+                                      if (salaryStructureModalCard)
+                                        this.props.closeModal(true);
+                                      else
+                                        this.props.history.push('/admin/payroll/config', { tabNo: '3' })
+                                    }}>
                                     <i className="fa fa-ban"></i>  {strings.Cancel}
                                   </Button>
                                 </FormGroup>
@@ -587,5 +594,5 @@ class ScreenComponent extends React.Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ScreenComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(SalaryComponentScreen)
 

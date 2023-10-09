@@ -50,9 +50,9 @@ class SalaryComponentScreen extends React.Component {
         componentId: '',
         componentName: '',
         componentType: this.props.ComponentType ? this.props.ComponentType : 'Earning',
-        calculationType: 'Percent of CTC',
-        ctcPercent: 1,
-        flatAmount: 1,
+        calculationType: 2,
+        ctcPercent: '',
+        flatAmount: '',
       },
       enableDelete: true,
     }
@@ -166,15 +166,18 @@ class SalaryComponentScreen extends React.Component {
       componentId,
       componentType,
       flatAmount,
-      ctcPercent
+      ctcPercent,
+      calculationType
     } = data;
 
     const formData = new FormData();
     formData.append('description', componentName != null ? componentName : '',)
     formData.append('flatAmount', flatAmount != null ? flatAmount : '',)
     formData.append('formula', ctcPercent != null ? ctcPercent : '',)
-    formData.append('componentId', componentId != null ? componentId : '',)
-    formData.append('componentType', componentType ? componentType.value ? componentType.value : componentType : '');
+    formData.append('componentCode', componentId != null ? componentId : '',)
+    formData.append('componentType', componentType ? componentType : '');
+    formData.append('salaryStructure', componentType ? componentType === 'Earning' ? 1 : componentType === 'Deduction' : 3);
+    formData.append('calculationType', calculationType ? calculationType : '');
 
     this.props.salaryComponentActions
       .saveSalaryComponent(formData)
@@ -243,10 +246,10 @@ class SalaryComponentScreen extends React.Component {
                               "Designation name already exist";
                           }
                           // return errors;
-                          if (values.calculationType === 'Percent of CTC' && !values.ctcPercent) {
+                          if (values.calculationType === 2 && !values.ctcPercent) {
                             errors.ctcPercent = strings.PercentOfCTCIsRequired
                           }
-                          if (values.calculationType === 'Flat Amount' && !values.flatAmount) {
+                          if (values.calculationType === 1 && !values.flatAmount) {
                             errors.flatAmount = strings.FlatAmountIsRequired
                           }
 
@@ -401,10 +404,10 @@ class SalaryComponentScreen extends React.Component {
                                             type="radio"
                                             id="calculationType-inline-radio1"
                                             name="calculationType-inline-radio1"
-                                            checked={props.values.calculationType === 'Percent of CTC'}
+                                            checked={props.values.calculationType === 2}
                                             value={props.values.calculationType}
                                             onChange={(value) => {
-                                              props.handleChange('calculationType')('Percent of CTC')
+                                              props.handleChange('calculationType')(2)
                                             }}
                                           />
                                           <label
@@ -423,9 +426,9 @@ class SalaryComponentScreen extends React.Component {
                                             id="calculationType-inline-radio2"
                                             name="calculationType-inline-radio2"
                                             value={props.values.calculationType}
-                                            checked={props.values.calculationType === 'Flat Amount'}
+                                            checked={props.values.calculationType === 1}
                                             onChange={(value) => {
-                                              props.handleChange('calculationType')('Flat Amount')
+                                              props.handleChange('calculationType')(1)
                                             }}
                                           />
                                           <label
@@ -441,7 +444,7 @@ class SalaryComponentScreen extends React.Component {
                                 </Row>
                                 <Row>
                                   <Col lg={4}>
-                                    {props.values.calculationType === 'Percent of CTC' ?
+                                    {props.values.calculationType === 2 ?
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="ctcPercent">
                                           <span className="text-danger">* </span>

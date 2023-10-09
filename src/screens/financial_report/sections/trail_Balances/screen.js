@@ -402,7 +402,7 @@ class TrailBalances extends React.Component {
 		return (
 			<tr style={{ backgroundColor: '#B4C6E7' }}>
 				<td className="pt-1 pb-1 bld">
-					{strings.Total + " " + strings.Equities}
+					{strings.Total + " " + strings.Income}
 				</td>
 				<td className="text-right pt-1 pb-1 bld">
 					<Currency
@@ -457,7 +457,7 @@ class TrailBalances extends React.Component {
 		return (
 			<tr style={{ backgroundColor: '#B4C6E7' }}>
 				<td className="pt-1 pb-1 bld">
-					{strings.Total + " " + strings.Equities}
+					{strings.Total + " " + strings.Expense}
 				</td>
 				<td className="text-right pt-1 pb-1 bld">
 					<Currency
@@ -979,7 +979,7 @@ class TrailBalances extends React.Component {
 																					''
 																				)}
 																			</td>
-																			<td className="text-right">
+																			<td className="pt-0 pb-0 text-right">
 																				{this.state.data[
 																					'transactionCategoryMapper'
 																				][`${item}`] === 'Credit' ? (

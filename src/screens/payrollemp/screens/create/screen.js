@@ -552,9 +552,9 @@ class CreateEmployeePayroll extends React.Component {
     const formData = new FormData();
     formData.append("employee", this.state.employeeid);
     if (this.state.ctcTypeOption.label == "ANNUALLY") {
-      formData.append('grossSalary', (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0 ))
+      formData.append('grossSalary', (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0))
     } else {
-      formData.append('grossSalary', (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0 ))
+      formData.append('grossSalary', (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0))
     }
     formData.append("totalNetPay", this.totalEarnings());
     formData.append("ctcType", this.state.ctcTypeOption.label ? this.state.ctcTypeOption.label : "ANNUALLY");
@@ -1179,7 +1179,7 @@ class CreateEmployeePayroll extends React.Component {
       }
       return obj;
     });
-    if (Deduction != null || Deduction?.length > 0) {
+    if (Deduction && Deduction?.length > 0) {
       Deduction.map((obj) => {
         locallist.push(obj);
         if (
@@ -1268,43 +1268,7 @@ class CreateEmployeePayroll extends React.Component {
       }
       return obj;
     });
-    // if (Variable != null) {
-    //   Variable.map((obj) => {
-    //     locallist.push(obj);
-    //     if (
-    //       obj.formula != null &&
-    //       obj.description != "Basic SALARY" &&
-    //       obj.formula.length > 0
-    //     ) {
-    //       if (newFormula !== undefined && obj.id === id) {
-    //         if (newFormula === "") {
-    //           obj.formula = "0";
-    //         } else {
-    //           obj.formula = newFormula;
-    //         }
-    //       }
-    //       var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-    //       var salaryAnnulay = salaryMonthy * 12;
-    //       obj.monthlyAmount = salaryMonthy;
-    //       obj.yearlyAmount = salaryAnnulay;
-    //       totalFixedSalary = totalFixedSalary + salaryMonthy;
-    //     } else if (obj.flatAmount != null) {
-    //       if (newFlatAmount !== undefined && obj.id === id) {
-    //         if (newFlatAmount === "") {
-    //           obj.flatAmount = "0";
-    //         } else {
-    //           obj.flatAmount = newFlatAmount;
-    //         }
-    //       }
-    //       var salaryMonthy = obj.flatAmount;
-    //       obj.monthlyAmount = salaryMonthy;
-    //       obj.yearlyAmount = salaryMonthy * 12;
-    //       totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
-    //     }
-    //     return obj;
-    //   });
-    // }
-    if (Deduction != null) {
+    if (Deduction && Deduction?.length > 0) {
       Deduction.map((obj) => {
         locallist.push(obj);
         if (

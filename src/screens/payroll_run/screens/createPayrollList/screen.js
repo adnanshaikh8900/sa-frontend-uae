@@ -577,8 +577,8 @@ class CreatePayrollList extends React.Component {
 		)
 	}
 	updateAmounts = (row, value) => {
-		if (value > 30) {
-			value = 30;
+		if (value > 29) {
+			value = 29;
 		}
 		let tmpPaidDay = this.state.paidDays;
 		let newData = [...this.state.allPayrollEmployee];

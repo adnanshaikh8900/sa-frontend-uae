@@ -734,7 +734,7 @@ const en = {
       Saving: "Saving",
       RemainingCredits: "Remaining Credits",
       BankClosingDate: "Bank Closing Date",
-      AmountRefund:"Amount Refund",
+      AmountRefund:"Amount Refunded",
       AmounttoRefund: "Amount to Refund",
       RefundDate: "Refund Date",
       RefundMode: "Refund Mode",

@@ -23,6 +23,8 @@ import * as Yup from 'yup';
 import { Formik, Field } from 'formik';
 import * as DebitNotesDetailActions from './actions';
 import * as DebitNotesActions from '../../actions';
+import * as SupplierInvoiceDetailActions from './actions';
+import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
 import { LeavePage, Loader, ConfirmDeleteModal, ProductTableCalculation } from 'components';
@@ -61,6 +63,12 @@ const mapDispatchToProps = (dispatch) => {
 		debitNotesActions: bindActionCreators(DebitNotesActions, dispatch,),
 		debitNotesDetailActions: bindActionCreators(DebitNotesDetailActions, dispatch,),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+
+		ProductActions: bindActionCreators(ProductActions, dispatch),
+		supplierInvoiceDetailActions: bindActionCreators(
+			SupplierInvoiceDetailActions,
+			dispatch,
+		),
 	};
 };
 const customStyles = {
@@ -113,6 +121,7 @@ class DetailDebitNote extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			fileName: '',
+			purchaseCategory: [],
 			basecurrency: [],
 			customer_currency: '',
 			loadingMsg: "Loading",
@@ -272,10 +281,33 @@ class DetailDebitNote extends React.Component {
 						this.formRef.current.setFieldValue('currency', res.data.currencyCode ? res.data.currencyCode : '', true);
 						this.formRef.current.setFieldValue('invoiceNumber', res.data.invoiceId ? res.data.invoiceId : '', true);
 						this.getInvoiceDetails(this.state.initValue.invoiceNumber.value)
+						this.purchaseCategory();
+
 					}
 				});
 		} else {
 			this.props.history.push('/admin/expense/debit-notes');
+		}
+	};
+
+	purchaseCategory = () => {
+		try {
+			this.props.ProductActions.getTransactionCategoryListForPurchaseProduct(
+				'10',
+			).then((res) => {
+				if (res.status === 200) {
+					this.setState(
+						{
+							purchaseCategory: res.data,
+						},
+						() => {
+							console.log(this.state.purchaseCategory);
+						},
+					);
+				}
+			});
+		} catch (err) {
+			console.log(err);
 		}
 	};
 
@@ -744,6 +776,65 @@ class DetailDebitNote extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].productId
+							? 'is-invalid'
+							: ''
+							}`}
+					/>
+				)}
+			/>
+		);
+	};
+
+	renderAccount = (cell, row, props) => {
+		const { purchaseCategory } = this.state;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.transactionCategoryId`}
+				render={({ field, form }) => (
+					<Select
+						styles={{
+							menu: (provided) => ({ ...provided, zIndex: 9999 }),
+						}}
+						options={purchaseCategory ? purchaseCategory : []}
+						id="transactionCategoryId"
+						onChange={(e) => {
+							this.selectItem(
+								e.value,
+								row,
+								'transactionCategoryId',
+								form,
+								field,
+								props,
+							);
+						}}
+						isDisabled={row.transactionCategoryId === 150}
+						value={
+							purchaseCategory.length > 0 && row.transactionCategoryLabel
+								? purchaseCategory
+									.find((item) => item.label === row.transactionCategoryLabel)
+									.options.find(
+										(item) => item.value === +row.transactionCategoryId,
+									)
+								: row.transactionCategoryId
+						}
+						placeholder={strings.Select + strings.Account}
+						className={`${props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)]
+								.transactionCategoryId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)]
+								.transactionCategoryId
 							? 'is-invalid'
 							: ''
 							}`}
@@ -1513,6 +1604,15 @@ class DetailDebitNote extends React.Component {
 																				}
 																			>
 																				{strings.PRODUCT}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				width="11%"
+																				dataField="account"
+																				dataFormat={(cell, rows) =>
+																					this.renderAccount(cell, rows, props)
+																				}
+																			>
+																				{strings.Account}
 																			</TableHeaderColumn>
 																			<TableHeaderColumn
 																				dataField="quantity"

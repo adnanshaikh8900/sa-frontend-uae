@@ -393,8 +393,7 @@ class ArAgingReport extends React.Component {
 																	<>	
 																				<tr key={index}>
 																					<td style={{ width: '10%', textAlign:'center'}}>
-																						{item['contactName']}
-																						
+																					{item["organizationName"] ? item["organizationName"] : item["contactName"]}																						
 																					</td>
 																					
 																					{/* <td style={{ width: '12%', textAlign:'center' }}>

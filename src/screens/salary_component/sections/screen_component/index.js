@@ -21,6 +21,7 @@ import { LeavePage, ConfirmDeleteModal, Loader } from 'components';
 import { selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global'
 import * as SalaryComponentActions from '../../actions';
+import 'react-toastify/dist/ReactToastify.css';
 import 'react-datepicker/dist/react-datepicker.css'
 //import './style.scss'
 import { data } from '../../../Language/index'
@@ -46,6 +47,7 @@ class SalaryComponentScreen extends React.Component {
       loading: false,
       createMore: false,
       disableLeavePage: false,
+      salaryComponent_id:'null',
       initValue: {
         componentId: '',
         componentName: '',
@@ -159,8 +161,8 @@ class SalaryComponentScreen extends React.Component {
     })
   }
   handleSubmit = (data, resetForm) => {
-    debugger
-    this.setState({ disabled: true, disableLeavePage: true });
+  
+    this.setState({ disabled: true, disableLeavePage: true, });
     const {
       componentName,
       componentId,
@@ -185,7 +187,7 @@ class SalaryComponentScreen extends React.Component {
         if (res.status === 200) {
           this.props.commonActions.tostifyAlert(
             'success',
-            'New Employee Designation Created Successfully')
+            'Salary Component Created Successfully')
           if (this.state.createMore) {
             this.setState({
               createMore: false
@@ -199,6 +201,68 @@ class SalaryComponentScreen extends React.Component {
         this.setState({ disabled: false, disableLeavePage: false });
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
       })
+
+  
+      .updateSalaryComponent(formData)
+      .then((res) => {
+        if (res.status === 200) {
+          this.props.commonActions.tostifyAlert(
+            'success',
+            'Salary Component Updated Successfully!')
+          if (this.state.createMore) {
+            this.setState({
+              createMore: false
+            })
+            resetForm(this.state.initValue)
+          } else {
+            this.props.history.push('/admin/payroll/config', { tabNo: '3' })
+          }
+        }
+      }).catch((err) => {
+        this.setState({ disabled: false, disableLeavePage: false });
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+      })
+  }
+  deleteSalaryComponent = () => {
+    const message1 =
+      <text>
+        <b>Delete Product Category?</b>
+      </text>
+    const message = 'This Salary Component will be deleted permanently and cannot be recovered. ';
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={this.removeSalaryComponent}
+        cancelHandler={this.removeDialog}
+        message={message}
+        message1={message1}
+      />
+    })
+  }
+  removeSalaryComponent = () => {
+    this.setState({ disabled1: true });
+    const { salaryComponent_id } = this.state
+    this.setState({ loading: true, loadingMsg: "Deleting Salary Component..." });
+    this.props.detailProductCategoryAction.deleteSalaryComponent(salaryComponent_id).then((res) => {
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert(
+          'success',
+          res.data ? res.data.message : 'Salary Component Deleted Successfully'
+        )
+        this.props.history.push('/admin/payroll/config')
+        this.setState({ loading: false, });
+      }
+    }).catch((err) => {
+      this.setState({ disabled: false, disableLeavePage: false });
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+    })
+    
+  }
+
+  removeDialog = () => {
+    this.setState({
+      dialog: null
+    })
   }
 
   render() {

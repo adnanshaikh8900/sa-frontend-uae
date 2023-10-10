@@ -5302,25 +5302,25 @@ class CreateEmployeePayroll extends React.Component {
                                       </td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.totalEarnings()
-                                          ? this.totalEarnings().toLocaleString(
+                                              ? 'AED ' + this.totalEarnings().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                          : 0.0}
+                                              : 'AED ' + 0 + '.00'}
                                       </b></td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.totalYearEarnings()
-                                          ? this.totalYearEarnings().toLocaleString(
+                                              ? 'AED ' +  this.totalYearEarnings().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                          : 0.0}
+                                              : 'AED ' +0 +'.00'}
                                       </b></td>
                                     </tr>
                                   </tbody>
@@ -5842,25 +5842,25 @@ class CreateEmployeePayroll extends React.Component {
                                       </td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {typeof this.state.Deduction === 'object' ? (this.totalDeductions()
-                                          ? this.totalDeductions().toLocaleString(
+                                              ? 'AED ' + this.totalDeductions().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                          : 0.0) : 0}
+                                              : 'AED ' + 0 + '.00') : 'AED ' + 0 + '.00'}
                                       </b></td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {typeof this.state.Deduction === 'object' ? (this.totalYearDeductions()
-                                          ? this.totalYearDeductions().toLocaleString(
+                                              ? 'AED ' + this.totalYearDeductions().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                          : 0.0) : 0}
+                                              : 'AED ' + 0 + '.00') : 'AED ' + 0 + '.00'}
                                       </b></td>
                                     </tr>
                                   </tbody>
@@ -5884,25 +5884,25 @@ class CreateEmployeePayroll extends React.Component {
                                       </td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.grossEarnings()
-                                          ? this.grossEarnings().toLocaleString(
+                                              ? 'AED ' + this.grossEarnings().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                          : 0.0}
+                                              : 'AED ' + 0 +'.00'}
                                       </b></td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.grossYearEarnings()
-                                          ? this.grossYearEarnings().toLocaleString(
+                                              ? 'AED ' + this.grossYearEarnings().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                          : 0.0}
+                                              : 'AED ' + 0 +'.00'}
                                       </b></td>
                                     </tr>
                                   </tbody>
@@ -5935,25 +5935,25 @@ class CreateEmployeePayroll extends React.Component {
                                       </td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.totalEarnings()
-                                          ? this.totalEarnings().toLocaleString(
+                                              ? 'AED ' + this.totalEarnings().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                          : 0.0}
+                                          :'AED '+ 0 +'.00'}
                                       </b></td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.totalYearEarnings()
-                                          ? this.totalYearEarnings().toLocaleString(
+                                              ? 'AED ' + this.totalYearEarnings().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                          : 0.0}
+                                          : 'AED ' +0 +'.00'}
                                       </b></td>
                                     </tr>
                                   </tbody>

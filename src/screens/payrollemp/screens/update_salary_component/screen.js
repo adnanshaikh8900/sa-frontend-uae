@@ -907,26 +907,26 @@ class UpdateSalaryComponent extends React.Component {
                                                                                             <b className="pull-left">{strings.TotalEarnings + ' (A):'}</b>
                                                                                         </td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                            {this.totalEarnings()
-                                                                                                ? this.totalEarnings().toLocaleString(
-                                                                                                    navigator.language,
-                                                                                                    {
-                                                                                                        minimumFractionDigits: 2,
-                                                                                                        maximumFractionDigits: 2,
-                                                                                                    }
-                                                                                                )
-                                                                                                : 0.0}
+                                                                                        {this.totalEarnings()
+                                                                                                    ? 'AED ' +  this.totalEarnings().toLocaleString(
+                                                                                                navigator.language,
+                                                                                                {
+                                                                                                minimumFractionDigits: 2,
+                                                                                                maximumFractionDigits: 2,
+                                                                                                }
+                                                                                            )
+                                                                                                    : 'AED ' +  0 + '.00'}
                                                                                         </b></td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                            {this.totalYearEarnings()
-                                                                                                ? this.totalYearEarnings().toLocaleString(
-                                                                                                    navigator.language,
-                                                                                                    {
-                                                                                                        minimumFractionDigits: 2,
-                                                                                                        maximumFractionDigits: 2,
-                                                                                                    }
-                                                                                                )
-                                                                                                : 0.0}
+                                                                                        {this.totalYearEarnings()
+                                                                                                    ? 'AED ' + this.totalYearEarnings().toLocaleString(
+                                                                                                navigator.language,
+                                                                                                {
+                                                                                                minimumFractionDigits: 2,
+                                                                                                maximumFractionDigits: 2,
+                                                                                                }
+                                                                                            )
+                                                                                                    : 'AED ' + 0 + '.00'}
                                                                                         </b></td>
                                                                                     </tr>
                                                                                 </tbody>
@@ -1170,10 +1170,10 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                             value={item.monthlyAmount ? (item.monthlyAmount.toLocaleString(
                                                                                                                 navigator.language,
                                                                                                                 {
-                                                                                                                    minimumFractionDigits: 2,
-                                                                                                                    maximumFractionDigits: 2,
+                                                                                                                  minimumFractionDigits: 2,
+                                                                                                                  maximumFractionDigits: 2,
                                                                                                                 }
-                                                                                                            )) : 0}
+                                                                                                              )) : 0}
                                                                                                         />
                                                                                                     </td>
                                                                                                     ) : (
@@ -1192,10 +1192,10 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                                 value={item.flatAmount ? (item.flatAmount.toLocaleString(
                                                                                                                     navigator.language,
                                                                                                                     {
-                                                                                                                        minimumFractionDigits: 2,
-                                                                                                                        maximumFractionDigits: 2,
+                                                                                                                      minimumFractionDigits: 2,
+                                                                                                                      maximumFractionDigits: 2,
                                                                                                                     }
-                                                                                                                )) : 0}
+                                                                                                                  )) : 0}
                                                                                                                 id='' />
                                                                                                         </td>
                                                                                                     )}
@@ -1204,8 +1204,8 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                         {item.yearlyAmount ? (item.yearlyAmount.toLocaleString(
                                                                                                             navigator.language,
                                                                                                             {
-                                                                                                                minimumFractionDigits: 2,
-                                                                                                                maximumFractionDigits: 2,
+                                                                                                            minimumFractionDigits: 2,
+                                                                                                            maximumFractionDigits: 2,
                                                                                                             }
                                                                                                         )) : 0}
                                                                                                     </td>
@@ -1214,7 +1214,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                             {item.flatAmount ? (item.flatAmount * 12) : 0}
                                                                                                         </td>
                                                                                                     )}
-                                                                                                <td style={{ borderTop: "0px" }}>
+                                                                                                <td style={{borderTop: "0px"}}>
                                                                                                     <Button
                                                                                                         color='link'
                                                                                                         onClick={() => {
@@ -1246,26 +1246,26 @@ class UpdateSalaryComponent extends React.Component {
                                                                                             <b className="pull-left">{strings.Total + ' ' + strings.Deductions + ' (B):'}</b>
                                                                                         </td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                            {typeof this.state.Deduction === 'object' ? (this.totalDeductions()
-                                                                                                ? this.totalDeductions().toLocaleString(
-                                                                                                    navigator.language,
-                                                                                                    {
-                                                                                                        minimumFractionDigits: 2,
-                                                                                                        maximumFractionDigits: 2,
-                                                                                                    }
-                                                                                                )
-                                                                                                : 0.0) : 0}
+                                                                                        {typeof this.state.Deduction === 'object' ? (this.totalDeductions()
+                                                                                            ? 'AED ' + this.totalDeductions().toLocaleString(
+                                                                                                navigator.language,
+                                                                                                {
+                                                                                                minimumFractionDigits: 2,
+                                                                                                maximumFractionDigits: 2,
+                                                                                                }
+                                                                                            )
+                                                                                                    : 'AED ' + 0 + '.00') : 'AED ' + 0 +'.00' }
                                                                                         </b></td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                            {typeof this.state.Deduction === 'object' ? (this.totalYearDeductions()
-                                                                                                ? this.totalYearDeductions().toLocaleString(
-                                                                                                    navigator.language,
-                                                                                                    {
-                                                                                                        minimumFractionDigits: 2,
-                                                                                                        maximumFractionDigits: 2,
-                                                                                                    }
-                                                                                                )
-                                                                                                : 0.0) : 0}
+                                                                                        {typeof this.state.Deduction === 'object' ? (this.totalYearDeductions()
+                                                                                                    ? 'AED ' + this.totalYearDeductions().toLocaleString(
+                                                                                                navigator.language,
+                                                                                                {
+                                                                                                minimumFractionDigits: 2,
+                                                                                                maximumFractionDigits: 2,
+                                                                                                }
+                                                                                            )
+                                                                                                    : 'AED ' + 0 + '.00') : 'AED ' + 0 + '.00'}
                                                                                         </b></td>
                                                                                     </tr>
                                                                                 </tbody>
@@ -1273,42 +1273,42 @@ class UpdateSalaryComponent extends React.Component {
                                                                         </Col>
                                                                         <Col lg={9}>
                                                                             <Row className="ml-2 mt-4">
-                                                                                <h4>{strings.Gross + ' ' + strings.Earnings + ':'}</h4>
+                                                                                <h4>{strings.Gross+' '+strings.Earnings+':'}</h4>
                                                                             </Row>
                                                                             <Table
-                                                                                className="text-center"
-                                                                                style={{
-                                                                                    width: "133%",
-                                                                                    marginBottom: "0px"
-                                                                                }}
+                                                                            className="text-center"
+                                                                            style={{
+                                                                                width: "133%",
+                                                                                marginBottom: "0px"
+                                                                            }}
                                                                             >
                                                                                 <tbody>
-                                                                                    <tr style={{ background: "#dfe9f7", color: "Black" }}>
-                                                                                        <td colSpan={2} style={{ border: "3px solid #c8ced3", width: "50%" }}>
-                                                                                            <b className="pull-left">{strings.Gross + ' ' + strings.Earnings + ' (C):'}</b>
+                                                                                    <tr style={{background: "#dfe9f7", color: "Black" }}>
+                                                                                        <td colSpan={2} style={{border: "3px solid #c8ced3", width: "50%"}}>
+                                                                                            <b className="pull-left">{strings.Gross+' '+strings.Earnings+' (C):'}</b>
                                                                                             <b className="pull-right">{'(A + B)'}</b>
                                                                                         </td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                            {this.grossEarnings()
-                                                                                                ? this.grossEarnings().toLocaleString(
-                                                                                                    navigator.language,
-                                                                                                    {
-                                                                                                        minimumFractionDigits: 2,
-                                                                                                        maximumFractionDigits: 2,
-                                                                                                    }
+                                                                                        {this.grossEarnings()
+                                                                                                    ? 'AED ' + this.grossEarnings().toLocaleString(
+                                                                                                navigator.language,
+                                                                                                {
+                                                                                                    minimumFractionDigits: 2,
+                                                                                                    maximumFractionDigits: 2,
+                                                                                                }
                                                                                                 )
-                                                                                                : 0.0}
+                                                                                                    : 'AED ' + 0 + '.00'}
                                                                                         </b></td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                            {this.grossYearEarnings()
-                                                                                                ? this.grossYearEarnings().toLocaleString(
-                                                                                                    navigator.language,
-                                                                                                    {
-                                                                                                        minimumFractionDigits: 2,
-                                                                                                        maximumFractionDigits: 2,
-                                                                                                    }
+                                                                                        {this.grossYearEarnings()
+                                                                                                    ? 'AED ' + this.grossYearEarnings().toLocaleString(
+                                                                                                navigator.language,
+                                                                                                {
+                                                                                                    minimumFractionDigits: 2,
+                                                                                                    maximumFractionDigits: 2,
+                                                                                                }
                                                                                                 )
-                                                                                                : 0.0}
+                                                                                                    : 'AED ' + 0 + '.00'}
                                                                                         </b></td>
                                                                                     </tr>
                                                                                 </tbody>
@@ -1340,26 +1340,26 @@ class UpdateSalaryComponent extends React.Component {
                                                                                             <b className="pull-right">{'(C - B)'}</b>
                                                                                         </td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                            {this.totalEarnings()
-                                                                                                ? this.totalEarnings().toLocaleString(
-                                                                                                    navigator.language,
-                                                                                                    {
-                                                                                                        minimumFractionDigits: 2,
-                                                                                                        maximumFractionDigits: 2,
-                                                                                                    }
-                                                                                                )
-                                                                                                : 0.0}
+                                                                                        {this.totalEarnings()
+                                                                                                    ? 'AED ' + this.totalEarnings().toLocaleString(
+                                                                                                navigator.language,
+                                                                                                {
+                                                                                                minimumFractionDigits: 2,
+                                                                                                maximumFractionDigits: 2,
+                                                                                                }
+                                                                                            )
+                                                                                            : 'AED ' + 0.0 +'.00'}
                                                                                         </b></td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                                                                            {this.totalYearEarnings()
-                                                                                                ? this.totalYearEarnings().toLocaleString(
-                                                                                                    navigator.language,
-                                                                                                    {
-                                                                                                        minimumFractionDigits: 2,
-                                                                                                        maximumFractionDigits: 2,
-                                                                                                    }
-                                                                                                )
-                                                                                                : 0.0}
+                                                                                        {this.totalYearEarnings()
+                                                                                                    ? 'AED ' +this.totalYearEarnings().toLocaleString(
+                                                                                            navigator.language,
+                                                                                            {
+                                                                                            minimumFractionDigits: 2,
+                                                                                            maximumFractionDigits: 2,
+                                                                                            }
+                                                                                        )
+                                                                                                    : 'AED ' + 0.0 +'.00'}
                                                                                         </b></td>
                                                                                     </tr>
                                                                                 </tbody>
@@ -1394,7 +1394,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                 className="btn-square"
                                                                                 onClick={() => {
                                                                                     this.props.history.push('/admin/master/employee/viewEmployee',
-                                                                                        { id: this.props.location.state.id })
+                                                                                    { id: this.props.location.state.id })
                                                                                 }}
                                                                             >
                                                                                 <i className="fa fa-ban"></i> {strings.Cancel}

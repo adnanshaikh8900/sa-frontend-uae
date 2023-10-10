@@ -21,6 +21,7 @@ import { LeavePage, ConfirmDeleteModal, Loader } from 'components';
 import { selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global'
 import * as SalaryComponentActions from '../../actions';
+import 'react-toastify/dist/ReactToastify.css';
 import 'react-datepicker/dist/react-datepicker.css'
 //import './style.scss'
 import { data } from '../../../Language/index'
@@ -123,7 +124,7 @@ class SalaryComponentScreen extends React.Component {
       <text>
         <b>Delete Designation ?</b>
       </text>
-    const message = 'This designation will be deleted permanently and cannot be recovered. ';
+    const message = 'This Salary Component will be deleted permanently and cannot be recovered. ';
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -137,10 +138,10 @@ class SalaryComponentScreen extends React.Component {
 
   remove = () => {
     const { current_salary_role_id } = this.state;
-    this.props.designationDetailActions.deleteDesignation(current_salary_role_id).then((res) => {
+    this.props.designationDetailActions.deletesalaryComponent(current_salary_role_id).then((res) => {
       if (res.status === 200) {
         this.setState({ disableLeavePage: true })
-        this.props.commonActions.tostifyAlert('success', 'Designation Deleted Successfully !')
+        this.props.commonActions.tostifyAlert('success', 'Salary Component Deleted Successfully !')
         this.props.history.push('/admin/payroll/config', { tabNo: '3' })
       }
 
@@ -152,7 +153,7 @@ class SalaryComponentScreen extends React.Component {
        */
       if (err.status === 409) {
         this.setState({ disableLeavePage: true })
-        this.props.commonActions.tostifyAlert('error', 'Designation can\'t be deleted, you need to delete employee first.')
+        this.props.commonActions.tostifyAlert('error', 'Salary Component can\'t be deleted, you need to delete employee first.')
         this.props.history.push('/admin/payroll/config', { tabNo: '5' })
       }
       else
@@ -166,8 +167,8 @@ class SalaryComponentScreen extends React.Component {
     })
   }
   handleSubmit = (data, resetForm) => {
-    debugger
-    this.setState({ disabled: true, disableLeavePage: true });
+  
+    this.setState({ disabled: true, disableLeavePage: true, });
     const {
       componentName,
       componentId,
@@ -192,7 +193,7 @@ class SalaryComponentScreen extends React.Component {
         if (res.status === 200) {
           this.props.commonActions.tostifyAlert(
             'success',
-            'New Employee Designation Created Successfully')
+            'Salary Component Created Successfully')
           if (this.state.createMore) {
             this.setState({
               createMore: false
@@ -209,7 +210,9 @@ class SalaryComponentScreen extends React.Component {
         this.setState({ disabled: false, disableLeavePage: false });
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
       })
-  }
+
+  
+    }
 
   render() {
     strings.setLanguage(this.state.language);

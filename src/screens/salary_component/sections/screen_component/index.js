@@ -56,6 +56,7 @@ class SalaryComponentScreen extends React.Component {
       },
       enableDelete: true,
     }
+    this.formRef = React.createRef();
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -68,11 +69,17 @@ class SalaryComponentScreen extends React.Component {
 
   initializeData = () => {
     if (this.props.componentID && !this.props.isCreated) {
-      // this.props.employeeActions.getEmployeeCountForDesignation(this.props.location.state.id).then(res => {
-      //   if (res.status === 200) {
-      //     this.setState({ enableDelete: res.data && res.data > 0 ? false : true })
-      //   }
-      // })
+      this.props.salaryComponentActions.getSalaryComponentById(this.props.componentID).then(res => {
+        if (res.status === 200) {
+          console.log(res.data)
+          this.formRef.current.setFieldValue('componentId', res.data.componentCode, true);
+          this.formRef.current.setFieldValue('componentName', res.data.description, true);
+          this.formRef.current.setFieldValue('componentType', res.data.componentType, true);
+          this.formRef.current.setFieldValue('calculationType', res.data.calculationType, true);
+          this.formRef.current.setFieldValue('ctcPercent', res.data.formula, true);
+          this.formRef.current.setFieldValue('flatAmount', res.data.flatAmount, true);
+        }
+      })
     }
 
   };
@@ -146,7 +153,7 @@ class SalaryComponentScreen extends React.Component {
       if (err.status === 409) {
         this.setState({ disableLeavePage: true })
         this.props.commonActions.tostifyAlert('error', 'Designation can\'t be deleted, you need to delete employee first.')
-        this.props.history.push('/admin/payroll/config', { tabNo: '3' })
+        this.props.history.push('/admin/payroll/config', { tabNo: '5' })
       }
       else
         this.props.commonActions.tostifyAlert('error', 'Something Went Wrong')
@@ -192,7 +199,7 @@ class SalaryComponentScreen extends React.Component {
             })
             resetForm(this.state.initValue)
           } else {
-            this.props.history.push('/admin/payroll/config', { tabNo: '3' })
+            this.props.history.push('/admin/payroll/config', { tabNo: '5' })
           }
         }
       }).catch((err) => {
@@ -228,6 +235,7 @@ class SalaryComponentScreen extends React.Component {
                     <Col lg={12}>
                       <Formik
                         initialValues={this.state.initValue}
+                        ref={this.formRef}
                         onSubmit={(values, { resetForm }) => {
                           this.handleSubmit(values, resetForm)
                         }}
@@ -236,14 +244,13 @@ class SalaryComponentScreen extends React.Component {
                           if (parseInt(values.componentId) === 0) {
                             errors.componentId =
                               "Enter valid designation ID";
-                          } else if (this.state.idExist === true || parseInt(values.componentId) === 1 || parseInt(values.componentId) === 2 || parseInt(values.componentId) === 3 || parseInt(values.componentId) === 4) {
+                          } else if (this.state.idExist === true || parseInt(values.componentId) === 1 || parseInt(values.componentId) === 3) {
                             errors.componentId =
-                              "Designation ID already exist";
+                              "Component ID already exist";
                           }
-
                           if (this.state.nameExist === true) {
                             errors.componentName =
-                              "Designation name already exist";
+                              "Component name already exist";
                           }
                           // return errors;
                           if (values.calculationType === 2 && !values.ctcPercent) {
@@ -252,7 +259,6 @@ class SalaryComponentScreen extends React.Component {
                           if (values.calculationType === 1 && !values.flatAmount) {
                             errors.flatAmount = strings.FlatAmountIsRequired
                           }
-
                           return errors;
                         }}
 
@@ -282,7 +288,7 @@ class SalaryComponentScreen extends React.Component {
                                         id="componentId"
                                         name="componentId"
                                         maxLength="9"
-                                        value={props.values.componentId}
+                                        value={props.values.componentId ? props.values.componentId : ''}
                                         placeholder={strings.Enter + strings.ComponentID}
                                         onChange={(option) => {
                                           if (option.target.value === '' || this.regEx.test(option.target.value)) {
@@ -305,7 +311,7 @@ class SalaryComponentScreen extends React.Component {
                                         id="componentName"
                                         name="componentName"
                                         maxLength="30"
-                                        value={props.values.componentName}
+                                        value={props.values.componentName ? props.values.componentName : ''}
                                         placeholder={strings.Enter + strings.ComponentName}
                                         onChange={(option) => {
                                           if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {
@@ -451,12 +457,11 @@ class SalaryComponentScreen extends React.Component {
                                           {strings.PercentOfCTC}
                                         </Label>
                                         <Input
-                                          type='number'
-                                          min={1}
-                                          max={100}
-                                          value={props.values.ctcPercent}
+                                          type='text'
+                                          maxLength="3,2"
+                                          value={props.values.ctcPercent ? props.values.ctcPercent : ''}
                                           onChange={(option) => {
-                                            if (option.target.value > 0 && option.target.value < 101) {
+                                            if (parseInt(option.target.value) > 0 && parseInt(option.target.value) < 101) {
                                               props.handleChange('ctcPercent')(option,);
                                             } else if (option.target.value === '') {
                                               props.handleChange('ctcPercent')('');
@@ -488,7 +493,7 @@ class SalaryComponentScreen extends React.Component {
                                           type='text'
                                           maxLength="14,2"
                                           min={1}
-                                          value={props.values.flatAmount}
+                                          value={props.values.flatAmount ? props.values.flatAmount : ''}
                                           onChange={(option) => {
                                             if (option.target.value === '' || this.regDecimal.test(option.target.value)) {
                                               props.handleChange('flatAmount')(option,);
@@ -510,7 +515,6 @@ class SalaryComponentScreen extends React.Component {
                                               {props.errors.flatAmount}
                                             </div>
                                           )}
-
                                       </FormGroup>
                                     }
                                   </Col>
@@ -573,7 +577,7 @@ class SalaryComponentScreen extends React.Component {
                                       if (salaryStructureModalCard)
                                         this.props.closeModal(true);
                                       else
-                                        this.props.history.push('/admin/payroll/config', { tabNo: '3' })
+                                        this.props.history.push('/admin/payroll/config', { tabNo: '5' })
                                     }}>
                                     <i className="fa fa-ban"></i>  {strings.Cancel}
                                   </Button>

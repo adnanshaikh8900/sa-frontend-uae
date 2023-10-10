@@ -33,7 +33,7 @@ const mapStateToProps = (state) => {
         employee_list_dropdown: state.payrollEmployee.employee_list_dropdown,
         state_list: state.payrollEmployee.state_list,
         country_list: state.payrollEmployee.country_list,
-        salary_component_fixed_dropdown: state.payrollEmployee.salary_component_fixed_dropdown,
+        salary_component_fixed_dropdown: state.payrollEmployee.salary_component_fixed_dropdown.data,
         salary_component_varaible_dropdown: state.payrollEmployee.salary_component_varaible_dropdown,
         salary_component_deduction_dropdown: state.payrollEmployee.salary_component_deduction_dropdown,
     })
@@ -319,14 +319,15 @@ class UpdateSalaryComponent extends React.Component {
             )
         })
     }
-
+    getCurrentSalaryComponent = (newComponent,componentType) => {
+		
+	};
     updateSalary = (CTC1) => {
         this.setState({ errorMsg: false })
         const Fixed = this.state.Fixed
         const Variable = this.state.Variable
         const Deduction = this.state.Deduction
         const Fixed_Allowance = this.state.Fixed_Allowance
-
         var locallist = []
         var totalFixedSalary = 0;
         Fixed.map((obj) => {
@@ -468,6 +469,53 @@ class UpdateSalaryComponent extends React.Component {
             list: locallist
         })
     }
+    renderComaponentName = (row,index) =>{
+        const {salary_component_fixed_dropdown}=this.props;
+        console.log(salary_component_fixed_dropdown,row)
+        return (
+			<Field
+				name={`Fixed.${index}.description`}
+				render={({ field, form }) => (
+					<>
+						<Select
+							options={salary_component_fixed_dropdown}
+							id="description"
+							placeholder={strings.Select + strings.Product}
+							onChange={(e) => {
+                                console.log(salary_component_fixed_dropdown)
+									if (this.checkedRow())
+										this.addRow();
+								
+								}
+							}
+							value={salary_component_fixed_dropdown.find(obj=>obj.label===row.description)}
+							// className={`${props.errors.lineItemsString &&
+							// 	props.errors.lineItemsString[parseInt(idx, 10)] &&
+							// 	props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+							// 	Object.keys(props.touched).length > 0 &&
+							// 	props.touched.lineItemsString &&
+							// 	props.touched.lineItemsString[parseInt(idx, 10)] &&
+							// 	props.touched.lineItemsString[parseInt(idx, 10)].productId
+							// 	? 'is-invalid'
+							// 	: ''
+							// 	}`}
+						/>
+						{/* {props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+							Object.keys(props.touched).length > 0 &&
+							(
+								<div className='invalid-feedback'>
+									{props.errors.lineItemsString[parseInt(idx, 10)].productId}
+								</div>
+							)} */}
+					</>
+
+				)}
+			/>
+		);
+
+    }
 
     render() {
         strings.setLanguage(this.state.language);
@@ -588,9 +636,9 @@ class UpdateSalaryComponent extends React.Component {
                                                                                 <tbody>
                                                                                     {this.state.Fixed ? Object.values(
                                                                                         this.state.Fixed,
-                                                                                    ).map((item) => (
+                                                                                    ).map((item,index) => (
                                                                                         <tr>
-                                                                                            <td style={{ border: "3px solid #c8ced3" }} >{item.description}</td>
+                                                                                            <td style={{ border: "3px solid #c8ced3" }} >{this.renderComaponentName(item,index)}</td>
                                                                                             <td style={{ border: "3px solid #c8ced3" }}>
                                                                                                 <Field
                                                                                                     render={({ field, form }) => (
@@ -1275,10 +1323,12 @@ class UpdateSalaryComponent extends React.Component {
                             closeSalaryComponentFixed={(e) => {
                                 this.closeSalaryComponentFixed(e);
                             }}
-                            salary_structure_dropdown={this.props.salary_structure_dropdown}
-                            salary_component_dropdown={this.props.salary_component_fixed_dropdown}
-                            CreateComponent={this.props.createPayrollEmployeeActions.saveSalaryComponent}
-                            selectedData={this.state.selectedData}
+                            getCurrentSalaryComponent={(e) => {
+								this.props.commonActions.getSalaryComponentList().then(res => {
+									if (res.status === 200)
+										this.getCurrentSalaryComponent(res.data[0],"Fixed")
+								})
+							}}
                         />
                         <SalaryComponentVariable
                             openSalaryComponentVariable={this.state.openSalaryComponentVariable}
@@ -1295,10 +1345,12 @@ class UpdateSalaryComponent extends React.Component {
                             closeSalaryComponentDeduction={(e) => {
                                 this.closeSalaryComponentDeduction(e);
                             }}
-                            salary_structure_dropdown={this.props.salary_structure_dropdown}
-                            salary_component_dropdown={this.props.salary_component_deduction_dropdown}
-                            CreateComponent={this.props.createPayrollEmployeeActions.saveSalaryComponent}
-                            selectedData={this.state.selectedData}
+                            getCurrentSalaryComponent={(e) => {
+								this.props.commonActions.getSalaryComponentList().then(res => {
+									if (res.status === 200)
+										this.getCurrentSalaryComponent(res.data[0],"Deduction")
+								})
+							}}
                         />
                     </div>
                     {this.state.disableLeavePage ? "" : <LeavePage />}

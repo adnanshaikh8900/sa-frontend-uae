@@ -19,6 +19,7 @@ const initState = {
 	customer_list: [],
 	pay_mode: [],
 	company_details: [],
+	salary_component_list: [],
 };
 
 const CommonReducer = (state = initState, action) => {
@@ -133,6 +134,11 @@ const CommonReducer = (state = initState, action) => {
 			return {
 				...state,
 				company_details: Object.assign([], payload.data),
+			};
+		case COMMON.SALARY_COMPONENT_LIST:
+			return {
+				...state,
+				salary_component_list: Object.assign([], payload.data),
 			};
 		default:
 			return state;

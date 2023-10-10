@@ -118,7 +118,7 @@ class SalaryComponentScreen extends React.Component {
       <text>
         <b>Delete Designation ?</b>
       </text>
-    const message = 'This designation will be deleted permanently and cannot be recovered. ';
+    const message = 'This Salary Component will be deleted permanently and cannot be recovered. ';
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -132,10 +132,10 @@ class SalaryComponentScreen extends React.Component {
 
   remove = () => {
     const { current_salary_role_id } = this.state;
-    this.props.designationDetailActions.deleteDesignation(current_salary_role_id).then((res) => {
+    this.props.designationDetailActions.deletesalaryComponent(current_salary_role_id).then((res) => {
       if (res.status === 200) {
         this.setState({ disableLeavePage: true })
-        this.props.commonActions.tostifyAlert('success', 'Designation Deleted Successfully !')
+        this.props.commonActions.tostifyAlert('success', 'Salary Component Deleted Successfully !')
         this.props.history.push('/admin/payroll/config', { tabNo: '3' })
       }
 
@@ -147,7 +147,7 @@ class SalaryComponentScreen extends React.Component {
        */
       if (err.status === 409) {
         this.setState({ disableLeavePage: true })
-        this.props.commonActions.tostifyAlert('error', 'Designation can\'t be deleted, you need to delete employee first.')
+        this.props.commonActions.tostifyAlert('error', 'Salary Component can\'t be deleted, you need to delete employee first.')
         this.props.history.push('/admin/payroll/config', { tabNo: '3' })
       }
       else
@@ -203,67 +203,7 @@ class SalaryComponentScreen extends React.Component {
       })
 
   
-      .updateSalaryComponent(formData)
-      .then((res) => {
-        if (res.status === 200) {
-          this.props.commonActions.tostifyAlert(
-            'success',
-            'Salary Component Updated Successfully!')
-          if (this.state.createMore) {
-            this.setState({
-              createMore: false
-            })
-            resetForm(this.state.initValue)
-          } else {
-            this.props.history.push('/admin/payroll/config', { tabNo: '3' })
-          }
-        }
-      }).catch((err) => {
-        this.setState({ disabled: false, disableLeavePage: false });
-        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-      })
-  }
-  deleteSalaryComponent = () => {
-    const message1 =
-      <text>
-        <b>Delete Product Category?</b>
-      </text>
-    const message = 'This Salary Component will be deleted permanently and cannot be recovered. ';
-    this.setState({
-      dialog: <ConfirmDeleteModal
-        isOpen={true}
-        okHandler={this.removeSalaryComponent}
-        cancelHandler={this.removeDialog}
-        message={message}
-        message1={message1}
-      />
-    })
-  }
-  removeSalaryComponent = () => {
-    this.setState({ disabled1: true });
-    const { salaryComponent_id } = this.state
-    this.setState({ loading: true, loadingMsg: "Deleting Salary Component..." });
-    this.props.detailProductCategoryAction.deleteSalaryComponent(salaryComponent_id).then((res) => {
-      if (res.status === 200) {
-        this.props.commonActions.tostifyAlert(
-          'success',
-          res.data ? res.data.message : 'Salary Component Deleted Successfully'
-        )
-        this.props.history.push('/admin/payroll/config')
-        this.setState({ loading: false, });
-      }
-    }).catch((err) => {
-      this.setState({ disabled: false, disableLeavePage: false });
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-    })
-    
-  }
-
-  removeDialog = () => {
-    this.setState({
-      dialog: null
-    })
-  }
+    }
 
   render() {
     strings.setLanguage(this.state.language);

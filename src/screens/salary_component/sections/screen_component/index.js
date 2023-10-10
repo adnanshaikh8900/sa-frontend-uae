@@ -167,7 +167,7 @@ class SalaryComponentScreen extends React.Component {
     })
   }
   handleSubmit = (data, resetForm) => {
-  
+
     this.setState({ disabled: true, disableLeavePage: true, });
     const {
       componentName,
@@ -200,8 +200,10 @@ class SalaryComponentScreen extends React.Component {
             })
             resetForm(this.state.initValue)
           } else {
-            if (this.props.salaryStructureModalCard)
+            if (this.props.salaryStructureModalCard) {
               this.props.closeModal(true);
+              this.props.getCurrentSalaryComponent(res.data);
+            }
             else
               this.props.history.push('/admin/payroll/config', { tabNo: '5' })
           }
@@ -211,8 +213,8 @@ class SalaryComponentScreen extends React.Component {
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
       })
 
-  
-    }
+
+  }
 
   render() {
     strings.setLanguage(this.state.language);

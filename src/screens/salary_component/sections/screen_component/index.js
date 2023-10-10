@@ -47,7 +47,6 @@ class SalaryComponentScreen extends React.Component {
       loading: false,
       createMore: false,
       disableLeavePage: false,
-      salaryComponent_id:'null',
       initValue: {
         componentId: '',
         componentName: '',

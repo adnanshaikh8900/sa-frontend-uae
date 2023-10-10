@@ -2902,9 +2902,14 @@ class CreateCreditNote extends React.Component {
 																				color="secondary"
 																				className="btn-square"
 																				onClick={() => {
-																					this.props.history.push(
-																						'/admin/income/credit-notes',
-																					);
+																					if (this.props.location?.state?.invoiceID)
+																						this.props.history.push(
+																							'/admin/income/customer-invoice',
+																						);
+																					else
+																						this.props.history.push(
+																							'/admin/income/credit-notes',
+																						);
 																				}}
 																			>
 																				<i className="fa fa-ban"></i> {strings.Cancel}

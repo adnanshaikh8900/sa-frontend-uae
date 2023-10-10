@@ -183,7 +183,7 @@ class SalaryComponentScreen extends React.Component {
     formData.append('formula', ctcPercent != null ? ctcPercent : '',)
     formData.append('componentCode', componentId != null ? componentId : '',)
     formData.append('componentType', componentType ? componentType : '');
-    formData.append('salaryStructure', componentType ? componentType === 'Earning' ? 1 : componentType === 'Deduction' : 3);
+    formData.append('salaryStructure', componentType ? componentType === 'Earning' ? 1 : 3 : '');
     formData.append('calculationType', calculationType ? calculationType : '');
 
     this.props.salaryComponentActions
@@ -199,7 +199,10 @@ class SalaryComponentScreen extends React.Component {
             })
             resetForm(this.state.initValue)
           } else {
-            this.props.history.push('/admin/payroll/config', { tabNo: '5' })
+            if (this.props.salaryStructureModalCard)
+              this.props.closeModal(true);
+            else
+              this.props.history.push('/admin/payroll/config', { tabNo: '5' })
           }
         }
       }).catch((err) => {

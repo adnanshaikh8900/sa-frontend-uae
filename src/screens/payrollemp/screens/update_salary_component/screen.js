@@ -35,7 +35,7 @@ const mapStateToProps = (state) => {
         country_list: state.payrollEmployee.country_list,
         salary_component_fixed_dropdown: state.payrollEmployee.salary_component_fixed_dropdown.data,
         salary_component_varaible_dropdown: state.payrollEmployee.salary_component_varaible_dropdown,
-        salary_component_deduction_dropdown: state.payrollEmployee.salary_component_deduction_dropdown,
+        salary_component_deduction_dropdown: state.payrollEmployee.salary_component_deduction_dropdown.data,
     })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -127,7 +127,7 @@ class UpdateSalaryComponent extends React.Component {
                                     res.data.ctc
                                     : parseFloat(res.data.ctc) * 12
                             )
-                            : ''
+                            : 0
 
                     this.setState({
                         loading: false,
@@ -138,16 +138,12 @@ class UpdateSalaryComponent extends React.Component {
                         Variable: res.data.salaryComponentResult.Variable,
                         Deduction: res.data.salaryComponentResult.Deduction,
                         Fixed_Allowance: res.data.salaryComponentResult.Fixed_Allowance,
+                    }, () => {
+                        this.updateSalary(res.data.ctc ? ctcValue : this.state.CTC)
+                        this.formRef.current.setFieldValue('CTC', res.data.ctc ? res.data.ctc : '' , true);
+                        this.addRow('Fixed');
+                        this.addRow('Deduction');
                     })
-
-                    this.updateSalary(res.data.ctc ? ctcValue : this.state.CTC)
-                    this.formRef.current.setFieldValue('CTC',
-                        this.state.CTC != "" ?
-                            (this.state.ctcType == "ANNUALLY" ?
-                                this.state.CTC
-                                : parseFloat(this.state.CTC) / 12)
-                            : 0
-                        , true);
                 }
             }).catch((err) => {
                 this.setState({ loading: false })
@@ -195,7 +191,6 @@ class UpdateSalaryComponent extends React.Component {
     closeSalaryComponentFixed = (res) => {
         this.setState({ openSalaryComponentFixed: false });
         this.getSalaryComponentByEmployeeId();
-        // this.updateSalary();
     };
     openSalaryComponentVariable = (props) => {
         this.setState({ openSalaryComponentVariable: true });
@@ -203,7 +198,6 @@ class UpdateSalaryComponent extends React.Component {
     closeSalaryComponentVariable = (res) => {
         this.setState({ openSalaryComponentVariable: false });
         this.getSalaryComponentByEmployeeId();
-        //   this.updateSalary();
     };
     openSalaryComponentDeduction = (props) => {
         this.setState({ openSalaryComponentDeduction: true });
@@ -211,7 +205,6 @@ class UpdateSalaryComponent extends React.Component {
     closeSalaryComponentDeduction = (res) => {
         this.setState({ openSalaryComponentDeduction: false });
         this.getSalaryComponentByEmployeeId();
-        //this.updateSalary();
     };
     renderActionForState = () => {
         this.props.createPayrollEmployeeActions.getEmployeeById(this.state.current_employee_id)
@@ -224,7 +217,8 @@ class UpdateSalaryComponent extends React.Component {
     }
 
     totalEarnings = () => {
-        const totalMonthlyAmount = Object.values(this.state.Fixed).reduce((total, item) => {
+        const fixed = this.state.Fixed.filter(obj => obj.id !== '')
+        const totalMonthlyAmount = Object.values(fixed).reduce((total, item) => {
             if (typeof item.monthlyAmount == 'string') {
                 total += parseFloat(item.monthlyAmount);
             } else {
@@ -232,11 +226,13 @@ class UpdateSalaryComponent extends React.Component {
             }
             return total;
         }, 0);
-        const totalMonthlyEarnings = totalMonthlyAmount ? totalMonthlyAmount : 0
+        const totalMonthlyEarnings = totalMonthlyAmount ? totalMonthlyAmount : 0;
+        console.log(totalMonthlyEarnings, "Monthly Earning");
         return totalMonthlyEarnings;
     }
     totalYearEarnings = () => {
-        const totalYearlyAmount = Object.values(this.state.Fixed).reduce((total, item) => {
+        const fixed = this.state.Fixed.filter(obj => obj.id !== '')
+        const totalYearlyAmount = Object.values(fixed).reduce((total, item) => {
             if (typeof item.yearlyAmount == 'string') {
                 total += parseFloat(item.yearlyAmount);
             } else {
@@ -248,7 +244,8 @@ class UpdateSalaryComponent extends React.Component {
         return totalYearlyEarnings;
     }
     totalDeductions = () => {
-        const totalMonthlyDeduction = Object.values(this.state.Deduction).reduce((total, item) => {
+        const deduction = this.state.Deduction.filter(obj => obj.id !== '')
+        const totalMonthlyDeduction = Object.values(deduction).reduce((total, item) => {
             if (typeof item.monthlyAmount == 'string') {
                 total += parseFloat(item.monthlyAmount);
             } else {
@@ -260,7 +257,8 @@ class UpdateSalaryComponent extends React.Component {
         return totalMonthlyDeductions;
     }
     totalYearDeductions = () => {
-        const totalYearlyDeduction = Object.values(this.state.Deduction).reduce((total, item) => {
+        const deduction = this.state.Deduction.filter(obj => obj.id !== '')
+        const totalYearlyDeduction = Object.values(deduction).reduce((total, item) => {
             if (typeof item.yearlyAmount == 'string') {
                 total += parseFloat(item.yearlyAmount);
             } else {
@@ -272,6 +270,7 @@ class UpdateSalaryComponent extends React.Component {
         return totalYearlyDeductions;
     }
     grossEarnings = () => {
+
         const grossEarning = (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0)
         // this.setState({grossSalarys : grossEarning})
         return grossEarning;
@@ -284,11 +283,11 @@ class UpdateSalaryComponent extends React.Component {
 
     // Create or Edit VAT
     handleSubmit = (data) => {
-
+        debugger
         this.setState({ disabled: true, disableLeavePage: true, });
         const { current_employee_id } = this.state;
         const { employee, CTC } = data;
-
+        const list = this.state.list.filter(obj => obj.id !== '');
         let formData = new FormData();
         formData.append('employee', current_employee_id)
         formData.append('employeeId', this.props.location.state.id ? this.props.location.state.id : "");
@@ -299,7 +298,7 @@ class UpdateSalaryComponent extends React.Component {
         }
         formData.append("totalNetPay", this.totalEarnings());
         formData.append('ctcType', this.state.ctcTypeOption.label ? this.state.ctcTypeOption.label : "ANNUALLY")
-        formData.append('salaryComponentString', JSON.stringify(this.state.list));
+        formData.append('salaryComponentString', JSON.stringify(list));
 
         this.setState({ loading: true, loadingMsg: "Updating Salary Details ..." });
         this.props.detailSalaryComponentAction.updateEmployeeBank(formData).then((res) => {
@@ -319,9 +318,10 @@ class UpdateSalaryComponent extends React.Component {
             )
         })
     }
-    getCurrentSalaryComponent = (newComponent,componentType) => {
-		
-	};
+    getCurrentSalaryComponent = (newComponent, componentType) => {
+        console.log(componentType,newComponent)
+
+    };
     updateSalary = (CTC1) => {
         this.setState({ errorMsg: false })
         const Fixed = this.state.Fixed
@@ -332,18 +332,20 @@ class UpdateSalaryComponent extends React.Component {
         var totalFixedSalary = 0;
         Fixed.map((obj) => {
             locallist.push(obj);
-            if (obj.formula != null && obj.formula.length > 0) {
-                var salaryAnnulay = CTC1 * (obj.formula / 100);
-                var salaryMonthy = salaryAnnulay / 12;
-                obj.monthlyAmount = salaryMonthy;
-                obj.yearlyAmount = salaryAnnulay;
-                totalFixedSalary = totalFixedSalary + salaryMonthy;
-            }
-            else {
-                var salaryMonthy = obj.flatAmount;
-                obj.monthlyAmount = salaryMonthy;
-                obj.yearlyAmount = salaryMonthy * 12;
-                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+            if (obj.id) {
+                if (obj.formula != null && obj.formula.length > 0) {
+                    var salaryAnnulay = CTC1 * (obj.formula / 100);
+                    var salaryMonthy = salaryAnnulay / 12;
+                    obj.monthlyAmount = salaryMonthy;
+                    obj.yearlyAmount = salaryAnnulay;
+                    totalFixedSalary = totalFixedSalary + salaryMonthy;
+                }
+                else {
+                    var salaryMonthy = obj.flatAmount;
+                    obj.monthlyAmount = salaryMonthy;
+                    obj.yearlyAmount = salaryMonthy * 12;
+                    totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+                }
             }
             return obj;
         });
@@ -351,17 +353,19 @@ class UpdateSalaryComponent extends React.Component {
         if (Deduction && Deduction?.length > 0) {
             Deduction.map((obj) => {
                 locallist.push(obj);
-                if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
-                    var salaryAnnulay = CTC1 * (obj.formula / 100);
-                    var salaryMonthy = salaryAnnulay / 12;
-                    obj.monthlyAmount = salaryMonthy;
-                    obj.yearlyAmount = salaryAnnulay;
-                    totalFixedSalary = totalFixedSalary + salaryMonthy;
-                }
-                else if (obj.flatAmount != null) {
-                    var salaryMonthy = obj.flatAmount;
-                    obj.monthlyAmount = salaryMonthy;
-                    obj.yearlyAmount = salaryMonthy * 12;
+                if (obj.id) {
+                    if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+                        var salaryAnnulay = CTC1 * (obj.formula / 100);
+                        var salaryMonthy = salaryAnnulay / 12;
+                        obj.monthlyAmount = salaryMonthy;
+                        obj.yearlyAmount = salaryAnnulay;
+                        totalFixedSalary = totalFixedSalary + salaryMonthy;
+                    }
+                    else if (obj.flatAmount != null) {
+                        var salaryMonthy = obj.flatAmount;
+                        obj.monthlyAmount = salaryMonthy;
+                        obj.yearlyAmount = salaryMonthy * 12;
+                    }
                 }
                 return obj;
             });
@@ -384,17 +388,12 @@ class UpdateSalaryComponent extends React.Component {
     }
 
     removeComponent = (ComponentId) => {
-        this.props.detailSalaryComponentAction.deleteSalaryComponentRow(this.state.current_employee_id, ComponentId).then((res) => {
-            if (res.status === 200) {
-                const fixed = this.state.Fixed.filter(obj => obj.id !== ComponentId);
-                const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== ComponentId) : '';
-                this.setState({ Fixed: fixed, Deduction: deduction },()=>{
-                    this.updateSalary(this.state.CTC);
-                })
-            }
-        }).catch((err) => {
-            this.props.commonActions.tostifyAlert('error', err.data.message)
-        });
+        debugger
+        const fixed = this.state.Fixed.filter(obj => obj.id !== ComponentId);
+        const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== ComponentId) : '';
+        this.setState({ Fixed: fixed, Deduction: deduction }, () => {
+            this.updateSalary(this.state.CTC);
+        })
     }
 
     updateSalary1 = (CTC1, newFormula, id, newFlatAmount) => {
@@ -408,46 +407,21 @@ class UpdateSalaryComponent extends React.Component {
         var totalFixedSalary = 0;
         Fixed.map((obj) => {
             locallist.push(obj);
-            if (obj.formula != null && obj.formula.length > 0) {
-                if (newFormula !== undefined && obj.id === id) {
-                    if (newFormula === '') { obj.formula = '0'; }
-                    else { obj.formula = newFormula; }
-                }
+            if (obj.id) {
 
-                var salaryAnnulay = CTC1 * (obj.formula / 100);
-                var salaryMonthy = salaryAnnulay / 12;
-                obj.monthlyAmount = salaryMonthy;
-                obj.yearlyAmount = salaryAnnulay;
-                totalFixedSalary = totalFixedSalary + salaryMonthy;
-            }
-            else {
-                if (newFlatAmount !== undefined && obj.id === id) {
-                    if (newFlatAmount === '') { obj.flatAmount = '0'; }
-                    else { obj.flatAmount = newFlatAmount; }
-                }
-                var salaryMonthy = obj.flatAmount;
-                obj.monthlyAmount = salaryMonthy;
-                obj.yearlyAmount = salaryMonthy * 12;
-                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
-            }
-            return obj;
-        });
-
-        if (Deduction && Deduction?.length > 0) {
-            Deduction.map((obj) => {
-                locallist.push(obj);
-                if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+                if (obj.formula != null && obj.formula.length > 0) {
                     if (newFormula !== undefined && obj.id === id) {
                         if (newFormula === '') { obj.formula = '0'; }
                         else { obj.formula = newFormula; }
                     }
+
                     var salaryAnnulay = CTC1 * (obj.formula / 100);
                     var salaryMonthy = salaryAnnulay / 12;
                     obj.monthlyAmount = salaryMonthy;
                     obj.yearlyAmount = salaryAnnulay;
                     totalFixedSalary = totalFixedSalary + salaryMonthy;
                 }
-                else if (obj.flatAmount != null) {
+                else {
                     if (newFlatAmount !== undefined && obj.id === id) {
                         if (newFlatAmount === '') { obj.flatAmount = '0'; }
                         else { obj.flatAmount = newFlatAmount; }
@@ -455,6 +429,36 @@ class UpdateSalaryComponent extends React.Component {
                     var salaryMonthy = obj.flatAmount;
                     obj.monthlyAmount = salaryMonthy;
                     obj.yearlyAmount = salaryMonthy * 12;
+                    totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+                }
+            }
+            return obj;
+        });
+
+        if (Deduction && Deduction?.length > 0) {
+            Deduction.map((obj) => {
+                locallist.push(obj);
+                if (obj.id) {
+                    if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+                        if (newFormula !== undefined && obj.id === id) {
+                            if (newFormula === '') { obj.formula = '0'; }
+                            else { obj.formula = newFormula; }
+                        }
+                        var salaryAnnulay = CTC1 * (obj.formula / 100);
+                        var salaryMonthy = salaryAnnulay / 12;
+                        obj.monthlyAmount = salaryMonthy;
+                        obj.yearlyAmount = salaryAnnulay;
+                        totalFixedSalary = totalFixedSalary + salaryMonthy;
+                    }
+                    else if (obj.flatAmount != null) {
+                        if (newFlatAmount !== undefined && obj.id === id) {
+                            if (newFlatAmount === '') { obj.flatAmount = '0'; }
+                            else { obj.flatAmount = newFlatAmount; }
+                        }
+                        var salaryMonthy = obj.flatAmount;
+                        obj.monthlyAmount = salaryMonthy;
+                        obj.yearlyAmount = salaryMonthy * 12;
+                    }
                 }
                 return obj;
             });
@@ -469,38 +473,128 @@ class UpdateSalaryComponent extends React.Component {
             list: locallist
         })
     }
-    renderComaponentName = (row,index) =>{
-        const {salary_component_fixed_dropdown}=this.props;
-        console.log(salary_component_fixed_dropdown,row)
+    addRow = (array) => {
+        if (array === 'Fixed') {
+            const data = [...this.state.Fixed];
+            this.setState(
+                {
+                    Fixed: data.concat({
+                        description: "",
+                        flatAmount: '',
+                        formula: '',
+                        id: "",
+                        monthlyAmount: 0,
+                        yearlyAmount: 0,
+                    }),
+                },
+            );
+        } else {
+            const data = [...this.state.Deduction];
+            this.setState(
+                {
+                    Deduction: data.concat({
+                        description: "",
+                        flatAmount: "",
+                        formula: "",
+                        id: "",
+                        monthlyAmount: "",
+                        yearlyAmount: "",
+                    }),
+                },
+            );
+        }
+    };
+    getSalaryComponentById = (componentId, array, index) => {
+        this.props.createPayrollEmployeeActions.getSalaryComponentById(componentId).then((res) => {
+            if (res.status === 200) {
+                if (array === 'Fixed') {
+                    this.state.Fixed.map((obj, idx) => {
+                        if (idx === index) {
+                            obj.description = res.data.description;
+                            obj.flatAmount = res.data.flatAmount;
+                            obj.formula = res.data.formula;
+                            obj.id = res.data.id;
+                            obj.employeeId = this.props.location.state.id;
+                            obj.salaryStructure = 1;
+                        }
+                        return obj;
+                    })
+                } else {
+                    this.state.Deduction.map((obj, idx) => {
+                        if (idx === index) {
+                            obj.description = res.data.description;
+                            obj.flatAmount = res.data.flatAmount;
+                            obj.formula = res.data.formula;
+                            obj.id = res.data.id;
+                            obj.employeeId = this.props.location.state.id;
+                            obj.salaryStructure = 3;
+                        }
+                        return obj;
+                    })
+                }
+                // const resFixedLength = res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed?.length : 0;
+                // const resDeductionLength = res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction?.length : 0;
+                // const fixedLength = this.state.Fixed ? this.state.Fixed?.length : 0
+                // const deductionLength = this.state.Deduction ? this.state.Deduction?.length : 0
+                // if (resFixedLength > fixedLength) {
+                //     this.state.Fixed.push(res.data.salaryComponentResult.Fixed[resFixedLength - 1])
+                // }
+                // if (resDeductionLength > deductionLength) {
+                //     if (this.state.Deduction)
+                //         this.state.Deduction.push(res.data.salaryComponentResult.Deduction[resDeductionLength - 1])
+                //     else
+                //         this.setState({
+                //             Deduction: [res.data.salaryComponentResult.Deduction[resDeductionLength - 1]]
+                //         })
+                // }
+
+                this.updateSalary1(this.state.CTC)
+            }
+        }).catch((err) => {
+            this.setState({ loading: false })
+            this.props.history.push('/admin/master/employee/viewEmployee',
+                { id: this.props.location.state.id })
+        })
+
+    }
+    renderComaponentName = (row, index, array) => {
+        const { salary_component_fixed_dropdown, salary_component_deduction_dropdown } = this.props;
+        const component_list = array === 'Fixed' ? salary_component_fixed_dropdown : salary_component_deduction_dropdown;
+        const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.label === row.description) : ''
         return (
-			<Field
-				name={`Fixed.${index}.description`}
-				render={({ field, form }) => (
-					<>
-						<Select
-							options={salary_component_fixed_dropdown}
-							id="description"
-							placeholder={strings.Select + strings.Product}
-							onChange={(e) => {
-                                console.log(salary_component_fixed_dropdown)
-									if (this.checkedRow())
-										this.addRow();
-								
-								}
-							}
-							value={salary_component_fixed_dropdown.find(obj=>obj.label===row.description)}
-							// className={`${props.errors.lineItemsString &&
-							// 	props.errors.lineItemsString[parseInt(idx, 10)] &&
-							// 	props.errors.lineItemsString[parseInt(idx, 10)].productId &&
-							// 	Object.keys(props.touched).length > 0 &&
-							// 	props.touched.lineItemsString &&
-							// 	props.touched.lineItemsString[parseInt(idx, 10)] &&
-							// 	props.touched.lineItemsString[parseInt(idx, 10)].productId
-							// 	? 'is-invalid'
-							// 	: ''
-							// 	}`}
-						/>
-						{/* {props.errors.lineItemsString &&
+            <Field
+                name={array === 'Fixed' ? `Fixed.${index}.description` : `Deduction.${index}.description`}
+                render={({ field, form }) => (
+                    <>
+                        <Select
+                            isDisabled={index === 0}
+                            options={component_list ? selectOptionsFactory.renderOptions(
+                                'label',
+                                'value',
+                                component_list,
+                                strings.SalaryComponent
+                            ) : []}
+                            id="description"
+                            placeholder={strings.Select + strings.SalaryComponent}
+                            onChange={(e) => {
+                                if (e.value) {
+                                    this.addRow(array);
+                                    this.getSalaryComponentById(e.value, array, index)
+                                }
+                            }}
+                            value={index === 0 && array === 'Fixed' ? { label: row.description, value: '' } : description ? description : ''}
+                        // className={`${props.errors.lineItemsString &&
+                        // 	props.errors.lineItemsString[parseInt(idx, 10)] &&
+                        // 	props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+                        // 	Object.keys(props.touched).length > 0 &&
+                        // 	props.touched.lineItemsString &&
+                        // 	props.touched.lineItemsString[parseInt(idx, 10)] &&
+                        // 	props.touched.lineItemsString[parseInt(idx, 10)].productId
+                        // 	? 'is-invalid'
+                        // 	: ''
+                        // 	}`}
+                        />
+                        {/* {props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
 							Object.keys(props.touched).length > 0 &&
@@ -509,11 +603,11 @@ class UpdateSalaryComponent extends React.Component {
 									{props.errors.lineItemsString[parseInt(idx, 10)].productId}
 								</div>
 							)} */}
-					</>
+                    </>
 
-				)}
-			/>
-		);
+                )}
+            />
+        );
 
     }
 
@@ -636,9 +730,9 @@ class UpdateSalaryComponent extends React.Component {
                                                                                 <tbody>
                                                                                     {this.state.Fixed ? Object.values(
                                                                                         this.state.Fixed,
-                                                                                    ).map((item,index) => (
+                                                                                    ).map((item, index) => (
                                                                                         <tr>
-                                                                                            <td style={{ border: "3px solid #c8ced3" }} >{this.renderComaponentName(item,index)}</td>
+                                                                                            <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComaponentName(item, index, 'Fixed')}</td>
                                                                                             <td style={{ border: "3px solid #c8ced3" }}>
                                                                                                 <Field
                                                                                                     render={({ field, form }) => (
@@ -977,9 +1071,9 @@ class UpdateSalaryComponent extends React.Component {
                                                                                     {this.state.Deduction ? (
                                                                                         Object.values(
                                                                                             this.state.Deduction,
-                                                                                        ).map((item) => (
+                                                                                        ).map((item, index) => (
                                                                                             <tr>
-                                                                                                <td style={{ border: "3px solid #c8ced3" }} >{item.description}</td>
+                                                                                                <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComaponentName(item, index, 'Deduction')}</td>
                                                                                                 <td style={{ border: "3px solid #c8ced3" }}>
                                                                                                     <Field
                                                                                                         render={({ field, form }) => (
@@ -1324,11 +1418,11 @@ class UpdateSalaryComponent extends React.Component {
                                 this.closeSalaryComponentFixed(e);
                             }}
                             getCurrentSalaryComponent={(e) => {
-								this.props.commonActions.getSalaryComponentList().then(res => {
-									if (res.status === 200)
-										this.getCurrentSalaryComponent(res.data[0],"Fixed")
-								})
-							}}
+                                this.props.commonActions.getSalaryComponentList().then(res => {
+                                    if (res.status === 200)
+                                        this.getCurrentSalaryComponent(res.data[0], "Fixed")
+                                })
+                            }}
                         />
                         <SalaryComponentVariable
                             openSalaryComponentVariable={this.state.openSalaryComponentVariable}
@@ -1346,11 +1440,11 @@ class UpdateSalaryComponent extends React.Component {
                                 this.closeSalaryComponentDeduction(e);
                             }}
                             getCurrentSalaryComponent={(e) => {
-								this.props.commonActions.getSalaryComponentList().then(res => {
-									if (res.status === 200)
-										this.getCurrentSalaryComponent(res.data[0],"Deduction")
-								})
-							}}
+                                this.props.commonActions.getSalaryComponentList().then(res => {
+                                    if (res.status === 200)
+                                        this.getCurrentSalaryComponent(res.data[res.data.length-1], "Deduction")
+                                })
+                            }}
                         />
                     </div>
                     {this.state.disableLeavePage ? "" : <LeavePage />}

@@ -70,7 +70,7 @@ class PayrollConfigurations extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			openModal: false,
 			selectedData: {},
-			activeTab: new Array(5).fill('1'),
+			activeTab: new Array(5).fill('5'),
 			filterData: {
 				salaryRoleId: '',
 				salaryRoleName: ''
@@ -305,8 +305,7 @@ class PayrollConfigurations extends React.Component {
 		return (
 			<Row>
 				<div>
-					{row.id == 1 ? ""
-						:
+					{row.id == 1 || row.id == 3 ? "" :
 						(<Button
 							className="btn btn-sm pdf-btn"
 							onClick={(e,) => {
@@ -469,6 +468,9 @@ class PayrollConfigurations extends React.Component {
 				<div>{row.designationId ? row.designationId : row.id}</div>
 			);
 		}
+	}
+	renderSalaryComponentId = (cell, row) => {
+		return (row.componentCode ? row.componentCode : row.id);
 	}
 
 	renderActions = (cell, row) => {
@@ -1309,7 +1311,7 @@ class PayrollConfigurations extends React.Component {
 																		<BootstrapTable
 																			selectRow={this.selectRowProp}
 																			search={false}
-																		//	options={this.designationoptions}
+																			//	options={this.designationoptions}
 																			data={this.state.salaryList && this.state.salaryList ? this.state.salaryList : []}
 																			version="4"
 																			hover
@@ -1317,7 +1319,7 @@ class PayrollConfigurations extends React.Component {
 																			keyField="id"
 																			remote
 
-																		 	//fetchInfo={{ dataTotalSize: salaryList.count ? salaryList.count : 0 }}
+																			//fetchInfo={{ dataTotalSize: salaryList.count ? salaryList.count : 0 }}
 																			className="SalaryComponent-list-table"
 																			trClassName="cursor-pointer"
 																			ref={(node) => this.table = node}
@@ -1325,6 +1327,7 @@ class PayrollConfigurations extends React.Component {
 																			<TableHeaderColumn
 																				className="table-header-bg"
 																				dataField="id"
+																				dataFormat={this.renderSalaryComponentId}
 																			>
 																				{strings.ComponentId}
 																			</TableHeaderColumn>

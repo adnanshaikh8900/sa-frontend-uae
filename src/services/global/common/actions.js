@@ -445,3 +445,24 @@ export const getByNoteListByInvoiceId = (id) => {
 		})
 	}
 }
+
+export const getSalaryComponentList = () => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/payroll/getSalaryList`
+	  }
+  
+	  return authApi(data).then((res) => {
+		dispatch({
+			type: COMMON.SALARY_COMPONENT_LIST,
+			payload: {
+				data: res.data,
+			},
+		});
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

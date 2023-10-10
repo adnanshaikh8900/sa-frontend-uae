@@ -3,11 +3,11 @@ import {
 } from 'utils'
 
 
-export const saveSalaryComponent = (obj) => {
+export const saveSalaryComponent = (obj,isCreated) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: '/rest/payroll/saveSalaryComponent',
+      url: '/rest/payroll/'+isCreated?'saveSalaryComponent':'updateSalaryComponent',
       data: obj
     }
     return authApi(data).then((res) => {
@@ -31,12 +31,11 @@ export const updateSalaryComponent = (obj) => {
     })
   }
 }
-export const deleteSalaryComponent = (obj) => {
+export const deleteSalaryComponent = (id) => {
   return (dispatch) => {
     let data = {
-      method: 'delete',
-      url: '/rest/payroll/deleteSalaryComponent',
-      data: obj
+      method: 'DELETE',
+      url: `/rest/payroll/deleteSalaryComponent?id=${id}`
     }
     return authApi(data).then((res) => {
       return res
@@ -46,4 +45,19 @@ export const deleteSalaryComponent = (obj) => {
   }
 }
 
+
+export const getSalaryComponentById = (_id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/payroll/getSalaryComponentById?id=${_id}`
+    }
+
+    return authApi(data).then((res) => {
+      return res
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
 

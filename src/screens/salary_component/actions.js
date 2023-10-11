@@ -3,11 +3,12 @@ import {
 } from 'utils'
 
 
-export const saveSalaryComponent = (obj,isCreated) => {
+export const saveSalaryComponent = (obj, isCreated) => {
+  let url = isCreated ? '/rest/payroll/saveSalaryComponent' : '/rest/payroll/updateSalaryComponent';
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: '/rest/payroll/'+isCreated?'saveSalaryComponent':'updateSalaryComponent',
+      url: url,
       data: obj
     }
     return authApi(data).then((res) => {

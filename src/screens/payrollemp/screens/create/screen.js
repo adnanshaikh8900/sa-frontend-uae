@@ -463,52 +463,67 @@ class CreateEmployeePayroll extends React.Component {
         },
       );
     } else {
-      const data = [...this.state.Deduction].filter(obj => obj.id !== '');;
-      this.setState(
-        {
-          Deduction: data.concat({
-            description: "",
-            flatAmount: "",
-            formula: "",
-            id: "",
-            monthlyAmount: "",
-            yearlyAmount: "",
-          }),
-        },
-      );
+      if (this.state.Deduction) {
+        const data = [...this.state.Deduction].filter(obj => obj.id !== '');;
+        this.setState(
+          {
+            Deduction: data.concat({
+              description: "",
+              flatAmount: "",
+              formula: "",
+              id: "",
+              monthlyAmount: "",
+              yearlyAmount: "",
+            }),
+          },
+        );
+      } else {
+        this.setState(
+          {
+            Deduction: {
+              description: "",
+              flatAmount: "",
+              formula: "",
+              id: "",
+              monthlyAmount: "",
+              yearlyAmount: "",
+            },
+          },
+        );
+      }
     }
   };
-  getSalaryComponentAdded = () => {
-    this.props.createPayrollEmployeeActions
-      .getSalaryComponentByEmployeeId(this.state.employeeid)
-      .then((res) => {
-        if (res.status === 200) {
-          const resFixedLength = res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed?.length : 0;
-          const resDeductionLength = res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction?.length : 0;
-          const fixedLength = this.state.Fixed ? this.state.Fixed?.length : 0
-          const deductionLength = this.state.Deduction ? this.state.Deduction?.length : 0
-          if (resFixedLength > fixedLength) {
-            this.state.Fixed.push(res.data.salaryComponentResult.Fixed[resFixedLength - 1])
-          }
-          if (resDeductionLength > deductionLength) {
-            if (this.state.Deduction)
-              this.state.Deduction.push(res.data.salaryComponentResult.Deduction[resDeductionLength - 1])
-            else
-              this.setState({
-                Deduction: [res.data.salaryComponentResult.Deduction[resDeductionLength - 1]]
-              })
-          }
-        }
-        this.updateSalary(this.state.CTC);
-      })
-      .catch((err) => {
-        this.setState({ loading: false });
-        this.props.commonActions.tostifyAlert(
-          "error",
-          err && err.data ? err.data.message : "Something Went Wrong"
-        );
-      });
-  }
+  // getSalaryComponentAdded = () => {
+  //   this.props.createPayrollEmployeeActions
+  //     .getSalaryComponentByEmployeeId(this.state.employeeid)
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         const resFixedLength = res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed?.length : 0;
+  //         const resDeductionLength = res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction?.length : 0;
+  //         const fixedLength = this.state.Fixed ? this.state.Fixed?.length : 0
+  //         const deductionLength = this.state.Deduction ? this.state.Deduction?.length : 0
+  //         if (resFixedLength > fixedLength) {
+  //           this.state.Fixed.push(res.data.salaryComponentResult.Fixed[resFixedLength - 1])
+  //         }
+  //         if (resDeductionLength > deductionLength) {
+  //           if (this.state.Deduction)
+  //             this.state.Deduction.push(res.data.salaryComponentResult.Deduction[resDeductionLength - 1])
+  //           else
+  //             this.setState({
+  //               Deduction: [res.data.salaryComponentResult.Deduction[resDeductionLength - 1]]
+  //             })
+  //         }
+  //       }
+  //       this.updateSalary(this.state.CTC);
+  //     })
+  //     .catch((err) => {
+  //       this.setState({ loading: false });
+  //       this.props.commonActions.tostifyAlert(
+  //         "error",
+  //         err && err.data ? err.data.message : "Something Went Wrong"
+  //       );
+  //     });
+  // }
   uploadImage = (picture, file) => {
     this.setState({
       userPhoto: picture,
@@ -1185,24 +1200,18 @@ class CreateEmployeePayroll extends React.Component {
   };
   closeSalaryComponentFixed = (res) => {
     this.setState({ openSalaryComponentFixed: false });
-    this.getSalaryComponentAdded();
-    // this.updateSalary();
   };
   openSalaryComponentVariable = (props) => {
     this.setState({ openSalaryComponentVariable: true });
   };
   closeSalaryComponentVariable = (res) => {
     this.setState({ openSalaryComponentVariable: false });
-    this.getSalaryComponentAdded();
-    //   this.updateSalary();
   };
   openSalaryComponentDeduction = (props) => {
     this.setState({ openSalaryComponentDeduction: true });
   };
   closeSalaryComponentDeduction = (res) => {
     this.setState({ openSalaryComponentDeduction: false });
-    this.getSalaryComponentAdded();
-    //this.updateSalary();
   };
 
   getCurrentUser = (data) => {
@@ -5192,7 +5201,7 @@ class CreateEmployeePayroll extends React.Component {
                                           <td
                                             style={{
                                               border: "3px solid #c8ced3",
-                                              textAlign:'left',
+                                              textAlign: 'left',
                                             }}
                                           >
                                             {this.renderComaponentName(item, index, 'Fixed')}
@@ -5689,7 +5698,7 @@ class CreateEmployeePayroll extends React.Component {
                                             <td
                                               style={{
                                                 border: "3px solid #c8ced3",
-                                              textAlign:'left',
+                                                textAlign: 'left',
                                               }}
                                             >
                                               {this.renderComaponentName(item, index, 'Deduction')}

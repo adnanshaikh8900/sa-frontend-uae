@@ -61,8 +61,8 @@ class SalaryComponentFixed extends React.Component {
 					className="modal-success contact-modal"
 				>
 					<SalaryComponentScreen
-						getCurrentProductData={(Data) => {
-							this.props.getCurrentProduct(Data);
+						getCurrentSalaryComponent={(Data) => {
+							this.props.getCurrentSalaryComponent(Data);
 						}}
 						closeModal={(e) => {
 							closeSalaryComponentFixed(false);

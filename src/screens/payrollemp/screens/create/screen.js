@@ -429,7 +429,7 @@ class CreateEmployeePayroll extends React.Component {
             return obj;
           })
         } else {
-          index = index|| index === 0 ? index : this.state.Deduction ? this.state.Deduction.length - 1 : 0;
+          index = index || index === 0 ? index : this.state.Deduction ? this.state.Deduction.length - 1 : 0;
           this.state.Deduction.map((obj, idx) => {
             obj.id = res.data.id;
             if (idx === index) {
@@ -1426,7 +1426,7 @@ class CreateEmployeePayroll extends React.Component {
         render={({ field, form }) => (
           <>
             <Select
-              isDisabled={index === 0 && componentType === 'Fixed'}
+              isDisabled={row.description === 'Basic SALARY'}
               options={component_list ? selectOptionsFactory.renderOptions(
                 'label',
                 'value',
@@ -1437,10 +1437,10 @@ class CreateEmployeePayroll extends React.Component {
               placeholder={strings.Select + strings.SalaryComponent}
               onChange={(e) => {
                 if (e.value) {
-                  this.getSalaryComponentById(e.value, componentType,index)
+                  this.getSalaryComponentById(e.value, componentType, index)
                 }
               }}
-              value={index === 0 && componentType === 'Fixed' ? { label: row.description, value: '' } : description ? description : ''}
+              value={row.description === 'Basic SALARY' ? { label: row.description, value: '' } : description ? description : ''}
 
             />
 
@@ -5392,7 +5392,7 @@ class CreateEmployeePayroll extends React.Component {
                                           )}
                                           <td style={{ border: 'none' }}>
                                             {item.description !==
-                                              "Basic SALARY" ? (
+                                              "Basic SALARY" && item.id ? (
                                               <Button
                                                 color="link"
                                                 onClick={() => {
@@ -5933,17 +5933,17 @@ class CreateEmployeePayroll extends React.Component {
                                               </td>
                                             )}
                                             <td style={{ borderTop: "0px" }}>
-                                              { }
-                                              <Button
-                                                color="link"
-                                                onClick={() => {
-                                                  this.removeComponent(
-                                                    item.id
-                                                  );
-                                                }}
-                                              >
-                                                <i class="far fa-times-circle"></i>
-                                              </Button>
+                                              {item.id &&
+                                                <Button
+                                                  color="link"
+                                                  onClick={() => {
+                                                    this.removeComponent(
+                                                      item.id
+                                                    );
+                                                  }}
+                                                >
+                                                  <i class="far fa-times-circle"></i>
+                                                </Button>}
                                             </td>
                                           </tr>
                                         )

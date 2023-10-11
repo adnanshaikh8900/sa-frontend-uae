@@ -509,51 +509,42 @@ class UpdateSalaryComponent extends React.Component {
             }
         }
     };
-    getSalaryComponentById = (componentId, componentType) => {
+    getSalaryComponentById = (componentId, componentType, index) => {
         this.props.createPayrollEmployeeActions.getSalaryComponentById(componentId).then((res) => {
             if (res.status === 200) {
                 if (componentType === 'Fixed') {
-                    const index = this.state.Fixed ? this.state.Fixed.length - 1 : 0;
+                    index = index ? index : this.state.Fixed ? this.state.Fixed.length - 1 : 0;
                     this.state.Fixed.map((obj, idx) => {
                         if (idx === index) {
-                            obj.description = res.data.description;
-                            obj.flatAmount = res.data.flatAmount;
-                            obj.formula = res.data.formula;
                             obj.id = res.data.id;
+                            obj.description = res.data.description;
+                            obj.formula = res.data.formula;
+                            obj.flatAmount = res.data.flatAmount;
                             obj.employeeId = this.props.location.state.id;
-                            obj.salaryStructure = 1;
+                            obj.salaryComponentId = res.data.id;
+                            obj.salaryStructure = 3;
+                            obj.monthlyAmount = "";
+                            obj.yearlyAmount = "";
                         }
                         return obj;
                     })
                 } else {
-                    const index = this.state.Deduction ? this.state.Deduction.length - 1 : 0;
+                    index = index || index === 0 ? index : this.state.Deduction ? this.state.Deduction.length - 1 : 0;
                     this.state.Deduction.map((obj, idx) => {
                         if (idx === index) {
-                            obj.description = res.data.description;
-                            obj.flatAmount = res.data.flatAmount;
-                            obj.formula = res.data.formula;
                             obj.id = res.data.id;
+                            obj.description = res.data.description;
+                            obj.formula = res.data.formula;
+                            obj.flatAmount = res.data.flatAmount;
                             obj.employeeId = this.props.location.state.id;
+                            obj.salaryComponentId = res.data.id;
                             obj.salaryStructure = 3;
+                            obj.monthlyAmount = "";
+                            obj.yearlyAmount = "";
                         }
                         return obj;
                     })
                 }
-                // const resFixedLength = res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed?.length : 0;
-                // const resDeductionLength = res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction?.length : 0;
-                // const fixedLength = this.state.Fixed ? this.state.Fixed?.length : 0
-                // const deductionLength = this.state.Deduction ? this.state.Deduction?.length : 0
-                // if (resFixedLength > fixedLength) {
-                //     this.state.Fixed.push(res.data.salaryComponentResult.Fixed[resFixedLength - 1])
-                // }
-                // if (resDeductionLength > deductionLength) {
-                //     if (this.state.Deduction)
-                //         this.state.Deduction.push(res.data.salaryComponentResult.Deduction[resDeductionLength - 1])
-                //     else
-                //         this.setState({
-                //             Deduction: [res.data.salaryComponentResult.Deduction[resDeductionLength - 1]]
-                //         })
-                // }
 
                 this.updateSalary1(this.state.CTC)
                 this.addRow(componentType);
@@ -586,7 +577,7 @@ class UpdateSalaryComponent extends React.Component {
                             placeholder={strings.Select + strings.SalaryComponent}
                             onChange={(e) => {
                                 if (e.value) {
-                                    this.getSalaryComponentById(e.value, componentType)
+                                    this.getSalaryComponentById(e.value, componentType, index)
                                 }
                             }}
                             value={index === 0 && componentType === 'Fixed' ? { label: row.description, value: '' } : description ? description : ''}

@@ -437,8 +437,8 @@ class UpdatePayroll extends React.Component {
 	}
 
 	updateAmounts = (row, value) => {
-		if (value > 29) {
-			value = 29;
+		if (value > 30) {
+			value = 30;
 		}
 		let tmpPaidDay = this.state.paidDays;
 		let newData = [...this.state.allPayrollEmployee]
@@ -718,7 +718,7 @@ class UpdatePayroll extends React.Component {
 
 													let value = parseFloat(evt.target.value === "" ? "0" : evt.target.value);
 
-													if (value > this.state.paidDays || value < 0) {
+													if (value > this.state.paidDays || value < 0 || value>= 0 && value < this.state.paidDays) {
 														return;
 													}
 

@@ -56,10 +56,12 @@ class SalaryComponentScreen extends React.Component {
         flatAmount: '',
       },
       enableDelete: true,
+      dialog: '',
     }
-    this.regEx = /^[0-9\d]+$/;
-    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.formRef = React.createRef();
+    this.regEx = /[a-zA-Z]+$/;
     this.regExAlpha = /^[a-zA-Z ]+$/;
+    this.regExCode = /[a-zA-Z0-9-/]+$/;
     this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
   }
 
@@ -69,21 +71,27 @@ class SalaryComponentScreen extends React.Component {
 
   initializeData = () => {
     if (this.props.componentID && !this.props.isCreated) {
-      // this.props.employeeActions.getEmployeeCountForDesignation(this.props.location.state.id).then(res => {
-      //   if (res.status === 200) {
-      //     this.setState({ enableDelete: res.data && res.data > 0 ? false : true })
-      //   }
-      // })
+      this.props.salaryComponentActions.getSalaryComponentById(this.props.componentID).then(res => {
+        if (res.status === 200) {
+          console.log(res.data)
+          this.formRef.current.setFieldValue('componentId', res.data.componentCode, true);
+          this.formRef.current.setFieldValue('componentName', res.data.description, true);
+          this.formRef.current.setFieldValue('componentType', res.data.componentType, true);
+          this.formRef.current.setFieldValue('calculationType', res.data.calculationType, true);
+          this.formRef.current.setFieldValue('ctcPercent', res.data.formula, true);
+          this.formRef.current.setFieldValue('flatAmount', res.data.flatAmount, true);
+        }
+      })
     }
 
   };
   componentNamevalidationCheck = (value) => {
     const data = {
-      moduleType: 26,
+      moduleType: 29,
       name: value,
     };
     this.props.commonActions.checkValidation(data).then((response) => {
-      if (response.data === 'Designation name already exists') {
+      if (response.data === 'Description Name Already Exists') {
         this.setState({
           nameExist: true,
         });
@@ -96,11 +104,11 @@ class SalaryComponentScreen extends React.Component {
   };
   componentIdvalidationCheck = (value) => {
     const data = {
-      moduleType: 25,
+      moduleType: 30,
       name: value,
     };
     this.props.commonActions.checkValidation(data).then((response) => {
-      if (response.data === 'Designation ID already exists') {
+      if (response.data === 'Component ID Already Exists') {
         this.setState({
           idExist: true,
         });
@@ -130,10 +138,10 @@ class SalaryComponentScreen extends React.Component {
   }
 
   remove = () => {
-    const { current_salary_role_id } = this.state;
-    this.props.designationDetailActions.deletesalaryComponent(current_salary_role_id).then((res) => {
+    this.setState({ disableLeavePage: true })
+    const { componentID } = this.props;
+    this.props.salaryComponentActions.deleteSalaryComponent(componentID).then((res) => {
       if (res.status === 200) {
-        this.setState({ disableLeavePage: true })
         this.props.commonActions.tostifyAlert('success', 'Salary Component Deleted Successfully !')
         this.props.history.push('/admin/payroll/config', { tabNo: '3' })
       }
@@ -145,12 +153,12 @@ class SalaryComponentScreen extends React.Component {
        * '409 Conflict'
        */
       if (err.status === 409) {
-        this.setState({ disableLeavePage: true })
         this.props.commonActions.tostifyAlert('error', 'Salary Component can\'t be deleted, you need to delete employee first.')
-        this.props.history.push('/admin/payroll/config', { tabNo: '3' })
       }
       else
         this.props.commonActions.tostifyAlert('error', 'Something Went Wrong')
+      this.setState({ disableLeavePage: false })
+      this.removeDialog();
     })
   }
 
@@ -160,8 +168,8 @@ class SalaryComponentScreen extends React.Component {
     })
   }
   handleSubmit = (data, resetForm) => {
-  
     this.setState({ disabled: true, disableLeavePage: true, });
+    const { componentID, isCreated } = this.props;
     const {
       componentName,
       componentId,
@@ -172,28 +180,35 @@ class SalaryComponentScreen extends React.Component {
     } = data;
 
     const formData = new FormData();
+    if (componentID)
+      formData.append('id', componentID)
     formData.append('description', componentName != null ? componentName : '',)
     formData.append('flatAmount', flatAmount != null ? flatAmount : '',)
     formData.append('formula', ctcPercent != null ? ctcPercent : '',)
     formData.append('componentCode', componentId != null ? componentId : '',)
     formData.append('componentType', componentType ? componentType : '');
-    formData.append('salaryStructure', componentType ? componentType === 'Earning' ? 1 : componentType === 'Deduction' : 3);
+    formData.append('salaryStructure', componentType ? componentType === 'Earning' ? 1 : 3 : '');
     formData.append('calculationType', calculationType ? calculationType : '');
 
     this.props.salaryComponentActions
-      .saveSalaryComponent(formData)
+      .saveSalaryComponent(formData, isCreated)
       .then((res) => {
         if (res.status === 200) {
           this.props.commonActions.tostifyAlert(
             'success',
-            'Salary Component Created Successfully')
+            isCreated ? 'Salary Component Created Successfully' : 'Salary Component Updated Successfully');
           if (this.state.createMore) {
             this.setState({
               createMore: false
             })
             resetForm(this.state.initValue)
           } else {
-            this.props.history.push('/admin/payroll/config', { tabNo: '3' })
+            if (this.props.salaryStructureModalCard) {
+              this.props.closeModal(true);
+              this.props.getCurrentSalaryComponent(res.data);
+            }
+            else
+              this.props.history.push('/admin/payroll/config', { tabNo: '5' })
           }
         }
       }).catch((err) => {
@@ -201,13 +216,13 @@ class SalaryComponentScreen extends React.Component {
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
       })
 
-  
-    }
+
+  }
 
   render() {
     strings.setLanguage(this.state.language);
     const { ComponentType, isCreated, salaryStructureModalCard } = this.props
-    const { enableDelete } = this.state;
+    const { enableDelete, dialog } = this.state;
 
 
     return (
@@ -227,10 +242,12 @@ class SalaryComponentScreen extends React.Component {
                   </Row>
                 </CardHeader>
                 <CardBody>
+                  {dialog}
                   <Row>
                     <Col lg={12}>
                       <Formik
                         initialValues={this.state.initValue}
+                        ref={this.formRef}
                         onSubmit={(values, { resetForm }) => {
                           this.handleSubmit(values, resetForm)
                         }}
@@ -239,14 +256,13 @@ class SalaryComponentScreen extends React.Component {
                           if (parseInt(values.componentId) === 0) {
                             errors.componentId =
                               "Enter valid designation ID";
-                          } else if (this.state.idExist === true || parseInt(values.componentId) === 1 || parseInt(values.componentId) === 2 || parseInt(values.componentId) === 3 || parseInt(values.componentId) === 4) {
+                          } else if (this.state.idExist === true || parseInt(values.componentId) === 1 || parseInt(values.componentId) === 3) {
                             errors.componentId =
-                              "Designation ID already exist";
+                              "Component ID already exist";
                           }
-
                           if (this.state.nameExist === true) {
                             errors.componentName =
-                              "Designation name already exist";
+                              "Component name already exist";
                           }
                           // return errors;
                           if (values.calculationType === 2 && !values.ctcPercent) {
@@ -255,21 +271,16 @@ class SalaryComponentScreen extends React.Component {
                           if (values.calculationType === 1 && !values.flatAmount) {
                             errors.flatAmount = strings.FlatAmountIsRequired
                           }
-
                           return errors;
                         }}
 
                         validationSchema={Yup.object().shape({
                           componentName: Yup.string()
-                            .required(strings.ComponentNameIsRequired).test('is new',
-                              strings.ComponentNameAlreadyExists,
-                              () => !this.state.nameExist),
+                            .required(strings.ComponentNameIsRequired),
                           componentType: Yup.string()
                             .required(strings.componentTypeIsRequired),
                           componentId: Yup.string()
-                            .required("Compoonent id is required").test('is new',
-                              "Component ID already exist",
-                              () => !this.state.idExist)
+                            .required("Compoonent ID is required"),
                         })}
                       >
                         {(props) => (
@@ -285,12 +296,16 @@ class SalaryComponentScreen extends React.Component {
                                         id="componentId"
                                         name="componentId"
                                         maxLength="9"
-                                        value={props.values.componentId}
+                                        value={props.values.componentId ? props.values.componentId : ''}
                                         placeholder={strings.Enter + strings.ComponentID}
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regEx.test(option.target.value)) {
-                                            props.handleChange('componentId')(option)
-                                            this.componentIdvalidationCheck(option.target.value)
+                                          if (option.target.value === '' || this.regExCode.test(option.target.value)) {
+                                            props.handleChange('componentId')(option);
+                                            this.setState({
+                                              idExist: false
+                                            }, () => {
+                                              this.componentIdvalidationCheck(option.target.value)
+                                            })
                                           }
                                         }}
                                         className={props.errors.componentId && props.touched.componentId ? "is-invalid" : ""}
@@ -308,12 +323,16 @@ class SalaryComponentScreen extends React.Component {
                                         id="componentName"
                                         name="componentName"
                                         maxLength="30"
-                                        value={props.values.componentName}
+                                        value={props.values.componentName ? props.values.componentName : ''}
                                         placeholder={strings.Enter + strings.ComponentName}
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {
+                                          if (option.target.value === '' || (!props.values.componentName && this.regEx.test(option.target.value)) || (props.values.componentName && this.regExAlpha.test(option.target.value))) {
                                             props.handleChange('componentName')(option)
-                                            this.componentNamevalidationCheck(option.target.value)
+                                            this.setState({
+                                              nameExist: false
+                                            }, () => {
+                                              this.componentNamevalidationCheck(option.target.value)
+                                            })
                                           }
                                         }}
                                         className={props.errors.componentName && props.touched.componentName ? "is-invalid" : ""}
@@ -454,12 +473,11 @@ class SalaryComponentScreen extends React.Component {
                                           {strings.PercentOfCTC}
                                         </Label>
                                         <Input
-                                          type='number'
-                                          min={1}
-                                          max={100}
-                                          value={props.values.ctcPercent}
+                                          type='text'
+                                          maxLength="3,2"
+                                          value={props.values.ctcPercent ? props.values.ctcPercent : ''}
                                           onChange={(option) => {
-                                            if (option.target.value > 0 && option.target.value < 101) {
+                                            if (parseInt(option.target.value) > 0 && parseInt(option.target.value) < 101) {
                                               props.handleChange('ctcPercent')(option,);
                                             } else if (option.target.value === '') {
                                               props.handleChange('ctcPercent')('');
@@ -491,7 +509,7 @@ class SalaryComponentScreen extends React.Component {
                                           type='text'
                                           maxLength="14,2"
                                           min={1}
-                                          value={props.values.flatAmount}
+                                          value={props.values.flatAmount ? props.values.flatAmount : ''}
                                           onChange={(option) => {
                                             if (option.target.value === '' || this.regDecimal.test(option.target.value)) {
                                               props.handleChange('flatAmount')(option,);
@@ -513,7 +531,6 @@ class SalaryComponentScreen extends React.Component {
                                               {props.errors.flatAmount}
                                             </div>
                                           )}
-
                                       </FormGroup>
                                     }
                                   </Col>
@@ -530,7 +547,7 @@ class SalaryComponentScreen extends React.Component {
                               <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
                                 <FormGroup>
                                   {enableDelete && !isCreated && <Button type="button" name="button" color="danger" className="btn-square"
-                                    onClick={this.delete}
+                                    onClick={() => { this.delete(); }}
                                   >
                                     <i className="fa fa-trash"></i> {strings.Delete}
                                   </Button>}
@@ -576,7 +593,7 @@ class SalaryComponentScreen extends React.Component {
                                       if (salaryStructureModalCard)
                                         this.props.closeModal(true);
                                       else
-                                        this.props.history.push('/admin/payroll/config', { tabNo: '3' })
+                                        this.props.history.push('/admin/payroll/config', { tabNo: '5' })
                                     }}>
                                     <i className="fa fa-ban"></i>  {strings.Cancel}
                                   </Button>

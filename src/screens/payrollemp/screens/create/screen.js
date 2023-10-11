@@ -59,12 +59,9 @@ const mapStateToProps = (state) => {
     country_list: state.payrollEmployee.country_list,
     salary_role_dropdown: state.payrollEmployee.salary_role_dropdown,
     salary_structure_dropdown: state.payrollEmployee.salary_structure_dropdown,
-    salary_component_fixed_dropdown:
-      state.payrollEmployee.salary_component_fixed_dropdown,
-    salary_component_varaible_dropdown:
-      state.payrollEmployee.salary_component_varaible_dropdown,
-    salary_component_deduction_dropdown:
-      state.payrollEmployee.salary_component_deduction_dropdown,
+    salary_component_fixed_dropdown: state.payrollEmployee.salary_component_fixed_dropdown.data,
+    salary_component_varaible_dropdown: state.payrollEmployee.salary_component_varaible_dropdown,
+    salary_component_deduction_dropdown: state.payrollEmployee.salary_component_deduction_dropdown.data,
     designationType_list: state.employeeDesignation.designationType_list,
   };
 };
@@ -320,7 +317,6 @@ class CreateEmployeePayroll extends React.Component {
       });
     // this.props.employeeActions.getEmployeesForDropdown();
     this.setState({ showIcon: false });
-
     this.initializeData();
   };
 
@@ -388,15 +384,17 @@ class CreateEmployeePayroll extends React.Component {
       .then((res) => {
         if (res.status === 200) {
           this.setState({
-            Fixed: res.data.salaryComponentResult.Fixed,
-            Variable: res.data.salaryComponentResult.Variable,
-            Deduction: res.data.salaryComponentResult.Deduction,
-            FixedAllowance: res.data.salaryComponentResult.Fixed_Allowance,
+            Fixed: res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed : [],
+            Variable: res.data.salaryComponentResult.Variable ? res.data.salaryComponentResult.Variable : [],
+            Deduction: res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction : [],
+            FixedAllowance: res.data.salaryComponentResult.Fixed_Allowance ? res.data.salaryComponentResult.Fixed_Allowance : [],
             loading: false,
             CTC: this.state.CTC,
           });
         }
         this.updateSalary(this.state.CTC);
+        this.addRow('Fixed')
+        this.addRow('Deduction')
       })
       .catch((err) => {
         this.setState({ loading: false });
@@ -405,6 +403,80 @@ class CreateEmployeePayroll extends React.Component {
           err && err.data ? err.data.message : "Something Went Wrong"
         );
       });
+  };
+  getCurrentSalaryComponent = (newComponent, componentType) => {
+    this.getSalaryComponentById(newComponent.value, componentType)
+
+  };
+  getSalaryComponentById = (componentId, componentType) => {
+    this.props.createPayrollEmployeeActions.getSalaryComponentById(componentId).then((res) => {
+      if (res.status === 200) {
+        if (componentType === 'Fixed') {
+          const index = this.state.Fixed ? this.state.Fixed.length - 1 : 0;
+          this.state.Fixed.map((obj, idx) => {
+            if (idx === index) {
+              obj.description = res.data.description;
+              obj.flatAmount = res.data.flatAmount;
+              obj.formula = res.data.formula;
+              obj.id = res.data.id;
+              obj.employeeId = this.state.employeeid;
+              obj.salaryStructure = 1;
+            }
+            return obj;
+          })
+        } else {
+          const index = this.state.Deduction ? this.state.Deduction.length - 1 : 0;
+          this.state.Deduction.map((obj, idx) => {
+            if (idx === index) {
+              obj.description = res.data.description;
+              obj.flatAmount = res.data.flatAmount;
+              obj.formula = res.data.formula;
+              obj.id = res.data.id;
+              obj.employeeId = this.state.employeeid;
+              obj.salaryStructure = 3;
+            }
+            return obj;
+          })
+        }
+        this.updateSalary(this.state.CTC)
+        this.addRow(componentType);
+      }
+    }).catch((err) => {
+      this.setState({ loading: false })
+
+    })
+
+  }
+  addRow = (componentType) => {
+    if (componentType === 'Fixed') {
+      const data = [...this.state.Fixed].filter(obj => obj.id !== '');
+      this.setState(
+        {
+          Fixed: data.concat({
+            description: "",
+            flatAmount: '',
+            formula: '',
+            id: "",
+            monthlyAmount: 0,
+            yearlyAmount: 0,
+          }),
+        },
+      );
+    } else {
+      const data = [...this.state.Deduction].filter(obj => obj.id !== '');;
+      this.setState(
+        {
+          Deduction: data.concat({
+            description: "",
+            flatAmount: "",
+            formula: "",
+            id: "",
+            monthlyAmount: "",
+            yearlyAmount: "",
+          }),
+        },
+      );
+    }
   };
   getSalaryComponentAdded = () => {
     this.props.createPayrollEmployeeActions
@@ -539,7 +611,6 @@ class CreateEmployeePayroll extends React.Component {
       .then((res) => {
         this.setState({
           selectedData: res.data,
-
           loading: false,
         });
       });
@@ -548,7 +619,7 @@ class CreateEmployeePayroll extends React.Component {
   handleSubmitForSalary = (data, resetForm) => {
     this.setState({ disabled: true, disableLeavePage: true });
     const { employee, CTC } = data;
-
+    const list = this.state.list.filter(obj => obj.id !== '');
     const formData = new FormData();
     formData.append("employee", this.state.employeeid);
     if (this.state.ctcTypeOption.label == "ANNUALLY") {
@@ -558,7 +629,7 @@ class CreateEmployeePayroll extends React.Component {
     }
     formData.append("totalNetPay", this.totalEarnings());
     formData.append("ctcType", this.state.ctcTypeOption.label ? this.state.ctcTypeOption.label : "ANNUALLY");
-    formData.append("salaryComponentString", JSON.stringify(this.state.list));
+    formData.append("salaryComponentString", JSON.stringify(list));
 
     this.setState({ loading: true, loadingMsg: "Creating New Employee..." });
     this.props.createPayrollEmployeeActions
@@ -585,7 +656,8 @@ class CreateEmployeePayroll extends React.Component {
       });
   };
   totalEarnings = () => {
-    const totalMonthlyAmount = Object.values(this.state.Fixed).reduce((total, item) => {
+    const fixed = this.state.Fixed.filter(obj => obj.id !== '')
+    const totalMonthlyAmount = Object.values(fixed).reduce((total, item) => {
       if (typeof item.monthlyAmount == 'string') {
         total += parseFloat(item.monthlyAmount);
       } else {
@@ -597,7 +669,8 @@ class CreateEmployeePayroll extends React.Component {
     return totalMonthlyEarnings;
   }
   totalYearEarnings = () => {
-    const totalYearlyAmount = Object.values(this.state.Fixed).reduce((total, item) => {
+    const fixed = this.state.Fixed.filter(obj => obj.id !== '')
+    const totalYearlyAmount = Object.values(fixed).reduce((total, item) => {
       if (typeof item.yearlyAmount == 'string') {
         total += parseFloat(item.yearlyAmount);
       } else {
@@ -609,7 +682,8 @@ class CreateEmployeePayroll extends React.Component {
     return totalYearlyEarnings;
   }
   totalDeductions = () => {
-    const totalMonthlyDeduction = Object.values(this.state.Deduction).reduce((total, item) => {
+    const deduction = this.state.Deduction.filter(obj => obj.id !== '')
+    const totalMonthlyDeduction = Object.values(deduction).reduce((total, item) => {
       if (typeof item.monthlyAmount == 'string') {
         total += parseFloat(item.monthlyAmount);
       } else {
@@ -621,7 +695,8 @@ class CreateEmployeePayroll extends React.Component {
     return totalMonthlyDeductions;
   }
   totalYearDeductions = () => {
-    const totalYearlyDeduction = Object.values(this.state.Deduction).reduce((total, item) => {
+    const deduction = this.state.Deduction.filter(obj => obj.id !== '')
+    const totalYearlyDeduction = Object.values(deduction).reduce((total, item) => {
       if (typeof item.yearlyAmount == 'string') {
         total += parseFloat(item.yearlyAmount);
       } else {
@@ -641,18 +716,10 @@ class CreateEmployeePayroll extends React.Component {
     return grossYearEarning;
   }
   removeComponent = (ComponentId) => {
-    this.props.detailSalaryComponentAction
-      .deleteSalaryComponentRow(this.state.employeeid, ComponentId)
-      .then((res) => {
-        if (res.status === 200) {
-          const fixed = this.state.Fixed.filter(obj => obj.id !== ComponentId);
-          const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== ComponentId) : '';
-          this.setState({ Fixed: fixed, Deduction: deduction })
-        }
-      })
-      .catch((err) => {
-        this.props.commonActions.tostifyAlert("error", err.data.message);
-      });
+    const fixed = this.state.Fixed.filter(obj => obj.id !== ComponentId);
+    const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== ComponentId) : '';
+    this.setState({ Fixed: fixed, Deduction: deduction })
+    this.updateSalary1(this.state.CTC)
   };
   handleSubmitForFinancial = (data, resetForm) => {
     this.setState({ disabled: true });
@@ -1164,40 +1231,44 @@ class CreateEmployeePayroll extends React.Component {
     var totalFixedSalary = 0;
     Fixed.map((obj) => {
       locallist.push(obj);
-      if (obj.formula != null && obj.formula.length > 0) {
-        var salaryAnnulay = CTC1 * (obj.formula / 100);
-        var salaryMonthy = salaryAnnulay / 12;
-        obj.monthlyAmount = salaryMonthy;
-        obj.yearlyAmount = salaryAnnulay;
-        totalFixedSalary = totalFixedSalary + salaryMonthy;
-      }
-      else {
-        var salaryMonthy = obj.flatAmount;
-        obj.monthlyAmount = salaryMonthy;
-        obj.yearlyAmount = salaryMonthy * 12;
-        totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+      if (obj.id) {
+        if (obj.formula != null && obj.formula.length > 0) {
+          var salaryAnnulay = CTC1 * (obj.formula / 100);
+          var salaryMonthy = salaryAnnulay / 12;
+          obj.monthlyAmount = salaryMonthy;
+          obj.yearlyAmount = salaryAnnulay;
+          totalFixedSalary = totalFixedSalary + salaryMonthy;
+        }
+        else {
+          var salaryMonthy = obj.flatAmount;
+          obj.monthlyAmount = salaryMonthy;
+          obj.yearlyAmount = salaryMonthy * 12;
+          totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+        }
       }
       return obj;
     });
     if (Deduction && Deduction?.length > 0) {
       Deduction.map((obj) => {
         locallist.push(obj);
-        if (
-          obj.formula != null &&
-          obj.formula.length > 0
-        ) {
-          var salaryAnnulay = CTC1 * (obj.formula / 100)
-          var salaryMonthy = salaryAnnulay / 12;
-          obj.monthlyAmount = salaryMonthy;
-          obj.yearlyAmount = salaryAnnulay;
-          totalFixedSalary = totalFixedSalary + salaryMonthy;
-        } else if (obj.flatAmount != null) {
-          var salaryMonthy = obj.flatAmount;
-          obj.monthlyAmount = salaryMonthy;
-          obj.yearlyAmount = salaryMonthy * 12;
-          // totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+        if (obj.id) {
+          if (
+            obj.formula != null &&
+            obj.formula.length > 0
+          ) {
+            var salaryAnnulay = CTC1 * (obj.formula / 100)
+            var salaryMonthy = salaryAnnulay / 12;
+            obj.monthlyAmount = salaryMonthy;
+            obj.yearlyAmount = salaryAnnulay;
+            totalFixedSalary = totalFixedSalary + salaryMonthy;
+          } else if (obj.flatAmount != null) {
+            var salaryMonthy = obj.flatAmount;
+            obj.monthlyAmount = salaryMonthy;
+            obj.yearlyAmount = salaryMonthy * 12;
+            // totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+          }
+          return obj;
         }
-        return obj;
       });
     }
 
@@ -1245,60 +1316,64 @@ class CreateEmployeePayroll extends React.Component {
     var totalFixedSalary = 0;
     Fixed.map((obj) => {
       locallist.push(obj);
-      if (obj.formula != null && obj.formula.length > 0) {
-        if (newFormula !== undefined && obj.id === id) {
-          if (newFormula === '') { obj.formula = '0'; }
-          else { obj.formula = newFormula; }
+      if (obj.id) {
+        if (obj.formula != null && obj.formula.length > 0) {
+          if (newFormula !== undefined && obj.id === id) {
+            if (newFormula === '') { obj.formula = '0'; }
+            else { obj.formula = newFormula; }
+          }
+          var salaryAnnulay = CTC1 * (obj.formula / 100);
+          var salaryMonthy = salaryAnnulay / 12;
+          obj.monthlyAmount = salaryMonthy;
+          obj.yearlyAmount = salaryAnnulay;
+          totalFixedSalary = totalFixedSalary + salaryMonthy;
         }
-        var salaryAnnulay = CTC1 * (obj.formula / 100);
-        var salaryMonthy = salaryAnnulay / 12;
-        obj.monthlyAmount = salaryMonthy;
-        obj.yearlyAmount = salaryAnnulay;
-        totalFixedSalary = totalFixedSalary + salaryMonthy;
-      }
-      else {
-        if (newFlatAmount !== undefined && obj.id === id) {
-          if (newFlatAmount === '') { obj.flatAmount = '0'; }
-          else { obj.flatAmount = newFlatAmount; }
+        else {
+          if (newFlatAmount !== undefined && obj.id === id) {
+            if (newFlatAmount === '') { obj.flatAmount = '0'; }
+            else { obj.flatAmount = newFlatAmount; }
+          }
+          var salaryMonthy = obj.flatAmount;
+          obj.monthlyAmount = salaryMonthy;
+          obj.yearlyAmount = salaryMonthy * 12;
+          totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
         }
-        var salaryMonthy = obj.flatAmount;
-        obj.monthlyAmount = salaryMonthy;
-        obj.yearlyAmount = salaryMonthy * 12;
-        totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
       }
       return obj;
     });
     if (Deduction && Deduction?.length > 0) {
       Deduction.map((obj) => {
-        locallist.push(obj);
-        if (
-          obj.formula != null &&
-          obj.formula.length > 0
-        ) {
-          if (newFormula !== undefined && obj.id === id) {
-            if (newFormula === "") {
-              obj.formula = "0";
-            } else {
-              obj.formula = newFormula;
+        if (obj.id) {
+          locallist.push(obj);
+          if (
+            obj.formula != null &&
+            obj.formula.length > 0
+          ) {
+            if (newFormula !== undefined && obj.id === id) {
+              if (newFormula === "") {
+                obj.formula = "0";
+              } else {
+                obj.formula = newFormula;
+              }
             }
-          }
-          var salaryAnnulay = CTC1 * (obj.formula / 100)
-          var salaryMonthy = salaryAnnulay / 12;
-          obj.monthlyAmount = salaryMonthy;
-          obj.yearlyAmount = salaryAnnulay;
-          totalFixedSalary = totalFixedSalary + salaryMonthy;
-        } else if (obj.flatAmount != null) {
-          if (newFlatAmount !== undefined && obj.id === id) {
-            if (newFlatAmount === "") {
-              obj.flatAmount = "0";
-            } else {
-              obj.flatAmount = newFlatAmount;
+            var salaryAnnulay = CTC1 * (obj.formula / 100)
+            var salaryMonthy = salaryAnnulay / 12;
+            obj.monthlyAmount = salaryMonthy;
+            obj.yearlyAmount = salaryAnnulay;
+            totalFixedSalary = totalFixedSalary + salaryMonthy;
+          } else if (obj.flatAmount != null) {
+            if (newFlatAmount !== undefined && obj.id === id) {
+              if (newFlatAmount === "") {
+                obj.flatAmount = "0";
+              } else {
+                obj.flatAmount = newFlatAmount;
+              }
             }
+            var salaryMonthy = obj.flatAmount;
+            obj.monthlyAmount = salaryMonthy;
+            obj.yearlyAmount = salaryMonthy * 12;
+            // totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
           }
-          var salaryMonthy = obj.flatAmount;
-          obj.monthlyAmount = salaryMonthy;
-          obj.yearlyAmount = salaryMonthy * 12;
-          // totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
         }
         return obj;
       });
@@ -1324,7 +1399,41 @@ class CreateEmployeePayroll extends React.Component {
       list: locallist,
     });
   };
+  renderComaponentName = (row, index, componentType) => {
+    const { salary_component_fixed_dropdown, salary_component_deduction_dropdown } = this.props;
+    const component_list = componentType === 'Fixed' ? salary_component_fixed_dropdown : salary_component_deduction_dropdown;
+    const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.label === row.description) : ''
+    return (
+      <Field
+        name={componentType === 'Fixed' ? `Fixed.${index}.description` : `Deduction.${index}.description`}
+        render={({ field, form }) => (
+          <>
+            <Select
+              isDisabled={index === 0 && componentType === 'Fixed'}
+              options={component_list ? selectOptionsFactory.renderOptions(
+                'label',
+                'value',
+                component_list,
+                strings.SalaryComponent
+              ) : []}
+              id="description"
+              placeholder={strings.Select + strings.SalaryComponent}
+              onChange={(e) => {
+                if (e.value) {
+                  this.getSalaryComponentById(e.value, componentType)
+                }
+              }}
+              value={index === 0 && componentType === 'Fixed' ? { label: row.description, value: '' } : description ? description : ''}
 
+            />
+
+          </>
+
+        )}
+      />
+    );
+
+  }
   render() {
     strings.setLanguage(this.state.language);
     const {
@@ -5077,15 +5186,16 @@ class CreateEmployeePayroll extends React.Component {
                                   </thead>
                                   <tbody>
                                     {Object.values(this.state.Fixed).map(
-                                      (item) => (
+                                      (item, index) => (
                                         <tr>
                                           {/* <td >{item.id}</td> */}
                                           <td
                                             style={{
                                               border: "3px solid #c8ced3",
+                                              textAlign:'left',
                                             }}
                                           >
-                                            {item.description}
+                                            {this.renderComaponentName(item, index, 'Fixed')}
                                           </td>
                                           <td style={{ border: "3px solid #c8ced3" }}>
                                             <Field
@@ -5302,25 +5412,25 @@ class CreateEmployeePayroll extends React.Component {
                                       </td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.totalEarnings()
-                                              ? 'AED ' + this.totalEarnings().toLocaleString(
+                                          ? 'AED ' + this.totalEarnings().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                              : 'AED ' + 0 + '.00'}
+                                          : 'AED ' + 0 + '.00'}
                                       </b></td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.totalYearEarnings()
-                                              ? 'AED ' +  this.totalYearEarnings().toLocaleString(
+                                          ? 'AED ' + this.totalYearEarnings().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                              : 'AED ' +0 +'.00'}
+                                          : 'AED ' + 0 + '.00'}
                                       </b></td>
                                     </tr>
                                   </tbody>
@@ -5574,14 +5684,15 @@ class CreateEmployeePayroll extends React.Component {
                                   <tbody>
                                     {this.state.Deduction
                                       ? Object.values(this.state.Deduction).map(
-                                        (item) => (
+                                        (item, index) => (
                                           <tr>
                                             <td
                                               style={{
                                                 border: "3px solid #c8ced3",
+                                              textAlign:'left',
                                               }}
                                             >
-                                              {item.description}
+                                              {this.renderComaponentName(item, index, 'Deduction')}
                                             </td>
                                             {/* {item.formula ? (
                                                 <td
@@ -5842,25 +5953,25 @@ class CreateEmployeePayroll extends React.Component {
                                       </td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {typeof this.state.Deduction === 'object' ? (this.totalDeductions()
-                                              ? 'AED ' + this.totalDeductions().toLocaleString(
+                                          ? 'AED ' + this.totalDeductions().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                              : 'AED ' + 0 + '.00') : 'AED ' + 0 + '.00'}
+                                          : 'AED ' + 0 + '.00') : 'AED ' + 0 + '.00'}
                                       </b></td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {typeof this.state.Deduction === 'object' ? (this.totalYearDeductions()
-                                              ? 'AED ' + this.totalYearDeductions().toLocaleString(
+                                          ? 'AED ' + this.totalYearDeductions().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                              : 'AED ' + 0 + '.00') : 'AED ' + 0 + '.00'}
+                                          : 'AED ' + 0 + '.00') : 'AED ' + 0 + '.00'}
                                       </b></td>
                                     </tr>
                                   </tbody>
@@ -5884,25 +5995,25 @@ class CreateEmployeePayroll extends React.Component {
                                       </td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.grossEarnings()
-                                              ? 'AED ' + this.grossEarnings().toLocaleString(
+                                          ? 'AED ' + this.grossEarnings().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                              : 'AED ' + 0 +'.00'}
+                                          : 'AED ' + 0 + '.00'}
                                       </b></td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.grossYearEarnings()
-                                              ? 'AED ' + this.grossYearEarnings().toLocaleString(
+                                          ? 'AED ' + this.grossYearEarnings().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                              : 'AED ' + 0 +'.00'}
+                                          : 'AED ' + 0 + '.00'}
                                       </b></td>
                                     </tr>
                                   </tbody>
@@ -5935,25 +6046,25 @@ class CreateEmployeePayroll extends React.Component {
                                       </td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.totalEarnings()
-                                              ? 'AED ' + this.totalEarnings().toLocaleString(
+                                          ? 'AED ' + this.totalEarnings().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                          :'AED '+ 0 +'.00'}
+                                          : 'AED ' + 0 + '.00'}
                                       </b></td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.totalYearEarnings()
-                                              ? 'AED ' + this.totalYearEarnings().toLocaleString(
+                                          ? 'AED ' + this.totalYearEarnings().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
                                               maximumFractionDigits: 2,
                                             }
                                           )
-                                          : 'AED ' +0 +'.00'}
+                                          : 'AED ' + 0 + '.00'}
                                       </b></td>
                                     </tr>
                                   </tbody>
@@ -6156,12 +6267,12 @@ class CreateEmployeePayroll extends React.Component {
           closeSalaryComponentFixed={(e) => {
             this.closeSalaryComponentFixed(e);
           }}
-          salary_structure_dropdown={this.props.salary_structure_dropdown}
-          salary_component_dropdown={this.props.salary_component_fixed_dropdown}
-          CreateComponent={
-            this.props.createPayrollEmployeeActions.saveSalaryComponent
-          }
-          selectedData={this.state.selectedData}
+          getCurrentSalaryComponent={(e) => {
+            this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownFixed().then(res => {
+              if (res.status === 200)
+                this.getCurrentSalaryComponent(res.data[res.data.length - 1], "Fixed")
+            })
+          }}
         />
         <SalaryComponentVariable
           openSalaryComponentVariable={this.state.openSalaryComponentVariable}
@@ -6182,14 +6293,12 @@ class CreateEmployeePayroll extends React.Component {
           closeSalaryComponentDeduction={(e) => {
             this.closeSalaryComponentDeduction(e);
           }}
-          salary_structure_dropdown={this.props.salary_structure_dropdown}
-          salary_component_dropdown={
-            this.props.salary_component_deduction_dropdown
-          }
-          CreateComponent={
-            this.props.createPayrollEmployeeActions.saveSalaryComponent
-          }
-          selectedData={this.state.selectedData}
+          getCurrentSalaryComponent={(e) => {
+            this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownDeduction().then(res => {
+              if (res.status === 200)
+                this.getCurrentSalaryComponent(res.data[res.data.length - 1], "Deduction")
+            })
+          }}
         />
 
         {this.state.disableLeavePage ? "" : <LeavePage />}

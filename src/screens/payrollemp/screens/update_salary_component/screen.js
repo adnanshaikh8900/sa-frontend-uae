@@ -559,14 +559,14 @@ class UpdateSalaryComponent extends React.Component {
     renderComaponentName = (row, index, componentType) => {
         const { salary_component_fixed_dropdown, salary_component_deduction_dropdown } = this.props;
         const component_list = componentType === 'Fixed' ? salary_component_fixed_dropdown : salary_component_deduction_dropdown;
-        const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.label === row.description) : ''
+        const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.value === row.salaryComponentId) : ''    
         return (
             <Field
                 name={componentType === 'Fixed' ? `Fixed.${index}.description` : `Deduction.${index}.description`}
                 render={({ field, form }) => (
                     <>
                         <Select
-                            isDisabled={index === 0 && componentType === 'Fixed'}
+                            isDisabled={row.description === 'Basic SALARY'}
                             options={component_list ? selectOptionsFactory.renderOptions(
                                 'label',
                                 'value',
@@ -580,7 +580,7 @@ class UpdateSalaryComponent extends React.Component {
                                     this.getSalaryComponentById(e.value, componentType, index)
                                 }
                             }}
-                            value={index === 0 && componentType === 'Fixed' ? { label: row.description, value: '' } : description ? description : ''}
+                            value={row.description === 'Basic SALARY' ? { label: row.description, value: '' } : description ? description : ''}
                         // className={`${props.errors.lineItemsString &&
                         // 	props.errors.lineItemsString[parseInt(idx, 10)] &&
                         // 	props.errors.lineItemsString[parseInt(idx, 10)].productId &&
@@ -872,7 +872,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                     </td>
                                                                                                 )}
                                                                                             <td style={{ border: 'none' }}>
-                                                                                                {item.description !== "Basic SALARY" ? (
+                                                                                                {item.description !== "Basic SALARY" && item.id? (
                                                                                                     <Button
                                                                                                         color='link'
 
@@ -1213,14 +1213,14 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                         </td>
                                                                                                     )}
                                                                                                 <td style={{ borderTop: "0px" }}>
-                                                                                                    <Button
+                                                                                                    {item.id && <Button
                                                                                                         color='link'
                                                                                                         onClick={() => {
                                                                                                             this.removeComponent(item.id)
                                                                                                         }}
                                                                                                     >
                                                                                                         <i class="far fa-times-circle"></i>
-                                                                                                    </Button></td>
+                                                                                                    </Button>}</td>
                                                                                             </tr>
                                                                                         ))) : (
                                                                                         " "

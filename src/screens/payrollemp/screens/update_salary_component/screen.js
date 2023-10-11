@@ -57,9 +57,37 @@ class UpdateSalaryComponent extends React.Component {
             loading: true,
             dialog: null,
             CTC: '',
-            Fixed: [],
-            Variable: [],
-            Deduction: [],
+            Fixed: [
+                {
+                    description: "",
+                    flatAmount: "",
+                    formula: "",
+                    id: "",
+                    monthlyAmount: "",
+                    yearlyAmount: "",
+                },
+            ],
+
+            Variable: [
+                {
+                    description: "",
+                    flatAmount: "",
+                    formula: "",
+                    id: "",
+                    monthlyAmount: "",
+                    yearlyAmount: "",
+                },
+            ],
+            Deduction: [
+                {
+                    description: "",
+                    flatAmount: "",
+                    formula: "",
+                    id: "",
+                    monthlyAmount: "",
+                    yearlyAmount: "",
+                },
+            ],
             Fixed_Allowance: [],
             current_employee_id: null,
             openSalaryComponentFixed: false,
@@ -134,9 +162,9 @@ class UpdateSalaryComponent extends React.Component {
                         current_employee_id: this.props.location.state.id,
                         id: res.data.id ? res.data.id : '',
                         CTC: res.data.ctc ? res.data.ctc : '',
-                        Fixed: res.data.salaryComponentResult.Fixed,
+                        Fixed: res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed : [],
                         Variable: res.data.salaryComponentResult.Variable,
-                        Deduction: res.data.salaryComponentResult.Deduction,
+                        Deduction: res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction : [],
                         Fixed_Allowance: res.data.salaryComponentResult.Fixed_Allowance,
                     }, () => {
                         this.updateSalary(res.data.ctc ? ctcValue : this.state.CTC)
@@ -153,58 +181,23 @@ class UpdateSalaryComponent extends React.Component {
             this.props.history.push('/admin/master/employee')
         }
     }
-    getSalaryComponentByEmployeeId = () => {
-        if (this.props.location.state && this.props.location.state.id) {
-            this.props.detailSalaryComponentAction.getSalaryComponentByEmployeeId(this.props.location.state.id).then((res) => {
-                if (res.status === 200) {
-                    const resFixedLength = res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed?.length : 0;
-                    const resDeductionLength = res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction?.length : 0;
-                    const fixedLength = this.state.Fixed ? this.state.Fixed?.length : 0
-                    const deductionLength = this.state.Deduction ? this.state.Deduction?.length : 0
-                    if (resFixedLength > fixedLength) {
-                        this.state.Fixed.push(res.data.salaryComponentResult.Fixed[resFixedLength - 1])
-                    }
-                    if (resDeductionLength > deductionLength) {
-                        if (this.state.Deduction)
-                            this.state.Deduction.push(res.data.salaryComponentResult.Deduction[resDeductionLength - 1])
-                        else
-                            this.setState({
-                                Deduction: [res.data.salaryComponentResult.Deduction[resDeductionLength - 1]]
-                            })
-                    }
-
-                    this.updateSalary1(this.state.CTC)
-                }
-            }).catch((err) => {
-                this.setState({ loading: false })
-                this.props.history.push('/admin/master/employee/viewEmployee',
-                    { id: this.props.location.state.id })
-            })
-        } else {
-            this.props.history.push('/admin/master/employee/viewEmployee',
-                { id: this.props.location.state.id })
-        }
-    }
     openSalaryComponentFixed = (props) => {
         this.setState({ openSalaryComponentFixed: true });
     };
     closeSalaryComponentFixed = (res) => {
         this.setState({ openSalaryComponentFixed: false });
-        this.getSalaryComponentByEmployeeId();
     };
     openSalaryComponentVariable = (props) => {
         this.setState({ openSalaryComponentVariable: true });
     };
     closeSalaryComponentVariable = (res) => {
         this.setState({ openSalaryComponentVariable: false });
-        this.getSalaryComponentByEmployeeId();
     };
     openSalaryComponentDeduction = (props) => {
         this.setState({ openSalaryComponentDeduction: true });
     };
     closeSalaryComponentDeduction = (res) => {
         this.setState({ openSalaryComponentDeduction: false });
-        this.getSalaryComponentByEmployeeId();
     };
     renderActionForState = () => {
         this.props.createPayrollEmployeeActions.getEmployeeById(this.state.current_employee_id)
@@ -243,7 +236,7 @@ class UpdateSalaryComponent extends React.Component {
         return totalYearlyEarnings;
     }
     totalDeductions = () => {
-        const deduction = this.state.Deduction.filter(obj => obj.id !== '')
+        const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== '') : ''
         const totalMonthlyDeduction = Object.values(deduction).reduce((total, item) => {
             if (typeof item.monthlyAmount == 'string') {
                 total += parseFloat(item.monthlyAmount);
@@ -256,7 +249,7 @@ class UpdateSalaryComponent extends React.Component {
         return totalMonthlyDeductions;
     }
     totalYearDeductions = () => {
-        const deduction = this.state.Deduction.filter(obj => obj.id !== '')
+        const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== '') : ''
         const totalYearlyDeduction = Object.values(deduction).reduce((total, item) => {
             if (typeof item.yearlyAmount == 'string') {
                 total += parseFloat(item.yearlyAmount);
@@ -486,19 +479,34 @@ class UpdateSalaryComponent extends React.Component {
                 },
             );
         } else {
-            const data = [...this.state.Deduction].filter(obj => obj.id !== '');
-            this.setState(
-                {
-                    Deduction: data.concat({
-                        description: "",
-                        flatAmount: "",
-                        formula: "",
-                        id: "",
-                        monthlyAmount: "",
-                        yearlyAmount: "",
-                    }),
-                },
-            );
+            if (this.state.Deduction) {
+                const data = [...this.state.Deduction].filter(obj => obj.id !== '');;
+                this.setState(
+                    {
+                        Deduction: data.concat({
+                            description: "",
+                            flatAmount: "",
+                            formula: "",
+                            id: "",
+                            monthlyAmount: "",
+                            yearlyAmount: "",
+                        }),
+                    },
+                );
+            } else {
+                this.setState(
+                    {
+                        Deduction: {
+                            description: "",
+                            flatAmount: "",
+                            formula: "",
+                            id: "",
+                            monthlyAmount: "",
+                            yearlyAmount: "",
+                        },
+                    },
+                );
+            }
         }
     };
     getSalaryComponentById = (componentId, componentType) => {
@@ -1418,8 +1426,9 @@ class UpdateSalaryComponent extends React.Component {
                             }}
                             getCurrentSalaryComponent={(e) => {
                                 this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownFixed().then(res => {
-                                    if (res.status === 200)
+                                    if (res.status === 200) {
                                         this.getCurrentSalaryComponent(res.data[res.data.length - 1], "Fixed")
+                                    }
                                 })
                             }}
                         />

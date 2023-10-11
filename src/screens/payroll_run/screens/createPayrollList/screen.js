@@ -503,7 +503,7 @@ class CreatePayrollList extends React.Component {
 
 													let value = parseFloat(evt.target.value === "" ? "0" : evt.target.value);
 
-													if (value > this.state.paidDays || value < 0) {
+													if (value > this.state.paidDays || value < 0 || value === this.state.paidDays) {
 														return;
 													}
 													this.updateAmounts(row, value);

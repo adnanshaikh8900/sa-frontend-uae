@@ -626,7 +626,7 @@ class Refund extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
 																			<span className="text-danger">* </span>{' '}
-																			 {strings.AmounttoRefund}
+																			 {strings.AmountRefund}
 																		</Label>
 																		<Input
 																			type="text"

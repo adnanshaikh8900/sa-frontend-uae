@@ -472,7 +472,7 @@ class UpdateSalaryComponent extends React.Component {
     }
     addRow = (componentType) => {
         if (componentType === 'Fixed') {
-            const data = [...this.state.Fixed];
+            const data = [...this.state.Fixed].filter(obj => obj.id !== '');
             this.setState(
                 {
                     Fixed: data.concat({
@@ -486,7 +486,7 @@ class UpdateSalaryComponent extends React.Component {
                 },
             );
         } else {
-            const data = [...this.state.Deduction];
+            const data = [...this.state.Deduction].filter(obj => obj.id !== '');
             this.setState(
                 {
                     Deduction: data.concat({
@@ -567,7 +567,7 @@ class UpdateSalaryComponent extends React.Component {
                 render={({ field, form }) => (
                     <>
                         <Select
-                            isDisabled={index === 0}
+                            isDisabled={index === 0 && componentType === 'Fixed'}
                             options={component_list ? selectOptionsFactory.renderOptions(
                                 'label',
                                 'value',

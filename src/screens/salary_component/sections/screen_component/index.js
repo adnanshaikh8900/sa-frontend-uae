@@ -59,8 +59,7 @@ class SalaryComponentScreen extends React.Component {
       dialog: '',
     }
     this.formRef = React.createRef();
-    this.regEx = /^[0-9\d]+$/;
-    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regEx = /[a-zA-Z]+$/;
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExCode = /[a-zA-Z0-9-/]+$/;
     this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -327,7 +326,7 @@ class SalaryComponentScreen extends React.Component {
                                         value={props.values.componentName ? props.values.componentName : ''}
                                         placeholder={strings.Enter + strings.ComponentName}
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {
+                                          if (option.target.value === '' || (!props.values.componentName && this.regEx.test(option.target.value)) || (props.values.componentName && this.regExAlpha.test(option.target.value))) {
                                             props.handleChange('componentName')(option)
                                             this.setState({
                                               nameExist: false

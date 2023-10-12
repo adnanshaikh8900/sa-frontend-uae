@@ -509,51 +509,42 @@ class UpdateSalaryComponent extends React.Component {
             }
         }
     };
-    getSalaryComponentById = (componentId, componentType) => {
+    getSalaryComponentById = (componentId, componentType, index) => {
         this.props.createPayrollEmployeeActions.getSalaryComponentById(componentId).then((res) => {
             if (res.status === 200) {
                 if (componentType === 'Fixed') {
-                    const index = this.state.Fixed ? this.state.Fixed.length - 1 : 0;
+                    index = index ? index : this.state.Fixed ? this.state.Fixed.length - 1 : 0;
                     this.state.Fixed.map((obj, idx) => {
                         if (idx === index) {
-                            obj.description = res.data.description;
-                            obj.flatAmount = res.data.flatAmount;
-                            obj.formula = res.data.formula;
                             obj.id = res.data.id;
+                            obj.description = res.data.description;
+                            obj.formula = res.data.formula;
+                            obj.flatAmount = res.data.flatAmount;
                             obj.employeeId = this.props.location.state.id;
-                            obj.salaryStructure = 1;
+                            obj.salaryComponentId = res.data.id;
+                            obj.salaryStructure = 3;
+                            obj.monthlyAmount = "";
+                            obj.yearlyAmount = "";
                         }
                         return obj;
                     })
                 } else {
-                    const index = this.state.Deduction ? this.state.Deduction.length - 1 : 0;
+                    index = index || index === 0 ? index : this.state.Deduction ? this.state.Deduction.length - 1 : 0;
                     this.state.Deduction.map((obj, idx) => {
                         if (idx === index) {
-                            obj.description = res.data.description;
-                            obj.flatAmount = res.data.flatAmount;
-                            obj.formula = res.data.formula;
                             obj.id = res.data.id;
+                            obj.description = res.data.description;
+                            obj.formula = res.data.formula;
+                            obj.flatAmount = res.data.flatAmount;
                             obj.employeeId = this.props.location.state.id;
+                            obj.salaryComponentId = res.data.id;
                             obj.salaryStructure = 3;
+                            obj.monthlyAmount = "";
+                            obj.yearlyAmount = "";
                         }
                         return obj;
                     })
                 }
-                // const resFixedLength = res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed?.length : 0;
-                // const resDeductionLength = res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction?.length : 0;
-                // const fixedLength = this.state.Fixed ? this.state.Fixed?.length : 0
-                // const deductionLength = this.state.Deduction ? this.state.Deduction?.length : 0
-                // if (resFixedLength > fixedLength) {
-                //     this.state.Fixed.push(res.data.salaryComponentResult.Fixed[resFixedLength - 1])
-                // }
-                // if (resDeductionLength > deductionLength) {
-                //     if (this.state.Deduction)
-                //         this.state.Deduction.push(res.data.salaryComponentResult.Deduction[resDeductionLength - 1])
-                //     else
-                //         this.setState({
-                //             Deduction: [res.data.salaryComponentResult.Deduction[resDeductionLength - 1]]
-                //         })
-                // }
 
                 this.updateSalary1(this.state.CTC)
                 this.addRow(componentType);
@@ -568,14 +559,14 @@ class UpdateSalaryComponent extends React.Component {
     renderComaponentName = (row, index, componentType) => {
         const { salary_component_fixed_dropdown, salary_component_deduction_dropdown } = this.props;
         const component_list = componentType === 'Fixed' ? salary_component_fixed_dropdown : salary_component_deduction_dropdown;
-        const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.label === row.description) : ''
+        const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.value === row.salaryComponentId) : ''    
         return (
             <Field
                 name={componentType === 'Fixed' ? `Fixed.${index}.description` : `Deduction.${index}.description`}
                 render={({ field, form }) => (
                     <>
                         <Select
-                            isDisabled={index === 0 && componentType === 'Fixed'}
+                            isDisabled={row.description === 'Basic SALARY'}
                             options={component_list ? selectOptionsFactory.renderOptions(
                                 'label',
                                 'value',
@@ -586,10 +577,10 @@ class UpdateSalaryComponent extends React.Component {
                             placeholder={strings.Select + strings.SalaryComponent}
                             onChange={(e) => {
                                 if (e.value) {
-                                    this.getSalaryComponentById(e.value, componentType)
+                                    this.getSalaryComponentById(e.value, componentType, index)
                                 }
                             }}
-                            value={index === 0 && componentType === 'Fixed' ? { label: row.description, value: '' } : description ? description : ''}
+                            value={row.description === 'Basic SALARY' ? { label: row.description, value: '' } : description ? description : ''}
                         // className={`${props.errors.lineItemsString &&
                         // 	props.errors.lineItemsString[parseInt(idx, 10)] &&
                         // 	props.errors.lineItemsString[parseInt(idx, 10)].productId &&
@@ -881,7 +872,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                     </td>
                                                                                                 )}
                                                                                             <td style={{ border: 'none' }}>
-                                                                                                {item.description !== "Basic SALARY" ? (
+                                                                                                {item.description !== "Basic SALARY" && item.id? (
                                                                                                     <Button
                                                                                                         color='link'
 
@@ -1222,14 +1213,14 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                         </td>
                                                                                                     )}
                                                                                                 <td style={{ borderTop: "0px" }}>
-                                                                                                    <Button
+                                                                                                    {item.id && <Button
                                                                                                         color='link'
                                                                                                         onClick={() => {
                                                                                                             this.removeComponent(item.id)
                                                                                                         }}
                                                                                                     >
                                                                                                         <i class="far fa-times-circle"></i>
-                                                                                                    </Button></td>
+                                                                                                    </Button>}</td>
                                                                                             </tr>
                                                                                         ))) : (
                                                                                         " "

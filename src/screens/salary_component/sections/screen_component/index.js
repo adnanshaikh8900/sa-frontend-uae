@@ -73,7 +73,7 @@ class SalaryComponentScreen extends React.Component {
     if (this.props.componentID && !this.props.isCreated) {
       this.props.salaryComponentActions.getSalaryComponentById(this.props.componentID).then(res => {
         if (res.status === 200) {
-          console.log(res.data)
+          this.setState({enableDelete:res.data.isComponentDeletable});
           this.formRef.current.setFieldValue('componentId', res.data.componentCode, true);
           this.formRef.current.setFieldValue('componentName', res.data.description, true);
           this.formRef.current.setFieldValue('componentType', res.data.componentType, true);
@@ -83,8 +83,18 @@ class SalaryComponentScreen extends React.Component {
         }
       })
     }
+    else{
+      this.getComponentId();
+    }
 
   };
+  getComponentId = () => {
+		this.props.salaryComponentActions.getComponentId().then((res) => {
+			if (res.status === 200) {
+				this.formRef.current.setFieldValue('componentId', res.data, true, this.componentIdvalidationCheck(res.data));
+			}
+		});
+	};
   componentNamevalidationCheck = (value) => {
     const data = {
       moduleType: 29,
@@ -143,7 +153,7 @@ class SalaryComponentScreen extends React.Component {
     this.props.salaryComponentActions.deleteSalaryComponent(componentID).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Salary Component Deleted Successfully !')
-        this.props.history.push('/admin/payroll/config', { tabNo: '3' })
+        this.props.history.push('/admin/payroll/config', { tabNo: '5' })
       }
 
     }).catch((err) => {
@@ -201,7 +211,8 @@ class SalaryComponentScreen extends React.Component {
             this.setState({
               createMore: false
             })
-            resetForm(this.state.initValue)
+            resetForm(this.state.initValue);
+            this.getComponentId();
           } else {
             if (this.props.salaryStructureModalCard) {
               this.props.closeModal(true);

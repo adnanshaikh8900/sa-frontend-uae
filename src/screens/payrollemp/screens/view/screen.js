@@ -258,6 +258,10 @@ class ViewEmployee extends React.Component {
 	};
 
 	initializeData = () => {
+		if (this.props.location.state && this.props.location.state.tabNo ) {
+			this.toggle(0, this.props.location.state.tabNo)
+		} else
+			this.toggle(0, this.state.activeTab[0])
 		if (this.props.location.state && this.props.location.state.id) {
 			this.props.employeeViewActions
 				.getEmployeeById(this.props.location.state.id)

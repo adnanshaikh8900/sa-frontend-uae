@@ -61,4 +61,19 @@ export const getSalaryComponentById = (_id) => {
     })
   }
 }
+export const getComponentId = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/customizeinvoiceprefixsuffix/getNextInvoiceNo?invoiceType=13`,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
 

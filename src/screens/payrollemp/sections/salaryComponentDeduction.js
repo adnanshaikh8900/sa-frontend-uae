@@ -37,7 +37,7 @@ class SalaryComponentDeduction extends React.Component {
 						closeModal={(e) => {
 							closeSalaryComponentDeduction(false);
 						}}
-						isCreated={true}
+						isCreated={false}
 						ComponentType={'Deduction'}
 						salaryStructureModalCard={true}
 					/>

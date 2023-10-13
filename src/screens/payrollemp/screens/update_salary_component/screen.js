@@ -522,7 +522,7 @@ class UpdateSalaryComponent extends React.Component {
                             obj.flatAmount = res.data.flatAmount;
                             obj.employeeId = this.props.location.state.id;
                             obj.salaryComponentId = res.data.id;
-                            obj.salaryStructure = 3;
+                            obj.salaryStructure = 1;
                             obj.monthlyAmount = "";
                             obj.yearlyAmount = "";
                         }

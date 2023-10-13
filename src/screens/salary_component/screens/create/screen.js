@@ -26,7 +26,7 @@ class CreateSalaryComponent extends React.Component {
       <SalaryComponentScreen
         props={this.props}
         history={this.props.history}
-        isCreated={true}
+        isCreated={false}
       >
       </SalaryComponentScreen>
     )

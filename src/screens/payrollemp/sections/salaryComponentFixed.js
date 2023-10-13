@@ -67,7 +67,7 @@ class SalaryComponentFixed extends React.Component {
 						closeModal={(e) => {
 							closeSalaryComponentFixed(false);
 						}}
-						isCreated={true}
+						isCreated={false}
 						ComponentType={'Earning'}
 						salaryStructureModalCard={true}
 					/>

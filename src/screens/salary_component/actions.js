@@ -4,7 +4,7 @@ import {
 
 
 export const saveSalaryComponent = (obj, isCreated) => {
-  let url = isCreated ? '/rest/payroll/saveSalaryComponent' : '/rest/payroll/updateSalaryComponent';
+  let url = isCreated ? '/rest/payroll/updateSalaryComponent' : '/rest/payroll/saveSalaryComponent';
   return (dispatch) => {
     let data = {
       method: 'post',
@@ -62,18 +62,18 @@ export const getSalaryComponentById = (_id) => {
   }
 }
 export const getComponentId = () => {
-	return (dispatch) => {
-		let data = {
-			method: 'GET',
-			url: `/rest/customizeinvoiceprefixsuffix/getNextInvoiceNo?invoiceType=13`,
-		};
-		return authApi(data)
-			.then((res) => {
-				return res;
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/customizeinvoiceprefixsuffix/getNextInvoiceNo?invoiceType=14`,
+    };
+    return authApi(data)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
 };
 

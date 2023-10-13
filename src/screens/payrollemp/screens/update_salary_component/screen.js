@@ -33,9 +33,9 @@ const mapStateToProps = (state) => {
         employee_list_dropdown: state.payrollEmployee.employee_list_dropdown,
         state_list: state.payrollEmployee.state_list,
         country_list: state.payrollEmployee.country_list,
-        salary_component_fixed_dropdown: state.payrollEmployee.salary_component_fixed_dropdown,
+        salary_component_fixed_dropdown: state.payrollEmployee.salary_component_fixed_dropdown.data,
         salary_component_varaible_dropdown: state.payrollEmployee.salary_component_varaible_dropdown,
-        salary_component_deduction_dropdown: state.payrollEmployee.salary_component_deduction_dropdown,
+        salary_component_deduction_dropdown: state.payrollEmployee.salary_component_deduction_dropdown.data,
     })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -57,9 +57,37 @@ class UpdateSalaryComponent extends React.Component {
             loading: true,
             dialog: null,
             CTC: '',
-            Fixed: [],
-            Variable: [],
-            Deduction: [],
+            Fixed: [
+                {
+                    description: "",
+                    flatAmount: "",
+                    formula: "",
+                    id: "",
+                    monthlyAmount: "",
+                    yearlyAmount: "",
+                },
+            ],
+
+            Variable: [
+                {
+                    description: "",
+                    flatAmount: "",
+                    formula: "",
+                    id: "",
+                    monthlyAmount: "",
+                    yearlyAmount: "",
+                },
+            ],
+            Deduction: [
+                {
+                    description: "",
+                    flatAmount: "",
+                    formula: "",
+                    id: "",
+                    monthlyAmount: "",
+                    yearlyAmount: "",
+                },
+            ],
             Fixed_Allowance: [],
             current_employee_id: null,
             openSalaryComponentFixed: false,
@@ -127,27 +155,23 @@ class UpdateSalaryComponent extends React.Component {
                                     res.data.ctc
                                     : parseFloat(res.data.ctc) * 12
                             )
-                            : ''
+                            : 0
 
                     this.setState({
                         loading: false,
                         current_employee_id: this.props.location.state.id,
                         id: res.data.id ? res.data.id : '',
                         CTC: res.data.ctc ? res.data.ctc : '',
-                        Fixed: res.data.salaryComponentResult.Fixed,
+                        Fixed: res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed : [],
                         Variable: res.data.salaryComponentResult.Variable,
-                        Deduction: res.data.salaryComponentResult.Deduction,
+                        Deduction: res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction : [],
                         Fixed_Allowance: res.data.salaryComponentResult.Fixed_Allowance,
+                    }, () => {
+                        this.updateSalary(res.data.ctc ? ctcValue : this.state.CTC)
+                        this.formRef.current.setFieldValue('CTC', res.data.ctc ? res.data.ctc : '', true);
+                        this.addRow('Fixed');
+                        this.addRow('Deduction');
                     })
-
-                    this.updateSalary(res.data.ctc ? ctcValue : this.state.CTC)
-                    this.formRef.current.setFieldValue('CTC',
-                        this.state.CTC != "" ?
-                            (this.state.ctcType == "ANNUALLY" ?
-                                this.state.CTC
-                                : parseFloat(this.state.CTC) / 12)
-                            : 0
-                        , true);
                 }
             }).catch((err) => {
                 this.setState({ loading: false })
@@ -157,61 +181,23 @@ class UpdateSalaryComponent extends React.Component {
             this.props.history.push('/admin/master/employee')
         }
     }
-    getSalaryComponentByEmployeeId = () => {
-        if (this.props.location.state && this.props.location.state.id) {
-            this.props.detailSalaryComponentAction.getSalaryComponentByEmployeeId(this.props.location.state.id).then((res) => {
-                if (res.status === 200) {
-                    const resFixedLength = res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed?.length : 0;
-                    const resDeductionLength = res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction?.length : 0;
-                    const fixedLength = this.state.Fixed ? this.state.Fixed?.length : 0
-                    const deductionLength = this.state.Deduction ? this.state.Deduction?.length : 0
-                    if (resFixedLength > fixedLength) {
-                        this.state.Fixed.push(res.data.salaryComponentResult.Fixed[resFixedLength - 1])
-                    }
-                    if (resDeductionLength > deductionLength) {
-                        if (this.state.Deduction)
-                            this.state.Deduction.push(res.data.salaryComponentResult.Deduction[resDeductionLength - 1])
-                        else
-                            this.setState({
-                                Deduction: [res.data.salaryComponentResult.Deduction[resDeductionLength - 1]]
-                            })
-                    }
-
-                    this.updateSalary1(this.state.CTC)
-                }
-            }).catch((err) => {
-                this.setState({ loading: false })
-                this.props.history.push('/admin/master/employee/viewEmployee',
-                    { id: this.props.location.state.id })
-            })
-        } else {
-            this.props.history.push('/admin/master/employee/viewEmployee',
-                { id: this.props.location.state.id })
-        }
-    }
     openSalaryComponentFixed = (props) => {
         this.setState({ openSalaryComponentFixed: true });
     };
     closeSalaryComponentFixed = (res) => {
         this.setState({ openSalaryComponentFixed: false });
-        this.getSalaryComponentByEmployeeId();
-        // this.updateSalary();
     };
     openSalaryComponentVariable = (props) => {
         this.setState({ openSalaryComponentVariable: true });
     };
     closeSalaryComponentVariable = (res) => {
         this.setState({ openSalaryComponentVariable: false });
-        this.getSalaryComponentByEmployeeId();
-        //   this.updateSalary();
     };
     openSalaryComponentDeduction = (props) => {
         this.setState({ openSalaryComponentDeduction: true });
     };
     closeSalaryComponentDeduction = (res) => {
         this.setState({ openSalaryComponentDeduction: false });
-        this.getSalaryComponentByEmployeeId();
-        //this.updateSalary();
     };
     renderActionForState = () => {
         this.props.createPayrollEmployeeActions.getEmployeeById(this.state.current_employee_id)
@@ -224,7 +210,8 @@ class UpdateSalaryComponent extends React.Component {
     }
 
     totalEarnings = () => {
-        const totalMonthlyAmount = Object.values(this.state.Fixed).reduce((total, item) => {
+        const fixed = this.state.Fixed.filter(obj => obj.id !== '')
+        const totalMonthlyAmount = Object.values(fixed).reduce((total, item) => {
             if (typeof item.monthlyAmount == 'string') {
                 total += parseFloat(item.monthlyAmount);
             } else {
@@ -232,11 +219,12 @@ class UpdateSalaryComponent extends React.Component {
             }
             return total;
         }, 0);
-        const totalMonthlyEarnings = totalMonthlyAmount ? totalMonthlyAmount : 0
+        const totalMonthlyEarnings = totalMonthlyAmount ? totalMonthlyAmount : 0;
         return totalMonthlyEarnings;
     }
     totalYearEarnings = () => {
-        const totalYearlyAmount = Object.values(this.state.Fixed).reduce((total, item) => {
+        const fixed = this.state.Fixed.filter(obj => obj.id !== '')
+        const totalYearlyAmount = Object.values(fixed).reduce((total, item) => {
             if (typeof item.yearlyAmount == 'string') {
                 total += parseFloat(item.yearlyAmount);
             } else {
@@ -248,7 +236,8 @@ class UpdateSalaryComponent extends React.Component {
         return totalYearlyEarnings;
     }
     totalDeductions = () => {
-        const totalMonthlyDeduction = Object.values(this.state.Deduction).reduce((total, item) => {
+        const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== '') : ''
+        const totalMonthlyDeduction = Object.values(deduction).reduce((total, item) => {
             if (typeof item.monthlyAmount == 'string') {
                 total += parseFloat(item.monthlyAmount);
             } else {
@@ -260,7 +249,8 @@ class UpdateSalaryComponent extends React.Component {
         return totalMonthlyDeductions;
     }
     totalYearDeductions = () => {
-        const totalYearlyDeduction = Object.values(this.state.Deduction).reduce((total, item) => {
+        const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== '') : ''
+        const totalYearlyDeduction = Object.values(deduction).reduce((total, item) => {
             if (typeof item.yearlyAmount == 'string') {
                 total += parseFloat(item.yearlyAmount);
             } else {
@@ -272,6 +262,7 @@ class UpdateSalaryComponent extends React.Component {
         return totalYearlyDeductions;
     }
     grossEarnings = () => {
+
         const grossEarning = (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0)
         // this.setState({grossSalarys : grossEarning})
         return grossEarning;
@@ -284,11 +275,10 @@ class UpdateSalaryComponent extends React.Component {
 
     // Create or Edit VAT
     handleSubmit = (data) => {
-
         this.setState({ disabled: true, disableLeavePage: true, });
         const { current_employee_id } = this.state;
         const { employee, CTC } = data;
-
+        const list = this.state.list.filter(obj => obj.id !== '');
         let formData = new FormData();
         formData.append('employee', current_employee_id)
         formData.append('employeeId', this.props.location.state.id ? this.props.location.state.id : "");
@@ -299,7 +289,7 @@ class UpdateSalaryComponent extends React.Component {
         }
         formData.append("totalNetPay", this.totalEarnings());
         formData.append('ctcType', this.state.ctcTypeOption.label ? this.state.ctcTypeOption.label : "ANNUALLY")
-        formData.append('salaryComponentString', JSON.stringify(this.state.list));
+        formData.append('salaryComponentString', JSON.stringify(list));
 
         this.setState({ loading: true, loadingMsg: "Updating Salary Details ..." });
         this.props.detailSalaryComponentAction.updateEmployeeBank(formData).then((res) => {
@@ -309,7 +299,7 @@ class UpdateSalaryComponent extends React.Component {
                     'Employee Updated Successfully.'
                 )
                 this.props.history.push('/admin/master/employee/viewEmployee',
-                    { id: this.props.location.state.id })
+                    { id: this.props.location.state.id , tabNo: '2'  })
                 this.setState({ loading: false, });
             }
         }).catch((err) => {
@@ -319,30 +309,34 @@ class UpdateSalaryComponent extends React.Component {
             )
         })
     }
+    getCurrentSalaryComponent = (newComponent, componentType) => {
+        this.getSalaryComponentById(newComponent.value, componentType)
 
+    };
     updateSalary = (CTC1) => {
         this.setState({ errorMsg: false })
         const Fixed = this.state.Fixed
         const Variable = this.state.Variable
         const Deduction = this.state.Deduction
         const Fixed_Allowance = this.state.Fixed_Allowance
-
         var locallist = []
         var totalFixedSalary = 0;
         Fixed.map((obj) => {
             locallist.push(obj);
-            if (obj.formula != null && obj.formula.length > 0) {
-                var salaryAnnulay = CTC1 * (obj.formula / 100);
-                var salaryMonthy = salaryAnnulay / 12;
-                obj.monthlyAmount = salaryMonthy;
-                obj.yearlyAmount = salaryAnnulay;
-                totalFixedSalary = totalFixedSalary + salaryMonthy;
-            }
-            else {
-                var salaryMonthy = obj.flatAmount;
-                obj.monthlyAmount = salaryMonthy;
-                obj.yearlyAmount = salaryMonthy * 12;
-                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+            if (obj.id) {
+                if (obj.formula != null && obj.formula.length > 0) {
+                    var salaryAnnulay = CTC1 * (obj.formula / 100);
+                    var salaryMonthy = salaryAnnulay / 12;
+                    obj.monthlyAmount = salaryMonthy;
+                    obj.yearlyAmount = salaryAnnulay;
+                    totalFixedSalary = totalFixedSalary + salaryMonthy;
+                }
+                else {
+                    var salaryMonthy = obj.flatAmount;
+                    obj.monthlyAmount = salaryMonthy;
+                    obj.yearlyAmount = salaryMonthy * 12;
+                    totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+                }
             }
             return obj;
         });
@@ -350,17 +344,19 @@ class UpdateSalaryComponent extends React.Component {
         if (Deduction && Deduction?.length > 0) {
             Deduction.map((obj) => {
                 locallist.push(obj);
-                if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
-                    var salaryAnnulay = CTC1 * (obj.formula / 100);
-                    var salaryMonthy = salaryAnnulay / 12;
-                    obj.monthlyAmount = salaryMonthy;
-                    obj.yearlyAmount = salaryAnnulay;
-                    totalFixedSalary = totalFixedSalary + salaryMonthy;
-                }
-                else if (obj.flatAmount != null) {
-                    var salaryMonthy = obj.flatAmount;
-                    obj.monthlyAmount = salaryMonthy;
-                    obj.yearlyAmount = salaryMonthy * 12;
+                if (obj.id) {
+                    if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+                        var salaryAnnulay = CTC1 * (obj.formula / 100);
+                        var salaryMonthy = salaryAnnulay / 12;
+                        obj.monthlyAmount = salaryMonthy;
+                        obj.yearlyAmount = salaryAnnulay;
+                        totalFixedSalary = totalFixedSalary + salaryMonthy;
+                    }
+                    else if (obj.flatAmount != null) {
+                        var salaryMonthy = obj.flatAmount;
+                        obj.monthlyAmount = salaryMonthy;
+                        obj.yearlyAmount = salaryMonthy * 12;
+                    }
                 }
                 return obj;
             });
@@ -383,17 +379,11 @@ class UpdateSalaryComponent extends React.Component {
     }
 
     removeComponent = (ComponentId) => {
-        this.props.detailSalaryComponentAction.deleteSalaryComponentRow(this.state.current_employee_id, ComponentId).then((res) => {
-            if (res.status === 200) {
-                const fixed = this.state.Fixed.filter(obj => obj.id !== ComponentId);
-                const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== ComponentId) : '';
-                this.setState({ Fixed: fixed, Deduction: deduction },()=>{
-                    this.updateSalary(this.state.CTC);
-                })
-            }
-        }).catch((err) => {
-            this.props.commonActions.tostifyAlert('error', err.data.message)
-        });
+        const fixed = this.state.Fixed.filter(obj => obj.id !== ComponentId);
+        const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== ComponentId) : '';
+        this.setState({ Fixed: fixed, Deduction: deduction }, () => {
+            this.updateSalary(this.state.CTC);
+        })
     }
 
     updateSalary1 = (CTC1, newFormula, id, newFlatAmount) => {
@@ -407,46 +397,21 @@ class UpdateSalaryComponent extends React.Component {
         var totalFixedSalary = 0;
         Fixed.map((obj) => {
             locallist.push(obj);
-            if (obj.formula != null && obj.formula.length > 0) {
-                if (newFormula !== undefined && obj.id === id) {
-                    if (newFormula === '') { obj.formula = '0'; }
-                    else { obj.formula = newFormula; }
-                }
+            if (obj.id) {
 
-                var salaryAnnulay = CTC1 * (obj.formula / 100);
-                var salaryMonthy = salaryAnnulay / 12;
-                obj.monthlyAmount = salaryMonthy;
-                obj.yearlyAmount = salaryAnnulay;
-                totalFixedSalary = totalFixedSalary + salaryMonthy;
-            }
-            else {
-                if (newFlatAmount !== undefined && obj.id === id) {
-                    if (newFlatAmount === '') { obj.flatAmount = '0'; }
-                    else { obj.flatAmount = newFlatAmount; }
-                }
-                var salaryMonthy = obj.flatAmount;
-                obj.monthlyAmount = salaryMonthy;
-                obj.yearlyAmount = salaryMonthy * 12;
-                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
-            }
-            return obj;
-        });
-
-        if (Deduction && Deduction?.length > 0) {
-            Deduction.map((obj) => {
-                locallist.push(obj);
-                if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+                if (obj.formula != null && obj.formula.length > 0) {
                     if (newFormula !== undefined && obj.id === id) {
                         if (newFormula === '') { obj.formula = '0'; }
                         else { obj.formula = newFormula; }
                     }
+
                     var salaryAnnulay = CTC1 * (obj.formula / 100);
                     var salaryMonthy = salaryAnnulay / 12;
                     obj.monthlyAmount = salaryMonthy;
                     obj.yearlyAmount = salaryAnnulay;
                     totalFixedSalary = totalFixedSalary + salaryMonthy;
                 }
-                else if (obj.flatAmount != null) {
+                else {
                     if (newFlatAmount !== undefined && obj.id === id) {
                         if (newFlatAmount === '') { obj.flatAmount = '0'; }
                         else { obj.flatAmount = newFlatAmount; }
@@ -454,6 +419,36 @@ class UpdateSalaryComponent extends React.Component {
                     var salaryMonthy = obj.flatAmount;
                     obj.monthlyAmount = salaryMonthy;
                     obj.yearlyAmount = salaryMonthy * 12;
+                    totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+                }
+            }
+            return obj;
+        });
+
+        if (Deduction && Deduction?.length > 0) {
+            Deduction.map((obj) => {
+                locallist.push(obj);
+                if (obj.id) {
+                    if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+                        if (newFormula !== undefined && obj.id === id) {
+                            if (newFormula === '') { obj.formula = '0'; }
+                            else { obj.formula = newFormula; }
+                        }
+                        var salaryAnnulay = CTC1 * (obj.formula / 100);
+                        var salaryMonthy = salaryAnnulay / 12;
+                        obj.monthlyAmount = salaryMonthy;
+                        obj.yearlyAmount = salaryAnnulay;
+                        totalFixedSalary = totalFixedSalary + salaryMonthy;
+                    }
+                    else if (obj.flatAmount != null) {
+                        if (newFlatAmount !== undefined && obj.id === id) {
+                            if (newFlatAmount === '') { obj.flatAmount = '0'; }
+                            else { obj.flatAmount = newFlatAmount; }
+                        }
+                        var salaryMonthy = obj.flatAmount;
+                        obj.monthlyAmount = salaryMonthy;
+                        obj.yearlyAmount = salaryMonthy * 12;
+                    }
                 }
                 return obj;
             });
@@ -467,6 +462,151 @@ class UpdateSalaryComponent extends React.Component {
             CTC: CTC1,
             list: locallist
         })
+    }
+    addRow = (componentType) => {
+        if (componentType === 'Fixed') {
+            const data = [...this.state.Fixed].filter(obj => obj.id !== '');
+            this.setState(
+                {
+                    Fixed: data.concat({
+                        description: "",
+                        flatAmount: '',
+                        formula: '',
+                        id: "",
+                        monthlyAmount: 0,
+                        yearlyAmount: 0,
+                    }),
+                },
+            );
+        } else {
+            if (this.state.Deduction) {
+                const data = [...this.state.Deduction].filter(obj => obj.id !== '');;
+                this.setState(
+                    {
+                        Deduction: data.concat({
+                            description: "",
+                            flatAmount: "",
+                            formula: "",
+                            id: "",
+                            monthlyAmount: "",
+                            yearlyAmount: "",
+                        }),
+                    },
+                );
+            } else {
+                this.setState(
+                    {
+                        Deduction: {
+                            description: "",
+                            flatAmount: "",
+                            formula: "",
+                            id: "",
+                            monthlyAmount: "",
+                            yearlyAmount: "",
+                        },
+                    },
+                );
+            }
+        }
+    };
+    getSalaryComponentById = (componentId, componentType, index) => {
+        this.props.createPayrollEmployeeActions.getSalaryComponentById(componentId).then((res) => {
+            if (res.status === 200) {
+                if (componentType === 'Fixed') {
+                    index = index ? index : this.state.Fixed ? this.state.Fixed.length - 1 : 0;
+                    this.state.Fixed.map((obj, idx) => {
+                        if (idx === index) {
+                            obj.id = res.data.id;
+                            obj.description = res.data.description;
+                            obj.formula = res.data.formula;
+                            obj.flatAmount = res.data.flatAmount;
+                            obj.employeeId = this.props.location.state.id;
+                            obj.salaryComponentId = res.data.id;
+                            obj.salaryStructure = 3;
+                            obj.monthlyAmount = "";
+                            obj.yearlyAmount = "";
+                        }
+                        return obj;
+                    })
+                } else {
+                    index = index || index === 0 ? index : this.state.Deduction ? this.state.Deduction.length - 1 : 0;
+                    this.state.Deduction.map((obj, idx) => {
+                        if (idx === index) {
+                            obj.id = res.data.id;
+                            obj.description = res.data.description;
+                            obj.formula = res.data.formula;
+                            obj.flatAmount = res.data.flatAmount;
+                            obj.employeeId = this.props.location.state.id;
+                            obj.salaryComponentId = res.data.id;
+                            obj.salaryStructure = 3;
+                            obj.monthlyAmount = "";
+                            obj.yearlyAmount = "";
+                        }
+                        return obj;
+                    })
+                }
+
+                this.updateSalary1(this.state.CTC)
+                this.addRow(componentType);
+            }
+        }).catch((err) => {
+            this.setState({ loading: false })
+            this.props.history.push('/admin/master/employee/viewEmployee',
+                { id: this.props.location.state.id , tabNo: '2'  })
+        })
+
+    }
+    renderComaponentName = (row, index, componentType) => {
+        const { salary_component_fixed_dropdown, salary_component_deduction_dropdown } = this.props;
+        const component_list = componentType === 'Fixed' ? salary_component_fixed_dropdown : salary_component_deduction_dropdown;
+        const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.value === row.salaryComponentId) : ''    
+        return (
+            <Field
+                name={componentType === 'Fixed' ? `Fixed.${index}.description` : `Deduction.${index}.description`}
+                render={({ field, form }) => (
+                    <>
+                        <Select
+                            isDisabled={row.description === 'Basic SALARY'}
+                            options={component_list ? selectOptionsFactory.renderOptions(
+                                'label',
+                                'value',
+                                component_list,
+                                strings.SalaryComponent
+                            ) : []}
+                            id="description"
+                            placeholder={strings.Select + strings.SalaryComponent}
+                            onChange={(e) => {
+                                if (e.value) {
+                                    this.getSalaryComponentById(e.value, componentType, index)
+                                }
+                            }}
+                            value={row.description === 'Basic SALARY' ? { label: row.description, value: '' } : description ? description : ''}
+                        // className={`${props.errors.lineItemsString &&
+                        // 	props.errors.lineItemsString[parseInt(idx, 10)] &&
+                        // 	props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+                        // 	Object.keys(props.touched).length > 0 &&
+                        // 	props.touched.lineItemsString &&
+                        // 	props.touched.lineItemsString[parseInt(idx, 10)] &&
+                        // 	props.touched.lineItemsString[parseInt(idx, 10)].productId
+                        // 	? 'is-invalid'
+                        // 	: ''
+                        // 	}`}
+                        />
+                        {/* {props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+							Object.keys(props.touched).length > 0 &&
+							(
+								<div className='invalid-feedback'>
+									{props.errors.lineItemsString[parseInt(idx, 10)].productId}
+								</div>
+							)} */}
+                    </>
+
+                )}
+            />
+        );
+
     }
 
     render() {
@@ -588,9 +728,9 @@ class UpdateSalaryComponent extends React.Component {
                                                                                 <tbody>
                                                                                     {this.state.Fixed ? Object.values(
                                                                                         this.state.Fixed,
-                                                                                    ).map((item) => (
+                                                                                    ).map((item, index) => (
                                                                                         <tr>
-                                                                                            <td style={{ border: "3px solid #c8ced3" }} >{item.description}</td>
+                                                                                            <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComaponentName(item, index, 'Fixed')}</td>
                                                                                             <td style={{ border: "3px solid #c8ced3" }}>
                                                                                                 <Field
                                                                                                     render={({ field, form }) => (
@@ -732,7 +872,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                     </td>
                                                                                                 )}
                                                                                             <td style={{ border: 'none' }}>
-                                                                                                {item.description !== "Basic SALARY" ? (
+                                                                                                {item.description !== "Basic SALARY" && item.id? (
                                                                                                     <Button
                                                                                                         color='link'
 
@@ -766,25 +906,25 @@ class UpdateSalaryComponent extends React.Component {
                                                                                         </td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
                                                                                             {this.totalEarnings()
-                                                                                                ? this.totalEarnings().toLocaleString(
+                                                                                                ? 'AED ' + this.totalEarnings().toLocaleString(
                                                                                                     navigator.language,
                                                                                                     {
                                                                                                         minimumFractionDigits: 2,
                                                                                                         maximumFractionDigits: 2,
                                                                                                     }
                                                                                                 )
-                                                                                                : 0.0}
+                                                                                                : 'AED ' + 0 + '.00'}
                                                                                         </b></td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
                                                                                             {this.totalYearEarnings()
-                                                                                                ? this.totalYearEarnings().toLocaleString(
+                                                                                                ? 'AED ' + this.totalYearEarnings().toLocaleString(
                                                                                                     navigator.language,
                                                                                                     {
                                                                                                         minimumFractionDigits: 2,
                                                                                                         maximumFractionDigits: 2,
                                                                                                     }
                                                                                                 )
-                                                                                                : 0.0}
+                                                                                                : 'AED ' + 0 + '.00'}
                                                                                         </b></td>
                                                                                     </tr>
                                                                                 </tbody>
@@ -929,9 +1069,9 @@ class UpdateSalaryComponent extends React.Component {
                                                                                     {this.state.Deduction ? (
                                                                                         Object.values(
                                                                                             this.state.Deduction,
-                                                                                        ).map((item) => (
+                                                                                        ).map((item, index) => (
                                                                                             <tr>
-                                                                                                <td style={{ border: "3px solid #c8ced3" }} >{item.description}</td>
+                                                                                                <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComaponentName(item, index, 'Deduction')}</td>
                                                                                                 <td style={{ border: "3px solid #c8ced3" }}>
                                                                                                     <Field
                                                                                                         render={({ field, form }) => (
@@ -1073,14 +1213,14 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                         </td>
                                                                                                     )}
                                                                                                 <td style={{ borderTop: "0px" }}>
-                                                                                                    <Button
+                                                                                                    {item.id && <Button
                                                                                                         color='link'
                                                                                                         onClick={() => {
                                                                                                             this.removeComponent(item.id)
                                                                                                         }}
                                                                                                     >
                                                                                                         <i class="far fa-times-circle"></i>
-                                                                                                    </Button></td>
+                                                                                                    </Button>}</td>
                                                                                             </tr>
                                                                                         ))) : (
                                                                                         " "
@@ -1105,25 +1245,25 @@ class UpdateSalaryComponent extends React.Component {
                                                                                         </td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
                                                                                             {typeof this.state.Deduction === 'object' ? (this.totalDeductions()
-                                                                                                ? this.totalDeductions().toLocaleString(
+                                                                                                ? 'AED ' + this.totalDeductions().toLocaleString(
                                                                                                     navigator.language,
                                                                                                     {
                                                                                                         minimumFractionDigits: 2,
                                                                                                         maximumFractionDigits: 2,
                                                                                                     }
                                                                                                 )
-                                                                                                : 0.0) : 0}
+                                                                                                : 'AED ' + 0 + '.00') : 'AED ' + 0 + '.00'}
                                                                                         </b></td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
                                                                                             {typeof this.state.Deduction === 'object' ? (this.totalYearDeductions()
-                                                                                                ? this.totalYearDeductions().toLocaleString(
+                                                                                                ? 'AED ' + this.totalYearDeductions().toLocaleString(
                                                                                                     navigator.language,
                                                                                                     {
                                                                                                         minimumFractionDigits: 2,
                                                                                                         maximumFractionDigits: 2,
                                                                                                     }
                                                                                                 )
-                                                                                                : 0.0) : 0}
+                                                                                                : 'AED ' + 0 + '.00') : 'AED ' + 0 + '.00'}
                                                                                         </b></td>
                                                                                     </tr>
                                                                                 </tbody>
@@ -1148,25 +1288,25 @@ class UpdateSalaryComponent extends React.Component {
                                                                                         </td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
                                                                                             {this.grossEarnings()
-                                                                                                ? this.grossEarnings().toLocaleString(
+                                                                                                ? 'AED ' + this.grossEarnings().toLocaleString(
                                                                                                     navigator.language,
                                                                                                     {
                                                                                                         minimumFractionDigits: 2,
                                                                                                         maximumFractionDigits: 2,
                                                                                                     }
                                                                                                 )
-                                                                                                : 0.0}
+                                                                                                : 'AED ' + 0 + '.00'}
                                                                                         </b></td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
                                                                                             {this.grossYearEarnings()
-                                                                                                ? this.grossYearEarnings().toLocaleString(
+                                                                                                ? 'AED ' + this.grossYearEarnings().toLocaleString(
                                                                                                     navigator.language,
                                                                                                     {
                                                                                                         minimumFractionDigits: 2,
                                                                                                         maximumFractionDigits: 2,
                                                                                                     }
                                                                                                 )
-                                                                                                : 0.0}
+                                                                                                : 'AED ' + 0 + '.00'}
                                                                                         </b></td>
                                                                                     </tr>
                                                                                 </tbody>
@@ -1199,25 +1339,25 @@ class UpdateSalaryComponent extends React.Component {
                                                                                         </td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
                                                                                             {this.totalEarnings()
-                                                                                                ? this.totalEarnings().toLocaleString(
+                                                                                                ? 'AED ' + this.totalEarnings().toLocaleString(
                                                                                                     navigator.language,
                                                                                                     {
                                                                                                         minimumFractionDigits: 2,
                                                                                                         maximumFractionDigits: 2,
                                                                                                     }
                                                                                                 )
-                                                                                                : 0.0}
+                                                                                                : 'AED ' + 0.0 + '.00'}
                                                                                         </b></td>
                                                                                         <td style={{ border: "3px solid  #c8ced3" }}><b>
                                                                                             {this.totalYearEarnings()
-                                                                                                ? this.totalYearEarnings().toLocaleString(
+                                                                                                ? 'AED ' + this.totalYearEarnings().toLocaleString(
                                                                                                     navigator.language,
                                                                                                     {
                                                                                                         minimumFractionDigits: 2,
                                                                                                         maximumFractionDigits: 2,
                                                                                                     }
                                                                                                 )
-                                                                                                : 0.0}
+                                                                                                : 'AED ' + 0.0 + '.00'}
                                                                                         </b></td>
                                                                                     </tr>
                                                                                 </tbody>
@@ -1252,7 +1392,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                 className="btn-square"
                                                                                 onClick={() => {
                                                                                     this.props.history.push('/admin/master/employee/viewEmployee',
-                                                                                        { id: this.props.location.state.id })
+                                                                                        { id: this.props.location.state.id , tabNo: '2' })
                                                                                 }}
                                                                             >
                                                                                 <i className="fa fa-ban"></i> {strings.Cancel}
@@ -1275,10 +1415,13 @@ class UpdateSalaryComponent extends React.Component {
                             closeSalaryComponentFixed={(e) => {
                                 this.closeSalaryComponentFixed(e);
                             }}
-                            salary_structure_dropdown={this.props.salary_structure_dropdown}
-                            salary_component_dropdown={this.props.salary_component_fixed_dropdown}
-                            CreateComponent={this.props.createPayrollEmployeeActions.saveSalaryComponent}
-                            selectedData={this.state.selectedData}
+                            getCurrentSalaryComponent={(e) => {
+                                this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownFixed().then(res => {
+                                    if (res.status === 200) {
+                                        this.getCurrentSalaryComponent(res.data[res.data.length - 1], "Fixed")
+                                    }
+                                })
+                            }}
                         />
                         <SalaryComponentVariable
                             openSalaryComponentVariable={this.state.openSalaryComponentVariable}
@@ -1295,10 +1438,12 @@ class UpdateSalaryComponent extends React.Component {
                             closeSalaryComponentDeduction={(e) => {
                                 this.closeSalaryComponentDeduction(e);
                             }}
-                            salary_structure_dropdown={this.props.salary_structure_dropdown}
-                            salary_component_dropdown={this.props.salary_component_deduction_dropdown}
-                            CreateComponent={this.props.createPayrollEmployeeActions.saveSalaryComponent}
-                            selectedData={this.state.selectedData}
+                            getCurrentSalaryComponent={(e) => {
+                                this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownDeduction().then(res => {
+                                    if (res.status === 200)
+                                        this.getCurrentSalaryComponent(res.data[res.data.length - 1], "Deduction")
+                                })
+                            }}
                         />
                     </div>
                     {this.state.disableLeavePage ? "" : <LeavePage />}

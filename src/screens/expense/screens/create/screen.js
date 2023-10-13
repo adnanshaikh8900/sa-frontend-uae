@@ -453,9 +453,7 @@ class CreateExpense extends React.Component {
 		formData.append('receiptNumber', receiptNumber);
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription,);
 		formData.append('expenseAmount', expenseAmount);
-		if (payMode && payMode.value) {
-			formData.append('payMode', payMode.value);
-		}
+		formData.append('payMode', payee?.value === 'Company Expense' || payee === 'Company Expense' ? payMode?.value ? payMode.value : payMode : '');
 		if (expenseCategory && expenseCategory.value) {
 			formData.append('expenseCategory', expenseCategory.value);
 		}
@@ -1029,10 +1027,9 @@ class CreateExpense extends React.Component {
 																// 	errors.payMode = 'Pay through is required'
 																// }
 
-																if (values.expenseNumber&&exist === true ) {
+																if (values.expenseNumber && exist === true) {
 																	errors.expenseNumber = 'Expense number already exists'
 																}
-															
 																if (this.state.currency === true && values.currency === '') {
 																	errors.currency = 'Currency is required';
 																}
@@ -1202,7 +1199,7 @@ class CreateExpense extends React.Component {
 																								props.handleChange('taxTreatmentId')('');
 																								props.handleChange('vatCategoryId')('');
 																								props.handleChange('placeOfSupplyId')('');
-																								this.setState({showPlacelist:false})
+																								this.setState({ showPlacelist: false })
 																							}
 																						} else {
 																							props.handleChange('expenseCategory')('');

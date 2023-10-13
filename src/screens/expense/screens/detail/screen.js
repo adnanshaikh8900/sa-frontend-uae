@@ -334,9 +334,7 @@ class DetailExpense extends React.Component {
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription,);
 		formData.append('delieryNote', DeliveryNotes,);
 		formData.append('expenseAmount', expenseAmount);
-		if (payMode) {
-			formData.append('payMode', payMode.value ? payMode.value : payMode);
-		}
+		formData.append('payMode', payee?.value === 'Company Expense' || payee === 'Company Expense' ? payMode?.value ? payMode.value : payMode : '');
 		if (expenseCategory && expenseCategory.value) {
 			formData.append('expenseCategory', expenseCategory.value);
 		}
@@ -1363,6 +1361,8 @@ class DetailExpense extends React.Component {
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('payee')(option);
+																							if (option.value === 'Company Expense')
+																								props.handleChange('payMode')({ label: 'Petty Cash', value: 'CASH' });
 																						} else {
 																							props.handleChange('payee')('');
 																						}

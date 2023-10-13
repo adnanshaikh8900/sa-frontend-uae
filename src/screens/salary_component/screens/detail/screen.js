@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css'
-import { ScreenComponent } from '../../sections';
+import { SalaryComponentScreen } from '../../sections';
 import './style.scss'
 
 const mapStateToProps = (state) => {
@@ -19,13 +19,13 @@ class DetailSalaryComponent extends React.Component {
   componentDidMount = () => { }
   render() {
     return (
-      <ScreenComponent
+      <SalaryComponentScreen
         props={this.props}
         history={this.props.history}
         isCreated={false}
         componentID= {this.props.location.state.id}
       >
-      </ScreenComponent>
+      </SalaryComponentScreen>
     )
   }
 }

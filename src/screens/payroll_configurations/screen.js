@@ -70,7 +70,7 @@ class PayrollConfigurations extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			openModal: false,
 			selectedData: {},
-			activeTab: new Array(5).fill('1'),
+			activeTab: new Array(5).fill('3'),
 			filterData: {
 				salaryRoleId: '',
 				salaryRoleName: ''
@@ -95,9 +95,9 @@ class PayrollConfigurations extends React.Component {
 			sortOrder: '',
 			onSortChange: this.sortColumn
 		}
+
 		this.options = {
-			onRowClick: this.goToDetail,
-			paginationPosition: 'top',
+			paginationPosition: 'bottom',
 			page: 1,
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,
@@ -126,7 +126,7 @@ class PayrollConfigurations extends React.Component {
 		this.getCompanyDataForPayroll()
 		this.initializeData()
 		this.initializeDataForDesignations()
-		this.initializeDataForStructure()
+		//this.initializeDataForStructure()
 
 	}
 	getCompanyDataForPayroll = () => {
@@ -159,9 +159,7 @@ class PayrollConfigurations extends React.Component {
 		if (this.props.location.state !== undefined && this.props.location.state !== null && this.props.location.state.tabNo !== undefined && this.props.location.state.tabNo !== null) {
 			this.toggle(0, this.props.location.state.tabNo)
 		} else
-			this.toggle(0, "3")
-		const { filterData } = this.state
-
+			this.toggle(0, this.state.activeTab[0])
 		const paginationData = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
 			pageSize: this.options.sizePerPage
@@ -170,16 +168,16 @@ class PayrollConfigurations extends React.Component {
 			order: this.options.sortOrder ? this.options.sortOrder : '',
 			sortingCol: this.options.sortName ? this.options.sortName : ''
 		}
-		const postData = { ...filterData, ...paginationData, ...sortingData }
-		this.props.employeeActions.getSalaryRoleList(postData).then((res) => {
-			if (res.status === 200) {
-				this.setState({ loading: false })
-			}
-		}).catch((err) => {
-			this.setState({ loading: false })
-			this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-		})
-		this.props.salaryStructureActions.getSalaryList().then((res) => {
+		const postData = { ...paginationData, ...sortingData }
+		// this.props.employeeActions.getSalaryRoleList(postData).then((res) => {
+		// 	if (res.status === 200) {
+		// 		this.setState({ loading: false })
+		// 	}
+		// }).catch((err) => {
+		// 	this.setState({ loading: false })
+		// 	this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+		// })
+		this.props.salaryStructureActions.getSalaryList(postData).then((res) => {
 			if (res.status === 200) {
 				this.setState({ salaryList: res.data })
 			}
@@ -190,12 +188,12 @@ class PayrollConfigurations extends React.Component {
 	initializeDataForDesignations = (search) => {
 		const { filterData } = this.state
 		const paginationData = {
-			pageNo: this.options.page ? this.options.page - 1 : 0,
-			pageSize: this.options.sizePerPage
+			pageNo: this.designationoptions.page ? this.designationoptions.page - 1 : 0,
+			pageSize: this.designationoptions.sizePerPage
 		}
 		const sortingData = {
-			order: this.options.sortOrder ? this.options.sortOrder : '',
-			sortingCol: this.options.sortName ? this.options.sortName : ''
+			order: this.designationoptions.sortOrder ? this.designationoptions.sortOrder : '',
+			sortingCol: this.designationoptions.sortName ? this.designationoptions.sortName : ''
 		}
 		const postData = { ...filterData, ...paginationData, ...sortingData }
 		this.props.designationActions.getEmployeeDesignationList(postData).then((res) => {
@@ -305,8 +303,7 @@ class PayrollConfigurations extends React.Component {
 		return (
 			<Row>
 				<div>
-					{row.id == 1 ? ""
-						:
+					{row.id == 1 || row.id == 3 ? "" :
 						(<Button
 							className="btn btn-sm pdf-btn"
 							onClick={(e,) => {
@@ -410,15 +407,15 @@ class PayrollConfigurations extends React.Component {
 	}
 
 	designationonSizePerPageList = (sizePerPage) => {
-		if (this.options.sizePerPage !== sizePerPage) {
-			this.options.sizePerPage = sizePerPage
+		if (this.designationoptions.sizePerPage !== sizePerPage) {
+			this.designationoptions.sizePerPage = sizePerPage
 			this.initializeDataForDesignations()
 		}
 	}
 
 	designationonPageChange = (page, sizePerPage) => {
-		if (this.options.page !== page) {
-			this.options.page = page
+		if (this.designationoptions.page !== page) {
+			this.designationoptions.page = page
 			this.initializeDataForDesignations()
 		}
 	}
@@ -470,7 +467,12 @@ class PayrollConfigurations extends React.Component {
 			);
 		}
 	}
-
+	renderSalaryComponentId = (cell, row) => {
+		return (row.componentCode ? row.componentCode : row.id);
+	}
+	renderSalaryCalculationType = (cell, row) => {
+		return (row.calculationType ? parseInt(row.calculationType) === 2 ? 'CTC Percent' : 'Flat Amount' : '');
+	}
 	renderActions = (cell, row) => {
 		return (
 			<div>
@@ -627,18 +629,7 @@ class PayrollConfigurations extends React.Component {
 											<div className="employee-screen">
 												<div className="animated fadeIn">
 													{dialog}
-													{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-													{/* <Card> */}
 
-													{/* <div>
-												Change Language:   <select onChange={this.handleLanguageChange}>
-													<option value="en">En- English</option>
-													<option value="it">fr-french</option>
-													<option value="ar">ar-Arabic</option>
-												</select>
-											</div> */}
-													{/* </Card> */}
-													{/* <Card> */}
 													<CardHeader>
 														<Row>
 															<Col lg={12}>
@@ -715,7 +706,7 @@ class PayrollConfigurations extends React.Component {
 																			<BootstrapTable
 																				selectRow={this.selectRowProp}
 																				search={false}
-																				options={this.options}
+																				//options={this.options}
 																				data={salaryRole_list && salaryRole_list.data ? salaryRole_list.data : []}
 																				version="4"
 																				hover
@@ -864,7 +855,7 @@ class PayrollConfigurations extends React.Component {
 																			<BootstrapTable
 																				selectRow={this.selectRowProp}
 																				search={false}
-																				options={this.options}
+																				//options={this.options}
 																				data={salaryStructure_list && salaryStructure_list.data ? salaryStructure_list.data : []}
 																				version="4"
 																				hover
@@ -1309,15 +1300,24 @@ class PayrollConfigurations extends React.Component {
 																		<BootstrapTable
 																			selectRow={this.selectRowProp}
 																			search={false}
-																		//	options={this.designationoptions}
-																			data={this.state.salaryList && this.state.salaryList ? this.state.salaryList : []}
+																			options={{
+																				paginationPosition: 'bottom',
+																				page: this.options.page,
+																				sizePerPage: this.options.pageSize,
+																				onSizePerPageList: this.onSizePerPageList,
+																				onPageChange: this.onPageChange,
+																				sortName: this.options.sortName,
+																				sortOrder: this.options.sortOrder,
+																				onSortChange: this.sortColumn
+																			}}
+																			data={this.state.salaryList && this.state.salaryList.data ? this.state.salaryList.data : []}
 																			version="4"
 																			hover
-																			//pagination={designation_list && designation_list.count > 0 ? true : false}
+																			pagination={this.state.salaryList && this.state.salaryList.count > 0 ? true : false}
 																			keyField="id"
 																			remote
 
-																		 	//fetchInfo={{ dataTotalSize: salaryList.count ? salaryList.count : 0 }}
+																			fetchInfo={{ dataTotalSize: this.state.salaryList.count ? this.state.salaryList.count : 0 }}
 																			className="SalaryComponent-list-table"
 																			trClassName="cursor-pointer"
 																			ref={(node) => this.table = node}
@@ -1325,6 +1325,7 @@ class PayrollConfigurations extends React.Component {
 																			<TableHeaderColumn
 																				className="table-header-bg"
 																				dataField="id"
+																				dataFormat={this.renderSalaryComponentId}
 																			>
 																				{strings.ComponentId}
 																			</TableHeaderColumn>
@@ -1338,14 +1339,13 @@ class PayrollConfigurations extends React.Component {
 																			<TableHeaderColumn
 																				className="table-header-bg"
 																				dataField="componentType"
-
 																			>
 																				{strings.ComponentType}
 																			</TableHeaderColumn>
 																			<TableHeaderColumn
 																				className="table-header-bg"
 																				dataField="calculationType"
-
+																				dataFormat={this.renderSalaryCalculationType}
 																			>
 																				{strings.calculation_type}
 																			</TableHeaderColumn>

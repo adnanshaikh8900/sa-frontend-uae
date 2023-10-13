@@ -445,6 +445,7 @@ class CreateDebitNote extends React.Component {
 		this.props.commonActions.getCustomerList(this.state.contactType);
 		this.props.debitNoteActions.getCountryList();
 		this.props.productActions.getProductCategoryList();
+		this.purchaseCategory();
 		this.props.commonActions.getVatList();
 		this.props.commonActions.getProductList();
 		this.props.commonActions.getExciseList();
@@ -749,6 +750,81 @@ class CreateDebitNote extends React.Component {
 							/>
 						</div>
 					</>
+				)}
+			/>
+		);
+	};
+	purchaseCategory = () => {
+		try {
+			this.props.productActions.getTransactionCategoryListForPurchaseProduct(
+				'10',
+			).then((res) => {
+				if (res.status === 200) {
+					this.setState(
+						{
+							purchaseCategory: res.data,
+						}
+					);
+				}
+			});
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	renderAccount = (cell, row, props) => {
+		const { purchaseCategory } = this.state;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+		const transactionCatory = purchaseCategory && row.transactionCategoryLabel ? purchaseCategory.find((item) => item.label === row.transactionCategoryLabel) : '';
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.transactionCategoryId`}
+				render={({ field, form }) => (
+					<Select
+						styles={{
+							menu: (provided) => ({ ...provided, zIndex: 9999 }),
+						}}
+						options={purchaseCategory ? purchaseCategory : []}
+						id="transactionCategoryId"
+						onChange={(e) => {
+							this.selectItem(
+								e.value,
+								row,
+								'transactionCategoryId',
+								form,
+								field,
+								props,
+							);
+						}}
+						value={
+							purchaseCategory && row.transactionCategoryLabel && transactionCatory
+								? transactionCatory.options.find(
+									(item) => item.value === +row.transactionCategoryId,
+								)
+								: { value: row.transactionCategoryId, label: row.transactionCategoryLabel }
+						}
+						isDisabled={row.transactionCategoryId === 150}
+						placeholder={strings.Select + strings.Account}
+						className={`${props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)]
+								.transactionCategoryId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)]
+								.transactionCategoryId
+							? 'is-invalid'
+							: ''
+							}`}
+					/>
 				)}
 			/>
 		);
@@ -1574,6 +1650,14 @@ class CreateDebitNote extends React.Component {
 																	>
 																		{strings.PRODUCT}
 																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																				dataField="account"
+																				dataFormat={(cell, rows) =>
+																					this.renderAccount(cell, rows, props)
+																				}
+																			>
+																				{strings.Account}
+																			</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
 																		dataFormat={(cell, rows) =>

@@ -102,7 +102,8 @@ class UpdateSalaryComponent extends React.Component {
             ctcTypeList: [
                 { label: "MONTHLY", value: 2 },
                 { label: "ANNUALLY", value: 1 },
-            ]
+            ],
+             componentId: [],
         }
 
         this.regEx = /^[0-9\d]+$/;
@@ -576,8 +577,22 @@ class UpdateSalaryComponent extends React.Component {
                             id="description"
                             placeholder={strings.Select + strings.SalaryComponent}
                             onChange={(e) => {
-                                if (e.value) {
+                                // console.log(this.state.componentId)
+                                // Check if the value is in the componentId array 
+                                 const isValueInArray = this.state.componentId.includes(e.value);
+                                if (isValueInArray){
+                                  
+                                }
+                                else{
+                                
+                                    // Update the componentId array by adding e.value  
+                                      this.setState(prevState => ({
+
+                                    componentId: [...prevState.componentId, e.value]
+
+                                }));
                                     this.getSalaryComponentById(e.value, componentType, index)
+                                    
                                 }
                             }}
                             value={row.description === 'Basic SALARY' ? { label: row.description, value: '' } : description ? description : ''}

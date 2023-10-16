@@ -244,6 +244,7 @@ class CreateEmployeePayroll extends React.Component {
       ],
       disabledPersonalDetailNextButton: false,
       errorMsg: false,
+      componentId: [],
     };
     this.formRef = React.createRef();
     this.formRefPersonal = React.createRef();
@@ -1436,9 +1437,22 @@ class CreateEmployeePayroll extends React.Component {
               id="description"
               placeholder={strings.Select + strings.SalaryComponent}
               onChange={(e) => {
-                if (e.value) {
-                  this.getSalaryComponentById(e.value, componentType, index)
+                const isValueInArray = this.state.componentId.includes(e.value);
+                if (isValueInArray) {
+                
                 }
+                else {
+
+                  // Update the componentId array by adding e.value  
+                  this.setState(prevState => ({
+
+                    componentId: [...prevState.componentId, e.value]
+
+                  }));
+                  this.getSalaryComponentById(e.value, componentType, index)
+
+                }
+
               }}
               value={row.description === 'Basic SALARY' ? { label: row.description, value: '' } : description ? description : ''}
 

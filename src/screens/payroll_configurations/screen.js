@@ -179,7 +179,7 @@ class PayrollConfigurations extends React.Component {
 		// })
 		this.props.salaryStructureActions.getSalaryList(postData).then((res) => {
 			if (res.status === 200) {
-				this.setState({ salaryList: res.data })
+				this.setState({ salaryList: res.data.data})
 			}
 		}).catch((err) => {
 			this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
@@ -552,7 +552,9 @@ class PayrollConfigurations extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, dialog, initValue, salaryList } = this.state;
+		console.log(this.state.salaryList);
+		let salaryList1 = this.state.salaryList.filter((i) => (i.description !== "Fixed Allowance"))
+		const { loading, dialog, initValue  } = this.state;
 		const { salaryRole_list, salaryStructure_list, designation_list } = this.props;
 		const { generateSif } = this.props.company_details;
 		return (
@@ -1310,14 +1312,14 @@ class PayrollConfigurations extends React.Component {
 																				sortOrder: this.options.sortOrder,
 																				onSortChange: this.sortColumn
 																			}}
-																			data={this.state.salaryList && this.state.salaryList.data ? this.state.salaryList.data : []}
+																			data={salaryList1 ? salaryList1 : []}
 																			version="4"
 																			hover
-																			pagination={this.state.salaryList && this.state.salaryList.count > 0 ? true : false}
+																			pagination={salaryList1 && salaryList1.count > 0 ? true : false}
 																			keyField="id"
 																			remote
 
-																			fetchInfo={{ dataTotalSize: this.state.salaryList.count ? this.state.salaryList.count : 0 }}
+																			fetchInfo={{ dataTotalSize: salaryList1.count ? salaryList1.count : 0 }}
 																			className="SalaryComponent-list-table"
 																			trClassName="cursor-pointer"
 																			ref={(node) => this.table = node}

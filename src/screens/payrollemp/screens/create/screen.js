@@ -244,6 +244,8 @@ class CreateEmployeePayroll extends React.Component {
       ],
       disabledPersonalDetailNextButton: false,
       errorMsg: false,
+      componentId: [],
+      componentSelected: [],
     };
     this.formRef = React.createRef();
     this.formRefPersonal = React.createRef();
@@ -394,7 +396,19 @@ class CreateEmployeePayroll extends React.Component {
         }
         this.updateSalary(this.state.CTC);
         this.addRow('Fixed')
-        this.addRow('Deduction')
+        this.addRow('Deduction');
+        let componentSelected = [];
+        this.state.Fixed && this.state.Fixed.length > 0 && this.state.Fixed.map(obj => {
+          componentSelected.push(obj.salaryComponentId);
+        })
+        this.state.Deduction && this.state.Deduction > 0 && this.state.Deduction.map(obj => {
+          componentSelected.push(obj.salaryComponentId);
+        })
+        this.setState({
+          componentSelected: componentSelected
+        })
+
+
       })
       .catch((err) => {
         this.setState({ loading: false });
@@ -409,6 +423,9 @@ class CreateEmployeePayroll extends React.Component {
 
   };
   getSalaryComponentById = (componentId, componentType, index) => {
+    this.setState(prevState => ({
+      componentSelected: [...prevState.componentSelected, componentId]
+    }));
 
     this.props.createPayrollEmployeeActions.getSalaryComponentById(componentId).then((res) => {
       if (res.status === 200) {
@@ -741,8 +758,10 @@ class CreateEmployeePayroll extends React.Component {
   removeComponent = (ComponentId) => {
     const fixed = this.state.Fixed.filter(obj => obj.id !== ComponentId);
     const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== ComponentId) : '';
-    this.setState({ Fixed: fixed, Deduction: deduction })
-    this.updateSalary1(this.state.CTC)
+    const componentSelected = this.state.componentSelected ? this.state.componentSelected.filter(obj => obj !== ComponentId) : [];
+    this.setState({ Fixed: fixed, Deduction: deduction, componentSelected: componentSelected }, () => {
+      this.updateSalary(this.state.CTC);
+    })
   };
   handleSubmitForFinancial = (data, resetForm) => {
     this.setState({ disabled: true });
@@ -1419,7 +1438,14 @@ class CreateEmployeePayroll extends React.Component {
   renderComaponentName = (row, index, componentType) => {
     const { salary_component_fixed_dropdown, salary_component_deduction_dropdown } = this.props;
     const component_list = componentType === 'Fixed' ? salary_component_fixed_dropdown : salary_component_deduction_dropdown;
-    const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.label === row.description) : ''
+    // const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.label === row.description) : ''
+    const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.value === row.salaryComponentId) : '';
+    const { componentSelected } = this.state;
+    const unusedComponentList = []
+    component_list && component_list.length > 0 && component_list.map(obj => {
+      if (!componentSelected.includes(obj.value))
+        unusedComponentList.push(obj);
+    });
     return (
       <Field
         name={componentType === 'Fixed' ? `Fixed.${index}.description` : `Deduction.${index}.description`}
@@ -1427,18 +1453,16 @@ class CreateEmployeePayroll extends React.Component {
           <>
             <Select
               isDisabled={row.description === 'Basic SALARY'}
-              options={component_list ? selectOptionsFactory.renderOptions(
+              options={unusedComponentList ? selectOptionsFactory.renderOptions(
                 'label',
                 'value',
-                component_list,
+                unusedComponentList,
                 strings.SalaryComponent
               ) : []}
               id="description"
               placeholder={strings.Select + strings.SalaryComponent}
               onChange={(e) => {
-                if (e.value) {
-                  this.getSalaryComponentById(e.value, componentType, index)
-                }
+                this.getSalaryComponentById(e.value, componentType, index)
               }}
               value={row.description === 'Basic SALARY' ? { label: row.description, value: '' } : description ? description : ''}
 

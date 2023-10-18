@@ -1065,7 +1065,6 @@ class CreateDebitNote extends React.Component {
 						const date = response.data.receiptDate ? new Date(moment(response.data.receiptDate, 'YYYY-MM-DD').format()) : new Date();
 						this.setState({
 							receiptDate: date,
-							debitNoteDate: date,
 							option: custmerName,
 							data: response.data.invoiceLineItems ? response.data.invoiceLineItems : [],
 							taxType: response.data.taxType ? response.data.taxType : false,
@@ -1105,7 +1104,6 @@ class CreateDebitNote extends React.Component {
 						this.formRef.current.setFieldValue('taxTreatmentId', response.data.taxTreatment ? response.data.taxTreatment : '', true);
 						this.formRef.current.setFieldValue('exchangeRate', response.data.exchangeRate ? response.data.exchangeRate : '', true);
 						this.formRef.current.setFieldValue('currency', response.data.currencyCode ? response.data.currencyCode : '', true);
-						this.formRef.current.setFieldValue('debitNoteDate', date, true);
 						this.getTaxTreatment(custmerName.value)
 						this.getCurrency(custmerName.value)
 					}

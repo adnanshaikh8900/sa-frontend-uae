@@ -333,10 +333,10 @@ class SupplierInvoice extends React.Component {
 									this.postInvoice(row, true);
 								}}
 							>
-								<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+								<i class="far fa-arrow-alt-circle-right"></i>{strings.Post}
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
+						{/* {row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
 									this.postInvoice(row, false);
@@ -344,7 +344,7 @@ class SupplierInvoice extends React.Component {
 							>
 								<i className="fas fa-send" />  {strings.Send}
 							</DropdownItem>
-						)}
+						)} */}
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem> */}

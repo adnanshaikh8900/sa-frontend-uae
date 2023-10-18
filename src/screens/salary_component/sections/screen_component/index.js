@@ -70,10 +70,10 @@ class SalaryComponentScreen extends React.Component {
   };
 
   initializeData = () => {
-    if (this.props.componentID && !this.props.isCreated) {
+    if (this.props.componentID && this.props.isCreated) {
       this.props.salaryComponentActions.getSalaryComponentById(this.props.componentID).then(res => {
         if (res.status === 200) {
-          this.setState({enableDelete:res.data.isComponentDeletable});
+          this.setState({ enableDelete: res.data.isComponentDeletable });
           this.formRef.current.setFieldValue('componentId', res.data.componentCode, true);
           this.formRef.current.setFieldValue('componentName', res.data.description, true);
           this.formRef.current.setFieldValue('componentType', res.data.componentType, true);
@@ -83,18 +83,18 @@ class SalaryComponentScreen extends React.Component {
         }
       })
     }
-    else{
+    else {
       this.getComponentId();
     }
 
   };
   getComponentId = () => {
-		this.props.salaryComponentActions.getComponentId().then((res) => {
-			if (res.status === 200) {
-				this.formRef.current.setFieldValue('componentId', res.data, true, this.componentIdvalidationCheck(res.data));
-			}
-		});
-	};
+    this.props.salaryComponentActions.getComponentId().then((res) => {
+      if (res.status === 200) {
+        this.formRef.current.setFieldValue('componentId', res.data, true, this.componentIdvalidationCheck(res.data));
+      }
+    });
+  };
   componentNamevalidationCheck = (value) => {
     const data = {
       moduleType: 29,
@@ -192,6 +192,7 @@ class SalaryComponentScreen extends React.Component {
     const formData = new FormData();
     if (componentID)
       formData.append('id', componentID)
+    formData.append('invoiceType', '14')
     formData.append('description', componentName != null ? componentName : '',)
     formData.append('flatAmount', flatAmount != null ? flatAmount : '',)
     formData.append('formula', ctcPercent != null ? ctcPercent : '',)
@@ -206,7 +207,7 @@ class SalaryComponentScreen extends React.Component {
         if (res.status === 200) {
           this.props.commonActions.tostifyAlert(
             'success',
-            isCreated ? 'Salary Component Created Successfully' : 'Salary Component Updated Successfully');
+            isCreated ? 'Salary Component Updated Successfully' : 'Salary Component Created Successfully');
           if (this.state.createMore) {
             this.setState({
               createMore: false
@@ -247,7 +248,7 @@ class SalaryComponentScreen extends React.Component {
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
                         <i className="nav-icon fas fa-money-check" />
-                        <span className="ml-2">{this.props.isCreated ? strings.CreateSalaryComponent : strings.UpdateSalaryComponent}</span>
+                        <span className="ml-2">{this.props.isCreated ? strings.UpdateSalaryComponent : strings.CreateSalaryComponent}</span>
                       </div>
                     </Col>
                   </Row>
@@ -267,7 +268,7 @@ class SalaryComponentScreen extends React.Component {
                           if (parseInt(values.componentId) === 0) {
                             errors.componentId =
                               "Enter valid designation ID";
-                          } else if (this.state.idExist === true || parseInt(values.componentId) === 1 || parseInt(values.componentId) === 3) {
+                          } else if (this.state.idExist === true || parseInt(values.componentId) === 1 || parseInt(values.componentId) === 2) {
                             errors.componentId =
                               "Component ID already exist";
                           }
@@ -306,7 +307,8 @@ class SalaryComponentScreen extends React.Component {
                                         type="text"
                                         id="componentId"
                                         name="componentId"
-                                        maxLength="9"
+                                        disabled={isCreated}
+                                        maxLength="10"
                                         value={props.values.componentId ? props.values.componentId : ''}
                                         placeholder={strings.Enter + strings.ComponentID}
                                         onChange={(option) => {
@@ -333,7 +335,7 @@ class SalaryComponentScreen extends React.Component {
                                         type="text"
                                         id="componentName"
                                         name="componentName"
-                                        maxLength="30"
+                                        maxLength="100"
                                         value={props.values.componentName ? props.values.componentName : ''}
                                         placeholder={strings.Enter + strings.ComponentName}
                                         onChange={(option) => {
@@ -376,7 +378,7 @@ class SalaryComponentScreen extends React.Component {
                                       <FormGroup check inline>
                                         <div className="custom-radio custom-control">
                                           <input
-                                            disabled={ComponentType}
+                                            disabled={ComponentType || !enableDelete}
                                             className="custom-control-input"
                                             type="radio"
                                             id="componentType-inline-radio1"
@@ -398,7 +400,7 @@ class SalaryComponentScreen extends React.Component {
                                       <FormGroup check inline>
                                         <div className="custom-radio custom-control">
                                           <input
-                                            disabled={ComponentType}
+                                            disabled={ComponentType || !enableDelete}
                                             className="custom-control-input"
                                             type="radio"
                                             id="componentType-inline-radio2"
@@ -557,14 +559,14 @@ class SalaryComponentScreen extends React.Component {
                             <Row>
                               <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
                                 <FormGroup>
-                                  {enableDelete && !isCreated && <Button type="button" name="button" color="danger" className="btn-square"
+                                  {enableDelete && isCreated && <Button type="button" name="button" color="danger" className="btn-square"
                                     onClick={() => { this.delete(); }}
                                   >
                                     <i className="fa fa-trash"></i> {strings.Delete}
                                   </Button>}
                                 </FormGroup>
                                 <FormGroup className="text-right">
-                                  {isCreated ? <>
+                                  {!isCreated ? <>
                                     <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
                                       //  added validation popup  msg                                                                
                                       props.handleBlur();

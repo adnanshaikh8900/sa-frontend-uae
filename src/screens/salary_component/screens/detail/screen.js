@@ -22,7 +22,7 @@ class DetailSalaryComponent extends React.Component {
       <SalaryComponentScreen
         props={this.props}
         history={this.props.history}
-        isCreated={false}
+        isCreated={true}
         componentID= {this.props.location.state.id}
       >
       </SalaryComponentScreen>

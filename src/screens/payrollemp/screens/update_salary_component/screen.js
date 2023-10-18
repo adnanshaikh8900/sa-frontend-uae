@@ -102,7 +102,8 @@ class UpdateSalaryComponent extends React.Component {
             ctcTypeList: [
                 { label: "MONTHLY", value: 2 },
                 { label: "ANNUALLY", value: 1 },
-            ]
+            ],
+            componentSelected: [],
         }
 
         this.regEx = /^[0-9\d]+$/;
@@ -171,6 +172,17 @@ class UpdateSalaryComponent extends React.Component {
                         this.formRef.current.setFieldValue('CTC', res.data.ctc ? res.data.ctc : '', true);
                         this.addRow('Fixed');
                         this.addRow('Deduction');
+                        let componentSelected = [];
+                        this.state.Fixed && this.state.Fixed.length > 0 && this.state.Fixed.map(obj => {
+                            componentSelected.push(obj.salaryComponentId);
+                        })
+                        this.state.Deduction && this.state.Deduction > 0 && this.state.Deduction.map(obj => {
+                            componentSelected.push(obj.salaryComponentId);
+                        })
+                        this.setState({
+                            componentSelected: componentSelected
+                        })
+
                     })
                 }
             }).catch((err) => {
@@ -299,7 +311,7 @@ class UpdateSalaryComponent extends React.Component {
                     'Employee Updated Successfully.'
                 )
                 this.props.history.push('/admin/master/employee/viewEmployee',
-                    { id: this.props.location.state.id , tabNo: '2'  })
+                    { id: this.props.location.state.id, tabNo: '2' })
                 this.setState({ loading: false, });
             }
         }).catch((err) => {
@@ -381,7 +393,8 @@ class UpdateSalaryComponent extends React.Component {
     removeComponent = (ComponentId) => {
         const fixed = this.state.Fixed.filter(obj => obj.id !== ComponentId);
         const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== ComponentId) : '';
-        this.setState({ Fixed: fixed, Deduction: deduction }, () => {
+        const componentSelected = this.state.componentSelected ? this.state.componentSelected.filter(obj => obj !== ComponentId) : [];
+        this.setState({ Fixed: fixed, Deduction: deduction, componentSelected: componentSelected }, () => {
             this.updateSalary(this.state.CTC);
         })
     }
@@ -510,6 +523,9 @@ class UpdateSalaryComponent extends React.Component {
         }
     };
     getSalaryComponentById = (componentId, componentType, index) => {
+        this.setState(prevState => ({
+            componentSelected: [...prevState.componentSelected, componentId]
+        }));
         this.props.createPayrollEmployeeActions.getSalaryComponentById(componentId).then((res) => {
             if (res.status === 200) {
                 if (componentType === 'Fixed') {
@@ -522,7 +538,7 @@ class UpdateSalaryComponent extends React.Component {
                             obj.flatAmount = res.data.flatAmount;
                             obj.employeeId = this.props.location.state.id;
                             obj.salaryComponentId = res.data.id;
-                            obj.salaryStructure = 3;
+                            obj.salaryStructure = 1;
                             obj.monthlyAmount = "";
                             obj.yearlyAmount = "";
                         }
@@ -552,14 +568,20 @@ class UpdateSalaryComponent extends React.Component {
         }).catch((err) => {
             this.setState({ loading: false })
             this.props.history.push('/admin/master/employee/viewEmployee',
-                { id: this.props.location.state.id , tabNo: '2'  })
+                { id: this.props.location.state.id, tabNo: '2' })
         })
 
     }
-    renderComaponentName = (row, index, componentType) => {
+    renderComponentName = (row, index, componentType) => {
         const { salary_component_fixed_dropdown, salary_component_deduction_dropdown } = this.props;
         const component_list = componentType === 'Fixed' ? salary_component_fixed_dropdown : salary_component_deduction_dropdown;
-        const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.value === row.salaryComponentId) : ''    
+        const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.value === row.salaryComponentId) : '';
+        const { componentSelected } = this.state;
+        const unusedComponentList = []
+        component_list && component_list.length > 0 && component_list.map(obj => {
+            if (!componentSelected.includes(obj.value))
+                unusedComponentList.push(obj);
+        });
         return (
             <Field
                 name={componentType === 'Fixed' ? `Fixed.${index}.description` : `Deduction.${index}.description`}
@@ -567,18 +589,16 @@ class UpdateSalaryComponent extends React.Component {
                     <>
                         <Select
                             isDisabled={row.description === 'Basic SALARY'}
-                            options={component_list ? selectOptionsFactory.renderOptions(
+                            options={unusedComponentList ? selectOptionsFactory.renderOptions(
                                 'label',
                                 'value',
-                                component_list,
+                                unusedComponentList,
                                 strings.SalaryComponent
                             ) : []}
                             id="description"
                             placeholder={strings.Select + strings.SalaryComponent}
                             onChange={(e) => {
-                                if (e.value) {
-                                    this.getSalaryComponentById(e.value, componentType, index)
-                                }
+                                this.getSalaryComponentById(e.value, componentType, index)
                             }}
                             value={row.description === 'Basic SALARY' ? { label: row.description, value: '' } : description ? description : ''}
                         // className={`${props.errors.lineItemsString &&
@@ -730,7 +750,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                         this.state.Fixed,
                                                                                     ).map((item, index) => (
                                                                                         <tr>
-                                                                                            <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComaponentName(item, index, 'Fixed')}</td>
+                                                                                            <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComponentName(item, index, 'Fixed')}</td>
                                                                                             <td style={{ border: "3px solid #c8ced3" }}>
                                                                                                 <Field
                                                                                                     render={({ field, form }) => (
@@ -872,7 +892,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                     </td>
                                                                                                 )}
                                                                                             <td style={{ border: 'none' }}>
-                                                                                                {item.description !== "Basic SALARY" && item.id? (
+                                                                                                {item.description !== "Basic SALARY" && item.id ? (
                                                                                                     <Button
                                                                                                         color='link'
 
@@ -1071,7 +1091,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                             this.state.Deduction,
                                                                                         ).map((item, index) => (
                                                                                             <tr>
-                                                                                                <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComaponentName(item, index, 'Deduction')}</td>
+                                                                                                <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComponentName(item, index, 'Deduction')}</td>
                                                                                                 <td style={{ border: "3px solid #c8ced3" }}>
                                                                                                     <Field
                                                                                                         render={({ field, form }) => (
@@ -1392,7 +1412,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                 className="btn-square"
                                                                                 onClick={() => {
                                                                                     this.props.history.push('/admin/master/employee/viewEmployee',
-                                                                                        { id: this.props.location.state.id , tabNo: '2' })
+                                                                                        { id: this.props.location.state.id, tabNo: '2' })
                                                                                 }}
                                                                             >
                                                                                 <i className="fa fa-ban"></i> {strings.Cancel}

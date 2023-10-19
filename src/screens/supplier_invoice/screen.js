@@ -588,7 +588,8 @@ class SupplierInvoice extends React.Component {
 					if (markAsSent === true) {
 						this.props.commonActions.tostifyAlert(
 							'success',
-							strings.InvoiceStatusChangedSuccessfully
+							strings.InvoicePostedSuccessfully,
+							
 						);	
 					} else {
 					this.props.commonActions.tostifyAlert(

@@ -1264,6 +1264,7 @@ const en = {
       InvoiceStatusChangedSuccessfully: 'Invoice Status Changed Successfully!',
       InvoiceSentSuccessfully: 'Invoice Sent Successfully!',
       InvoiceMovedToDraftSuccessfully: 'Invoice Moved To Draft Successfully!',
+      InvoicePostedSuccessfully: 'Invoice Posted Successfully!',
 
 
       //Payroll Settings

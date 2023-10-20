@@ -622,18 +622,18 @@ class ApplyToInvoice extends React.Component {
 																		</Button> */}
 																	</FormGroup>
 																	<FormGroup className="text-right">
-																		<Button
+																	<Button
 																			type="submit"
-																			color="primary"
+																			color={this.state.selectedRows.length < 1 ? "secondary" : "primary"} 
 																			className="btn-square mr-3"
 																			disabled={this.state.selectedRows.length < 1 || !this.state.selectedRows || (this.state.disabled || this.state.cannotsave)}
 																			onClick={this.handleSubmit}
-																		>
+																			>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
-																				? strings.Saving
-																				: strings.Save}
-																		</Button>
+																			? strings.Saving
+																			: strings.Save}
+																			</Button>
 																		<Button
 																			color="secondary"
 																			className="btn-square"

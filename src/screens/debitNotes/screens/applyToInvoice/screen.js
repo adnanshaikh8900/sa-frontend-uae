@@ -459,24 +459,24 @@ class ApplyToSupplierInvoice extends React.Component {
 																<Col lg={12} className="mt-5">
 
 																	<FormGroup className="text-right">
-																		<Button
+																<Button
 																			type="submit"
-																			color="primary"
+																			color={this.state.selectedRows.length < 1 ? "secondary" : "primary"} 
 																			className="btn-square mr-3"
 																			disabled={this.state.selectedRows.length < 1 || !this.state.selectedRows || (this.state.disabled || cannotsave)}
 																			onClick={this.handleSubmit}
-																		>
+																			>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
-																				? strings.Saving
-																				: strings.Save}
-																		</Button>
+																			? strings.Saving
+																			: strings.Save}
+																			</Button>
 																		<Button
 																			color="secondary"
 																			className="btn-square"
 																			onClick={() => {
 																				this.props.history.push(
-																					'/admin/expense/debit-notes',
+																					'/admin/expense/debit-notes', 
 																				);
 																			}}
 																		>

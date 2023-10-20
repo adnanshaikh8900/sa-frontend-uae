@@ -14,4 +14,9 @@
   .disabled-cursor {
     cursor: not-allowed;
   }
+  button[disabled] {
+    background-color: #C8CED3 !important; 
+    border-color: #C8CED3 !important; 
+    color: #000 !important;
+   }
 }

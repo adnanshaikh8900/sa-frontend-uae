@@ -1278,7 +1278,7 @@ const en = {
       VATIsRequired: 'VAT is required',
 
       //Salary Component
-      NewSalaryComponent: "New Salary Component",
+      NewSalaryComponent: "Add New Salary Component",
       ComponentId: "Component ID",
       ComponentType: "Component Type"
 }

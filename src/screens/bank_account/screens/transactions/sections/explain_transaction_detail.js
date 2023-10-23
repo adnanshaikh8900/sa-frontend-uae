@@ -1683,10 +1683,11 @@ class ExplainTrasactionDetail extends React.Component {
                             ) {
                               errors.vatId = "Please select Vat";
                             }
+                            console.log(values.payrollListIds,values.coaCategoryId.label , values.expenseCategory.value)
                             if (
                               (values.payrollListIds === "" || !values.payrollListIds || values.payrollListIds?.length === 0) &&
                               values.coaCategoryId.label === "Expense" &&
-                              values.expenseCategory.value == 34
+                              values.expenseCategory == 34
                             ) {
                               errors.payrollListIds = "Please select Payroll";
                             }

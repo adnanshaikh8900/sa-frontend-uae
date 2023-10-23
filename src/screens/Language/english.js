@@ -1007,7 +1007,7 @@ const en = {
       Designations: "Designations",
       DESIGNATIONID: "Designation ID",
       DESIGNATIONNAME: "DESIGNATION NAME",
-      NewDesignation: "New Designation",
+      NewDesignation: "Add New Designation",
       UpdateDesignation: "Update Designation",
       DesignationName: "Designation Name",
       DesignationType: "Designation Type",

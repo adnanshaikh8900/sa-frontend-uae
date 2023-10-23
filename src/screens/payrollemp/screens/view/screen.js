@@ -225,8 +225,8 @@ class ViewEmployee extends React.Component {
 							id: this.props.location.state.id,
 							salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'),
 							sendMail: true,
-							startDate: moment(startDate).format('DD-MM-YYYY'),
-							endDate: moment(endDate).format('DD-MM-YYYY'),
+							startDate: moment(startDate, "DD/MM/YYYY").format('DD-MM-YYYY'),
+							endDate: moment(endDate, "DD/MM/YYYY").format('DD-MM-YYYY'),
 						};
 						this.props.employeeViewActions
 							.getSalarySlip(postData)

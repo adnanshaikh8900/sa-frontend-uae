@@ -1765,7 +1765,7 @@ class CreateEmployeePayroll extends React.Component {
                                             "Last name is required"
                                           ),
                                           email: Yup.string()
-                                            .required("Valid email required")
+                                            .required("Email is required")
                                             .email("Invalid Email"),
                                           mobileNumber: Yup.string().required(
                                             "Mobile number is required"

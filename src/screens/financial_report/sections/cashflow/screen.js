@@ -125,7 +125,7 @@ class Cashflow extends React.Component {
 			endDate: initValue.endDate,
 		};
 		this.props.financialReportActions
-			.getProfitAndLossReport(postData)
+			.getCashFlowReport(postData)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({
@@ -386,14 +386,14 @@ class Cashflow extends React.Component {
 															<tr style={{backgroundColor: '#4472C4'}}>
 																<td className="wh pt-1 pb-1 bld" colSpan={2}>{strings.Operating+" "+strings.Activities}</td>
 															</tr>
-															{/* {Object.keys(
-																this.state.data['operatingActivities'],
+															{Object.keys(
+																this.state.data['operatingIncome'],
 															).map((item) => (
 																<tr>
 																	<td className="pt-0 pb-0">{item}</td>
 																	<td className="pt-0 pb-0 text-right">
 																		<Currency
-																			value={this.state.data['operatingActivities'][
+																			value={this.state.data['operatingIncome'][
 																				`${item}`
 																			]  }
 																			currencySymbol={
@@ -405,7 +405,39 @@ class Cashflow extends React.Component {
 																		/>
 																	</td>
 																</tr>
-															))} */}
+															))}
+															
+															<tr >
+																<td className="pt-0 pb-0">
+																	{strings.NetIncome}
+																</td>
+																<td className="pt-0 pb-0 text-right">
+																	{this.state.data['netIncome'] !=
+																	null ? (
+																		<Currency
+																			value={this.state.data[
+																				'netIncome'
+																			]  }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'AED'
+																			}
+																		/>
+																	) : (
+																		<Currency
+																			value={"0.00"}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	)}
+																</td>
+															</tr>
 															<tr>
 																<td></td>
 																<td></td>
@@ -415,11 +447,11 @@ class Cashflow extends React.Component {
 																	{strings.Total+" "+strings.Cash_flow+" "+strings.From+" "+strings.Operating+" "+strings.Activities}
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
-																	{this.state.data['totalCashFlowFromOperatingActivities'] !=
+																	{this.state.data['totalOperatingIncome'] !=
 																	null ? (
 																		<Currency
 																			value={this.state.data[
-																				'totalCashFlowFromOperatingActivities'
+																				'totalOperatingIncome'
 																			]  }
 																			currencySymbol={
 																				universal_currency_list[0]
@@ -447,7 +479,7 @@ class Cashflow extends React.Component {
 															<tr style={{backgroundColor: '#4472C4'}}>
 																<td className="wh pt-1 pb-1 bld" colSpan={2}>{strings.Investing+" "+strings.Activities}</td>
 															</tr>
-															{/* {Object.keys(
+															{Object.keys(
 																this.state.data['investingActivities'],
 															).map((item) => (
 																<tr>
@@ -466,7 +498,7 @@ class Cashflow extends React.Component {
 																		/>
 																	</td>
 																</tr>
-															))} */}
+															))}
 															<tr>
 																<td></td>
 																<td></td>
@@ -476,11 +508,11 @@ class Cashflow extends React.Component {
 																	{strings.Total+" "+strings.Cash_flow+" "+strings.From+" "+strings.Investing+" "+strings.Activities}
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
-																	{this.state.data['totalCashFlowFromInvestingActivities'] !=
+																	{this.state.data['totalInvestingActivities'] !=
 																	null ? (
 																		<Currency
 																			value={this.state.data[
-																				'totalCashFlowFromInvestingActivities'
+																				'totalInvestingActivities'
 																			]  }
 																			currencySymbol={
 																				universal_currency_list[0]
@@ -508,7 +540,7 @@ class Cashflow extends React.Component {
 															<tr style={{backgroundColor: '#4472C4'}}>
 																<td className="wh pt-1 pb-1 bld" colSpan={2}>{strings.Financing+" "+strings.Activities}</td>
 															</tr>
-															{/* {Object.keys(
+															{Object.keys(
 																this.state.data['financingActivities'],
 															).map((item) => (
 																<tr>
@@ -527,7 +559,7 @@ class Cashflow extends React.Component {
 																		/>
 																	</td>
 																</tr>
-															))} */}
+															))}
 															<tr>
 																<td></td>
 																<td></td>
@@ -537,11 +569,11 @@ class Cashflow extends React.Component {
 																	{strings.Total+" "+strings.Cash_flow+" "+strings.From+" "+strings.Financing+" "+strings.Activities}
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
-																	{this.state.data['totalCashFlowFromFinancingActivities'] !=
+																	{this.state.data['totalFinancingActivities'] !=
 																	null ? (
 																		<Currency
 																			value={this.state.data[
-																				'totalCashFlowFromFinancingActivities'
+																				'totalFinancingActivities'
 																			]  }
 																			currencySymbol={
 																				universal_currency_list[0]

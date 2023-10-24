@@ -3266,7 +3266,8 @@ class ExplainTrasactionDetail extends React.Component {
 																			</Col>
 																		</Row>
 																	)} */}
-                              {props.values.coaCategoryId &&
+                              {props.values?.invoiceIdList?.[0]?.type !== "CREDIT_NOTE" &&
+                              props.values.coaCategoryId &&
                                 (props.values.coaCategoryId?.label ===
                                   "Sales" ||
                                   props.values.coaCategoryId?.label ===
@@ -3347,6 +3348,7 @@ class ExplainTrasactionDetail extends React.Component {
                                     )}
                                     {props.values?.invoiceIdList?.map(
                                       (i, invindex) => {
+                                        console.log("this is the i", i);
                                         return (
                                           <Row
                                             style={{
@@ -3661,7 +3663,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       )}
                                   </>
                                 )}
-
+                                
                               {/* {props.values.coaCategoryId &&
 																props.values.coaCategoryId?.label ===
 																'Sales' && (

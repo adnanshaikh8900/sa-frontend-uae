@@ -278,7 +278,7 @@ class RecordVatPayment extends React.Component {
 													 }
 													
 													 if(parseFloat(values.amount)>values.balanceDue){
-														errors.amount ="Amount Cannot Be greater than Balance amount"
+														errors.amount ="Amount cannot be greater than due amount"
 													 }
 													
 													 return errors
@@ -387,12 +387,12 @@ class RecordVatPayment extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
 																			<span className="text-danger">* </span>{' '}
-																			Balance Due
-																		</Label>
+																			{strings.DueAmount}															
+						  												</Label>
 																		<Input
 																		disabled
 																			type="number"
-																			placeholder='Enter Balance Amount'
+																			placeholder='Enter Due Amount'
 																			id="balanceDue"
 																			name="balanceDue"
 																			value={props.values.balanceDue}

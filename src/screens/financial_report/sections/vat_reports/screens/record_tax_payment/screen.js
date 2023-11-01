@@ -79,7 +79,7 @@ class RecordVatPayment extends React.Component {
 				totalTaxPayable: this.props.location.state && this.props.location.state.totalTaxPayable ?this.props.location.state.totalTaxPayable: 0.00,
 				payMode: '',
 				notes: '',
-				paidThrough: '',
+				paidThrough: { value: 47, label: 'Petty Cash' },
 				referenceCode: '',
 				attachmentFile: '',
 				paidInvoiceListStr: [],
@@ -506,7 +506,7 @@ class RecordVatPayment extends React.Component {
 																		<Select
 																			// styles={customStyles}
 																			options={deposit_list}
-																			value={props.values.paidThrought}
+																			value={props.values.paidThrough}
 																			onChange={(option) => {
 																				if (option && option.value) {
 																					props.handleChange('paidThrough')(

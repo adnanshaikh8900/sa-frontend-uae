@@ -1683,10 +1683,11 @@ class ExplainTrasactionDetail extends React.Component {
                             ) {
                               errors.vatId = "Please select Vat";
                             }
+                            console.log(values.payrollListIds,values.coaCategoryId.label , values.expenseCategory.value)
                             if (
                               (values.payrollListIds === "" || !values.payrollListIds || values.payrollListIds?.length === 0) &&
                               values.coaCategoryId.label === "Expense" &&
-                              values.expenseCategory.value == 34
+                              values.expenseCategory == 34
                             ) {
                               errors.payrollListIds = "Please select Payroll";
                             }
@@ -3265,7 +3266,8 @@ class ExplainTrasactionDetail extends React.Component {
 																			</Col>
 																		</Row>
 																	)} */}
-                              {props.values.coaCategoryId &&
+                              {props.values?.invoiceIdList?.[0]?.type !== "CREDIT_NOTE" &&
+                              props.values.coaCategoryId &&
                                 (props.values.coaCategoryId?.label ===
                                   "Sales" ||
                                   props.values.coaCategoryId?.label ===
@@ -3346,6 +3348,7 @@ class ExplainTrasactionDetail extends React.Component {
                                     )}
                                     {props.values?.invoiceIdList?.map(
                                       (i, invindex) => {
+                                        console.log("this is the i", i);
                                         return (
                                           <Row
                                             style={{
@@ -3660,7 +3663,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       )}
                                   </>
                                 )}
-
+                                
                               {/* {props.values.coaCategoryId &&
 																props.values.coaCategoryId?.label ===
 																'Sales' && (

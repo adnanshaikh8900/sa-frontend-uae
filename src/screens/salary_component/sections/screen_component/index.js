@@ -268,7 +268,7 @@ class SalaryComponentScreen extends React.Component {
                           if (parseInt(values.componentId) === 0) {
                             errors.componentId =
                               "Enter valid designation ID";
-                          } else if (this.state.idExist === true || parseInt(values.componentId) === 1 || parseInt(values.componentId) === 2) {
+                          } else if (this.state.idExist === true || parseInt(values.componentId) === 1) {
                             errors.componentId =
                               "Component ID already exist";
                           }

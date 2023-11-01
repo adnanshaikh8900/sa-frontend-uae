@@ -742,6 +742,8 @@ const en = {
       RefundNotes: "Notes",
       CreditNoteIssuedonCustomerInvoice: "Credit Note Issued on Customer Invoice:",
       CreditNoteAmountUsedSummary: "Credit note amount used summary:",
+      CreditNoteNumber2: "Credit Note No",
+      CreditNoteDate2: "Credit Note Date",
 
       //ImportStatement
       ImportStatement: "Import Statement",
@@ -1007,7 +1009,7 @@ const en = {
       Designations: "Designations",
       DESIGNATIONID: "Designation ID",
       DESIGNATIONNAME: "DESIGNATION NAME",
-      NewDesignation: "New Designation",
+      NewDesignation: "Add New Designation",
       UpdateDesignation: "Update Designation",
       DesignationName: "Designation Name",
       DesignationType: "Designation Type",
@@ -1278,7 +1280,7 @@ const en = {
       VATIsRequired: 'VAT is required',
 
       //Salary Component
-      NewSalaryComponent: "New Salary Component",
+      NewSalaryComponent: "Add New Salary Component",
       ComponentId: "Component ID",
       ComponentType: "Component Type"
 }

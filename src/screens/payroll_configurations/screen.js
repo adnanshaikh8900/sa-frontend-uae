@@ -471,7 +471,12 @@ class PayrollConfigurations extends React.Component {
 		return (row.componentCode ? row.componentCode : row.id);
 	}
 	renderSalaryCalculationType = (cell, row) => {
-		return (row.calculationType ? parseInt(row.calculationType) === 2 ? 'CTC Percent' : 'Flat Amount' : '');
+		console.log(row);
+		return (row.calculationType ? parseInt(row.calculationType) === 2 ? 'CTC Percent' : 'Flat Amount' : (row.formula ? "CTC Percent" : "Flat Amount"));
+	}
+	renderSalaryComponentType = (cell, row) => {
+		console.log(row);
+		return (row.description === 'Basic SALARY' ? 'Earning' : row.componentType);
 	}
 	renderActions = (cell, row) => {
 		return (
@@ -1339,6 +1344,7 @@ class PayrollConfigurations extends React.Component {
 																			<TableHeaderColumn
 																				className="table-header-bg"
 																				dataField="componentType"
+																				dataFormat={this.renderSalaryComponentType}
 																			>
 																				{strings.ComponentType}
 																			</TableHeaderColumn>

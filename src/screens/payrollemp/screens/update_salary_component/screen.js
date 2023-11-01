@@ -176,7 +176,10 @@ class UpdateSalaryComponent extends React.Component {
                         this.state.Fixed && this.state.Fixed.length > 0 && this.state.Fixed.map(obj => {
                             componentSelected.push(obj.salaryComponentId);
                         })
-                        this.state.Deduction && this.state.Deduction > 0 && this.state.Deduction.map(obj => {
+                        console.log(this.state.Deduction)
+
+                        this.state.Deduction && this.state.Deduction.length > 0 && this.state.Deduction.map(obj => {
+                            console.log(obj)
                             componentSelected.push(obj.salaryComponentId);
                         })
                         this.setState({

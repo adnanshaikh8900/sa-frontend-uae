@@ -79,7 +79,7 @@ class RecordVatPayment extends React.Component {
 				totalTaxPayable: this.props.location.state && this.props.location.state.totalTaxPayable ?this.props.location.state.totalTaxPayable: 0.00,
 				payMode: '',
 				notes: '',
-				paidThrough: '',
+				paidThrough: { value: 47, label: 'Petty Cash' },
 				referenceCode: '',
 				attachmentFile: '',
 				paidInvoiceListStr: [],
@@ -278,7 +278,7 @@ class RecordVatPayment extends React.Component {
 													 }
 													
 													 if(parseFloat(values.amount)>values.balanceDue){
-														errors.amount ="Amount Cannot Be greater than Balance amount"
+														errors.amount ="Amount cannot be greater than due amount"
 													 }
 													
 													 return errors
@@ -387,12 +387,12 @@ class RecordVatPayment extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
 																			<span className="text-danger">* </span>{' '}
-																			Balance Due
-																		</Label>
+																			{strings.DueAmount}															
+						  												</Label>
 																		<Input
 																		disabled
 																			type="number"
-																			placeholder='Enter Balance Amount'
+																			placeholder='Enter Due Amount'
 																			id="balanceDue"
 																			name="balanceDue"
 																			value={props.values.balanceDue}
@@ -506,7 +506,7 @@ class RecordVatPayment extends React.Component {
 																		<Select
 																			// styles={customStyles}
 																			options={deposit_list}
-																			value={props.values.paidThrought}
+																			value={props.values.paidThrough}
 																			onChange={(option) => {
 																				if (option && option.value) {
 																					props.handleChange('paidThrough')(

@@ -42,6 +42,7 @@ const mapStateToProps = (state) => {
 		project_list: state.supplier_invoice.project_list,
 		contact_list: state.supplier_invoice.contact_list,
 		currency_list: state.supplier_invoice.currency_list,
+		vat_list: state.supplier_invoice.vat_list,
 		tax_treatment_list: state.common.tax_treatment_list,
 		excise_list: state.supplier_invoice.excise_list,
 		product_list: state.customer_invoice.product_list,
@@ -194,7 +195,7 @@ class DetailSupplierInvoice extends React.Component {
 				.getInvoiceById(this.props.location.state.id)
 				.then((res) => {
 					if (res.status === 200) {
-						
+
 						this.getCompanyCurrency();
 						this.props.supplierInvoiceActions.getSupplierList(
 							this.state.contactType,
@@ -293,7 +294,7 @@ class DetailSupplierInvoice extends React.Component {
 								supplier_currency: res.data.currencyCode ? res.data.currencyCode : '',
 								supplier_currency_des: res.data.currencyName ? res.data.currencyName : '',
 								supplier_currency_symbol: res.data.currencyIsoCode ? res.data.currencyIsoCode : '',
-								supplier_currencyCode : res.data.currencyCode ? res.data.currencyCode : '',
+								supplier_currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 							},
 							() => {
 								if (this.state.data.length > 0) {
@@ -323,9 +324,9 @@ class DetailSupplierInvoice extends React.Component {
 							},
 						);
 
-					//	this.getCurrency(res.data.contactId)
-					
-					
+						//	this.getCurrency(res.data.contactId)
+
+
 
 					}
 				});
@@ -872,7 +873,7 @@ class DetailSupplierInvoice extends React.Component {
 				console.log(err, "Get Company Type Error");
 			});
 	};
-	addProductToProductVatList =  (id) => {
+	addProductToProductVatList = (id) => {
 		if (this.state.customer_taxTreatment_des) {
 			const { product_list } = this.props;
 			const product = product_list.find(obj => obj.id === id);
@@ -998,9 +999,9 @@ class DetailSupplierInvoice extends React.Component {
 							}
 							value={
 								vat_list ?
-								selectOptionsFactory
-									.renderOptions('name', 'id', vat_list, 'VAT')
-									.find((option) => option.value == row.vatCategoryId) : ""
+									selectOptionsFactory
+										.renderOptions('name', 'id', vat_list, 'VAT')
+										.find((option) => option.value == row.vatCategoryId) : ""
 							}
 							id="vatCategoryId"
 							placeholder={strings.Select + strings.VAT}
@@ -1106,20 +1107,15 @@ class DetailSupplierInvoice extends React.Component {
 				obj['unitTypeId'] = result.unitTypeId;
 				idx = index;
 				if (this.state.isRegisteredVat) {
-					this.state.producttype.map(element => {
-						if (element.id === e) {
-							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
-							if (!found) {
-								obj['vatCategoryId'] = '';
-							}
-							else {
-								obj['vatCategoryId'] = result.vatCategoryId;
-							}
-							return found;
+					if (producttype) {
+						if (producttype.id === parseInt(e)) {
+							obj['vatCategoryId'] = result.vatCategoryId;
 						}
-					});
-				}
-				else {
+						else {
+							obj['vatCategoryId'] = '';
+						}
+					}
+				} else {
 					obj['vatCategoryId'] = 10;
 				}
 			}
@@ -1549,16 +1545,16 @@ class DetailSupplierInvoice extends React.Component {
 		});
 		if (result && result[0] && result[0].exchangeRate)
 			this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-			this.exchangeRaterevalidate(result[0].exchangeRate)
+		this.exchangeRaterevalidate(result[0].exchangeRate)
 	};
 
 	setCurrency = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-		this.setState({supplier_currency_des: result[0].currencyName })
+		this.setState({ supplier_currency_des: result[0].currencyName })
 		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
-		this.setState({supplier_currency_symbol :result[0].currencyIsoCode })
+		this.setState({ supplier_currency_symbol: result[0].currencyIsoCode })
 	};
 
 	handleSubmit = (data) => {
@@ -1658,7 +1654,7 @@ class DetailSupplierInvoice extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? strings.InvoiceUpdatedSuccessfully : res.data.message ,
+					res.data ? strings.InvoiceUpdatedSuccessfully : res.data.message,
 				);
 				this.props.history.push('/admin/expense/supplier-invoice');
 				this.setState({ loading: false, });
@@ -1701,7 +1697,7 @@ class DetailSupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? strings.InvoiceDeletedSuccessfully :  res.data.message,
+						res.data ? strings.InvoiceDeletedSuccessfully : res.data.message,
 					);
 					this.props.history.push('/admin/expense/supplier-invoice');
 					this.setState({ loading: false, });
@@ -1755,13 +1751,25 @@ class DetailSupplierInvoice extends React.Component {
 	getCurrentProduct = (newProduct) => {
 		if (newProduct) {
 			let newData = []
-			const {data,isRegisteredVat} = this.state;
+			const { data, isRegisteredVat } = this.state;
 			newData = data.filter((obj) => obj.productId !== "");
-			// props.setFieldValue('lineItemsString', newData, true);
-			// this.updateAmount(newData, props);
+			const producttype = this.addProductToProductVatList(parseInt(newProduct.id));
 			let exchangeRate = this.formRef.current?.state?.values?.exchangeRate > 0
 				&& this.formRef.current?.state?.values?.exchangeRate !== "" ?
 				this.formRef.current?.state?.values?.exchangeRate : 1
+			let vatCategoryId = '';
+			if (isRegisteredVat) {
+				if (producttype) {
+					if (producttype.id === parseInt(newProduct.id)) {
+						vatCategoryId = newProduct.vatCategoryId;
+					}
+					else {
+						vatCategoryId = '';
+					}
+				}
+			} else {
+				vatCategoryId = 10;
+			}
 			this.setState(
 				{
 					data: newData.concat({
@@ -1770,7 +1778,7 @@ class DetailSupplierInvoice extends React.Component {
 						quantity: 1,
 						discount: 0,
 						unitPrice: (parseFloat(newProduct.unitPrice) * (1 / exchangeRate)).toFixed(2),
-						vatCategoryId: isRegisteredVat? '':10,
+						vatCategoryId: vatCategoryId,
 						exciseTaxId: newProduct.exciseTaxId,
 						vatAmount: newProduct.vatAmount ? newProduct.vatAmount : 0,
 						subTotal: newProduct.unitPrice,
@@ -1782,7 +1790,6 @@ class DetailSupplierInvoice extends React.Component {
 						transactionCategoryLabel: newProduct.transactionCategoryLabel,
 					}),
 					idCount: this.state.idCount + 1,
-					producttype: [],
 				},
 				() => {
 					const values = {
@@ -1819,7 +1826,7 @@ class DetailSupplierInvoice extends React.Component {
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.vatCategoryId`,
-				newProduct.vatCategoryId,
+				vatCategoryId,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -2205,47 +2212,47 @@ class DetailSupplierInvoice extends React.Component {
 																					{strings.TaxTreatment}
 																				</Label>
 																				<Select
-																						options={
-																							tax_treatment_list
-																								? selectOptionsFactory.renderOptions(
-																									'name',
-																									'id',
-																									tax_treatment_list,
-																									'VAT',
-																								)
-																								: []
-																						}
-																						isDisabled={true}
-																						id="taxTreatmentid"
-																						name="taxTreatmentid"
-																						placeholder={strings.Select + strings.TaxTreatment}
-																						value={
-																							tax_treatment_list &&
-																							selectOptionsFactory
-																								.renderOptions(
-																									'name',
-																									'id',
-																									tax_treatment_list,
-																									'VAT',
-																								)
-																								.find(
-																									(option) =>
-																										option.label ===
-																										this.state.customer_taxTreatment_des,
-																								)
-																						}
-																						onChange={(option) => {
-																							props.handleChange('taxTreatmentid')(
-																								option,
-																							);
-																						}}
-																						className={
-																							props.errors.taxTreatmentid &&
-																								props.touched.taxTreatmentid
-																								? 'is-invalid'
-																								: ''
-																						}
-																					/>
+																					options={
+																						tax_treatment_list
+																							? selectOptionsFactory.renderOptions(
+																								'name',
+																								'id',
+																								tax_treatment_list,
+																								'VAT',
+																							)
+																							: []
+																					}
+																					isDisabled={true}
+																					id="taxTreatmentid"
+																					name="taxTreatmentid"
+																					placeholder={strings.Select + strings.TaxTreatment}
+																					value={
+																						tax_treatment_list &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'name',
+																								'id',
+																								tax_treatment_list,
+																								'VAT',
+																							)
+																							.find(
+																								(option) =>
+																									option.label ===
+																									this.state.customer_taxTreatment_des,
+																							)
+																					}
+																					onChange={(option) => {
+																						props.handleChange('taxTreatmentid')(
+																							option,
+																						);
+																					}}
+																					className={
+																						props.errors.taxTreatmentid &&
+																							props.touched.taxTreatmentid
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
 																				{props.errors.taxTreatmentid &&
 																					props.touched.taxTreatmentid && (
 																						<div className="invalid-feedback">
@@ -2472,7 +2479,7 @@ class DetailSupplierInvoice extends React.Component {
 																				{strings.Currency}
 																			</Label>
 																			<Select
-																				
+
 																				styles={customStyles}
 																				options={
 																					currency_convert_list
@@ -2499,15 +2506,15 @@ class DetailSupplierInvoice extends React.Component {
 																							(option) =>
 																								option.value ===
 																								(this.state.supplier_currency ? +this.state.supplier_currency : +props.values.currencyCode),
-																								//(this.state.currencyCode ? +this.state.currencyCode : +props.values.currencyCode),
+																							//(this.state.currencyCode ? +this.state.currencyCode : +props.values.currencyCode),
 																						)
 																				}
 																				onChange={(option) => {
 																					props.handleChange('currencyCode')(option.value)
 																					this.setExchange(option.value)
 																					this.setCurrency(option.value)
-																					this.setState({supplier_currency: option.value})
-																				} }
+																					this.setState({ supplier_currency: option.value })
+																				}}
 																				className={`${props.errors.currencyCode &&
 																					props.touched.currencyCode
 																					? 'is-invalid'

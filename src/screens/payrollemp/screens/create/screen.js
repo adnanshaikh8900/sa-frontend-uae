@@ -401,7 +401,7 @@ class CreateEmployeePayroll extends React.Component {
         this.state.Fixed && this.state.Fixed.length > 0 && this.state.Fixed.map(obj => {
           componentSelected.push(obj.salaryComponentId);
         })
-        this.state.Deduction && this.state.Deduction > 0 && this.state.Deduction.map(obj => {
+        this.state.Deduction && this.state.Deduction.length > 0 && this.state.Deduction.map(obj => {
           componentSelected.push(obj.salaryComponentId);
         })
         this.setState({
@@ -448,7 +448,6 @@ class CreateEmployeePayroll extends React.Component {
         } else {
           index = index || index === 0 ? index : this.state.Deduction ? this.state.Deduction.length - 1 : 0;
           this.state.Deduction.map((obj, idx) => {
-            obj.id = res.data.id;
             if (idx === index) {
               obj.id = res.data.id;
               obj.description = res.data.description;
@@ -1438,7 +1437,6 @@ class CreateEmployeePayroll extends React.Component {
   renderComaponentName = (row, index, componentType) => {
     const { salary_component_fixed_dropdown, salary_component_deduction_dropdown } = this.props;
     const component_list = componentType === 'Fixed' ? salary_component_fixed_dropdown : salary_component_deduction_dropdown;
-    // const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.label === row.description) : ''
     const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.value === row.salaryComponentId) : '';
     const { componentSelected } = this.state;
     const unusedComponentList = []
@@ -1765,7 +1763,7 @@ class CreateEmployeePayroll extends React.Component {
                                             "Last name is required"
                                           ),
                                           email: Yup.string()
-                                            .required("Valid email required")
+                                            .required("Email is required")
                                             .email("Invalid Email"),
                                           mobileNumber: Yup.string().required(
                                             "Mobile number is required"

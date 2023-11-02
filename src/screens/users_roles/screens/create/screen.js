@@ -378,7 +378,7 @@ getvalidation=()=>{
 																id="name"
 																name="name"
 																placeholder={strings.Enter+strings.Name}
-																onBlur={props.handleBlur}
+																// onBlur={props.handleBlur}
 																onChange={(option) => {
 																	if (
 																		option.target.value === '' ||

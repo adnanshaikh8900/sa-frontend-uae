@@ -1610,7 +1610,7 @@ class CreateBankTransaction extends React.Component {
                                     }
                                     id="transactionAmount"
                                     name="transactionAmount"
-                                    placeholder={strings.Amount}
+                                    placeholder={props.values.coaCategoryId?.label === "Corporate Tax Payment" ? strings.Enter + strings.Amount : strings.Amount}
                                     onChange={(option) => {
                                       if (
                                         option.target.value === "" ||

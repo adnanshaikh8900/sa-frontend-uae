@@ -1065,7 +1065,7 @@ class ExplainTrasactionDetail extends React.Component {
                 .explinationStatusEnum ===
               "RECONCILED"
             }
-            styles={customStyles}
+         //   styles={customStyles}
             isMulti
             value={props.values.payrollListIds}
             // className="select-default-width"

@@ -247,7 +247,6 @@ class DetailBankAccount extends React.Component {
 		this.props.bankAccountActions
 			.getExplainCount(current_bank_account_id)
 			.then((res) => {
-				console.log(res);
 				if (res.data > 0) {
 					this.props.commonActions.tostifyAlert(
 						'error',
@@ -995,7 +994,7 @@ class DetailBankAccount extends React.Component {
 																		color="danger"
 																		className="btn-square"
 																		disabled={this.state.disabled1}
-																		onClick={() => this.closeBankAccount(console.log(current_bank_account_id) || current_bank_account_id)}
+																		onClick={() => this.closeBankAccount(current_bank_account_id)}
 																	>
 																		<i className="fa fa-trash"></i>{' '}{this.state.disabled1 ? 'Deleting...' : strings.Delete}
 																	</Button>

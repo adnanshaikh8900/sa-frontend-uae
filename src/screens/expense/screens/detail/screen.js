@@ -770,7 +770,7 @@ class DetailExpense extends React.Component {
 								? selectOptionsFactory.renderOptions(
 									'name',
 									'id',
-									vat_list,
+								this.props.vat_list,
 									'VAT',
 								)
 								: []

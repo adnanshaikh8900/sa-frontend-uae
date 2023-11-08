@@ -810,7 +810,7 @@ class CreateDebitNote extends React.Component {
 								)
 								: { value: row.transactionCategoryId, label: row.transactionCategoryLabel }
 						}
-						isDisabled={row.transactionCategoryId === 150}
+						isDisabled={true}
 						placeholder={strings.Select + strings.Account}
 						className={`${props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&

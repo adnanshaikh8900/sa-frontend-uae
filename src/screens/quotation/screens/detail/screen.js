@@ -1046,7 +1046,7 @@ class DetailQuotation extends React.Component {
       const { product_list } = this.props;
       const product = product_list.find(obj => obj.id === id);
       if (product) {
-        var { vat_list } = this.props;
+        var { vat_list } = this.state;
         let pt = {};
         var vt = [];
         pt.id = product.id;
@@ -1088,6 +1088,7 @@ class DetailQuotation extends React.Component {
                   vt.push(element);
                 }
               });
+
             }
           }
         } else {
@@ -1103,8 +1104,8 @@ class DetailQuotation extends React.Component {
         }));
         return pt;
       }
-
     }
+
   };
   resetVatId = (props) => {
     this.setState({
@@ -1251,7 +1252,7 @@ class DetailQuotation extends React.Component {
           parseFloat(result.unitPrice) *
           (1 / exchangeRate)
         ).toFixed(2);
-        //  obj["vatCategoryId"] = parseInt(result.vatCategoryId);
+        obj["vatCategoryId"] = parseInt(result.vatCategoryId);
         obj["exciseTaxId"] = result.exciseTaxId;
         obj["description"] = result.description;
         obj["isExciseTaxExclusive"] = result.isExciseTaxExclusive;

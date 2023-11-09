@@ -524,8 +524,9 @@ class SalaryComponentScreen extends React.Component {
                                           min={1}
                                           value={props.values.flatAmount ? props.values.flatAmount : ''}
                                           onChange={(option) => {
-                                            if (option.target.value === '' || this.regDecimal.test(option.target.value)) {
-                                              props.handleChange('flatAmount')(option,);
+                                            if (option.target.value === '0') {
+                                            } else if (option.target.value === '' || this.regDecimal.test(option.target.value)) {
+                                              props.handleChange('flatAmount')(option);
                                             }
                                           }}
                                           placeholder={strings.Enter + strings.FlatAmount}

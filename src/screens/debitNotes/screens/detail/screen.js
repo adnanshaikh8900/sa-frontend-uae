@@ -815,7 +815,7 @@ class DetailDebitNote extends React.Component {
 								props,
 							);
 						}}
-						isDisabled={row.transactionCategoryId === 150}
+						isDisabled={true}
 						value={
 							purchaseCategory.length > 0 && row.transactionCategoryLabel
 								? purchaseCategory

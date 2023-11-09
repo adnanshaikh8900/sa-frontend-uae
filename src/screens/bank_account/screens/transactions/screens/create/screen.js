@@ -113,11 +113,11 @@ class CreateBankTransaction extends React.Component {
         this.setState({ COACList: response.data });
       });
     this.getCorporateTaxList();
-  
+
     this.props.commonActions.getCompanyDetails().then((res) => {
       if (res.status === 200) {
         const isRegisteredVat = res.data.isRegisteredVat;
-        
+
         this.props.history.replace({
           pathname: this.props.location.pathname,
           state: {
@@ -125,7 +125,7 @@ class CreateBankTransaction extends React.Component {
             isRegisteredVat: isRegisteredVat,
           },
         });
-  
+
         this.setState({
           companyDetails: res.data,
           isRegisteredVat: isRegisteredVat,
@@ -560,7 +560,7 @@ class CreateBankTransaction extends React.Component {
       amount: amount,
       id: option,
       currency:
-      this.state?.bankCurrency?.bankAccountCurrency 
+        this.state?.bankCurrency?.bankAccountCurrency
           ? this.state?.bankCurrency?.bankAccountCurrency
           : 0,
       bankId: this.props.location.state.bankAccountId,
@@ -569,11 +569,11 @@ class CreateBankTransaction extends React.Component {
   };
 
   getSuggestionInvoicesFotVend = (option, amount, invoice_list) => {
-      const data = {
+    const data = {
       amount: amount,
       id: option,
       currency:
-      this.state.bankCurrency?.bankAccountCurrency 
+        this.state.bankCurrency?.bankAccountCurrency
           ? this.state.bankCurrency?.bankAccountCurrency
           : 0,
       bankId: this.props.location.state.bankAccountId,
@@ -645,7 +645,7 @@ class CreateBankTransaction extends React.Component {
         //this.setExchange(this.state.bankCurrency.bankAccountCurrency);
       }
     );
-    
+
   };
   payrollList = (option) => {
     this.setState({
@@ -692,11 +692,11 @@ class CreateBankTransaction extends React.Component {
               props.handleChange("payrollListIds")(option);
               this.payrollList(option);
               this.getPayrollAmount(option);
-              (!option && this.formRef.current.setFieldValue("transactionAmount", "" )) 
+              (!option && this.formRef.current.setFieldValue("transactionAmount", ""))
               // let selectedPayroll1 = []
               if (option) {
                 option.map((i) => {
-                  
+
                   const selectedPayroll = this.state.payrolldata.find((el) => el.id === i.value)
                   this.state.selectedPayrollListBank.push(selectedPayroll)
                   const uniqueArray = [];
@@ -1067,7 +1067,7 @@ class CreateBankTransaction extends React.Component {
       amount: amount,
       id: option.value,
       currency:
-      this.state?.bankCurrency?.bankAccountCurrency 
+        this.state?.bankCurrency?.bankAccountCurrency
           ? this.state?.bankCurrency?.bankAccountCurrency
           : 0,
       bankId: this.props.location.state.bankAccountId,
@@ -1567,7 +1567,6 @@ class CreateBankTransaction extends React.Component {
                                     id="transactionDate"
                                     name="transactionDate"
                                     placeholderText={strings.TransactionDate}
-                                    maxDate={new Date()}
                                     showMonthDropdown
                                     showYearDropdown
                                     dateFormat="dd-MM-yyyy"
@@ -1576,15 +1575,12 @@ class CreateBankTransaction extends React.Component {
                                     selected={props.values.transactionDate}
                                     onBlur={props.handleBlur("transactionDate")}
                                     onChange={(value) => {
-                                      props.handleChange("transactionDate")(
-                                        value
-                                      );
+                                      props.handleChange("transactionDate")(value);
                                     }}
                                     className={`form-control ${props.errors.transactionDate &&
                                       props.touched.transactionDate
                                       ? "is-invalid"
-                                      : ""
-                                      }`}
+                                      : ""}`}
                                   />
                                   {props.errors.transactionDate &&
                                     props.touched.transactionDate && (
@@ -1610,7 +1606,7 @@ class CreateBankTransaction extends React.Component {
                                     }
                                     id="transactionAmount"
                                     name="transactionAmount"
-                                    placeholder={strings.Amount}
+                                    placeholder={props.values.coaCategoryId?.label === "Corporate Tax Payment" ? strings.Enter + strings.Amount : strings.Amount}
                                     onChange={(option) => {
                                       if (
                                         option.target.value === "" ||
@@ -2200,7 +2196,7 @@ class CreateBankTransaction extends React.Component {
                                                 : []
                                             }
                                             onChange={(option) => {
-                                                if (option === null) {
+                                              if (option === null) {
                                                 this.getSuggestionInvoicesFotVend(
                                                   props.values.vendorId.value,
                                                   props.values
@@ -2504,7 +2500,7 @@ class CreateBankTransaction extends React.Component {
                                               option.value,
                                               props.values.transactionAmount
                                             );
-                                        
+
                                           }}
                                         />
                                         {props.errors.customerId &&

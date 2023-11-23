@@ -176,7 +176,6 @@ class UpdateSalaryComponent extends React.Component {
                         this.state.Fixed && this.state.Fixed.length > 0 && this.state.Fixed.map(obj => {
                             componentSelected.push(obj.salaryComponentId);
                         })
-debugger
                         this.state.Deduction && this.state.Deduction.length > 0 && this.state.Deduction.map(obj => {
                             componentSelected.push(obj.salaryComponentId);
                         })
@@ -392,7 +391,6 @@ debugger
     }
 
     removeComponent = (ComponentId) => {
-        debugger
         const fixed = this.state.Fixed.filter(obj => obj.salaryComponentId !== ComponentId);
         const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.salaryComponentId !== ComponentId) : '';
         const componentSelected = this.state.componentSelected ? this.state.componentSelected.filter(obj => obj !== ComponentId) : [];
@@ -530,7 +528,6 @@ debugger
         }));
         this.props.createPayrollEmployeeActions.getSalaryComponentById(componentId).then((res) => {
             if (res.status === 200) {
-                debugger
                 if (componentType === 'Fixed') {
                     index = index ? index : this.state.Fixed ? this.state.Fixed.length - 1 : 0;
                     this.state.Fixed.map((obj, idx) => {

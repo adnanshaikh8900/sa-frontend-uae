@@ -176,10 +176,7 @@ class UpdateSalaryComponent extends React.Component {
                         this.state.Fixed && this.state.Fixed.length > 0 && this.state.Fixed.map(obj => {
                             componentSelected.push(obj.salaryComponentId);
                         })
-                        console.log(this.state.Deduction)
-
                         this.state.Deduction && this.state.Deduction.length > 0 && this.state.Deduction.map(obj => {
-                            console.log(obj)
                             componentSelected.push(obj.salaryComponentId);
                         })
                         this.setState({
@@ -394,8 +391,8 @@ class UpdateSalaryComponent extends React.Component {
     }
 
     removeComponent = (ComponentId) => {
-        const fixed = this.state.Fixed.filter(obj => obj.id !== ComponentId);
-        const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== ComponentId) : '';
+        const fixed = this.state.Fixed.filter(obj => obj.salaryComponentId !== ComponentId);
+        const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.salaryComponentId !== ComponentId) : '';
         const componentSelected = this.state.componentSelected ? this.state.componentSelected.filter(obj => obj !== ComponentId) : [];
         this.setState({ Fixed: fixed, Deduction: deduction, componentSelected: componentSelected }, () => {
             this.updateSalary(this.state.CTC);
@@ -900,7 +897,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                         color='link'
 
                                                                                                         onClick={() => {
-                                                                                                            this.removeComponent(item.id)
+                                                                                                            this.removeComponent(item.salaryComponentId)
                                                                                                         }}
                                                                                                     >
                                                                                                         <i class="far fa-times-circle"></i>
@@ -1059,7 +1056,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                     <Button
                                                                                                         color='link'
                                                                                                         onClick={() => {
-                                                                                                            this.removeComponent(item.id)
+                                                                                                            this.removeComponent(item.salaryComponentId)
                                                                                                         }}
                                                                                                     >
                                                                                                         <i class="far fa-times-circle"></i>
@@ -1239,7 +1236,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                     {item.id && <Button
                                                                                                         color='link'
                                                                                                         onClick={() => {
-                                                                                                            this.removeComponent(item.id)
+                                                                                                            this.removeComponent(item.salaryComponentId)
                                                                                                         }}
                                                                                                     >
                                                                                                         <i class="far fa-times-circle"></i>

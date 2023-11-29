@@ -598,7 +598,7 @@ console.log(journal_list_data,"journal_list_data")
 													}
 											>
 													<i className="fas fa-plus mr-1" />
-													{strings.NewJournal}  
+															{strings.AddNewJournal}  
 												</Button>
 										</div>
 										<div>

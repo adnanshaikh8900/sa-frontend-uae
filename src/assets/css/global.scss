@@ -60,6 +60,47 @@ div.Select.is-invalid {
 		border: 1px solid #f86c6b !important;
 	}
 }
+.MuiInputBase-multiline {
+	padding: 0.375rem 0.75rem;
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #5c6873;
+	background-color: #fff;
+	background-clip: padding-box;
+	outline: 1px solid #ccc;
+	border-radius: 0.25rem;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	border: none;
+	resize: none !important;
+    width: 100% !important;
+}
+
+.MuiInputBase-inputMultiline {
+	padding: 0.1563rem 0.75rem !important;
+	font: menu !important;
+	font-size: 0.875rem !important;
+	font-weight: 400 !important;
+	line-height: 1.5 !important;
+	color: #5c6873 !important;
+}
+
+.MuiInput-underline:before,
+.MuiInput-underline:after {
+	border-bottom: 0px solid black !important;
+}
+
+.Mui-focused {
+	border: none !important;
+	box-shadow: none !important;
+	outline: 1px solid #2064d8;
+}
+
+::placeholder {
+	color: #5c6873 !important;
+	opacity: 0.9 !important;
+	/* Firefox */
+}
 
 // card styles
 .card {

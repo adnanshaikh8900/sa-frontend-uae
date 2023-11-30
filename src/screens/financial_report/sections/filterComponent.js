@@ -67,7 +67,7 @@ class FilterComponent extends Component {
 													placeholderText="From"
 													showMonthDropdown
 													autoComplete="off"
-													maxDate={new Date()}
+												//	maxDate={new Date()}
 													showYearDropdown
 													value={moment(props.values.endDate).format(
 														'DD-MM-YYYY',

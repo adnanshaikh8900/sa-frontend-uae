@@ -1253,15 +1253,18 @@ class DetailCustomerInvoice extends React.Component {
 							)}
 						{row['productId'] != '' ?
 							<div className='mt-1'>
-								<Input
-									type="text"
-									maxLength="250"
+								<TextField
+									type="textarea"
+									inputProps={{ maxLength: 2000 }}
+									multiline
+									minRows={1}
+									maxRows={4}
 									value={row['description'] !== '' ? row['description'] : ''}
 									onChange={(e) => {
 										this.selectItem(e.target.value, row, 'description', form, field);
 									}}
 									placeholder={strings.Description}
-									className={`form-control ${props.errors.lineItemsString &&
+									className={`textarea ${props.errors.lineItemsString &&
 										props.errors.lineItemsString[parseInt(idx, 10)] &&
 										props.errors.lineItemsString[parseInt(idx, 10)].description &&
 										Object.keys(props.touched).length > 0 &&

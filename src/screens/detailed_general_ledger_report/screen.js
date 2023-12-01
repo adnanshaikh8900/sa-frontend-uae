@@ -280,22 +280,26 @@ class DetailedGeneralLedgerReport extends React.Component {
 		return className;
 	};
 
-	getInvoice = (postingType, type, id) => {
+	getInvoice = (postingType, type, id,) => {
 		switch (postingType) {
 			case 'INVOICE':
 				if (type === 1) {
 					this.props.history.push('/admin/expense/supplier-invoice/view', {
-						id,
-					});
+						gotoDGLReport: true,
+					}
+					);
+					
 				} else {
 					this.props.history.push('/admin/income/customer-invoice/view', {
 						id,
+						gotoDGLReport: true,
 					});
 				}
 				break;
 			case 'EXPENSE':
 				this.props.history.push('/admin/expense/expense/view', {
 					expenseId: id,
+					gotoDGLReport: true,
 				});
 				break;
 			case 'MANUAL':
@@ -574,11 +578,57 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						{/* {row['postingReferenceTypeEnum']} */}
 																						{row['name']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
-																						{row['transactonRefNo']}
+																					<td style={{ width: '12%', textAlign: 'center', color: "#2046DB" }}>
+																						{/* {row['transactonRefNo']} */}
+																						{row['postingReferenceTypeEnum'] !== 'Opening Balance' &&
+																							row['postingReferenceTypeEnum'] !== 'Closing Balance' &&
+																							 (
+                                                                                             
+                                                                                               <p  className="text-center"
+																						onClick={() =>
+																							this.getInvoice(
+																								row[
+																									'postingReferenceType'
+																								],
+																								row['invoiceType'],
+																								row['referenceId'],
+																							)
+																							
+																							
+																							
+																						}>
+																								{row.transactonRefNo}
+																							</p>
+																							)
+																					}
+																		
 																					</td>
-																					<td style={{ width: '8%', textAlign: 'center'}}>
-																						{row['referenceNo']}
+																					<td style={{ width: '8%', textAlign: 'center', color: "#2046DB" }}>
+																						{/* {row['referenceNo']} */}
+																						{row['postingReferenceTypeEnum'] !== 'Opening Balance' &&
+																							row['postingReferenceTypeEnum'] !== 'Closing Balance' &&
+																							(
+
+																								<p className="text-center"
+																							onClick={() =>
+																							
+																								this.getInvoice(
+																									row[
+																									'postingReferenceType'
+																									],
+																									
+																									row['invoiceType'],
+																									row['referenceId'],
+																									
+																								)
+																								
+																							}>
+																									{row.referenceNo}
+																									
+																									
+																						</p>
+																						)
+																		}
 																					</td>
 																					{row['postingReferenceTypeEnum'] !==
 																						'Opening Balance' &&
@@ -587,16 +637,18 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						<td style={{ width: '15%' }}>
 																							{row.debitAmount > 0 && (
 																								<p
+																										style={{ color: '#000000' }}
 																									className="text-center"
-																									onClick={() =>
-																										this.getInvoice(
-																											row[
-																												'postingReferenceType'
-																											],
-																											row['invoiceType'],
-																											row['referenceId'],
-																										)
-																									}
+																								
+																									// onClick={() =>
+																									// 	this.getInvoice(
+																									// 		row[
+																									// 			'postingReferenceType'
+																									// 		],
+																									// 		row['invoiceType'],
+																									// 		row['referenceId'],
+																									// 	)
+																									// }
 																								>
 																									<Currency
 																										value={row.debitAmount}
@@ -640,16 +692,17 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						<td style={{ width: '15%' }}>
 																							{row.creditAmount > 0 && (
 																								<p
+																									style={{ color: '#000000' }}
 																									className="text-center"
-																									onClick={() =>
-																										this.getInvoice(
-																											row[
-																												'postingReferenceType'
-																											],
-																											row['invoiceType'],
-																											row['referenceId'],
-																										)
-																									}
+																									// onClick={() =>
+																									// 	this.getInvoice(
+																									// 		row[
+																									// 			'postingReferenceType'
+																									// 		],
+																									// 		row['invoiceType'],
+																									// 		row['referenceId'],
+																									// 	)
+																									// }
 																								>
 																									<Currency
 																										value={row.creditAmount}
@@ -691,14 +744,14 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						'Closing Balance' ? (
 																						<td
 																							className="amount-col text-center"
-																							style={{ width: '15%' }}
-																							onClick={() =>
-																								this.getInvoice(
-																									row['postingReferenceType'],
-																									row['invoiceType'],
-																									row['referenceId'],
-																								)
-																							}
+																								style={{ width: '15%', color: '#000000' }}
+																							// onClick={() =>
+																							// 	this.getInvoice(
+																							// 		row['postingReferenceType'],
+																							// 		row['invoiceType'],
+																							// 		row['referenceId'],
+																							// 	)
+																							// }
 																						>
 																							{
 																								<Currency

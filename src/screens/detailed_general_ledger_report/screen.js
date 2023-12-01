@@ -285,6 +285,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 			case 'INVOICE':
 				if (type === 1) {
 					this.props.history.push('/admin/expense/supplier-invoice/view', {
+						id,
 						gotoDGLReport: true,
 					}
 					);

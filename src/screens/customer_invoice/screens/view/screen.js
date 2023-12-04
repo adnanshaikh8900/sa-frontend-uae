@@ -231,7 +231,9 @@ class ViewCustomerInvoice extends React.Component {
 												endDate: this.props.location.state.endDate,
 												placeOfSupplyId: this.props.location.state.placeOfSupplyId
 											});
-										} else {
+										} else if (this.props.location && this.props.location.state && this.props.location.state.gotoDGLReport)
+											this.props.history.push('/admin/report/detailed-general-ledger'); 
+										else {
 											this.props.history.push('/admin/income/customer-invoice');
 										}
 									}}

@@ -138,6 +138,8 @@ class ViewExpense extends React.Component {
 												placeOfSupplyId:this.props.location.state.placeOfSupplyId
 											});
 										}
+										else if (this.props.location && this.props.location.state && this.props.location.state.gotoDGLReport)
+											this.props.history.push('/admin/report/detailed-general-ledger');
 										else{
 											this.props.history.push('/admin/expense');
 										}

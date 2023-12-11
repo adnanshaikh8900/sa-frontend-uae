@@ -478,6 +478,7 @@ const en = {
       DEBITAMOUNT: "DEBIT AMOUNT",
       CREDITAMOUNT: "CREDIT AMOUNT",
       NewJournal: "New Journal",
+      AddNewJournal:"Add New Journal",
 
       //ADD Journal
       CreateJournal: "Create Journal",

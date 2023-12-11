@@ -248,6 +248,7 @@ class CreateBankAccount extends React.Component {
 				if (this.state.createMore) {
 					this.setState({
 						createMore: false,
+						disableLeavePage:false,
 					});
 					this.initializeData();
 					resetForm(this.state.initialVals);

@@ -35,7 +35,7 @@ import './style.scss';
 import moment from 'moment';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { TextareaAutosize } from '@material-ui/core';
+import { TextareaAutosize,TextField} from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
@@ -972,16 +972,19 @@ class DetailCreditNote extends React.Component {
 								}`}
 						/>
 						<div className='mt-1'>
-							<Input
-								disabled
-								type="text"
-								maxLength="250"
+							<TextField
+							 disabled
+								type="textarea"
+								inputProps={{ maxLength: 2000 }}
+								multiline
+								minRows={1}
+								maxRows={4}
 								value={row['description'] !== '' ? row['description'] : ''}
 								onChange={(e) => {
 									this.selectItem(e.target.value, row, 'description', form, field);
 								}}
 								placeholder={strings.Description}
-								className={`form-control  ${props.errors.lineItemsString &&
+								className={`textarea  ${props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
 									props.errors.lineItemsString[parseInt(idx, 10)].description &&
 									Object.keys(props.touched).length > 0 &&
@@ -2182,7 +2185,7 @@ class DetailCreditNote extends React.Component {
 																					>
 																						{strings.UNITPRICE}
 																					</TableHeaderColumn>
-																					{props.values.lineItemsString.map(i => (i.discount != 0 ? (
+																					{initValue.discount != 0 ?
 																						<TableHeaderColumn
 																							width="12%"
 																							dataField="discount"
@@ -2192,7 +2195,7 @@ class DetailCreditNote extends React.Component {
 																						>
 																							{strings.DisCount}
 																						</TableHeaderColumn>
-																					) : null))
+																						: null
 																					}
 																					{props.values.lineItemsString.map(i => (i.exciseAmount != 0 ? (
 																						<TableHeaderColumn
@@ -2245,7 +2248,24 @@ class DetailCreditNote extends React.Component {
 																					</TableHeaderColumn>
 																				</BootstrapTable>
 																			</Col>
-																		</Row></>)}
+																		</Row>
+																		{initValue.discount != 0 &&
+																			<Row className="ml-4 ">
+																				<Col className=" ml-4">
+																					<FormGroup className='pull-right'>
+																						<Input
+																							type="checkbox"
+																							id="discountEnabled"
+																							checked={initValue.discount != 0 ? true : false}
+																							value={initValue.discount != 0 ? true : false}
+																						/>
+																						<Label>{strings.ApplyLineItemDiscount}</Label>
+																					</FormGroup>
+																				</Col>
+																			</Row>
+																		}
+																	</>
+																)}
 																{this.state.invoiceNumber ? (
 																	<Row>
 																		<Col lg={8}>

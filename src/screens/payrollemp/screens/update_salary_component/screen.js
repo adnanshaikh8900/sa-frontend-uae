@@ -21,8 +21,9 @@ import 'react-toastify/dist/ReactToastify.css'
 import * as DetailSalaryComponentAction from './actions';
 import * as CreatePayrollEmployeeActions from '../create/actions'
 import { SalaryComponentDeduction, SalaryComponentFixed, SalaryComponentVariable } from 'screens/payrollemp/sections';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import * as Yup from "yup";
+import { selectOptionsFactory } from 'utils';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -32,9 +33,9 @@ const mapStateToProps = (state) => {
         employee_list_dropdown: state.payrollEmployee.employee_list_dropdown,
         state_list: state.payrollEmployee.state_list,
         country_list: state.payrollEmployee.country_list,
-        salary_component_fixed_dropdown: state.payrollEmployee.salary_component_fixed_dropdown,
+        salary_component_fixed_dropdown: state.payrollEmployee.salary_component_fixed_dropdown.data,
         salary_component_varaible_dropdown: state.payrollEmployee.salary_component_varaible_dropdown,
-        salary_component_deduction_dropdown: state.payrollEmployee.salary_component_deduction_dropdown,
+        salary_component_deduction_dropdown: state.payrollEmployee.salary_component_deduction_dropdown.data,
     })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -47,7 +48,6 @@ const mapDispatchToProps = (dispatch) => {
 
 let strings = new LocalizedStrings(data);
 
-
 class UpdateSalaryComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -57,9 +57,37 @@ class UpdateSalaryComponent extends React.Component {
             loading: true,
             dialog: null,
             CTC: '',
-            Fixed: [],
-            Variable: [],
-            Deduction: [],
+            Fixed: [
+                {
+                    description: "",
+                    flatAmount: "",
+                    formula: "",
+                    id: "",
+                    monthlyAmount: "",
+                    yearlyAmount: "",
+                },
+            ],
+
+            Variable: [
+                {
+                    description: "",
+                    flatAmount: "",
+                    formula: "",
+                    id: "",
+                    monthlyAmount: "",
+                    yearlyAmount: "",
+                },
+            ],
+            Deduction: [
+                {
+                    description: "",
+                    flatAmount: "",
+                    formula: "",
+                    id: "",
+                    monthlyAmount: "",
+                    yearlyAmount: "",
+                },
+            ],
             Fixed_Allowance: [],
             current_employee_id: null,
             openSalaryComponentFixed: false,
@@ -67,18 +95,25 @@ class UpdateSalaryComponent extends React.Component {
             openSalaryComponentDeduction: false,
             loadingMsg: "Loading....",
             disableLeavePage: false,
-            ctcTypeOption: this.props.location.state.ctcTypeOption ? this.props.location.state.ctcTypeOption : { label: "ANNUALLY", value: 1 },
-            ctcType: this.props.location.state.ctcTypeOption ? this.props.location.state.ctcTypeOption.label : "ANNUALLY",
+            varEarn: false,
+            errorMsg: false,
+            ctcTypeOption: this.props.location.state.ctcTypeOption ? this.props.location.state.ctcTypeOption : { label: "MONTHLY", value: 2 },
+            ctcType: this.props.location.state.ctcTypeOption ? this.props.location.state.ctcTypeOption.label : "MONTHLY",
             ctcTypeList: [
-                { label: "ANNUALLY", value: 1 },
                 { label: "MONTHLY", value: 2 },
-            ]
+                { label: "ANNUALLY", value: 1 },
+            ],
+            componentSelected: [],
         }
 
         this.regEx = /^[0-9\d]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regDec1 = /^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
+        this.type = [
+            { label: 'Flat Amount', value: 1 },
+            { label: '% of CTC', value: 2 }
+        ];
 
         this.formRef = React.createRef();
 
@@ -86,7 +121,7 @@ class UpdateSalaryComponent extends React.Component {
             { label: 'Component Name', value: 'Component Name', sort: false },
             { label: 'Calculation Type', value: 'Calculation Type', sort: false },
             { label: 'Monthly', value: 'Monthly', sort: false },
-            { label: 'Annualy', value: 'Annualy', sort: false },
+            { label: 'Annually', value: 'Annualy', sort: false },
         ];
     }
 
@@ -121,68 +156,34 @@ class UpdateSalaryComponent extends React.Component {
                                     res.data.ctc
                                     : parseFloat(res.data.ctc) * 12
                             )
-                            : ''
-
-                    this.setState({
-                        loading: false,
-                        current_employee_id: this.props.location.state.id,
-
-                        id: res.data.id ? res.data.id : '',
-                        CTC: res.data.ctc ? res.data.ctc : '',
-                        Fixed: res.data.salaryComponentResult.Fixed,
-                        Variable: res.data.salaryComponentResult.Variable,
-                        Deduction: res.data.salaryComponentResult.Deduction,
-                        Fixed_Allowance: res.data.salaryComponentResult.Fixed_Allowance,
-                    }
-                    )
-
-                    this.updateSalary(res.data.ctc ? ctcValue : this.state.CTC)
-                    this.formRef.current.setFieldValue('CTC',
-                        // this.state.CTC
-                        this.state.CTC != "" ?
-                            (this.state.ctcType == "ANNUALLY" ?
-                                this.state.CTC
-                                : parseFloat(this.state.CTC) / 12)
                             : 0
-                        , true);
-                }
-            }).catch((err) => {
-                this.setState({ loading: false })
-                this.props.history.push('/admin/master/employee')
-            })
-        } else {
-            this.props.history.push('/admin/master/employee')
-        }
-    }
-    getSalaryComponentByEmployeeId = () => {
 
-        if (this.props.location.state && this.props.location.state.id) {
-            this.props.detailSalaryComponentAction.getSalaryComponentByEmployeeId(this.props.location.state.id).then((res) => {
-
-                if (res.status === 200) {
-                    let ctcValue =
-                        res.data.ctc ?
-                            (
-                                this.state.ctcType == "ANNUALLY" ?
-                                    res.data.ctc
-                                    : parseFloat(res.data.ctc) * 12
-                            )
-                            : ''
                     this.setState({
                         loading: false,
                         current_employee_id: this.props.location.state.id,
-
                         id: res.data.id ? res.data.id : '',
                         CTC: res.data.ctc ? res.data.ctc : '',
-                        Fixed: res.data.salaryComponentResult.Fixed,
+                        Fixed: res.data.salaryComponentResult.Fixed ? res.data.salaryComponentResult.Fixed : [],
                         Variable: res.data.salaryComponentResult.Variable,
-                        Deduction: res.data.salaryComponentResult.Deduction,
+                        Deduction: res.data.salaryComponentResult.Deduction ? res.data.salaryComponentResult.Deduction : [],
                         Fixed_Allowance: res.data.salaryComponentResult.Fixed_Allowance,
+                    }, () => {
+                        this.updateSalary(res.data.ctc ? ctcValue : this.state.CTC)
+                        this.formRef.current.setFieldValue('CTC', res.data.ctc ? res.data.ctc : '', true);
+                        this.addRow('Fixed');
+                        this.addRow('Deduction');
+                        let componentSelected = [];
+                        this.state.Fixed && this.state.Fixed.length > 0 && this.state.Fixed.map(obj => {
+                            componentSelected.push(obj.salaryComponentId);
+                        })
+                        this.state.Deduction && this.state.Deduction.length > 0 && this.state.Deduction.map(obj => {
+                            componentSelected.push(obj.salaryComponentId);
+                        })
+                        this.setState({
+                            componentSelected: componentSelected
+                        })
 
-                    }
-                    )
-
-                    this.updateSalary1(res.data.ctc ? ctcValue : this.state.CTC)
+                    })
                 }
             }).catch((err) => {
                 this.setState({ loading: false })
@@ -197,24 +198,18 @@ class UpdateSalaryComponent extends React.Component {
     };
     closeSalaryComponentFixed = (res) => {
         this.setState({ openSalaryComponentFixed: false });
-        this.getSalaryComponentByEmployeeId();
-        // this.updateSalary();
     };
     openSalaryComponentVariable = (props) => {
         this.setState({ openSalaryComponentVariable: true });
     };
     closeSalaryComponentVariable = (res) => {
         this.setState({ openSalaryComponentVariable: false });
-        this.getSalaryComponentByEmployeeId();
-        //   this.updateSalary();
     };
     openSalaryComponentDeduction = (props) => {
         this.setState({ openSalaryComponentDeduction: true });
     };
     closeSalaryComponentDeduction = (res) => {
         this.setState({ openSalaryComponentDeduction: false });
-        this.getSalaryComponentByEmployeeId();
-        //this.updateSalary();
     };
     renderActionForState = () => {
         this.props.createPayrollEmployeeActions.getEmployeeById(this.state.current_employee_id)
@@ -223,27 +218,91 @@ class UpdateSalaryComponent extends React.Component {
                     selectedData: res.data,
                     loading: false,
                 })
-
             });
     }
+
+    totalEarnings = () => {
+        const fixed = this.state.Fixed.filter(obj => obj.id !== '')
+        const totalMonthlyAmount = Object.values(fixed).reduce((total, item) => {
+            if (typeof item.monthlyAmount == 'string') {
+                total += parseFloat(item.monthlyAmount);
+            } else {
+                total += item.monthlyAmount
+            }
+            return total;
+        }, 0);
+        const totalMonthlyEarnings = totalMonthlyAmount ? totalMonthlyAmount : 0;
+        return totalMonthlyEarnings;
+    }
+    totalYearEarnings = () => {
+        const fixed = this.state.Fixed.filter(obj => obj.id !== '')
+        const totalYearlyAmount = Object.values(fixed).reduce((total, item) => {
+            if (typeof item.yearlyAmount == 'string') {
+                total += parseFloat(item.yearlyAmount);
+            } else {
+                total += item.yearlyAmount
+            }
+            return total;
+        }, 0);
+        const totalYearlyEarnings = totalYearlyAmount ? totalYearlyAmount : 0
+        return totalYearlyEarnings;
+    }
+    totalDeductions = () => {
+        const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== '') : ''
+        const totalMonthlyDeduction = Object.values(deduction).reduce((total, item) => {
+            if (typeof item.monthlyAmount == 'string') {
+                total += parseFloat(item.monthlyAmount);
+            } else {
+                total += item.monthlyAmount
+            }
+            return total;
+        }, 0);
+        const totalMonthlyDeductions = totalMonthlyDeduction ? totalMonthlyDeduction : 0
+        return totalMonthlyDeductions;
+    }
+    totalYearDeductions = () => {
+        const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.id !== '') : ''
+        const totalYearlyDeduction = Object.values(deduction).reduce((total, item) => {
+            if (typeof item.yearlyAmount == 'string') {
+                total += parseFloat(item.yearlyAmount);
+            } else {
+                total += item.yearlyAmount
+            }
+            return total;
+        }, 0);
+        const totalYearlyDeductions = totalYearlyDeduction ? totalYearlyDeduction : 0
+        return totalYearlyDeductions;
+    }
+    grossEarnings = () => {
+
+        const grossEarning = (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0)
+        // this.setState({grossSalarys : grossEarning})
+        return grossEarning;
+    }
+    grossYearEarnings = () => {
+        const grossYearEarning = (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0)
+        // this.setState({grossSalarys : grossEarning})
+        return grossYearEarning;
+    }
+
     // Create or Edit VAT
     handleSubmit = (data) => {
-
         this.setState({ disabled: true, disableLeavePage: true, });
         const { current_employee_id } = this.state;
-        const {
-            employee,
-            CTC
-
-        } = data;
-
+        const { employee, CTC } = data;
+        const list = this.state.list.filter(obj => obj.id !== '');
         let formData = new FormData();
         formData.append('employee', current_employee_id)
         formData.append('employeeId', this.props.location.state.id ? this.props.location.state.id : "");
-        formData.append('grossSalary', CTC != null ? CTC : '')
+        if (this.state.ctcTypeOption.label == "ANNUALLY") {
+            formData.append('grossSalary', (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0))
+        } else {
+            formData.append('grossSalary', (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0))
+        }
+        formData.append("totalNetPay", this.totalEarnings());
         formData.append('ctcType', this.state.ctcTypeOption.label ? this.state.ctcTypeOption.label : "ANNUALLY")
+        formData.append('salaryComponentString', JSON.stringify(list));
 
-        formData.append('salaryComponentString', JSON.stringify(this.state.list));
         this.setState({ loading: true, loadingMsg: "Updating Salary Details ..." });
         this.props.detailSalaryComponentAction.updateEmployeeBank(formData).then((res) => {
             if (res.status === 200) {
@@ -251,7 +310,8 @@ class UpdateSalaryComponent extends React.Component {
                     'success',
                     'Employee Updated Successfully.'
                 )
-                this.props.history.push('/admin/master/employee')
+                this.props.history.push('/admin/master/employee/viewEmployee',
+                    { id: this.props.location.state.id, tabNo: '2' })
                 this.setState({ loading: false, });
             }
         }).catch((err) => {
@@ -261,200 +321,110 @@ class UpdateSalaryComponent extends React.Component {
             )
         })
     }
+    getCurrentSalaryComponent = (newComponent, componentType) => {
+        this.getSalaryComponentById(newComponent.value, componentType)
 
-
+    };
     updateSalary = (CTC1) => {
-        const CTC = this.state.CTC
-
+        this.setState({ errorMsg: false })
         const Fixed = this.state.Fixed
         const Variable = this.state.Variable
         const Deduction = this.state.Deduction
         const Fixed_Allowance = this.state.Fixed_Allowance
-
         var locallist = []
-        var basicSalaryAnnulay = 0;
-        var basicSalaryMonthy = 0;
         var totalFixedSalary = 0;
         Fixed.map((obj) => {
             locallist.push(obj);
-            if (obj.formula != null && obj.description === "Basic SALARY") {
-                basicSalaryAnnulay = (CTC1 * (obj.formula / 100));
-                basicSalaryMonthy = (basicSalaryAnnulay) / 12;
-                obj.monthlyAmount = basicSalaryMonthy;
-                obj.yearlyAmount = basicSalaryAnnulay;
-                totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
-            }
-            else if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
-                var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-                var salaryAnnulay = salaryMonthy * 12;
-                obj.monthlyAmount = salaryMonthy;
-                obj.yearlyAmount = salaryAnnulay;
-                totalFixedSalary = totalFixedSalary + salaryMonthy;
-            }
-            else if (obj.flatAmount != null) {
-                var salaryMonthy = obj.flatAmount;
-                obj.monthlyAmount = salaryMonthy;
-                obj.yearlyAmount = salaryMonthy * 12;
-                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
-            }
-
-            return obj;
-        });
-        if (Variable != null) {
-            Variable.map((obj) => {
-                locallist.push(obj);
-                if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
-                    var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-                    var salaryAnnulay = salaryMonthy * 12;
+            if (obj.id) {
+                if (obj.formula != null && obj.formula.length > 0) {
+                    var salaryAnnulay = CTC1 * (obj.formula / 100);
+                    var salaryMonthy = salaryAnnulay / 12;
                     obj.monthlyAmount = salaryMonthy;
                     obj.yearlyAmount = salaryAnnulay;
                     totalFixedSalary = totalFixedSalary + salaryMonthy;
                 }
-                else if (obj.flatAmount != null) {
+                else {
                     var salaryMonthy = obj.flatAmount;
                     obj.monthlyAmount = salaryMonthy;
                     obj.yearlyAmount = salaryMonthy * 12;
                     totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
                 }
+            }
+            return obj;
+        });
 
-                return obj;
-            });
-        }
-        if (Deduction != null) {
+        if (Deduction && Deduction?.length > 0) {
             Deduction.map((obj) => {
                 locallist.push(obj);
-                if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
-                    var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-                    var salaryAnnulay = salaryMonthy * 12;
-                    obj.monthlyAmount = salaryMonthy;
-                    obj.yearlyAmount = salaryAnnulay;
-                    totalFixedSalary = totalFixedSalary + salaryMonthy;
+                if (obj.id) {
+                    if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+                        var salaryAnnulay = CTC1 * (obj.formula / 100);
+                        var salaryMonthy = salaryAnnulay / 12;
+                        obj.monthlyAmount = salaryMonthy;
+                        obj.yearlyAmount = salaryAnnulay;
+                        totalFixedSalary = totalFixedSalary + salaryMonthy;
+                    }
+                    else if (obj.flatAmount != null) {
+                        var salaryMonthy = obj.flatAmount;
+                        obj.monthlyAmount = salaryMonthy;
+                        obj.yearlyAmount = salaryMonthy * 12;
+                    }
                 }
-                else if (obj.flatAmount != null) {
-                    var salaryMonthy = obj.flatAmount;
-                    obj.monthlyAmount = salaryMonthy;
-                    obj.yearlyAmount = salaryMonthy * 12;
-                    // totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
-                }
-
                 return obj;
             });
         }
-
-
 
         const monthlySalary = CTC1 / 12
         const componentTotal1 = monthlySalary - totalFixedSalary;
-        console.log(componentTotal1, "%$componentTotal")
 
-        if (Fixed_Allowance != null) {
-            Fixed_Allowance.map((obj) => {
-                locallist.push(obj);
-                if (obj.flatAmount != null) {
-
-                    obj.monthlyAmount = componentTotal1;
-                    obj.yearlyAmount = componentTotal1 * 12;
-
+        this.setState({
+            componentTotal: componentTotal1,
+            CTC: CTC1,
+            list: locallist,
+            initValue: {
+                ...this.state.initValue,
+                ...{
+                    CTC: CTC1
                 }
-
-                return obj;
-            });
-        }
-
-        this.setState(
-            {
-                componentTotal: componentTotal1,
-                CTC: CTC1,
-                list: locallist,
-                initValue: {
-                    ...this.state.initValue,
-                    ...{
-                        CTC: CTC1
-                    }
-                }
-
-            })
-        console.log(this.state.componentTotal, "componentTotal")
+            }
+        })
     }
 
     removeComponent = (ComponentId) => {
-
-        this.props.detailSalaryComponentAction.deleteSalaryComponentRow(this.state.current_employee_id, ComponentId).then((res) => {
-            if (res.status === 200) {
-                this.getSalaryComponentByEmployeeId();
-            }
-        }).catch((err) => {
-            this.props.commonActions.tostifyAlert('error', err.data.message)
-        });
-
+        const fixed = this.state.Fixed.filter(obj => obj.salaryComponentId !== ComponentId);
+        const deduction = this.state.Deduction ? this.state.Deduction.filter(obj => obj.salaryComponentId !== ComponentId) : '';
+        const componentSelected = this.state.componentSelected ? this.state.componentSelected.filter(obj => obj !== ComponentId) : [];
+        this.setState({ Fixed: fixed, Deduction: deduction, componentSelected: componentSelected }, () => {
+            this.updateSalary(this.state.CTC);
+        })
     }
 
     updateSalary1 = (CTC1, newFormula, id, newFlatAmount) => {
-        const CTC = this.state.CTC
-
+        this.setState({ errorMsg: false })
         const Fixed = this.state.Fixed
         const Variable = this.state.Variable
         const Deduction = this.state.Deduction
         const Fixed_Allowance = this.state.Fixed_Allowance
 
         var locallist = []
-        var basicSalaryAnnulay = 0;
-        var basicSalaryMonthy = 0;
         var totalFixedSalary = 0;
         Fixed.map((obj) => {
             locallist.push(obj);
+            if (obj.id) {
 
-            if (obj.formula != null && obj.description === "Basic SALARY") {
-                if (newFormula !== undefined && obj.id === id) {
-                    if (newFormula === '') { obj.formula = '0'; }
-                    else { obj.formula = newFormula; }
-                }
-
-                basicSalaryAnnulay = (CTC1 * (obj.formula / 100));
-                basicSalaryMonthy = (basicSalaryAnnulay) / 12;
-                obj.monthlyAmount = basicSalaryMonthy;
-                obj.yearlyAmount = basicSalaryAnnulay;
-                totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
-            }
-            else if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
-                if (newFormula !== undefined && obj.id === id) {
-                    if (newFormula === '') { obj.formula = '0'; }
-                    else { obj.formula = newFormula; }
-                }
-                var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-                var salaryAnnulay = salaryMonthy * 12;
-                obj.monthlyAmount = salaryMonthy;
-                obj.yearlyAmount = salaryAnnulay;
-                totalFixedSalary = totalFixedSalary + salaryMonthy;
-            }
-            else if (obj.flatAmount != null) {
-                if (newFlatAmount !== undefined && obj.id === id) {
-                    if (newFlatAmount === '') { obj.flatAmount = '0'; }
-                    else { obj.flatAmount = newFlatAmount; }
-                }
-                var salaryMonthy = obj.flatAmount;
-                obj.monthlyAmount = salaryMonthy;
-                obj.yearlyAmount = salaryMonthy * 12;
-                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
-            }
-
-            return obj;
-        });
-        if (Variable != null) {
-            Variable.map((obj) => {
-                locallist.push(obj);
-                if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+                if (obj.formula != null && obj.formula.length > 0) {
                     if (newFormula !== undefined && obj.id === id) {
                         if (newFormula === '') { obj.formula = '0'; }
                         else { obj.formula = newFormula; }
                     }
-                    var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-                    var salaryAnnulay = salaryMonthy * 12;
+
+                    var salaryAnnulay = CTC1 * (obj.formula / 100);
+                    var salaryMonthy = salaryAnnulay / 12;
                     obj.monthlyAmount = salaryMonthy;
                     obj.yearlyAmount = salaryAnnulay;
                     totalFixedSalary = totalFixedSalary + salaryMonthy;
                 }
-                else if (obj.flatAmount != null) {
+                else {
                     if (newFlatAmount !== undefined && obj.id === id) {
                         if (newFlatAmount === '') { obj.flatAmount = '0'; }
                         else { obj.flatAmount = newFlatAmount; }
@@ -464,74 +434,205 @@ class UpdateSalaryComponent extends React.Component {
                     obj.yearlyAmount = salaryMonthy * 12;
                     totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
                 }
+            }
+            return obj;
+        });
 
-                return obj;
-            });
-        }
-        if (Deduction != null) {
+        if (Deduction && Deduction?.length > 0) {
             Deduction.map((obj) => {
                 locallist.push(obj);
-                if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
-                    if (newFormula !== undefined && obj.id === id) {
-                        if (newFormula === '') { obj.formula = '0'; }
-                        else { obj.formula = newFormula; }
+                if (obj.id) {
+                    if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+                        if (newFormula !== undefined && obj.id === id) {
+                            if (newFormula === '') { obj.formula = '0'; }
+                            else { obj.formula = newFormula; }
+                        }
+                        var salaryAnnulay = CTC1 * (obj.formula / 100);
+                        var salaryMonthy = salaryAnnulay / 12;
+                        obj.monthlyAmount = salaryMonthy;
+                        obj.yearlyAmount = salaryAnnulay;
+                        totalFixedSalary = totalFixedSalary + salaryMonthy;
                     }
-                    var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
-                    var salaryAnnulay = salaryMonthy * 12;
-                    obj.monthlyAmount = salaryMonthy;
-                    obj.yearlyAmount = salaryAnnulay;
-                    totalFixedSalary = totalFixedSalary + salaryMonthy;
-                }
-                else if (obj.flatAmount != null) {
-                    if (newFlatAmount !== undefined && obj.id === id) {
-                        if (newFlatAmount === '') { obj.flatAmount = '0'; }
-                        else { obj.flatAmount = newFlatAmount; }
+                    else if (obj.flatAmount != null) {
+                        if (newFlatAmount !== undefined && obj.id === id) {
+                            if (newFlatAmount === '') { obj.flatAmount = '0'; }
+                            else { obj.flatAmount = newFlatAmount; }
+                        }
+                        var salaryMonthy = obj.flatAmount;
+                        obj.monthlyAmount = salaryMonthy;
+                        obj.yearlyAmount = salaryMonthy * 12;
                     }
-                    var salaryMonthy = obj.flatAmount;
-                    obj.monthlyAmount = salaryMonthy;
-                    obj.yearlyAmount = salaryMonthy * 12;
-                    // totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
                 }
-
                 return obj;
             });
         }
-
-
 
         const monthlySalary = CTC1 / 12
         const componentTotal1 = monthlySalary - totalFixedSalary;
-        console.log(componentTotal1, "%$componentTotal")
 
-        if (Fixed_Allowance != null) {
-            Fixed_Allowance.map((obj) => {
-                locallist.push(obj);
-                if (obj.flatAmount != null) {
-
-                    obj.monthlyAmount = componentTotal1;
-                    obj.yearlyAmount = componentTotal1 * 12;
-
+        this.setState({
+            componentTotal: componentTotal1,
+            CTC: CTC1,
+            list: locallist
+        })
+    }
+    addRow = (componentType) => {
+        if (componentType === 'Fixed') {
+            const data = [...this.state.Fixed].filter(obj => obj.id !== '');
+            this.setState(
+                {
+                    Fixed: data.concat({
+                        description: "",
+                        flatAmount: '',
+                        formula: '',
+                        id: "",
+                        monthlyAmount: 0,
+                        yearlyAmount: 0,
+                    }),
+                },
+            );
+        } else {
+            if (this.state.Deduction) {
+                const data = [...this.state.Deduction].filter(obj => obj.id !== '');;
+                this.setState(
+                    {
+                        Deduction: data.concat({
+                            description: "",
+                            flatAmount: "",
+                            formula: "",
+                            id: "",
+                            monthlyAmount: "",
+                            yearlyAmount: "",
+                        }),
+                    },
+                );
+            } else {
+                this.setState(
+                    {
+                        Deduction: {
+                            description: "",
+                            flatAmount: "",
+                            formula: "",
+                            id: "",
+                            monthlyAmount: "",
+                            yearlyAmount: "",
+                        },
+                    },
+                );
+            }
+        }
+    };
+    getSalaryComponentById = (componentId, componentType, index) => {
+        this.setState(prevState => ({
+            componentSelected: [...prevState.componentSelected, componentId]
+        }));
+        this.props.createPayrollEmployeeActions.getSalaryComponentById(componentId).then((res) => {
+            if (res.status === 200) {
+                if (componentType === 'Fixed') {
+                    index = index ? index : this.state.Fixed ? this.state.Fixed.length - 1 : 0;
+                    this.state.Fixed.map((obj, idx) => {
+                        if (idx === index) {
+                            obj.id = res.data.id;
+                            obj.description = res.data.description;
+                            obj.formula = res.data.formula;
+                            obj.flatAmount = res.data.flatAmount;
+                            obj.employeeId = this.props.location.state.id;
+                            obj.salaryComponentId = res.data.id;
+                            obj.salaryStructure = 1;
+                            obj.monthlyAmount = "";
+                            obj.yearlyAmount = "";
+                        }
+                        return obj;
+                    })
+                } else {
+                    index = index || index === 0 ? index : this.state.Deduction ? this.state.Deduction.length - 1 : 0;
+                    this.state.Deduction.map((obj, idx) => {
+                        if (idx === index) {
+                            obj.id = res.data.id;
+                            obj.description = res.data.description;
+                            obj.formula = res.data.formula;
+                            obj.flatAmount = res.data.flatAmount;
+                            obj.employeeId = this.props.location.state.id;
+                            obj.salaryComponentId = res.data.id;
+                            obj.salaryStructure = 3;
+                            obj.monthlyAmount = "";
+                            obj.yearlyAmount = "";
+                        }
+                        return obj;
+                    })
                 }
 
-                return obj;
-            });
-        }
+                this.updateSalary1(this.state.CTC)
+                this.addRow(componentType);
+            }
+        }).catch((err) => {
+            this.setState({ loading: false })
+            this.props.history.push('/admin/master/employee/viewEmployee',
+                { id: this.props.location.state.id, tabNo: '2' })
+        })
 
-        this.setState(
-            {
-                componentTotal: componentTotal1,
-                CTC: CTC1,
-                list: locallist
+    }
+    renderComponentName = (row, index, componentType) => {
+        const { salary_component_fixed_dropdown, salary_component_deduction_dropdown } = this.props;
+        const component_list = componentType === 'Fixed' ? salary_component_fixed_dropdown : salary_component_deduction_dropdown;
+        const description = component_list && component_list.length > 0 ? component_list.find(obj => obj.value === row.salaryComponentId) : '';
+        const { componentSelected } = this.state;
+        const unusedComponentList = []
+        component_list && component_list.length > 0 && component_list.map(obj => {
+            if (!componentSelected.includes(obj.value))
+                unusedComponentList.push(obj);
+        });
+        return (
+            <Field
+                name={componentType === 'Fixed' ? `Fixed.${index}.description` : `Deduction.${index}.description`}
+                render={({ field, form }) => (
+                    <>
+                        <Select
+                            isDisabled={row.description === 'Basic SALARY'}
+                            options={unusedComponentList ? selectOptionsFactory.renderOptions(
+                                'label',
+                                'value',
+                                unusedComponentList,
+                                strings.SalaryComponent
+                            ) : []}
+                            id="description"
+                            placeholder={strings.Select + strings.SalaryComponent}
+                            onChange={(e) => {
+                                this.getSalaryComponentById(e.value, componentType, index)
+                            }}
+                            value={row.description === 'Basic SALARY' ? { label: row.description, value: '' } : description ? description : ''}
+                        // className={`${props.errors.lineItemsString &&
+                        // 	props.errors.lineItemsString[parseInt(idx, 10)] &&
+                        // 	props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+                        // 	Object.keys(props.touched).length > 0 &&
+                        // 	props.touched.lineItemsString &&
+                        // 	props.touched.lineItemsString[parseInt(idx, 10)] &&
+                        // 	props.touched.lineItemsString[parseInt(idx, 10)].productId
+                        // 	? 'is-invalid'
+                        // 	: ''
+                        // 	}`}
+                        />
+                        {/* {props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+							Object.keys(props.touched).length > 0 &&
+							(
+								<div className='invalid-feedback'>
+									{props.errors.lineItemsString[parseInt(idx, 10)].productId}
+								</div>
+							)} */}
+                    </>
 
-            })
-        console.log(this.state.componentTotal, "componentTotal")
+                )}
+            />
+        );
+
     }
 
     render() {
         strings.setLanguage(this.state.language);
         const { loading, loadingMsg, initValue, dialog } = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
-        console.log(initValue, "initValue")
 
         return (
             loading == true ? <Loader loadingMsg={loadingMsg} /> :
@@ -553,12 +654,21 @@ class UpdateSalaryComponent extends React.Component {
                                                 <Loader></Loader>
                                             ) : (
                                                 <Row>
-                                                    <Col lg={8}>
+                                                    <Col>
                                                         <Formik
                                                             initialValues={initValue}
                                                             ref={this.formRef}
                                                             onSubmit={(values) => {
                                                                 this.handleSubmit(values)
+                                                            }}
+                                                            validate={(values) => {
+                                                                let errors = {}
+                                                                if (this.state.errorMsg && this.state.CTC && (parseFloat(this.state.CTC) != parseFloat((this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0)))) {
+                                                                    errors.grossEarning = "Gross Earnings should be equal to CTC"
+                                                                } else {
+                                                                    errors = {}
+                                                                }
+                                                                return errors;
                                                             }}
                                                             validationSchema={Yup.object().shape({
                                                                 CTC: Yup.string()
@@ -566,92 +676,69 @@ class UpdateSalaryComponent extends React.Component {
                                                                     .test("non Zero", "CTC should be greater then zero", (value) => {
                                                                         return parseFloat(value) > 0
                                                                     }),
-                                                                // lastName: Yup.string()
-                                                                // .required("Last Name is required"),
-                                                                // email: Yup.string()
-                                                                // .email("Valid Email Required"),
-                                                                // employeeDesignationId : Yup.string()
-                                                                // .required("Designation is required"),
-                                                                // salaryRoleId :  Yup.string()
-                                                                // .required(" Employee Role is required"),
-                                                                // dob: Yup.date()
-                                                                //     .required('DOB is required')                   
                                                             })}
-
                                                         >
                                                             {(props) => (
                                                                 <Form onSubmit={props.handleSubmit} name="simpleForm">
-
-                                                                    <div style={{ textAlign: "center" }}>
-                                                                        <FormGroup className="mt-3" style={{ textAlign: "center", display: "inline-grid" }} >
-                                                                            <Label><span className="text-danger">*</span>  {strings.CosttoCompany}  ( CTC )
-                                                                                : </Label>
-                                                                            <div style={{ display: "flex" }}>
-                                                                                <div style={{ width: "-webkit-fill-available" }}>
-                                                                                    <Select
-                                                                                        options={this.state.ctcTypeList}
-                                                                                        id="ctcTypeOption"
-                                                                                        name="ctcTypeOption"
-                                                                                        className="mr-2"
-                                                                                        value={this.state.ctcTypeOption}
-                                                                                        onChange={(e) => {
-                                                                                            this.setState({ ctcTypeOption: e, ctcType: e.label })
-                                                                                            this.updateSalary(e.label == "ANNUALLY" ? props.values.CTC : parseFloat(props.values.CTC) * 12);
-                                                                                        }}
-                                                                                    />
+                                                                    <div style={{ width: "100%" }}>
+                                                                        <div style={{ textAlign: "center" }}>
+                                                                            <FormGroup className="mt-3" style={{ textAlign: "center", display: "grid" }} >
+                                                                                <div style={{ display: "flex", textAlign: "center", justifyContent: 'center' }}>
+                                                                                    <h4 style={{ width: "30%", display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignContent: 'center' }} className="mb-0">
+                                                                                        <span className="text-danger">*</span>  {strings.CosttoCompany}  ( CTC ) :
+                                                                                    </h4>
+                                                                                    <div style={{ width: "20%", paddingRight: "2%" }}>
+                                                                                        <Input
+                                                                                            type="text"
+                                                                                            id="CTC"
+                                                                                            size="30"
+                                                                                            name="CTC"
+                                                                                            maxLength='14,2'
+                                                                                            style={{ textAlign: "center" }}
+                                                                                            value={props.values.CTC}
+                                                                                            placeholder={this.state.ctcType == "MONTHLY" ? "Enter Monthly Wages" : (strings.Enter + strings.ctc)}
+                                                                                            onChange={(option) => {
+                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) {
+                                                                                                    let ctcValue = this.state.ctcType == "ANNUALLY" ? option.target.value : parseFloat(option.target.value) * 12
+                                                                                                    props.handleChange('CTC')(option);
+                                                                                                    this.setState({ ctcValue: ctcValue })
+                                                                                                }
+                                                                                                this.updateSalary(this.state.ctcType == "ANNUALLY" ? option.target.value : parseFloat(option.target.value) * 12);
+                                                                                            }}
+                                                                                            className={props.errors.CTC && props.touched.CTC ? "is-invalid" : ""}
+                                                                                        />
+                                                                                        {props.errors.CTC && props.touched.CTC && (
+                                                                                            <div className="invalid-feedback">{props.errors.CTC}</div>
+                                                                                        )}
+                                                                                    </div>
+                                                                                    <div style={{ width: "20%" }}>
+                                                                                        <Select
+                                                                                            options={this.state.ctcTypeList}
+                                                                                            id="ctcTypeOption"
+                                                                                            name="ctcTypeOption"
+                                                                                            className="mr-2"
+                                                                                            value={this.state.ctcTypeOption}
+                                                                                            onChange={(e) => {
+                                                                                                this.setState({ ctcTypeOption: e, ctcType: e.label })
+                                                                                                this.updateSalary(e.label == "ANNUALLY" ? props.values.CTC : parseFloat(props.values.CTC) * 12);
+                                                                                            }}
+                                                                                        />
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div>
-                                                                                    <Input
-                                                                                        type="text"
-                                                                                        id="CTC"
-                                                                                        size="30"
-                                                                                        name="CTC"
-                                                                                        maxLength='14,2'
-                                                                                        style={{ textAlign: "center" }}
-                                                                                        value={props.values.CTC}
-                                                                                        placeholder={this.state.ctcType == "MONTHLY" ? "Enter Monthly Wages" : (strings.Enter + strings.ctc)}
-                                                                                        onChange={(option) => {
-                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) {
-                                                                                                let ctcValue = this.state.ctcType == "ANNUALLY" ? option.target.value : parseFloat(option.target.value) * 12
-                                                                                                props.handleChange('CTC')(option);
-                                                                                                this.setState({ ctcValue: ctcValue })
-                                                                                            }
-                                                                                            this.updateSalary(this.state.ctcType == "ANNUALLY" ? option.target.value : parseFloat(option.target.value) * 12);
-                                                                                        }}
-                                                                                        className={props.errors.CTC && props.touched.CTC ? "is-invalid" : ""}
-                                                                                    />
-                                                                                    {props.errors.CTC && props.touched.CTC && (
-                                                                                        <div className="invalid-feedback">{props.errors.CTC}</div>
-                                                                                    )}</div>
-                                                                            </div>
-
-                                                                        </FormGroup>
+                                                                            </FormGroup>
+                                                                        </div>
                                                                     </div>
-
                                                                     <Row>
-                                                                        <Col lg={8}>
-                                                                            <Row className='ml-2'>
-                                                                                <h4>{strings.FixedEarnings}</h4>
-
-                                                                                <Button
-                                                                                    color="link"
-                                                                                    className=" mr-3 mb-3"
-                                                                                    onClick={(e, props) => {
-                                                                                        this.openSalaryComponentFixed(props);
-                                                                                        this.renderActionForState()
-                                                                                    }}
-                                                                                >
-                                                                                    <i className="fa fa-plus"></i>  {strings.AddFixed}
-                                                                                </Button>
-
+                                                                        <Col lg={9}>
+                                                                            <Row className="ml-2">
+                                                                                <h4>{strings.Earnings + ":"}</h4>
                                                                             </Row>
-
-                                                                            <Table className="text-center" style={{ border: "1px solid #c8ced3", width: '150%' }} >
-                                                                                <thead style={{ border: "1px solid #c8ced3" }}>
-                                                                                    <tr style={{ border: "1px solid #c8ced3", background: '#dfe9f7', color: "Black" }}>
+                                                                            <Table className="text-center" style={{ width: '133%' }} >
+                                                                                <thead>
+                                                                                    <tr style={{ background: '#dfe9f7', color: "Black" }}>
                                                                                         {this.state.Fixed ? this.columnHeader1.map((column, index) => {
                                                                                             return (
-                                                                                                <th>
+                                                                                                <th style={{ border: "3px solid #c8ced3" }}>
                                                                                                     {column.label}
                                                                                                 </th>
                                                                                             );
@@ -661,58 +748,119 @@ class UpdateSalaryComponent extends React.Component {
                                                                                 <tbody>
                                                                                     {this.state.Fixed ? Object.values(
                                                                                         this.state.Fixed,
-                                                                                    ).map((item) => (
+                                                                                    ).map((item, index) => (
                                                                                         <tr>
-                                                                                            {/* <td >{item.id}</td> */}
-                                                                                            <td style={{ border: "1px solid #c8ced3" }} >{item.description}</td>
-                                                                                            {item.formula ?
-                                                                                                (
-                                                                                                    <td style={{ border: "1px solid #c8ced3" }}>
-                                                                                                        <Input
-                                                                                                            type="number"
-                                                                                                            min="0"
-                                                                                                            max="99"
-                                                                                                            step="0.01"
-                                                                                                            size="30"
-                                                                                                            maxLength={2}
-                                                                                                            style={{ textAlign: "center" }}
-                                                                                                            id="formula"
-                                                                                                            name="formula"
-                                                                                                            value={item.formula}
-                                                                                                            // onChange={(e)=>{this.handleChange(e)}}   
-                                                                                                            onChange={(option) => {
-                                                                                                                if (option.target.value === '' || this.regDec1.test(option.target.value)) {
-                                                                                                                    props.handleChange('formula')(option)
-                                                                                                                    this.updateSalary1(this.state.CTC, option.target.value, item.id);
+                                                                                            <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComponentName(item, index, 'Fixed')}</td>
+                                                                                            <td style={{ border: "3px solid #c8ced3" }}>
+                                                                                                <Field
+                                                                                                    render={({ field, form }) => (
+                                                                                                        <div>
+                                                                                                            <div class="input-group">
+                                                                                                                {item.formula ?
+                                                                                                                    <Input
+                                                                                                                        type="number"
+                                                                                                                        min="0"
+                                                                                                                        max="99"
+                                                                                                                        step="0.01"
+                                                                                                                        size="30"
+                                                                                                                        maxLength={2}
+                                                                                                                        style={{ textAlign: "center" }}
+                                                                                                                        id="formula"
+                                                                                                                        name="formula"
+                                                                                                                        value={item.formula}
+                                                                                                                        onChange={(option) => {
+                                                                                                                            if (option.target.value === '' || this.regDec1.test(option.target.value)) {
+                                                                                                                                props.handleChange('formula')(option)
+                                                                                                                                this.updateSalary1(this.state.CTC, option.target.value, item.id);
+                                                                                                                            }
+                                                                                                                        }}
+                                                                                                                    /> :
+                                                                                                                    <Input
+                                                                                                                        maxLength="8"
+                                                                                                                        type="text"
+                                                                                                                        size="30"
+                                                                                                                        style={{ textAlign: "center" }}
+                                                                                                                        onChange={(option) => {
+                                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) {
+                                                                                                                                props.handleChange('flatAmount')(option)
+                                                                                                                            }
+                                                                                                                            this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
+                                                                                                                        }}
+                                                                                                                        value={item.flatAmount}
+                                                                                                                        id='' />
                                                                                                                 }
-
-
-                                                                                                            }}
-                                                                                                        />
-                                                                                                        {item.description !== 'Basic SALARY' ? (' % of Basic') : (' % of CTC')}
-                                                                                                    </td>
-                                                                                                ) : (
-                                                                                                    <td style={{ border: "1px solid #c8ced3" }}>{strings.FixedAmount}</td>)
-                                                                                            }
+                                                                                                                <div class="dropdown open input-group-append">
+                                                                                                                    <div style={{ width: '200px' }}>
+                                                                                                                        <Select
+                                                                                                                            options={
+                                                                                                                                this.type
+                                                                                                                                    ? selectOptionsFactory.renderOptions(
+                                                                                                                                        'label',
+                                                                                                                                        'value',
+                                                                                                                                        this.type,
+                                                                                                                                        'Type',
+                                                                                                                                    )
+                                                                                                                                    : []
+                                                                                                                            }
+                                                                                                                            id="type"
+                                                                                                                            name="type"
+                                                                                                                            placeholder={strings.Select + strings.Type}
+                                                                                                                            value={
+                                                                                                                                this.type
+                                                                                                                                && selectOptionsFactory.renderOptions(
+                                                                                                                                    'label',
+                                                                                                                                    'value',
+                                                                                                                                    this.type,
+                                                                                                                                    'Type',
+                                                                                                                                ).find((option) => (item.formula == "" ?
+                                                                                                                                    option.value == 1 : option.value == 2))
+                                                                                                                            }
+                                                                                                                            onChange={(value) => {
+                                                                                                                                props.handleChange('type')(value);
+                                                                                                                                if (value.value == 1) {
+                                                                                                                                    item.formula = ""
+                                                                                                                                    item.flatAmount = "1"
+                                                                                                                                    this.updateSalary(this.state.CTC)
+                                                                                                                                } else {
+                                                                                                                                    item.formula = "1"
+                                                                                                                                    item.flatAmount = ""
+                                                                                                                                    this.updateSalary(this.state.CTC)
+                                                                                                                                }
+                                                                                                                            }}
+                                                                                                                            className={`${props.errors.type && props.touched.type
+                                                                                                                                ? 'is-invalid'
+                                                                                                                                : ''
+                                                                                                                                }`}
+                                                                                                                        />
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    )}
+                                                                                                />
+                                                                                            </td>
                                                                                             {item.formula ?
-                                                                                                (<td style={{ border: "1px solid #c8ced3" }}
+                                                                                                (<td style={{ border: "3px solid #c8ced3" }}
                                                                                                 >
                                                                                                     <Input
                                                                                                         disabled={true}
                                                                                                         type="text"
                                                                                                         size="30"
                                                                                                         style={{ textAlign: "center" }}
-                                                                                                        value={item.monthlyAmount ? item.monthlyAmount.toLocaleString() : 0.00}
+                                                                                                        value={item.monthlyAmount ? (item.monthlyAmount.toLocaleString(
+                                                                                                            navigator.language,
+                                                                                                            {
+                                                                                                                minimumFractionDigits: 2,
+                                                                                                                maximumFractionDigits: 2,
+                                                                                                            }
+                                                                                                        )) : 0.0}
                                                                                                         id=''
-                                                                                                        isDisabled={true}
                                                                                                     />
-                                                                                                    {/* {item.monthlyAmount ?  item.monthlyAmount.toLocaleString() : 0.00} */}
-
                                                                                                 </td>
-
                                                                                                 ) : (
-                                                                                                    <td style={{ border: "1px solid #c8ced3" }} >
+                                                                                                    <td style={{ border: "3px solid #c8ced3" }} >
                                                                                                         <Input
+                                                                                                            disabled={true}
                                                                                                             maxLength="8"
                                                                                                             type="text"
                                                                                                             size="30"
@@ -720,45 +868,89 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                             onChange={(option) => {
                                                                                                                 if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
                                                                                                                 this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
-
                                                                                                             }}
-                                                                                                            value={item.flatAmount}
+                                                                                                            value={item.flatAmount ? item.flatAmount : 0}
                                                                                                             id='' />
                                                                                                     </td>
                                                                                                 )}
-
                                                                                             {item.formula ?
-                                                                                                (<td style={{ border: "1px solid  #c8ced3" }} >
-
-                                                                                                    {item.yearlyAmount ? item.yearlyAmount.toLocaleString() : 0.00}
+                                                                                                (<td style={{ border: "3px solid  #c8ced3" }} >
+                                                                                                    {item.yearlyAmount ? (item.yearlyAmount
+                                                                                                        ? item.yearlyAmount.toLocaleString(
+                                                                                                            navigator.language,
+                                                                                                            {
+                                                                                                                minimumFractionDigits: 2,
+                                                                                                                maximumFractionDigits: 2,
+                                                                                                            }
+                                                                                                        )
+                                                                                                        : 0.0) : 0}
                                                                                                 </td>
-
                                                                                                 ) : (
-                                                                                                    <td style={{ border: "1px solid  #c8ced3" }} >
+                                                                                                    <td style={{ border: "3px solid  #c8ced3" }} >
 
-                                                                                                        {item.flatAmount ? item.flatAmount * 12 : 0.00}
+                                                                                                        {item.flatAmount ? item.flatAmount * 12 : 0.0}
                                                                                                     </td>
                                                                                                 )}
-                                                                                            <td>
-                                                                                                {item.description !== "Basic SALARY" ? (
+                                                                                            <td style={{ border: 'none' }}>
+                                                                                                {item.description !== "Basic SALARY" && item.id ? (
                                                                                                     <Button
                                                                                                         color='link'
 
                                                                                                         onClick={() => {
-                                                                                                            this.removeComponent(item.id)
+                                                                                                            this.removeComponent(item.salaryComponentId)
                                                                                                         }}
                                                                                                     >
                                                                                                         <i class="far fa-times-circle"></i>
-                                                                                                    </Button>) : ''}</td>
-
+                                                                                                    </Button>)
+                                                                                                    : ''}
+                                                                                            </td>
                                                                                         </tr>
-
                                                                                     )) : ""}
+                                                                                    <tr>
+                                                                                        <td colSpan={4} style={{ border: "3px solid  #c8ced3" }}>
+                                                                                            <Button
+                                                                                                color="link"
+                                                                                                className="pull-left"
+                                                                                                onClick={(e, props) => {
+                                                                                                    this.openSalaryComponentFixed(props);
+                                                                                                    this.renderActionForState()
+                                                                                                }}
+                                                                                            >
+                                                                                                <i className="fa fa-plus"></i>  {strings.AddEarnings}
+                                                                                            </Button>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr style={{ background: "#dfe9f7", color: "Black" }}>
+                                                                                        <td colSpan={2} style={{ border: "3px solid #c8ced3" }}>
+                                                                                            <b className="pull-left">{strings.TotalEarnings + ' (A):'}</b>
+                                                                                        </td>
+                                                                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                            {this.totalEarnings()
+                                                                                                ? 'AED ' + this.totalEarnings().toLocaleString(
+                                                                                                    navigator.language,
+                                                                                                    {
+                                                                                                        minimumFractionDigits: 2,
+                                                                                                        maximumFractionDigits: 2,
+                                                                                                    }
+                                                                                                )
+                                                                                                : 'AED ' + 0 + '.00'}
+                                                                                        </b></td>
+                                                                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                            {this.totalYearEarnings()
+                                                                                                ? 'AED ' + this.totalYearEarnings().toLocaleString(
+                                                                                                    navigator.language,
+                                                                                                    {
+                                                                                                        minimumFractionDigits: 2,
+                                                                                                        maximumFractionDigits: 2,
+                                                                                                    }
+                                                                                                )
+                                                                                                : 'AED ' + 0 + '.00'}
+                                                                                        </b></td>
+                                                                                    </tr>
                                                                                 </tbody>
                                                                             </Table>
-
                                                                         </Col>
-                                                                        <Col lg={8}>
+                                                                        {this.state.varEarn === true && <Col lg={8}>
                                                                             <Row className='ml-2'>
                                                                                 <h4>{strings.VariableEarnings}</h4>
                                                                                 <Button
@@ -833,7 +1025,6 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                             value={item.monthlyAmount.toLocaleString()}
                                                                                                             id='' />
                                                                                                     </td>
-
                                                                                                     ) : (
                                                                                                         <td style={{ border: "1px solid  #c8ced3" }} >
                                                                                                             <Input
@@ -850,13 +1041,11 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                                 id='' />
                                                                                                         </td>
                                                                                                     )}
-
                                                                                                 {item.formula ?
                                                                                                     (<td style={{ border: "1px solid  #c8ced3" }} >
 
                                                                                                         {(item.yearlyAmount.toLocaleString())}
                                                                                                     </td>
-
                                                                                                     ) : (
                                                                                                         <td style={{ border: "1px solid  #c8ced3" }} >
                                                                                                             {item.flatAmount * 12}
@@ -867,96 +1056,148 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                     <Button
                                                                                                         color='link'
                                                                                                         onClick={() => {
-                                                                                                            this.removeComponent(item.id)
+                                                                                                            this.removeComponent(item.salaryComponentId)
                                                                                                         }}
                                                                                                     >
                                                                                                         <i class="far fa-times-circle"></i>
-                                                                                                    </Button></td>
-
-
+                                                                                                    </Button>
+                                                                                                </td>
                                                                                             </tr>
                                                                                         ))) : (
                                                                                         <tr style={{ border: "1px solid #c8ced3" }}></tr>
                                                                                     )}
-
-
                                                                                 </tbody>
                                                                             </Table>
-
-                                                                        </Col>
+                                                                        </Col>}
                                                                         <Col lg={8}>
-                                                                            <Row className='ml-2'>
-                                                                                <h4>{strings.Deductions}</h4>
-                                                                                <Button
-                                                                                    color="link"
-                                                                                    className=" mr-3 mb-3"
-                                                                                    onClick={(e, props) => {
-                                                                                        this.openSalaryComponentDeduction(props);
-                                                                                        this.renderActionForState()
-                                                                                    }}
-                                                                                >
-                                                                                    <i className="fa fa-plus"></i>  {strings.AddDeduction}
-                                                                                </Button></Row>
-                                                                            <Table className="text-center" style={{ border: "1px solid #c8ced3", width: '150%' }}>
-                                                                                <thead style={{ border: "1px solid #c8ced3" }}>
-                                                                                    <tr style={{ border: "1px solid #c8ced3", background: '#dfe9f7', color: "Black" }}>
-                                                                                        {this.state.Deduction ? this.columnHeader1.map((column, index) => {
+                                                                            <Row className="ml-2 mt-4">
+                                                                                <h4>{strings.Deductions + ":"}</h4>
+                                                                            </Row>
+                                                                            <Table className="text-center" style={{ width: '150%' }}>
+                                                                                <thead>
+                                                                                    <tr style={{ background: '#dfe9f7', color: "Black" }}>
+                                                                                        {this.columnHeader1.map((column, index) => {
                                                                                             return (
-                                                                                                <th>
+                                                                                                <th style={{ border: "3px solid #c8ced3" }}>
                                                                                                     {column.label}
                                                                                                 </th>
                                                                                             );
-                                                                                        }) : ""}
+                                                                                        })}
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
                                                                                     {this.state.Deduction ? (
                                                                                         Object.values(
                                                                                             this.state.Deduction,
-                                                                                        ).map((item) => (
+                                                                                        ).map((item, index) => (
                                                                                             <tr>
-                                                                                                {/* <td >{item.id}</td> */}
-                                                                                                <td style={{ border: "1px solid #c8ced3" }} >{item.description}</td>
-                                                                                                {item.formula ?
-                                                                                                    (
-                                                                                                        <td style={{ border: "1px solid #c8ced3" }}>
-                                                                                                            <Input
-                                                                                                                type="number"
-                                                                                                                // min="0"
-                                                                                                                min="0"
-                                                                                                                max="99"
-                                                                                                                step="0.01"
-                                                                                                                maxLength={2}
-                                                                                                                size="30"
-                                                                                                                className="text-center"
-                                                                                                                value={item.formula}
-                                                                                                                onChange={(option) => {
-                                                                                                                    if (option.target.value === '' || this.regDec1.test(option.target.value)) {
-                                                                                                                        props.handleChange('formula')(option)
-                                                                                                                        this.updateSalary1(this.state.CTC, option.target.value, item.id);
+                                                                                                <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComponentName(item, index, 'Deduction')}</td>
+                                                                                                <td style={{ border: "3px solid #c8ced3" }}>
+                                                                                                    <Field
+                                                                                                        render={({ field, form }) => (
+                                                                                                            <div>
+                                                                                                                <div class="input-group">
+                                                                                                                    {item.formula ?
+                                                                                                                        <Input
+                                                                                                                            type="number"
+                                                                                                                            min="0"
+                                                                                                                            max="99"
+                                                                                                                            step="0.01"
+                                                                                                                            size="30"
+                                                                                                                            maxLength={2}
+                                                                                                                            style={{ textAlign: "center" }}
+                                                                                                                            id="formula"
+                                                                                                                            name="formula"
+                                                                                                                            value={item.formula}
+                                                                                                                            onChange={(option) => {
+                                                                                                                                if (option.target.value === '' || this.regDec1.test(option.target.value)) {
+                                                                                                                                    props.handleChange('formula')(option)
+                                                                                                                                    this.updateSalary1(this.state.CTC, option.target.value, item.id);
+                                                                                                                                }
+                                                                                                                            }}
+                                                                                                                        /> :
+                                                                                                                        <Input
+                                                                                                                            maxLength="8"
+                                                                                                                            type="text"
+                                                                                                                            size="30"
+                                                                                                                            style={{ textAlign: "center" }}
+                                                                                                                            onChange={(option) => {
+                                                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                                                                                this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
+                                                                                                                            }}
+                                                                                                                            value={item.flatAmount}
+                                                                                                                            id='' />
                                                                                                                     }
-
-
-                                                                                                                }}
-                                                                                                            />{' '}% of Basic
-                                                                                                        </td >
-                                                                                                    ) : (
-                                                                                                        <td style={{ border: "1px solid #c8ced3" }}>{strings.FixedAmount}</td>)
-                                                                                                }
+                                                                                                                    <div class="dropdown open input-group-append">
+                                                                                                                        <div style={{ width: '200px' }}>
+                                                                                                                            <Select
+                                                                                                                                options={
+                                                                                                                                    this.type
+                                                                                                                                        ? selectOptionsFactory.renderOptions(
+                                                                                                                                            'label',
+                                                                                                                                            'value',
+                                                                                                                                            this.type,
+                                                                                                                                            'Type',
+                                                                                                                                        )
+                                                                                                                                        : []
+                                                                                                                                }
+                                                                                                                                id="type"
+                                                                                                                                name="type"
+                                                                                                                                placeholder={strings.Select + strings.Type}
+                                                                                                                                value={
+                                                                                                                                    this.type
+                                                                                                                                    && selectOptionsFactory.renderOptions(
+                                                                                                                                        'label',
+                                                                                                                                        'value',
+                                                                                                                                        this.type,
+                                                                                                                                        'Type',
+                                                                                                                                    ).find((option) => (item.formula == "" ?
+                                                                                                                                        option.value == 1 : option.value == 2))
+                                                                                                                                }
+                                                                                                                                onChange={(value) => {
+                                                                                                                                    props.handleChange('type')(value);
+                                                                                                                                    if (value.value == 1) {
+                                                                                                                                        item.formula = ""
+                                                                                                                                        item.flatAmount = "1"
+                                                                                                                                        this.updateSalary(this.state.CTC)
+                                                                                                                                    } else {
+                                                                                                                                        item.formula = "1"
+                                                                                                                                        item.flatAmount = ""
+                                                                                                                                        this.updateSalary(this.state.CTC)
+                                                                                                                                    }
+                                                                                                                                }}
+                                                                                                                                className={`${props.errors.type && props.touched.type
+                                                                                                                                    ? 'is-invalid'
+                                                                                                                                    : ''
+                                                                                                                                    }`}
+                                                                                                                            />
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        )}
+                                                                                                    />
+                                                                                                </td>
                                                                                                 {item.formula ?
-                                                                                                    (<td style={{ border: "1px solid #c8ced3" }} >
+                                                                                                    (<td style={{ border: "3px solid #c8ced3" }} >
                                                                                                         <Input
                                                                                                             disabled={true}
                                                                                                             type="text"
                                                                                                             size="30"
                                                                                                             style={{ textAlign: "center" }}
-                                                                                                            value={item.monthlyAmount.toLocaleString()}
+                                                                                                            value={item.monthlyAmount ? (item.monthlyAmount.toLocaleString(
+                                                                                                                navigator.language,
+                                                                                                                {
+                                                                                                                    minimumFractionDigits: 2,
+                                                                                                                    maximumFractionDigits: 2,
+                                                                                                                }
+                                                                                                            )) : 0}
                                                                                                         />
                                                                                                     </td>
-
                                                                                                     ) : (
-                                                                                                        <td style={{ border: "1px solid #c8ced3" }} >
+                                                                                                        <td style={{ border: "3px solid #c8ced3" }} >
                                                                                                             <Input
+                                                                                                                disabled={true}
                                                                                                                 maxLength="8"
                                                                                                                 type="text"
                                                                                                                 size="30"
@@ -966,98 +1207,183 @@ class UpdateSalaryComponent extends React.Component {
 
                                                                                                                 }}
                                                                                                                 style={{ textAlign: "center" }}
-                                                                                                                value={item.flatAmount}
+                                                                                                                value={item.flatAmount ? (item.flatAmount.toLocaleString(
+                                                                                                                    navigator.language,
+                                                                                                                    {
+                                                                                                                        minimumFractionDigits: 2,
+                                                                                                                        maximumFractionDigits: 2,
+                                                                                                                    }
+                                                                                                                )) : 0}
                                                                                                                 id='' />
                                                                                                         </td>
                                                                                                     )}
-
                                                                                                 {item.formula ?
-                                                                                                    (<td style={{ border: "1px solid  #c8ced3" }} >
-
-                                                                                                        {item.yearlyAmount.toLocaleString()}
+                                                                                                    (<td style={{ border: "3px solid  #c8ced3" }} >
+                                                                                                        {item.yearlyAmount ? (item.yearlyAmount.toLocaleString(
+                                                                                                            navigator.language,
+                                                                                                            {
+                                                                                                                minimumFractionDigits: 2,
+                                                                                                                maximumFractionDigits: 2,
+                                                                                                            }
+                                                                                                        )) : 0}
                                                                                                     </td>
-
                                                                                                     ) : (
-                                                                                                        <td style={{ border: "1px solid  #c8ced3" }} >
-                                                                                                            {item.flatAmount * 12}
+                                                                                                        <td style={{ border: "3px solid  #c8ced3" }} >
+                                                                                                            {item.flatAmount ? (item.flatAmount * 12) : 0}
                                                                                                         </td>
                                                                                                     )}
-                                                                                                <td>
-                                                                                                    <Button
+                                                                                                <td style={{ borderTop: "0px" }}>
+                                                                                                    {item.id && <Button
                                                                                                         color='link'
-
                                                                                                         onClick={() => {
-                                                                                                            this.removeComponent(item.id)
+                                                                                                            this.removeComponent(item.salaryComponentId)
                                                                                                         }}
                                                                                                     >
                                                                                                         <i class="far fa-times-circle"></i>
-                                                                                                    </Button></td>
+                                                                                                    </Button>}</td>
                                                                                             </tr>
                                                                                         ))) : (
                                                                                         " "
                                                                                     )}
+                                                                                    <tr>
+                                                                                        <td colSpan={4} style={{ border: "3px solid  #c8ced3" }}>
+                                                                                            <Button
+                                                                                                color="link"
+                                                                                                className="pull-left"
+                                                                                                onClick={(e, props) => {
+                                                                                                    this.openSalaryComponentDeduction(props);
+                                                                                                    this.renderActionForState()
+                                                                                                }}
+                                                                                            >
+                                                                                                <i className="fa fa-plus"></i>  {strings.AddDeduction}
+                                                                                            </Button>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr style={{ background: "#dfe9f7", color: "Black" }}>
+                                                                                        <td colSpan={2} style={{ border: "3px solid #c8ced3" }}>
+                                                                                            <b className="pull-left">{strings.Total + ' ' + strings.Deductions + ' (B):'}</b>
+                                                                                        </td>
+                                                                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                            {typeof this.state.Deduction === 'object' ? (this.totalDeductions()
+                                                                                                ? 'AED ' + this.totalDeductions().toLocaleString(
+                                                                                                    navigator.language,
+                                                                                                    {
+                                                                                                        minimumFractionDigits: 2,
+                                                                                                        maximumFractionDigits: 2,
+                                                                                                    }
+                                                                                                )
+                                                                                                : 'AED ' + 0 + '.00') : 'AED ' + 0 + '.00'}
+                                                                                        </b></td>
+                                                                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                            {typeof this.state.Deduction === 'object' ? (this.totalYearDeductions()
+                                                                                                ? 'AED ' + this.totalYearDeductions().toLocaleString(
+                                                                                                    navigator.language,
+                                                                                                    {
+                                                                                                        minimumFractionDigits: 2,
+                                                                                                        maximumFractionDigits: 2,
+                                                                                                    }
+                                                                                                )
+                                                                                                : 'AED ' + 0 + '.00') : 'AED ' + 0 + '.00'}
+                                                                                        </b></td>
+                                                                                    </tr>
                                                                                 </tbody>
                                                                             </Table>
-
                                                                         </Col>
-                                                                        <Col lg={8}>
-                                                                            <Table className="text-center" style={{ border: "1px solid #c8ced3", width: '150%' }}>
-                                                                                {/* <thead style={{border:"1px solid #dfe9f7"}}>
-                                                                      <tr style={{border:"1px solid #dfe9f7",    background: '#dfe9f7',color:"Black"}}>
-                                                                        {this.columnHeader1.map((column, index) => {
-                                                                            return (
-                                                                                <th>
-                                                                                    {column.label}
-                                                                                </th>
-                                                                            );
-                                                                        })}
-                                                                    </tr>
-                                                                </thead> */}
+                                                                        <Col lg={9}>
+                                                                            <Row className="ml-2 mt-4">
+                                                                                <h4>{strings.Gross + ' ' + strings.Earnings + ':'}</h4>
+                                                                            </Row>
+                                                                            <Table
+                                                                                className="text-center"
+                                                                                style={{
+                                                                                    width: "133%",
+                                                                                    marginBottom: "0px"
+                                                                                }}
+                                                                            >
                                                                                 <tbody>
-                                                                                    {this.state.Fixed_Allowance ? (
-                                                                                        Object.values(
-                                                                                            this.state.Fixed_Allowance,
-                                                                                        ).map((item) => (
-                                                                                            <Row >
-                                                                                                <Col className="p-2"  >{item.description ? item.description : "-"}</Col>
-                                                                                                <Col className="p-2" > {"-"} </Col>
-                                                                                                <Col className="p-2" >AED {item.monthlyAmount ? item.monthlyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"} </Col>
-                                                                                                <Col className="p-2" >AED {item.yearlyAmount ? item.yearlyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}</Col>
-                                                                                            </Row>
-                                                                                        ))) : (
-                                                                                        ""
-                                                                                    )}
+                                                                                    <tr style={{ background: "#dfe9f7", color: "Black" }}>
+                                                                                        <td colSpan={2} style={{ border: "3px solid #c8ced3", width: "50%" }}>
+                                                                                            <b className="pull-left">{strings.Gross + ' ' + strings.Earnings + ' (C):'}</b>
+                                                                                            <b className="pull-right">{'(A + B)'}</b>
+                                                                                        </td>
+                                                                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                            {this.grossEarnings()
+                                                                                                ? 'AED ' + this.grossEarnings().toLocaleString(
+                                                                                                    navigator.language,
+                                                                                                    {
+                                                                                                        minimumFractionDigits: 2,
+                                                                                                        maximumFractionDigits: 2,
+                                                                                                    }
+                                                                                                )
+                                                                                                : 'AED ' + 0 + '.00'}
+                                                                                        </b></td>
+                                                                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                            {this.grossYearEarnings()
+                                                                                                ? 'AED ' + this.grossYearEarnings().toLocaleString(
+                                                                                                    navigator.language,
+                                                                                                    {
+                                                                                                        minimumFractionDigits: 2,
+                                                                                                        maximumFractionDigits: 2,
+                                                                                                    }
+                                                                                                )
+                                                                                                : 'AED ' + 0 + '.00'}
+                                                                                        </b></td>
+                                                                                    </tr>
                                                                                 </tbody>
                                                                             </Table>
-
+                                                                            {this.state.errorMsg && props.errors.grossEarning && (
+                                                                                <div style={{ width: '133%' }}>
+                                                                                    <div className='pull-right'>
+                                                                                        <div className='invalid-feedback d-block' style={{ fontSize: 'medium' }}>
+                                                                                            {props.errors.grossEarning}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            )}
                                                                         </Col>
-                                                                        <Col lg={8}>
-                                                                            <Table className="text-center" style={{ border: "1px solid #c8ced3", width: '150%' }}>
-                                                                                {/* <thead style={{border:"1px solid #c8ced3"}}>
-                                                                      <tr style={{border:"1px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
-                                                                        {this.columnHeader1.map((column, index) => {
-                                                                            return (
-                                                                                <th>
-                                                                                    {column.label}
-                                                                                </th>
-                                                                            );
-                                                                        })}
-                                                                    </tr>
-                                                                </thead>  */}
+                                                                        <Col lg={9}>
+                                                                            <Row className="ml-2 mt-4">
+                                                                                <h4>{strings.TotalNetPay + ':'}</h4>
+                                                                            </Row>
+                                                                            <Table
+                                                                                className="text-center"
+                                                                                style={{
+                                                                                    width: "133%",
+                                                                                }}
+                                                                            >
                                                                                 <tbody>
-                                                                                    <Row >
-                                                                                        <Col className="p-2" >{"Company Cost"}</Col>
-                                                                                        <Col className="p-2"  > {"-"} </Col>
-                                                                                        <Col className="p-2" >AED {this.state.CTC ? (this.state.CTC / 12).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}</Col>
-                                                                                        <Col className="p-2" >AED {this.state.CTC ? (this.state.CTC / 1).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}</Col>
-                                                                                    </Row>
-
+                                                                                    <tr style={{ background: "#dfe9f7", color: "Black" }}>
+                                                                                        <td colSpan={2} style={{ border: "3px solid #c8ced3", width: "50%" }}>
+                                                                                            <b className="pull-left">{strings.TotalNetPay + ':'}</b>
+                                                                                            <b className="pull-right">{'(C - B)'}</b>
+                                                                                        </td>
+                                                                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                            {this.totalEarnings()
+                                                                                                ? 'AED ' + this.totalEarnings().toLocaleString(
+                                                                                                    navigator.language,
+                                                                                                    {
+                                                                                                        minimumFractionDigits: 2,
+                                                                                                        maximumFractionDigits: 2,
+                                                                                                    }
+                                                                                                )
+                                                                                                : 'AED ' + 0.0 + '.00'}
+                                                                                        </b></td>
+                                                                                        <td style={{ border: "3px solid  #c8ced3" }}><b>
+                                                                                            {this.totalYearEarnings()
+                                                                                                ? 'AED ' + this.totalYearEarnings().toLocaleString(
+                                                                                                    navigator.language,
+                                                                                                    {
+                                                                                                        minimumFractionDigits: 2,
+                                                                                                        maximumFractionDigits: 2,
+                                                                                                    }
+                                                                                                )
+                                                                                                : 'AED ' + 0.0 + '.00'}
+                                                                                        </b></td>
+                                                                                    </tr>
                                                                                 </tbody>
                                                                             </Table>
                                                                         </Col>
                                                                     </Row>
-
-
                                                                     <Row className='pull-right'>
                                                                         <FormGroup className="text-right">
                                                                             <Button
@@ -1066,10 +1392,14 @@ class UpdateSalaryComponent extends React.Component {
                                                                                 className="btn-square mr-3"
                                                                                 disabled={this.state.disabled}
                                                                                 onClick={() => {
+                                                                                    this.setState({ errorMsg: true })
                                                                                     //	added validation popup	msg
                                                                                     props.handleBlur();
-                                                                                    if (props.errors && Object.keys(props.errors).length != 0)
+                                                                                    if (
+                                                                                        props.errors == {} && Object.keys(props.errors) == [] && Object.keys(props.errors) != 'grossEarning'
+                                                                                    ) {
                                                                                         this.props.commonActions.fillManDatoryDetails();
+                                                                                    }
                                                                                 }}
                                                                             >
                                                                                 <i className="fa fa-dot-circle-o"></i>{' '}
@@ -1081,9 +1411,8 @@ class UpdateSalaryComponent extends React.Component {
                                                                                 color="secondary"
                                                                                 className="btn-square"
                                                                                 onClick={() => {
-                                                                                    this.props.history.push(
-                                                                                        '/admin/master/employee',
-                                                                                    );
+                                                                                    this.props.history.push('/admin/master/employee/viewEmployee',
+                                                                                        { id: this.props.location.state.id, tabNo: '2' })
                                                                                 }}
                                                                             >
                                                                                 <i className="fa fa-ban"></i> {strings.Cancel}
@@ -1106,11 +1435,13 @@ class UpdateSalaryComponent extends React.Component {
                             closeSalaryComponentFixed={(e) => {
                                 this.closeSalaryComponentFixed(e);
                             }}
-                            salary_structure_dropdown={this.props.salary_structure_dropdown}
-                            salary_component_dropdown={this.props.salary_component_fixed_dropdown}
-                            CreateComponent={this.props.createPayrollEmployeeActions.saveSalaryComponent}
-                            selectedData={this.state.selectedData}
-
+                            getCurrentSalaryComponent={(e) => {
+                                this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownFixed().then(res => {
+                                    if (res.status === 200) {
+                                        this.getCurrentSalaryComponent(res.data[res.data.length - 1], "Fixed")
+                                    }
+                                })
+                            }}
                         />
                         <SalaryComponentVariable
                             openSalaryComponentVariable={this.state.openSalaryComponentVariable}
@@ -1121,18 +1452,18 @@ class UpdateSalaryComponent extends React.Component {
                             salary_component_dropdown={this.props.salary_component_varaible_dropdown}
                             CreateComponent={this.props.createPayrollEmployeeActions.saveSalaryComponent}
                             selectedData={this.state.selectedData}
-
                         />
                         <SalaryComponentDeduction
                             openSalaryComponentDeduction={this.state.openSalaryComponentDeduction}
                             closeSalaryComponentDeduction={(e) => {
                                 this.closeSalaryComponentDeduction(e);
                             }}
-                            salary_structure_dropdown={this.props.salary_structure_dropdown}
-                            salary_component_dropdown={this.props.salary_component_deduction_dropdown}
-                            CreateComponent={this.props.createPayrollEmployeeActions.saveSalaryComponent}
-                            selectedData={this.state.selectedData}
-
+                            getCurrentSalaryComponent={(e) => {
+                                this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownDeduction().then(res => {
+                                    if (res.status === 200)
+                                        this.getCurrentSalaryComponent(res.data[res.data.length - 1], "Deduction")
+                                })
+                            }}
                         />
                     </div>
                     {this.state.disableLeavePage ? "" : <LeavePage />}

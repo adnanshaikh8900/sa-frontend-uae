@@ -13,6 +13,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip
 } from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import Select from 'react-select'
@@ -150,11 +151,11 @@ class UpdatePayroll extends React.Component {
 
 	};
 	calculatePayperioad = (startDate, endDate) => {
-
+		let month = moment(startDate).format("MMMM");
 		// let diffDays=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1
 		const diffTime = Math.abs(startDate - endDate);
-		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-
+		let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+		diffDays = diffDays > 30 ? 30 : month == "February" ? 30 : diffDays;
 		this.setState({ paidDays: diffDays });
 		this.getAllPayrollEmployee(startDate);
 	}
@@ -165,7 +166,6 @@ class UpdatePayroll extends React.Component {
 				//	 
 				let payPeriodString = res.data.payPeriod;
 				let dateArray = payPeriodString.split('-')
-
 				this.setState({
 					loading: false,
 
@@ -196,8 +196,8 @@ class UpdatePayroll extends React.Component {
 					// 	onSelect: this.onRowSelect,
 					// 	onSelectAll: this.onSelectAll,
 					// },
-					startDate: moment(dateArray[0]),
-					endDate: moment(dateArray[1])
+					startDate: moment(dateArray[0], 'DD/MM/YYYY'),
+					endDate: moment(dateArray[1], 'DD/MM/YYYY')
 
 				}
 				)
@@ -319,7 +319,6 @@ class UpdatePayroll extends React.Component {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
 			})
 	}
-
 	handleSubmit = (data, resetForm) => {
 
 		this.setState({ disabled: true, disableLeavePage: true });
@@ -331,9 +330,8 @@ class UpdatePayroll extends React.Component {
 			endDate
 		} = data;
 		let employeeListIds = this.state.selectedRows ? this.state.selectedRows : '';
-
 		let diff = Math.abs(parseInt((startDate - endDate) / (1000 * 60 * 60 * 24), 10)) + 1
-		let string = moment(this.state.startDate).format('MM/DD/YYYY') + '-' + moment(this.state.endDate).format('MM/DD/YYYY')
+		let string = moment(this.state.startDate).format('DD/MM/YYYY') + '-' + moment(this.state.endDate).format('DD/MM/YYYY')
 		// this.setState({payPeriod:diff});
 		this.setState({ payPeriod: string });
 		const formData = new FormData();
@@ -439,11 +437,15 @@ class UpdatePayroll extends React.Component {
 	}
 
 	updateAmounts = (row, value) => {
+		if (value > 30) {
+			value = 30;
+		}
+		let tmpPaidDay = this.state.paidDays;
 		let newData = [...this.state.allPayrollEmployee]
 		newData = newData.map((data) => {
 			if (row.id === data.id) {
 				data.lopDay = value;
-				data.noOfDays = 30 - value
+				data.noOfDays = parseFloat(tmpPaidDay) - value
 
 				data.deduction = ((data.originalDeduction / 30) * data.noOfDays).toFixed(2)
 				let deduction = data.noOfDays == 0 ? 0 : data.deduction;
@@ -512,7 +514,7 @@ class UpdatePayroll extends React.Component {
 								// data.originalGrossPay=data.grossPay		
 								// data.perDaySal=data.originalGrossPay / data.noOfDays			
 								let tmpPaidDay = this.state.paidDays > 30 ? 30 :
-									(this.state.paidDays == 28 && month == "February" ? 30 : this.state.paidDays)
+									(month == "February" ? 30 : this.state.paidDays)
 								if (this.state.checkForLopSetting === true) data.noOfDays = tmpPaidDay
 
 								data.originalDeduction = data.deduction
@@ -521,7 +523,7 @@ class UpdatePayroll extends React.Component {
 								data.originalGrossPay = data.grossPay
 								data.perDaySal = data.originalGrossPay / 30
 
-								if (this.state.checkForLopSetting === true) data.lopDay = 30 - tmpPaidDay;
+								if (this.state.checkForLopSetting === true) data.lopDay = 0;
 								data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
 								data.netPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
 
@@ -529,7 +531,7 @@ class UpdatePayroll extends React.Component {
 								if (empList && empList?.length > 0) {
 									let flag = true;
 									empList.map(obj => {
-										if (obj.payPeriod.includes(moment(date).format("MM/DD/YYYY"))) {
+										if (obj.payPeriod.includes(moment(date).format("DD/MM/YYYY"))) {
 											flag = false;
 										}
 									})
@@ -637,45 +639,38 @@ class UpdatePayroll extends React.Component {
 		const cols = [
 			{
 				label: 'Employee No',
-				dataSort: true,
 				width: '',
 				key: 'empCode'
 			},
 			{
 				label: 'Employee Name',
-				dataSort: true,
 				width: '',
 				key: 'empName'
 
 			},
 			{
 				label: 'LOP',
-				dataSort: true,
 				width: '8%',
 				key: 'lopDay'
 			},
 			{
 				label: 'Paid Days',
-				dataSort: true,
 				width: '12%',
 				key: 'noOfDays'
 			},
 			{
 				label: 'Gross Pay',
-				dataSort: true,
 				width: '',
 				key: 'grossPay'
 			},
 
 			{
 				label: 'Deductions',
-				dataSort: true,
 				width: '',
 				key: 'deduction'
 			},
 			{
 				label: 'Net Pay',
-				dataSort: true,
 				width: '12%',
 				key: 'netPay'
 
@@ -712,9 +707,9 @@ class UpdatePayroll extends React.Component {
 										return (
 											<Input
 												type="number"
-												min={30 - this.state.paidDays}
+												min={0}
 												step="0.5"
-												max={30}
+												max={this.state.paidDays - 1}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}
@@ -723,7 +718,7 @@ class UpdatePayroll extends React.Component {
 
 													let value = parseFloat(evt.target.value === "" ? "0" : evt.target.value);
 
-													if (value > this.state.paidDays || value < 0) {
+													if (value >= this.state.paidDays || value < 0 || value === this.state.paidDays) {
 														return;
 													}
 
@@ -959,6 +954,7 @@ class UpdatePayroll extends React.Component {
 			onSelect: this.onRowSelect,
 			onSelectAll: this.onSelectAll,
 		}
+		console.log(this.state.payPeriod)
 		var today = new Date();
 		return (
 			loading == true ? <Loader /> :
@@ -1157,6 +1153,16 @@ class UpdatePayroll extends React.Component {
 																						<span className="text-danger">* </span>
 																						{strings.payroll_approver}
 																					</Label>
+																					<i
+																						id="payrollApprovertip"
+																						className="fa fa-question-circle ml-1"
+																					></i>
+																					<UncontrolledTooltip
+																						placement="right"
+																						target="payrollApprovertip"
+																					>
+																						It is mandatory to have an approver for payroll submission. Otherwise, it is not mandatory.
+																					</UncontrolledTooltip>
 																					<Select
 																						isDisabled={this.disable() ? true : false}
 																						// styles={customStyles}
@@ -1189,7 +1195,6 @@ class UpdatePayroll extends React.Component {
 																								: []
 																						}
 																						onChange={(option) => {
-																							debugger
 																							if (option && option.value) {
 																								this.setState({ payrollApproverRequired: false, userId: option.value, payrollApprover: option.value, submitButton: false })
 																							} else

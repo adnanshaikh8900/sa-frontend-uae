@@ -23,6 +23,8 @@ import * as Yup from 'yup';
 import { Formik, Field } from 'formik';
 import * as DebitNotesDetailActions from './actions';
 import * as DebitNotesActions from '../../actions';
+import * as SupplierInvoiceDetailActions from './actions';
+import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
 import { LeavePage, Loader, ConfirmDeleteModal, ProductTableCalculation } from 'components';
@@ -61,6 +63,12 @@ const mapDispatchToProps = (dispatch) => {
 		debitNotesActions: bindActionCreators(DebitNotesActions, dispatch,),
 		debitNotesDetailActions: bindActionCreators(DebitNotesDetailActions, dispatch,),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+
+		ProductActions: bindActionCreators(ProductActions, dispatch),
+		supplierInvoiceDetailActions: bindActionCreators(
+			SupplierInvoiceDetailActions,
+			dispatch,
+		),
 	};
 };
 const customStyles = {
@@ -113,6 +121,7 @@ class DetailDebitNote extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			fileName: '',
+			purchaseCategory: [],
 			basecurrency: [],
 			customer_currency: '',
 			loadingMsg: "Loading",
@@ -120,6 +129,7 @@ class DetailDebitNote extends React.Component {
 			taxType: false,
 			disableLeavePage: false,
 			isCreatedWithoutInvoice: false,
+			isReverseChargeEnabled: false,
 			receiptDate: '',
 		};
 		this.formRef = React.createRef();
@@ -177,6 +187,7 @@ class DetailDebitNote extends React.Component {
 								taxType: res.data.taxType ? res.data.taxType : false,
 								isCreatedWithoutInvoice: res.data.invoiceId ? false : true,
 								debitNoteId: this.props.location.state.id,
+								isReverseChargeEnabled: res.data.isReverseChargeEnabled,
 								initValue: {
 									invoiceNumber: res.data.invoiceId ? { value: res.data.invoiceId, label: res.data.invoiceNumber } : '',
 									receiptAttachmentDescription: res.data
@@ -269,11 +280,34 @@ class DetailDebitNote extends React.Component {
 						this.formRef.current.setFieldValue('remainingInvoiceAmount', res.data.remainingInvoiceAmount, true);
 						this.formRef.current.setFieldValue('currency', res.data.currencyCode ? res.data.currencyCode : '', true);
 						this.formRef.current.setFieldValue('invoiceNumber', res.data.invoiceId ? res.data.invoiceId : '', true);
+						this.getInvoiceDetails(this.state.initValue.invoiceNumber.value)
+						this.purchaseCategory();
 
 					}
 				});
 		} else {
 			this.props.history.push('/admin/expense/debit-notes');
+		}
+	};
+
+	purchaseCategory = () => {
+		try {
+			this.props.ProductActions.getTransactionCategoryListForPurchaseProduct(
+				'10',
+			).then((res) => {
+				if (res.status === 200) {
+					this.setState(
+						{
+							purchaseCategory: res.data,
+						},
+						() => {
+							console.log(this.state.purchaseCategory);
+						},
+					);
+				}
+			});
+		} catch (err) {
+			console.log(err);
 		}
 	};
 
@@ -751,6 +785,65 @@ class DetailDebitNote extends React.Component {
 		);
 	};
 
+	renderAccount = (cell, row, props) => {
+		const { purchaseCategory } = this.state;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.transactionCategoryId`}
+				render={({ field, form }) => (
+					<Select
+						styles={{
+							menu: (provided) => ({ ...provided, zIndex: 9999 }),
+						}}
+						options={purchaseCategory ? purchaseCategory : []}
+						id="transactionCategoryId"
+						onChange={(e) => {
+							this.selectItem(
+								e.value,
+								row,
+								'transactionCategoryId',
+								form,
+								field,
+								props,
+							);
+						}}
+						isDisabled={true}
+						value={
+							purchaseCategory.length > 0 && row.transactionCategoryLabel
+								? purchaseCategory
+									.find((item) => item.label === row.transactionCategoryLabel)
+									.options.find(
+										(item) => item.value === +row.transactionCategoryId,
+									)
+								: row.transactionCategoryId
+						}
+						placeholder={strings.Select + strings.Account}
+						className={`${props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)]
+								.transactionCategoryId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)]
+								.transactionCategoryId
+							? 'is-invalid'
+							: ''
+							}`}
+					/>
+				)}
+			/>
+		);
+	};
+
 	deleteRow = (e, row, props) => {
 		const id = row['id'];
 		let newData = [];
@@ -858,6 +951,7 @@ class DetailDebitNote extends React.Component {
 			formData.append('totalAmount', this.state.initValue.totalAmount);
 			formData.append('discount', this.state.initValue.totalDiscount);
 			formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
+			formData.append('isReverseChargeEnabled', this.state.isReverseChargeEnabled);
 		}
 		if (contactId) {
 			formData.append('contactId', contactId.value ? contactId.value : contactId);
@@ -940,7 +1034,7 @@ class DetailDebitNote extends React.Component {
 	getTaxTreatment = (opt) => {
 		this.props.customer_list.map(item => {
 			if (item.label.contactId == opt) {
-				this.formRef.current.setFieldValue('taxTreatmentId', { 'label': item.label.taxTreatment.taxTreatment, 'value': item.label.taxTreatment.id }, true);
+				this.formRef.current.setFieldValue('taxTreatmentId', item.label.taxTreatment.taxTreatment, true);
 			}
 		});
 	}
@@ -956,6 +1050,7 @@ class DetailDebitNote extends React.Component {
 						this.setState({
 							receiptDate: response.data.receiptDate ? new Date(moment(response.data.receiptDate, 'YYYY-MM-DD').format()) : new Date(),
 							option: custmerName,
+							isReverseChargeEnabled: response.data.isReverseChargeEnabled,
 							data: response.data.invoiceLineItems ? response.data.invoiceLineItems : [],
 							taxType: response.data.taxType ? response.data.taxType : false,
 							totalAmount: response.data.totalAmount,
@@ -1001,11 +1096,11 @@ class DetailDebitNote extends React.Component {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, loadingMsg, initValue, loading, dialog, isCreatedWithoutInvoice } = this.state;
+		const { data, loadingMsg, initValue, loading, dialog, isCreatedWithoutInvoice, isReverseChargeEnabled } = this.state;
 
 		const { tax_treatment_list, invoice_list, currency_convert_list, customer_list, universal_currency_list, company_details } = this.props;
 		let tmpCustomer_list = []
-		const { isRegisteredVat } = company_details;
+		const { isRegisteredVat, isDesignatedZone } = company_details;
 
 		customer_list.map(item => {
 			let obj = { label: item.label.contactName, value: item.value }
@@ -1231,61 +1326,61 @@ class DetailDebitNote extends React.Component {
 																		</FormGroup>
 																	</Col>
 																	{isRegisteredVat &&
-																	<Col lg={3}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="taxTreatmentId">
-																				{strings.TaxTreatment}
-																			</Label>
-																			<Select
-																				options={
-																					tax_treatment_list
-																						? selectOptionsFactory.renderOptions(
-																							'name',
-																							'id',
-																							tax_treatment_list,
-																							'Tax Treatment',
-																						)
-																						: []
-																				}
-																				isDisabled={true}
-																				id="taxTreatmentId"
-																				name="taxTreatmentId"
-																				placeholder={strings.Select + strings.TaxTreatment}
-																				value={props.values.taxTreatmentId?.value ? props.values.taxTreatmentId :
-																					tax_treatment_list &&
-																					selectOptionsFactory
-																						.renderOptions(
-																							'name',
-																							'id',
-																							tax_treatment_list,
-																							'Tax Treatment',
-																						)
-																						.find(
-																							(option) =>
-																								option.label === props.values.taxTreatmentId,
-																						)
-																				}
-																				onChange={(option) => {
-																					props.handleChange('taxTreatmentId')(
-																						option,
-																					);
-																				}}
-																				className={
-																					props.errors.taxTreatmentId &&
-																						props.touched.taxTreatmentId
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.taxTreatmentId &&
-																				props.touched.taxTreatmentId && (
-																					<div className="invalid-feedback">
-																						{props.errors.taxTreatmentId}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-	}
+																		<Col lg={3}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="taxTreatmentId">
+																					{strings.TaxTreatment}
+																				</Label>
+																				<Select
+																					options={
+																						tax_treatment_list
+																							? selectOptionsFactory.renderOptions(
+																								'name',
+																								'id',
+																								tax_treatment_list,
+																								'Tax Treatment',
+																							)
+																							: []
+																					}
+																					isDisabled={true}
+																					id="taxTreatmentId"
+																					name="taxTreatmentId"
+																					placeholder={strings.Select + strings.TaxTreatment}
+																					value={props.values.taxTreatmentId?.value ? props.values.taxTreatmentId :
+																						tax_treatment_list &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'name',
+																								'id',
+																								tax_treatment_list,
+																								'Tax Treatment',
+																							)
+																							.find(
+																								(option) =>
+																									option.label === props.values.taxTreatmentId,
+																							)
+																					}
+																					onChange={(option) => {
+																						props.handleChange('taxTreatmentId')(
+																							option,
+																						);
+																					}}
+																					className={
+																						props.errors.taxTreatmentId &&
+																							props.touched.taxTreatmentId
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.taxTreatmentId &&
+																					props.touched.taxTreatmentId && (
+																						<div className="invalid-feedback">
+																							{props.errors.taxTreatmentId}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	}
 																</Row>
 																<Row>
 
@@ -1431,145 +1526,153 @@ class DetailDebitNote extends React.Component {
 																</Row>
 																<hr />
 																{!isCreatedWithoutInvoice && !this.state.isDNWIWithoutProduct && (
-																<Row>
-																			<Col lg={8} className="mb-3">
-																			</Col>
-																			<Col>
-																				{this.state.taxType === false ?
-																					<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
-																					<span className='mr-4'>{strings.Exclusive}</span>}
-																				<Switch
-																					value={props.values.taxType}
-																					checked={this.state.taxType}
-																					disabled
-																					onChange={(taxType) => {
-																						props.handleChange('taxType')(taxType);
-																						this.setState({ taxType }, () => {
-																							this.updateAmount(
-																								this.state.data,
-																								props
-																							)
-																						});
-																					}}
-
-																					onColor="#2064d8"
-																					onHandleColor="#2693e6"
-																					handleDiameter={25}
-																					uncheckedIcon={false}
-																					checkedIcon={false}
-																					boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-																					activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-																					height={20}
-																					width={48}
-																					className="react-switch "
-																				/>
-																				{this.state.taxType === true ?
-																					<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
-																					: <span className='ml-4'>{strings.Inclusive}</span>
-																				}
-																			</Col>
-																		</Row>)}
-																{this.state.isDNWIWithoutProduct === false && data && data.length > 0 && (
 																	<Row>
-																		{props.errors.lineItemsString &&
-																			typeof props.errors.lineItemsString ===
-																			'string' && (
-																				<div
-																					className={
-																						props.errors.lineItemsString
-																							? 'is-invalid'
-																							: ''
-																					}
-																				>
-																					<div className="invalid-feedback">
-																						{props.errors.lineItemsString}
-																					</div>
-																				</div>
-																			)}
-																		<Col lg={12}>
-																			<BootstrapTable
-																				options={this.options}
-																				data={data}
-																				version="4"
-																				hover
-																				keyField="id"
-																				className="invoice-create-table"
+																		<Col lg={8} className="mb-3">
+																		</Col>
+																		<Col>
+																			{this.state.taxType === false ?
+																				<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																				<span className='mr-4'>{strings.Exclusive}</span>}
+																			<Switch
+																				value={props.values.taxType}
+																				checked={this.state.taxType}
+																				disabled
+																				onChange={(taxType) => {
+																					props.handleChange('taxType')(taxType);
+																					this.setState({ taxType }, () => {
+																						this.updateAmount(
+																							this.state.data,
+																							props
+																						)
+																					});
+																				}}
+
+																				onColor="#2064d8"
+																				onHandleColor="#2693e6"
+																				handleDiameter={25}
+																				uncheckedIcon={false}
+																				checkedIcon={false}
+																				boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																				activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																				height={20}
+																				width={48}
+																				className="react-switch "
+																			/>
+																			{this.state.taxType === true ?
+																				<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																				: <span className='ml-4'>{strings.Inclusive}</span>
+																			}
+																		</Col>
+																	</Row>)}
+																{this.state.isDNWIWithoutProduct === false && data && data.length > 0 && (<Row>
+																	{props.errors.lineItemsString &&
+																		typeof props.errors.lineItemsString ===
+																		'string' && (
+																			<div
+																				className={
+																					props.errors.lineItemsString
+																						? 'is-invalid'
+																						: ''
+																				}
 																			>
+																				<div className="invalid-feedback">
+																					{props.errors.lineItemsString}
+																				</div>
+																			</div>
+																		)}
+																	<Col lg={12}>
+																		<BootstrapTable
+																			options={this.options}
+																			data={data}
+																			version="4"
+																			hover
+																			keyField="id"
+																			className="invoice-create-table"
+																		>
+																			<TableHeaderColumn
+																				width="3%"
+																				dataAlign="center"
+																				dataFormat={(cell, rows) =>
+																					this.renderActions(cell, rows, props)
+																				}
+																			></TableHeaderColumn>
+																			<TableHeaderColumn
+																				//width="20%"
+																				dataField="product"
+																				dataFormat={(cell, rows) =>
+																					this.renderProduct(cell, rows, props)
+																				}
+																			>
+																				{strings.PRODUCT}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				width="11%"
+																				dataField="account"
+																				dataFormat={(cell, rows) =>
+																					this.renderAccount(cell, rows, props)
+																				}
+																			>
+																				{strings.Account}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				dataField="quantity"
+																				dataFormat={(cell, rows) =>
+																					this.renderQuantity(cell, rows, props)
+																				}
+																			>
+																				{strings.QUANTITY}
+																			</TableHeaderColumn>
+																			<TableHeaderColumn
+																				dataField="unitPrice"
+																				dataFormat={(cell, rows) =>
+																					this.renderUnitPrice(cell, rows, props)
+																				}
+																			>
+																				{strings.UNITPRICE}
+																				<i
+																					id="UnitPriceTooltip"
+																					className="fa fa-question-circle ml-1"
+																				></i>
+																				<UncontrolledTooltip
+																					placement="right"
+																					target="UnitPriceTooltip"
+																				>
+																					Unit Price – Price of a single product or
+																					service
+																				</UncontrolledTooltip>
+																			</TableHeaderColumn>
+																			{initValue.totalDiscount != 0 &&
 																				<TableHeaderColumn
-																					width="3%"
-																					dataAlign="center"
+																					dataField="discount"
 																					dataFormat={(cell, rows) =>
-																						this.renderActions(cell, rows, props)
-																					}
-																				></TableHeaderColumn>
-																				<TableHeaderColumn
-																					//width="20%"
-																					dataField="product"
-																					dataFormat={(cell, rows) =>
-																						this.renderProduct(cell, rows, props)
+																						this.renderDiscount(cell, rows, props)
 																					}
 																				>
-																					{strings.PRODUCT}
+																					Discount Type
 																				</TableHeaderColumn>
+																			}
+																			{initValue.total_excise != 0 &&
 																				<TableHeaderColumn
-																					dataField="quantity"
+																					//	width="10%"
+																					dataField="exciseTaxId"
 																					dataFormat={(cell, rows) =>
-																						this.renderQuantity(cell, rows, props)
+																						this.renderExcise(cell, rows, props)
 																					}
 																				>
-																					{strings.QUANTITY}
-																				</TableHeaderColumn>
-																				<TableHeaderColumn
-																					dataField="unitPrice"
-																					dataFormat={(cell, rows) =>
-																						this.renderUnitPrice(cell, rows, props)
-																					}
-																				>
-																					{strings.UNITPRICE}
+																					{strings.Excises}
 																					<i
-																						id="UnitPriceTooltip"
+																						id="ExiseTooltip"
 																						className="fa fa-question-circle ml-1"
 																					></i>
 																					<UncontrolledTooltip
 																						placement="right"
-																						target="UnitPriceTooltip"
+																						target="ExiseTooltip"
 																					>
-																						Unit Price – Price of a single product or
-																						service
+																						Excise dropdown will be enabled only for the excise products
 																					</UncontrolledTooltip>
 																				</TableHeaderColumn>
-																				{initValue.totalDiscount != 0 &&
-																					<TableHeaderColumn
-																						dataField="discount"
-																						dataFormat={(cell, rows) =>
-																							this.renderDiscount(cell, rows, props)
-																						}
-																					>
-																						Discount Type
-																					</TableHeaderColumn>
-																				}
-																				{initValue.total_excise != 0 &&
-																					<TableHeaderColumn
-																						//	width="10%"
-																						dataField="exciseTaxId"
-																						dataFormat={(cell, rows) =>
-																							this.renderExcise(cell, rows, props)
-																						}
-																					>
-																						{strings.Excises}
-																						<i
-																							id="ExiseTooltip"
-																							className="fa fa-question-circle ml-1"
-																						></i>
-																						<UncontrolledTooltip
-																							placement="right"
-																							target="ExiseTooltip"
-																						>
-																							Excise dropdown will be enabled only for the excise products
-																						</UncontrolledTooltip>
-																					</TableHeaderColumn>
-																				}
-																				{isRegisteredVat &&
+																			}
+																			{isRegisteredVat &&
 																				<TableHeaderColumn
 																					dataField="vat"
 																					dataFormat={(cell, rows) =>
@@ -1578,8 +1681,8 @@ class DetailDebitNote extends React.Component {
 																				>
 																					{strings.VAT}
 																				</TableHeaderColumn>
-	}
-																	{isRegisteredVat &&
+																			}
+																			{isRegisteredVat &&
 																				<TableHeaderColumn
 																					dataField="vat_amount"
 																					dataFormat={this.renderVatAmount}
@@ -1589,19 +1692,40 @@ class DetailDebitNote extends React.Component {
 																				>
 																					{strings.VATAMOUNT}
 																				</TableHeaderColumn>
-	}
-																				<TableHeaderColumn
-																					dataField="sub_total"
-																					dataFormat={this.renderSubTotal}
-																					className="text-right"
-																					columnClassName="text-right"
-																					formatExtraData={universal_currency_list}
-																				>
-																					{strings.SUBTOTAL}
-																				</TableHeaderColumn>
-																			</BootstrapTable>
-																		</Col>
-																	</Row>)}
+																			}
+																			<TableHeaderColumn
+																				dataField="sub_total"
+																				dataFormat={this.renderSubTotal}
+																				className="text-right"
+																				columnClassName="text-right"
+																				formatExtraData={universal_currency_list}
+																			>
+																				{strings.SUBTOTAL}
+																			</TableHeaderColumn>
+																		</BootstrapTable>
+																	</Col>
+																</Row>)}
+																{this.state.isDNWIWithoutProduct === false && data && data.length > 0 && isRegisteredVat && <Row>
+																	<Col className="ml-4">
+																		{this.state.isReverseChargeEnabled === true 
+																			// && (isDesignatedZone && props.values.taxTreatmentId !== 'UAE NON-VAT REGISTERED' && props.values.taxTreatmentId !== 'UAE NON-VAT REGISTERED FREEZONE' && props.values.taxTreatmentId !== 'UAE VAT REGISTERED' && props.values.taxTreatmentId !== 'UAE VAT REGISTERED FREEZONE')
+																			// || (!isDesignatedZone && props.values.taxTreatmentId !== 'UAE VAT REGISTERED FREEZONE')
+																			? <FormGroup className="mb-3">
+																				<Input
+																					type="checkbox"
+																					id="isReverseChargeEnabled"
+																					checked={this.state.isReverseChargeEnabled}
+																					value={this.state.isReverseChargeEnabled}
+																					onChange={(e) => {
+																						this.setState({
+																							isReverseChargeEnabled: isReverseChargeEnabled,
+																						})
+																					}}
+																				/>
+																				<Label>{strings.IsReverseCharge}</Label>
+																			</FormGroup> : ''}
+																	</Col>
+																</Row>}
 																<Row>
 																	<Col lg={7}>
 																		<Col lg={6}>
@@ -1696,23 +1820,23 @@ class DetailDebitNote extends React.Component {
 																					</Col>
 																				</Row>
 																			</div>
-																	{isRegisteredVat &&
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.TotalVat}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.totalVatAmount ? initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-	}
+																			{isRegisteredVat &&
+																				<div className="total-item p-2">
+																					<Row>
+																						<Col lg={6}>
+																							<h5 className="mb-0 text-right">
+																								{strings.TotalVat}
+																							</h5>
+																						</Col>
+																						<Col lg={6} className="text-right">
+																							<label className="mb-0">
+																								{this.state.customer_currency_symbol} &nbsp;
+																								{initValue.totalVatAmount ? initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
+																							</label>
+																						</Col>
+																					</Row>
+																				</div>
+																			}
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

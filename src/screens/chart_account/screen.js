@@ -452,7 +452,7 @@ class ChartAccount extends React.Component {
                             <span>
                               <Button
                                 color="primary"
-                                className="btn-square pull-right mr-1"
+                                className="btn-square pull-right mr-1 custom-button"
                                 onClick={this.goToCreatePage}
                               >
                                 <i className="fas fa-plus mr-1" />

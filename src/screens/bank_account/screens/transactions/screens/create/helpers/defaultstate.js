@@ -1,4 +1,4 @@
-export const defaultState = (currency) => {
+export const defaultState = (currency, isRegisteredVat) => {
   return {
     language: window["localStorage"].getItem("language"),
     createMore: false,
@@ -18,7 +18,7 @@ export const defaultState = (currency) => {
       attachment: "",
       customerId: "",
       invoiceIdList: [],
-      payrollListIds: "",
+      payrollListIds: [],
       vatId: "",
       expenseCategory: "",
       vendorId: "",
@@ -51,7 +51,7 @@ export const defaultState = (currency) => {
           },
           {
             value: 12,
-            label: "Money Paid To User",
+            label: "Money Paid To Employee",
           },
           {
             value: 13,
@@ -70,7 +70,7 @@ export const defaultState = (currency) => {
             label: "Supplier Invoice",
           },
           {
-            ...(currency === "AED"
+            ...((currency === "AED" && isRegisteredVat == true)
               ? {
                   value: 16,
                   label: "VAT Payment",
@@ -108,7 +108,7 @@ export const defaultState = (currency) => {
           },
           {
             value: 6,
-            label: "Money Received From User",
+            label: "Money Received From Employee",
           },
           {
             value: 7,
@@ -119,7 +119,7 @@ export const defaultState = (currency) => {
             label: "Money Received Others",
           },
           {
-            ...(currency === "AED"
+            ...((currency === "AED" && isRegisteredVat == true)
               ? {
                   value: 17,
                   label: "VAT Claim",
@@ -133,6 +133,7 @@ export const defaultState = (currency) => {
     cat1_label: "",
     id: "",
     conversionDetails: [],
-    selectedPayrollListBank: []
+    selectedPayrollListBank: [],
+    companyDetails : [],   
   };
 };

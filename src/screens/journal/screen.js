@@ -535,7 +535,7 @@ console.log(journal_list_data,"journal_list_data")
 														showYearDropdown
 														dropdownMode="select"
 														// dateFormat="dd-MM-yyyy"
-														dateFormat="yyyy-MM-dd"
+														dateFormat="dd-MM-yyyy"
 														autoComplete="off"
 														selected={filterData.journalDate}
 														onChange={(value) => {
@@ -598,7 +598,7 @@ console.log(journal_list_data,"journal_list_data")
 													}
 											>
 													<i className="fas fa-plus mr-1" />
-													{strings.NewJournal}  
+															{strings.AddNewJournal}  
 												</Button>
 										</div>
 										<div>

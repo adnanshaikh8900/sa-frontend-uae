@@ -192,6 +192,8 @@ import {
 	DetailSalaryStructure,
 	DetailSalaryTemplate,
 	DetailDesignation,
+	DetailSalaryComponent,
+	CreateSalaryComponent,
 	ApplyToInvoice,
 	Refund,
 	UpdateEmployeeEmployment,
@@ -215,7 +217,8 @@ import {
 	ExciseTaxAuditReport,
 	ViewFtaExciseAuditReport,
 	SubReports,
-	NotesSettings
+	NotesSettings,
+	PayrollSettings,
 } from 'screens';
 import Config from '../constants/config'
 const adminRoutes = [
@@ -606,7 +609,7 @@ const adminRoutes = [
 		component: UpdateEmployeeBank.screen,
 	},
 	Config.MASTER_EMPLOYEE && {
-		path: '/admin/master/employee/updateEmployeeEmployement',
+		path: '/admin/master/employee/updateEmployeeEmployment',
 		name: 'Update Employee',
 		component: UpdateEmployeeEmployment.screen,
 	},
@@ -702,6 +705,16 @@ const adminRoutes = [
 		path: '/admin/payroll/config/detailEmployeeDesignation',
 		name: 'Update Employee Designation',
 		component: DetailDesignation.screen,
+	},
+	Config.PAYROLL_PC && {
+		path: '/admin/payroll/config/createSalaryComponent',
+		name: 'Add Salary Component',
+		component: CreateSalaryComponent.screen,
+	},
+	Config.PAYROLL_PC && {
+		path: '/admin/payroll/config/detailSalaryComponent',
+		name: 'Update Salary Component',
+		component: DetailSalaryComponent.screen,
 	},
 	Config.PAYROLL_MODULE && {
 		path: '/admin/payroll/employeeDesignation',
@@ -1122,6 +1135,11 @@ const adminRoutes = [
 		path: '/admin/settings/notesSettings',
 		name: 'Save Note Settings',
 		component: NotesSettings.screen,
+	},
+	{
+		path: '/admin/settings/payrollsettings',
+		name: 'Save Payroll Settings',
+		component: PayrollSettings.screen,
 	},
 
 	Config.SETTING_IMPORT && {

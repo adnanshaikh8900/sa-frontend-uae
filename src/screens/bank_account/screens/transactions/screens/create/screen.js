@@ -86,7 +86,7 @@ let strings = new LocalizedStrings(data);
 class CreateBankTransaction extends React.Component {
   constructor(props) {
     super(props);
-    this.state = defaultState(this.props.location.state?.currency);
+    this.state = defaultState(this.props.location.state?.currency, this.props.location.state?.isRegisteredVat);
 
     this.file_size = 1024000;
     this.supported_format = [
@@ -113,6 +113,25 @@ class CreateBankTransaction extends React.Component {
         this.setState({ COACList: response.data });
       });
     this.getCorporateTaxList();
+
+    this.props.commonActions.getCompanyDetails().then((res) => {
+      if (res.status === 200) {
+        const isRegisteredVat = res.data.isRegisteredVat;
+
+        this.props.history.replace({
+          pathname: this.props.location.pathname,
+          state: {
+            ...this.props.location.state,
+            isRegisteredVat: isRegisteredVat,
+          },
+        });
+
+        this.setState({
+          companyDetails: res.data,
+          isRegisteredVat: isRegisteredVat,
+        });
+      }
+    });
   };
 
   initializeData = () => {
@@ -136,27 +155,27 @@ class CreateBankTransaction extends React.Component {
           true
         );
       });
-    
-      const paginationData = {
-        pageNo: '',
-        pageSize: '',
-        paginationDisable: true,
-      };
-      const sortingData = {
-        order: '',
-        sortingCol: '',
-      };
-      const postData = { ...paginationData, ...sortingData };
-    
+
+    const paginationData = {
+      pageNo: '',
+      pageSize: '',
+      paginationDisable: true,
+    };
+    const sortingData = {
+      order: '',
+      sortingCol: '',
+    };
+    const postData = { ...paginationData, ...sortingData };
+
     this.props.transactionCreateActions.getAllPayrollList(postData)
-    .then((res) => {
+      .then((res) => {
         this.setState(
           {
             payrolldata: res.data
           },
-          () => {}
+          () => { }
         );
-    })
+      })
 
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.setState({ id: this.props.location.state.bankAccountId, });
@@ -440,7 +459,6 @@ class CreateBankTransaction extends React.Component {
         report ? JSON.stringify([report]) : ""
       );
     }
-    debugger
     this.props.transactionCreateActions
       .createTransaction(formData)
       .then((res) => {
@@ -541,6 +559,11 @@ class CreateBankTransaction extends React.Component {
     const data = {
       amount: amount,
       id: option,
+      currency:
+        this.state?.bankCurrency?.bankAccountCurrency
+          ? this.state?.bankCurrency?.bankAccountCurrency
+          : 0,
+      bankId: this.props.location.state.bankAccountId,
     };
     this.props.transactionActions.getCustomerInvoiceList(data);
   };
@@ -550,8 +573,8 @@ class CreateBankTransaction extends React.Component {
       amount: amount,
       id: option,
       currency:
-        this.state.invoiceCurrency && invoice_list != null
-          ? this.state.invoiceCurrency
+        this.state.bankCurrency?.bankAccountCurrency
+          ? this.state.bankCurrency?.bankAccountCurrency
           : 0,
       bankId: this.props.location.state.bankAccountId,
     };
@@ -596,6 +619,7 @@ class CreateBankTransaction extends React.Component {
         // this.setExchange(this.state.bankCurrency.bankAccountCurrency);
       }
     );
+
   };
 
   getVendorInvoiceCurrency = (opt, props) => {
@@ -621,6 +645,7 @@ class CreateBankTransaction extends React.Component {
         //this.setExchange(this.state.bankCurrency.bankAccountCurrency);
       }
     );
+
   };
   payrollList = (option) => {
     this.setState({
@@ -633,6 +658,18 @@ class CreateBankTransaction extends React.Component {
     });
     this.formRef.current.setFieldValue("payrollListIds", option, true);
   };
+
+  getPayrollAmount = (option) => {
+    const amounts = option && option.map((i) => {
+      const startIndex = i.label.indexOf("(");
+      const endIndex = i.label.indexOf(")");
+      const amountString = i.label.slice(startIndex + 1, endIndex);
+      const amount = parseFloat(amountString);
+      return amount;
+    });
+    const totalAmount = amounts && amounts.reduce((sum, amount) => sum + amount, 0);
+    this.formRef.current.setFieldValue("transactionAmount", totalAmount)
+  }
 
   getPayrollList = (UnPaidPayrolls_List, props) => {
     return (
@@ -647,15 +684,19 @@ class CreateBankTransaction extends React.Component {
                 ? UnPaidPayrolls_List
                 : []
             }
-            placeholder={strings.Select+strings.Payroll}
+            placeholder={strings.Select + strings.Payroll}
             id="payrollListIds"
             onChange={(option) => {
+
               this.state.selectedPayrollListBank = []
               props.handleChange("payrollListIds")(option);
               this.payrollList(option);
+              this.getPayrollAmount(option);
+              (!option && this.formRef.current.setFieldValue("transactionAmount", ""))
               // let selectedPayroll1 = []
               if (option) {
                 option.map((i) => {
+
                   const selectedPayroll = this.state.payrolldata.find((el) => el.id === i.value)
                   this.state.selectedPayrollListBank.push(selectedPayroll)
                   const uniqueArray = [];
@@ -1026,8 +1067,8 @@ class CreateBankTransaction extends React.Component {
       amount: amount,
       id: option.value,
       currency:
-        this.state.invoiceCurrency && invoice_list != null
-          ? this.state.invoiceCurrency
+        this.state?.bankCurrency?.bankAccountCurrency
+          ? this.state?.bankCurrency?.bankAccountCurrency
           : 0,
       bankId: this.props.location.state.bankAccountId,
     };
@@ -1245,14 +1286,14 @@ class CreateBankTransaction extends React.Component {
                             values.coaCategoryId.label === "Expense" &&
                             values.expenseCategory.value !== 34
                           ) {
-                            errors.vatId = "Please select Vat";
+                            errors.vatId = "Please select vat";
                           }
                           if (
-                            values.payrollListIds === "" &&
+                            (values.payrollListIds === "" || !values.payrollListIds || values.payrollListIds?.length === 0) &&
                             values.coaCategoryId.label === "Expense" &&
                             values.expenseCategory.value == 34
                           ) {
-                            errors.vatId = "Please select Payroll";
+                            errors.vatId = "Payroll is Required";
                           }
                           if (
                             values.coaCategoryId.value === 2 ||
@@ -1353,7 +1394,7 @@ class CreateBankTransaction extends React.Component {
                               errors.transactionAmount = strings.AmountShouldBeLessThanOrEqualToTheBalanceDue;
                           }
                           if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
-                            if (values.expenseCategory && values.expenseCategory.value === 34) {
+                            if (values.expenseCategory && values.expenseCategory.value === 34 && values.payrollListIds && values.payrollListIds?.length > 0) {
                               const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
                                 let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
                                 return sum + num;
@@ -1366,18 +1407,16 @@ class CreateBankTransaction extends React.Component {
                           if (!values.transactionDate) {
                             errors.transactionDate = "Transaction Date is Required";
                           }
-                          if (values.transactionDate)
-                            {
-                              this.state.selectedPayrollListBank.map((i) => {
-                                const dateObject = new Date(i.runDate);
-                                let payrollDate1 = moment(dateObject).format('DD-MM-YYYY')
-                                if (moment(values.transactionDate).format('DD-MM-YYYY') < payrollDate1)
-                                {
-                                  errors.transactionDate =
-                                    "Transaction Date cannot be earlier than the payroll approval date.";
-                                }
-                              })
-                            }
+                          if (values.transactionDate) {
+                            this.state.selectedPayrollListBank.map((i) => {
+                              const dateObject = new Date(i.runDate);
+                              let payrollDate1 = moment(dateObject).format('DD-MM-YYYY')
+                              if (moment(values.transactionDate).format('DD-MM-YYYY') < payrollDate1) {
+                                errors.transactionDate =
+                                  "Transaction Date cannot be earlier than the payroll approval date.";
+                              }
+                            })
+                          }
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({
@@ -1386,7 +1425,7 @@ class CreateBankTransaction extends React.Component {
                           ),
                           reference: Yup.string().max(20),
                           transactionAmount: Yup.string()
-                            .required("Transaction Amount is Required")
+                            .required("Amount is Required")
                             .test(
                               "transactionAmount",
                               "Transaction Amount Must Be Greater Than 0",
@@ -1528,7 +1567,6 @@ class CreateBankTransaction extends React.Component {
                                     id="transactionDate"
                                     name="transactionDate"
                                     placeholderText={strings.TransactionDate}
-                                    maxDate={new Date()}
                                     showMonthDropdown
                                     showYearDropdown
                                     dateFormat="dd-MM-yyyy"
@@ -1537,15 +1575,12 @@ class CreateBankTransaction extends React.Component {
                                     selected={props.values.transactionDate}
                                     onBlur={props.handleBlur("transactionDate")}
                                     onChange={(value) => {
-                                      props.handleChange("transactionDate")(
-                                        value
-                                      );
+                                      props.handleChange("transactionDate")(value);
                                     }}
                                     className={`form-control ${props.errors.transactionDate &&
                                       props.touched.transactionDate
                                       ? "is-invalid"
-                                      : ""
-                                      }`}
+                                      : ""}`}
                                   />
                                   {props.errors.transactionDate &&
                                     props.touched.transactionDate && (
@@ -1571,7 +1606,7 @@ class CreateBankTransaction extends React.Component {
                                     }
                                     id="transactionAmount"
                                     name="transactionAmount"
-                                    placeholder={strings.Amount}
+                                    placeholder={props.values.coaCategoryId?.label === "Corporate Tax Payment" ? strings.Enter + strings.Amount : strings.Amount}
                                     onChange={(option) => {
                                       if (
                                         option.target.value === "" ||
@@ -1833,9 +1868,7 @@ class CreateBankTransaction extends React.Component {
                                             : []
                                         }
                                         onChange={(option) => {
-                                          props.handleChange("expenseCategory")(
-                                            option
-                                          );
+                                          props.handleChange("expenseCategory")(option,);
                                         }}
                                         id="expenseCategory"
                                         name="expenseCategory"
@@ -2462,6 +2495,12 @@ class CreateBankTransaction extends React.Component {
                                               option,
                                               props.values.transactionAmount
                                             );
+
+                                            this.getSuggestionInvoicesFotCust(
+                                              option.value,
+                                              props.values.transactionAmount
+                                            );
+
                                           }}
                                         />
                                         {props.errors.customerId &&
@@ -2509,6 +2548,10 @@ class CreateBankTransaction extends React.Component {
                                               props.values.transactionAmount,
                                               option
                                             );
+                                            // this.getSuggestionInvoicesFotCust(
+                                            //   option.value,
+                                            //   props.values.transactionAmount
+                                            // );
                                           }
 
                                           this.setexchnagedamount(option);

@@ -10,12 +10,15 @@ p,
 em {
 	font-family: Montserrat, serif;
 }
+
 .nav-link {
 	border-radius: 0 !important;
 }
+
 .cursor-pointer {
 	cursor: pointer;
 }
+
 .filter-panel {
 	border-top: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
@@ -46,8 +49,8 @@ em {
 	}
 }
 
-.is-invalid ~ .invalid-feedback,
-.react-datepicker-wrapper + .invalid-feedback {
+.is-invalid~.invalid-feedback,
+.react-datepicker-wrapper+.invalid-feedback {
 	display: block;
 	white-space: normal;
 }
@@ -56,6 +59,47 @@ div.Select.is-invalid {
 	.Select-control {
 		border: 1px solid #f86c6b !important;
 	}
+}
+.MuiInputBase-multiline {
+	padding: 0.375rem 0.75rem;
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #5c6873;
+	background-color: #fff;
+	background-clip: padding-box;
+	outline: 1px solid #ccc;
+	border-radius: 0.25rem;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	border: none;
+	resize: none !important;
+    width: 100% !important;
+}
+
+.MuiInputBase-inputMultiline {
+	padding: 0.1563rem 0.75rem !important;
+	font: menu !important;
+	font-size: 0.875rem !important;
+	font-weight: 400 !important;
+	line-height: 1.5 !important;
+	color: #5c6873 !important;
+}
+
+.MuiInput-underline:before,
+.MuiInput-underline:after {
+	border-bottom: 0px solid black !important;
+}
+
+.Mui-focused {
+	border: none !important;
+	box-shadow: none !important;
+	outline: 1px solid #2064d8;
+}
+
+::placeholder {
+	color: #5c6873 !important;
+	opacity: 0.9 !important;
+	/* Firefox */
 }
 
 // card styles
@@ -85,6 +129,7 @@ div.Select.is-invalid {
 .tab-card {
 	background: #ffffff !important;
 }
+
 .tab-content {
 	border-radius: 0 !important;
 }
@@ -100,22 +145,27 @@ div.Select.is-invalid {
 // react-bootstrap-table styles
 .react-bs-table-container {
 	margin-bottom: 15px !important;
+
 	.react-bs-table {
 		border-radius: 0 !important;
 		border-top-width: 0px !important;
 		border-left: none !important;
 		border-right: none !important;
+
 		td {
 			vertical-align: top;
 			border-left: 0px !important;
 			border-right: 0px !important;
+
 			.btn-group {
 				position: inherit !important;
 			}
+
 			.btn-brand {
 				border-radius: 0.25rem !important;
 			}
 		}
+
 		th {
 			text-transform: uppercase !important;
 			border-bottom-width: 1px !important;
@@ -123,25 +173,32 @@ div.Select.is-invalid {
 			border-right: 0px !important;
 		}
 	}
+
 	.cursor-pointer td {
 		overflow: hidden;
 	}
+
 	.react-bs-table-tool-bar {
 		.btn {
 			border-radius: 0 !important;
 		}
+
 		.react-bs-table-search-form {
 			margin-bottom: 15px !important;
 		}
 	}
+
 	.react-bs-table-pagination {
 		margin-bottom: 1rem;
+
 		ul {
 			margin-bottom: 0px;
 		}
+
 		.btn.dropdown-toggle {
 			border-radius: 15 !important;
 		}
+
 		.page-link {
 			border-radius: 15 !important;
 		}
@@ -159,24 +216,31 @@ th {
 // modal styles
 .modal-dialog {
 	border-radius: 0 !important;
+
 	.modal-content {
 		border-radius: 0 !important;
 		border-color: none !important;
+
 		.modal-header {
 			border-radius: 0 !important;
 			background-color: #2064d8;
+
 			button.close {
 				display: none;
+
 				span {
 					color: #ffffff;
 				}
 			}
 		}
+
 		.modal-body {
 			border-radius: 0 !important;
 		}
+
 		.modal-footer {
 			border-radius: 0 !important;
+
 			button {
 				border-radius: 40px !important;
 				padding: 5px 40px;
@@ -188,24 +252,29 @@ th {
 // react-select styles
 .Select-control {
 	border-radius: 0px !important;
+
 	.Select-value {
 		span {
 			color: #5c6873 !important;
 		}
 	}
+
 	.Select-clear-zone {
 		display: none !important;
 	}
 }
+
 .Select-menu-outer {
 	border-radius: 0px !important;
 	z-index: 9 !important;
 }
+
 .select-default-width {
 	.Select-menu-outer {
 		width: calc(100% - 1px) !important;
 	}
 }
+
 .select-min-width {
 	min-width: 200px;
 }
@@ -221,21 +290,26 @@ th {
 	background: #ffffff !important;
 	box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2),
 		0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 3px 3px -2px rgba(0, 0, 0, 0.12) !important;
+
 	.react-datepicker__triangle::before {
 		box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2),
 			0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 3px 3px -2px rgba(0, 0, 0, 0.12) !important;
 		border: none !important;
 	}
+
 	.react-datepicker {
 		border-radius: 0px !important;
 		border: none !important;
+
 		.react-datepicker__header {
 			border-bottom: 0px !important;
 			border-radius: 0px !important;
 		}
+
 		.react-datepicker__day--keyboard-selected {
 			border-radius: 0px !important;
 		}
+
 		.react-datepicker__day:hover {
 			border-radius: 0px !important;
 		}
@@ -252,21 +326,26 @@ th {
 .react-bootstrap-daterangepicker-container {
 	width: 100%;
 }
+
 .daterangepicker {
 	border-radius: 10px !important;
 	border: none !important;
 	box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2),
 		0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 3px 3px -2px rgba(0, 0, 0, 0.12) !important;
+
 	.applyBtn {
 		border-radius: 10px !important;
 	}
+
 	.start-date {
 		border-radius: 10px !important;
 	}
+
 	.end-date {
 		border-radius: 10px !important;
 	}
 }
+
 .daterangepicker::before {
 	box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2),
 		0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 3px 3px -2px rgba(0, 0, 0, 0.12) !important;
@@ -286,10 +365,12 @@ th {
 	background-color: #4dbd74 !important;
 	border-color: #4dbd74 !important;
 }
+
 .btn.disabled,
 .btn:disabled {
 	opacity: 1 !important;
 }
+
 .main .container-fluid {
 	padding: 0 !important;
 	background-color: #dfe9f7;
@@ -299,9 +380,11 @@ th {
 	.sidebar-nav {
 		overflow: visible !important;
 	}
+
 	.sidebar .ps-container .nav-dropdown-items .nav-item .nav-link {
 		padding-left: 0 !important;
 	}
+
 	.main-table-panel {
 		width: 63.7% !important;
 		transition: width 3s;
@@ -319,12 +402,14 @@ th {
 		table-layout: auto !important;
 		width: 1200px !important;
 	}
+
 	.form-action-btn {
 		button {
 			padding: 0.375rem !important;
 		}
 	}
 }
+
 @media screen and (max-width: 420px) {
 	.navbar-brand {
 		margin-left: 0px !important;
@@ -332,8 +417,24 @@ th {
 		width: 120px !important;
 	}
 }
-.is-invalidMobile{
-    border: 1px solid #f86c6b;
-    border-radius: 5px;
-    }
-.react-tel-input .form-control{width: 100% !important;}
+
+.is-invalidMobile {
+	border: 1px solid #f86c6b;
+	border-radius: 5px;
+}
+
+.react-tel-input .form-control {
+	width: 100% !important;
+}
+
+.react-bs-table-no-data {
+	visibility: hidden;
+	position: relative;
+}
+
+.react-bs-table-no-data:after {
+	visibility: visible;
+	position: absolute;
+	content: "There are no records to display";
+	left: 45%;
+}

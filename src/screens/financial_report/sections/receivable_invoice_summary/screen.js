@@ -350,7 +350,7 @@ class ReceivableInvoiceSummary extends React.Component {
 														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
 														{strings.InvoiceAmount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Balance}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.RemainingBalance}</th>
 
 													</tr>
 												</thead>
@@ -361,12 +361,12 @@ class ReceivableInvoiceSummary extends React.Component {
 																<tr key={index}>
 
 
-																	<td style={{ textAlign: 'center'}}>{item.invoiceNumber}</td>
+																	<td style={{ textAlign: 'left'}}>{item.invoiceNumber}</td>
 																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
-																	<td style={{ textAlign: 'center'}}>{item.invoiceDate ? (
+																	<td style={{ textAlign: 'left'}}>{item.invoiceDate ? (
 																		moment(item.invoiceDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
-																	<td style={{ textAlign: 'center'}}>
+																	<td style={{ textAlign: 'left'}}>
 																	{item.invoiceDueDate ? (
 																		moment(item.invoiceDueDate).format('DD-MM-YYYY')
 																	) : ("-")}</td>

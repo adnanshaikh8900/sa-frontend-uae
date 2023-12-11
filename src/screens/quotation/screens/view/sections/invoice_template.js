@@ -209,9 +209,9 @@ class RFQTemplate extends Component {
 							<div className="mb-1 ml-2"><b>{strings.QuotationNo}:</b> {QuotationData.quotationNumber}</div>
 							{QuotationData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo}: </b>{QuotationData.receiptNumber}</div>)}
 							<div className="mb-1 ml-2"><b>{strings.Created_Date}: </b>{' '}
-								{moment(QuotationData.quotationdate).format('DD MMM YYYY')}</div>
+								{moment(QuotationData.quotationdate).format('DD-MM-YYYY')}</div>
 							<div className="mb-1 ml-2"><b>{strings.ExpirationDate }: </b>
-								{moment(QuotationData.quotaionExpiration).format('DD MMM YYYY')}</div>
+								{moment(QuotationData.quotaionExpiration).format('DD-MM-YYYY')}</div>
 							<div className=" ml-2"><b>{strings.Status}: </b>{this.renderQuotationStatus(QuotationData.status)}</div>
 							<div className="mb-1 ml-2"><b>{strings.Exchangerate}: </b>{QuotationData.exchangeRate}</div><br /><br/>
 							</div>
@@ -280,6 +280,9 @@ class RFQTemplate extends Component {
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
 									<th style={{ padding: '0.5rem' }}>{strings.ProductNameAndDescription}</th>
 									<th className="text-center" style={{ padding: '0.5rem' }}>{strings.Quantity}</th>
+									<th className="text-center" style={{ padding: '0.5rem' }}>
+										{strings.UnitType}
+									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.UnitCost}</th>
 
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
@@ -316,7 +319,8 @@ class RFQTemplate extends Component {
 												<td className="center">{index + 1}</td>
 												<td><b>{item.productName}</b><br/><br />{item.description}</td>
 												<td  style={{ textAlign: 'center' }}>{item.quantity}<br/><br/>
-												<b style={{fontSize:"10.5px"}}>{item.unitType}</b>	
+												</td>
+												<td  style={{ textAlign: 'center' }}>{item.unitType}<br/><br/>
 												</td>
 												<td style={{ textAlign: 'right', width: '10%' }}>
 												

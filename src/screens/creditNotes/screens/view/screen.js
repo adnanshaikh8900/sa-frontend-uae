@@ -160,14 +160,15 @@ class ViewCreditNote extends React.Component {
 	};
 
 	redirectToCustmerIncoive = (invoice) => {
-		this.props.history.push('/admin/income/customer-invoice/view', {
-			id: invoice.invoiceId,
-			status: invoice.status,
-			contactId: invoice.contactId,
-			TCN_Id: this.props.location.state.id,
-			TCN_WithoutPRoduct: this.props.location.state.isCNWithoutProduct,
-			TCN_Status: this.props.location.state.status,
-		});
+		if (!(invoice.transactionType && invoice.transactionType === 'Refund'))
+			this.props.history.push('/admin/income/customer-invoice/view', {
+				id: invoice.invoiceId,
+				status: invoice.status,
+				contactId: invoice.contactId,
+				TCN_Id: this.props.location.state.id,
+				TCN_WithoutPRoduct: this.props.location.state.isCNWithoutProduct,
+				TCN_Status: this.props.location.state.status,
+			});
 	}
 
 	exportPDFWithComponent = () => {
@@ -218,7 +219,7 @@ class ViewCreditNote extends React.Component {
 									className="close-btn mb-1 btn-lg print-btn-cont"
 									onClick={() => {
 										if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
-										this.props.history.push('/admin/report/credit-note-details');
+											this.props.history.push('/admin/report/credit-note-details');
 										else if (this.props.location.state.CI_id)
 											this.props.history.push('/admin/income/customer-invoice/view', {
 												id: this.props.location.state.CI_id,
@@ -345,8 +346,8 @@ class ViewCreditNote extends React.Component {
 														<td className="center">{index + 1}</td>
 														<td>{item.transactionType}</td>
 														<td>{item.invoiceNumber}</td>
-														<td align="right">{item.totalAmount ? <Currency
-															value={item.totalAmount}
+														<td align="right">{invoiceData.totalAmount ? <Currency
+															value={invoiceData.totalAmount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode

@@ -14,9 +14,11 @@ import {
 	Table,
 	Button,
 	UncontrolledTooltip,
+	FormGroup,
 } from 'reactstrap';
 import * as EmployeeViewActions from "./actions"
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import { ConfirmDeleteModal } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
@@ -35,6 +37,7 @@ import { amountFormat } from 'screens/bank_account/screens/transactions/screens/
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
+		company_details: state.common.company_details,
 	};
 };
 
@@ -65,7 +68,9 @@ class ViewEmployee extends React.Component {
 			FixedAllowance: [],
 			CTC: '',
 			current_employee_id: '',
-			transactionList: []
+			transactionList: [],
+			dialog: null,
+			isEmployeeDeletable: true,
 		};
 
 
@@ -147,7 +152,7 @@ class ViewEmployee extends React.Component {
 						const postData = {
 							id: this.props.location.state.id,
 							salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'),
-							sendMail: true,
+							sendMail: false,
 							startDate: '',
 							endDate: '',
 						};
@@ -167,30 +172,30 @@ class ViewEmployee extends React.Component {
 										Deduction: res.data.salarySlipResult.Deduction,
 									});
 								}
-							let payPeriod = this.state.selectedData.payPeriod
-							const [startDateString, endDateString] = payPeriod.split("-");
-							const startDate = startDateString.trim();
-							const endDate = endDateString.trim();
-							const postData = {
-								employeeId: this.props.location.state.id,
-								startDate: moment(startDate).format('DD/MM/YYYY'),
-								endDate: moment(endDate).format('DD/MM/YYYY'),
-							};
-							this.props.employeeViewActions
-								.getEmployeeTransactions(postData)
-								.then((res) => {
-									if (res.status === 200) {
-										this.setState({
-											transactionList: res.data,
-										});
-									}
-								})
-								.catch((err) => {
-									this.props.commonActions.tostifyAlert(
-										'error',
-										err && err.data ? err.data.message : 'Something Went Wrong',
-									);
-								})
+								let payPeriod = this.state.selectedData.payPeriod
+								const [startDateString, endDateString] = payPeriod.split("-");
+								const startDate = startDateString.trim();
+								const endDate = endDateString.trim();
+								const postData = {
+									employeeId: this.props.location.state.id,
+									startDate: moment(startDate).format('DD/MM/YYYY'),
+									endDate: moment(endDate).format('DD/MM/YYYY'),
+								};
+								this.props.employeeViewActions
+									.getEmployeeTransactions(postData)
+									.then((res) => {
+										if (res.status === 200) {
+											this.setState({
+												transactionList: res.data,
+											});
+										}
+									})
+									.catch((err) => {
+										this.props.commonActions.tostifyAlert(
+											'error',
+											err && err.data ? err.data.message : 'Something Went Wrong',
+										);
+									})
 							})
 							.catch((err) => {
 								this.props.commonActions.tostifyAlert(
@@ -220,8 +225,8 @@ class ViewEmployee extends React.Component {
 							id: this.props.location.state.id,
 							salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'),
 							sendMail: true,
-							startDate: moment(startDate).format('DD-MM-YYYY'),
-							endDate: moment(endDate).format('DD-MM-YYYY'),
+							startDate: moment(startDate, "DD/MM/YYYY").format('DD-MM-YYYY'),
+							endDate: moment(endDate, "DD/MM/YYYY").format('DD-MM-YYYY'),
 						};
 						this.props.employeeViewActions
 							.getSalarySlip(postData)
@@ -236,7 +241,6 @@ class ViewEmployee extends React.Component {
 									// 	startDate: moment(startDate).format('DD/MM/YYYY'),
 									// 	endDate: moment(endDate).format('DD/MM/YYYY'),
 									// };
-									// console.log(postData);
 									toast.success("Payslip Sent Successfully")
 								}
 							})
@@ -250,9 +254,14 @@ class ViewEmployee extends React.Component {
 
 	closeModal = (res) => {
 		this.setState({ openModal: false });
+		this.initializeData();
 	};
 
 	initializeData = () => {
+		if (this.props.location.state && this.props.location.state.tabNo ) {
+			this.toggle(0, this.props.location.state.tabNo)
+		} else
+			this.toggle(0, this.state.activeTab[0])
 		if (this.props.location.state && this.props.location.state.id) {
 			this.props.employeeViewActions
 				.getEmployeeById(this.props.location.state.id)
@@ -266,6 +275,7 @@ class ViewEmployee extends React.Component {
 									? this.state.userPhoto.concat(res.data.profileImageBinary)
 									: [],
 								loading: false,
+								isEmployeeDeletable: res.data.isEmployeeDeletable,
 							},
 							() => {
 
@@ -320,6 +330,56 @@ class ViewEmployee extends React.Component {
 			this.props.history.push('/admin/master/employee');
 		}
 	};
+	deleteEmployee = () => {
+		const { current_employee_id } = this.state;
+		const message1 =
+			<text>
+				<b>Delete Employee?</b>
+			</text>
+		const message = 'This Employee will be deleted permanently and cannot be recovered. ';
+		this.setState({
+			dialog: (
+				<ConfirmDeleteModal
+					isOpen={true}
+					okHandler={this.removeEmployee}
+					cancelHandler={this.removeDialog}
+					message1={message1}
+					message={message}
+				/>
+			),
+
+		});
+	};
+	removeEmployee = () => {
+		this.setState({ disabled1: true });
+		const { current_employee_id } = this.state;
+		this.setState({ loading: true, loadingMsg: "Deleting Employee..." });
+		this.props.employeeViewActions
+			.deleteEmployee(current_employee_id)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						res.data ? res.data.message : 'Employee Deleted Successfully!',
+					);
+
+					this.props.history.push('/admin/master/employee');
+					this.setState({ loading: false, });
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err.data ? err.data.message : 'Employee Deleted Unsuccessfully',
+				);
+			});
+	};
+
+	removeDialog = () => {
+		this.setState({
+			dialog: null,
+		});
+	};
 	getPhoto = () => {
 		// let image ="data:image/png;base64, "+ this.state.userPhoto[0];
 		let image = this.state.userPhoto.length !== 0
@@ -330,7 +390,7 @@ class ViewEmployee extends React.Component {
 		return image;
 	}
 	renderSalaryDate = (cell, row) => {
-		let salaryDateString = moment(row.salaryDate).format('DD/MM/YYYY')
+		let salaryDateString = moment(row.salaryDate).format('DD-MM-YYYY')
 		return salaryDateString
 	}
 	getEmployeeInviteEmail = () => {
@@ -345,11 +405,13 @@ class ViewEmployee extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { profile } = this.props;
+		const { generateSif } = this.props.company_details;
+		const { dialog, isEmployeeDeletable } = this.state;
 		return (
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">
+					{dialog}
 					<Card>
-
 						<CardBody>
 							<Row>
 								<Col>
@@ -415,8 +477,7 @@ class ViewEmployee extends React.Component {
 											<Card style={{ height: '621px' }}>
 												<div >
 													<CardBody className='m-4'>
-
-														<Row>
+														{generateSif && <Row>
 															<Col>
 																<label> <b>{strings.EmployementDetails} </b></label>
 															</Col>
@@ -426,9 +487,7 @@ class ViewEmployee extends React.Component {
 																	className="btn-square pull-right mb-2"
 																	style={{ marginBottom: '10px' }}
 																	onClick={() =>
-																		// this.props.history.push(`/admin/payroll/employee/updateEmployeeEmployement`,
-																		// { id: this.state.current_employee_id })
-																		this.props.history.push(`/admin/master/employee/updateEmployeeEmployement`,
+																		this.props.history.push(`/admin/master/employee/updateEmployeeEmployment`,
 																			{ id: this.state.current_employee_id })
 
 																	}
@@ -436,7 +495,7 @@ class ViewEmployee extends React.Component {
 																	<i class="far fa-edit"></i>
 																</Button>
 															</Col>
-														</Row>
+														</Row>}
 
 														<div className='text-center'>
 
@@ -484,14 +543,17 @@ class ViewEmployee extends React.Component {
 																	>
 																		Date of Joining
 																	</UncontrolledTooltip>  &nbsp;{this.state.EmployeeDetails.dateOfJoining ? this.state.EmployeeDetails.dateOfJoining : '-'}</span></div>
-																<div className='mt-2 mb-2' >
-																	<UncontrolledTooltip
-																		placement="left"
-																		target="department"
-																	>
-																		Department
-																	</UncontrolledTooltip>
-																	<span id="department"> <i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</span></div>
+																{generateSif &&
+																	<div className='mt-2 mb-2' >
+																		<UncontrolledTooltip
+																			placement="left"
+																			target="department"
+																		>
+																			Department
+																		</UncontrolledTooltip>
+																		<span id="department"> <i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</span>
+																	</div>
+																}
 															</div>
 														</div>
 														<hr></hr>
@@ -536,15 +598,15 @@ class ViewEmployee extends React.Component {
 
 																<Row> <Col className='mt-2 mb-2'>{strings.MobileNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.mobileNumber ? this.state.EmployeeDetails.mobileNumber : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{(this.state.EmployeeDetails.presentAddress ? this.state.EmployeeDetails.presentAddress : " ") + ' , ' + (this.state.EmployeeDetails.city ? this.state.EmployeeDetails.city : '') + ' , ' +
-																	(this.state.EmployeeDetails.stateName ? this.state.EmployeeDetails.stateName : ' ') + ' , ' + (this.state.EmployeeDetails.countryName ? this.state.EmployeeDetails.countryName : '') + ' , ' + (this.state.EmployeeDetails.pincode ? this.state.EmployeeDetails.pincode : ' ')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{(this.state.EmployeeDetails.presentAddress ? this.state.EmployeeDetails.presentAddress : "") + (this.state.EmployeeDetails.city ? this.state.EmployeeDetails.city + ' , ' : '') +
+																	(this.state.EmployeeDetails.stateName ? this.state.EmployeeDetails.stateName + ' , ' : '') + (this.state.EmployeeDetails.countryName ? this.state.EmployeeDetails.countryName : '') + (this.state.EmployeeDetails.pincode ? this.state.EmployeeDetails.pincode + ' , ' : '')}</Col></Row>
 
 															</div>
 														</CardBody>
 													</div>
 												</Card>
 
-												<Card style={{ width: '650px' }}>
+												{generateSif && <Card style={{ width: '650px' }}>
 													<div>
 														<CardBody className='m-4' style={{ height: '250px', width: '600px' }}>
 															<div>
@@ -583,9 +645,10 @@ class ViewEmployee extends React.Component {
 															</div>
 														</CardBody>
 													</div>
-												</Card>
+												</Card>}
 											</div>
-										</CardGroup>			</div>
+										</CardGroup>
+									</div>
 								</TabPane>
 
 
@@ -602,14 +665,14 @@ class ViewEmployee extends React.Component {
 																	amountFormat(this.state.CTC, 'AED')
 																	:
 																	amountFormat(parseFloat(this.state.CTC) * 12, 'AED')
-																: ''}</h3></div></Col>
+																: amountFormat(0.00, 'AED')}</h3></div></Col>
 														<Col><h5> {strings.MonthlyIncome} </h5>
 															<div> <h3>{this.state.CTC ?
 																this.state.EmployeeDetails.ctcType == "ANNUALLY" ?
 																	amountFormat(this.state.CTC / 12, 'AED')
 																	:
 																	amountFormat(this.state.CTC, 'AED')
-																: ''}</h3></div></Col>
+																: amountFormat(0.00, 'AED')}</h3></div></Col>
 														<Col>
 															<Button
 																className={`btn-square pull-right mb-2 mr-3 ${this.disable() ? `disabled-cursor` : ``
@@ -693,7 +756,7 @@ class ViewEmployee extends React.Component {
 																		))) : (<tr></tr>)}
 																</tbody>
 																<tfoot>
-																	{this.state.FixedAllowance ? (
+																	{/* {this.state.FixedAllowance ? (
 																		Object.values(
 																			this.state.FixedAllowance
 																		).map((item) => (
@@ -702,7 +765,7 @@ class ViewEmployee extends React.Component {
 																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.monthlyAmount ? amountFormat(item.monthlyAmount, "AED") : ''}</td>
 																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.yearlyAmount ? amountFormat(item.yearlyAmount, "AED") : ''}</td>
 																			</tr>
-																		))) : (<tr></tr>)}
+																		))) : (<tr></tr>)} */}
 																	<tr style={{ border: "3px solid #dfe9f7" }}>
 																		<td className="text-left"><h5><b> {strings.CosttoCompany}</b></h5></td>
 																		<td className="text-right"><h5>{this.state.CTC ? this.state.EmployeeDetails.ctcType == "ANNUALLY" ? amountFormat(this.state.CTC / 12, "AED") : amountFormat(this.state.CTC, "AED") : ''}</h5></td>
@@ -772,7 +835,29 @@ class ViewEmployee extends React.Component {
 								</TabPane>
 
 							</TabContent>
-
+							<Row>
+								<Col>
+									<p><b>Note:</b> Employees cannot be deleted once a transaction has been created for them</p>
+								</Col>
+							</Row>
+							<Row>
+								<Col>
+									{isEmployeeDeletable && <FormGroup>
+										<Button
+											type="button"
+											name="button"
+											color="danger"
+											className="btn-square"
+											disabled1={this.state.disabled1}
+											onClick={this.deleteEmployee}
+										>
+											<i className="fa fa-trash"></i> {this.state.disabled1
+												? 'Deleting...'
+												: strings.Delete}
+										</Button>
+									</FormGroup>}
+								</Col>
+							</Row>
 						</CardBody>
 					</Card>
 				</div>

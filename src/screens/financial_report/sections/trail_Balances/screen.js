@@ -161,6 +161,338 @@ class TrailBalances extends React.Component {
 			});
 	};
 
+	totalAssets = () => {
+		let debitValueAR = 0;
+		let creditValueAR = 0;
+		let debitValueA = 0;
+		let creditValueA = 0;
+		let debitValueFA = 0;
+		let creditValueFA = 0;
+		let debitValueB = 0;
+		let creditValueB = 0;
+
+		Object.keys(this.state.data['accountReceivable']).map((item) => {
+			const transactionCategory = this.state.data['transactionCategoryMapper'][`${item}`];
+			const assetValue = this.state.data['accountReceivable'][`${item}`];
+
+			if (transactionCategory === 'Debit') {
+				debitValueAR += assetValue;
+			} else if (transactionCategory === 'Credit') {
+				creditValueAR += assetValue;
+			}
+		})
+
+		Object.keys(this.state.data['assets']).map((item) => {
+			const transactionCategory = this.state.data['transactionCategoryMapper'][`${item}`];
+			const assetValue = this.state.data['assets'][`${item}`];
+
+			if (transactionCategory === 'Debit') {
+				debitValueA += assetValue;
+			} else if (transactionCategory === 'Credit') {
+				creditValueA += assetValue;
+			}
+		})
+
+		Object.keys(this.state.data['fixedAsset']).map((item) => {
+			const transactionCategory = this.state.data['transactionCategoryMapper'][`${item}`];
+			const assetValue = this.state.data['fixedAsset'][`${item}`];
+
+			if (transactionCategory === 'Debit') {
+				debitValueA += assetValue;
+			} else if (transactionCategory === 'Credit') {
+				creditValueA += assetValue;
+			}
+		})
+
+		Object.keys(this.state.data['bank']).map((item) => {
+			const transactionCategory = this.state.data['transactionCategoryMapper'][`${item}`];
+			const assetValue = this.state.data['bank'][`${item}`];
+
+			if (transactionCategory === 'Debit') {
+				debitValueB += assetValue;
+			} else if (transactionCategory === 'Credit') {
+				creditValueB += assetValue;
+			}
+		})
+		
+		const totalCredit = parseFloat(creditValueAR + creditValueA + creditValueFA + creditValueB)
+		const totalDebit = parseFloat(debitValueAR + debitValueA + debitValueFA + debitValueB)
+		console.log(typeof totalDebit);
+		return (
+			<tr style={{ backgroundColor: '#B4C6E7' }}>
+				<td className="pt-1 pb-1 bld">
+					{strings.Total + " " + strings.Assets}
+				</td>
+				<td className="text-right pt-1 pb-1 bld">
+					<Currency
+						value={ totalDebit ? (
+							totalDebit
+						) : (
+							0.00
+						)}
+						currencyCode={
+							this.props.universal_currency_list[0]
+								? this.props.universal_currency_list[0]
+									.currencyIsoCode
+								: 'AED'
+						}
+					/>
+				</td>
+				<td className="pt-1 pb-1 text-right bld">
+					<Currency
+						value={totalCredit ? (
+							totalCredit
+						) : (
+							0.00
+						)}
+						currencyCode={
+							this.props.universal_currency_list[0]
+								? this.props.universal_currency_list[0]
+									.currencyIsoCode
+								: 'AED'
+						}
+					/>
+				</td>
+			</tr>
+		)
+	}
+
+	totalLiabilities = () => {
+		
+		let debitValueAP = 0;
+		let creditValueAP = 0;
+		let debitValueL = 0;
+		let creditValueL = 0;
+
+		Object.keys(this.state.data['accountpayable']).map((item) => {
+			const transactionCategory = this.state.data['transactionCategoryMapper'][`${item}`];
+			const assetValue = this.state.data['accountpayable'][`${item}`];
+
+			if (transactionCategory === 'Debit') {
+				debitValueAP += assetValue;
+			} else if (transactionCategory === 'Credit') {
+				creditValueAP += assetValue;
+			}
+		})
+		
+		Object.keys(this.state.data['liabilities']).map((item) => {
+			const transactionCategory = this.state.data['transactionCategoryMapper'][`${item}`];
+			const assetValue = this.state.data['liabilities'][`${item}`];
+
+			if (transactionCategory === 'Debit') {
+				debitValueL += assetValue;
+			} else if (transactionCategory === 'Credit') {
+				creditValueL += assetValue;
+			}
+		})
+
+		const totalCredit = parseFloat(creditValueAP + creditValueL)
+		const totalDebit = parseFloat(debitValueAP + debitValueL)
+		
+		return (
+			<tr style={{ backgroundColor: '#B4C6E7' }}>
+				<td className="pt-1 pb-1 bld">
+					{strings.Total + " " + strings.Liabilities}
+				</td>
+				<td className="text-right pt-1 pb-1 bld">
+					<Currency
+						value={ totalDebit ? (
+							totalDebit
+						) : (
+							0.00
+						)}
+						currencyCode={
+							this.props.universal_currency_list[0]
+								? this.props.universal_currency_list[0]
+									.currencyIsoCode
+								: 'AED'
+						}
+					/>
+				</td>
+				<td className="pt-1 pb-1 text-right bld">
+					<Currency
+						value={totalCredit ? (
+							totalCredit
+						) : (
+							0.00
+						)}
+						currencyCode={
+							this.props.universal_currency_list[0]
+								? this.props.universal_currency_list[0]
+									.currencyIsoCode
+								: 'AED'
+						}
+					/>
+				</td>
+			</tr>
+		)
+	}
+
+	totalEquities = () => {
+
+		let totalDebit = 0
+		let totalCredit = 0
+
+		Object.keys(this.state.data['equities']).map((item) => {
+			const transactionCategory = this.state.data['transactionCategoryMapper'][`${item}`];
+			const assetValue = this.state.data['equities'][`${item}`];
+
+			if (transactionCategory === 'Debit') {
+				totalDebit += assetValue;
+			} else if (transactionCategory === 'Credit') {
+				totalCredit += assetValue;
+			}
+		})
+
+		return (
+			<tr style={{ backgroundColor: '#B4C6E7' }}>
+				<td className="pt-1 pb-1 bld">
+					{strings.Total + " " + strings.Equities}
+				</td>
+				<td className="text-right pt-1 pb-1 bld">
+					<Currency
+						value={ totalDebit ? (
+							totalDebit
+						) : (
+							0.00
+						)}
+						currencyCode={
+							this.props.universal_currency_list[0]
+								? this.props.universal_currency_list[0]
+									.currencyIsoCode
+								: 'AED'
+						}
+					/>
+				</td>
+				<td className="pt-1 pb-1 text-right bld">
+					<Currency
+						value={totalCredit ? (
+							totalCredit
+						) : (
+							0.00
+						)}
+						currencyCode={
+							this.props.universal_currency_list[0]
+								? this.props.universal_currency_list[0]
+									.currencyIsoCode
+								: 'AED'
+						}
+					/>
+				</td>
+			</tr>
+		)
+	}
+	
+	totalIncome = () => {
+
+		let totalDebit = 0
+		let totalCredit = 0
+
+		Object.keys(this.state.data['income']).map((item) => {
+			const transactionCategory = this.state.data['transactionCategoryMapper'][`${item}`];
+			const assetValue = this.state.data['income'][`${item}`];
+
+			if (transactionCategory === 'Debit') {
+				totalDebit += assetValue;
+			} else if (transactionCategory === 'Credit') {
+				totalCredit += assetValue;
+			}
+		})
+
+		return (
+			<tr style={{ backgroundColor: '#B4C6E7' }}>
+				<td className="pt-1 pb-1 bld">
+					{strings.Total + " " + strings.Income}
+				</td>
+				<td className="text-right pt-1 pb-1 bld">
+					<Currency
+						value={ totalDebit ? (
+							totalDebit
+						) : (
+							0.00
+						)}
+						currencyCode={
+							this.props.universal_currency_list[0]
+								? this.props.universal_currency_list[0]
+									.currencyIsoCode
+								: 'AED'
+						}
+					/>
+				</td>
+				<td className="pt-1 pb-1 text-right bld">
+					<Currency
+						value={totalCredit ? (
+							totalCredit
+						) : (
+							0.00
+						)}
+						currencyCode={
+							this.props.universal_currency_list[0]
+								? this.props.universal_currency_list[0]
+									.currencyIsoCode
+								: 'AED'
+						}
+					/>
+				</td>
+			</tr>
+		)
+	}
+	
+	totalExpense = () => {
+
+		let totalDebit = 0
+		let totalCredit = 0
+
+		Object.keys(this.state.data['expense']).map((item) => {
+			const transactionCategory = this.state.data['transactionCategoryMapper'][`${item}`];
+			const assetValue = this.state.data['expense'][`${item}`];
+
+			if (transactionCategory === 'Debit') {
+				totalDebit += assetValue;
+			} else if (transactionCategory === 'Credit') {
+				totalCredit += assetValue;
+			}
+		})
+
+		return (
+			<tr style={{ backgroundColor: '#B4C6E7' }}>
+				<td className="pt-1 pb-1 bld">
+					{strings.Total + " " + strings.Expense}
+				</td>
+				<td className="text-right pt-1 pb-1 bld">
+					<Currency
+						value={ totalDebit ? (
+							totalDebit
+						) : (
+							0.00
+						)}
+						currencyCode={
+							this.props.universal_currency_list[0]
+								? this.props.universal_currency_list[0]
+									.currencyIsoCode
+								: 'AED'
+						}
+					/>
+				</td>
+				<td className="pt-1 pb-1 text-right bld">
+					<Currency
+						value={totalCredit ? (
+							totalCredit
+						) : (
+							0.00
+						)}
+						currencyCode={
+							this.props.universal_currency_list[0]
+								? this.props.universal_currency_list[0]
+									.currencyIsoCode
+								: 'AED'
+						}
+					/>
+				</td>
+			</tr>
+		)
+	}
+
 	exportFile = () => {
 
 		// let exportData
@@ -216,7 +548,7 @@ class TrailBalances extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
-		const { profile, universal_currency_list, company_profile } = this.props;
+		const { universal_currency_list, profile, company_profile } = this.props;
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -400,7 +732,6 @@ class TrailBalances extends React.Component {
 																	key={index}
 																	style={(!column.class ? { width: '50%' } : { width: '25%' })}
 																	className={column.class ? 'text-right th' : 'th'}
-																// className="table-header-bg"
 																>
 																	{column.label}
 																</th>
@@ -415,224 +746,215 @@ class TrailBalances extends React.Component {
 																<td className='pt-3 pb-3' colSpan={3}> </td >
 															</tr>
 															<tr style={{ backgroundColor: '#4472C4' }}>
-																<td className="wh pt-1 pb-1 bld" colSpan={3}>{strings.Assets}</td>
+																<td className="wh pt-1 pb-1 bld" colSpan={3}>{strings.Assets}</td>	
 															</tr>
-															{Object.keys(this.state.data['assets']).map(
-																(item) => (
-																	<tr>
-																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit' ? (
-																				this.state.data['assets'][`${item}`]
-																					.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																			) : (
-																				''
-																			)}
-																		</td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit' ? (
-																				this.state.data['assets'][`${item}`]
-																					.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																			) : (
-																				''
-																			)}
-																		</td>
-																	</tr>
-
-																),
+															{Object.keys(this.state.data['accountReceivable']).map(
+																(item) => {
+																	if (this.state.data['accountReceivable'][`${item}`] === 0 || this.state.data['accountReceivable'][`${item}`] === undefined) {
+																		return null;
+																	}
+																	return (
+																		<tr>
+																			<td className="pt-0 pb-0">{item}</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data['transactionCategoryMapper'
+																				][`${item}`] === 'Debit' ? (
+																					this.state.data['accountReceivable'][`${item}`]
+																					.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data['transactionCategoryMapper'
+																				][`${item}`] === 'Credit' ? (
+																					this.state.data['accountReceivable'][`${item}`]
+																					.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																		</tr>
+																	)
+																},
 															)}
 															{Object.keys(this.state.data['bank']).map(
-																(item) => (
-																	<tr>
-																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit' ? (
-																				this.state.data['bank'][`${item}`]
-																					.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																			) : (
-																				''
-																			)}
-																		</td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit' ? (
-																				this.state.data['bank'][`${item}`]
-																					.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																			) : (
-																				''
-																			)}
-																		</td>
-																	</tr>
-																),
+																(item) => {
+																	if (this.state.data['bank'][`${item}`] === 0 || this.state.data['bank'][`${item}`] === undefined) {
+																		return null;
+																	}
+																	return (
+																		<tr>
+																			<td className="pt-0 pb-0">{item}</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Debit' ? (
+																					this.state.data['bank'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Credit' ? (
+																					this.state.data['bank'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																		</tr>
+																	)
+																},
 															)}
-
-															<tr> <td></td>
+															{Object.keys(this.state.data['fixedAsset']).map(
+																(item) => {
+																	if (this.state.data['fixedAsset'][`${item}`] === 0 || this.state.data['fixedAsset'][`${item}`] === undefined) {
+																		return null;
+																	}
+																	return (
+																		<tr>
+																			<td className="pt-0 pb-0">{item}</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Debit' ? (
+																					this.state.data['fixedAsset'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Credit' ? (
+																					this.state.data['fixedAsset'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																		</tr>
+																	)
+																},
+															)}
+															{Object.keys(this.state.data['assets']).map(
+																(item) => {
+																	if (this.state.data['assets'][`${item}`] === 0 || this.state.data['assets'][`${item}`] === undefined) {
+																		return null;
+																	}
+																	return (
+																		<tr>
+																			<td className="pt-0 pb-0">{item}</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Debit' ? (
+																					this.state.data['assets'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Credit' ? (
+																					this.state.data['assets'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																		</tr>
+																	)
+																},
+															)}
+															<tr>
 																<td></td>
-																<td> </td>
+																<td></td>
+																<td></td>
 															</tr>
-															<tr style={{ backgroundColor: '#B4C6E7' }}>
-																<td className="pt-1 pb-1 bld">
-																	{strings.Total + " " + strings.Assets}
-																</td>
-																<td className="text-right pt-1 pb-1 bld">
-																	<Currency
-																		value={this.state.data[
-																			'transactionCategoryMapper'
-																		]['totalAssets'] === 'Debit' ? (
-																			this.state.data['totalAssets']
-																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																		) : (
-																			''
-																		)}
-																		currencyCode={
-																			universal_currency_list[0]
-																				? universal_currency_list[0]
-																					.currencyIsoCode
-																				: 'AED'
-																		}
-																	/>
+															{this.totalAssets()}
 
-
-																</td>
-																<td className="pt-1 pb-1 text-right bld">
-																	<Currency
-																		value={this.state.data[
-																			'transactionCategoryMapper'
-																		]['totalAssets'] === 'Credit' ? (
-																			this.state.data['totalAssets']
-																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																		) : (
-																			''
-																		)}
-																		currencyCode={
-																			universal_currency_list[0]
-																				? universal_currency_list[0]
-																					.currencyIsoCode
-																				: 'AED'
-																		}
-																	/>
-
-																</td>
-															</tr>
 															<tr>
 																<td className='pt-3 pb-3' colSpan={3}> </td >
 															</tr>
-															{/* <tr>
-																<td className="mainLable ">{strings.FixedAssets}</td>
-																<td></td>
-																<td></td>
-															</tr>
-															{Object.keys(this.state.data['fixedAsset']).map(
-																(item) => (
-																	<tr>
-																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit' ? (
-																				this.state.data['fixedAsset'][`${item}`]
-																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
-																			) : (
-																				''
-																			)}
-																		</td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit' ? (
-																				this.state.data['fixedAsset'][`${item}`]
-																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
-																			) : (
-																				''
-																			)}
-																		</td>
-																	</tr>
-																),
-															)} */}
 															<tr style={{ backgroundColor: '#4472C4' }}>
 																<td className="wh pt-1 pb-1 bld" colSpan={3}>{strings.Liabilities}</td>
 															</tr>
-															{Object.keys(this.state.data['liabilities']).map(
-																(item) => (
-																	<tr>
-																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit' ? (
-																				this.state.data['liabilities'][`${item}`]
-																					.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-
-																			) : (
-																				''
-																			)}
-																		</td>
-																		<td className="text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit' ? (
-																				this.state.data['liabilities'][`${item}`]
-																					.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-
-																			) : (
-																				''
-																			)}
-																		</td>
-																	</tr>
-																),
+															{Object.keys(this.state.data['accountpayable']).map(
+																(item) => {
+																	if (this.state.data['accountpayable'][`${item}`] === 0 || this.state.data['accountpayable'][`${item}`] === undefined) {
+																		return null;
+																	}
+																	return (
+																		<tr>
+																			<td className="pt-0 pb-0">{item}</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data['transactionCategoryMapper'
+																				][`${item}`] === 'Debit' ? (
+																					this.state.data['accountpayable'][`${item}`]
+																					.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data['transactionCategoryMapper'
+																				][`${item}`] === 'Credit' ? (
+																					this.state.data['accountpayable'][`${item}`]
+																					.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																		</tr>
+																	)
+																},
 															)}
-															<tr> <td></td>
+															{Object.keys(this.state.data['liabilities']).map(
+																(item) => {
+																	if (this.state.data['liabilities'][`${item}`] === 0 || this.state.data['liabilities'][`${item}`] === undefined) {
+																		return null;
+																	}
+																	return (
+																		<tr>
+																			<td className="pt-0 pb-0">{item}</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Debit' ? (
+																					this.state.data['liabilities'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Credit' ? (
+																					this.state.data['liabilities'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																		</tr>
+																	)
+																},
+															)}
+															<tr><td></td>
 																<td></td>
-																<td> </td>
+																<td></td>
 															</tr>
-															<tr style={{ backgroundColor: '#B4C6E7' }}>
-																<td className="pt-1 pb-1 bld">
-																	{strings.Total + " " + strings.Liabilities}
-																</td>
-																<td className="text-right pt-1 pb-1 bld">
-																	<Currency
-																		value={this.state.data[
-																			'transactionCategoryMapper'
-																		]['totalLiabilities'] === 'Debit' ? (
-																			this.state.data['totalLiabilities']
-																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																		) : (
-																			''
-																		)}
-																		currencyCode={
-																			universal_currency_list[0]
-																				? universal_currency_list[0]
-																					.currencyIsoCode
-																				: 'AED'
-																		}
-																	/>
-																</td>
-																<td className="pt-1 pb-1 text-right bld">
-																	<Currency
-																		value={this.state.data[
-																			'transactionCategoryMapper'
-																		]['totalLiabilities'] === 'Credit' ? (
-																			this.state.data['totalLiabilities']
-																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																		) : (
-																			''
-																		)}
-																		currencyCode={
-																			universal_currency_list[0]
-																				? universal_currency_list[0]
-																					.currencyIsoCode
-																				: 'AED'
-																		}
-																	/>
-																</td>
-															</tr>
+															{this.totalLiabilities()}
+
 															<tr>
 																<td className='pt-3 pb-3' colSpan={3}> </td >
 															</tr>
@@ -640,295 +962,136 @@ class TrailBalances extends React.Component {
 																<td className="wh pt-1 pb-1 bld" colSpan={3}>{strings.Equities}</td>
 															</tr>
 															{Object.keys(this.state.data['equities']).map(
-																(item) => (
-																	<tr>
-																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit' ? (
-																				this.state.data['equities'][`${item}`]
-																					.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																			) : (
-																				''
-																			)}
-																		</td>
-																		<td className="text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit' ? (
-																				this.state.data['equities'][`${item}`]
-																					.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																			) : (
-																				''
-																			)}
-																		</td>
-																	</tr>
-																),
+																(item) => {
+																	if (this.state.data['equities'][`${item}`] === 0 || this.state.data['equities'][`${item}`] === undefined) {
+																		return null;
+																	}
+																	return (
+																		<tr>
+																			<td className="pt-0 pb-0">{item}</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Debit' ? (
+																					this.state.data['equities'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Credit' ? (
+																					this.state.data['equities'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																		</tr>
+																	)
+																},
 															)}
 															<tr>
 																<td></td>
 																<td></td>
 																<td></td>
 															</tr>
-															<tr style={{ backgroundColor: '#B4C6E7' }}>
-																<td className="pt-1 pb-1 bld">
-																	{strings.Total + " " + strings.Equities}
-																</td>
-																<td className="text-right pt-1 pb-1 bld">
-																	<Currency
-																		value={this.state.data[
-																			'transactionCategoryMapper'
-																		]['totalEquities'] === 'Debit' ? (
-																			this.state.data['totalEquities']
-																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																		) : (
-																			''
-																		)}
-																		currencyCode={
-																			universal_currency_list[0]
-																				? universal_currency_list[0]
-																					.currencyIsoCode
-																				: 'AED'
-																		}
-																	/>
+															{this.totalEquities()}
 
-																</td>
-																<td className="pt-1 pb-1 text-right bld">
-																	<Currency
-																		value={this.state.data[
-																			'transactionCategoryMapper'
-																		]['totalEquities'] === 'Credit' ? (
-																			this.state.data['totalEquities']
-																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																		) : (
-																			''
-																		)}
-																		currencyCode={
-																			universal_currency_list[0]
-																				? universal_currency_list[0]
-																					.currencyIsoCode
-																				: 'AED'
-																		}
-																	/>
-
-																</td>
-															</tr>
 															<tr>
 																<td className='pt-3 pb-3' colSpan={3}> </td >
 															</tr>
-
 															<tr style={{ backgroundColor: '#4472C4' }}>
 																<td className="wh pt-1 pb-1 bld" colSpan={3}>{strings.Income}</td>
 															</tr>
 															{Object.keys(this.state.data['income']).map(
-																(item) => (
-																	<tr>
-																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit' ? (
-																				this.state.data['income'][`${item}`]
-																					.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																			) : (
-																				''
-																			)}
-																		</td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit' ? (
-																				this.state.data['income'][`${item}`]
-																					.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																			) : (
-																				''
-																			)}
-																		</td>
-																	</tr>
-																),
+																(item) => {
+																	if (this.state.data['income'][`${item}`] === 0 || this.state.data['income'][`${item}`] === undefined) {
+																		return null;
+																	}
+																	return (
+																		<tr>
+																			<td className="pt-0 pb-0">{item}</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Debit' ? (
+																					this.state.data['income'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Credit' ? (
+																					this.state.data['income'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																		</tr>
+																	)
+																},
 															)}
 															<tr>
 																<td></td>
 																<td></td>
 																<td></td>
 															</tr>
-															<tr style={{ backgroundColor: '#B4C6E7' }}>
-																<td className="pt-1 pb-1 bld">
-																	{strings.Total + " " + strings.Income}
-																</td>
-																<td className="text-right pt-1 pb-1 bld">
-																	<Currency
-																		value={this.state.data[
-																			'transactionCategoryMapper'
-																		]['totalIncome'] === 'Debit' ? (
-																			this.state.data['totalIncome']
-																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																		) : (
-																			''
-																		)}
-																		currencyCode={
-																			universal_currency_list[0]
-																				? universal_currency_list[0]
-																					.currencyIsoCode
-																				: 'AED'
-																		}
-																	/>
+															{this.totalIncome()}
 
-
-																</td>
-																<td className="pt-1 pb-1 text-right bld">
-																	<Currency
-																		value={this.state.data[
-																			'transactionCategoryMapper'
-																		]['totalIncome'] === 'Credit' ? (
-																			this.state.data['totalIncome']
-																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																		) : (
-																			''
-																		)}
-																		currencyCode={
-																			universal_currency_list[0]
-																				? universal_currency_list[0]
-																					.currencyIsoCode
-																				: 'AED'
-																		}
-																	/>
-
-																</td>
-															</tr>
 															<tr>
 																<td className='pt-3 pb-3' colSpan={3}> </td >
 															</tr>
-
 															<tr style={{ backgroundColor: '#4472C4' }}>
 																<td className="wh pt-1 pb-1 bld" colSpan={3}>{strings.Expense}</td>
 															</tr>
 															{Object.keys(this.state.data['expense']).map(
-																(item) => (
-																	<tr>
-																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit' ? (
-																				this.state.data['expense'][`${item}`]
-																					.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																			) : (
-																				''
-																			)}
-																		</td>
-																		<td className="text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit' ? (
-																				this.state.data['expense'][`${item}`]
-																					.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																			) : (
-																				''
-																			)}
-																		</td>
-																	</tr>
-																),
+																(item) => {
+																	if (this.state.data['expense'][`${item}`] === 0 || this.state.data['expense'][`${item}`] === undefined) {
+																		return null;
+																	}
+																	return (
+																		<tr>
+																			<td className="pt-0 pb-0">{item}</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Debit' ? (
+																					this.state.data['expense'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																			<td className="pt-0 pb-0 text-right">
+																				{this.state.data[
+																					'transactionCategoryMapper'
+																				][`${item}`] === 'Credit' ? (
+																					this.state.data['expense'][`${item}`]
+																						.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+																				) : (
+																					''
+																				)}
+																			</td>
+																		</tr>
+																	)
+																},
 															)}
 															<tr> <td></td>
 																<td></td>
 																<td> </td>
 															</tr>
-															<tr style={{ backgroundColor: '#B4C6E7' }}>
-																<td className="pt-1 pb-1 bld">
-																	{strings.Total + " " + strings.Expense}
-																</td>
-																<td className="text-right pt-1 pb-1 bld">
-																	<Currency
-																		value={this.state.data[
-																			'transactionCategoryMapper'
-																		]['totalExpense'] === 'Debit' ? (
-																			this.state.data['totalExpense']
-																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																		) : (
-																			''
-																		)}
-																		currencyCode={
-																			universal_currency_list[0]
-																				? universal_currency_list[0]
-																					.currencyIsoCode
-																				: 'AED'
-																		}
-																	/>
-																</td>
-																<td className="pt-1 pb-1 text-right bld">
-																	<Currency
-																		value={this.state.data[
-																			'transactionCategoryMapper'
-																		]['totalExpense'] === 'Credit' ? (
-																			this.state.data['totalExpense']
-																				.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-																		) : (
-																			''
-																		)}
-																		currencyCode={
-																			universal_currency_list[0]
-																				? universal_currency_list[0]
-																					.currencyIsoCode
-																				: 'AED'
-																		}
-																	/>
+															{this.totalExpense()}
 
-																</td>
-															</tr>
 															<tr>
 																<td className='pt-3 pb-3' colSpan={3}> </td >
 															</tr>
-															{/* <tr>
-																<td className="mainLable ">
-																	{strings.Account+" "+strings.Receivable}
-																</td>
-																<td className="text-right">
-																	{this.state.data['transactionCategoryMapper'][
-																		'Accounts Receivable'
-																	] === 'Debit' ? (
-																		this.state.data['accountReceivable']['Accounts Receivable']
-																		.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
-																</td>
-																<td className="text-right">
-																	{this.state.data['transactionCategoryMapper'][
-																		'Accounts Receivable'
-																	] === 'Credit' ? (
-																		this.state.data['accountReceivable']['Accounts Receivable']
-																		.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
-																</td>
-															</tr>
-															<tr>
-																<td className="mainLable ">{strings.AccountsPayable }</td>
-																<td className="text-right">
-																	{' '}
-																	{this.state.data['transactionCategoryMapper'][
-																		'Accounts Payable'
-																	] === 'Debit' ? (
-																		this.state.data['accountpayable']['Accounts Payable']
-																		.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
-																</td>
-																<td className="text-right">
-																	{this.state.data['transactionCategoryMapper'][
-																		'Accounts Payable'
-																	] === 'Credit' ? (
-																		this.state.data['accountpayable']['Accounts Payable']
-																		.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
-																	) : (
-																		''
-																	)}
-																</td>
-															</tr> */}
 															<tr style={{ backgroundColor: '#9CC2E5' }}>
 																<td className="pt-1 pb-1 bld">{strings.Total}</td>
 																<td className="text-right pt-1 pb-1 bld">

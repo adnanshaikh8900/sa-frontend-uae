@@ -17,7 +17,7 @@ export const getSalaryStructureList = (obj) => {
       url: `/rest/payroll/salaryStructureList?&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     }
     return authApi(data).then((res) => {
-      if(!obj.paginationDisable) {
+      if (!obj.paginationDisable) {
         dispatch({
           type: SALARY_STRUCTURE.SALARY_STRUCTURE_LIST,
           payload: res.data
@@ -29,3 +29,24 @@ export const getSalaryStructureList = (obj) => {
     })
   }
 }
+
+export const getSalaryList = (obj) => {
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/payroll/getSalaryList?pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
+    }
+
+    return authApi(data).then((res) => {
+      return res
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
+

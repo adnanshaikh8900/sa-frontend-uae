@@ -257,7 +257,7 @@ jobs:
         with:
           ref: '${{ needs.parse.outputs.commit-sha }}'
       - uses: JasonEtco/create-an-issue@v2
-        name: Create approval Issue for UAT
+        name: Create approval Issue for PROD
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ENVIRONMENT: PROD

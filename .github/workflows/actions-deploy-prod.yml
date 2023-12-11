@@ -115,6 +115,38 @@ jobs:
           simpleaccounts/simpleaccounts-frontend-uae:latest
           simpleaccounts/simpleaccounts-frontend-uae:${{ env.TAG }}
 
+  deploy-PROD-preprod:
+    needs: [build]
+    runs-on: datainn-digitalocean-test-runner-set
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest' # default is latest stable
+      id: install-kubectl
+
+    - uses: azure/setup-helm@v3
+      with:
+        version: 'latest' # default is latest (stable)
+        token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+      id: install-helm
+
+    - name: Helm chart PROD preprod Deployment
+      run: |
+        echo "Deploying application to following cluster..."
+        kubectl cluster-info
+        echo "Test deployment scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=preprod.app.simpleaccounts.io,simpleVatHost=https://preprod-api.app.simpleaccounts.io,fullnameOverride=preprod-frontend,serviceAccount.name=preprod-deploy-robot-frontend,ingress.hosts[0].host=preprod.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=preprod-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=preprod-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=preprod.app.simpleaccounts.io --wait --dry-run --debug --namespace preprod --create-namespace preprod-frontend ./simpleaccounts-frontend 
+        echo "Deployment started scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=preprod.app.simpleaccounts.io,simpleVatHost=https://preprod-api.app.simpleaccounts.io,fullnameOverride=preprod-frontend,serviceAccount.name=preprod-deploy-robot-frontend,ingress.hosts[0].host=preprod.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=preprod-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=preprod-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=preprod.app.simpleaccounts.io --wait --namespace preprod --create-namespace preprod-frontend ./simpleaccounts-frontend 
+        echo "Application successfully deployed."
+
   deploy-PROD-dit:
     needs: [build]
     runs-on: datainn-digitalocean-test-runner-set
@@ -274,6 +306,102 @@ jobs:
         helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=sdgiconsultants.app.simpleaccounts.io,simpleVatHost=https://sdgiconsultants-api.app.simpleaccounts.io,fullnameOverride=sdgiconsultants-frontend,serviceAccount.name=sdgiconsultants-deploy-robot-frontend,ingress.hosts[0].host=sdgiconsultants.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sdgiconsultants-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sdgiconsultants-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sdgiconsultants.app.simpleaccounts.io --wait --dry-run --debug --namespace sdgiconsultants --create-namespace sdgiconsultants-frontend ./simpleaccounts-frontend 
         echo "Deployment started scripts..."
         helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=sdgiconsultants.app.simpleaccounts.io,simpleVatHost=https://sdgiconsultants-api.app.simpleaccounts.io,fullnameOverride=sdgiconsultants-frontend,serviceAccount.name=sdgiconsultants-deploy-robot-frontend,ingress.hosts[0].host=sdgiconsultants.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sdgiconsultants-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sdgiconsultants-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sdgiconsultants.app.simpleaccounts.io --wait --namespace sdgiconsultants --create-namespace sdgiconsultants-frontend ./simpleaccounts-frontend 
+        echo "Application successfully deployed."
+
+  deploy-PROD-lonmgllc:
+    needs: [build]
+    runs-on: datainn-digitalocean-test-runner-set
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest' # default is latest stable
+      id: install-kubectl
+
+    - uses: azure/setup-helm@v3
+      with:
+        version: 'latest' # default is latest (stable)
+        token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+      id: install-helm
+
+    - name: Helm chart PROD lonmgllc Deployment
+      run: |
+        echo "Deploying application to following cluster..."
+        kubectl cluster-info
+        echo "Test deployment scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=lonmgllc.app.simpleaccounts.io,simpleVatHost=https://lonmgllc-api.app.simpleaccounts.io,fullnameOverride=lonmgllc-frontend,serviceAccount.name=lonmgllc-deploy-robot-frontend,ingress.hosts[0].host=lonmgllc.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=lonmgllc-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=lonmgllc-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=lonmgllc.app.simpleaccounts.io --wait --dry-run --debug --namespace lonmgllc --create-namespace lonmgllc-frontend ./simpleaccounts-frontend 
+        echo "Deployment started scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=lonmgllc.app.simpleaccounts.io,simpleVatHost=https://lonmgllc-api.app.simpleaccounts.io,fullnameOverride=lonmgllc-frontend,serviceAccount.name=lonmgllc-deploy-robot-frontend,ingress.hosts[0].host=lonmgllc.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=lonmgllc-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=lonmgllc-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=lonmgllc.app.simpleaccounts.io --wait --namespace lonmgllc --create-namespace lonmgllc-frontend ./simpleaccounts-frontend 
+        echo "Application successfully deployed."
+
+  deploy-PROD-emiratesfreezones:
+    needs: [build]
+    runs-on: datainn-digitalocean-test-runner-set
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest' # default is latest stable
+      id: install-kubectl
+
+    - uses: azure/setup-helm@v3
+      with:
+        version: 'latest' # default is latest (stable)
+        token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+      id: install-helm
+
+    - name: Helm chart PROD emiratesfreezones Deployment
+      run: |
+        echo "Deploying application to following cluster..."
+        kubectl cluster-info
+        echo "Test deployment scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=emiratesfreezones.app.simpleaccounts.io,simpleVatHost=https://emiratesfreezones-api.app.simpleaccounts.io,fullnameOverride=emiratesfreezones-frontend,serviceAccount.name=emiratesfreezones-deploy-robot-frontend,ingress.hosts[0].host=emiratesfreezones.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=emiratesfreezones-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=emiratesfreezones-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=emiratesfreezones.app.simpleaccounts.io --wait --dry-run --debug --namespace emiratesfreezones --create-namespace emiratesfreezones-frontend ./simpleaccounts-frontend 
+        echo "Deployment started scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=emiratesfreezones.app.simpleaccounts.io,simpleVatHost=https://emiratesfreezones-api.app.simpleaccounts.io,fullnameOverride=emiratesfreezones-frontend,serviceAccount.name=emiratesfreezones-deploy-robot-frontend,ingress.hosts[0].host=emiratesfreezones.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=emiratesfreezones-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=emiratesfreezones-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=emiratesfreezones.app.simpleaccounts.io --wait --namespace emiratesfreezones --create-namespace emiratesfreezones-frontend ./simpleaccounts-frontend 
+        echo "Application successfully deployed."
+        
+  deploy-PROD-va-consultancyuae:
+    needs: [build]
+    runs-on: datainn-digitalocean-test-runner-set
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest' # default is latest stable
+      id: install-kubectl
+
+    - uses: azure/setup-helm@v3
+      with:
+        version: 'latest' # default is latest (stable)
+        token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+      id: install-helm
+
+    - name: Helm chart PROD va-consultancyuae Deployment
+      run: |
+        echo "Deploying application to following cluster..."
+        kubectl cluster-info
+        echo "Test deployment scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=va-consultancyuae.app.simpleaccounts.io,simpleVatHost=https://va-consultancyuae-api.app.simpleaccounts.io,fullnameOverride=va-consultancyuae-frontend,serviceAccount.name=va-consultancyuae-deploy-robot-frontend,ingress.hosts[0].host=va-consultancyuae.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=va-consultancyuae-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=va-consultancyuae-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=va-consultancyuae.app.simpleaccounts.io --wait --dry-run --debug --namespace va-consultancyuae --create-namespace va-consultancyuae-frontend ./simpleaccounts-frontend 
+        echo "Deployment started scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=va-consultancyuae.app.simpleaccounts.io,simpleVatHost=https://va-consultancyuae-api.app.simpleaccounts.io,fullnameOverride=va-consultancyuae-frontend,serviceAccount.name=va-consultancyuae-deploy-robot-frontend,ingress.hosts[0].host=va-consultancyuae.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=va-consultancyuae-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=va-consultancyuae-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=va-consultancyuae.app.simpleaccounts.io --wait --namespace va-consultancyuae --create-namespace va-consultancyuae-frontend ./simpleaccounts-frontend 
         echo "Application successfully deployed."
 
   deploy-PROD-cashin:

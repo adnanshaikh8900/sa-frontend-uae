@@ -2190,8 +2190,8 @@ class CreateQuotation extends React.Component {
 																	'Invoice number is required',
 																),
 																customerId: Yup.string().required(
-																	//strings.CustomerNameIsRequired
-																	'Customer name is required'
+																	strings.Customer_Name_Is_Required
+																	
 																),
 																// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 
@@ -2238,8 +2238,8 @@ class CreateQuotation extends React.Component {
 																				strings.VATIsRequired,
 																			),
 																			productId: Yup.string().required(
-																				//strings.ProductIsRequired,
-																				'Product is required'
+																				strings.Product_Is_Required
+																				
 																			),
 																		}),
 																	),

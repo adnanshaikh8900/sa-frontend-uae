@@ -1179,7 +1179,7 @@ class CreateDebitNote extends React.Component {
 												}}
 												validationSchema={Yup.object().shape({
 
-													debitNoteNumber: Yup.string().required('Debit note number is required',),
+													debitNoteNumber: Yup.string().required(strings.Debit_Note_Number_Is_Required,),
 													contactId: Yup.string().required('Supplier name is required',),
 													debitNoteDate: Yup.string().required(strings.DebitNoteDateIsRequired,),
 													lineItemsString: Yup.array().required('Atleast one Debit Note sub detail is mandatory',).of(

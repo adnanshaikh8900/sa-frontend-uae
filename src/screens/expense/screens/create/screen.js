@@ -1048,10 +1048,10 @@ class CreateExpense extends React.Component {
 															}}
 															validationSchema={Yup.object().shape({
 																expenseNumber: Yup.string().required(
-																	strings.ExpenseNumberRequired
+																	'Expense number is required'
 																),
 																expenseCategory: Yup.string().required(
-																	strings.ExpenseCategoryRequired
+																	'Expense category is required'
 																),
 																expenseDate: Yup.date().required(
 																	'Expense date is required',

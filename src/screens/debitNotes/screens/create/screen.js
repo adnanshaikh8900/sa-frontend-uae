@@ -1163,7 +1163,7 @@ class CreateDebitNote extends React.Component {
 													}
 
 													if (!isCreatedWithoutInvoice && !values.invoiceNumber) {
-														errors.invoiceNumber = 'Invoice Number is Required';
+														errors.invoiceNumber = 'Invoice number is required';
 													}
 
 													if ((this.state.isDNWIWithoutProduct || isCreatedWithoutInvoice) && !values.debitAmount)
@@ -1179,8 +1179,8 @@ class CreateDebitNote extends React.Component {
 												}}
 												validationSchema={Yup.object().shape({
 
-													debitNoteNumber: Yup.string().required(strings.DebitNoteNumberIsRequired,),
-													contactId: Yup.string().required('Supplier Name is Required',),
+													debitNoteNumber: Yup.string().required('Debit note number is required',),
+													contactId: Yup.string().required('Supplier name is required',),
 													debitNoteDate: Yup.string().required(strings.DebitNoteDateIsRequired,),
 													lineItemsString: Yup.array().required('Atleast one Debit Note sub detail is mandatory',).of(
 														Yup.object().shape({
@@ -1452,7 +1452,7 @@ class CreateDebitNote extends React.Component {
 																	{props.errors.debitNoteDate &&
 																		props.touched.debitNoteDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.debitNoteDate.includes("nullable()") ? "Tax Credit Note Date is Required" : props.errors.debitNoteDate}
+																				{props.errors.debitNoteDate.includes("nullable()") ? "Tax credit note date is required" : props.errors.debitNoteDate}
 																			</div>
 																		)}
 																</FormGroup>

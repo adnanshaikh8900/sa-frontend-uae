@@ -2454,7 +2454,7 @@ class CreateSupplierInvoice extends React.Component {
 																'Invoice number is required',
 															),
 															contactId: Yup.string().required(
-																strings.SupplierNameIsRequired
+																'Supplier name is required'
 															),
 															// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 															term: Yup.string().required(strings.TermIsRequired
@@ -2494,12 +2494,12 @@ class CreateSupplierInvoice extends React.Component {
 																						return false;
 																					}
 																				},
-																			).required('Unit Price is required'),
+																			).required('Unit price is required'),
 																		vatCategoryId: Yup.string().required(
 																			strings.VATIsRequired,
 																		),
 																		productId: Yup.string().required(
-																			strings.ProductIsRequired,
+																			'Product is required'
 																		),
 																		// transactionCategoryId: Yup.string().required(
 																		// 	'Account is required',

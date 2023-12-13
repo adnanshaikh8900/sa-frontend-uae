@@ -376,6 +376,7 @@ const en = {
       DebitNoteNumberIsRequired: 'Debit Note Number is Required',
       Debit_Note_Number_Is_Required:'Debit note number is required',
       DebitNoteDateIsRequired: "Debit Note Date is Required",
+      TaxCreditNoteDateIsRequired: "Tax credit note date is required",
       DebitNoteDate: "Debit Note Date",
       DebitNoteNumberAlreadyExists: 'Debit Note Number already exists',
       QuatityIsRequired: "Quatity is required",

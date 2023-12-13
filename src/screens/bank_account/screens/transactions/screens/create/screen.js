@@ -2547,8 +2547,6 @@ class CreateBankTransaction extends React.Component {
                                         0
                                       );
                                     
-                                      console.log('Total Due Amount', totalDueAmount);
-                                    
                                       props.setFieldValue("transactionAmount", totalDueAmount);
                                     
                                       this.setexchnagedamount(selectedOptions);

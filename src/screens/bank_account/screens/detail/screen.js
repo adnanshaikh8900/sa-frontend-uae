@@ -426,6 +426,7 @@ class DetailBankAccount extends React.Component {
 																	<span className="text-danger">* </span>{strings.AccountName}
 																</Label>
 																<Input
+																    disabled
 																	type="text"
 																	maxLength="100"
 																	id="account_name"
@@ -762,6 +763,7 @@ class DetailBankAccount extends React.Component {
 																	<span className="text-danger">* </span>{strings.AccountNumber}
 																</Label>
 																<Input
+																    disabled
 																	type="text"
 																	maxLength="25"
 																	id="account_number"

@@ -1047,7 +1047,7 @@ class CreateCreditNote extends React.Component {
 							<TextField
 						        disabled
 								type="textarea"
-								inputProps={{ maxLength: 2000 }}
+								inputProps={{ maxLength: 250 }}
 								multiline
 								minRows={1}
 								maxRows={4}

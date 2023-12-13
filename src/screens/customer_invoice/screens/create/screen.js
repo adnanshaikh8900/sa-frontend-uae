@@ -1698,7 +1698,7 @@ class CreateCustomerInvoice extends React.Component {
 							<div className='mt-1'>
 								<TextField
 									type="textarea"
-									inputProps={{ maxLength: 2000 }}
+									inputProps={{ maxLength: 250 }}
 									multiline
 									minRows={1}
 									maxRows={4}

@@ -2131,7 +2131,7 @@ class DetailCustomerInvoice extends React.Component {
 																						return false;
 																					}
 																				},
-																			).required('Unit Price is required'),
+																			).required('Unit price is required'),
 																		vatCategoryId: Yup.string().required(
 																			'VAT is required',
 																		),

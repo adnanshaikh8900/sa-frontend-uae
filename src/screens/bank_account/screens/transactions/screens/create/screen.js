@@ -2512,68 +2512,62 @@ class CreateBankTransaction extends React.Component {
                                       </FormGroup>
                                     </Col>
                                   )}
-                                {props.values.coaCategoryId.value === 2 && (
-                                  <Col lg={3}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="invoiceIdList">
-                                        <span className="text-danger">* </span>
-                                        Invoice
-                                      </Label>
-                                      <Select
-                                        style={customStyles}
-                                        placeholder={
-                                          strings.Select + " Invoice"
-                                        }
-                                        isMulti
-                                        className={`select-default-width, ${props.errors.invoiceIdList &&
-                                          props.touched.invoiceIdList
-                                          ? "is-invalid"
-                                          : ""
-                                          }`}
-                                        options={
-                                          customer_invoice_list &&
-                                            customer_invoice_list.data
-                                            ? customer_invoice_list.data
-                                            : []
-                                        }
-                                        value={props.values.invoiceIdList}
-                                        // options={
-                                        // 	invoice_list ? invoice_list.data : []
-                                        // }
-                                        id="invoiceIdList"
-                                        onChange={(option) => {
-                                          if (option === null) {
-                                            this.getInvoices(
-                                              props.values.customerId,
-                                              props.values.transactionAmount,
-                                              option
-                                            );
-                                            // this.getSuggestionInvoicesFotCust(
-                                            //   option.value,
-                                            //   props.values.transactionAmount
-                                            // );
-                                          }
-
-                                          this.setexchnagedamount(option);
-                                          this.totalAmount(option);
-
-                                          if (option != null) {
-                                            this.getInvoiceCurrency(
-                                              option[0],
-                                              props
-                                            );
-                                          }
-                                        }}
-                                      />
-                                      {props.errors.invoiceIdList &&
-                                        props.touched.invoiceIdList && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.invoiceIdList}
-                                          </div>
-                                        )}
-                                    </FormGroup>
-                                  </Col>
-                                )}
+                               {props.values.coaCategoryId.value === 2 && (
+                              <Col lg={3}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="invoiceIdList">
+                                    <span className="text-danger">* </span>
+                                    Invoice
+                                  </Label>
+                                  <Select
+                                    style={customStyles}
+                                    placeholder={strings.Select + " Invoice"}
+                                    isMulti
+                                    className={`select-default-width, ${props.errors.invoiceIdList &&
+                                      props.touched.invoiceIdList
+                                      ? "is-invalid"
+                                      : ""}`}
+                                    options={
+                                      customer_invoice_list && customer_invoice_list.data
+                                        ? customer_invoice_list.data
+                                        : []
+                                    }
+                                    value={props.values.invoiceIdList}
+                                    id="invoiceIdList"
+                                    onChange={(selectedOptions) => {
+                                      if (!selectedOptions || selectedOptions.length === 0) {
+                                     
+                                        props.setFieldValue("transactionAmount", 0); 
+                                        props.setFieldValue("invoiceIdList", []);
+                                        return;
+                                      }
+                                    
+                                      const totalDueAmount = selectedOptions.reduce(
+                                        (acc, selectedOption) => acc + (selectedOption.dueAmount || 0),
+                                        0
+                                      );
+                                    
+                                      console.log('Total Due Amount', totalDueAmount);
+                                    
+                                      props.setFieldValue("transactionAmount", totalDueAmount);
+                                    
+                                      this.setexchnagedamount(selectedOptions);
+                                      this.totalAmount(selectedOptions);
+                                    
+                                      if (selectedOptions.length > 0) {
+                                        this.getInvoiceCurrency(selectedOptions[0], props);
+                                      }
+                                    }}
+                                  />
+                                  {props.errors.invoiceIdList &&
+                                    props.touched.invoiceIdList && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.invoiceIdList}
+                                      </div>
+                                    )}
+                                </FormGroup>
+                              </Col>
+                            )}
                               </Row>
                             )}
 

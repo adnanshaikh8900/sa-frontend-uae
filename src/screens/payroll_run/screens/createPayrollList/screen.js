@@ -821,8 +821,11 @@ class CreatePayrollList extends React.Component {
 																validate={(values) => {
 																	// let status = false
 																	let errors = {};
-																	if (this.state.payrollApproverRequired && !values.payrollApprover) {
-																		errors.payrollApprover = 'Payroll Approver is required';
+																	// if (this.state.payrollApproverRequired && !values.payrollApprover) {
+																	// 	errors.payrollApprover = 'Payroll Approver is required';
+																	// }
+																	if (!values.payrollApprover){
+																		errors.payrollApprover="Payroll approver is required"
 																	}
 																	if (!values.payrollDate) {
 																		errors.payrollDate = 'Payroll date is required';

@@ -1398,7 +1398,7 @@ class DetailDebitNote extends React.Component {
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
-																				value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
+																				// value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
 																				minDate={this.state.receiptDate}
 																				selected={props.values.invoiceDate}
 																				onChange={(value) => {

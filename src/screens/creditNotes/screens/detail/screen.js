@@ -975,7 +975,7 @@ class DetailCreditNote extends React.Component {
 							<TextField
 							 disabled
 								type="textarea"
-								inputProps={{ maxLength: 250 }}
+								inputProps={{ maxLength: 2000 }}
 								multiline
 								minRows={1}
 								maxRows={4}

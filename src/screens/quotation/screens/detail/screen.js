@@ -1390,7 +1390,7 @@ class DetailQuotation extends React.Component {
               <div className="mt-1">
                 <TextField
                   type="textarea"
-                  inputProps={{ maxLength: 250 }}
+                  inputProps={{ maxLength: 2000 }}
                   multiline
                   minRows={1}
                   maxRows={4}

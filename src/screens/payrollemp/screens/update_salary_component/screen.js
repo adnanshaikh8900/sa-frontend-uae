@@ -776,18 +776,21 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                                         }}
                                                                                                                     /> :
                                                                                                                     <Input
-                                                                                                                        maxLength="8"
+                                                                                                                        maxLength={8}
                                                                                                                         type="text"
-                                                                                                                        size="30"
+                                                                                                                        size={30}
                                                                                                                         style={{ textAlign: "center" }}
                                                                                                                         onChange={(option) => {
-                                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) {
-                                                                                                                                props.handleChange('flatAmount')(option)
+                                                                                                                            const inputValue = option.target.value;
+
+                                                                                                                            if (/^\d*\.?\d*$/.test(inputValue) && inputValue.length <= 8) {
+                                                                                                                                props.handleChange('flatAmount')(option);
+                                                                                                                                this.updateSalary1(this.state.CTC, undefined, item.id, inputValue);
                                                                                                                             }
-                                                                                                                            this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
                                                                                                                         }}
                                                                                                                         value={item.flatAmount}
-                                                                                                                        id='' />
+                                                                                                                        id=''
+                                                                                                                    />
                                                                                                                 }
                                                                                                                 <div class="dropdown open input-group-append">
                                                                                                                     <div style={{ width: '200px' }}>
@@ -1117,16 +1120,21 @@ class UpdateSalaryComponent extends React.Component {
                                                                                                                             }}
                                                                                                                         /> :
                                                                                                                         <Input
-                                                                                                                            maxLength="8"
+                                                                                                                            maxLength={8}
                                                                                                                             type="text"
-                                                                                                                            size="30"
+                                                                                                                            size={30}
                                                                                                                             style={{ textAlign: "center" }}
                                                                                                                             onChange={(option) => {
-                                                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                                                                                this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
+                                                                                                                                const inputValue = option.target.value;
+
+                                                                                                                                if (/^\d*\.?\d*$/.test(inputValue) && inputValue.length <= 8) {
+                                                                                                                                    props.handleChange('formula')(option);
+                                                                                                                                    this.updateSalary1(this.state.CTC, undefined, item.id, inputValue);
+                                                                                                                                }
                                                                                                                             }}
                                                                                                                             value={item.flatAmount}
-                                                                                                                            id='' />
+                                                                                                                            id=''
+                                                                                                                        />
                                                                                                                     }
                                                                                                                     <div class="dropdown open input-group-append">
                                                                                                                         <div style={{ width: '200px' }}>

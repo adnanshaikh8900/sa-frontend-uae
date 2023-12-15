@@ -1413,7 +1413,7 @@ class DetailDebitNote extends React.Component {
 																			{props.errors.invoiceDate &&
 																				props.touched.invoiceDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.invoiceDate.includes("nullable()") ? strings.TaxCreditNoteDateIsRequired : props.errors.invoiceDate}
+																						{props.errors.invoiceDate.includes("nullable()") ? strings.Debit_Note_Date_Is_Required : props.errors.invoiceDate}
 																					</div>
 																				)}
 																		</FormGroup>

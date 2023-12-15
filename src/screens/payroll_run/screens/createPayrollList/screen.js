@@ -824,8 +824,11 @@ class CreatePayrollList extends React.Component {
 																	// if (this.state.payrollApproverRequired && !values.payrollApprover) {
 																	// 	errors.payrollApprover = 'Payroll Approver is required';
 																	// }
-																	if (!values.payrollApprover){
-																		errors.payrollApprover="Payroll approver is required"
+																	// if (!values.payrollApprover){
+																	// 	errors.payrollApprover="Payroll approver is required"
+																	// }
+																	if (this.state.payrollApproverRequired && !values.payrollApprover) {
+																		errors.payrollApprover = "Payroll approver is required";
 																	}
 																	if (!values.payrollDate) {
 																		errors.payrollDate = 'Payroll date is required';
@@ -1149,8 +1152,8 @@ class CreatePayrollList extends React.Component {
 																							this.setState({ payrollApproverRequired: false }, () => {
 																								//  added validation popup  msg                                                                
 																								props.handleBlur();
-																								if (props.errors && Object.keys(props.errors).length != 0)
-																									this.props.commonActions.fillManDatoryDetails();
+																								// if (props.errors && Object.keys(props.errors).length != 0)
+																								// 	this.props.commonActions.fillManDatoryDetails();
 																								if (this.state.selectedRows && this.state.selectedRows.length != 0) {
 																									this.setState({ apiSelector: "createPayroll" })
 																									props.handleSubmit()

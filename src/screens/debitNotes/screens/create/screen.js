@@ -1452,7 +1452,7 @@ class CreateDebitNote extends React.Component {
 																	{props.errors.debitNoteDate &&
 																		props.touched.debitNoteDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.debitNoteDate.includes("nullable()") ? "Tax credit note date is required" : props.errors.debitNoteDate}
+																			{props.errors.debitNoteDate.includes("nullable()") ? strings.Debit_Note_Date_Is_Required : props.errors.debitNoteDate}
 																			</div>
 																		)}
 																</FormGroup>

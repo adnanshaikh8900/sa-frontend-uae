@@ -2845,8 +2845,8 @@ class CreateBankTransaction extends React.Component {
                                             name="total"
                                             value={amountFormat(
                                               props.values?.invoiceIdList?.reduce(
-                                                (accu, curr, index) =>
-                                                  accu + curr.explainedAmount,
+                                                (accu, curr) =>
+                                                 curr.explainedAmount,
                                                 0
                                               ),
                                               this.state.bankCurrency

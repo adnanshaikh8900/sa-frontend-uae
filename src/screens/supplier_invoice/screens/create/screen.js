@@ -125,6 +125,7 @@ class CreateSupplierInvoice extends React.Component {
 				receiptNumber: '',
 				contact_po_number: '',
 				currencyCode: '',
+				currency: '',
 				invoiceDueDate: '',
 				invoiceDate: new Date(),
 				contactId: '',
@@ -2994,9 +2995,8 @@ class CreateSupplierInvoice extends React.Component {
 																				{strings.Currency}
 																			</Label>
 																			<Select
-
 																				placeholder={strings.Select + strings.Currency}
-																				styles={customStyles}
+																				// styles={customStyles}
 																				options={
 																					currency_convert_list
 																						? selectCurrencyFactory.renderOptions(

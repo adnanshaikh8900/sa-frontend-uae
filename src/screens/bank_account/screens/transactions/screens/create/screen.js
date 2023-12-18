@@ -1408,14 +1408,14 @@ class CreateBankTransaction extends React.Component {
                             errors.transactionDate = "Transaction Date is Required";
                           }
                           if (values.transactionDate) {
-                            this.state.selectedPayrollListBank.map((i) => {
-                              const dateObject = new Date(i.runDate);
-                              let payrollDate1 = moment(dateObject).format('DD-MM-YYYY')
-                              if (moment(values.transactionDate).format('DD-MM-YYYY') < payrollDate1) {
-                                errors.transactionDate =
-                                  "Transaction Date cannot be earlier than the payroll approval date.";
+                            this.state.selectedPayrollListBank.forEach((payrollItem) => {
+                              const payrollDate = moment(payrollItem.runDate).startOf('day');
+                              const transactionDate = moment(values.transactionDate).startOf('day');
+
+                              if (transactionDate.isBefore(payrollDate)) {
+                                errors.transactionDate = "Transaction Date cannot be earlier than the payroll approval date.";
                               }
-                            })
+                            });
                           }
                           return errors;
                         }}

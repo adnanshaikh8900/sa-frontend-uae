@@ -424,7 +424,8 @@ class CreateEmployeePayroll extends React.Component {
   };
   getSalaryComponentById = (componentId, componentType, index) => {
     this.setState(prevState => ({
-      componentSelected: [...prevState.componentSelected, componentId]
+      //componentSelected: [...prevState.componentSelected, componentId]
+      componentSelected: [prevState.componentSelected, componentId]
     }));
 
     this.props.createPayrollEmployeeActions.getSalaryComponentById(componentId).then((res) => {

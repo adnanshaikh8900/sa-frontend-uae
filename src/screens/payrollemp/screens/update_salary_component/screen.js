@@ -524,7 +524,8 @@ class UpdateSalaryComponent extends React.Component {
     };
     getSalaryComponentById = (componentId, componentType, index) => {
         this.setState(prevState => ({
-            componentSelected: [...prevState.componentSelected, componentId]
+           // componentSelected: [...prevState.componentSelected, componentId]
+             componentSelected: [prevState.componentSelected, componentId]
         }));
         this.props.createPayrollEmployeeActions.getSalaryComponentById(componentId).then((res) => {
             if (res.status === 200) {
@@ -567,8 +568,8 @@ class UpdateSalaryComponent extends React.Component {
             }
         }).catch((err) => {
             this.setState({ loading: false })
-            this.props.history.push('/admin/master/employee/viewEmployee',
-                { id: this.props.location.state.id, tabNo: '2' })
+            // this.props.history.push('/admin/master/employee/viewEmployee',
+            //     { id: this.props.location.state.id, tabNo: '2' })
         })
 
     }

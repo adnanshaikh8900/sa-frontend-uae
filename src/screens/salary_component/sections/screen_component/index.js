@@ -487,7 +487,7 @@ class SalaryComponentScreen extends React.Component {
                                         </Label>
                                         <Input
                                           type='text'
-                                          maxLength="3,2"
+                                          maxLength="5,2"
                                           value={props.values.ctcPercent ? props.values.ctcPercent : ''}
                                           onChange={(option) => {
                                             if (parseInt(option.target.value) > 0 && parseInt(option.target.value) < 101) {

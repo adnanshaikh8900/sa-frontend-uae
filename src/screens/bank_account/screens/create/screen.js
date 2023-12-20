@@ -699,7 +699,7 @@ class CreateBankAccount extends React.Component {
 																		name="account_number"
 																		placeholder={strings.Enter+strings.AccountNumber}
 																		value={props.values.account_number}
-																		onBlur={props.handleBlur('account_number')}
+																	    //onBlur={props.handleBlur('account_number')}
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||

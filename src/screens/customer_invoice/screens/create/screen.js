@@ -3130,7 +3130,7 @@ class CreateCustomerInvoice extends React.Component {
 																					{strings.Currency}
 																				</Label>
 																				<Select
-																					styles={customStyles}
+																					// styles={customStyles}
 																					placeholder={strings.Select + strings.Currency}
 																					options={
 																						currency_convert_list

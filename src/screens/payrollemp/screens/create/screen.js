@@ -424,7 +424,8 @@ class CreateEmployeePayroll extends React.Component {
   };
   getSalaryComponentById = (componentId, componentType, index) => {
     this.setState(prevState => ({
-      componentSelected: [...prevState.componentSelected, componentId]
+      //componentSelected: [...prevState.componentSelected, componentId]
+      componentSelected: [prevState.componentSelected, componentId]
     }));
 
     this.props.createPayrollEmployeeActions.getSalaryComponentById(componentId).then((res) => {
@@ -5263,16 +5264,21 @@ class CreateEmployeePayroll extends React.Component {
                                                         }}
                                                       /> :
                                                       <Input
-                                                        maxLength="8"
                                                         type="text"
-                                                        size="30"
+                                                        maxLength={8}
+                                                        size={30}
                                                         style={{ textAlign: "center" }}
                                                         onChange={(option) => {
-                                                          if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                          this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
+                                                          const inputValue = option.target.value;
+
+                                                          if (/^\d*\.?\d*$/.test(inputValue) && inputValue.length <= 8) {
+                                                            props.handleChange('formula')(option);
+                                                            this.updateSalary1(this.state.CTC, undefined, item.id, inputValue);
+                                                          }
                                                         }}
                                                         value={item.flatAmount}
-                                                        id='' />
+                                                        id=''
+                                                      />
                                                     }
                                                     <div class="dropdown open input-group-append">
                                                       <div style={{ width: '200px' }}>
@@ -5802,16 +5808,21 @@ class CreateEmployeePayroll extends React.Component {
                                                           }}
                                                         /> :
                                                         <Input
-                                                          maxLength="8"
                                                           type="text"
-                                                          size="30"
+                                                          maxLength={8}
+                                                          size={30}
                                                           style={{ textAlign: "center" }}
                                                           onChange={(option) => {
-                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                            this.updateSalary1(this.state.CTC, undefined, item.id, option.target.value);
+                                                            const inputValue = option.target.value;
+
+                                                            if (/^\d*\.?\d*$/.test(inputValue) && inputValue.length <= 8) {
+                                                              props.handleChange('formula')(option);
+                                                              this.updateSalary1(this.state.CTC, undefined, item.id, inputValue);
+                                                            }
                                                           }}
                                                           value={item.flatAmount}
-                                                          id='' />
+                                                          id=''
+                                                        />
                                                       }
                                                       <div class="dropdown open input-group-append">
                                                         <div style={{ width: '200px' }}>

@@ -1363,7 +1363,7 @@ class CreateQuotation extends React.Component {
 							<div className='mt-1'>
 								<TextField
 									type="textarea"
-									inputProps={{ maxLength: 2000 }}
+									inputProps={{ maxLength: 2000}}
 									multiline
 									minRows={1}
 									maxRows={4}
@@ -2190,7 +2190,8 @@ class CreateQuotation extends React.Component {
 																	'Invoice number is required',
 																),
 																customerId: Yup.string().required(
-																	strings.CustomerNameIsRequired
+																	strings.Customer_Name_Is_Required
+																	
 																),
 																// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 
@@ -2232,12 +2233,13 @@ class CreateQuotation extends React.Component {
 																							return false;
 																						}
 																					},
-																				).required('Unit Price is required'),
+																				).required('Unit price is required'),
 																			vatCategoryId: Yup.string().required(
 																				strings.VATIsRequired,
 																			),
 																			productId: Yup.string().required(
-																				strings.ProductIsRequired,
+																				strings.Product_Is_Required
+																				
 																			),
 																		}),
 																	),

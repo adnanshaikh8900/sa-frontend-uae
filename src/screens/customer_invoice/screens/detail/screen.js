@@ -1255,7 +1255,7 @@ class DetailCustomerInvoice extends React.Component {
 							<div className='mt-1'>
 								<TextField
 									type="textarea"
-									inputProps={{ maxLength: 2000 }}
+									inputProps={{ maxLength: 2000}}
 									multiline
 									minRows={1}
 									maxRows={4}
@@ -2131,7 +2131,7 @@ class DetailCustomerInvoice extends React.Component {
 																						return false;
 																					}
 																				},
-																			).required('Unit Price is required'),
+																			).required('Unit price is required'),
 																		vatCategoryId: Yup.string().required(
 																			'VAT is required',
 																		),

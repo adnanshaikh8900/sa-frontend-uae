@@ -125,6 +125,7 @@ class CreateSupplierInvoice extends React.Component {
 				receiptNumber: '',
 				contact_po_number: '',
 				currencyCode: '',
+				currency: '',
 				invoiceDueDate: '',
 				invoiceDate: new Date(),
 				contactId: '',
@@ -2454,7 +2455,7 @@ class CreateSupplierInvoice extends React.Component {
 																'Invoice number is required',
 															),
 															contactId: Yup.string().required(
-																strings.SupplierNameIsRequired
+																strings.Supplier_Name_Is_Required
 															),
 															// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 															term: Yup.string().required(strings.TermIsRequired
@@ -2494,12 +2495,12 @@ class CreateSupplierInvoice extends React.Component {
 																						return false;
 																					}
 																				},
-																			).required('Unit Price is required'),
+																			).required('Unit price is required'),
 																		vatCategoryId: Yup.string().required(
 																			strings.VATIsRequired,
 																		),
 																		productId: Yup.string().required(
-																			strings.ProductIsRequired,
+																			strings.Product_Is_Required
 																		),
 																		// transactionCategoryId: Yup.string().required(
 																		// 	'Account is required',
@@ -2994,9 +2995,8 @@ class CreateSupplierInvoice extends React.Component {
 																				{strings.Currency}
 																			</Label>
 																			<Select
-
 																				placeholder={strings.Select + strings.Currency}
-																				styles={customStyles}
+																				// styles={customStyles}
 																				options={
 																					currency_convert_list
 																						? selectCurrencyFactory.renderOptions(

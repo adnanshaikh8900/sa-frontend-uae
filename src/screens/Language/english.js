@@ -252,6 +252,7 @@ const en = {
       CreateSupplier: "Create Supplier",
       excise: "Excise",
       CustomerNameIsRequired: 'Customer Name is Required',
+      Customer_Name_Is_Required: 'Customer name is required',
       PlaceOfSupplyRequired: 'Place of supply is required',
 
       //Expenses
@@ -272,7 +273,9 @@ const en = {
       ActualExpenseAmount: "Actual Expense Amount",
       TaxTreatmentRequired: 'Tax treatment is required',
       ExpenseNumberRequired: 'Expense Number is required',
+      Expense_Number_Required: 'Expense number is required',
       ExpenseCategoryRequired: 'Expense Category is required',
+      Expense_Category_Required: 'Expense category is required',
       PaidByRequired: 'Paid by is required',
       AmountIsRequired: 'Amount is required',
       TaxPeriodIsRequired: "Tax Period is required",
@@ -302,6 +305,7 @@ const en = {
       InvoiceNumberRequired: "Invoice number is required",
       SupplierIsRequired: "Supplier is required",
       SupplierNameIsRequired: "Supplier Name is required",
+      Supplier_Name_Is_Required: 'Supplier name is required',
 
 
       //Create invoice
@@ -370,7 +374,10 @@ const en = {
       CreateDebitNoteWithoutInvoice: "Create Debit Note Without Invoice",
       DebitNoteNumber: "Debit Note Number",
       DebitNoteNumberIsRequired: 'Debit Note Number is Required',
+      Debit_Note_Number_Is_Required:'Debit note number is required',
       DebitNoteDateIsRequired: "Debit Note Date is Required",
+      Debit_Note_Date_Is_Required:'Debit note date is required',
+      TaxCreditNoteDateIsRequired: "Tax credit note date is required",
       DebitNoteDate: "Debit Note Date",
       DebitNoteNumberAlreadyExists: 'Debit Note Number already exists',
       QuatityIsRequired: "Quatity is required",
@@ -1275,7 +1282,8 @@ const en = {
       SifPayroll: 'Would you like to generate a Salary Information File (SIF) for the payroll?',
 
       //Line Item
-      ProductIsRequired: "Product is Required",
+      //ProductIsRequired: "Product is Required",
+      Product_Is_Required:" Product is required",
       QuantityGreaterThan0: 'Quantity should be greater than 0',
       UnitPriceGreaterThan1: 'Unit price should be greater than 1',
       VATIsRequired: 'VAT is required',

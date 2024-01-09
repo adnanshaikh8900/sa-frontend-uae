@@ -97,7 +97,7 @@ class CreateProduct extends React.Component {
 				productSalesPriceType: '',
 				productPurchasePriceType: '',
 				disabled: false,
-				isInventoryEnabled: false,
+				isInventoryEnabled: true,
 				transactionCategoryId:{value: 150, label: 'Inventory Asset'},
 				exciseTaxId:''
 			},
@@ -1426,7 +1426,7 @@ try {
 																					: true
 																			}
 																			type="textarea"
-																			maxLength="250"
+																			maxLength="2000"
 																			name="salesDescription"
 																			id="salesDescription"
 																			rows="3"
@@ -1635,7 +1635,7 @@ try {
 																					: true
 																			}
 																			type="textarea"
-																			maxLength="250"
+																			maxLength="2000"
 																			autoComplete="Off"
 																			name="purchaseDescription"
 																			id="purchaseDescription"

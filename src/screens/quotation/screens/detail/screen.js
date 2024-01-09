@@ -2103,7 +2103,7 @@ class DetailQuotation extends React.Component {
                                             return false;
                                           }
                                         }
-                                      ).required("Unit Price is required"),
+                                      ).required("Unit price is required"),
                                     vatCategoryId:
                                       Yup.string().required("VAT is required"),
                                     productId: Yup.string().required(
@@ -3035,7 +3035,7 @@ class DetailQuotation extends React.Component {
                                           type="textarea"
                                           style={{ width: "500px" }}
                                           className="textarea"
-                                          inputProps={{ maxLength: 255 }}
+                                          inputProps={{ maxLength: 2000 }}
                                           name="notes"
                                           id="notes"
                                           rows="2"

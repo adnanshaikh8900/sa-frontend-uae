@@ -473,7 +473,7 @@ class Register extends React.Component {
 																			'Company / business type is required',
 																		),
 																		companyAddress1: Yup.string().required(
-																			'Company address is required',
+																			'Company address line 1 is required',
 																		),
 																		countryId: Yup.string().required(
 																			'Country is required',

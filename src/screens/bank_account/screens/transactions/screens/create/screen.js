@@ -1408,14 +1408,14 @@ class CreateBankTransaction extends React.Component {
                             errors.transactionDate = "Transaction Date is Required";
                           }
                           if (values.transactionDate) {
-                            this.state.selectedPayrollListBank.map((i) => {
-                              const dateObject = new Date(i.runDate);
-                              let payrollDate1 = moment(dateObject).format('DD-MM-YYYY')
-                              if (moment(values.transactionDate).format('DD-MM-YYYY') < payrollDate1) {
-                                errors.transactionDate =
-                                  "Transaction Date cannot be earlier than the payroll approval date.";
+                            this.state.selectedPayrollListBank.forEach((payrollItem) => {
+                              const payrollDate = moment(payrollItem.runDate).startOf('day');
+                              const transactionDate = moment(values.transactionDate).startOf('day');
+
+                              if (transactionDate.isBefore(payrollDate)) {
+                                errors.transactionDate = "Transaction Date cannot be earlier than the payroll approval date.";
                               }
-                            })
+                            });
                           }
                           return errors;
                         }}
@@ -2195,21 +2195,26 @@ class CreateBankTransaction extends React.Component {
                                                 ? vendor_invoice_list.data
                                                 : []
                                             }
-                                            onChange={(option) => {
-                                              if (option === null) {
-                                                this.getSuggestionInvoicesFotVend(
-                                                  props.values.vendorId.value,
-                                                  props.values
-                                                    .transactionAmount,
-                                                  option
-                                                );
-                                              }
-                                              this.setexchnagedamount(option);
+                                            onChange={(selectedOptions) => {
+                                              if (!selectedOptions || selectedOptions.length === 0) {
 
-                                              this.totalAmount(option);
-                                              if (option) {
+                                                props.setFieldValue("transactionAmount", 0);
+                                                props.setFieldValue("invoiceIdList", []);
+                                                return;
+                                              }
+
+                                              const totalDueAmount = selectedOptions.reduce(
+                                                (acc, selectedOption) => acc + (selectedOption.dueAmount || 0),
+                                                0
+                                              );
+
+                                              props.setFieldValue("transactionAmount", totalDueAmount);
+
+                                              this.setexchnagedamount(selectedOptions);
+                                              this.totalAmount(selectedOptions);
+                                              if (selectedOptions) {
                                                 this.getVendorInvoiceCurrency(
-                                                  option,
+                                                  selectedOptions,
                                                   props
                                                 );
                                               }
@@ -2521,47 +2526,39 @@ class CreateBankTransaction extends React.Component {
                                       </Label>
                                       <Select
                                         style={customStyles}
-                                        placeholder={
-                                          strings.Select + " Invoice"
-                                        }
+                                        placeholder={strings.Select + " Invoice"}
                                         isMulti
                                         className={`select-default-width, ${props.errors.invoiceIdList &&
                                           props.touched.invoiceIdList
                                           ? "is-invalid"
-                                          : ""
-                                          }`}
+                                          : ""}`}
                                         options={
-                                          customer_invoice_list &&
-                                            customer_invoice_list.data
+                                          customer_invoice_list && customer_invoice_list.data
                                             ? customer_invoice_list.data
                                             : []
                                         }
                                         value={props.values.invoiceIdList}
-                                        // options={
-                                        // 	invoice_list ? invoice_list.data : []
-                                        // }
                                         id="invoiceIdList"
-                                        onChange={(option) => {
-                                          if (option === null) {
-                                            this.getInvoices(
-                                              props.values.customerId,
-                                              props.values.transactionAmount,
-                                              option
-                                            );
-                                            // this.getSuggestionInvoicesFotCust(
-                                            //   option.value,
-                                            //   props.values.transactionAmount
-                                            // );
+                                        onChange={(selectedOptions) => {
+                                          if (!selectedOptions || selectedOptions.length === 0) {
+
+                                            props.setFieldValue("transactionAmount", 0);
+                                            props.setFieldValue("invoiceIdList", []);
+                                            return;
                                           }
 
-                                          this.setexchnagedamount(option);
-                                          this.totalAmount(option);
+                                          const totalDueAmount = selectedOptions.reduce(
+                                            (acc, selectedOption) => acc + (selectedOption.dueAmount || 0),
+                                            0
+                                          );
 
-                                          if (option != null) {
-                                            this.getInvoiceCurrency(
-                                              option[0],
-                                              props
-                                            );
+                                          props.setFieldValue("transactionAmount", totalDueAmount);
+
+                                          this.setexchnagedamount(selectedOptions);
+                                          this.totalAmount(selectedOptions);
+
+                                          if (selectedOptions.length > 0) {
+                                            this.getInvoiceCurrency(selectedOptions[0], props);
                                           }
                                         }}
                                       />
@@ -2848,8 +2845,8 @@ class CreateBankTransaction extends React.Component {
                                             name="total"
                                             value={amountFormat(
                                               props.values?.invoiceIdList?.reduce(
-                                                (accu, curr, index) =>
-                                                  accu + curr.explainedAmount,
+                                                (accu, curr) =>
+                                                 curr.explainedAmount,
                                                 0
                                               ),
                                               this.state.bankCurrency

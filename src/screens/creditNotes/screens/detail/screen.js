@@ -35,7 +35,7 @@ import './style.scss';
 import moment from 'moment';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { TextareaAutosize,TextField} from '@material-ui/core';
+import { TextareaAutosize, TextField } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
@@ -323,7 +323,6 @@ class DetailCreditNote extends React.Component {
 										label: response.data.contactName === '' ? response.data.organisationName : response.data.contactName,
 										value: response.data.contactId
 									}
-
 									this.setState(
 										{
 											option: {
@@ -973,7 +972,7 @@ class DetailCreditNote extends React.Component {
 						/>
 						<div className='mt-1'>
 							<TextField
-							 disabled
+								disabled
 								type="textarea"
 								inputProps={{ maxLength: 2000 }}
 								multiline
@@ -1086,10 +1085,10 @@ class DetailCreditNote extends React.Component {
 							label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
 							value: response.data.contactId
 						}
-
 						this.setState({
 							receiptDate: response.data.receiptDate,
 							taxType: response.data.taxType,
+							placeOfSupplyId: response.data.placeOfSupplyId,
 							option: {
 								label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
 								value: response.data.contactId,
@@ -1113,6 +1112,7 @@ class DetailCreditNote extends React.Component {
 						},);
 						this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
 						this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
+						this.formRef.current.setFieldValue('placeOfSupplyId', this.state.placeOfSupplyId, true);
 						this.setExchange(this.getCurrency(customerdetails.value));
 						this.formRef.current.setFieldValue('contactId', response.data.contactId, true);
 						this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
@@ -1140,6 +1140,7 @@ class DetailCreditNote extends React.Component {
 			exchangeRate,
 			lineItemsString,
 			invoiceNumber,
+			placeOfSupplyId,
 		} = data;
 		let formData = new FormData();
 		formData.append('email', email ? email : '',);
@@ -1173,6 +1174,9 @@ class DetailCreditNote extends React.Component {
 		}
 		if (contactId) {
 			formData.append('contactId', contactId ? contactId.value ? contactId.value : contactId : '');
+		}
+		if (placeOfSupplyId) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);
 		}
 		if (currency) {
 			formData.append('currencyCode', currency.value ? currency.value : currency);
@@ -1763,83 +1767,65 @@ class DetailCreditNote extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-																	{/* <Col>
-																	<Label
-																		htmlFor="contactId"
-																		style={{ display: 'block' }}
-																	>
-																		Add New Customer
-																	</Label>
-																	<Button
-																		type="button"
-																		color="primary"
-																		className="btn-square mr-3 mb-3"
-																		onClick={this.openCustomerModal}
-																	>
-																		<i className="fa fa-plus"></i> Add a
-																		Customer
-																	</Button>
-																</Col> */}
-																	{/* <Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="placeOfSupplyId">
-																			<span className="text-danger">* </span>
-																			Place of Supply
-																		</Label>
-																		<Select
-																			styles={customStyles}
-																			options={
-																				this.placelist
-																					? selectOptionsFactory.renderOptions(
+																	<Col lg={3}>
+																		{this.state.customer_taxTreatment_des !== "NON GCC" && this.state.customer_taxTreatment_des !== "GCC VAT REGISTERED" && this.state.customer_taxTreatment_des !== "GCC NON-VAT REGISTERED" && (
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="placeOfSupplyId">
+																					<span className="text-danger">* </span>
+																					{strings.PlaceofSupply}
+																				</Label>
+																				<Select
+																					id="placeOfSupplyId"
+																					name="placeOfSupplyId"
+																					placeholder={strings.Select + strings.PlaceofSupply}
+																					options={
+																						this.placelist
+																						? selectOptionsFactory.renderOptions(
 																							'label',
 																							'value',
 																							this.placelist,
 																							'Place of Supply',
-																					  )
-																					: []
-																			}
-																			id="placeOfSupplyId"
-																			name="placeOfSupplyId"
-																			value={
-																				this.placelist &&
-																				selectOptionsFactory.renderOptions(
-																					'label',
-																					'value',
-																					this.placelist,
-																					'Place of Supply',
-																			  ).find(
-																										(option) =>
-																											option.value ===
-																											props.values
-																												.placeOfSupplyId.toString(),
-																									)
-																							}
-																							onChange={(options) => {
-																								if (options && options.value) {
-																									props.handleChange(
-																										'placeOfSupplyId',
-																									)(options.value);
-																								} else {
-																									props.handleChange(
-																										'placeOfSupplyId',
-																									)('');
-																								}
-																							}}
-																			className={`${
-																				props.errors.placeOfSupplyId &&
-																				props.touched.placeOfSupplyId
-																					? 'is-invalid'
-																					: ''
-																			}`}
-																		/>
-																		{props.errors.placeOfSupplyId &&
-																			props.touched.placeOfSupplyId && (
-																				<div className="invalid-feedback">
-																					{props.errors.placeOfSupplyId}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col> */}
+																						)
+																						: []
+																					}
+																					value={
+																						this.placelist &&
+																						selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							this.placelist,
+																							'Place of Supply',
+																						).find(
+																							(option) =>
+																								option.value ==
+																								((this.state.invoiceId) ? this.state.placeOfSupplyId ? this.state.placeOfSupplyId : this.state.placeOfSupplyId :
+																									props.values.placeOfSupplyId.toString()))
+																					}
+																					isDisabled={this.state.placeOfSupplyId !== null}
+																					className={
+																						props.errors.placeOfSupplyId &&
+																							props.touched.placeOfSupplyId
+																							? 'is-invalid'
+																							: ''
+																					}
+																					onChange={(option) => {
+																						props.handleChange('placeOfSupplyId')(
+																							option,
+																						);
+																						this.setState({
+																							placeOfSupplyId: option
+																						});
+																					}}
+																				/>
+																				{props.errors.placeOfSupplyId &&
+																					props.touched.placeOfSupplyId && (
+																						<div className="invalid-feedback">
+																							{props.errors.placeOfSupplyId}
+																						</div>
+																					)}
+																			</FormGroup>
+																		)}
+																	</Col>
 																</Row>
 																<hr />
 																<Row>

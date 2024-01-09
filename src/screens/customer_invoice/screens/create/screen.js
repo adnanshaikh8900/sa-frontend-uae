@@ -1698,7 +1698,7 @@ class CreateCustomerInvoice extends React.Component {
 							<div className='mt-1'>
 								<TextField
 									type="textarea"
-									inputProps={{ maxLength: 2000 }}
+									inputProps={{ maxLength: 2000}}
 									multiline
 									minRows={1}
 									maxRows={4}
@@ -2587,7 +2587,8 @@ class CreateCustomerInvoice extends React.Component {
 																	'Invoice number is required',
 																),
 																contactId: Yup.string().required(
-																	strings.CustomerNameIsRequired
+																	strings.Customer_Name_Is_Required
+																	
 																),
 																// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 																term: Yup.string().required(strings.TermIsRequired),
@@ -2627,12 +2628,12 @@ class CreateCustomerInvoice extends React.Component {
 																							return false;
 																						}
 																					},
-																				).required('Unit Price is required'),
+																				).required('Unit price is required'),
 																			vatCategoryId: Yup.string().required(
 																				strings.VATIsRequired
 																			),
 																			productId: Yup.string().required(
-																				strings.ProductIsRequired
+																				strings.Product_Is_Required
 																			),
 																		}),
 																	),
@@ -3129,7 +3130,7 @@ class CreateCustomerInvoice extends React.Component {
 																					{strings.Currency}
 																				</Label>
 																				<Select
-																					styles={customStyles}
+																					// styles={customStyles}
 																					placeholder={strings.Select + strings.Currency}
 																					options={
 																						currency_convert_list

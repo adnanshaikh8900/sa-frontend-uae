@@ -1752,7 +1752,7 @@ renderName=(cell,row)=>{
 																					: true
 																			}
 																			type="textarea"
-																			maxLength="250"
+																			maxLength="2000"
 																			name="salesDescription"
 																			id="salesDescription"
 																			rows="3"
@@ -1971,7 +1971,7 @@ renderName=(cell,row)=>{
 																			type="textarea"
 																			name="purchaseDescription"
 																			id="purchaseDescription"
-																			maxLength='255'
+																			maxLength='2000'
 																			rows="3"
 																			placeholder={strings.Description}
 																			onChange={(value) => {

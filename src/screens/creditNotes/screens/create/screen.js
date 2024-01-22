@@ -1395,23 +1395,14 @@ class CreateCreditNote extends React.Component {
 		});
 	};
 
-	getCurrency = (opt) => {
-		let customer_currencyCode = 0;
-		let customer_item_currency = ''
-		this.props.customer_list.map(item => {
-			if (item.label.contactId == opt) {
-				this.setState({
-					customer_currency: item.label.currency.currencyCode,
-					customer_currency_des: item.label.currency.currencyName,
-					customer_currency_symbol: item.label.currency.currencyIsoCode,
-				});
+	getCurrency = (currencyCode, currencyName, currencyIsoCode) => {
+		this.setState({
+			customer_currency: currencyCode,
+			customer_currency_des: currencyName,
+			customer_currency_symbol: currencyIsoCode,
+		});
 
-				customer_currencyCode = item.label.currency.currencyCode;
-				customer_item_currency = item.label.currency
-			}
-		})
-
-		return customer_currencyCode;
+		return currencyCode;
 	}
 	getTaxTreatment = (opt) => {
 
@@ -1468,15 +1459,14 @@ class CreateCreditNote extends React.Component {
 							);
 							this.updateAmount(this.state.data)
 						},);
-						this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
+						this.formRef.current.setFieldValue('currency', response.data.currencyCode, true);
 						this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
 						this.formRef.current.setFieldValue('placeOfSupplyId', this.state.placeOfSupplyId, true);
-						this.setExchange(this.getCurrency(customerdetails.value));
+						this.setExchange(this.getCurrency(response.data.currencyCode,response.data.currencyName,response.data.currencyIsoCode));
 						this.formRef.current.setFieldValue('contactId', response.data.contactId, true);
 						this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
-						this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
-						this.getCurrency(this.state.option.value)
-						this.getTaxTreatment(this.state.option.value)
+						this.formRef.current.setFieldValue('currencyCode', response.data.currencyCode, true);
+						// this.getTaxTreatment(this.state.option.value)
 					}
 				});
 		}
@@ -1829,10 +1819,6 @@ class CreateCreditNote extends React.Component {
 																				isDisabled={this.state.invoiceSelected}
 																				onChange={(option) => {
 																					if (option && option.value) {
-
-																						this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
-																						this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
-																						this.setExchange(this.getCurrency(option.value));
 																						props.handleChange('contactId')(option);
 																					} else {
 																						props.handleChange('contactId')('');

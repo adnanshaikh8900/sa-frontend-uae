@@ -97,7 +97,7 @@ class CreateProduct extends React.Component {
 				productSalesPriceType: '',
 				productPurchasePriceType: '',
 				disabled: false,
-				isInventoryEnabled: true,
+				isInventoryEnabled: false,
 				transactionCategoryId:{value: 150, label: 'Inventory Asset'},
 				exciseTaxId:''
 			},

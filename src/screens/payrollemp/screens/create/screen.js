@@ -663,11 +663,16 @@ class CreateEmployeePayroll extends React.Component {
     const formData = new FormData();
     formData.append("employee", this.state.employeeid);
     if (this.state.ctcTypeOption.label == "ANNUALLY") {
-      formData.append('grossSalary', (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0))
+      formData.append('grossSalary', (this.totalYearEarnings()))
     } else {
-      formData.append('grossSalary', (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0))
+      formData.append('grossSalary', (this.totalEarnings()))
     }
-    formData.append("totalNetPay", this.totalEarnings());
+
+    if (this.state.ctcTypeOption.label == "ANNUALLY") {
+      formData.append('totalNetPay', (this.totalYearEarnings()) - (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0))
+    } else {
+      formData.append('totalNetPay', (this.totalEarnings()) - (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0))
+    }
     formData.append("ctcType", this.state.ctcTypeOption.label ? this.state.ctcTypeOption.label : "ANNUALLY");
     formData.append("salaryComponentString", JSON.stringify(list));
 
@@ -748,12 +753,20 @@ class CreateEmployeePayroll extends React.Component {
     return totalYearlyDeductions;
   }
   grossEarnings = () => {
-    const grossEarning = (this.totalEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0)
+    const grossEarning = (this.totalEarnings())
     return grossEarning;
   }
   grossYearEarnings = () => {
-    const grossYearEarning = (this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0)
+    const grossYearEarning = (this.totalYearEarnings())
     return grossYearEarning;
+  }
+  totalNetPay = () => {
+    const totalNetPay = (this.grossEarnings()) - (typeof this.state.Deduction === 'object' ? this.totalDeductions() : 0)
+    return totalNetPay;
+  }
+  totalYearNetPay = () => {
+    const totalYearNetPay = (this.grossYearEarnings()) - (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0)
+    return totalYearNetPay;
   }
   removeComponent = (ComponentId) => {
     const fixed = this.state.Fixed.filter(obj => obj.id !== ComponentId);
@@ -5086,7 +5099,7 @@ class CreateEmployeePayroll extends React.Component {
                       }}
                       validate={(values) => {
                         let errors = {}
-                        if (this.state.errorMsg && this.state.CTC && (parseFloat(this.state.CTC) != parseFloat((this.totalYearEarnings()) + (typeof this.state.Deduction === 'object' ? this.totalYearDeductions() : 0)))) {
+                        if (this.state.errorMsg && this.state.CTC && (parseFloat(this.state.CTC) != parseFloat((this.totalYearEarnings())))) {
                           errors.grossEarning = "Gross Earnings should be equal to CTC"
                         } else {
                           errors = {}
@@ -6041,7 +6054,7 @@ class CreateEmployeePayroll extends React.Component {
                                     <tr style={{ background: "#dfe9f7", color: "Black" }}>
                                       <td colSpan={2} style={{ border: "3px solid #c8ced3", width: "50%" }}>
                                         <b className="pull-left">{strings.Gross + ' ' + strings.Earnings + ' (C):'}</b>
-                                        <b className="pull-right">{'(A + B)'}</b>
+                                        <b className="pull-right">{'(A)'}</b>
                                       </td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
                                         {this.grossEarnings()
@@ -6091,12 +6104,12 @@ class CreateEmployeePayroll extends React.Component {
                                   <tbody>
                                     <tr style={{ background: "#dfe9f7", color: "Black" }}>
                                       <td colSpan={2} style={{ border: "3px solid #c8ced3", width: "50%" }}>
-                                        <b className="pull-left">{strings.TotalNetPay + ':'}</b>
+                                        <b className="pull-left">{strings.TotalNetPay + '(D):'}</b>
                                         <b className="pull-right">{'(C - B)'}</b>
                                       </td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                        {this.totalEarnings()
-                                          ? 'AED ' + this.totalEarnings().toLocaleString(
+                                        {this.totalNetPay()
+                                          ? 'AED ' + this.totalNetPay().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,
@@ -6106,8 +6119,8 @@ class CreateEmployeePayroll extends React.Component {
                                           : 'AED ' + 0 + '.00'}
                                       </b></td>
                                       <td style={{ border: "3px solid  #c8ced3" }}><b>
-                                        {this.totalYearEarnings()
-                                          ? 'AED ' + this.totalYearEarnings().toLocaleString(
+                                        {this.totalYearNetPay()
+                                          ? 'AED ' + this.totalYearNetPay().toLocaleString(
                                             navigator.language,
                                             {
                                               minimumFractionDigits: 2,

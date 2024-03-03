@@ -573,6 +573,7 @@ const en = {
       SellingPriceRequired: "Selling price is required",
       PurchasePriceRequired: "Purchase price is required",
       ProductType: "Product Type",
+      ProductIsRequired:"Product is required",
 
 
       //Add product
@@ -953,6 +954,11 @@ const en = {
       TotalNetPay: "Total Net Pay",
       AddEarnings: "Add Earnings",
       TotalEarnings: "Total Earnings",
+      TotalDeductions: "Total Deductions",
+      TotalDeductionsShouldBeLessThanTotalEarnings:"Total deductions should be less than total earnings",
+      GrossEarningsShouldBeEqualToCTC:"Gross Earnings should be equal to CTC",
+      CTCIsRequired:"CTC is required",
+      CTCShouldBeGreaterThenZero:"CTC should be greater then zero",
       FixedAmount: "Fixed Amount",
       VariableEarnings: "Variable Earnings",
       AddVariable: "Add Variable",

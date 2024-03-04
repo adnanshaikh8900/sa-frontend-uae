@@ -1466,7 +1466,6 @@ class CreateCreditNote extends React.Component {
 						this.formRef.current.setFieldValue('contactId', response.data.contactId, true);
 						this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
 						this.formRef.current.setFieldValue('currencyCode', response.data.currencyCode, true);
-						this.formRef.current.setFieldValue('notes', response.data.notes, true);
 						// this.getTaxTreatment(this.state.option.value)
 					}
 				});

@@ -261,18 +261,6 @@ class CreateCustomerInvoice extends React.Component {
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
 
-	// renderActions (cell, row) {
-	//   return (
-	//     <Button
-	//       size="sm"
-	//       color="primary"
-	//       className="btn-brand icon"
-	//     >
-	//       <i className="fas fa-trash"></i>
-	//     </Button>
-	//   )
-	// }
-
 	renderProductName = (cell, row) => {
 		return (
 			<div className="d-flex align-items-center">
@@ -3888,7 +3876,6 @@ class CreateCustomerInvoice extends React.Component {
 																						inputProps={{ maxLength: 255 }}
 																						name="notes"
 																						id="notes"
-																						rows="1"
 																						maxRows={4}
 																						placeholder={strings.DeliveryNotes}
 																						onChange={(option) =>
@@ -3969,7 +3956,6 @@ class CreateCustomerInvoice extends React.Component {
 																						style={{ width: "500px" }}
 																						name="receiptAttachmentDescription"
 																						id="receiptAttachmentDescription"
-																						rows="1"
 																						placeholder={strings.ReceiptAttachmentDescription}
 																						onChange={(option) =>
 																							props.handleChange('receiptAttachmentDescription')(option)

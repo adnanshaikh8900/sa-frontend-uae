@@ -28,6 +28,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { TextField } from '@material-ui/core';
 
 import './style.scss';
 import moment from 'moment';
@@ -1452,7 +1453,7 @@ class CreateDebitNote extends React.Component {
 																	{props.errors.debitNoteDate &&
 																		props.touched.debitNoteDate && (
 																			<div className="invalid-feedback">
-																			{props.errors.debitNoteDate.includes("nullable()") ? strings.Debit_Note_Date_Is_Required : props.errors.debitNoteDate}
+																				{props.errors.debitNoteDate.includes("nullable()") ? strings.Debit_Note_Date_Is_Required : props.errors.debitNoteDate}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1649,13 +1650,13 @@ class CreateDebitNote extends React.Component {
 																		{strings.PRODUCT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																				dataField="account"
-																				dataFormat={(cell, rows) =>
-																					this.renderAccount(cell, rows, props)
-																				}
-																			>
-																				{strings.Account}
-																			</TableHeaderColumn>
+																		dataField="account"
+																		dataFormat={(cell, rows) =>
+																			this.renderAccount(cell, rows, props)
+																		}
+																	>
+																		{strings.Account}
+																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
 																		dataFormat={(cell, rows) =>
@@ -1749,7 +1750,7 @@ class CreateDebitNote extends React.Component {
 														</Row>)}
 														{this.state.isDNWIWithoutProduct === false && data && data.length > 0 && isRegisteredVat && <Row>
 															<Col className="ml-4">
-																{this.state.isReverseChargeEnabled === true 
+																{this.state.isReverseChargeEnabled === true
 																	// && (isDesignatedZone && props.values.taxTreatmentId.label !== 'UAE NON-VAT REGISTERED' && props.values.taxTreatmentId.label !== 'UAE NON-VAT REGISTERED FREEZONE' && props.values.taxTreatmentId.label !== 'UAE VAT REGISTERED' && props.values.taxTreatmentId.label !== 'UAE VAT REGISTERED FREEZONE')
 																	// || (!isDesignatedZone && props.values.taxTreatmentId.label !== 'UAE VAT REGISTERED FREEZONE')
 																	? <FormGroup className="mb-3">
@@ -1793,14 +1794,19 @@ class CreateDebitNote extends React.Component {
 																		)}
 																	</FormGroup>}
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																		<Label htmlFor="notes">
+																			{strings.Notes}
+																		</Label><br />
+																		<TextField
 																			type="textarea"
-																			maxLength="255"
+																			multiline
+																			style={{ width: "500px" }}
+																			className="textarea"
+																			inputProps={{ maxLength: 255 }}
 																			name="notes"
 																			id="notes"
-																			rows="6"
-																			placeholder={strings.Notes}
+																			maxRows={4}
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}

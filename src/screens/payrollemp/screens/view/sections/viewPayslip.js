@@ -135,6 +135,7 @@ class PaySlipModal extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { openModal, closeModal, id, companyData, empData, bankDetails, salaryDate, currencyData, transactionList } = this.props;
 		const { generateSif } = this.props.company_details;
+		const {selectedData}=this.state;
 		return (
 			<div className="contact-modal-screen">
 				<Modal isOpen={openModal} className="modal-success contact-modal">
@@ -247,7 +248,7 @@ class PaySlipModal extends React.Component {
 
 																	}}>
 																	<div style={{ marginTop: '0.5rem' }}>
-																		<div className="mb-1 ml-2" style={{ fontSize: "1.75rem" }} ><b>	{strings.Payslip}</b> ( {this.state.selectedData.salaryMonth + " )"}</div><br />
+																		<div className="mb-1 ml-2" style={{ fontSize: "1.75rem" }} ><b>	{strings.Payslip}</b> ( {selectedData.salaryMonth + " )"}</div><br />
 																		<div className="mb-1 ml-2" style={{ fontSize: "22px" }}><b>{companyData.company.companyName}</b></div>
 																		<div className="mb-1 ml-2">{companyData.company.companyAddressLine1}</div>
 																		<div className="mb-1 ml-2">{companyData.company.companyAddressLine2}</div>
@@ -293,18 +294,18 @@ class PaySlipModal extends React.Component {
 
 																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.employee_unique_id} </Col><Col className='mt-2 mb-2'>: &nbsp;{empData.employeeCode !== '' ? empData.employeeCode : ('-')}</Col>
 																</Row>
-																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.EmployeeName} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.employeename !== '' ? this.state.selectedData.employeename : ('-')}</Col></Row>
-																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.Designation} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.designation !== '' ? this.state.selectedData.designation : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.EmployeeName} </Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.employeename !== '' ? selectedData.employeename : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.Designation} </Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.designation !== '' ? selectedData.designation : ('-')}</Col></Row>
 
-																{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.email ? this.state.selectedData.email : ('-')}</Col></Row>				 */}
+																{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.email ? selectedData.email : ('-')}</Col></Row>				 */}
 
-																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.dateOfJoining !== '' ? moment(this.state.selectedData.dateOfJoining).format("DD-MM-YYYY") : ('-')}</Col>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.dateOfJoining !== '' ? moment(selectedData.dateOfJoining).format("DD-MM-YYYY") : ('-')}</Col>
 																</Row>
-																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayPeriod} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payPeriod !== '' ? this.renderPayperiod(this.state.selectedData.payPeriod) : ('-')}</Col>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayPeriod} </Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.payPeriod !== '' ? this.renderPayperiod(selectedData.payPeriod) : ('-')}</Col>
 																</Row>
-																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payDate !== '' ? moment(this.state.selectedData.payDate).format("DD-MM-YYYY") : ('-')}</Col>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.payDate !== '' ? moment(selectedData.payDate).format("DD-MM-YYYY") : ('-')}</Col>
 																</Row>
-																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.LOPDays} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.lopDays !== '' ? this.state.selectedData.lopDays : ('-')}</Col>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.LOPDays} </Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.lopDays !== '' ? selectedData.lopDays : ('-')}</Col>
 																</Row>
 															</div>
 														</Col>
@@ -422,7 +423,7 @@ class PaySlipModal extends React.Component {
 																		<td><b>{strings.Gross + " " + strings.Earnings}</b></td>
 																		<td style={{ textAlign: 'right' }}>
 																			<Currency
-																				value={this.state.selectedData.earnings}
+																				value={selectedData.earnings}
 																				currencySymbol={
 																					'AED'
 																				}
@@ -472,7 +473,7 @@ class PaySlipModal extends React.Component {
 																		<td><b>{strings.Total + " " + strings.Deductions}</b></td>
 																		<td style={{ textAlign: 'right' }}>
 																			<Currency
-																				value={this.state.selectedData.deductions ? this.state.selectedData.deductions : 0}
+																				value={selectedData.deductions ? selectedData.deductions : 0}
 																				currencySymbol={
 																					'AED'
 																				}
@@ -497,7 +498,7 @@ class PaySlipModal extends React.Component {
 													>
 														<h5> {strings.Salary + " " + strings.Payable + " (A):"} <b>
 															<Currency
-																value={this.state.selectedData.netPay}
+																value={selectedData.netPay}
 																currencySymbol={
 																	'AED'
 																}
@@ -505,8 +506,8 @@ class PaySlipModal extends React.Component {
 														</b>
 														</h5>
 														<h5>
-															{/* (	{	upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} ) */}
-															{/* {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay))).replace("POINT","AND")) : " -" } */}
+															{/* (	{	upperFirst(converter.toWords(toInteger(selectedData.netPay)))} ) */}
+															{/* {selectedData.netPay ? (upperCase((toWords.convert(selectedData.netPay))).replace("POINT","AND")) : " -" } */}
 														</h5>
 													</div>
 
@@ -574,7 +575,7 @@ class PaySlipModal extends React.Component {
 														>
 															<h5> {strings.TotalNet + " " + strings.Payable + " (A+B):"} <b>
 																<Currency
-																	value={this.state.selectedData.netPay + Object.values(this.props.transactionList).reduce(
+																	value={selectedData.netPay + Object.values(this.props.transactionList).reduce(
 																		(sum, item) => sum + (item.amount || 0),
 																		0
 																	)}
@@ -585,8 +586,8 @@ class PaySlipModal extends React.Component {
 															</b>
 															</h5>
 															<h5>
-																{/* (	{	upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} ) */}
-																{/* {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay))).replace("POINT","AND")) : " -" } */}
+																{/* (	{	upperFirst(converter.toWords(toInteger(selectedData.netPay)))} ) */}
+																{/* {selectedData.netPay ? (upperCase((toWords.convert(selectedData.netPay))).replace("POINT","AND")) : " -" } */}
 															</h5>
 														</div>
 													</div>

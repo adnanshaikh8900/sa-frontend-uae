@@ -2511,7 +2511,6 @@ class CreateCreditNote extends React.Component {
 																					inputProps={{ maxLength: 255 }}
 																					name="notes"
 																					id="notes"
-																					rows="1"
 																					maxRows={4}
 																					placeholder={strings.DeliveryNotes}
 																					onChange={(option) =>

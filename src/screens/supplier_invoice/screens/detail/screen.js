@@ -2879,7 +2879,8 @@ class DetailSupplierInvoice extends React.Component {
 																					maxLength="255"
 																					name="notes"
 																					id="notes"
-																					rows="2"
+																					minRows={1}
+																					maxRows={4}
 																					placeholder={strings.DeliveryNotes}
 																					onChange={(option) =>
 																						props.handleChange('notes')(option)

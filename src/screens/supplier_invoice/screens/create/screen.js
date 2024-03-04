@@ -1715,20 +1715,6 @@ class CreateSupplierInvoice extends React.Component {
 				)}
 			/>
 		);
-		// } else {
-		// 	return (
-		// 		<Button
-		// 			type="button"
-		// 			color="primary"
-		// 			className="btn-square mr-3 mb-3"
-		// 			onClick={(e, props) => {
-		// 				this.openProductModal(props);
-		// 			}}
-		// 		>
-		// 			<i className="fa fa-plus"></i> Add a Product
-		// 		</Button>
-		// 	);
-		// }
 	};
 
 	// selectCategory = (options, row, name, form, field, props) => {
@@ -3411,7 +3397,7 @@ class CreateSupplierInvoice extends React.Component {
 																					maxLength="255"
 																					name="notes"
 																					id="notes"
-																					rows="2"
+																					maxRows={4}
 																					placeholder={strings.DeliveryNotes}
 																					onChange={(option) =>
 																						props.handleChange('notes')(option)
@@ -3514,7 +3500,7 @@ class CreateSupplierInvoice extends React.Component {
 																					style={{ width: "500px" }}
 																					name="receiptAttachmentDescription"
 																					id="receiptAttachmentDescription"
-																					rows="2"
+																					maxRows={4}
 																					placeholder={strings.ReceiptAttachmentDescription}
 																					onChange={(option) =>
 																						props.handleChange(

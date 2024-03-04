@@ -490,15 +490,6 @@ class InvoiceTemplate extends Component {
 								}}
 							>
 								<br />
-								{/* <div className="pl-5 pb-2">{strings.AmountInWords }:<br/>
-								<b><u>{invoiceData.totalAmount ? (upperCase(invoiceData.currencyName + " " +(toWords.convert(invoiceData.totalAmount))+" ONLY")).replace("POINT","AND") : " -" } */}
-								{/* <b> {parseInt(invoiceData.dueAmount)} */}
-								{/* </u></b></div> */}
-								{/* <div className="pl-5 pb-2">{strings.VAT+" "+strings.AmountInWords }:
-										<br/>
-									<b><u> {invoiceData.totalVatAmount ? (upperCase(invoiceData.currencyName + " " +(toWords.convert(invoiceData.totalVatAmount))+" ONLY")).replace("POINT","AND") : " -" }</u></b> */}
-								{/* <b> {invoiceData.totalVatAmount}</b> */}
-								{/* </div> */}
 								<><h6 className="mb-0 pt-2">
 									<b>{strings.Notes}:</b>
 								</h6><br />

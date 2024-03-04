@@ -2871,15 +2871,17 @@ class DetailSupplierInvoice extends React.Component {
 																	<Row>
 																		<Col lg={8}>
 																			<FormGroup className="py-2">
-																				<Label htmlFor="notes">{strings.Notes}</Label><br />
+																				<Label htmlFor="notes">
+																					{strings.Notes}
+																				</Label><br />
 																				<TextField
 																					type="textarea"
+																					multiline
 																					style={{ width: "500px" }}
-																					className="textarea form-control"
-																					maxLength="255"
+																					className="textarea"
+																					inputProps={{ maxLength: 255 }}
 																					name="notes"
 																					id="notes"
-																					minRows={1}
 																					maxRows={4}
 																					placeholder={strings.DeliveryNotes}
 																					onChange={(option) =>

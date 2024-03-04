@@ -261,18 +261,6 @@ class CreateCustomerInvoice extends React.Component {
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
 
-	// renderActions (cell, row) {
-	//   return (
-	//     <Button
-	//       size="sm"
-	//       color="primary"
-	//       className="btn-brand icon"
-	//     >
-	//       <i className="fas fa-trash"></i>
-	//     </Button>
-	//   )
-	// }
-
 	renderProductName = (cell, row) => {
 		return (
 			<div className="d-flex align-items-center">

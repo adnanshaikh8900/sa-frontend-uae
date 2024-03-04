@@ -316,7 +316,12 @@ class DebitNoteTemplate extends Component {
 								{debitNoteData.notes && (<><h6 className="mb-0 pt-2">
 									<b>{strings.Notes}:</b>
 								</h6>
-									<h6 className="mb-0">{debitNoteData.notes}</h6>
+									<textarea
+										className="mb-0"
+										style={{ width: '500px', height: '200px', border: 'none' }}
+										value={debitNoteData.notes}
+										readOnly
+									/>
 								</>)}
 
 							</div>

@@ -3389,12 +3389,15 @@ class CreateSupplierInvoice extends React.Component {
 																	<Row>
 																		<Col lg={8}>
 																			<FormGroup className="py-2">
-																				<Label htmlFor="notes">{strings.Notes}</Label><br />
+																				<Label htmlFor="notes">
+																					{strings.Notes}
+																				</Label><br />
 																				<TextField
 																					type="textarea"
+																					multiline
 																					style={{ width: "500px" }}
-																					className="textarea form-control"
-																					maxLength="255"
+																					className="textarea"
+																					inputProps={{ maxLength: 255 }}
 																					name="notes"
 																					id="notes"
 																					maxRows={4}
@@ -3405,7 +3408,6 @@ class CreateSupplierInvoice extends React.Component {
 																					value={props.values.notes}
 																				/>
 																			</FormGroup>
-
 																			<Row>
 																				<Col lg={6}>
 																					<FormGroup className="mb-3">

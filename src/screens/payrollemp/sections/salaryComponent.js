@@ -390,7 +390,7 @@ class SalaryComponent extends React.Component {
                         obj.flatAmount = res.data.flatAmount;
                         obj.employeeId = current_employee_id;
                         obj.salaryComponentId = res.data.id;
-                        obj.salaryStructure = 1;
+                        obj.salaryStructure = componentType === 'Fixed' ? 1 : 3;
                         obj.monthlyAmount = "";
                         obj.yearlyAmount = "";
                     }

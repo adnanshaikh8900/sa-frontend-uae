@@ -954,7 +954,7 @@ class CreateEmployeePayroll extends React.Component {
       laborCardIdexist,
       employeeId,
       sifEnabled,
-      checkmobileNumberParam2,
+      activeTab,
       existForAccountNumber,
       bankList,
       loading,
@@ -994,7 +994,7 @@ class CreateEmployeePayroll extends React.Component {
                 <Nav className="justify-content-center" tabs pills>
                   <NavItem>
                     <NavLink
-                      active={this.state.activeTab[0] === "1"}
+                      active={activeTab[0] === "1"}
                     // onClick={() => {
                     //     this.toggle(0, '1');
                     // }}
@@ -1002,10 +1002,10 @@ class CreateEmployeePayroll extends React.Component {
                       {strings.BasicDetails}
                     </NavLink>
                   </NavItem>
-                  {this.state.sifEnabled && (
+                  {sifEnabled && (
                     <NavItem>
                       <NavLink
-                        active={this.state.activeTab[0] === "2"}
+                        active={activeTab[0] === "2"}
                       // onClick={() => {
                       //     this.toggle(0, '2');
                       // }}
@@ -1014,13 +1014,10 @@ class CreateEmployeePayroll extends React.Component {
                       </NavLink>
                     </NavItem>
                   )}
-                  {this.state.sifEnabled && (
+                  {sifEnabled && (
                     <NavItem>
                       <NavLink
-                        active={this.state.activeTab[0] === "3"}
-                      // onClick={() => {
-                      //     this.toggle(0, '3');
-                      // }}
+                        active={activeTab[0] === "3"}
                       >
                         {strings.FinancialDetails}
                       </NavLink>
@@ -1028,16 +1025,13 @@ class CreateEmployeePayroll extends React.Component {
                   )}
                   <NavItem>
                     <NavLink
-                      active={this.state.activeTab[0] === "4"}
-                    // onClick={() => {
-                    //     this.toggle(0, '4');
-                    // }}
+                      active={activeTab[0] === "4"}
                     >
                       {strings.SalarySetup}
                     </NavLink>
                   </NavItem>
                 </Nav>
-                <TabContent activeTab={this.state.activeTab[0]}>
+                <TabContent activeTab={activeTab[0]}>
                   <TabPane tabId="1">
                     <div className="create-employee-screen">
                       <div className="animated fadeIn">
@@ -4552,18 +4546,20 @@ class CreateEmployeePayroll extends React.Component {
                                     </div> */}
                   </TabPane>
                   <TabPane tabId="4">
-                    <SalaryComponent
-                      employeeId={employeeId}
-                      handleSubmit={(values) => {
-                        this.handleSubmitForSalary(values);
-                      }}
-                      history={this.props.history}
-                      updateComponent={false}
-                      toggle={(tab) => {
-                        this.toggle(0, tab)
-                      }}
-                      sifEnabled={sifEnabled}
-                    />
+                    {activeTab[0] === "4" && employeeId &&
+                      <SalaryComponent
+                        employeeId={employeeId}
+                        handleSubmit={(values) => {
+                          this.handleSubmitForSalary(values);
+                        }}
+                        history={this.props.history}
+                        updateComponent={false}
+                        toggle={(tab) => {
+                          this.toggle(0, tab)
+                        }}
+                        sifEnabled={sifEnabled}
+                      />
+                    }
                   </TabPane>
                 </TabContent>
               </CardBody>

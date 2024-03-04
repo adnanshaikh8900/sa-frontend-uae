@@ -5,38 +5,20 @@ import {
     Card,
     CardHeader,
     CardBody,
-    Button,
-    Input,
-    Form,
-    FormGroup,
-    Label,
     Row,
     Col,
-    Table,
 } from 'reactstrap'
 import { Loader, LeavePage } from 'components'
-import Select from 'react-select'
 import { CommonActions } from 'services/global'
 import 'react-toastify/dist/ReactToastify.css'
 import * as DetailSalaryComponentAction from './actions';
 import * as CreatePayrollEmployeeActions from '../create/actions'
-import { SalaryComponentDeduction, SalaryComponentFixed, SalaryComponentVariable, SalaryComponent } from 'screens/payrollemp/sections';
-import { Formik, Field } from 'formik';
-import * as Yup from "yup";
-import { selectOptionsFactory } from 'utils';
-import { data } from '../../../Language/index'
+import {SalaryComponent } from 'screens/payrollemp/sections';
+import { data } from 'screens/Language/index'
 import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
-    return ({
-        designation_dropdown: state.payrollEmployee.designation_dropdown,
-        employee_list_dropdown: state.payrollEmployee.employee_list_dropdown,
-        state_list: state.payrollEmployee.state_list,
-        country_list: state.payrollEmployee.country_list,
-        salary_component_fixed_dropdown: state.payrollEmployee.salary_component_fixed_dropdown.data,
-        salary_component_varaible_dropdown: state.payrollEmployee.salary_component_varaible_dropdown,
-        salary_component_deduction_dropdown: state.payrollEmployee.salary_component_deduction_dropdown.data,
-    })
+    return ({})
 }
 const mapDispatchToProps = (dispatch) => {
     return ({

@@ -710,12 +710,7 @@ class SalaryComponent extends React.Component {
             Fixed,
             Deduction,
         } = initValue
-        const { handleSubmit, toggle, updateComponent, sifEnabled, employeeId } = this.props;
-        if (employeeId && this.componentJustLoaded) {
-            this.getSalaryComponentByEmployeeId_First_Time(employeeId);
-            this.componentJustLoaded = false;
-        }
-
+        const { handleSubmit, toggle, updateComponent, sifEnabled } = this.props;
         return (
             <div>
                 {loading ? (<Loader></Loader>) : (

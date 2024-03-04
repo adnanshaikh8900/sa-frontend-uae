@@ -390,7 +390,7 @@ class SalaryComponent extends React.Component {
                         obj.flatAmount = res.data.flatAmount;
                         obj.employeeId = current_employee_id;
                         obj.salaryComponentId = res.data.id;
-                        obj.salaryStructure = 1;
+                        obj.salaryStructure = componentType === 'Fixed' ? 1 : 3;
                         obj.monthlyAmount = "";
                         obj.yearlyAmount = "";
                     }
@@ -710,12 +710,7 @@ class SalaryComponent extends React.Component {
             Fixed,
             Deduction,
         } = initValue
-        const { handleSubmit, toggle, updateComponent, sifEnabled, employeeId } = this.props;
-        if (employeeId && this.componentJustLoaded) {
-            this.getSalaryComponentByEmployeeId_First_Time(employeeId);
-            this.componentJustLoaded = false;
-        }
-
+        const { handleSubmit, toggle, updateComponent, sifEnabled } = this.props;
         return (
             <div>
                 {loading ? (<Loader></Loader>) : (

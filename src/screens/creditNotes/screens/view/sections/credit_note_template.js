@@ -381,7 +381,12 @@ class InvoiceTemplate extends Component {
 								{invoiceData.notes && (<><h6 className="mb-0 pt-2">
 									<b>{strings.RefundNotes}:</b>
 								</h6><br />
-									<h6 className="mb-0">{invoiceData.notes}</h6>
+									<textarea
+										className="mb-0"
+										style={{ width: '500px', height: '200px', border: 'none' }}
+										value={invoiceData.notes}
+										readOnly
+									/>
 								</>)}
 
 							</div>

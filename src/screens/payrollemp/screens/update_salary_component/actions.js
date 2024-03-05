@@ -1,52 +1,53 @@
 import {
-    authApi
-  } from 'utils'
+	authApi
+} from 'utils'
 
 
-  export const getSalaryComponentByEmployeeId = (_id) => {
-	return (dispatch) => {
-	  let data = {
-		method: 'GET',
-		url: `/rest/payroll/getSalaryComponentByEmployeeId?id=${_id}`
-	  }
-  
-	  return authApi(data).then((res) => {
-		return res
-	  }).catch((err) => {
-		throw err
-	  })
+export const getSalaryComponentByEmployeeId = (_id) => {
+	return async (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/payroll/getSalaryComponentByEmployeeId?id=${_id}`
+		}
+
+		try {
+			const res = await authApi(data)
+			return res
+		} catch (err) {
+			throw err
+		}
 	}
-  }
+}
 
-  export const updateEmployeeBank = (obj) => {
-    return (dispatch) => {
-      let data = {
-        method: 'POST',
-        url: `/rest/payroll/updateSalaryComponent`,
-        data: obj
-      }
-  
-      return authApi(data).then((res) => {
-        return res
-      }).catch((err) => {
-        throw err
-      })
-    }
-  }
+export const updateEmployeeBank = (obj) => {
+	return async (dispatch) => {
+		let data = {
+			method: 'POST',
+			url: `/rest/payroll/updateSalaryComponent`,
+			data: obj
+		}
 
-  
-export const deleteSalaryComponentRow = (id,componentId) => {
-	return (dispatch) => {
+		try {
+			const res = await authApi(data)
+			return res
+		} catch (err) {
+			throw err
+		}
+	}
+}
+
+
+export const deleteSalaryComponentRow = (id, componentId) => {
+	return async (dispatch) => {
 		let data = {
 			method: 'DELETE',
 			url: `/rest/payroll/deleteSalaryComponentRow?id=${id}&componentId=${componentId}`,
 		};
-		return authApi(data)
-			.then((res) => {
-				return res;
-			})
-			.catch((err) => {
-				throw err;
-			});
+		try {
+			const res = await authApi(data)
+			return res
+		} catch (err) {
+			throw err
+		}
 	};
 };

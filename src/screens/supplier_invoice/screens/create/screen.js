@@ -1715,20 +1715,6 @@ class CreateSupplierInvoice extends React.Component {
 				)}
 			/>
 		);
-		// } else {
-		// 	return (
-		// 		<Button
-		// 			type="button"
-		// 			color="primary"
-		// 			className="btn-square mr-3 mb-3"
-		// 			onClick={(e, props) => {
-		// 				this.openProductModal(props);
-		// 			}}
-		// 		>
-		// 			<i className="fa fa-plus"></i> Add a Product
-		// 		</Button>
-		// 	);
-		// }
 	};
 
 	// selectCategory = (options, row, name, form, field, props) => {
@@ -3403,15 +3389,18 @@ class CreateSupplierInvoice extends React.Component {
 																	<Row>
 																		<Col lg={8}>
 																			<FormGroup className="py-2">
-																				<Label htmlFor="notes">{strings.Notes}</Label><br />
+																				<Label htmlFor="notes">
+																					{strings.Notes}
+																				</Label><br />
 																				<TextField
 																					type="textarea"
+																					multiline
 																					style={{ width: "500px" }}
-																					className="textarea form-control"
-																					maxLength="255"
+																					className="textarea"
+																					inputProps={{ maxLength: 255 }}
 																					name="notes"
 																					id="notes"
-																					rows="2"
+																					maxRows={4}
 																					placeholder={strings.DeliveryNotes}
 																					onChange={(option) =>
 																						props.handleChange('notes')(option)
@@ -3419,7 +3408,6 @@ class CreateSupplierInvoice extends React.Component {
 																					value={props.values.notes}
 																				/>
 																			</FormGroup>
-
 																			<Row>
 																				<Col lg={6}>
 																					<FormGroup className="mb-3">
@@ -3514,7 +3502,7 @@ class CreateSupplierInvoice extends React.Component {
 																					style={{ width: "500px" }}
 																					name="receiptAttachmentDescription"
 																					id="receiptAttachmentDescription"
-																					rows="2"
+																					maxRows={4}
 																					placeholder={strings.ReceiptAttachmentDescription}
 																					onChange={(option) =>
 																						props.handleChange(

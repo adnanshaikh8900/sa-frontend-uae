@@ -1462,7 +1462,7 @@ class CreateCreditNote extends React.Component {
 						this.formRef.current.setFieldValue('currency', response.data.currencyCode, true);
 						this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
 						this.formRef.current.setFieldValue('placeOfSupplyId', this.state.placeOfSupplyId, true);
-						this.setExchange(this.getCurrency(response.data.currencyCode,response.data.currencyName,response.data.currencyIsoCode));
+						this.setExchange(this.getCurrency(response?.data?.currencyCode, response?.data?.currencyName, response?.data?.currencyIsoCode));
 						this.formRef.current.setFieldValue('contactId', response.data.contactId, true);
 						this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
 						this.formRef.current.setFieldValue('currencyCode', response.data.currencyCode, true);
@@ -2500,15 +2500,18 @@ class CreateCreditNote extends React.Component {
 																	<Row>
 																		<Col lg={8}>
 																			<FormGroup className="py-2">
-																				<Label htmlFor="notes">{strings.RefundNotes}</Label><br />
-																				<TextareaAutosize
+																				<Label htmlFor="notes">
+																					{strings.RefundNotes}
+																				</Label><br />
+																				<TextField
 																					type="textarea"
-																					style={{ width: "700px" }}
-																					className="textarea form-control"
-																					maxLength="255"
+																					multiline
+																					style={{ width: "500px" }}
+																					className="textarea"
+																					inputProps={{ maxLength: 255 }}
 																					name="notes"
 																					id="notes"
-																					rows="2"
+																					maxRows={4}
 																					placeholder={strings.DeliveryNotes}
 																					onChange={(option) =>
 																						props.handleChange('notes')(option)
@@ -2516,6 +2519,7 @@ class CreateCreditNote extends React.Component {
 																					value={props.values.notes}
 																				/>
 																			</FormGroup>
+
 																			<Row>
 																				<Col lg={6}>
 																					<FormGroup className="mb-3">
@@ -2537,26 +2541,6 @@ class CreateCreditNote extends React.Component {
 																						{props.errors.receiptNumber && props.touched.receiptNumber && (
 																							<div className="invalid-feedback">{props.errors.receiptNumber}</div>
 																						)}
-																						{/* <Input
-																								type="text"
-																								maxLength="100"
-																								id="receiptNumber"
-																								name="receiptNumber"
-																								placeholder={strings.ReceiptNumber}
-																								onChange={(option) => {
-																									if (
-																										option.target.value === '' ||
-																										this.regExBoth.test(
-																											option.target.value,
-																										)
-																									) {
-																										props.handleChange(
-																											'receiptNumber',
-																										)(option);
-																									}
-																								}}
-																								value={props.values.receiptNumber}
-																							/> */}
 																					</FormGroup>
 																				</Col>
 																				<Col lg={6}>

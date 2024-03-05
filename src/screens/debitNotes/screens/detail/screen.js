@@ -26,6 +26,7 @@ import * as DebitNotesActions from '../../actions';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
+import { TextField } from '@material-ui/core';
 
 import { LeavePage, Loader, ConfirmDeleteModal, ProductTableCalculation } from 'components';
 
@@ -1751,21 +1752,25 @@ class DetailDebitNote extends React.Component {
 																				)}
 																			</FormGroup>}
 																			<FormGroup className="py-2">
-																				<Label htmlFor="notes">{strings.Notes}</Label>
-																				<Input
+																				<Label htmlFor="notes">
+																					{strings.Notes}
+																				</Label><br />
+																				<TextField
 																					type="textarea"
-																					maxLength="255"
+																					multiline
+																					style={{ width: "500px" }}
+																					className="textarea"
+																					inputProps={{ maxLength: 255 }}
 																					name="notes"
 																					id="notes"
-																					rows="6"
-																					placeholder={strings.Notes}
+																					maxRows={4}
+																					placeholder={strings.DeliveryNotes}
 																					onChange={(option) =>
 																						props.handleChange('notes')(option)
 																					}
 																					value={props.values.notes}
 																				/>
 																			</FormGroup>
-
 																		</Col>
 																	</Col>
 																	{this.state.isDNWIWithoutProduct === false && (<Col lg={5}>

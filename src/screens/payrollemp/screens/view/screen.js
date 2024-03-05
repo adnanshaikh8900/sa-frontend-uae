@@ -18,7 +18,7 @@ import {
 } from 'reactstrap';
 import * as EmployeeViewActions from "./actions"
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { ConfirmDeleteModal } from 'components';
+import { ConfirmDeleteModal, Currency } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
@@ -162,6 +162,7 @@ class ViewEmployee extends React.Component {
 								if (res.status === 200) {
 									// this.initializeData();
 									// let v ="Fixed Allowance"
+									res.data.netPay = res.data.earnings - res.data.deductions;
 									this.setState({
 										salaryDate: row.salaryDate,
 										employeename: res.data.employeename,
@@ -258,7 +259,7 @@ class ViewEmployee extends React.Component {
 	};
 
 	initializeData = () => {
-		if (this.props.location.state && this.props.location.state.tabNo ) {
+		if (this.props.location.state && this.props.location.state.tabNo) {
 			this.toggle(0, this.props.location.state.tabNo)
 		} else
 			this.toggle(0, this.state.activeTab[0])
@@ -318,7 +319,23 @@ class ViewEmployee extends React.Component {
 								loading: false,
 							},
 							() => {
-
+								const { Fixed, Deduction } = this.state;
+								const totalEarnings = this.totalEarning(Fixed);
+								const totalDeductions = this.totalEarning(Deduction);
+								const totalMonthlyEarnings = totalEarnings.monthly;
+								const totalYearlyEarnings = totalEarnings.yearly;
+								const totalMonthlyDeductions = totalDeductions.monthly;
+								const totalYearlyDeductions = totalDeductions.yearly;
+								const totalNetPayMontly = parseFloat(totalMonthlyEarnings) - parseFloat(totalMonthlyDeductions);
+								const totalNetPayYearly = parseFloat(totalYearlyEarnings) - parseFloat(totalYearlyDeductions);
+								this.setState({
+									totalMonthlyEarnings: totalMonthlyEarnings,
+									totalYearlyEarnings: totalEarnings.yearly,
+									totalMonthlyDeductions: totalDeductions.monthly,
+									totalYearlyDeductions: totalDeductions.yearly,
+									totalNetPayMontly: totalNetPayMontly,
+									totalNetPayYearly: totalNetPayYearly,
+								})
 							},
 						);
 					}
@@ -330,6 +347,21 @@ class ViewEmployee extends React.Component {
 			this.props.history.push('/admin/master/employee');
 		}
 	};
+	totalEarning = (data) => {
+		let monthly = 0;
+		let yearly = 0;
+		if (data && data.length > 0) {
+			data = data.filter(obj => obj.id !== '')
+			data.map((item) => {
+				if (item.monthlyAmount) {
+					monthly += parseFloat(item.monthlyAmount);
+				} if (item.yearlyAmount) {
+					yearly += parseFloat(item.yearlyAmount);
+				}
+			});
+		}
+		return { yearly: yearly, monthly: monthly };
+	}
 	deleteEmployee = () => {
 		const { current_employee_id } = this.state;
 		const message1 =
@@ -406,7 +438,7 @@ class ViewEmployee extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { profile } = this.props;
 		const { generateSif } = this.props.company_details;
-		const { dialog, isEmployeeDeletable } = this.state;
+		const { dialog, isEmployeeDeletable, totalNetPayYearly, totalNetPayMontly } = this.state;
 		return (
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">
@@ -756,20 +788,20 @@ class ViewEmployee extends React.Component {
 																		))) : (<tr></tr>)}
 																</tbody>
 																<tfoot>
-																	{/* {this.state.FixedAllowance ? (
-																		Object.values(
-																			this.state.FixedAllowance
-																		).map((item) => (
-																			<tr>
-																				<td className="text-left" style={{ border: "3px solid #dfe9f7" }} >{item.description}</td>
-																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.monthlyAmount ? amountFormat(item.monthlyAmount, "AED") : ''}</td>
-																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.yearlyAmount ? amountFormat(item.yearlyAmount, "AED") : ''}</td>
-																			</tr>
-																		))) : (<tr></tr>)} */}
 																	<tr style={{ border: "3px solid #dfe9f7" }}>
 																		<td className="text-left"><h5><b> {strings.CosttoCompany}</b></h5></td>
-																		<td className="text-right"><h5>{this.state.CTC ? this.state.EmployeeDetails.ctcType == "ANNUALLY" ? amountFormat(this.state.CTC / 12, "AED") : amountFormat(this.state.CTC, "AED") : ''}</h5></td>
-																		<td className="text-right"><h5>{this.state.CTC ? this.state.EmployeeDetails.ctcType == "ANNUALLY" ? amountFormat(this.state.CTC, "AED") : amountFormat(parseFloat(this.state.CTC) * 12, "AED") : ''}</h5></td>
+																		<td className="text-right"><h5>
+																			<Currency
+																				value={totalNetPayMontly}
+																				currrency={'AED'}
+																			/>
+																		</h5></td>
+																		<td className="text-right"><h5>
+																			<Currency
+																				value={totalNetPayYearly}
+																				currrency={'AED'}
+																			/>
+																		</h5></td>
 																	</tr>
 																</tfoot>
 															</Table>

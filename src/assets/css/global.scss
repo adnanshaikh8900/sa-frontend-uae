@@ -60,6 +60,7 @@ div.Select.is-invalid {
 		border: 1px solid #f86c6b !important;
 	}
 }
+
 .MuiInputBase-multiline {
 	padding: 0.375rem 0.75rem;
 	font-size: 0.875rem;
@@ -73,7 +74,7 @@ div.Select.is-invalid {
 	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 	border: none;
 	resize: none !important;
-    width: 100% !important;
+	width: 100% !important;
 }
 
 .MuiInputBase-inputMultiline {
@@ -395,7 +396,12 @@ th {
 	height: calc(1.5em + 0.75rem + 4px) !important;
 }
 
+.textarea {
+	resize: auto !important;
+}
+
 //responsive
+
 
 @media screen and (max-width: 767px) {
 	.react-bs-table table {

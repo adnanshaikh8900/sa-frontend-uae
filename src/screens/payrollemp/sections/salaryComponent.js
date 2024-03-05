@@ -697,7 +697,7 @@ class SalaryComponent extends React.Component {
                                     if (values.CTC && (parseFloat(values.yearlyCTC) !== parseFloat(totalYearlyEarnings))) {
                                         errors.totalEarning = strings.GrossEarningsShouldBeEqualToCTC;
                                     }
-                                    if (values.CTC && (parseFloat(totalYearlyEarnings) < parseFloat(totalYearlyDeductions))) {
+                                    if (values.CTC && (parseFloat(totalYearlyEarnings) <= parseFloat(totalYearlyDeductions))) {
                                         errors.totalDeductions = strings.TotalDeductionsShouldBeLessThanTotalEarnings
                                     }
                                     return errors;

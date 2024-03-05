@@ -216,13 +216,14 @@ class SalaryComponent extends React.Component {
             if (component.formula && component.formula.length > 0) {
                 var salaryAnnulay = yearlyCTC * (component.formula / 100);
                 var salaryMonthy = salaryAnnulay / 12;
+                salaryMonthy = parseFloat(parseFloat(salaryMonthy).toFixed(2))
                 component.monthlyAmount = salaryMonthy;
                 component.yearlyAmount = salaryAnnulay;
             }
             else {
                 var salary = component.flatAmount;
                 var salaryMonthy = ctcType === "ANNUALLY" ? salary / 12 : salary;
-
+                salaryMonthy = parseFloat(parseFloat(salaryMonthy).toFixed(2))
                 component.monthlyAmount = salaryMonthy;
                 component.yearlyAmount = salaryMonthy * 12;
             }

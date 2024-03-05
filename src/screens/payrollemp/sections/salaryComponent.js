@@ -144,7 +144,7 @@ class SalaryComponent extends React.Component {
                     const { ctcType } = this.state.initValue;
                     const ctc = res.data.ctc ?? 0;
                     const monthltCTC = ctcType === 'Monthly' ? ctc : parseFloat(parseFloat(ctc / 12).toFixed(2));
-                    const yearlyCTC = ctcType == "ANNUALLY" ? ctc : parseFloat(ctc) * 12
+                    const yearlyCTC = ctcType === "ANNUALLY" ? ctc : parseFloat(ctc) * 12
                     this.setState({
                         initValue: {
                             ...this.state.initValue,
@@ -211,53 +211,42 @@ class SalaryComponent extends React.Component {
         this.getSalaryComponentById(newComponent.value, componentType)
 
     };
+    updateComponentSalary = (component, yearlyCTC, ctcType) => {
+        if (component.id) {
+            if (component.formula && component.formula.length > 0) {
+                var salaryAnnulay = yearlyCTC * (component.formula / 100);
+                var salaryMonthy = salaryAnnulay / 12;
+                salaryMonthy = parseFloat(parseFloat(salaryMonthy).toFixed(2))
+                component.monthlyAmount = salaryMonthy;
+                component.yearlyAmount = salaryAnnulay;
+            }
+            else {
+                var salary = component.flatAmount;
+                var salaryMonthy = ctcType === "ANNUALLY" ? salary / 12 : salary;
+                salaryMonthy = parseFloat(parseFloat(salaryMonthy).toFixed(2))
+                component.monthlyAmount = salaryMonthy;
+                component.yearlyAmount = salaryMonthy * 12;
+            }
+        }
+        return component
+    }
     updateSalary = async () => {
-        let { Deduction, Fixed, yearlyCTC, monthltCTC, CTC } = this.state.initValue;
+        let { Deduction, Fixed, yearlyCTC, monthltCTC, CTC, ctcType } = this.state.initValue;
         this.setState({ errorMsg: false })
         var locallist = []
-        var totalFixedSalary = 0;
         Fixed.map((obj) => {
             locallist.push(obj);
-            if (obj.id) {
-                if (obj.formula && obj.formula.length > 0) {
-                    var salaryAnnulay = yearlyCTC * (obj.formula / 100);
-                    var salaryMonthy = salaryAnnulay / 12;
-                    obj.monthlyAmount = salaryMonthy;
-                    obj.yearlyAmount = salaryAnnulay;
-                    totalFixedSalary = totalFixedSalary + salaryMonthy;
-                }
-                else {
-                    var salaryMonthy = obj.flatAmount;
-                    obj.monthlyAmount = salaryMonthy;
-                    obj.yearlyAmount = salaryMonthy * 12;
-                    totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
-                }
-            }
-            return obj;
+            const component = this.updateComponentSalary(obj, yearlyCTC, ctcType);
+            return component;
         });
 
         if (Deduction && Deduction?.length > 0) {
             Deduction.map((obj) => {
                 locallist.push(obj);
-                if (obj.id) {
-                    if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
-                        var salaryAnnulay = CTC * (obj.formula / 100);
-                        var salaryMonthy = salaryAnnulay / 12;
-                        obj.monthlyAmount = salaryMonthy;
-                        obj.yearlyAmount = salaryAnnulay;
-                        totalFixedSalary = totalFixedSalary + salaryMonthy;
-                    }
-                    else if (obj.flatAmount != null) {
-                        var salaryMonthy = obj.flatAmount;
-                        obj.monthlyAmount = salaryMonthy;
-                        obj.yearlyAmount = salaryMonthy * 12;
-                    }
-                }
-                return obj;
+                const component = this.updateComponentSalary(obj, yearlyCTC, ctcType);
+                return component;
             });
         }
-        const monthlySalary = CTC / 12
-        const componentTotal1 = monthlySalary - totalFixedSalary;
         const totalEarnings = this.totalEarning(Fixed);
         const totalDeductions = this.totalEarning(Deduction);
 
@@ -271,7 +260,6 @@ class SalaryComponent extends React.Component {
         const totalNetPayMontly = parseFloat(totalMonthlyEarnings) - parseFloat(totalMonthlyDeductions);
         const totalNetPayYearly = parseFloat(totalYearlyEarnings) - parseFloat(totalYearlyDeductions);
         this.setState({
-            componentTotal: componentTotal1,
             CTC: CTC,
             list: locallist,
             initValue: {
@@ -522,11 +510,12 @@ class SalaryComponent extends React.Component {
                                             ).find((option) => (item.formula == "" ?
                                                 option.value == 1 : option.value == 2))
                                         }
-                                        onChange={(value) => {
-                                            if (value.value == 1) {
-                                                this.addComponentValue(componentType, 1, 'FlatAmount', item);
+                                        onChange={(option) => {
+                                            const value = item.formula || item.flatAmount;
+                                            if (option.value == 1) {
+                                                this.addComponentValue(componentType, value, 'FlatAmount', item);
                                             } else {
-                                                this.addComponentValue(componentType, 1, 'Formula', item);
+                                                this.addComponentValue(componentType, value, 'Formula', item);
                                             }
                                         }}
                                     />
@@ -554,70 +543,51 @@ class SalaryComponent extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {data ? Object.values(data,).map((item, index) => (
-                        <tr>
-                            <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComponentName(item, index, componentType)}</td>
-                            <td style={{ border: "3px solid #c8ced3" }}>{this.renderComponentValue(item, componentType)}</td>
-                            {item.formula ?
-                                (<td style={{ border: "3px solid #c8ced3" }}
-                                >
+                    {data && Object.values(data).map((item, index) => {
+                        console.log(item)
+                        return (
+                            <tr>
+                                <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComponentName(item, index, componentType)}</td>
+                                <td style={{ border: "3px solid #c8ced3" }}>{this.renderComponentValue(item, componentType)}</td>
+                                <td style={{ border: "3px solid #c8ced3" }}                                    >
                                     <Input
                                         disabled={true}
                                         type="text"
                                         size="30"
                                         style={{ textAlign: "center" }}
-                                        value={item.monthlyAmount ? (item.monthlyAmount.toLocaleString(
-                                            navigator.language,
-                                            {
-                                                minimumFractionDigits: 2,
-                                                maximumFractionDigits: 2,
-                                            }
-                                        )) : 0.0}
+                                        value={item.monthlyAmount ? item.monthlyAmount.toLocaleString(
+                                            navigator.language, {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        }) : '0.00'}
                                         id=''
                                     />
                                 </td>
-                                ) : (
-                                    <td style={{ border: "3px solid #c8ced3" }} >
-                                        <Input
-                                            disabled={true}
-                                            maxLength="8"
-                                            type="text"
-                                            size="30"
-                                            style={{ textAlign: "center" }}
-                                            onChange={(option) => {
-                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                            }}
-                                            value={item.flatAmount ? item.flatAmount : 0}
-                                            id='' />
-                                    </td>
-                                )}
-                            {item.formula ?
-                                (<td style={{ border: "3px solid  #c8ced3" }} >
-                                    <Currency
-                                        value={item.yearlyAmount}
-                                    />
+
+                                <td style={{ border: "3px solid  #c8ced3" }} >
+                                    {item.yearlyAmount ? item.yearlyAmount.toLocaleString(
+                                        navigator.language, {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    }) : '0.00'}
+
                                 </td>
-                                ) : (
-                                    <td style={{ border: "3px solid  #c8ced3" }} >
 
-                                        {item.flatAmount ? item.flatAmount * 12 : 0.0}
-                                    </td>
-                                )}
-                            <td style={{ border: 'none' }}>
-                                {item.description !== "Basic SALARY" && item.id ? (
-                                    <Button
-                                        color='link'
-
-                                        onClick={() => {
-                                            this.removeComponent(item.salaryComponentId)
-                                        }}
-                                    >
-                                        <i class="far fa-times-circle"></i>
-                                    </Button>)
-                                    : ''}
-                            </td>
-                        </tr>
-                    )) : ""}
+                                <td style={{ border: 'none' }}>
+                                    {item.description !== "Basic SALARY" && item.id ? (
+                                        <Button
+                                            color='link'
+                                            onClick={() => {
+                                                this.removeComponent(item.salaryComponentId)
+                                            }}
+                                        >
+                                            <i class="far fa-times-circle"></i>
+                                        </Button>)
+                                        : ''}
+                                </td>
+                            </tr>
+                        )
+                    })}
                     <tr>
                         <td colSpan={4} style={{ border: "3px solid  #c8ced3" }}>
                             <Button
@@ -661,7 +631,7 @@ class SalaryComponent extends React.Component {
         let monthlyCTC = 0;
         let yearlyCTC = 0;
         if (ctcValue === '' || this.regEx.test(ctcValue)) {
-            if (ctcType == "ANNUALLY") {
+            if (ctcType === "ANNUALLY") {
                 yearlyCTC = ctcValue;
                 monthlyCTC = parseFloat(parseFloat(ctcValue / 12).toFixed(2));
             } else {

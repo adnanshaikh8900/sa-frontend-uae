@@ -451,7 +451,7 @@ class SalaryComponent extends React.Component {
                 render={({ field, form }) => (
                     <div>
                         <div class="input-group">
-                            {item.formula ?
+                            {(item.formula || item.formula === null) ?
                                 <Input
                                     type="number"
                                     min="0"
@@ -464,7 +464,10 @@ class SalaryComponent extends React.Component {
                                     name="formula"
                                     value={item.formula}
                                     onChange={(option) => {
-                                        if (option.target.value === '' || this.regDec1.test(option.target.value)) {
+                                        if (option.target.value === '') {
+                                            this.addComponentValue(componentType, null, 'Formula', item);
+
+                                        } else if (this.regDec1.test(option.target.value)) {
                                             this.addComponentValue(componentType, option.target.value, 'Formula', item);
                                         }
                                     }}
@@ -511,11 +514,10 @@ class SalaryComponent extends React.Component {
                                                 option.value == 1 : option.value == 2))
                                         }
                                         onChange={(option) => {
-                                            const value = item.formula || item.flatAmount;
                                             if (option.value == 1) {
-                                                this.addComponentValue(componentType, value, 'FlatAmount', item);
+                                                this.addComponentValue(componentType, 1, 'FlatAmount', item);
                                             } else {
-                                                this.addComponentValue(componentType, value, 'Formula', item);
+                                                this.addComponentValue(componentType, 1, 'Formula', item);
                                             }
                                         }}
                                     />

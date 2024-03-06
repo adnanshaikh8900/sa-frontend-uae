@@ -462,11 +462,10 @@ class SalaryComponent extends React.Component {
                                     style={{ textAlign: "center" }}
                                     id="formula"
                                     name="formula"
-                                    value={item.formula}
+                                    value={item.formula ?? ''}
                                     onChange={(option) => {
                                         if (option.target.value === '') {
                                             this.addComponentValue(componentType, null, 'Formula', item);
-
                                         } else if (this.regDec1.test(option.target.value)) {
                                             this.addComponentValue(componentType, option.target.value, 'Formula', item);
                                         }
@@ -479,11 +478,13 @@ class SalaryComponent extends React.Component {
                                     style={{ textAlign: "center" }}
                                     onChange={(option) => {
                                         const inputValue = option.target.value;
-                                        if (/^\d*\.?\d*$/.test(inputValue) && inputValue.length <= 8) {
+                                        if (inputValue === '') {
+                                            this.addComponentValue(componentType, null, 'Formula', item);
+                                        } else if (/^\d*\.?\d*$/.test(inputValue) && inputValue.length <= 8) {
                                             this.addComponentValue(componentType, option.target.value, 'FlatAmount', item);
                                         }
                                     }}
-                                    value={item.flatAmount}
+                                    value={item.flatAmount ?? ''}
                                     id=''
                                 />
                             }
@@ -515,9 +516,9 @@ class SalaryComponent extends React.Component {
                                         }
                                         onChange={(option) => {
                                             if (option.value == 1) {
-                                                this.addComponentValue(componentType, 1, 'FlatAmount', item);
+                                                this.addComponentValue(componentType, null, 'FlatAmount', item);
                                             } else {
-                                                this.addComponentValue(componentType, 1, 'Formula', item);
+                                                this.addComponentValue(componentType, null, 'Formula', item);
                                             }
                                         }}
                                     />

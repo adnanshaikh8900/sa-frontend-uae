@@ -511,7 +511,7 @@ class SalaryComponent extends React.Component {
                                                 'value',
                                                 this.type,
                                                 'Type',
-                                            ).find((option) => (item.formula == "" ?
+                                            ).find((option) => (item.formula || item.formula === null ?
                                                 option.value == 1 : option.value == 2))
                                         }
                                         onChange={(option) => {

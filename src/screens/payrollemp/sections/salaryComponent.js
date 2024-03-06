@@ -225,7 +225,7 @@ class SalaryComponent extends React.Component {
                 var salaryMonthy = ctcType === "ANNUALLY" ? salary / 12 : salary;
                 salaryMonthy = parseFloat(parseFloat(salaryMonthy).toFixed(2))
                 component.monthlyAmount = salaryMonthy;
-                component.yearlyAmount = salaryMonthy * 12;
+                component.yearlyAmount = ctcType === "ANNUALLY" ? salary : salaryMonthy * 12;
             }
         }
         return component

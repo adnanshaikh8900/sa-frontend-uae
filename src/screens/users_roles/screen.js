@@ -81,6 +81,9 @@ class UsersRoles extends React.Component {
 		this.options = {
 
 			onRowClick: this.goToDetail,
+			sortName: '',
+			sortOrder: '',
+			onSortChange: this.sortColumn,
 		};
 
 		
@@ -90,7 +93,13 @@ class UsersRoles extends React.Component {
 		this.initializeData();
 	};
 	initializeData = () => {
-		this.props.rolesActions.getRoleList();
+		const sortingData = {
+			order: this.options.sortOrder ? this.options.sortOrder : '',
+			sortingCol: this.options.sortName ? this.options.sortName : '',
+		};
+		const postData = {...sortingData };
+		this.props.rolesActions.getRoleList(postData);
+		this.props.rolesActions.getRoleList();		
 	};
 
 	// Show Invite User Modal
@@ -101,16 +110,22 @@ class UsersRoles extends React.Component {
 	closeInviteUserModal = () => {
 		this.setState({ openInviteUserModal: false });
 	};
+	sortColumn = (sortName, sortOrder) => {
+		this.options.sortName = sortName;
+		this.options.sortOrder = sortOrder;
+		this.initializeData();
+	};
 
 	goToDetail = (row) => {
-		{row.roleCode === 1 || row.roleCode === 2 ||row.roleCode === 3 ||row.roleCode === 104 ||row.roleCode === 105 ? 
+		{
+			row.roleCode === 1 || row.roleCode === 2 ||row.roleCode === 3 ||row.roleCode === 104 ||row.roleCode === 105 ? 
 			this.props.commonActions.tostifyAlert('error', 'You Cannot Edit '+row.roleName+' Role')
 			 :
 			this.props.history.push('/admin/settings/user-role/update', {
 			id: row.roleCode,
-		});
-	}};
-
+		    });
+		}	
+	};
 	getUserName = (cell, row) => {
 		return (
 			<div className="d-flex">
@@ -145,38 +160,37 @@ class UsersRoles extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { loading, openInviteUserModal } = this.state;
 		const containerStyle = {
-			zIndex: 1999,closeOnClick: true,
+			zIndex: 1999, closeOnClick: true,
 			draggable: true
 		};
 		const { role_list } = this.props;
 		return (
-			loading ==true? <Loader/> :
-<div>
-			<div className="transaction-category-screen">
-				<div className="animated fadeIn">
-					<ToastContainer
-						closeOnClick
-            			draggable					
-						position="top-right"
-						autoClose={1700}
-						style={containerStyle}
-					/>
-
-					<Card>
-						<CardHeader>
-							<div className="h4 mb-0 d-flex align-items-center">
-								<i className="nav-icon fas fa-users" />
-								<span className="ml-2">{strings.Role}</span>
-							</div>
-						</CardHeader>
-						<CardBody>
-							{loading ? (
-								<Loader></Loader>
-							) : (
-								<Row>
-									<Col lg="12">
-										<div className="d-flex justify-content-end"></div>
-										{/* <div className="py-3">
+			loading == true ? <Loader /> :
+				<div>
+					<div className="transaction-category-screen">
+						<div className="animated fadeIn">
+							<ToastContainer
+								closeOnClick
+								draggable
+								position="top-right"
+								autoClose={1700}
+								style={containerStyle}
+							/>
+							<Card>
+								<CardHeader>
+									<div className="h4 mb-0 d-flex align-items-center">
+										<i className="nav-icon fas fa-users" />
+										<span className="ml-2">{strings.Role}</span>
+									</div>
+								</CardHeader>
+								<CardBody>
+									{loading ? (
+										<Loader></Loader>
+									) : (
+										<Row>
+											<Col lg="12">
+												<div className="d-flex justify-content-end"></div>
+												{/* <div className="py-3">
 											<h5>Filter : </h5>
 											<Row>
 												<Col lg={2} className="mb-1">
@@ -191,117 +205,118 @@ class UsersRoles extends React.Component {
 												</Col>
 											</Row>
 										</div> */}
-										
-										{config.ADD_ROLES && <Button
-											color="primary"
-											style={{ marginBottom: '10px' }}
-											className="btn-square pull-right"
-											onClick={() =>
-												this.props.history.push(
-													`/admin/settings/user-role/create`,
-												)
-											}
-										>
-											<i className="fas fa-plus mr-1" />
-											 {strings.AddNewRole}
-										</Button> }
-										<BootstrapTable
-											data={role_list}
-											hover
-											pagination
-											version="4"
-											search={false}
-											selectRow={this.selectRowProp}
-											options={this.options}
-											trClassName="cursor-pointer"
-										>
-											<TableHeaderColumn
-												isKey
-												dataField="email"
-												className="table-header-bg"
-												dataFormat={this.getUserName}
-												dataSort
-											>
-												 {strings.UserDetail} 
-											</TableHeaderColumn>
-											<TableHeaderColumn 
-											dataField="roleName"
-											className="table-header-bg"
-											dataSort>
-												 {strings.Role}
-											</TableHeaderColumn>
-											<TableHeaderColumn 
-											dataField="isActive"
-											dataFormat={this.renderStatus}
-											className="table-header-bg"
-											dataSort>
-												 {strings.Status}
-											</TableHeaderColumn>
-										</BootstrapTable>
-									</Col>
-								</Row>
-							)}
-						</CardBody>
-					</Card>
 
-					<Modal
-						isOpen={openInviteUserModal}
-						className={'modal-success ' + this.props.className}
-					>
-						<ModalHeader toggle={this.toggleDanger}> {strings.InviteUser} </ModalHeader>
-						<ModalBody>
-							<Form onSubmit={this.handleSubmit} name="simpleForm">
-								<FormGroup>
-									<Label htmlFor="categoryName">*{strings.CompanyName}</Label>
-									<Input
-										type="text"
-										id="categoryName"
-										name="categoryName"
-										placeholder={strings.Enter+strings.UserName}
-										required
-									/>
-								</FormGroup>
-								<FormGroup>
-									<Label htmlFor="categoryCode">*{strings.Email}</Label>
-									<Input
-										type="text"
-										id="categoryCode"
-										name="categoryCode"
-										placeholder={strings.Enter+strings.Email}
-										required
-									/>
-								</FormGroup>
-								<FormGroup>
-									<Label htmlFor="categoryCode"> {strings.Position}</Label>
-									<Select
-										className="select-min-width"
-										options={[]}
-										placeholder={strings.Position}
-									/>
-								</FormGroup>
-							</Form>
-						</ModalBody>
-						<ModalFooter>
-							<Button
-								color="success"
-								className="btn-square"
-								onClick={this.closeInviteUserModal}
+												{config.ADD_ROLES && <Button
+													color="primary"
+													style={{ marginBottom: '10px' }}
+													className="btn-square pull-right"
+													onClick={() =>
+														this.props.history.push(
+															`/admin/settings/user-role/create`,
+														)
+													}
+												>
+													<i className="fas fa-plus mr-1" />
+													{strings.AddNewRole}
+												</Button>}
+												<BootstrapTable
+													data={role_list}
+													hover
+													pagination
+													version="4"
+													search={false}
+													selectRow={this.selectRowProp}
+													options={this.options}
+													trClassName="cursor-pointer"
+												>
+													<TableHeaderColumn
+														isKey
+														dataField="roleName"
+														className="table-header-bg"
+														dataFormat={this.getUserName}
+														dataSort
+													>
+														{strings.UserDetail}
+													</TableHeaderColumn>
+													<TableHeaderColumn
+														dataField="roleName"
+														className="table-header-bg"
+														dataSort
+													>
+														{strings.Role}
+													</TableHeaderColumn>
+													<TableHeaderColumn
+														dataField="isActive"
+														dataFormat={this.renderStatus}
+														className="table-header-bg"
+														dataSort
+													>
+														{strings.Status}
+													</TableHeaderColumn>
+												</BootstrapTable>
+											</Col>
+										</Row>
+									)}
+								</CardBody>
+							</Card>
+							<Modal
+								isOpen={openInviteUserModal}
+								className={'modal-success ' + this.props.className}
 							>
-							 {strings.Send}
-							</Button>
-							&nbsp;
-							<Button
-								color="secondary"
-								className="btn-square"
-								onClick={this.closeInviteUserModal}
-							>
-								 {strings.No}
-							</Button>
-						</ModalFooter>
-					</Modal>
+								<ModalHeader toggle={this.toggleDanger}> {strings.InviteUser} </ModalHeader>
+								<ModalBody>
+									<Form onSubmit={this.handleSubmit} name="simpleForm">
+										<FormGroup>
+											<Label htmlFor="categoryName">*{strings.CompanyName}</Label>
+											<Input
+												type="text"
+												id="categoryName"
+												name="categoryName"
+												placeholder={strings.Enter + strings.UserName}
+												required
+											/>
+										</FormGroup>
+										<FormGroup>
+											<Label htmlFor="categoryCode">*{strings.Email}</Label>
+											<Input
+												type="text"
+												id="categoryCode"
+												name="categoryCode"
+												placeholder={strings.Enter + strings.Email}
+												required
+											/>
+										</FormGroup>
+										<FormGroup>
+											<Label htmlFor="categoryCode"> {strings.Position}</Label>
+											<Select
+												className="select-min-width"
+												options={[]}
+												placeholder={strings.Position}
+											/>
+										</FormGroup>
+									</Form>
+								</ModalBody>
+								<ModalFooter>
+									<Button
+										color="success"
+										className="btn-square"
+										onClick={this.closeInviteUserModal}
+									>
+										{strings.Send}
+									</Button>
+									&nbsp;
+									<Button
+										color="secondary"
+										className="btn-square"
+										onClick={this.closeInviteUserModal}
+									>
+										{strings.No}
+									</Button>
+								</ModalFooter>
+							</Modal>
+						</div>
+					</div>
 				</div>
-			</div>
-			</div>
 		);
 	}
 }

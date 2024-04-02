@@ -403,3 +403,35 @@ jobs:
         echo "Deployment started scripts..."
         helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=va-consultancyuae.app.ae.simpleaccounts.io,simpleVatHost=https://va-consultancyuae-api.app.ae.simpleaccounts.io,fullnameOverride=va-consultancyuae-frontend,serviceAccount.name=va-consultancyuae-deploy-robot-frontend,ingress.hosts[0].host=va-consultancyuae.app.ae.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,ingress.hosts[1].host=va-consultancyuae.app.simpleaccounts.io,ingress.hosts[1].paths[0]=/*,clusterIssuer=ae-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=ae-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=va-consultancyuae-frontend-app-ae-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=va-consultancyuae.app.ae.simpleaccounts.io,ingress.tls[0].hosts[1]=va-consultancyuae.app.simpleaccounts.io --wait --namespace va-consultancyuae --create-namespace va-consultancyuae-frontend ./simpleaccounts-frontend 
         echo "Application successfully deployed."
+
+  deploy-PROD-dalitso:
+    needs: [build]
+    runs-on: datainn-digitalocean-test-runner-set
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest' # default is latest stable
+      id: install-kubectl
+
+    - uses: azure/setup-helm@v3
+      with:
+        version: 'latest' # default is latest (stable)
+        token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+      id: install-helm
+
+    - name: Helm chart PROD dalitso Deployment
+      run: |
+        echo "Deploying application to following cluster..."
+        kubectl cluster-info
+        echo "Test deployment scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=dalitso.app.ae.simpleaccounts.io,simpleVatHost=https://dalitso-api.app.ae.simpleaccounts.io,fullnameOverride=dalitso-frontend,serviceAccount.name=dalitso-deploy-robot-frontend,ingress.hosts[0].host=dalitso.app.ae.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,ingress.hosts[1].host=dalitso.app.simpleaccounts.io,ingress.hosts[1].paths[0]=/*,clusterIssuer=ae-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=ae-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dalitso-frontend-app-ae-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dalitso.app.ae.simpleaccounts.io,ingress.tls[0].hosts[1]=dalitso.app.simpleaccounts.io --wait --dry-run --debug --namespace dalitso --create-namespace dalitso-frontend ./simpleaccounts-frontend 
+        echo "Deployment started scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=dalitso.app.ae.simpleaccounts.io,simpleVatHost=https://dalitso-api.app.ae.simpleaccounts.io,fullnameOverride=dalitso-frontend,serviceAccount.name=dalitso-deploy-robot-frontend,ingress.hosts[0].host=dalitso.app.ae.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,ingress.hosts[1].host=dalitso.app.simpleaccounts.io,ingress.hosts[1].paths[0]=/*,clusterIssuer=ae-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=ae-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dalitso-frontend-app-ae-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dalitso.app.ae.simpleaccounts.io,ingress.tls[0].hosts[1]=dalitso.app.simpleaccounts.io --wait --namespace dalitso --create-namespace dalitso-frontend ./simpleaccounts-frontend 
+        echo "Application successfully deployed."

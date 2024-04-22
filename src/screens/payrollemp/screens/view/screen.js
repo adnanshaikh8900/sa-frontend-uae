@@ -77,7 +77,7 @@ class ViewEmployee extends React.Component {
 		this.columnHeader1 = [
 			{ label: 'Component Name', value: 'Component Name', sort: false },
 			{ label: 'Monthly', value: 'Monthly', sort: false },
-			{ label: 'Annualy', value: 'Annualy', sort: false },
+			{ label: 'Annually', value: 'Annually', sort: false },
 		];
 	}
 

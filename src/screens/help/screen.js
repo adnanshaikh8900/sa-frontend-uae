@@ -149,6 +149,7 @@ class Help extends React.Component {
 												
 												</button> */}
 												<h6><p>Email: support@simpleaccounts.io</p></h6>
+												<h6><p>Phone: +971(0) 565 610 010</p></h6>
 											</div>
 
 											</div>

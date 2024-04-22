@@ -18,7 +18,7 @@ import Select from 'react-select';
 // import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import EmailModal from '../customer_invoice/sections/email_template';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal,SentInvoice } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -174,7 +174,33 @@ class Quatation extends React.Component {
 		});
 	};
 
-
+	sendMail = (row, markAsSent, sendAgain) => {
+		
+		const { totalAmount, currencyIsoCode, totalVatAmount, id } = row;
+		this.setState({
+			dialog: (
+				<SentInvoice
+					invoiceAmount={totalAmount || 0}
+					id={id}
+					currencyName={currencyIsoCode || 'SAR'}
+					vatAmount={totalVatAmount || 0}
+					markAsSent={markAsSent}
+					postingRefType={"QUOTATION"}
+					setState={(value) => {
+						this.removeDialog();
+					}}
+					initializeData={() => {
+						this.initializeData();
+					}}
+					documentTitle={strings.Quotation}
+					unSent={false}
+					sendAgain={sendAgain}
+					mailPopupCard={!markAsSent || sendAgain}
+					zatcaConfirmation={false}
+				/>
+			)
+		})
+	}
 
 	renderRFQStatus = (cell, row) => {
 		let classname = '';
@@ -305,7 +331,7 @@ class Quatation extends React.Component {
 							{row.status === 'Draft' && (
 							<DropdownItem
 								onClick={() => {
-									this.sendMail(row,false);
+									this.sendMail(row, false, false);
 								}}
 							>
 								<i className="fas fa-send" />  {strings.Send}
@@ -325,7 +351,7 @@ class Quatation extends React.Component {
 							{row.status === 'Draft' && (
                             <DropdownItem
 								onClick={() => {
-									this.sendMail(row,true);
+									this.sendMail(row, true, false);
 								}}
 							>
 							<i className="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
@@ -333,7 +359,7 @@ class Quatation extends React.Component {
 							{row.status === 'Sent' && (
 							<DropdownItem
 							onClick={() => {
-								this.sendMail(row,false);
+								this.sendMail(row, false, true);
 							}}
 							>
 								<i className="fas fa-send" />{strings.SendAgain}
@@ -447,121 +473,6 @@ class Quatation extends React.Component {
 }
 
 
-
-sendMail = (row,MarkAsSent) => {
-	this.setState({
-		loading: true,
-	});
-	const postingRequestModel = {
-	
-		postingRefId: row.id,
-		markAsSent:MarkAsSent,
-		amountInWords:upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
-			vatInWords:row.totalVatAmount ? upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
-	};
-	
-	this.props.quotationAction
-		.sendMail(postingRequestModel)
-		.then((res) => {
-			if (res.status === 200) {
-				this.props.commonActions.tostifyAlert(
-					'success',
-					res.data ? res.data.message : 'Quotation Posted Successfully'
-				);
-				this.setState({
-					loading: false,
-				});
-				this.initializeData();
-			}
-		})
-		.catch((err) => {
-			this.props.commonActions.tostifyAlert(
-				'error',
-				err.data ? err.data.message : 'Purchase Order Posted Unsuccessfully'
-			);
-			this.setState({
-				loading: false,
-			});
-			this.initializeData();
-		});
-};
-
-	// sendMail = (id,status) => {
-	// 	this.setState({
-	// 		loading: true,
-	// 	});
-	// 	const postingRequestModel = {
-		
-	// 		postingRefId: row.id,
-		
-	// 		amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
-	// 		vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
-	// 	};
-	// 	this.props.quotationAction
-	// 		.sendMail(id)
-	// 		.then((res) => {
-	// 			if (res.status === 200) {
-	// 				this.props.commonActions.tostifyAlert(
-	// 					'success',
-	// 					res.data ? res.data.message : 'Email Send Successfully'
-	// 				);
-	// 				this.setState({
-	// 					loading: false,
-	// 				});
-	// 				this.initializeData();
-	// 			}
-	// 		})
-	// 		.catch((err) => {
-	// 			this.props.commonActions.tostifyAlert(
-	// 				'error',
-	// 				err.data ? err.data.message : 'Email Send Unsuccessfully'
-	// 			);
-	// 		});
-	// };
-	// 	postQuotation = (id) => {
-	// 	this.props.goodsReceivedNoteAction
-	// 		.postQUOTATION(id)
-	// 		.then((res) => {
-	// 			if (res.status === 200) {
-	// 				this.props.commonActions.tostifyAlert(
-	// 					'success',
-	// 					res.data ? res.data.message : 'Send Successfully'
-	// 				);
-	// 				this.setState({
-	// 					loading: false,
-	// 				});
-	// 				this.initializeData();
-	// 			}
-	// 		})
-	// 		.catch((err) => {
-	// 			this.props.commonActions.tostifyAlert(
-	// 				'error',
-	// 				err.data ? err.data.message : 'Send Unsuccessfully'
-	// 			);
-	// 		});
-	// };
-	// postQuotation = (id) => {
-	// 	this.props.quotationAction
-	// 		.postQUOTATION(id)
-	// 		.then((res) => {
-	// 			if (res.status === 200) {
-	// 				this.props.commonActions.tostifyAlert(
-	// 					'success',
-	// 					res.data ? res.data.message : 'Send Successfully'
-	// 				);
-	// 				this.setState({
-	// 					loading: false,
-	// 				});
-	// 				this.initializeData();
-	// 			}
-	// 		})
-	// 		.catch((err) => {
-	// 			this.props.commonActions.tostifyAlert(
-	// 				'error',
-	// 				err.data ? err.data.message : 'Send Unsuccessfully'
-	// 			);
-	// 		});
-	// };
 	onSizePerPageList = (sizePerPage) => {
 		if (this.options.sizePerPage !== sizePerPage) {
 			this.options.sizePerPage = sizePerPage;

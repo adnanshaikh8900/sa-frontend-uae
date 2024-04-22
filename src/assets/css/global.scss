@@ -398,6 +398,16 @@ th {
 
 .textarea {
 	resize: auto !important;
+	min-width: 100% !important;
+}
+.textarea:focus{
+	border-color: #2064d8 !important;
+	outline: 1px solid #2064d8 !important;
+}
+.card-body .textarea:focus {
+	border-color: #2064d8 !important;
+	outline: 1px solid #2064d8 !important;
+    box-shadow: none !important;
 }
 
 //responsive

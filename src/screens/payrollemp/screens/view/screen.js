@@ -793,13 +793,11 @@ class ViewEmployee extends React.Component {
 																		<td className="text-right"><h5>
 																			<Currency
 																				value={totalNetPayMontly}
-																				currrency={'AED'}
 																			/>
 																		</h5></td>
 																		<td className="text-right"><h5>
 																			<Currency
 																				value={totalNetPayYearly}
-																				currrency={'AED'}
 																			/>
 																		</h5></td>
 																	</tr>

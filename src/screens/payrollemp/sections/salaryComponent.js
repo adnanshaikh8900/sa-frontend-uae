@@ -105,7 +105,7 @@ class SalaryComponent extends React.Component {
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regDec1 = /^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
-        this.type = [
+        this.componentTypeOptions = [
             { label: 'Flat Amount', value: 1 },
             { label: '% of CTC', value: 2 }
         ];
@@ -216,14 +216,14 @@ class SalaryComponent extends React.Component {
             if (component.formula && component.formula.length > 0) {
                 var salaryAnnulay = yearlyCTC * (component.formula / 100);
                 var salaryMonthy = salaryAnnulay / 12;
-                salaryMonthy = parseFloat(parseFloat(salaryMonthy).toFixed(2))
+                salaryMonthy = parseFloat(salaryMonthy)
                 component.monthlyAmount = salaryMonthy;
                 component.yearlyAmount = salaryAnnulay;
             }
             else {
                 var salary = component.flatAmount;
                 var salaryMonthy = ctcType === "ANNUALLY" ? salary / 12 : salary;
-                salaryMonthy = parseFloat(parseFloat(salaryMonthy).toFixed(2))
+                salaryMonthy = parseFloat(salaryMonthy)
                 component.monthlyAmount = salaryMonthy;
                 component.yearlyAmount = ctcType === "ANNUALLY" ? salary : salaryMonthy * 12;
             }
@@ -492,11 +492,11 @@ class SalaryComponent extends React.Component {
                                 <div style={{ width: '130px' }}>
                                     <Select
                                         options={
-                                            this.type
+                                            this.componentTypeOptions
                                                 ? selectOptionsFactory.renderOptions(
                                                     'label',
                                                     'value',
-                                                    this.type,
+                                                    this.componentTypeOptions,
                                                     'Type',
                                                 )
                                                 : []
@@ -505,14 +505,14 @@ class SalaryComponent extends React.Component {
                                         name="type"
                                         placeholder={strings.Select + strings.Type}
                                         value={
-                                            this.type
+                                            this.componentTypeOptions
                                             && selectOptionsFactory.renderOptions(
                                                 'label',
                                                 'value',
-                                                this.type,
+                                                this.componentTypeOptions,
                                                 'Type',
-                                            ).find((option) => (item.formula == "" ?
-                                                option.value == 1 : option.value == 2))
+                                            ).find((option) => (item.formula || item.formula === null ?
+                                                option.value == 2 : option.value == 1))
                                         }
                                         onChange={(option) => {
                                             if (option.value == 1) {
@@ -547,7 +547,6 @@ class SalaryComponent extends React.Component {
                 </thead>
                 <tbody>
                     {data && Object.values(data).map((item, index) => {
-                        console.log(item)
                         return (
                             <tr>
                                 <td style={{ border: "3px solid #c8ced3", textAlign: 'left' }} >{this.renderComponentName(item, index, componentType)}</td>
@@ -614,14 +613,12 @@ class SalaryComponent extends React.Component {
                         <td style={{ border: "3px solid  #c8ced3" }}><b>
                             <Currency
                                 value={totalMonthly}
-                                currency={'AED'}
                             />
 
                         </b></td>
                         <td style={{ border: "3px solid  #c8ced3" }}><b>
                             <Currency
                                 value={totalYearly}
-                                currency={'AED'}
                             />
                         </b></td>
                     </tr>
@@ -809,13 +806,11 @@ class SalaryComponent extends React.Component {
                                                             <td style={{ border: "3px solid  #c8ced3" }}><b>
                                                                 <Currency
                                                                     value={totalMonthlyEarnings}
-                                                                    currency={'AED'}
                                                                 />
                                                             </b></td>
                                                             <td style={{ border: "3px solid  #c8ced3" }}><b>
                                                                 <Currency
                                                                     value={totalYearlyEarnings}
-                                                                    currency={'AED'}
                                                                 />
                                                             </b></td>
                                                         </tr>
@@ -842,13 +837,11 @@ class SalaryComponent extends React.Component {
                                                             <td style={{ border: "3px solid  #c8ced3" }}><b>
                                                                 <Currency
                                                                     value={totalNetPayMontly}
-                                                                    currency={'AED'}
                                                                 />
                                                             </b></td>
                                                             <td style={{ border: "3px solid  #c8ced3" }}><b>
                                                                 <Currency
                                                                     value={totalNetPayYearly}
-                                                                    currency={'AED'}
                                                                 />
                                                             </b></td>
                                                         </tr>
@@ -942,32 +935,36 @@ class SalaryComponent extends React.Component {
                         </Col>
                     </Row>
                 )}
-                <SalaryComponentFixed
-                    openSalaryComponentFixed={openSalaryComponentFixed}
-                    closeSalaryComponentFixed={() => {
-                        this.closeSalaryComponentFixed();
-                    }}
-                    getCurrentSalaryComponent={() => {
-                        this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownFixed().then(res => {
-                            if (res.status === 200) {
-                                this.getCurrentSalaryComponent(res.data[res.data.length - 1], "Fixed")
-                            }
-                        })
-                    }}
-                />
+                {openSalaryComponentFixed &&
+                    <SalaryComponentFixed
+                        openSalaryComponentFixed={openSalaryComponentFixed}
+                        closeSalaryComponentFixed={() => {
+                            this.closeSalaryComponentFixed();
+                        }}
+                        getCurrentSalaryComponent={() => {
+                            this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownFixed().then(res => {
+                                if (res.status === 200) {
+                                    this.getCurrentSalaryComponent(res.data[res.data.length - 1], "Fixed")
+                                }
+                            })
+                        }}
+                    />
+                }
 
-                <SalaryComponentDeduction
-                    openSalaryComponentDeduction={openSalaryComponentDeduction}
-                    closeSalaryComponentDeduction={() => {
-                        this.closeSalaryComponentDeduction();
-                    }}
-                    getCurrentSalaryComponent={() => {
-                        this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownDeduction().then(res => {
-                            if (res.status === 200)
-                                this.getCurrentSalaryComponent(res.data[res.data.length - 1], "Deduction")
-                        })
-                    }}
-                />
+                {openSalaryComponentDeduction &&
+                    <SalaryComponentDeduction
+                        openSalaryComponentDeduction={openSalaryComponentDeduction}
+                        closeSalaryComponentDeduction={() => {
+                            this.closeSalaryComponentDeduction();
+                        }}
+                        getCurrentSalaryComponent={() => {
+                            this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownDeduction().then(res => {
+                                if (res.status === 200)
+                                    this.getCurrentSalaryComponent(res.data[res.data.length - 1], "Deduction")
+                            })
+                        }}
+                    />
+                }
             </div>
         )
     }

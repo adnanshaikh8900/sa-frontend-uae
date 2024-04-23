@@ -7,6 +7,8 @@ import * as selectInvoiceFactory from './select_invoice_factory';
 import * as filterFactory from './filter_factory';
 import * as cryptoService from './crypto';
 import * as optionFactory from './option_factory';
+import * as ActionMessagesList from './action_messages';
+
 export {
   api,
   authApi,
@@ -16,5 +18,6 @@ export {
   cryptoService,
   selectCurrencyFactory,
   selectInvoiceFactory,
-  optionFactory
+  optionFactory,
+  ActionMessagesList,
 };

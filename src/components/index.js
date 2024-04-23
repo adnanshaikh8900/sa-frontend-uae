@@ -16,6 +16,7 @@ import ConfirmLeavePageModal from './confirm_leave_page'
 import LeavePage from './navigationPromtForLeavePage'
 import {CommonList} from './comman_list_data'
 import * as ProductTableCalculation from './product_table_calculatoin'
+import SentInvoice from './sent_document';
 
 export {
 	Loading,
@@ -36,4 +37,5 @@ export {
 	InvoiceTemplate,
 	CommonList,
 	ProductTableCalculation,
+	SentInvoice,
 };

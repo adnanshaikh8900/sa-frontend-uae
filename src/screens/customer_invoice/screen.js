@@ -18,7 +18,7 @@ import {
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
+import { Loader, ConfirmDeleteModal, SentInvoice } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -415,6 +415,37 @@ class CustomerInvoice extends React.Component {
 		return row.invoiceDate ? row.invoiceDate : '';
 	};
 
+	sendMail = (row, markAsSent, sendAgain) => {
+		console.log(row)
+		const { invoiceAmount, currencySymbol, vatAmount, id } = row;
+		this.setState({
+			dialog: (
+				<SentInvoice
+					invoiceAmount={invoiceAmount || 0}
+					id={id}
+					currencyName={currencySymbol || 'SAR'}
+					vatAmount={vatAmount || 0}
+					markAsSent={markAsSent}
+					postingRefType={"INVOICE"}
+					setState={(value) => {
+						this.setState({ sentInvoice: value, unSent: false, sendAgain: false })
+						this.removeDialog();
+					}}
+					initializeData={() => {
+						this.initializeData();
+					}}
+					documentTitle={strings.CustomerInvoice}
+					unSent={false}
+					sendAgain={sendAgain}
+					mailPopupCard={!markAsSent || sendAgain}
+					zatcaConfirmation={false}
+				/>
+			)
+		})
+
+
+	}
+
 	renderVatAmount = (cell, row, extraData) => {
 		// return row.vatAmount === 0 ? (
 		// 	<Currency
@@ -479,7 +510,7 @@ class CustomerInvoice extends React.Component {
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.stockInHandTestForProduct(row, false);
+									this.sendMail(row, false, false);
 								}}
 							>
 								<i className="fas fa-send" /> {strings.Send}
@@ -567,25 +598,6 @@ class CustomerInvoice extends React.Component {
 				</ButtonDropdown>
 			</div>
 		);
-	};
-	sendMail = (id) => {
-		this.props.customerInvoiceActions
-			.sendMail(id)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						res.data ? res.data.message : 'Invoice Posted Successfully.'
-					);
-					this.setState({ openEmailModal: false });
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data ? err.data.message : 'Invoice Posted Successfully.'
-				);
-			});
 	};
 
 	onRowSelect = (row, isSelected, e) => {
@@ -1289,16 +1301,7 @@ class CustomerInvoice extends React.Component {
 							</CardBody>
 						</Card>
 					</div>
-					{/* <PreviewInvoiceModal
-          openInvoicePreviewModal={this.state.openInvoicePreviewModal}
-          closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
-          getInvoiceById={this.props.customerInvoiceActions.getInvoiceById}
-          currency_list={this.props.currency_list}
-          id={this.state.selectedId}
-        /> */}
-
-
-					<CreateCreditNoteModal
+				<CreateCreditNoteModal
 						openModal={this.state.openModal}
 						closeModal={(e) => {
 							this.closeModal(e);
@@ -1322,24 +1325,10 @@ class CustomerInvoice extends React.Component {
 						totalAmount={this.state.totalAmount}
 						totalVatAmount={this.state.totalVatAmount}
 						totalExciseAmount={this.state.totalExciseAmount}
-					//  getRfqbyid={this.props.requestForQuotationDetailsAction.getRFQeById}
-					//	getState={this.props.requestForQuotationDetailsAction.renderActionForState}
-					//	getInvoice={this.props.purchaseOrderCreateAction.getPoNo()}
-					//	nextprefixData={this.state.nextprefixData}
-					//	getVat={this.props.purchaseOrderAction.getVatList()}
-					//	getProductList={this.props.purchaseOrderAction.getProductList()}
 					/>
-					<EmailModal
-						openEmailModal={this.state.openEmailModal}
-						closeEmailModal={(e) => {
-							this.closeEmailModal(e);
-						}}
-						sendEmail={(e) => {
-							this.sendMail(this.state.rowId);
-						}}
-						id={this.state.rowId}
-					/>
-				</div></div>
+					
+				</div>
+				</div>
 
 		);
 	}

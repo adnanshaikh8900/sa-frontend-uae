@@ -25,6 +25,8 @@ import FilterComponent from '../filterComponent';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import FilterComponent3 from '../filterComponent3';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -544,24 +546,28 @@ class TrailBalances extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
+	hideExportOptionsFunctionality = (val) => {
+		this.setState({ hideExportOptions: val });
+	}
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
+		const { loading, initValue, dropdownOpen, csvData, view, customPeriod} = this.state;
 		const { universal_currency_list, profile, company_profile } = this.props;
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
 					<Card>
 						<div>
-							<CardHeader>
-								<Row>
+						{!this.state.hideExportOptions && 
+							
+								<Row style={{ marginTop: '10px' }}>
 									<Col lg={12}>
 										<div
-											className="h4 mb-0 d-flex align-items-center"
-											style={{ justifyContent: 'space-between' }}
+											className="h4 mb-0 d-flex align-items-center pull-right"
+											style={{ justifyContent: 'space-between',marginRight:'10px'}}
 										>
-											<div>
+											{/* <div>
 												<p
 													className="mb-0"
 													style={{
@@ -574,10 +580,10 @@ class TrailBalances extends React.Component {
 													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 
 												</p>
-											</div>
+											</div> */}
 											<div className="d-flex">
 
-												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+												<Dropdown isOpen={dropdownOpen} toggle={this.toggle} style={{marginTop:'5px'}}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 
@@ -665,15 +671,41 @@ class TrailBalances extends React.Component {
 										</div>
 									</Col>
 								</Row>
+							}
+							<CardHeader>
+								<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+									viewFilter={this.viewFilter}
+									generateReport={(value) => {
+										this.generateReport(value);
+									}}
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+                                    if (customPeriod === 'asOn') {
+                                    const currentDate = moment();
+                                    this.setState(prevState => ({
+                                    initValue: {
+                                    ...prevState.initValue,
+                                    endDate: currentDate,            }
+                                     }));
+                                    this.generateReport({ endDate: currentDate });
+                                    }
+                                    this.setState({ customPeriod: 'asOn' });
+                                    }}
+								/>
 							</CardHeader>
-							<div className={`panel ${view ? 'view-panel' : ''}`}>
+
+							{/* <div className={`panel ${view ? 'view-panel' : ''}`}>
 								<FilterComponent
 									viewFilter={this.viewFilter}
 									generateReport={(value) => {
 										this.generateReport(value);
 									}}
 								/>{' '}
-							</div>
+							</div> */}
 							<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
@@ -713,7 +745,9 @@ class TrailBalances extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style={{ fontSize: '18px' }}>{strings.TrailBalances + " " + strings.Report}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.Ason}  {initValue.endDate.replaceAll("/", "-")}
+											{customPeriod === 'asOn' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
+											{/* {strings.From} {initValue.startDate.replaceAll("/", "-")} to {initValue.endDate.replaceAll("/", "-")} */}
 
 										</div>
 										<div>

@@ -34,6 +34,7 @@ import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { StringStream } from 'codemirror';
+import FilterComponent3 from '../filterComponent3';
 
 const mapStateToProps = (state) => {
 	return {
@@ -216,24 +217,27 @@ class HorizontalBalanceSheet extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
+	hideExportOptionsFunctionality = (val) => {
+		this.setState({ hideExportOptions: val });
+	}
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
+		const { loading, initValue, dropdownOpen, csvData, view, customPeriod } = this.state;
 		const { profile, universal_currency_list, company_profile } = this.props;
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
 					<Card>
 						<div>
-							<CardHeader>
-								<column>
+						{!this.state.hideExportOptions &&
+								<Row style={{ marginTop: '10px' }}>
 									<Col lg={12}>
 										<div
-											className="h4 mb-0 d-flex align-items-center"
-											style={{ justifyContent: 'space-between' }}
+											className="h4 mb-0 d-flex align-items-center pull-right"
+											style={{ justifyContent: 'space-between',marginRight: '10px' }}
 										>
-											<div>
+											{/* <div>
 												<p
 													className="mb-0"
 													style={{
@@ -245,10 +249,10 @@ class HorizontalBalanceSheet extends React.Component {
 												>
 													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
-											</div>
+											</div> */}
 											<div className="d-flex">
 
-												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+												<Dropdown isOpen={dropdownOpen} toggle={this.toggle} style={{marginTop:'10px'}}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 
@@ -331,16 +335,41 @@ class HorizontalBalanceSheet extends React.Component {
 											</div>
 										</div>
 									</Col>
-								</column>
-							</CardHeader>
-							<div className={`panel ${view ? 'view-panel' : ''}`}>
+								</Row>
+							}
+							<CardHeader>
+							<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+									viewFilter={this.viewFilter}
+									generateReport={(value) => {
+										this.generateReport(value);
+									}}
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+										if (customPeriod === 'asOn') {
+										const currentDate = moment();
+										this.setState(prevState => ({
+										initValue: {
+										...prevState.initValue,
+										endDate: currentDate,            }
+										 }));
+										this.generateReport({ endDate: currentDate });
+										}
+										this.setState({ customPeriod: 'asOn' });
+										}}
+								/>
+							</CardHeader>	
+							{/* <div className={`panel ${view ? 'view-panel' : ''}`}>
 								<FilterComponent
 									viewFilter={this.viewFilter}
 									generateReport={(value) => {
 										this.generateReport(value);
 									}}
 								/>{' '}
-							</div>
+							</div> */}
 							<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}

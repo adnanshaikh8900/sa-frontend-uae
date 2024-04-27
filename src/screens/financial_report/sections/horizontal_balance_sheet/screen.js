@@ -67,11 +67,13 @@ class HorizontalBalanceSheet extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: true,
+			customPeriod: 'asOn',
 			dropdownOpen: false,
+			hideExportOptions:false,
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				endDate: moment().format('DD/MM/YYYY'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: '',
 			},
@@ -128,6 +130,7 @@ class HorizontalBalanceSheet extends React.Component {
 		this.setState(
 			{
 				initValue: {
+					startDate: moment(value.startDate).format('DD/MM/YYYY'),
 					endDate: moment(value.endDate).format('DD/MM/YYYY'),
 				},
 				loading: true,
@@ -409,7 +412,9 @@ class HorizontalBalanceSheet extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style={{ fontSize: '18px' }}>{strings.HorizontalBalanceSheet}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.Ason}  {initValue.endDate.replaceAll("/", "-")}
+											{customPeriod === 'asOn' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
+											{/* {strings.From} {initValue.startDate.replaceAll("/", "-")} to {initValue.endDate.replaceAll("/", "-")} */}
 
 										</div>
 										<div>

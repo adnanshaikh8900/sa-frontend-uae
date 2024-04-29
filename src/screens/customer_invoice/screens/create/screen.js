@@ -859,7 +859,7 @@ class CreateCustomerInvoice extends React.Component {
 								this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.contactId), true);
 								this.formRef.current.setFieldValue('term', term, true);
 								this.formRef.current.setFieldValue('exchangeRate', res.data.exchangeRate, true);
-								// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+								this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 								// this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
 								// this.setDate(undefined, '');
 								const val = term ? term.value.split('_') : '';

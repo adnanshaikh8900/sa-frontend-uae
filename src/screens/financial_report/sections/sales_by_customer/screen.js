@@ -88,7 +88,28 @@ class SalesByCustomer extends React.Component {
 	componentDidMount = () => {
 		this.props.financialReportActions.getCompany()
 		this.initializeData();
+		this.getColumnConfigs();
 	};
+
+	getColumnConfigs = () => {
+		const postData = {
+			id:1
+		};
+		this.props.financialReportActions
+			.getColumnConfigs(postData)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						data: res.data,
+						loading: false,
+					});
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
+	};
+
 
 	initializeData = () => {
 		const { initValue } = this.state;

@@ -81,7 +81,11 @@ class RecordSupplierPayment extends React.Component {
 			current_customer_id: null,
 			initValue: {
 				paymentNo: 1,
-				paymentDate: new Date(),
+				paymentDate: new Date(
+                    this.props.location.state.id.invoiceDate.substring(6), 
+                    this.props.location.state.id.invoiceDate.substring(3, 5) - 1,  
+                    this.props.location.state.id.invoiceDate.substring(0, 2)  
+                  ),
 				contactId: this.props.location.state.id.contactId,
 				amount: this.props.location.state.id.dueAmount,
 				payMode: { label: 'CASH', value: 'CASH' },
@@ -609,8 +613,8 @@ class RecordSupplierPayment extends React.Component {
 																					showYearDropdown
 																					dateFormat="dd-MM-yyyy"
 																					dropdownMode="select"
-																					minDate={new Date(this.props.location.state.id.invoiceDate.substring(3, 5) + " " + this.props.location.state.id.invoiceDate.substring(0, 2) + " " + this.props.location.state.id.invoiceDate.substring(6))}
-																					maxDate={new Date()}
+																					minDate={new Date(props.values.paymentDate)}
+                                                                                    maxDate={null}
 																					value={props.values.paymentDate}
 																					selected={props.values.paymentDate}
 																					onChange={(value) => {

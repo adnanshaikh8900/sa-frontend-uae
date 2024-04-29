@@ -411,3 +411,21 @@ export const getBalanceReport = (postData) => {
 				});
 		};
 	};
+
+	export const getColumnConfigs = (postData) => {
+		const { startDate, endDate} = postData
+		let url = `/rest/reportsconfiguration/getById?id=${postData.id}`
+		return (dispatch) => {
+		  let data = {
+			method: 'get',
+			url
+		  }
+		  return authApi(data).then((res) => {
+			if (res.status === 200) {
+			  return res
+			}
+		  }).catch((err) => {
+			throw err
+		  })
+		}
+	  }

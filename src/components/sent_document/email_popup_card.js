@@ -219,10 +219,10 @@ class EmailPopUpModal extends React.Component {
                         validate={(values) => {
                             let errors = {};
                             const { currentEntityEmailDetails } = this.props
-                            if (!currentEntityEmailDetails.billingEmail)
-                                errors.mailTo = strings.ValidEmailAddressIsRequired;
-                            else if (this.toEmailError > 0)
+                            if (this.toEmailError > 0)
                                 errors.mailTo = strings.InValidEmailAddress;
+                            else if (!currentEntityEmailDetails.billingEmail)
+                                errors.mailTo = strings.ValidEmailAddressIsRequired;
                             if (this.CCEmailError > 0)
                                 errors.cc_emails = strings.InValidEmailAddress;
                             if (this.BCCEmailError > 0)
@@ -414,18 +414,19 @@ class EmailPopUpModal extends React.Component {
                                                             <Label htmlFor="subject">Subject</Label>
                                                         </Col>
                                                         <Col sm="9">
-                                                            <Input
-                                                                type="text"
-                                                                maxLength="255"
-                                                                id="subject"
+                                                            <TextField
+                                                                type="textarea"
+                                                                className="textarea"
+                                                                inputProps={{ maxLength: 255 }}
+                                                                multiline
                                                                 name="subject"
-                                                                placeholder="Enter the Subject"
-                                                                value={currentEntityEmailDetails.subject
-                                                                    && currentEntityEmailDetails.subject}
-                                                                onChange={(e) => {
+                                                                id="subject"
+                                                                maxRows="4"
+                                                                placeholder={'Enter the Subject'}
+                                                                onChange={(e) =>
                                                                     this.updateState(e, props, "subject", e.target.value)
-
-                                                                }}
+                                                                }
+                                                                value={currentEntityEmailDetails.subject && currentEntityEmailDetails.subject}
                                                             />
                                                         </Col>
                                                         <Col></Col>

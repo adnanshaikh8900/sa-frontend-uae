@@ -429,3 +429,22 @@ export const getBalanceReport = (postData) => {
 		  })
 		}
 	  }
+
+	  
+	export const updateColumnConfigs = (postData) => {
+		let url = `/rest/reportsconfiguration/update`
+		return (dispatch) => {
+		  let data = {
+			method: 'post',
+			url,
+			data: postData
+		  }
+		  return authApi(data).then((res) => {
+			if (res.status === 200) {
+			  return res
+			}
+		  }).catch((err) => {
+			throw err
+		  })
+		}
+	  }

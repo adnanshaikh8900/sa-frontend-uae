@@ -17,7 +17,7 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal ,SentInvoice} from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -145,6 +145,36 @@ class CreditNotes extends React.Component {
 			});
 	};
 
+	sendMail = (row, markAsSent, sendAgain) => {
+		const { invoiceAmount, currencyName,isCNWithoutProduct, totalVatAmount, id } = row;
+		this.setState({
+			dialog: (
+				<SentInvoice
+					invoiceAmount={invoiceAmount || 0}
+					id={id}
+					currencyName={currencyName || 'SAR'}
+					vatAmount={totalVatAmount || 0}
+					markAsSent={markAsSent}
+					postingRefType={"CREDIT_NOTE"}
+					setState={(value) => {
+						this.setState({ sentInvoice: value, unSent: false, sendAgain: false })
+						this.removeDialog();
+					}}
+					initializeData={() => {
+						this.initializeData();
+					}}
+					documentTitle={strings.CreditNote}
+					unSent={false}
+					sendAgain={sendAgain}
+					mailPopupCard={!markAsSent || sendAgain}
+					zatcaConfirmation={true}
+					isCNWithoutProduct={isCNWithoutProduct}
+				/>
+			)
+		})
+
+
+	}
 	initializeData = (search) => {
 		let { filterData } = this.state;
 		const paginationData = {
@@ -425,7 +455,7 @@ class CreditNotes extends React.Component {
 						{row.statusEnum == 'Draft' && (
 							<DropdownItem
 								onClick={() => {
-									this.creditNoteposting(row, true);
+									this.sendMail(row, true, false);
 								}}
 							>
 								<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
@@ -434,7 +464,7 @@ class CreditNotes extends React.Component {
 						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.creditNoteposting(row);
+									this.sendMail(row, false, false);
 								}}
 							>
 								<i className="fas fa-send" />  {strings.Send}
@@ -490,26 +520,6 @@ class CreditNotes extends React.Component {
 				</ButtonDropdown>
 			</div>
 		);
-	};
-
-	sendMail = (id) => {
-		this.props.customerInvoiceActions
-			.sendMail(id)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						res.data ? res.data.message : 'Email Send Successfully',
-					);
-					this.setState({ openEmailModal: false });
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data ? err.data.message : 'Email Send Unsuccessfully',
-				);
-			});
 	};
 
 	onRowSelect = (row, isSelected, e) => {
@@ -1220,24 +1230,6 @@ class CreditNotes extends React.Component {
 								</CardBody>
 							</Card>
 						</div>
-						{/* <PreviewInvoiceModal
-          openInvoicePreviewModal={this.state.openInvoicePreviewModal}
-          closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
-          getInvoiceById={this.props.customerInvoiceActions.getInvoiceById}
-          currency_list={this.props.currency_list}
-          id={this.state.selectedId}
-        /> */}
-						<EmailModal
-							openEmailModal={this.state.openEmailModal}
-							closeEmailModal={(e) => {
-								this.closeEmailModal(e);
-							}}
-							sendEmail={(e) => {
-								this.sendMail(this.state.rowId);
-							}}
-							id={this.state.rowId}
-						/>
-
 					</div>
 				</div>
 		);

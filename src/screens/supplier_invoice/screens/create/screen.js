@@ -641,6 +641,8 @@ class CreateSupplierInvoice extends React.Component {
 								this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.contactId), true);
 								this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.contactId), true);
 								this.formRef.current.setFieldValue('term', term, true);
+								this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+								this.formRef.current.setFieldValue('notes', res.data.notes, true);
 								const val = term ? term?.value.split('_') : '';
 								const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 								const values = new Date();

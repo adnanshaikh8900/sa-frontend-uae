@@ -195,7 +195,7 @@ class FilterComponent3 extends Component {
                     <Form>
                         <Row>
                             <Col lg={3}>
-                                <div className={`align-items-center pull left ${selectedPeriod !== 'customRange' && selectedPeriod !== 'asOn' ? 'myReportingCss' : ''}`}>
+                                <div className={`align-items-center pull left ${selectedPeriod !== 'customRange' && selectedPeriod !== 'asOn'}`}>
                                 <FormGroup>
                                 <Label htmlFor="reportingPeriod" style={{ color: 'black',fontWeight: '600'}}>{strings.ReportingPeriod}</Label>
                                     <Select

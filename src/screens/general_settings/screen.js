@@ -13,11 +13,12 @@ import {
 	Label,
 	Row,
 	Button,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { LeavePage, Loader } from 'components';
-import { CommonActions,AuthActions } from 'services/global';
+import { CommonActions, AuthActions } from 'services/global';
 import './style.scss';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import * as GeneralSettingActions from './actions';
@@ -32,7 +33,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		generalSettingActions: bindActionCreators(GeneralSettingActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
-		authActions:bindActionCreators(AuthActions, dispatch),
+		authActions: bindActionCreators(AuthActions, dispatch),
 	};
 };
 
@@ -52,11 +53,13 @@ class GeneralSettings extends React.Component {
 				mailingPassword: '',
 				mailingAPIKey: '',
 				mailingPort: '',
+				fromEmailAddress: '',
 				mailingUserName: '',
 			},
 			loading: true,
-			disableLeavePage:false,
+			disableLeavePage: false,
 			message: '',
+			emailUsed: '',
 			contentState: {},
 			selected_smtp_auth: false,
 			selected_smtp_enable: false,
@@ -64,6 +67,7 @@ class GeneralSettings extends React.Component {
 		};
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.content = {};
+		this.formRef = React.createRef();
 	}
 
 	// onEditorStateChange = (editorState) => {
@@ -78,8 +82,9 @@ class GeneralSettings extends React.Component {
 		this.props.authActions
 			.checkAuthStatus().then((res) => {
 				if (res.status === 200) {
-					this.setState({userId:res.data.userId});
-				}})
+					this.setState({ userId: res.data.userId });
+				}
+			})
 			.catch((err) => {
 				this.setState({
 					loading: false,
@@ -88,13 +93,13 @@ class GeneralSettings extends React.Component {
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
-				this.props.history.push(config.DASHBOARD?config.BASE_ROUTE:config.SECONDARY_BASE_ROUTE);
+				this.props.history.push(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
 			});
 	}
-			
-		
+
+
 	testMail = () => {
-		this.props.generalSettingActions.getTestUserMailById(this.state.userId ? this.state.userId:1).then((res) => {
+		this.props.generalSettingActions.getTestUserMailById(this.state.userId ? this.state.userId : 1).then((res) => {
 			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert(
 					'success',
@@ -102,7 +107,7 @@ class GeneralSettings extends React.Component {
 				);
 			}
 		})
-	
+
 	}
 	initializeData = () => {
 		this.props.generalSettingActions
@@ -120,6 +125,7 @@ class GeneralSettings extends React.Component {
 								invoicingReferencePattern: res.data.invoicingReferencePattern
 									? res.data.invoicingReferencePattern
 									: '',
+								fromEmailAddress: res.data.fromEmailAddress ?? '',
 								mailingHost: res.data.mailingHost ? res.data.mailingHost : '',
 								mailingPort: res.data.mailingPort ? res.data.mailingPort : '',
 								mailingUserName: res.data.mailingUserName
@@ -141,8 +147,12 @@ class GeneralSettings extends React.Component {
 							selected_smtp_enable: res.data.mailingSmtpStarttlsEnable
 								? res.data.mailingSmtpStarttlsEnable
 								: '',
+							emailUsed: res.data.loggedInUserEmailFlag ? 'loginUser' :
+								!res.data.fromEmailAddress || res.data.fromEmailAddress === "" ? 'defaultEmail' :
+									res.data.fromEmailAddress ? 'anotherEmail' : '',
 						},
 						() => {
+							this.formRef.current.setFieldValue('fromEmailAddress', res.data.fromEmailAddress ?? '');
 							this.content = {
 								entityMap: {},
 								blocks: [
@@ -172,13 +182,14 @@ class GeneralSettings extends React.Component {
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
-				this.props.history.push(config.DASHBOARD?config.BASE_ROUTE:config.SECONDARY_BASE_ROUTE);
+				this.props.history.push(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
 			});
 	};
 
 	handleSubmit = (data) => {
-		this.setState({ loading:true, disableLeavePage:true});
-		const { selected_smtp_auth, selected_smtp_enable, message } = this.state;
+		this.setState({ loading: true, disableLeavePage: true });
+		const { selected_smtp_auth, selected_smtp_enable, message, emailUsed } = this.state;
+		const setLoggedInUserEmail = emailUsed === 'DefaultEmailId' ? false : emailUsed === 'anotherEmail' ? false : emailUsed === 'loginUser' ? true : false;
 		const postData = {
 			id: data.id,
 			invoiceMailingBody: message,
@@ -191,6 +202,8 @@ class GeneralSettings extends React.Component {
 			mailingAPIKey: data.mailingAPIKey,
 			mailingSmtpStarttlsEnable: selected_smtp_enable,
 			mailingUserName: data.mailingUserName,
+			setLoggedInUserEmail: setLoggedInUserEmail,
+			fromEmailAddress: data.fromEmailAddress ? data.fromEmailAddress : null,
 		};
 		this.props.generalSettingActions
 			.updateGeneralSettings(postData)
@@ -200,7 +213,7 @@ class GeneralSettings extends React.Component {
 						'success',
 						'General Setting Updated Successfully',
 					);
-					this.props.history.push(config.DASHBOARD?config.BASE_ROUTE:config.SECONDARY_BASE_ROUTE);
+					this.props.history.push(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
 				}
 			})
 			.catch((err) => {
@@ -226,7 +239,7 @@ class GeneralSettings extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, loading } = this.state;
+		const { initValue, loading ,emailUsed} = this.state;
 
 		return (
 			<div className="general-settings-screen">
@@ -236,7 +249,7 @@ class GeneralSettings extends React.Component {
 							<Card>
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
-									<i className="fas fa-envelope"></i>
+										<i className="fas fa-envelope"></i>
 										<span className="ml-2"> {strings.GeneralSettings}</span>
 									</div>
 								</CardHeader>
@@ -251,22 +264,17 @@ class GeneralSettings extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values, resetForm);
 													}}
+													ref={this.formRef}
+													validate={(values) => {
+														let errors = {};
+														if (emailUsed === 'anotherEmail' && !values.fromEmailAddress) {
+															errors.fromEmailAddress = strings.EmailIsRequired;
+														}
+														return errors
+													}}
 													validationSchema={Yup.object().shape({
-														// invoicingReferencePattern: Yup.string().required(
-														// 	'Invoice reference number is required',
-														// ),
-														// mailingHost: Yup.string().required(
-														// 	'Mailing host is required',
-														// ),
-														// mailingPort: Yup.string().required(
-														// 	'Mailing port is required',
-														// ),
-														// mailingUserName: Yup.string().required(
-														// 	'Mailing username is required',
-														// ),
-														// mailingPassword: Yup.string().required(
-														// 	'Mailing password is required',
-														// ),
+														fromEmailAddress: Yup.string()
+															.email(strings.InvalidEmail),
 													})}
 												>
 													{(props) => (
@@ -621,187 +629,157 @@ class GeneralSettings extends React.Component {
 																	</Col>
 																)}
 															</Row>
-															{/* <h4>Invoice Mail Configuration</h4>
-															{this.state.viewEditor && (
-																<Row>
-																	<Col sm="8">
-																		<FormGroup>
-																			<Label htmlFor="invoiceMailingSubject">
-																				Subject
-																			</Label>
-																			<Input
-																				type="text"
-																				id="invoiceMailingSubject"
-																				name="invoiceMailingSubject"
-																				placeholder="Enter the Subject"
-																				value={
-																					props.values.invoiceMailingSubject
-																				}
-																				onChange={(value) => {
-																					props.handleChange(
-																						'invoiceMailingSubject',
-																					)(value);
-																				}}
-																			/>
-																		</FormGroup>
-																		<FormGroup>
-																			<Label htmlFor="text-input">
-																				Message
-																			</Label>
-																			<Editor
-																				initialContentState={this.content}
-																				editorContent={contentState}
-																				toolbarClassName="editor-toolbar"
-																				wrapperClassName="wrapperClassName"
-																				editorClassName="massage-editor"
-																				// onEditorStateChange={this.onEditorStateChange}
-																				onContentStateChange={
-																					this.onContentStateChange
-																				}
-																			/>
-																		</FormGroup>
-																	</Col>
-																	<Col sm="4">
-																		<FormGroup>
-																			<Label htmlFor="text-input">
-																				Description
-																			</Label>
-																			<Table responsive bordered>
-																				<thead>
-																					<th>Value</th>
-																					<th>Description</th>
-																				</thead>
-																				<tbody>
-																				<tr>
-																						<td>{'{companyName}'}</td>
-																						<td>Company Name</td>
-																					</tr>
-																					<tr>
-																						<td>
-																							{'{invoicingReferencePattern}'}
-																						</td>
-																						<td>Invoice Reference Number</td>
-																					</tr>
-																					<tr>
-																						<td>{'{invoiceDate}'}</td>
-																						<td>Invoice Date</td>
-																					</tr>
-																					<tr>
-																						<td>{'{invoiceDueDate}'}</td>
-																						<td>Invoice Due Date</td>
-																					</tr>
-																					<tr>
-																						<td>{'{invoiceAmount}'}</td>
-																						<td>Invoice Amount</td>
-																					</tr>
-																					<tr>
-																						<td>{'{dueAmount}'}</td>
-																						<td>Due Amount</td>
-																					</tr>
-																					<tr>
-																						<td>{'{invoiceDuePeriod}'}</td>
-																						<td>Invoice Due Period</td>
-																					</tr>
-																					<tr>
-																						<td>{'{invoiceAmount}'}</td>
-																						<td>Invoice Amount</td>
-																					</tr>
-																					<tr>
-																						<td>{'{contactName}'}</td>
-																						<td>Contact Name</td>
-																					</tr>
-																					<tr>
-																						<td>{'{mobileNumber}'}</td>
-																						<td>Mobile Number</td>
-																					</tr>
-																					<tr>
-																						<td>{'{contactAddress}'}</td>
-																						<td>Contact Address</td>
-																					</tr>
-																					<tr>
-																						<td>{'{contactCountry}'}</td>
-																						<td>Contact Country</td>
-																					</tr>
-																					<tr>
-																						<td>{'{contactState}'}</td>
-																						<td>Contact State</td>
-																					</tr>
-																					<tr>	
-																						<td>{'{contactCity}'}</td>
-																						<td>Contact City</td>
-																					</tr>
-																					<tr>
-																						<td>{'{invoiceDiscount}'}</td>
-																						<td>Invoice Discount</td>
-																					</tr>
-																					<tr>
-																						<td>{'{contractPoNumber}'}</td>
-																						<td>contract Po Number</td>
-																					</tr>
-																					<tr>
-																						<td>{'{subTotal}'}</td>
-																						<td>Sub Total</td>
-																					</tr>
-																					<tr>
-																						<td>{'{invoiceVatAmount}'}</td>
-																						<td>Invoice VAT Amount</td>
-																					</tr>
-																					<tr>
-																						<td>{'{product}'}</td>
-																						<td>Product</td>
-																					</tr>
-																					<tr>
-																						<td>{'{description}'}</td>
-																						<td>Description</td>
-																					</tr>
-																					<tr>
-																						<td>{'{quantity}'}</td>
-																						<td>Quantity</td>
-																					</tr>
-																					<tr>
-																						<td>{'{unitprice}'}</td>
-																						<td>Unit Price</td>
-																					</tr>
-																					<tr>
-																						<td>{'{vat}'}</td>
-																						<td>Vat Amount</td>
-																					</tr>
-																					<tr>
-																						<td>{'{total}'}</td>
-																						<td>Total</td>
-																					</tr>
-																					<tr>
-																						<td>{'{projectName}'}</td>
-																						<td>Project Name</td>
-																					</tr>
-																					<tr>
-																						<td>{'{senderName}'}</td>
-																						<td>Sender Name</td>
-																					</tr>
-																				
-																				</tbody>
-																			</Table>
-																		</FormGroup>
-																	</Col>
-																</Row>
-															)} */}
 
 															<Row>
-													
+																<Col sm="6">
+																	<FormGroup>
+																		<Label htmlFor="emailUsed">
+																			{strings.SenderEmail}
+																		</Label>
+																		<div>
+																			<FormGroup check inline>
+																				<div className="custom-radio custom-control">
+																					<input
+																						className="custom-control-input"
+																						type="radio"
+																						id="emailUsed-radio1"
+																						name="emailUsed"
+																						checked={emailUsed === 'loginUser'}
+																						value={true}
+																						onChange={(e) => {
+																							if (e.target.value) {
+																								this.setState({
+																									emailUsed: 'loginUser',
+																								});
+																								props.handleChange('fromEmailAddress')('',);
+																							}
+																						}}
+																					/>
+																					<label
+																						className="custom-control-label"
+																						htmlFor="emailUsed-radio1"
+																					>
+																						{strings.loginUserEmailId}
+																					</label>
+																				</div>
+																			</FormGroup>
+																			<FormGroup check inline>
+																				<div className="custom-radio custom-control">
+																					<input
+																						className="custom-control-input"
+																						type="radio"
+																						id="emailUsed-radio2"
+																						name="emailUsed"
+																						value={false}
+																						checked={emailUsed === 'anotherEmail'}
+																						onChange={(e) => {
+																							if (e.target.value) {
+																								this.setState({
+																									emailUsed: 'anotherEmail',
+																								});
+																							}
+																						}}
+																					/>
+																					<label
+																						className="custom-control-label"
+																						htmlFor="emailUsed-radio2"
+																					>
+																						{strings.AnotherEmailId}
+																					</label>
+																				</div>
+																			</FormGroup>
+																			<FormGroup check inline>
+																				<div className="custom-radio custom-control">
+																					<input
+																						className="custom-control-input"
+																						type="radio"
+																						id="emailUsed-radio3"
+																						name="emailUsed"
+																						value={false}
+																						checked={emailUsed === 'defaultEmail'}
+																						onChange={(e) => {
+																							if (e.target.value) {
+																								this.setState({
+																									emailUsed: 'defaultEmail',
+																								});
+																								props.handleChange('fromEmailAddress')('',);
+																							}
+																						}}
+																					/>
+																					<label
+																						className="custom-control-label"
+																						htmlFor="emailUsed-radio3"
+																					>
+																						{strings.DefaultEmailId}
+																						<i
+																							id="emailUsed-radio3-tooltip"
+																							className="fa fa-question-circle ml-1"
+																						></i>
+																						<UncontrolledTooltip
+																							placement="right"
+																							target="emailUsed-radio3-tooltip"
+																						>
+																							{strings.CompanyRegistrationEmailAddress}
+																						</UncontrolledTooltip>
+																					</label>
+																				</div>
+																			</FormGroup>
+																		</div>
+																	</FormGroup>
+																</Col>
+																<Col sm="6"></Col>
+																{emailUsed === 'anotherEmail' && (
+																	<Col sm="6">
+																		<FormGroup>
+																			<Label htmlFor="mailingPassword">
+																				<span className="text-danger ">* </span>{strings.EmailID}
+																			</Label>
+																			<Input
+																				type="email"
+																				maxLength="80"
+																				id="fromEmailAddress"
+																				name="fromEmailAddress"
+																				placeholder={strings.Enter + strings.EmailID}
+																				value={props.values.fromEmailAddress}
+																				onChange={(option) => {
+																					props.handleChange('fromEmailAddress')(
+																						option,
+																					);
+																				}}
+																				className={
+																					props.errors.fromEmailAddress &&
+																						props.touched.fromEmailAddress
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.fromEmailAddress &&
+																				props.touched.fromEmailAddress && (
+																					<div className="invalid-feedback">
+																						{props.errors.fromEmailAddress}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																)}
+
+															</Row>
+															<Row>
+
 																<Col lg={12} className="mt-5">
-															
+
 																	<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square pull-left  mt-5"
 																		onClick={() => {
-																		this.testMail();
+																			this.testMail();
 																		}}
 																	>
-																	<i class="fas fa-envelope"></i> {strings.TestMail}
+																		<i class="fas fa-envelope"></i> {strings.TestMail}
 																	</Button>
 
-															
+
 																	<FormGroup className="text-right mt-5 ">
 																		<Button
 																			type="button"
@@ -811,7 +789,7 @@ class GeneralSettings extends React.Component {
 																			onClick={() => {
 																				this.handleSubmit(props.values)
 																				this.props.history.push(
-																					config.DASHBOARD ?'/admin/dashboard':'/admin/income/customer-invoice'
+																					config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice'
 																				);
 																			}}
 
@@ -825,10 +803,10 @@ class GeneralSettings extends React.Component {
 																			className="btn-square"
 																			onClick={() => {
 																				this.props.history.push(
-																					config.DASHBOARD ?'/admin/dashboard':'/admin/income/customer-invoice'
+																					config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice'
 																				);
 																			}}
-																		
+
 																		>
 																			<i className="fa fa-ban"></i>  {strings.Cancel}
 																		</Button>
@@ -846,7 +824,7 @@ class GeneralSettings extends React.Component {
 						</Col>
 					</Row>
 				</div>
-			{this.state.disableLeavePage ?"":<LeavePage/>}
+				{this.state.disableLeavePage ? "" : <LeavePage />}
 			</div>
 		);
 	}

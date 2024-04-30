@@ -9,3 +9,13 @@
   .react-datepicker-wrapper{
     width: 100%;
   }
+
+  
+.payroll-List .react-bs-table.react-bs-table-bordered thead th:first-child input{
+  position: absolute;
+  margin-top: -51px;
+  border: none;
+}
+.payroll-List .react-bs-table.react-bs-table-bordered thead th:first-child{
+  border: none;
+}

@@ -855,6 +855,11 @@ const en = {
 
       //general settings
       TestMail: "Test Mail",
+      SenderEmail: "Sender Email",
+      loginUserEmailId: "Login User Email ID",
+      AnotherEmailId: 'Another Email ID',
+      DefaultEmailId: 'Default Email ID',
+      InvalidEmail: 'Invalid Email',
 
       //Mail Theams
       Theme1: "Theme1",
@@ -1286,7 +1291,10 @@ const en = {
       //Payroll Settings
       PayrollSettings: 'Payroll Settings',
       SifPayroll: 'Would you like to generate a Salary Information File (SIF) for the payroll?',
+      APaySlipWillBeMailedToTheSelectedEmployees: "A pay slip will be mailed to the selected employees.",
+      SendPayslip: "Send Payslip",
 
+      
       //Line Item
       //ProductIsRequired: "Product is Required",
       Product_Is_Required:" Product is required",

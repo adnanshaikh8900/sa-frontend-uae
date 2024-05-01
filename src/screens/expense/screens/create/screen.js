@@ -300,8 +300,8 @@ class CreateExpense extends React.Component {
 								vat.value = "10";
 							}
 							this.formRef.current.setFieldValue('vatCategoryId', vat, true);
-							// this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
-							// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+							this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
+							this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 							// this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
 							// this.formRef.current.setFieldValue('notes',  res.data.notes, true);
 

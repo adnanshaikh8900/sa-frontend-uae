@@ -646,7 +646,7 @@ class CreateQuotation extends React.Component {
 								this.formRef.current.setFieldValue('customerId', customer, true);
 								this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 								this.formRef.current.setFieldValue('exchangeRate', res.data.exchangeRate ? res.data.exchangeRate : 1, true);
-								// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+								this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 								// this.formRef.current.setFieldValue('attachmentDescription',  res.data.attachmentDescription, true);
 								const { data } = this.state;
 								const idCount =

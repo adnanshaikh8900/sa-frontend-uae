@@ -220,6 +220,24 @@ class BankTransactions extends React.Component {
         this.props.location.state.bankAccountId =
           localStorage.getItem("bankId");
       }
+      this.props.commonActions.getCompanyDetails().then((res) => {
+        if (res.status === 200) {
+          const isRegisteredVat = res.data.isRegisteredVat;
+
+          this.props.history.replace({
+            pathname: this.props.location.pathname,
+            state: {
+              ...this.props.location.state,
+              isRegisteredVat: isRegisteredVat,
+            },
+          });
+
+          this.setState({
+            companyDetails: res.data,
+            isRegisteredVat: isRegisteredVat,
+          });
+        }
+      });
       this.props.transactionsActions.getTransactionTypeList();
       this.initializeData();
     }
@@ -1076,6 +1094,7 @@ class BankTransactions extends React.Component {
                                   ? this.props.location.state.bankAccountId
                                   : "",
                               currency: this.props.location.state.currency,
+                              isRegisteredVat: this.props.location.state.isRegisteredVat
                             }
                           )
                         }

@@ -1202,7 +1202,7 @@ class CreateDebitNote extends React.Component {
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
-														{!lockInvoiceDetail && <><Row>
+														{<><Row>
 															{this.state.invoiceSelected && <Col lg={12}>
 																<Checkbox
 																	checked={this.state.isDNWIWithoutProduct}

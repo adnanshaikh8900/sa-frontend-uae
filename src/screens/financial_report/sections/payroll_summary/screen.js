@@ -30,7 +30,8 @@ import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColumnMenu } from '@mui/x-data-grid';
+import FilterComponent3 from '../filterComponent3';
  
 const mapStateToProps = (state) => {
     return {
@@ -57,10 +58,12 @@ class PayrollSummaryReport extends React.Component {
             language: window['localStorage'].getItem('language'),
             loading: false,
             dropdownOpen: false,
+            customPeriod: 'asOn',
+            hideExportOptions:false,
             view: false,
             initValue: {
                 startDate: moment().startOf('month').format('DD/MM/YYYY'),
-                endDate: moment().endOf('month').format('DD/MM/YYYY'),
+                endDate: moment().format('DD/MM/YYYY'),
            
             },
             showTable:true,
@@ -68,11 +71,29 @@ class PayrollSummaryReport extends React.Component {
             activePage: 1,
             sizePerPage: 10,
             totalCount: 0,
+            columnConfigs: {
+                id: false,
+                "payrollDate": false,
+                "payrollSubject":  true,
+                "payPeriod":  true,
+                "employeeCount":  true,
+                "generatedBy":  true,
+                "approvedBy":  true,
+                "status":  true,
+                "runDate":  true,
+                "comment":  false,
+                "isActive": true,
+                "payrollApprover":  true,
+                "generatedByName":  true,
+                "payrollApproverName":  true,
+                "totalAmount":  true,
+                "dueAmount":  false
+              },
             sort: {
                 column: null,
                 direction: 'desc',
             },
-        data1:{payrollSummaryModelList:[
+        data:{payrollSummaryModelList:[
             {
                 id: 1,
                 "payrollDate": "2024-03-16T17:38",
@@ -142,7 +163,7 @@ class PayrollSummaryReport extends React.Component {
                     endDate: moment(value.endDate).format('DD/MM/YYYY'),
                 },
                 loading: true,
-                view: !this.state.view,
+                // view: !this.state.view,
             },
             () => {
                 this.initializeData();
@@ -153,11 +174,11 @@ class PayrollSummaryReport extends React.Component {
     componentDidMount = () => {
         this.props.financialReportActions.getCompany()
         this.initializeData();
-		this.getColumnConfigs();
+        this.getColumnConfigs();
    
-      
+       
     };
-	getColumnConfigs = () => {
+    getColumnConfigs = () => {
 		const postData = {
 			id:1
 		};
@@ -166,7 +187,7 @@ class PayrollSummaryReport extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({
-						data: res.data,
+						columnConfigs: res.data,
 						loading: false,
 					});
 				}
@@ -176,6 +197,28 @@ class PayrollSummaryReport extends React.Component {
 			});
 	};
  
+    updateColumnConfigs = (json) => {
+		const postData = {
+			id:1,
+            reportName:"PayrollSummaryReport",
+            columnNames:json
+		};
+		this.props.financialReportActions
+			.updateColumnConfigs(postData)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						columnConfigs: res.data,
+						loading: false,
+					});
+
+                    this.getColumnConfigs()
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
+	};
     initializeData = () => {
         const { initValue } = this.state;
         const postData = {
@@ -199,9 +242,14 @@ class PayrollSummaryReport extends React.Component {
             this.props.financialReportActions
             .getPayrollSummaryReport(postData)
             .then((res) => {
+                let data= res.data
+                data.payrollSummaryModelList=data.payrollSummaryModelList.map((row,i)=>{
+                    row.id=i+1;
+                    return row
+                })
                 if (res.status === 200) {
                     this.setState({
-                        data: res.data,
+                        data: data,
                         loading: false,
                     });
                 }
@@ -319,7 +367,7 @@ class PayrollSummaryReport extends React.Component {
     };
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dropdownOpen, csvData, view } = this.state;
+        const { loading, initValue, dropdownOpen, csvData, view ,columnConfigs,customPeriod} = this.state;
         const { profile, universal_currency_list,company_profile,payable_invoice } = this.props;
        
         return (
@@ -331,10 +379,10 @@ class PayrollSummaryReport extends React.Component {
                                 <Row>
                                     <Col lg={12}>
                                         <div
-                                            className="h4 mb-0 d-flex align-items-center"
+                                            className="h4 mb-0 d-flex align-items-center pull-right"
                                             style={{ justifyContent: 'space-between' }}
                                         >
-                                            <div>
+                                            {/* <div>
                                                 <p
                                                     className="mb-0"
                                                     style={{
@@ -346,7 +394,7 @@ class PayrollSummaryReport extends React.Component {
                                                 >
                                                     <i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
                                                 </p>
-                                            </div>
+                                            </div> */}
                                        
                                             <div className="d-flex">
                                                 <div>
@@ -427,7 +475,33 @@ class PayrollSummaryReport extends React.Component {
                                         </div>
                                     </Col>
                                 </Row>
+                               
                             </CardHeader>
+                            <CardHeader>
+							<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+									viewFilter={this.viewFilter}
+									generateReport={(value) => {
+										this.generateReport(value);
+									}}
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+										if (customPeriod === 'asOn') {
+										const currentDate = moment();
+										this.setState(prevState => ({
+										initValue: {
+										...prevState.initValue,
+										endDate: currentDate,            }
+										 }));
+										this.generateReport({ endDate: currentDate });
+										}
+										this.setState({ customPeriod: 'asOn' });
+										}}
+								/>
+							</CardHeader>	
                             <div className={`panel ${view ? 'view-panel' : ''}`}>
                                 <FilterComponent2
                                     viewFilter={this.viewFilter}
@@ -483,72 +557,51 @@ class PayrollSummaryReport extends React.Component {
                                     {loading ? (
                                         <Loader />
                                     ) : (
-                                        <div id="tbl_exporttable_to_xls" className="table-wrapper">
-                                            {/* <Table >
-                                                <thead className="table-header-bg">
-                                                    <tr>
-                                                        <th style={{ padding: '0.5rem', textAlign: 'center' , color:'black'}}>  Payroll Date</th>
-                                                        <th style={{ padding: '0.5rem', textAlign: 'center', color:'black'}}>   Payroll Subject</th>
-                                                        <th style={{ padding: '0.5rem', textAlign: 'center', color:'black'}}>   Pay Period</th>
-                                                        <th style={{ padding: '0.5rem', textAlign: 'center' , color:'black'}}>Employee Count</th>
-                                                        <th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>  Generated by</th>
-                                                        <th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>  Approver</th>
-                                                        <th style={{ padding: '0.5rem', textAlign: 'center' , color:'black' }}>Run Date</th>
-                                                        <th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Status}</th>
-                                                        <th style={{ padding: '0.5rem', textAlign: 'center', color:'black',width:"20%"}}>{strings.Amount}</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className=" table-bordered table-hover">
-                                                    {this.state.data.payrollSummaryModelList &&
-                                                        this.state.data.payrollSummaryModelList.map((item, index) => {
-                                                            return (
-                                                                <tr key={index}>
-                                                                    <td className='pl-0 pr-0' style={{ textAlign: 'center'}}>
-                                                                    {item.payrollDate ? (
-                                                                        moment(item.payrollDate).format('DD-MM-YYYY')
-                                                                    ) : (" ")}</td>
-                                                                   
-                                                                    <td style={{ textAlign: 'center'}}>{item.payrollSubject}</td>
-                                                                    <td style={{ textAlign: 'center',whiteSpace:"normal"}}>{this.renderPayperiod(item)}</td>
-                                                                    <td style={{ textAlign: 'center' }}>{item.employeeCount}</td>
-                                                                    <td style={{ textAlign: 'center'}}>{item.generatedByName}</td>
-                                                                    <td style={{ textAlign: 'center'}}>{item.payrollApproverName}</td>
-                                                                   
-                                                                    <td className='pl-0 pr-0' style={{ textAlign: 'center'}}>
-                                                                    {item.runDate ? (
-                                                                        moment(item.runDate).format('DD-MM-YYYY')
-                                                                    ) : (" ")}</td>
-                                                                    <td style={{ textAlign: 'center' }}>{item.status}</td>
-                                                                    <td style={{ textAlign: 'right' }}>{this.renderPayrolltotalAmount(item)}</td>
-                                                                   
- 
-                                                               
-                                                                </tr>
-                                                            );
-                                                        })}
- 
-                                                </tbody>
+                                        <div id="tbl_exporttable_to_xls" className="table-wrapper">                                    
+    {this.state.data &&
+                                    this.state.data.payrollSummaryModelList &&
+                                    <DataGrid
+                                        rows={this.state.data.payrollSummaryModelList}
+                                        columns={[
+                                            { field: 'payrollDate', headerName: 'Payroll Date', headerClassName: "table-header-bg", flex: 1},
+                                            { field: 'payrollSubject', headerName: 'Subject', headerClassName: "table-header-bg", flex: 1,},
+                                            { field: 'payPeriod', headerName: 'Pay Period', headerClassName: "table-header-bg", flex: 1, },
+                                            { field: 'employeeCount', headerName: 'Employee Count', headerClassName: "table-header-bg", flex: 1, },
+                                            { field: 'status', headerName: 'Status', headerClassName: "table-header-bg", flex: 1, },
+                                            { field: 'payrollApproverName', headerName: 'Approver', headerClassName: "table-header-bg", flex: 1, },
+                                            { field: 'approvedBy', headerName: 'Approved BY', headerClassName: "table-header-bg", flex: 1,},
+                                            { field: 'totalAmount', headerName: 'Total Amount', headerClassName: "table-header-bg", flex: 1,},
+                                            { field: 'comment', headerName: 'Comments', headerClassName: "table-header-bg", flex: 1,},
+                                            { field: 'dueAmount', headerName: 'Due Amount', headerClassName: "table-header-bg", flex: 1,},
+                                            { field: 'generatedByName', headerName: 'Generated By', headerClassName: "table-header-bg", flex: 1,},
                                            
-                                            </Table> */}
- 
- <DataGrid
-          rows={this.state.data1.payrollSummaryModelList}
-          columns={[
- 
-            { field: 'payrollDate', headerName: 'Payroll Date', headerClassName:"table-header-bg", flex: 1  },
-            { field: 'payrollSubject', headerName: 'Subject', headerClassName:"table-header-bg", flex: 1 },
-            { field: 'payPeriod', headerName: 'Pay Period' , headerClassName:"table-header-bg", flex: 1 },
-            { field: 'employeeCount', headerName: 'Employee Count', headerClassName:"table-header-bg", flex: 1  },
-            { field: 'status', headerName: 'Status' , headerClassName:"table-header-bg", flex: 1 },
-            { field: 'payrollApproverName', headerName: 'Approver', headerClassName:"table-header-bg", flex: 1 },
-            { field: 'totalAmount', headerName: 'Total Amount', headerClassName:"table-header-bg", flex: 1 },
-          ]}
-          autoHeight  
-          pageSize={5}
-        //   checkboxSelection
-        //   disableRowSelectionOnClick
-        rowSelection={false}
-        />
+                                        ]}
+                                        autoHeight  
+                                        pageSize={5}
+                                        rowSelection={false}
+                                        hideFooterPagination={false}
+                                        columnVisibilityModel={columnConfigs}
+                                        onColumnVisibilityModelChange={(newModel) =>{   
+                                                  
+                                      
+                                        //    const serializeModel = (model) => {
+                                        //     let serializedString = '';
+                                        //     for (const key in model) {
+                                        //         if (model.hasOwnProperty(key)) {
+                                        //             serializedString += `"${key}": ${model[key]},`;
+                                        //         }
+                                        //     }
+                                        //     return serializedString;
+                                        // };
+                                            //  const str = serializeModel(newModel);
+
+                                            const str = JSON.stringify(newModel)
+                                           console.log(str);
+debugger
+                                           this.updateColumnConfigs(str);
+                                          this.setState({columnConfigs:newModel})}
+                                        }
+                                    />}
        
                                         </div>
                                     )}

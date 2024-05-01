@@ -561,11 +561,11 @@ class TrailBalances extends React.Component {
 						<div>
 						{!this.state.hideExportOptions && 
 							
-								<Row style={{ marginTop: '10px' }}>
+								
 									<Col lg={12}>
 										<div
 											className="h4 mb-0 d-flex align-items-center pull-right"
-											style={{ justifyContent: 'space-between',marginRight:'10px'}}
+											style={{ justifyContent: 'space-between',marginRight:'10px', marginTop:'20px'}}
 										>
 											{/* <div>
 												<p
@@ -670,7 +670,7 @@ class TrailBalances extends React.Component {
 											</div>
 										</div>
 									</Col>
-								</Row>
+								
 							}
 							<CardHeader>
 								<FilterComponent3

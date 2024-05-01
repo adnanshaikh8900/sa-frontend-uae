@@ -1649,7 +1649,7 @@ class CreateCreditNote extends React.Component {
 													>
 														{(props) => (
 															<Form onSubmit={props.handleSubmit}>
-																{!lockInvoiceDetail && <div>
+																{<div>
 																	<Row style={{ display: this.state.invoiceSelected === true ? '' : 'none' }}>
 																		<Col lg={4}>
 																			<Checkbox

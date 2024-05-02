@@ -202,7 +202,7 @@ class InvoiceTemplate extends Component {
 									<tr>
 										<td>{invoiceData.creditNoteNumber}</td>
 										<td>{' '}{moment(invoiceData.creditNoteDate).format('DD-MM-YYYY',)}</td>
-										<td>{invoiceData.status ? invoiceData.status === 'Partially Paid' ? 'Partially Debited' : invoiceData.status : ''}</td>
+										<td>{invoiceData.status ? invoiceData.status === 'Partially Paid' ? 'Partially Credited' : invoiceData.status : ''}</td>
 										{invoiceData.referenceNo && <td>{invoiceData.referenceNo}</td>}
 										{isCNWithoutProduct && <td style={{ textAlign: 'right' }}>
 											<Currency

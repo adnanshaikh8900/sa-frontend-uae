@@ -398,7 +398,7 @@ class CreateJournal extends React.Component {
 							this.selectItem(e.target.value, row, 'contactId', form, field);
 						}}
 						value={row.contactId}
-						placeholder={strings.Select+strings.Contact}
+						// placeholder={strings.Select+strings.Contact}
 						className={`form-control 
              ${
 							props.errors.journalLineItems &&
@@ -412,15 +412,17 @@ class CreateJournal extends React.Component {
 								: ''
 						}`}
 					>
+						<option value="">Select Customer Name</option>
+						
 						{contactList
-							? contactList.map((obj) => {
-									return (
-										<option value={obj.value} key={obj.value}>
-											{obj.label.contactName}
-										</option>
-									);
-							  })
-							: ''}
+                    ? contactList
+                          .filter((obj) => obj.value)
+                          .map((obj) => (
+                              <option value={obj.value} key={obj.value}>
+                                  {obj.label.contactName}
+                              </option>
+                          ))
+                    : ''}
 					</Input>
 				)}
 			/>

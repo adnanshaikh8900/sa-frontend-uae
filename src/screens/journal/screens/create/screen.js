@@ -690,6 +690,7 @@ class CreateJournal extends React.Component {
 							this.setState(
 								{
 									createMore: false,
+									disableLeavePage: false,
 									submitJournal: false,
 									data: [
 										{

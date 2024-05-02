@@ -503,14 +503,14 @@ class CreateUser extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="email">
 																				<span className="text-danger">* </span>
-																				 {strings.EmailID}
+																				 {"Email"}
 																			</Label>
 																			<Input
 																				type="email"
 																				maxLength="80"
 																				id="email"
 																				name="email"
-																				placeholder={strings.Enter+strings.EmailID}
+																				placeholder={strings.Enter+strings.EmailAddres}
 																				value={props.values.email}
 																				onChange={(option) => {
 																					props.handleChange('email')(option);

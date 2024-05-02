@@ -457,7 +457,7 @@ class Receipt extends React.Component {
 																: []
 														}
 														className="select-default-width"
-														placeholder={strings.CustomerName}
+														placeholder={strings.Select+" "+strings.Customer}
 														value={filterData.contactId}
 														onChange={(option) => {
 															if (option && option.value) {

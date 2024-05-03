@@ -67,10 +67,10 @@ class DebitNoteRefund extends React.Component {
 			dialog: false,
 			initValue: {
 				receiptNo: '',
-				paymentDate: new Date(),
 				contactId: this.props.location.state.id.contactId,
 				amount: this.props.location.state.id.dueAmount,
 				payMode: { label: 'CASH', value: 'CASH' },
+				paymentDate: new Date(this.props.location.state.id.creditNoteDate),
 				notes: '',
 				depositeTo: { label: 'Petty Cash', value: 47 },
 				referenceCode: '',
@@ -413,7 +413,8 @@ class DebitNoteRefund extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
-																			minDate={props.values.debitNoteDate}
+																			minDate={new Date(props.values.paymentDate)}
+																			maxDate={null}
 																			dropdownMode="select"
 																			value={props.values.paymentDate}
 																			selected={props.values.paymentDate}

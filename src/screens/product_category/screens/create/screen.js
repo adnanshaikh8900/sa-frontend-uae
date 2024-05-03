@@ -113,6 +113,7 @@ class CreateProductCategory extends React.Component {
 						this.componentDidMount()
 						this.setState({
 							createMore: false,
+							disableLeavePage: false,
 						});
 					} else {
 						this.props.history.push('/admin/master/product-category');

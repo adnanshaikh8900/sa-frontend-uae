@@ -231,7 +231,7 @@ class CreateContact extends React.Component {
 					// this.gotoParentUrl() this.props.history.push(this.props.location.state.goto)
 					if (this.state.createMore) {
 						resetForm(this.state.initValue);
-						this.setState({ createMore: false });
+						this.setState({ createMore: false, disableLeavePage: false });
 					} else {
 
 						// if(this.props.location

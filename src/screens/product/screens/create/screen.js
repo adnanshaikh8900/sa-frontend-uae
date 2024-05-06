@@ -354,6 +354,7 @@ try {
 					if (this.state.createMore) {
 						this.setState({
 							createMore: false,
+							disableLeavePage: false,
 						});
 						resetForm(this.state.initValue);
 						this.getProductCode()

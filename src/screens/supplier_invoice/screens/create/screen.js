@@ -2477,7 +2477,7 @@ class CreateSupplierInvoice extends React.Component {
 																				'Unit Price',
 																				strings.UnitPriceGreaterThan1,
 																				(value) => {
-																					if (value > 1) {
+																					if (value > 0) {
 																						return true;
 																					} else {
 																						return false;

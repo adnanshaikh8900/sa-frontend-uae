@@ -2573,6 +2573,11 @@ class CreateQuotation extends React.Component {
 																					}
 																					this.setState({ quotationDateForVatValidation: value });
 																					props.handleChange('quotationdate')(value);
+																					const minExpirationDate = value ? new Date(value) : null;
+																					props.setFieldValue('quotaionExpiration', null);
+																					props.setFieldTouched('quotaionExpiration', false); 
+																					props.setFieldError('quotaionExpiration', '');
+																					props.setFieldValue('quotaionExpiration', minExpirationDate); 
 																				}}
 																			/>
 																			{props.errors.quotationdate &&
@@ -2605,6 +2610,7 @@ class CreateQuotation extends React.Component {
 																				showYearDropdown
 																				dropdownMode="select"
 																				dateFormat="dd-MM-yyyy"
+																				minDate={props.values.quotationdate ? new Date(props.values.quotationdate) : null}
 																				onChange={(value) => {
 																					props.handleChange('quotaionExpiration')(value);
 																				}}

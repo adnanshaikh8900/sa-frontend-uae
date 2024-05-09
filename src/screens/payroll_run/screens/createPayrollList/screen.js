@@ -108,6 +108,7 @@ class CreatePayrollList extends React.Component {
 			disableLeavePage: false,
 			isPayrollSubjectNameExist: false,
 			payrollApproverRequired: false,
+			payrollSubjectRequired:false,
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -811,8 +812,8 @@ class CreatePayrollList extends React.Component {
 
 																}}
 																validationSchema={Yup.object().shape({
-																	payrollSubject: Yup.string()
-																		.required("Payroll subject is required"),
+																	// payrollSubject: Yup.string()
+																	// 	.required("Payroll subject is required"),
 																	payrollDate: Yup.string()
 																		.required("Payroll date is required"),
 																	// payrollApprover: Yup.string()
@@ -833,6 +834,10 @@ class CreatePayrollList extends React.Component {
 																	if (!values.payrollDate) {
 																		errors.payrollDate = 'Payroll date is required';
 																	}
+																	if (this.state.payrollSubjectRequired && !values.payrollSubject) {
+																		errors.payrollSubject = "Payroll subject is required";
+																	}
+																	
 																	if (this.state.isPayrollSubjectNameExist === true) {
 																		errors.payrollSubject = "Payroll Subject Already Exists"
 																	}
@@ -878,6 +883,7 @@ class CreatePayrollList extends React.Component {
 																						maxLength="100"
 																						placeholder={strings.Enter + strings.pay_subject}
 																						onChange={(option) => {
+																							
 																							if (
 																								option.target.value === '' ||
 																								this.regExAlphaNumeric.test(
@@ -886,6 +892,7 @@ class CreatePayrollList extends React.Component {
 																							)
 																								props.handleChange('payrollSubject')(option.target.value);
 																							this.validatePayrollSubjectName(option.target.value)
+																					
 
 																						}}
 																						className={
@@ -1118,7 +1125,7 @@ class CreatePayrollList extends React.Component {
 																					color="primary"
 																					className="btn-square pull-right"
 																					onClick={() => {
-																						this.setState({ payrollApproverRequired: true }, () => {
+																						this.setState({ payrollApproverRequired: true,payrollSubjectRequired:true }, () => {
 																							//  added validation popup  msg                                                                
 																							props.handleBlur();
 																							if (props.errors && Object.keys(props.errors).length != 0)
@@ -1149,7 +1156,7 @@ class CreatePayrollList extends React.Component {
 																				<Button type="button" color="primary" className="btn-square pull-right "
 																					onClick={
 																						() => {
-																							this.setState({ payrollApproverRequired: false }, () => {
+																							this.setState({ payrollApproverRequired: false,payrollSubjectRequired:true }, () => {
 																								//  added validation popup  msg                                                                
 																								props.handleBlur();
 																								// if (props.errors && Object.keys(props.errors).length != 0)

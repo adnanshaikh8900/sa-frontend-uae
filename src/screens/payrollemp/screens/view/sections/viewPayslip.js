@@ -351,7 +351,7 @@ class PaySlipModal extends React.Component {
 																		{/* <th className="center" style={{ padding: '0.5rem', width: "40px" }}>																			#									</th> */}
 																		{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
 																		<th style={{ padding: '0.5rem' }}>{strings.Earnings} </th>
-																		<th style={{ padding: '0.5rem' }}>{strings.Amount}</th>
+																		<th className="pull-right"style={{ padding: '0.5rem' }}>{strings.Amount}</th>
 
 																	</tr>
 																</thead>
@@ -442,7 +442,7 @@ class PaySlipModal extends React.Component {
 									</th> */}
 																		{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
 																		<th style={{ padding: '0.5rem' }}>{strings.Deductions}</th>
-																		<th style={{ padding: '0.5rem' }}>{strings.Amount}</th>
+																		<th className="pull-right" style={{ padding: '0.5rem' }}>{strings.Amount}</th>
 
 																	</tr>
 																</thead>

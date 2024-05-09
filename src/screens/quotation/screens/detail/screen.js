@@ -2554,7 +2554,7 @@ class DetailQuotation extends React.Component {
                                         {strings.Currency}
                                       </Label>
                                       <Select
-                                        //isDisabled={true}
+                                        isDisabled={true}
                                         placeholder={
                                           strings.Select + strings.Currency
                                         }

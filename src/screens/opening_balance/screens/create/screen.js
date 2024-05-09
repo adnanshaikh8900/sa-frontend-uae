@@ -305,6 +305,7 @@ class CreateOpeningBalance extends React.Component {
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('effectiveDate')(value);
 																		}}

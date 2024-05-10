@@ -2357,11 +2357,7 @@ class CreateSupplierInvoice extends React.Component {
 										<Row>
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
-													<img
-														alt="invoiceimage"
-														src={invoiceimage}
-														style={{ width: '40px' }}
-													/>
+												<i className="fas fa-file-invoice" />
 													<span className="ml-2">{strings.CreateInvoice}</span>
 												</div>
 											</Col>

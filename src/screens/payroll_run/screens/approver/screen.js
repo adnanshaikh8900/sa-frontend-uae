@@ -131,6 +131,7 @@ class PayrollApproverScreen extends React.Component {
 	};
 
 	approveAndRunPayroll = () => {
+		debugger
 		const { selectedEmployeesIdsList } = this.state;
 		this.setState({ disableLeavePage: true })
 		let payPeriod = this.state.payPeriod

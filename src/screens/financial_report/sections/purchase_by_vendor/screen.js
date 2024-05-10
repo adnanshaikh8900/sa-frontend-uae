@@ -363,8 +363,8 @@ class PurchaseByVendor extends React.Component {
 																<tr key={index}>
 
 
-																	<td style={{ textAlign: 'center', width: '25%' }}>{item.vendorName}</td>
-																	<td style={{ textAlign: 'center', width: '25%' }}>{item.invoiceCount}</td>
+																	<td style={{ textAlign: 'center pull-left', width: '25%' }}>{item.vendorName}</td>
+																	<td style={{ textAlign: 'right', width: '25%' }}>{item.invoiceCount}</td>
 																	<td style={{ textAlign: 'right', width: '25%' }}>
 																		<Currency
 																			value={item.salesExcludingvat}

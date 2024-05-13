@@ -1901,6 +1901,7 @@ renderName=(cell,row)=>{
 																			options={
 																				purchaseCategory ? purchaseCategory : []
 																			}
+																			placeholder={strings.CostofGoodsSold}
 																			value={
 																				purchaseCategory &&
 																				props.values

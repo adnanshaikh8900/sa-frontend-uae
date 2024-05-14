@@ -1529,7 +1529,7 @@ try {
 																			name="purchaseUnitPrice"
 																			autoComplete="Off"
 																			placeholder={strings.Enter+strings.PurchasePrice}
-																			disabled={props.values.isInventoryEnabled===true }
+																			//disabled={props.values.isInventoryEnabled===true }
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||

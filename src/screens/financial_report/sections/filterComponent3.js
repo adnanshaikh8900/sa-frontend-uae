@@ -154,12 +154,12 @@ class FilterComponent3 extends Component {
                 this.props.hideExportOptionsFunctionality(true);
                 break;
             case 'asOn':
-                startDate = moment().startOf('month').toDate();
+                startDate = moment().startOf('year').toDate();
                 endDate = currentDate.clone().toDate();
                 showStartDate = false;
                 showEndDate = true;
                 showRunReport = true;
-                this.props.generateReport({endDate });
+                this.props.generateReport({endDate});
                 this.props.hideExportOptionsFunctionality(true);
                 break;
             default:
@@ -185,10 +185,10 @@ class FilterComponent3 extends Component {
 
     render() {
         strings.setLanguage(this.state.language);
-        
+
         const { setCutomPeriod } = this.props;
         const { initValue, selectedPeriod, showStartDate, showEndDate, showRunReport } = this.state;
-        
+
         return (
             <Formik initialValues={initValue}>
                 {(props) => (
@@ -196,43 +196,45 @@ class FilterComponent3 extends Component {
                         <Row>
                             <Col lg={3}>
                                 <div className={`align-items-center pull left ${selectedPeriod !== 'customRange' && selectedPeriod !== 'asOn'}`}>
-                                <FormGroup>
-                                <Label htmlFor="reportingPeriod" style={{ color: 'black',fontWeight: '600'}}>{strings.ReportingPeriod}</Label>
-                                    <Select
-                                        options={this.state.options}
-                                        value={this.state.options.find((option) => option.value === selectedPeriod)}
-                                        onChange={(option) => {
-                                            this.getDateRange(option.value, props);
-                                            this.setState({ selectedPeriod: option.value });
-                                            setCutomPeriod(option.value);
-                                        }}
-                                        placeholder="Select Period"
-                                       // styles={customStyles}
-                                       id="reportingPeriod"
-                                       name="reportingPeriod"
-                                       styles={{
-                                        control: (provided) => ({
-                                            ...provided,
-                                            borderColor: 'black',
-                                            height: '30px',
-                                        }),
-                                        singleValue: (provided) => ({
-                                            ...provided,
-                                            color: 'black',
-                                        }),
-                                        option: (provided) => ({
-                                            ...provided,
-                                            color: 'black',
-                                        }),
-                                    }}
-                                    />
-                                </FormGroup>
+                                    <FormGroup>
+                                        <Label htmlFor="reportingPeriod" style={{ color: 'black', fontWeight: '600', marginTop: '15px' }}>{strings.ReportingPeriod}</Label>
+                                        <Select
+                                            options={this.state.options}
+                                            value={this.state.options.find((option) => option.value === selectedPeriod)}
+                                            onChange={(option) => {
+                                                this.getDateRange(option.value, props);
+                                                this.setState({ selectedPeriod: option.value });
+                                                setCutomPeriod(option.value);
+                                            }}
+                                            placeholder="Select Period"
+                                            // styles={customStyles}
+                                            id="reportingPeriod"
+                                            name="reportingPeriod"
+                                            styles={{
+                                                control: (provided) => ({
+                                                    ...provided,
+                                                    borderColor: 'black',
+                                                    height: '30px',
+                                                }),
+                                                singleValue: (provided) => ({
+                                                    ...provided,
+                                                    color: 'black',
+                                                }),
+                                                option: (provided) => ({
+                                                    ...provided,
+                                                    color: 'black',
+                                                }),
+                                            }}
+                                        />
+                                    </FormGroup>
                                 </div>
                             </Col>
-                            <Col lg={3}>
+                        </Row>
+                        <Row>
+                            {selectedPeriod !== 'asOn' && <Col lg={3}>
                                 {showStartDate && (
                                     <FormGroup className="mb-3">
-                                        <Label htmlFor="startDate" style={{ color: 'black' }}>{strings.StartDate}</Label>
+                                        <Label htmlFor="startDate" style={{ color: 'black',fontWeight: '600', marginTop: '15px', borderColor: 'black'}}>{strings.StartDate}</Label>
                                         <DatePicker
                                             id="date"
                                             name="startDate"
@@ -247,17 +249,17 @@ class FilterComponent3 extends Component {
                                             maxDate={props.values.endDate}
                                             onChange={(value) => {
                                                 if (value <= props.values.endDate) {
-                                                props.handleChange('startDate')(value);
+                                                    props.handleChange('startDate')(value);
                                                 }
                                             }}
                                         />
                                     </FormGroup>
                                 )}
-                            </Col>
+                            </Col>}
                             <Col lg={3}>
                                 {showEndDate && (
                                     <FormGroup className="mb-3">
-                                        <Label htmlFor="endDate" style={{ color: 'black' }}>{strings.EndDate}</Label>
+                                        <Label htmlFor="endDate" style={{ color: 'black',fontWeight: '600', marginTop: '15px', borderColor: 'black'}}>{strings.EndDate}</Label>
                                         <DatePicker
                                             id="date"
                                             name="endDate"
@@ -273,13 +275,15 @@ class FilterComponent3 extends Component {
                                             onClick={() => this.setState({ showEndDate: true })}
                                             onChange={(value) => {
                                                 if (value >= props.values.startDate) {
-                                                props.handleChange('endDate')(value);
+                                                    props.handleChange('endDate')(value);
                                                 }
                                             }}
                                         />
                                     </FormGroup>
                                 )}
                             </Col>
+                        </Row>
+                        <Row className="justify-content-end">
                             {showRunReport && (
                                 <Col lg={3} className="mt-4">
                                     <FormGroup className="text-right">
@@ -287,6 +291,7 @@ class FilterComponent3 extends Component {
                                             type="button"
                                             color="primary"
                                             className="btn-square mr-3"
+                                            style={{ marginTop: '15px' }}
                                             onClick={() => {
                                                 console.log(props.values);
                                                 this.props.generateReport(props.values);
@@ -299,28 +304,28 @@ class FilterComponent3 extends Component {
                                         <Button
                                             color="secondary"
                                             className="btn-square"
+                                            style={{ marginTop: '15px' }}
                                             onClick={() => {
-                                               const currentDate = moment();
-                                               props.handleChange('endDate')(currentDate.toDate());
-                                               this.props.handleCancel();
-                                               this.setState({ 
-                                                selectedPeriod: 'asOn', 
-                                                showEndDate: true, 
-                                                showRunReport: false,
-                                                showStartDate: false,
-                                            });
-                                               this.props.generateReport({endDate: currentDate.toDate() });
-                                               this.props.hideExportOptionsFunctionality(false);
-                                               console.log(props.values);
+                                                const currentDate = moment();
+                                                props.handleChange('endDate')(currentDate.toDate());
+                                                this.props.handleCancel();
+                                                this.setState({
+                                                    selectedPeriod: 'asOn',
+                                                    showEndDate: true,
+                                                    showRunReport: false,
+                                                    showStartDate: false,
+                                                });
+                                                this.props.generateReport({ endDate: currentDate.toDate() });
+                                                this.props.hideExportOptionsFunctionality(false);
+                                                console.log(props.values);
                                                 console.log(props.values);
                                             }}
                                         >
-                                            <i className="fa fa-ban"></i> {strings.Cancel}
+                                            <i className="fa fa-ban pull"></i> {strings.Cancel}
                                         </Button>
                                     </FormGroup>
                                 </Col>
-                            )}
-                        </Row>
+                            )}</Row>
                     </Form>
                 )}
             </Formik>

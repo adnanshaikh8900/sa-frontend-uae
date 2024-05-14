@@ -2795,7 +2795,8 @@ class DetailSupplierInvoice extends React.Component {
 																			}
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
-																					width="12%"
+																					//width="12%"
+																					width={ "250px" }
 																					dataField="vat"
 																					dataFormat={(cell, rows) =>
 																						this.renderVat(cell, rows, props)
@@ -2806,7 +2807,7 @@ class DetailSupplierInvoice extends React.Component {
 																			}
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
-																					width="10%"
+																					//width="10%"
 																					dataField="sub_total"
 																					dataFormat={this.renderVatAmount}
 																					className="text-right"

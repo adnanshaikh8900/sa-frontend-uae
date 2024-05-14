@@ -2451,6 +2451,7 @@ class CreateCreditNote extends React.Component {
 																				{strings.DisCount}
 																			</TableHeaderColumn> */}
 																					<TableHeaderColumn
+																						width={ "250px" }
 																						dataField="vat"
 																						dataFormat={(cell, rows) =>
 																							this.renderVat(cell, rows, props)

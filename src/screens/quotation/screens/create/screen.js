@@ -2955,6 +2955,7 @@ class CreateQuotation extends React.Component {
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
 																					//width="10%"
+																					width = {"250px"}
 																					dataField="sub_total"
 																					dataFormat={this.renderVatAmount}
 																					className="text-right"

@@ -7,34 +7,26 @@ import {
 	CardBody,
 	Row,
 	Col,
-	Table,
 	Dropdown,
 	DropdownToggle,
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
+import { ReportTables } from 'screens/financial_report/sections'
 import moment from 'moment';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CSVLink } from 'react-csv';
-import { Loader, Currency } from 'components';
+import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
 import FilterComponent2 from '../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
-import { CommonActions } from 'services/global';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
-		profile: state.auth.profile,
-		universal_currency_list: state.common.universal_currency_list,
 		company_profile: state.reports.company_profile,
 		payable_invoice: state.reports.payable_invoice,
 	};
@@ -45,7 +37,6 @@ const mapDispatchToProps = (dispatch) => {
 			FinancialReportActions,
 			dispatch,
 		),
-		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
 let strings = new LocalizedStrings(data);
@@ -107,7 +98,17 @@ class PayablesInvoiceSummary extends React.Component {
 			.getPayableInvoiceSummary(postData)
 			.then((res) => {
 				if (res.status === 200) {
+					let payableInvoiceSummaryModelList = res.data.payableInvoiceSummaryModelList
+					payableInvoiceSummaryModelList.push({
+						balance: res.data.totalBalance,
+						totalInvoiceAmount: res.data.totalAmount,
+					})
+					payableInvoiceSummaryModelList = payableInvoiceSummaryModelList.map((row, i) => {
+						row.id = i + 1;
+						return row
+					})
 					this.setState({
+						payableInvoiceSummaryModelList: payableInvoiceSummaryModelList,
 						data: res.data,
 						loading: false,
 					});
@@ -120,7 +121,6 @@ class PayablesInvoiceSummary extends React.Component {
 
 	exportFile = () => {
 
-	
 		let dl =""
 		let fn =""
 		let type="csv"
@@ -143,22 +143,6 @@ class PayablesInvoiceSummary extends React.Component {
 			 XLSX.writeFile(wb, fn || ('PayablesInvoice Summary Report.'+ (type || 'xlsx')));
    
 	   }
-
-
-
-	// exportFile = (csvData, fileName, type) => {
-	// 	const fileType =
-	// 		type === 'xls'
-	// 			? 'application/vnd.ms-excel'
-	// 			: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-	// 	const fileExtension = `.${type}`;
-	// 	const ws = XLSX.utils.json_to_sheet(csvData);
-	// 	const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-	// 	const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-	// 	const data = new Blob([excelBuffer], { type: fileType });
-	// 	FileSaver.saveAs(data, fileName + fileExtension);
-	// };
-
 	toggle = () =>
 		this.setState((prevState) => {
 			return { dropdownOpen: !prevState.dropdownOpen };
@@ -172,30 +156,10 @@ class PayablesInvoiceSummary extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
-	renderinvoiceDate = (cell, rows) => {
-		return moment(rows.invoiceDate).format('DD-MM-YYYY');
-	};
-	renderinvoiceDueDate = (cell, rows) => {
-		return moment(rows.invoiceDueDate).format('DD-MM-YYYY');
-	};
-	renderbalance = (cell, row, extraData) => {
-		return row.balance === 0 ? (
-			<Currency
-				value={row.balance}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			<Currency
-				value={row.balance}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		);
-		
-	};
 	render() {
 		strings.setLanguage(this.state.language); 
-		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
-		const { profile, universal_currency_list,company_profile,payable_invoice } = this.props;
+		const { loading, initValue, dropdownOpen, payableInvoiceSummaryModelList, view } = this.state;
+		const { company_profile } = this.props;
 		
 		return (
 			<div className="transactions-report-screen">
@@ -250,20 +214,6 @@ class PayablesInvoiceSummary extends React.Component {
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
 														</DropdownItem>
-														{/* <DropdownItem
-															onClick={() => {
-																this.exportFile(csvData, 'profitloss', 'xls');
-															}}
-														>
-															XLS (Microsoft Excel 1997-2004 Compatible)
-														</DropdownItem>
-														<DropdownItem
-															onClick={() => {
-																this.exportFile(csvData, 'profitloss', 'xlsx');
-															}}
-														>
-															XLSX (Microsoft Excel)
-														</DropdownItem> */}
 													</DropdownMenu>
 												</Dropdown></div> &nbsp;&nbsp;
 												<div
@@ -275,17 +225,6 @@ class PayablesInvoiceSummary extends React.Component {
 												>
 													<i className="fa fa-print"></i>
 												</div>
-												{/* <div
-												className="mr-2 print-btn-cont"
-												onClick={() => {
-													this.exportPDFWithComponent();
-												}}
-												style={{
-													cursor: 'pointer',
-													}}
-												>
-												<i className="fa fa-file-pdf-o"></i>
-											</div> */}
 												<div
 													className="mr-2 print-btn-cont"
                                                     onClick={() => {
@@ -358,101 +297,16 @@ class PayablesInvoiceSummary extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div id="tbl_exporttable_to_xls" className="table-wrapper">
-											<Table className="table-bordered">
-												<thead className="table-header-bg">
-													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceNumber}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.SupplierName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceDate}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceDueDate}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Status}</th>
-
-														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
-														{strings.InvoiceAmount}
-														</th>
-															<th style={{ padding: '0.5rem', textAlign: 'right', color: 'black' }}>{strings.DueBalance}</th>
-
-													</tr>
-												</thead>
-												<tbody className=" table-bordered table-hover">
-													{this.state.data.payableInvoiceSummaryModelList &&
-														this.state.data.payableInvoiceSummaryModelList.map((item, index) => {
-															return (
-																<tr key={index}>
-
-
-																	<td style={{ textAlign: 'center  pull-left'}}>{item.invoiceNumber}</td>
-																	<td style={{ textAlign: 'center  pull-left'}}>{item.supplierName}</td>
-																	<td style={{ textAlign: 'center'}}>{item.invoiceDate ? (
-																		moment(item.invoiceDate).format('DD-MM-YYYY')
-																	) : (" ")}</td>
-																	<td style={{ textAlign: 'center'}}>
-																	{item.invoiceDueDate ? (
-																		moment(item.invoiceDueDate).format('DD-MM-YYYY')
-																	) : (" ")}</td>
-																	<td style={{ textAlign: 'center  pull-left' }}>{item.status}</td>
-																	<td style={{ textAlign: 'right' }}>
-																		<Currency
-																			value={item.totalInvoiceAmount}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0].currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	</td>
-
-																	<td style={{ textAlign: 'right' }}>
-																		<Currency
-																			value={item.balance}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0].currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	</td>
-																</tr>
-															);
-														})}
-
-												</tbody>
-												<tfoot>
-													<tr style={{ border: "3px solid #dfe9f7" }}>
-													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
-													<td></td>	<td></td>	<td></td>	<td></td>
-													<td style={{ textAlign: 'right', width: '20%' }}>
-												
-														<b><Currency
-															value={this.state.data.totalAmount}
-															currencySymbol={
-																universal_currency_list[0]
-																	? universal_currency_list[0].currencyIsoCode
-																	: 'USD'
-															}
-														/></b>
-														
-													</td>
-
-													
-													<td style={{ textAlign: 'right', width: '20%' }}>
-														
-													<b>
-													<Currency
-															value={this.state.data.totalBalance}
-															currencySymbol={
-																universal_currency_list[0]
-																	? universal_currency_list[0].currencyIsoCode
-																	: 'USD'
-															}
-														/></b>
-														
-													</td>
-												</tr>
-												</tfoot>
-											</Table>
-										</div>
+										<>
+											<ReportTables
+												reportDataList={payableInvoiceSummaryModelList}
+												reportName={'Payable Invoice Summary'}
+												id={10}
+												rowHeight={50}
+												history={this.props.history}
+											/>
+										</>
+										
 									)}
 									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy } <b>SimpleAccounts</b></div> 
 								</PDFExport>

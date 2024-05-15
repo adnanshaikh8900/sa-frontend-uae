@@ -7,27 +7,22 @@ import {
 	CardBody,
 	Row,
 	Col,
-	Table,
 	Dropdown,
 	DropdownToggle,
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
+import { ReportTables } from 'screens/financial_report/sections'
 import moment from 'moment';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CSVLink } from 'react-csv';
-import { Loader, Currency } from 'components';
+import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
 import FilterComponent2 from '../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
-import {data}  from '../../../Language/index'
+import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
@@ -58,7 +53,7 @@ class ReceivableInvoiceSummary extends React.Component {
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
 				endDate: moment().endOf('month').format('DD/MM/YYYY'),
-			
+
 			},
 			csvData: [],
 			activePage: 1,
@@ -68,9 +63,9 @@ class ReceivableInvoiceSummary extends React.Component {
 				column: null,
 				direction: 'desc',
 			},
-			data:[],
+			data: [],
 		};
-	
+
 	}
 
 	generateReport = (value) => {
@@ -90,7 +85,7 @@ class ReceivableInvoiceSummary extends React.Component {
 	};
 
 	componentDidMount = () => {
-		this.props.financialReportActions.getCompany() 
+		this.props.financialReportActions.getCompany()
 		this.initializeData();
 	};
 
@@ -104,7 +99,17 @@ class ReceivableInvoiceSummary extends React.Component {
 			.getReceivableInvoiceSummary(postData)
 			.then((res) => {
 				if (res.status === 200) {
+					let receivableInvoiceSummaryModelList = res.data.receivableInvoiceSummaryModelList
+					receivableInvoiceSummaryModelList.push({
+						balance: res.data.totalBalance,
+						invoiceTotalAmount: res.data.totalAmount,
+					})
+					receivableInvoiceSummaryModelList = receivableInvoiceSummaryModelList.map((row, i) => {
+						row.id = i + 1;
+						return row
+					})
 					this.setState({
+						receivableInvoiceSummaryModelList: receivableInvoiceSummaryModelList,
 						data: res.data,
 						loading: false,
 					});
@@ -114,32 +119,30 @@ class ReceivableInvoiceSummary extends React.Component {
 				this.setState({ loading: false });
 			});
 	};
-     
+
 	exportFile = () => {
-
-	
-		let dl =""
-		let fn =""
-		let type="csv"
-		var elt = document.getElementById('tbl_exporttable_to_xls');												
-		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		let dl = ""
+		let fn = ""
+		let type = "csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
 		return dl ?
-		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-		  XLSX.writeFile(wb, fn || ('Receivable Invoice Summary Report.'+ (type || 'csv')));
+			XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+			XLSX.writeFile(wb, fn || ('Receivable Invoice Summary Report.' + (type || 'csv')));
 
-	   }
+	}
 
-	   exportExcelFile  = () => 
-	   {   let dl =""
-		   let fn =""
-		   let type="xlsx"
-		   var elt = document.getElementById('tbl_exporttable_to_xls');												
-		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
-		   return dl ?
-			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-			 XLSX.writeFile(wb, fn || ('Receivable Invoice Summary Report.'+ (type || 'xlsx')));
-   
-	   }
+	exportExcelFile = () => {
+		let dl = ""
+		let fn = ""
+		let type = "xlsx"
+		var elt = document.getElementById('tbl_exporttable_to_xls');
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+		return dl ?
+			XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+			XLSX.writeFile(wb, fn || ('Receivable Invoice Summary Report.' + (type || 'xlsx')));
+
+	}
 	toggle = () =>
 		this.setState((prevState) => {
 			return { dropdownOpen: !prevState.dropdownOpen };
@@ -153,30 +156,10 @@ class ReceivableInvoiceSummary extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
-	renderinvoiceDate = (cell, rows) => {
-		return moment(rows.invoiceDate).format('DD-MM-YYYY');
-	};
-	renderinvoiceDueDate = (cell, rows) => {
-		return moment(rows.invoiceDueDate).format('DD-MM-YYYY');
-	};
-	renderbalance = (cell, row, extraData) => {
-		return row.balance === 0 ? (
-			<Currency
-				value={row.balance}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			<Currency
-				value={row.balance}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		);
-		
-	};
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
-		const { profile, universal_currency_list,company_profile,receivable_invoice } = this.props;
+		const { loading, initValue, dropdownOpen, receivableInvoiceSummaryModelList, view } = this.state;
+		const { company_profile } = this.props;
 		console.log(this.state.data)
 		return (
 			<div className="transactions-report-screen">
@@ -204,45 +187,31 @@ class ReceivableInvoiceSummary extends React.Component {
 												</p>
 											</div>
 											<div className="d-flex">
-											<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
-													
-													<DropdownItem onClick={()=>{this.exportFile()}}>
+
+														<DropdownItem onClick={() => { this.exportFile() }}>
 															<span
-															style={{
-																border: 0,
-    															padding: 0,
-																backgroundColor:"white !important"
-															}}
-														  >CSV (Comma Separated Value)</span>
+																style={{
+																	border: 0,
+																	padding: 0,
+																	backgroundColor: "white !important"
+																}}
+															>CSV (Comma Separated Value)</span>
 														</DropdownItem>
-														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
+														<DropdownItem onClick={() => { this.exportExcelFile() }}>
 															<span
-															style={{
-																border: 0,
-    															padding: 0,
-																backgroundColor:"white !important"
-															}}
-														    	>Excel</span>
+																style={{
+																	border: 0,
+																	padding: 0,
+																	backgroundColor: "white !important"
+																}}
+															>Excel</span>
 														</DropdownItem>
-															<DropdownItem onClick={this.exportPDFWithComponent}>
+														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
 														</DropdownItem>
-														{/* <DropdownItem
-															onClick={() => {
-																this.exportFile(csvData, 'profitloss', 'xls');
-															}}
-														>
-															XLS (Microsoft Excel 1997-2004 Compatible)
-														</DropdownItem>
-														<DropdownItem
-															onClick={() => {
-																this.exportFile(csvData, 'profitloss', 'xlsx');
-															}}
-														>
-															XLSX (Microsoft Excel)
-														</DropdownItem> */}
 													</DropdownMenu>
 												</Dropdown>&nbsp;&nbsp;
 												<div
@@ -250,33 +219,22 @@ class ReceivableInvoiceSummary extends React.Component {
 													onClick={() => window.print()}
 													style={{
 														cursor: 'pointer',
-														}}
+													}}
 												>
 													<i className="fa fa-print"></i>
 												</div>
-												{/* <div
-												className="mr-2 print-btn-cont"
-												onClick={() => {
-													this.exportPDFWithComponent();
-												}}
-												style={{
-													cursor: 'pointer',
-													}}
-												>
-												<i className="fa fa-file-pdf-o"></i>
-											</div> */}
 												<div
 													className="mr-2 print-btn-cont"
-                                                    onClick={() => {
-                                                        this.props.history.push('/admin/report/reports-page');
-                                                    }}
+													onClick={() => {
+														this.props.history.push('/admin/report/reports-page');
+													}}
 													style={{
 														cursor: 'pointer',
-														}}
+													}}
 												>
-												<span>X</span>
+													<span>X</span>
 												</div>
-												
+
 											</div>
 										</div>
 									</Col>
@@ -290,150 +248,66 @@ class ReceivableInvoiceSummary extends React.Component {
 									}}
 								/>{' '}
 							</div>
-									<CardBody id="section-to-print">
-									<PDFExport
+							<CardBody id="section-to-print">
+								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
 									fileName="Receivable Invoice Summary.pdf"
 								>
-							<div style={{	
-									
-									display: 'flex',
-									justifyContent: 'space-between',
-									marginBottom: '1rem'}}>
-									<div>
-									<img
-										src={ 
-											company_profile &&
-											company_profile.companyLogoByteArray
-												? 'data:image/jpg;base64,' +
-											company_profile.companyLogoByteArray
-												: logo
-										}
-										className=""
-										alt=""
-										style={{ width: ' 150px' }}></img>
-								
-									
-									</div>			
-									<div style={{textAlign:'center'}} >
-								
-										<h2>
-										{company_profile &&
-											company_profile['companyName']
-												? company_profile['companyName']
-												: ''}
-											</h2>	
+									<div style={{
+
+										display: 'flex',
+										justifyContent: 'space-between',
+										marginBottom: '1rem'
+									}}>
+										<div>
+											<img
+												src={
+													company_profile &&
+														company_profile.companyLogoByteArray
+														? 'data:image/jpg;base64,' +
+														company_profile.companyLogoByteArray
+														: logo
+												}
+												className=""
+												alt=""
+												style={{ width: ' 150px' }}></img>
+
+
+										</div>
+										<div style={{ textAlign: 'center' }} >
+
+											<h2>
+												{company_profile &&
+													company_profile['companyName']
+													? company_profile['companyName']
+													: ''}
+											</h2>
 											<br style={{ marginBottom: '5px' }} />
-											<b style ={{ fontSize: '18px'}}>{strings.ReceivableInvoiceSummary}</b>
+											<b style={{ fontSize: '18px' }}>{strings.ReceivableInvoiceSummary}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
-											
+											{strings.From} {(initValue.startDate).replaceAll("/", "-")} {strings.To} {initValue.endDate.replaceAll("/", "-")}
+
+										</div>
+										<div>
+										</div>
 									</div>
-									<div>
-									</div>									
-							</div>
 									{loading ? (
 										<Loader />
 									) : (
-										<div id="tbl_exporttable_to_xls" className="table-wrapper">
-											<Table className="table-bordered">
-												<thead className="table-header-bg">
-													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceNumber}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceDate}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceDueDate}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Status}</th>
+										<>
+											<ReportTables
+												reportDataList={receivableInvoiceSummaryModelList}
+												reportName={'Receivable Invoice Summary'}
+												id={5}
+												rowHeight={50}
+												history={this.props.history}
+											/>
+										</>
 
-														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
-														{strings.InvoiceAmount}
-														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.RemainingBalance}</th>
-
-													</tr>
-												</thead>
-												<tbody className=" table-bordered table-hover">
-													{this.state.data.receivableInvoiceSummaryModelList &&
-														this.state.data.receivableInvoiceSummaryModelList.map((item, index) => {
-															return (
-																<tr key={index}>
-
-
-																	<td style={{ textAlign: 'left'}}>{item.invoiceNumber}</td>
-																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
-																	<td style={{ textAlign: 'left'}}>{item.invoiceDate ? (
-																		moment(item.invoiceDate).format('DD-MM-YYYY')
-																	) : (" ")}</td>
-																	<td style={{ textAlign: 'left'}}>
-																	{item.invoiceDueDate ? (
-																		moment(item.invoiceDueDate).format('DD-MM-YYYY')
-																	) : ("-")}</td>
-																	<td style={{ textAlign: 'center' }}>{item.status}</td>
-																	<td style={{ textAlign: 'right' }}>
-																		<Currency
-																			value={item.invoiceTotalAmount}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0].currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	</td>
-
-																	<td style={{ textAlign: 'right' }}>
-																		<Currency
-																			value={item.balance}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0].currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	</td>
-																</tr>
-															);
-														})}
-
-												</tbody>
-												<tfoot>
-													<tr style={{ border: "3px solid #dfe9f7" }}>
-													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
-													<td></td>	<td></td>	<td></td>	<td></td>
-													<td style={{ textAlign: 'right', width: '20%' }}>
-												
-														<b><Currency
-															value={this.state.data.totalAmount}
-															currencySymbol={
-																universal_currency_list[0]
-																	? universal_currency_list[0].currencyIsoCode
-																	: 'USD'
-															}
-														/></b>
-														
-													</td>
-
-													
-													<td style={{ textAlign: 'right', width: '20%' }}>
-														
-													<b>
-													<Currency
-															value={this.state.data.totalBalance}
-															currencySymbol={
-																universal_currency_list[0]
-																	? universal_currency_list[0].currencyIsoCode
-																	: 'USD'
-															}
-														/></b>
-														
-													</td>
-												</tr>
-												</tfoot>
-											</Table>
-										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast: 'center' }}> {strings.PoweredBy} <b>SimpleAccounts</b></div>
 								</PDFExport>
 							</CardBody>
 						</div>

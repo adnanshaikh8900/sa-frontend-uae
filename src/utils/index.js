@@ -7,6 +7,7 @@ import * as selectInvoiceFactory from './select_invoice_factory';
 import * as filterFactory from './filter_factory';
 import * as cryptoService from './crypto';
 import * as optionFactory from './option_factory';
+import * as ReportsColumnList from './reports_column_lists';
 import * as ActionMessagesList from './action_messages';
 
 export {
@@ -20,4 +21,5 @@ export {
   selectInvoiceFactory,
   optionFactory,
   ActionMessagesList,
+  ReportsColumnList
 };

@@ -5,6 +5,7 @@ import VatReturnsReport from './vat_return'
 import PurchaseByItem from './purchase_by_item'
 import PurchaseByVendor from './purchase_by_vendor'
 import ARAgingReport  from './ar_aging_report'
+import ReportTables from './reportsTables'
 
 export {
   ProfitAndLoss,
@@ -13,5 +14,6 @@ export {
   VatReturnsReport,
   PurchaseByItem,
   PurchaseByVendor,
+  ReportTables,
   ARAgingReport
 }

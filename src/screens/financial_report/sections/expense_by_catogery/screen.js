@@ -7,29 +7,23 @@ import {
 	CardBody,
 	Row,
 	Col,
-	Table,
 	Dropdown,
 	DropdownToggle,
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
 import moment from 'moment';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CSVLink } from 'react-csv';
-import { Loader, Currency } from 'components';
+import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
 import FilterComponent2 from '../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization'
-import download from 'downloadjs';
+import { ReportTables } from 'screens/financial_report/sections'
 
 
 const mapStateToProps = (state) => {
@@ -107,10 +101,19 @@ class ExpenseByCategory extends React.Component {
 			.getExpenseByCategory(postData)
 			.then((res) => {
 				if (res.status === 200) {
+					let expenseByCategoryList = res.data.expenseByCategoryList
+					expenseByCategoryList.push({
+						expensesAmountWithoutTaxSum: res.data.totalAmountWithoutTax,
+						expensesAmountSum: res.data.totalAmount,
+						expensesVatAmountSum: res.data.totalVatAmount,
+					})
+					expenseByCategoryList = expenseByCategoryList.map((row, i) => {
+						row.id = i + 1;
+						return row
+					})
 					this.setState({
-						data: res.data,
+						expenseByCategoryList: expenseByCategoryList,
 						loading: false,
-						
 					});
 				}
 			})
@@ -120,8 +123,6 @@ class ExpenseByCategory extends React.Component {
 	};
 
 	exportFile = () => {
-
-	
 		let dl =""
 		let fn =""
 		let type="csv"
@@ -158,38 +159,11 @@ class ExpenseByCategory extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
-	rendersalesExcludingvat = (cell, row, extraData) => {
-		return row.salesExcludingvat === 0 ? (
-			<Currency
-				value={row.salesExcludingvat}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			<Currency
-				value={row.salesExcludingvat}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		);
 
-	};
-	rendergetSalesWithvat = (cell, row, extraData) => {
-		return row.getSalesWithvat === 0 ? (
-			<Currency
-				value={row.getSalesWithvat}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			<Currency
-				value={row.getSalesWithvat}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		);
-
-	};
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
-		const { profile, universal_currency_list, company_profile, sales_by_customer } = this.props;
+		const { loading, initValue, dropdownOpen, expenseByCategoryList, view } = this.state;
+		const {company_profile } = this.props;
 		console.log(this.state.data)
 		return (
 			<div className="transactions-report-screen">
@@ -243,20 +217,6 @@ class ExpenseByCategory extends React.Component {
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
 														</DropdownItem>
-														{/* <DropdownItem
-															onClick={() => {
-																this.exportFile();
-															}}
-														>
-															XLS (Microsoft Excel 1997-2004 Compatible)
-														</DropdownItem> */}
-														{/* <DropdownItem
-															onClick={() => {
-																this.exportFile(csvData, 'profitloss', 'xlsx');
-															}}
-														>
-															XLSX (Microsoft Excel)
-														</DropdownItem> */}
 													</DropdownMenu>
 												</Dropdown>&nbsp;&nbsp;
 												<div
@@ -268,17 +228,6 @@ class ExpenseByCategory extends React.Component {
 												>
 													<i className="fa fa-print"></i>
 												</div>
-												{/* <div
-													className="mr-2 print-btn-cont"
-													onClick={() => {
-														this.exportPDFWithComponent();
-													}}
-													style={{
-														cursor: 'pointer',
-													}}
-												>
-													<i className="fa fa-file-pdf-o"></i>
-												</div> */}
 												<div
 													className="mr-2 print-btn-cont"
 													onClick={() => {
@@ -352,87 +301,14 @@ class ExpenseByCategory extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div  id="tbl_exporttable_to_xls" className="table-wrapper">
-											<Table className="table-bordered">
-												<thead className="table-header-bg">
-													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.TransactionCategory+" "+strings.Name}</th>
-													
-														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
-														{strings.Amount}
-														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Amount+" "+strings.WithTax}</th>
-
-													</tr>
-												</thead>
-												<tbody className=" table-bordered table-hover">
-													{this.state.data.expenseByCategoryList &&
-														this.state.data.expenseByCategoryList.map((item, index) => {
-															return (
-																<tr key={index}>
-
-
-																	<td style={{ textAlign: 'left', width: '60%' }}>{item.transactionCategoryName}</td>
-																
-																	<td style={{ textAlign: 'right', width: '20%' }}>
-																		<Currency
-																			value={item.expensesAmountWithoutTaxSum}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0].currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	</td>
-
-																	<td style={{ textAlign: 'right', width: '20%' }}>
-																		<Currency
-																			value={item.expensesAmountSum}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0].currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	</td>
-																</tr>
-															);
-														})}
-
-												</tbody>
-												<tfoot>
-													<tr style={{ border: "3px solid #dfe9f7" }}>
-													<td style={{ textAlign: 'left', width: '20%' }}><b>{strings.Total}</b></td>
-													
-													<td style={{ textAlign: 'right', width: '20%' }}>
-													
-														<b><Currency
-															value={this.state.data.totalAmountWithoutTax}
-															currencySymbol={
-																universal_currency_list[0]
-																	? universal_currency_list[0].currencyIsoCode
-																	: 'USD'
-															}
-														/></b>
-														
-													</td>
-
-													<td style={{ textAlign: 'right', width: '20%' }}>
-													<b>
-													<Currency
-															value={this.state.data.totalAmount}
-															currencySymbol={
-																universal_currency_list[0]
-																	? universal_currency_list[0].currencyIsoCode
-																	: 'USD'
-															}
-														/></b>
-														
-													</td>
-												</tr>
-												</tfoot>
-											</Table>
-										</div>
+										<>
+										<ReportTables
+												reportDataList={expenseByCategoryList}
+												reportName={'Expense By Category Details'}
+												id={4}
+												rowHeight={50}
+											/>
+										</>
 									)}
 									<div style={{ textAlignLast: 'center' }}>{strings.PoweredBy} <b>SimpleAccounts</b></div>
 								</PDFExport>

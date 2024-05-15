@@ -1299,7 +1299,7 @@ const en = {
       //ProductIsRequired: "Product is Required",
       Product_Is_Required:" Product is required",
       QuantityGreaterThan0: 'Quantity should be greater than 0',
-      UnitPriceGreaterThan1: 'Unit price should be greater than 1',
+      UnitPriceGreaterThan1: 'Unit price should be greater than 0',
       VATIsRequired: 'VAT is required',
 
       //Salary Component

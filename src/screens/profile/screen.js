@@ -332,7 +332,7 @@ class Profile extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'User Updated Successfully',
+						'Profile Updated Successfully',
 					);
 					this.props.authActions.checkAuthStatus().catch((err) => {
 						this.props.authActions.logOut();

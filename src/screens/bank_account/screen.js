@@ -339,17 +339,12 @@ class BankAccount extends React.Component {
 					</DropdownItem>
 					)		}				
 					
-					{row.name !== 'PettyCash' &&  (
+					{row.bankAccountId != 10000 && row.transactionCount === 0 ? 
 						<DropdownItem
-							onClick={() =>
-								this.props.history.push('/admin/banking/bank-account/detail', {
-									bankAccountId: row.bankAccountId,
-									currency:row.curruncySymbol
-								})
-							}
+							onClick={() => this.closeBankAccount(row.bankAccountId)}
 						>
-							<i className="fas fa-edit" />{strings.Edit}
-						</DropdownItem>)}
+							<i className="fa fa-edit" /> Edit
+						</DropdownItem> : ''}
 						<DropdownItem
 							onClick={() => {
 								this.props.history.push(

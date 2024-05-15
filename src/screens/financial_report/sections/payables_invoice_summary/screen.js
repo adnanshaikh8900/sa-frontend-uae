@@ -382,8 +382,8 @@ class PayablesInvoiceSummary extends React.Component {
 																<tr key={index}>
 
 
-																	<td style={{ textAlign: 'center'}}>{item.invoiceNumber}</td>
-																	<td style={{ textAlign: 'center'}}>{item.supplierName}</td>
+																	<td style={{ textAlign: 'center  pull-left'}}>{item.invoiceNumber}</td>
+																	<td style={{ textAlign: 'center  pull-left'}}>{item.supplierName}</td>
 																	<td style={{ textAlign: 'center'}}>{item.invoiceDate ? (
 																		moment(item.invoiceDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
@@ -391,7 +391,7 @@ class PayablesInvoiceSummary extends React.Component {
 																	{item.invoiceDueDate ? (
 																		moment(item.invoiceDueDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
-																	<td style={{ textAlign: 'center' }}>{item.status}</td>
+																	<td style={{ textAlign: 'center  pull-left' }}>{item.status}</td>
 																	<td style={{ textAlign: 'right' }}>
 																		<Currency
 																			value={item.totalInvoiceAmount}

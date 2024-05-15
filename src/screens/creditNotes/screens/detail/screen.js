@@ -2206,6 +2206,7 @@ class DetailCreditNote extends React.Component {
 																					) : null))
 																					}
 																					<TableHeaderColumn
+																						width={ "250px" }
 																						dataField="vat"
 																						dataFormat={(cell, rows) =>
 																							this.renderVat(cell, rows, props)
@@ -2214,7 +2215,7 @@ class DetailCreditNote extends React.Component {
 																						{strings.VAT}
 																					</TableHeaderColumn>
 																					<TableHeaderColumn
-																						width="10%"
+																						//width="10%"
 																						dataField="sub_total"
 																						dataFormat={this.renderVatAmount}
 																						className="text-right"

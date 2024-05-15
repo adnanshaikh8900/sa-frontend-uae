@@ -575,7 +575,10 @@ class RecordCustomerPayment extends React.Component {
 																			maxLength="14,2"
 																			id="amount"
 																			name="amount"
-																			value={props.values.amount}
+																			value={props.values.amount.toLocaleString('en-US', {
+																				minimumFractionDigits: 2,
+																				maximumFractionDigits: 2
+																			})}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||

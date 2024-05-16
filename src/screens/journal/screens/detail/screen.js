@@ -1162,7 +1162,7 @@ min="0"
 																		></TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="transactionCategoryId"
-																			width="20%"
+																			width="400"
 																			dataFormat={(cell, rows) =>
 																				this.renderAccount(cell, rows, props)
 																			}

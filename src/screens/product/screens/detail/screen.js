@@ -1841,7 +1841,7 @@ renderName=(cell,row)=>{
 																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
-																		disabled={props.values.isInventoryEnabled===true }
+																		//disabled={props.values.isInventoryEnabled===true }
 																			type="text"
 																			maxLength="14,2"
 																			id="purchaseUnitPrice"

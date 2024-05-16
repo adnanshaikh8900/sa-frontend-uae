@@ -667,7 +667,8 @@ class InvoiceTemplate extends Component {
 													</span>
 												</td>
 											</tr>)}
-											<tr >
+											<tr style={{ border: "1px solid rgb(200, 206, 211)"}}>
+											
 												<td style={{ width: '40%' }}>
 													<strong>{strings.Total}</strong>
 												</td>

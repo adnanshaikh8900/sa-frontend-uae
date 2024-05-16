@@ -1984,7 +1984,7 @@ class DetailSupplierInvoice extends React.Component {
 										<Row>
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
-													<i className="fas fa-address-book" />
+												<i className="fas fa-file-invoice" />
 													<span className="ml-2"> {strings.UpdateInvoice}</span>
 												</div>
 											</Col>
@@ -2795,7 +2795,8 @@ class DetailSupplierInvoice extends React.Component {
 																			}
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
-																					width="12%"
+																					//width="12%"
+																					width={ "250px" }
 																					dataField="vat"
 																					dataFormat={(cell, rows) =>
 																						this.renderVat(cell, rows, props)
@@ -2806,7 +2807,7 @@ class DetailSupplierInvoice extends React.Component {
 																			}
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
-																					width="10%"
+																					//width="10%"
 																					dataField="sub_total"
 																					dataFormat={this.renderVatAmount}
 																					className="text-right"

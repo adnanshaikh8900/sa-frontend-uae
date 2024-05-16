@@ -2110,11 +2110,7 @@ class CreateQuotation extends React.Component {
 										<Row>
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
-													<img
-														alt="invoiceimage"
-														src={invoiceimage}
-														style={{ width: '40px' }}
-													/>
+												<i className="fas fa-box-open" />
 													<span className="ml-2">{strings.CreateQuotation}</span>
 												</div>
 											</Col>
@@ -2959,6 +2955,7 @@ class CreateQuotation extends React.Component {
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
 																					//width="10%"
+																					width = {"250px"}
 																					dataField="sub_total"
 																					dataFormat={this.renderVatAmount}
 																					className="text-right"

@@ -304,8 +304,8 @@ class CreateOpeningBalance extends React.Component {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		maxDate={new Date()}
-																		minDate={new Date()}
+																		// maxDate={new Date()}
+																		// minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('effectiveDate')(value);
 																		}}

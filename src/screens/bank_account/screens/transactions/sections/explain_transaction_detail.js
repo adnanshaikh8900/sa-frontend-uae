@@ -1607,7 +1607,10 @@ class ExplainTrasactionDetail extends React.Component {
                               (a, c) => a + c.explainedAmount,
                               0
                             );
-
+                            if (!values.coaCategoryId) {
+                              errors.coaCategoryId = "Please select Transaction Type"
+                              return errors;
+                            }
                             if (
                               values.coaCategoryId?.value === 2 ||
                               values.coaCategoryId?.value === 100

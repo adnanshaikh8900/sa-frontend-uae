@@ -284,7 +284,7 @@ class CreateCustomerInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
-						maxLength="250"
+						maxLength="2000"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);

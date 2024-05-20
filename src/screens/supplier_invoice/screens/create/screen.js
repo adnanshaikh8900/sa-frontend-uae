@@ -1695,7 +1695,7 @@ class CreateSupplierInvoice extends React.Component {
 							<div className='mt-1'>
 								<Input
 									type="text"
-									maxLength="250"
+									maxLength="2000"
 									value={row['description'] !== '' && row['description'] !== null ? row['description'] : ''}
 									onChange={(e) => {
 										this.selectItem(e.target.value, row, 'description', form, field);

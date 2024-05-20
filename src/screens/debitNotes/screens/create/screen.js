@@ -732,7 +732,7 @@ class CreateDebitNote extends React.Component {
 							<Input
 								disabled
 								type="text"
-								maxLength="250"
+								maxLength="2000"
 								value={row['description'] ? row['description'] : ''}
 								onChange={(e) => {
 									this.selectItem(e.target.value, row, 'description', form, field);

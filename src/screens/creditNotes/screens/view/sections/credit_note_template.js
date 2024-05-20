@@ -519,7 +519,7 @@ class InvoiceTemplate extends Component {
 
 								}}
 							>
-								<div style={{ width: '100%' }}>
+								<div style={{ width: '250px' ,marginLeft: 'auto' }}>
 									<Table className="table-clear cal-table">
 										<tbody>
 

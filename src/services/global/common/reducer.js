@@ -20,6 +20,8 @@ const initState = {
 	pay_mode: [],
 	company_details: [],
 	salary_component_list: [],
+	companyCurrency: [],
+	currency_convert_list: [],
 };
 
 const CommonReducer = (state = initState, action) => {
@@ -31,6 +33,12 @@ const CommonReducer = (state = initState, action) => {
 				...state,
 				is_loading: true,
 			};
+		case COMMON.COMPANY_CURRENCY:
+			return {
+				...state,
+				companyCurrency: Object.assign([], payload),
+			};
+
 
 		case COMMON.END_LOADING:
 			return {
@@ -82,6 +90,11 @@ const CommonReducer = (state = initState, action) => {
 			return {
 				...state,
 				state_list: Object.assign([], payload),
+			};
+		case COMMON.CURRENCY_CONVERT_LIST:
+			return {
+				...state,
+				currency_convert_list: Object.assign([], payload.data),
 			};
 
 		case COMMON.COMPANY_TYPE:

@@ -20,9 +20,9 @@ import { adminRoutes } from 'routes';
 import { AuthActions, CommonActions } from 'services/global';
 import PrivateRoute from '../private';
 import navigation from 'constants/navigation';
-import { Aside, Header, Footer, Loading } from 'components';
+import { Aside, Header, Footer, Loading, Loader } from 'components';
 import './style.scss';
-import {data}  from '../../screens/Language/index'
+import { data } from '../../screens/Language/index'
 import LocalizedStrings from 'react-localization';
 import config from '../../constants/config'
 
@@ -41,11 +41,10 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 let strings = new LocalizedStrings(data);
-if(localStorage.getItem('language')==null)
-	{
-		strings.setLanguage('en');
+if (localStorage.getItem('language') == null) {
+	strings.setLanguage('en');
 }
-else{
+else {
 	strings.setLanguage(localStorage.getItem('language'));
 }
 class AdminLayout extends React.Component {
@@ -54,6 +53,9 @@ class AdminLayout extends React.Component {
 		this.state = {
 			// language: window['localStorage'].getItem('language'),
 			registeredVat: true,
+			loading: true,
+			loadingMsg: "Loading...",
+			SubscriptionMessage: '',
 		};
 	}
 
@@ -63,10 +65,18 @@ class AdminLayout extends React.Component {
 		} else {
 			this.props.authActions
 				.checkAuthStatus()
-				.then((response) => {
-					this.props.commonActions.getCompanyDetails().then((res) => {
-						this.setState({ registeredVat: res.data.isRegisteredVat })});
+				.then(async (response) => {
+					await this.props.commonActions.getCompanyDetails().then((res) => {
+						this.setState({ registeredVat: res.data.isRegisteredVat })
+					});
 					this.props.commonActions.getRoleList(response.data.role.roleCode);
+					await this.props.commonActions.getCompanyCurrency();
+					await this.props.commonActions.getCurrencyConversionList();
+					await this.props.commonActions.getVatList();
+					await this.props.commonActions.getCurrencyList();
+					this.setState({
+						loading: false,
+					})
 				})
 				.catch((err) => {
 					this.props.commonActions.tostifyAlert(
@@ -77,7 +87,6 @@ class AdminLayout extends React.Component {
 					this.props.history.push('/login');
 				});
 			this.props.commonActions.getSimpleVATVersion();
-			this.props.commonActions.getCurrencyList();
 			const toastifyAlert = (status, message) => {
 				if (!message) {
 					message = 'Unexpected Error';
@@ -101,6 +110,21 @@ class AdminLayout extends React.Component {
 				}
 			};
 			this.props.commonActions.setTostifyAlertFunc(toastifyAlert);
+			this.props.authActions.getUserSubscription().then((res) => {
+				let message = res.data.message
+				if (res.status === 200) {
+					if (message === 'Active') {
+						message = null;
+					} else {
+						message = message || strings.SubscriptionExpiredMessage;
+					}
+				} else {
+					message = strings.SubscriptionFailedMessage;
+				}
+				this.setState({ SubscriptionMessage: message });
+			}).catch((err) => {
+				this.setState({ SubscriptionMessage: strings.SubscriptionErrorMessage });
+			});
 		}
 	}
 
@@ -110,8 +134,9 @@ class AdminLayout extends React.Component {
 			zIndex: 1999,
 			closeOnClick: true,
 			draggable: true,
-			
+
 		};
+		const { loading, loadingMsg, SubscriptionMessage } = this.state;
 		const { user_role_list, user_list } = this.props;
 		var arr = [];
 
@@ -122,155 +147,160 @@ class AdminLayout extends React.Component {
 		function filterPaths(arr, moduleName) {
 
 			navigation.items.forEach((item) => {
-			 	if (item.children) {
-			 		var childPath = item.children.find((child) => {
-			 			return child.path == moduleName;
-					 });
-					 
-			 		if (childPath) {
-			 			var existingPath = parentPathPresent(arr, item.name);
-			 			if (existingPath) {
-			 				existingPath['children'].push(childPath);
-			 			} else {
-			 				arr.items.push({
-			 					name: item.name,
-			 					url: item.url,
-			 					icon: item.icon,
-			 					children: [childPath],
-			 				});
-			 			}
-			 		}
-			 	}
-			 	if (moduleName === 'Dashboard' && item.name === strings.Dashboard && config.DASHBOARD) {
+				if (item.children) {
+					var childPath = item.children.find((child) => {
+						return child.path == moduleName;
+					});
+
+					if (childPath) {
+						var existingPath = parentPathPresent(arr, item.name);
+						if (existingPath) {
+							existingPath['children'].push(childPath);
+						} else {
+							arr.items.push({
+								name: item.name,
+								url: item.url,
+								icon: item.icon,
+								children: [childPath],
+							});
+						}
+					}
+				}
+				if (moduleName === 'Dashboard' && item.name === strings.Dashboard && config.DASHBOARD) {
 					arr.items.push({
-			 			name: item.name,
-			 			url: item.url,
-			 			icon: item.icon,
-			 		});
-				 }
-				 if (moduleName === 'Report' && item.name === strings.Report && config.REPORTS_MODULE ) {
+						name: item.name,
+						url: item.url,
+						icon: item.icon,
+					});
+				}
+				if (moduleName === 'Report' && item.name === strings.Report && config.REPORTS_MODULE) {
 					arr.items.push({
-			 			name: item.name,
-			 			url: item.url,
-			 			icon: item.icon,
-			 		});
-				 }
-				 if (moduleName === 'Inventory Summary' && item.name === strings.Inventory ) {
+						name: item.name,
+						url: item.url,
+						icon: item.icon,
+					});
+				}
+				if (moduleName === 'Inventory Summary' && item.name === strings.Inventory) {
 					arr.items.push({
-			 			name: item.name,
-			 			url: item.url,
-			 			icon: item.icon,
-			 		});
-				 }
+						name: item.name,
+						url: item.url,
+						icon: item.icon,
+					});
+				}
 				//  if (moduleName === 'Template' && item.name === 'Template') {
 				// 	arr.items.push({
-			 	// 		name: item.name,
-			 	// 		url: item.url,
-			 	// 		icon: item.icon,
-			 	// 	});
+				// 		name: item.name,
+				// 		url: item.url,
+				// 		icon: item.icon,
+				// 	});
 				//  }
-				 
+
 			});
 		}
 
 		var finalArray = { items: [] };
 
 		user_role_list.forEach((p) => {
-		filterPaths(finalArray, p.moduleName);
+			filterPaths(finalArray, p.moduleName);
 		});
 
 		var correctSequence = navigation.items.map(item => item.name);
 
 		finalArray.items = correctSequence.reduce((arr, name) => {
-		const filteredItems = finalArray.items.slice();
+			const filteredItems = finalArray.items.slice();
 
-		filteredItems.filter((item) => {
-			if (item.name === 'Master') {
-				if (this.state.registeredVat === false) {
-					item.children = item.children.filter((i) => i.name !== "VAT Category");
-					
+			filteredItems.filter((item) => {
+				if (item.name === 'Master') {
+					if (this.state.registeredVat === false) {
+						item.children = item.children.filter((i) => i.name !== "VAT Category");
+
+					}
 				}
-			}
-			return item;
-		});
+				return item;
+			});
 
-		const ele = filteredItems.find((item) => item.name === name);
-		if (ele) arr.push(ele);
+			const ele = filteredItems.find((item) => item.name === name);
+			if (ele) arr.push(ele);
 
-		return arr;
+			return arr;
 		}, []);
-	
 
 		return (
-			<div className="admin-container">
-				<div className="app">
-					<AppHeader fixed>
-						<Suspense fallback={Loading()}>
-							<Header {...this.props} />
-						</Suspense>
-					</AppHeader>
-					<div className="app-body">
-						<AppSidebar fixed display="lg">
-							<AppSidebarHeader />
-							<AppSidebarForm />
+			loading == true ? <Loader loadingMsg={loadingMsg} /> :
+				<div className="admin-container">
+					<div className="app">
+						<AppHeader fixed>
 							<Suspense fallback={Loading()}>
-								<AppSidebarNav navConfig={finalArray} {...this.props} />
+								<Header {...this.props} />
 							</Suspense>
-							<AppSidebarMinimizer />
-							<AppSidebarFooter />
-						</AppSidebar>
-						<main className="main">
-							<div className="breadcrumb-container">
-								<AppBreadcrumb appRoutes={adminRoutes} />
-							</div>
-							<Container fluid className="p-20">
+						</AppHeader>
+						<div className="app-body">
+							<AppSidebar fixed display="lg">
+								<AppSidebarHeader />
+								<AppSidebarForm />
 								<Suspense fallback={Loading()}>
-									<ToastContainer
-										position="top-right"
-										autoClose={1700}
-										style={containerStyle}
-										closeOnClick
-            							draggable
-									/>
-									<Switch>
-										{adminRoutes?.map((prop, key) => {
-											if (prop?.redirect){
+									<AppSidebarNav navConfig={finalArray} {...this.props} />
+								</Suspense>
+								<AppSidebarMinimizer />
+								<AppSidebarFooter />
+							</AppSidebar>
+							<main className="main">
+								{SubscriptionMessage && config.VALIDATE_SUBSCRIPTION &&
+									<div className="alert alert-danger mt-3 ml-3 mr-3 mb-0">
+										{SubscriptionMessage}
+									</div>
+								}
+								<div className="breadcrumb-container">
+									<AppBreadcrumb appRoutes={adminRoutes} />
+								</div>
+								<Container fluid className="p-20">
+									<Suspense fallback={Loading()}>
+										<ToastContainer
+											position="top-right"
+											autoClose={1700}
+											style={containerStyle}
+											closeOnClick
+											draggable
+										/>
+										<Switch>
+											{adminRoutes?.map((prop, key) => {
+												if (prop?.redirect) {
+													return (
+														<Redirect
+															from={prop?.path}
+															to={prop?.pathTo}
+															key={key}
+														/>
+													);
+												}
 												return (
-													<Redirect
-														from={prop?.path}
-														to={prop?.pathTo}
+													<PrivateRoute
+														path={prop.path}
+														name={prop.name}
+														node={user_role_list}
+														component={prop.component}
 														key={key}
+														exact
 													/>
 												);
-											}
-											return (
-												<PrivateRoute
-													path={prop.path}
-													name={prop.name}
-													node={user_role_list}
-													component={prop.component}
-													key={key}
-													exact
-												/>
-											);
-										})}
-									</Switch>
+											})}
+										</Switch>
+									</Suspense>
+								</Container>
+							</main>
+							<AppAside>
+								<Suspense fallback={Loading()}>
+									<Aside />
 								</Suspense>
-							</Container>
-						</main>
-						<AppAside>
+							</AppAside>
+						</div>
+						<AppFooter>
 							<Suspense fallback={Loading()}>
-								<Aside />
+								<Footer {...this.props} />
 							</Suspense>
-						</AppAside>
+						</AppFooter>
 					</div>
-					<AppFooter>
-						<Suspense fallback={Loading()}>
-							<Footer {...this.props} />
-						</Suspense>
-					</AppFooter>
 				</div>
-			</div>
 		);
 	}
 }

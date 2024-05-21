@@ -65,7 +65,7 @@ export const register = (obj) => {
 		};
 		return api(data)
 			.then((res) => {
-			//	console.log(res);
+				//	console.log(res);
 				// dispatch({
 				// 	type: AUTH.REGISTER,
 				// });
@@ -98,7 +98,7 @@ export const registerStrapiUser = (obj, companyobj) => {
 				let companyObjectKey = new RegExp(`"${key}"\\s*:\\s*"[^"]*"`);
 				let companyJsonStr = JSON.stringify(companyobj).replace(companyObjectKey, `"${key}": "${res.data.user.id}"`);
 				//end of block	
-				registerStrapiCompany (res.data.jwt, companyJsonStr);
+				registerStrapiCompany(res.data.jwt, companyJsonStr);
 			})
 			.catch((err) => {
 				throw err;
@@ -111,15 +111,15 @@ export const registerStrapiUser = (obj, companyobj) => {
 
 export const registerStrapiCompany = (apiToken, companyObj) => {
 	//return (dispatch) => {
-try{
+	try {
 		//console.log('Starting API request...');
-	let data = {
+		let data = {
 			method: 'post',
 			url: 'https://strapi-api.ae.simpleaccounts.io/api/companies',
 			data: companyObj,
 			headers: {
 				Authorization: `Bearer ${apiToken}`,
-       			'Content-Type': 'application/json',
+				'Content-Type': 'application/json',
 			},
 		};
 		return api(data)
@@ -130,9 +130,9 @@ try{
 				console.log(err)
 				throw err;
 			});
-		} catch (error) {
-			console.log(error)
-		}
+	} catch (error) {
+		console.log(error)
+	}
 	//};
 };
 
@@ -142,30 +142,49 @@ try{
 // 	return async (dispatch) => {
 // 	  try {
 // 		console.log('Starting API request...');
-		
+
 // 		const response = await api.post('https://strapi-api-test-ae.app.simpleaccounts.io/api/companies', companyObj, {
 // 		  headers: {
 // 			Authorization: `Bearer ${apiToken}`,
 // 			'Content-Type': 'application/json',
 // 		  },
 // 		});
-  
+
 // 		console.log('API request successful!');
 // 		console.log('Response:', response.data);
-		
+
 // 		// Handle the API response and dispatch appropriate actions
 // 		// Example: dispatch({ type: REGISTER_COMPANY_SUCCESS, payload: response.data });
 // 	  } catch (error) {
 // 		console.log('API request error!');
 // 		console.log('Error:', error);
-		
+
 // 		// Handle the error and dispatch appropriate actions
 // 		// Example: dispatch({ type: REGISTER_COMPANY_ERROR, payload: error.message });
 // 		throw error;
 // 	  }
 // 	};
 //   };
-  
+
+export const getUserSubscription = () => {
+	const apiUrl = `${process.env.SIMPLE_SERVICES_HOST}/api/getSimpleAccountsSubscription`;
+	const apiKey = process.env.SIMPLE_SERVICES_GET_SUBSCRIPTION_KEY;
+	const domainUrl = window.location.origin;
+	const url = `${apiUrl}?code=${apiKey}&domainUrl=${domainUrl}`;
+	return async (dispatch) => {
+		let data = {
+			method: 'get',
+			url: url,
+		};
+		return api(data)
+			.then((res) => {
+				return res;
+			}).catch((err) => {
+				throw err;
+			});
+	};
+};
+
 
 export const getCurrencyList = () => {
 	return (dispatch) => {

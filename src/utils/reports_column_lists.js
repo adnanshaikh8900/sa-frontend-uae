@@ -7,6 +7,7 @@ import { Currency } from 'components';
 import moment from 'moment';
 import LocalizedStrings from 'react-localization';
 import { data } from '../screens/Language/index'
+import { Link } from "react-router-dom";
 
 let strings = new LocalizedStrings(data);
 
@@ -132,16 +133,17 @@ const ReceivableInvoiceSummary = [
         field: 'invoiceNumber', headerName: strings.InvoiceNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',
         renderCell: (params) => {
             return (
-                <p style={{ textAlign: 'left', color: "#2046DB", cursor: 'pointer', }}
-                    onClick={() => {
-                        this.props.history.push('/admin/income/customer-invoice/view', {
+                <Link
+                    to={{
+                        pathname: '/admin/income/customer-invoice/view',
+                        state: {
                             id: params.row.invoiceId,
                             gotoReports: '/admin/report/receivable-invoice-summary'
-                        })
+                        }
                     }}
-                >
+                    style={{ textAlign: 'left', color: "#2046DB", cursor: 'pointer', }} >
                     {params.row.invoiceNumber}
-                </p>
+                </Link>
             );
         }
     },
@@ -167,16 +169,17 @@ const ReceivableInvoiceDetails = [
         field: 'invoiceNumber', headerName: strings.InvoiceNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',
         renderCell: (params) => {
             return (
-                <p style={{ textAlign: 'left', color: "#2046DB", cursor: 'pointer', }}
-                    onClick={() => {
-                        this.props.history.push('/admin/income/customer-invoice/view', {
+                <Link
+                    to={{
+                        pathname: '/admin/income/customer-invoice/view',
+                        state: {
                             id: params.row.invoiceId,
                             gotoReports: '/admin/report/receivable-invoice-summary'
-                        })
+                        }
                     }}
-                >
+                    style={{ textAlign: 'left', color: "#2046DB", cursor: 'pointer', }} >
                     {params.row.invoiceNumber}
-                </p>
+                </Link>
             );
         }
     },
@@ -196,40 +199,7 @@ const ReceivableInvoiceDetails = [
     },
 ]
 
-const DetailedGeneralLedger = [
-    { field: 'invoiceDate', headerName: strings.InvoiceDate, headerAlign: 'left', headerClassName: "table-header-bg", flex: 1, align: 'left', hideable: false, },
-    {
-        field: 'invoiceNumber', headerName: strings.InvoiceNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',
-        renderCell: (params) => {
-            return (
-                <p style={{ textAlign: 'left', color: "#2046DB", cursor: 'pointer', }}
-                    onClick={() => {
-                        this.props.history.push('/admin/income/customer-invoice/view', {
-                            id: params.row.invoiceId,
-                            gotoReports: '/admin/report/receivable-invoice-summary'
-                        })
-                    }}
-                >
-                    {params.row.invoiceNumber}
-                </p>
-            );
-        }
-    },
-    { field: 'productName', headerName: strings.ProductName, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', },
-    { field: 'description', headerName: strings.Description, headerAlign: 'left', headerClassName: "table-header-bg", flex: 1, align: 'left', },
-    { field: 'quantity', headerName: strings.Quantity, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', },
-    { field: 'unitPrice', headerName: strings.UnitPrice, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', },
-    {
-        field: 'vatAmount', headerName: strings.VatAmount, headerAlign: 'right', align: 'right', headerClassName: "table-header-bg", flex: 1, renderCell: (params) => {
-            return params.row.vatAmount === null ? '' : renderAmount(params.row.vatAmount);
-        }
-    },
-    {
-        field: 'totalAmount', headerName: strings.Total + " " + strings.Amount, headerAlign: 'right', align: 'right', headerClassName: "table-header-bg", flex: 1, renderCell: (params) => {
-            return params.row.totalAmount === null ? '' : renderAmount(params.row.totalAmount);
-        }
-    },
-]
+
 const PurchaseByVendor = [
     { field: 'vendorName', headerName: strings.Vendor + " " + strings.Name, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', },
     { field: 'invoiceCount', headerName: strings.InvoiceCount, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', },
@@ -324,16 +294,17 @@ const PayableInvoiceSummary = [
         field: 'invoiceNumber', headerName: strings.InvoiceNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',
         renderCell: (params) => {
             return (
-                <p style={{ textAlign: 'left', color: "#2046DB", cursor: 'pointer', }}
-                    onClick={() => {
-                        this.props.history.push('/admin/income/customer-invoice/view', {
+                <Link
+                    to={{
+                        pathname: '/admin/expense/supplier-invoice/view',
+                        state: {
                             id: params.row.invoiceId,
                             gotoReports: '/admin/report/payable-invoice-summary'
-                        })
+                        }
                     }}
-                >
+                    style={{ textAlign: 'left', color: "#2046DB", cursor: 'pointer', }} >
                     {params.row.invoiceNumber}
-                </p>
+                </Link>
             );
         }
     },
@@ -388,6 +359,71 @@ const PayableInvoiceDetails = [
     },
 ]
 
+const DetailedGeneralLedger = [
+    { field: 'date', headerName: strings.Date, headerAlign: 'left', headerClassName: "table-header-bg", flex: 1, align: 'left', hideable: false, },
+    { field: 'postingReferenceTypeEnum', headerName: strings.TransactionType, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', },
+    { field: 'transactionTypeName', headerName: strings.Account, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', },
+    { field: 'name', headerName: strings.TransactionDetails, headerAlign: 'left', headerClassName: "table-header-bg", flex: 1, align: 'left', },
+    {
+        field: 'transactionRefNo', headerName: strings.Transaction + '#', headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',
+        renderCell: (params) => {
+            if (params.row.deleteFlag) {
+                return params.row.transactionRefNo;
+            }
+            const pathname = getInvoicePath(params.row.postingReferenceType, params.row.transactionType);
+            return (
+                <Link
+                    to={{
+                        pathname: pathname,
+                        state: {
+                            id: params.row.transactionId,
+                            gotoReports: '/admin/report/detailed-general-ledger'
+                        }
+                    }}
+                    style={{ textAlign: 'left', color: "#2046DB", cursor: 'pointer', }} >
+                    {params.row.transactionRefNo}
+                </Link>
+            );
+        }
+    },
+    {
+        field: 'referenceNo', headerName: strings.Reference + "#", headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',
+        renderCell: (params) => {
+            if (params.row.deleteFlag) {
+                return params.row.transactionRefNo;
+            }
+            const pathname = getReferencePath(params.row.postingReferenceType, params.row.transactionType);
+            return (
+                <Link
+                    to={{
+                        pathname: pathname,
+                        state: {
+                            id: params.row.referenceId,
+                            gotoReports: '/admin/report/detailed-general-ledger'
+                        }
+                    }}
+                    style={{ textAlign: 'left', color: "#2046DB", cursor: 'pointer', }} >
+                    {params.row.referenceNo}
+                </Link>
+            );
+        }
+    },
+    {
+        field: 'debitAmount', headerName: strings.Debit, headerAlign: 'right', align: 'right', headerClassName: "table-header-bg", flex: 1, renderCell: (params) => {
+            return params.row.debitAmount ? renderAmount(params.row.debitAmount) : '';
+        }
+    },
+    {
+        field: 'creditAmount', headerName: strings.Credit, headerAlign: 'right', align: 'right', headerClassName: "table-header-bg", flex: 1, renderCell: (params) => {
+            return params.row.creditAmount ? renderAmount(params.row.creditAmount) : '';
+        }
+    },
+    {
+        field: 'amount', headerName: strings.Amount, headerAlign: 'right', align: 'right', headerClassName: "table-header-bg", flex: 1, renderCell: (params) => {
+            return params.row.amount ? renderAmount(params.row.amount) : '';
+        }
+    },
+]
 export const List = {
     'PayrollSummaryReport': PayrollSummary,
     'Sales By Customer': SalesByCustomer,
@@ -401,7 +437,6 @@ export const List = {
     'Debit Note Detail Report': TaxDebitNoteDetails,
     'Payable Invoice Summary': PayableInvoiceSummary,
     'Payable Invoice Details': PayableInvoiceDetails,
-
 }
 
 
@@ -426,4 +461,52 @@ function renderAmount(amount) {
             </label>
         </div>
     );
+};
+
+function getInvoicePath(postingType, type) {
+    if (postingType === "EXPENSE") {
+        return '/admin/expense/expense/view';
+    } else if (postingType === "INVOICE") {
+        if (type === 1) {
+            return '/admin/expense/supplier-invoice/view';
+        } else {
+            return '/admin/income/customer-invoice/view';
+        }
+    } else if (postingType === "DEBIT_NOTE") {
+        return '/admin/expense/debit-notes/view';
+    } else if (postingType === "CREDIT_NOTE") {
+        return '/admin/income/credit-notes/view';
+    } else if (postingType === "RECEIPT" || postingType === "BANK_RECEIPT") {
+        return '/admin/income/customer-invoice/view';
+    } else if (postingType === "PAYMENT" || postingType === "BANK_PAYMENT") {
+        return '/admin/expense/supplier-invoice/view';
+    } else if (postingType === "MANUAL") {
+        return '/admin/accountant/journal/detail';
+    } else {
+        return '#';
+    }
+};
+
+function getReferencePath(postingType, type) {
+    if (postingType === "EXPENSE") {
+        return '/admin/expense/expense/view';
+    } else if (postingType === "INVOICE") {
+        if (type === 1) {
+            return '/admin/expense/purchase-order/view';
+        } else {
+            return '/admin/income/quotation/view';
+        }
+    } else if (postingType === "DEBIT_NOTE") {
+        return '/admin/expense/debit-notes/view';
+    } else if (postingType === "CREDIT_NOTE") {
+        return '/admin/income/credit-notes/view';
+    } else if (postingType === "RECEIPT" || postingType === "BANK_RECEIPT") {
+        return '/admin/income/receipt/view';
+    } else if (postingType === "PAYMENT" || postingType === "BANK_PAYMENT") {
+        return '/admin/expense/purchase-receipt/view';
+    } else if (postingType === "MANUAL") {
+        return '/admin/accountant/journal/detail';
+    } else {
+        return '#';
+    }
 };

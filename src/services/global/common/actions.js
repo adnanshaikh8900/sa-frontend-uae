@@ -114,6 +114,47 @@ export const getRoleList = (id) => {
 			});
 	};
 };
+export const getCompanyCurrency = () => {
+	return async (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/company/getCompanyCurrency',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: COMMON.COMPANY_CURRENCY,
+						payload: res.data,
+					});
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getCurrencyConversionList = () => {
+	return async (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/currencyConversion/getActiveCurrencyConversionList`,
+		};
+
+		return authApi(data)
+			.then((res) => {
+				dispatch({
+					type: COMMON.CURRENCY_CONVERT_LIST,
+					payload: res,
+				});
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
 export const getStateList = (countryCode) => {
 	return (dispatch) => {
 		let data = {

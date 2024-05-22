@@ -442,6 +442,7 @@ class CreateJournal extends React.Component {
 			<Field
 				name={`journalLineItems.${idx}.debitAmount`}
 				render={({ field, form }) => (
+					<>
 					<Input
 					type="number"
 					min="0"
@@ -475,6 +476,19 @@ class CreateJournal extends React.Component {
 								: ''
 						}`}
 					/>
+					{props.errors.journalLineItems &&
+						props.errors.journalLineItems[parseInt(idx, 10)] &&
+						props.errors.journalLineItems[parseInt(idx, 10)].debitAmount &&
+						Object.keys(props.touched).length > 0 &&
+						props.touched.journalLineItems &&
+						props.touched.journalLineItems[parseInt(idx, 10)] &&
+						props.touched.journalLineItems[parseInt(idx, 10)].debitAmount && (
+							<div className='invalid-feedback'>
+								{props.errors.journalLineItems[parseInt(idx, 10)].debitAmount}
+							</div>
+
+						)}
+						</>
 				)}
 			/>
 		);
@@ -493,6 +507,7 @@ class CreateJournal extends React.Component {
 			<Field
 				name={`journalLineItems.${idx}.creditAmount`}
 				render={({ field, form }) => (
+					<>
 					<Input
 					type="number"
 					min="0"
@@ -526,6 +541,20 @@ class CreateJournal extends React.Component {
 								: ''
 						}`}
 					/>
+					{props.errors.journalLineItems &&
+							props.errors.journalLineItems[parseInt(idx, 10)] &&
+							props.errors.journalLineItems[parseInt(idx, 10)].creditAmount &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.journalLineItems &&
+							props.touched.journalLineItems[parseInt(idx, 10)] &&
+							props.touched.journalLineItems[parseInt(idx, 10)].creditAmount && (
+								<div className='invalid-feedback'>
+									{props.errors.journalLineItems[parseInt(idx, 10)].creditAmount}
+								</div>
+
+							)}
+					</>
+
 				)}
 			/>
 		);
@@ -822,8 +851,8 @@ class CreateJournal extends React.Component {
 																transactionCategoryId: Yup.string().required(
 																	'Account is required',
 																),
-																debitAmount: Yup.number().required(),
-																creditAmount: Yup.number().required(),
+																debitAmount: Yup.string().required('Debit is required'),
+																creditAmount: Yup.string().required('Credit is required'),
 															}),
 														)
 														.min(

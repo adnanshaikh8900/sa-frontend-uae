@@ -19,8 +19,6 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import { toast } from 'react-toastify';
 import './style.scss';
-import DatePicker from 'react-datepicker';
-import moment from 'moment';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { CommonActions } from 'services/global';
@@ -32,7 +30,6 @@ import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperFirst } from 'lodash-es';
 import { FormControlUnstyled } from '@mui/base';
-import 'react-datepicker/dist/react-datepicker.css';
 
 const mapStateToProps = (state) => {
 	return {
@@ -1373,7 +1370,7 @@ class DetailContact extends React.Component {
 																			</Col>
 																	
 																{/* Hidden by Shoaib for Multi-country */}
-																			{/* <Col lg={4}>
+																			<Col lg={4}>
 																				<FormGroup className="mb-3 hideTRN">
 																					<Label htmlFor="taxTreatmentId">
 																						<span className="text-danger">* </span>{strings.TaxTreatment}
@@ -1500,130 +1497,8 @@ class DetailContact extends React.Component {
 																						<b>	<a target="_blank" rel="noopener noreferrer" href="https://tax.gov.ae/en/default.aspx" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
 																					</div>
 																				</FormGroup>
-																			</Col>)} */}
-																			
-																			<Col lg={4}>
-																				<FormGroup check inline className="mb-6">
-																					<div>
-																						<Input
-																							// className="custom-control-input"
-																							type="checkbox"
-																							id="inline-radio1"
-																							name="SMTP-auth"
-																							checked={props.values.isRegisteredVat}
-																							onChange={(value) => {
-																								console.log(value,value.target.value,"Value")
-																								if(value != null){
-																								props.handleChange('isRegisteredVat')(
-																									value,
-																								);
-																								}else{
-																									props.handleChange('isRegisteredVat')(
-																										'',
-																									);
-																								}
-																							}}
-																						/>
-																						<label htmlFor="inline-radio1">
-																						{strings.CompanyVatRegistered}
-																					</label>
-																					</div>
-																				</FormGroup>
-																			</Col>
-																	</Row>
-																	<Row style={{display: props.values.isRegisteredVat === true ? '' : 'none'}}>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="product_code">
-																							<span className="text-danger">* </span> {strings.TaxRegistrationNumber}
-																							<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
-																								<span class="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
-																						</Label>
-																							<Input
-																								// disabled={!this.state.enableVatRegistrationDate}
-																								type="text"
-																								id="vatRegistrationNumber"
-																								minLength="15"
-																								maxLength="15"
-																								name="vatRegistrationNumber"
-																								placeholder={strings.Enter+strings.TaxRegistrationNumber}
-																								value={
-																									props.values
-																										.vatRegistrationNumber
-																								}
-																								onChange={(option) => {
-																									if (
-																										option.target.value === '' ||
-																										this.regEx.test(option.target.value)
-																									) {
-																										props.handleChange('vatRegistrationNumber')(
-																											option,
-																										);
-																									} 
-																								}
-																							}
-																							//value={props.values.vatRegistrationNumber}
-																								className={
-																									props.errors.vatRegistrationNumber &&
-																									props.touched.vatRegistrationNumber
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.vatRegistrationNumber &&
-																								props.touched.vatRegistrationNumber && (
-																									<div className="invalid-feedback">
-																										{props.errors.vatRegistrationNumber}
-																									</div>
-																								)}
-																								<div className="VerifyTRN">
-																									<br/>
-																									<b>	<a target="_blank" rel="noopener noreferrer"  href="https://tax.gov.ae/en/default.aspx" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
-																								</div>
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="expense_date">
-																								<span className="text-danger">* </span> {strings.VatRegisteredOn} 
-																								<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
-																								<span class="tooltiptext">Please note that you cannot update <br></br> this detail once you have created a document.</span></div>
-																							</Label>
-																							<DatePicker
-																								// disabled={!this.state.enableVatRegistrationDate}
-																								autoComplete='off'
-																								id="vatRegistrationDate"
-																								name="vatRegistrationDate"
-																								placeholderText='Select VAT Registered Date.'
-																								showMonthDropdown
-																								showYearDropdown
-																								dateFormat="dd-MM-yyyy"
-																								dropdownMode="select"
-																								minDate={new Date("01/01/2018")}
-																								//maxDate={this.state.transaction_first_date}
-																								// value={props.values.vatRegistrationDate ?moment(
-																								// 	props.values.vatRegistrationDate,
-																								// ).format('DD-MM-YYYY'):""}
-																								selected={props.values.vatRegistrationDate ? new Date (moment(props.values.vatRegistrationDate).format('MM DD YYYY')) : new Date()}
-																								onChange={(value) => {
-																									props.handleChange('vatRegistrationDate')(value);
-																								}}
-																								className={`form-control ${
-																									props.errors.vatRegistrationDate &&
-																									props.touched.vatRegistrationDate
-																										? 'is-invalid'
-																										: ''
-																								}`}
-																							/>
-																							{props.errors.vatRegistrationDate &&
-																								props.touched.vatRegistrationDate && (
-																									<div className="invalid-feedback">
-																										{props.errors.vatRegistrationDate}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																				</Row>
+																			</Col>)}
+																		</Row>
 																		<hr />
 																		<h2 className="mb-3 mt-3">{strings.ContactAddressDetails}</h2>
 																		<h5 className="mb-3 mt-3">{strings.BillingDetails}</h5>

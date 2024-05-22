@@ -1609,7 +1609,6 @@ class ExplainTrasactionDetail extends React.Component {
                             );
                             if (!values.coaCategoryId) {
                               errors.coaCategoryId = "Please select Transaction Type"
-                              return errors;
                             }
                             if (
                               values.coaCategoryId?.value === 2 ||
@@ -1677,7 +1676,6 @@ class ExplainTrasactionDetail extends React.Component {
                               ) {
                                 errors.amount = `The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `;
                               }
-                              return errors;
                             }
 
                             if (
@@ -1687,7 +1685,7 @@ class ExplainTrasactionDetail extends React.Component {
                             ) {
                               errors.vatId = "Please select Vat";
                             }
-                            console.log(values.payrollListIds,values.coaCategoryId.label , values.expenseCategory.value)
+                            // console.log(values.payrollListIds,values.coaCategoryId.label , values.expenseCategory.value)
                             if (
                               (values.payrollListIds === "" || !values.payrollListIds || values.payrollListIds?.length === 0) &&
                               values.coaCategoryId.label === "Expense" &&
@@ -1702,7 +1700,7 @@ class ExplainTrasactionDetail extends React.Component {
                               values.coaCategoryId.label === "Expense"
                             ) {
                               errors.expenseCategory =
-                                "Please select Expence Category";
+                                "Please select Expense Category";
                             }
 
                             // if (

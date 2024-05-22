@@ -181,20 +181,12 @@ class Header extends Component {
 								<i className="fas fa-info-circle"></i> {strings.Help}
 							</DropdownItem>
 							<DropdownItem
-									onClick={this.signOut}
-							>
+								onClick={() => this.props.history.push('/logout')}
+								>
 								<i className="fa fa-sign-out header-icon mr-1"></i> {strings.LogOut}
 							</DropdownItem>
 						</DropdownMenu>
 					</UncontrolledDropdown>
-					{/* <NavItem className="px-3">
-						<button
-							className="nav-link d-flex align-items-center my-link"
-							onClick={this.signOut}
-						>
-							<i className="fa fa-sign-out header-icon mr-1"></i> Log Out
-						</button>
-					</NavItem> */}
 				</Nav>
 			</React.Fragment>
 		);

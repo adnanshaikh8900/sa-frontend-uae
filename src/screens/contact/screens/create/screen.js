@@ -35,6 +35,8 @@ const mapStateToProps = (state) => {
 		state_list: state.contact.state_list,
 		currency_list: state.contact.currency_list,
 		contact_type_list: state.contact.contact_type_list,
+		companyDetails: state.common.company_details,
+
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -363,6 +365,7 @@ class CreateContact extends React.Component {
 		const {country_list} = this.state.country_list;
 		const { initValue, checkmobileNumberParam, taxTreatmentList, isSame, state_list_for_shipping } = this.state;
 		const { loading, loadingMsg } = this.state;
+		const { isRegisteredVat } = this.props.companyDetails;
 
 		return (
 			loading == true ? <Loader loadingMsg={loadingMsg} /> :
@@ -1096,7 +1099,8 @@ class CreateContact extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		{props.values.taxTreatmentId && props.values.taxTreatmentId.value && (<Col md="4" style={{ display: props.values.taxTreatmentId.value === 1 || props.values.taxTreatmentId.value === 3 || props.values.taxTreatmentId.value === 5 ? '' : 'none' }}>
+																		{props.values.taxTreatmentId && props.values.taxTreatmentId.value && (
+																		<Col md="4" style={{ display: props.values.taxTreatmentId.value === 1 || props.values.taxTreatmentId.value === 3 || props.values.taxTreatmentId.value === 5 ? '' : 'none' }}>
 																			<FormGroup>
 																				<Label htmlFor="vatRegistrationNumber"><span className="text-danger">* </span>
 																					{strings.TaxRegistrationNumber}

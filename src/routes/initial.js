@@ -7,7 +7,7 @@ const initialRoutes = [
 		component: LogIn.screen,
 	},
 	{
-		path: '/login-two',
+		path: '/logout',
 		name: 'LogInTwo',
 		component: LogInTwo,
 	},

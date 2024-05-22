@@ -91,7 +91,7 @@ class CreateExpense extends React.Component {
 				payee: { label: 'Company Expense', value: 'Company Expense' },
 				placeOfSupplyId: '',
 				expenseDate: new Date(),
-				currency: '',
+				currencyCode: 150,
 				project: '',
 				exchangeRate: '',
 				expenseCategory: '',
@@ -300,7 +300,7 @@ class CreateExpense extends React.Component {
 								vat.value = "10";
 							}
 							this.formRef.current.setFieldValue('vatCategoryId', vat, true);
-							this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
+							this.formRef.current.setFieldValue('expenseDescription', res.data.expenseDescription, true);
 							this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 							// this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
 							// this.formRef.current.setFieldValue('notes',  res.data.notes, true);
@@ -1561,15 +1561,16 @@ class CreateExpense extends React.Component {
 																	</FormGroup>
 																</Col>
 															)} */}
+																		{this.state.isRegisteredVat && props.values.expenseCategory && (props.values?.expenseCategory && props.values?.expenseCategory !== 34) && (this.renderVat(props))}
 																		<Col lg={3}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="currency">
+																				<Label htmlFor="currencyCode">
 																					<span className="text-danger">* </span>
 																					{strings.Currency}
 																				</Label>
 																				<Select
-																					id="currency"
-																					name="currency"
+																					id="currencyCode"
+																					name="currencyCode"
 																					// styles={customStyles}
 																					options={
 																						currency_convert_list
@@ -1582,25 +1583,33 @@ class CreateExpense extends React.Component {
 																							: []
 																					}
 																					placeholder={strings.Select + strings.Currency}
-																					value={props.values.currency}
+																					value={props.values.currencyCode?.value ? props.values.currencyCode :
+																						currency_convert_list
+																						&& selectCurrencyFactory.renderOptions(
+																							'currencyName',
+																							'currencyCode',
+																							currency_convert_list,
+																							'Currency',
+																						).find(obj => obj.value === props.values.currencyCode)
+																					}
 																					onChange={(option) => {
 																						if (option.value != "") {
-																							props.handleChange('currency')(option);
+																							props.handleChange('currencyCode')(option);
 																							this.setExchange(option.value);
 																							this.setCurrency(option.value);
 																						}
 																					}}
 																					className={
-																						props.errors.currency &&
-																							props.touched.currency
+																						props.errors.currencyCode &&
+																							props.touched.currencyCode
 																							? 'is-invalid'
 																							: ''
 																					}
 																				/>
-																				{props.errors.currency &&
-																					props.touched.currency && (
+																				{props.errors.currencyCode &&
+																					props.touched.currencyCode && (
 																						<div className="invalid-feedback">
-																							{props.errors.currency}
+																							{props.errors.currencyCode}
 																						</div>
 																					)}
 																			</FormGroup>

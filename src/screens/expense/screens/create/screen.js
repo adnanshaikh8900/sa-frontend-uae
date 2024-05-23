@@ -1427,20 +1427,6 @@ class CreateExpense extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		{/* <Col>
-																				<Button
-																					color="primary"
-																					className="btn-square pull-left mb-3 mr-3 mt-4"
-																					// style={{ marginBottom: '40px' }}
-																					onClick={() =>
-																						//  this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})
-																						this.props.history.push(`/admin/master/employee/create`,{goto:"Expense"})
-																						}
-																				>
-																					<i className="fas fa-plus mr-1" />
-																					{strings.NewEmployee}
-																				</Button>
-																			</Col> */}
 																	</Row>
 																	<Row>
 																		<Col lg={3}>

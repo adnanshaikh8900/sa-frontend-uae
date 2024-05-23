@@ -614,7 +614,7 @@ class VatReports extends React.Component {
     return cell
       ? moment(cell).format("DD-MM-YYYY")
       : // .format('LL')
-        "-";
+      "-";
   };
 
   renderVATNumber = (cell, row) => {
@@ -632,7 +632,7 @@ class VatReports extends React.Component {
   render() {
     const {
       vatReportDataList,
-      csvFileNamesData,
+      openFileTaxRetrunModal,
       dialog,
       options,
       loading,
@@ -891,8 +891,8 @@ class VatReports extends React.Component {
                   // rowData={vatReportDataList.data ? vatReportDataList.data : []}
                   pagination={
                     vatReportDataList &&
-                    vatReportDataList.data &&
-                    vatReportDataList.data.length
+                      vatReportDataList.data &&
+                      vatReportDataList.data.length
                       ? true
                       : false
                   }
@@ -998,16 +998,19 @@ class VatReports extends React.Component {
             this.getInitialData();
           }}
         />
-        <FileTaxReturnModal
-          openModal={this.state.openFileTaxRetrunModal}
-          current_report_id={this.state.current_report_id}
-          endDate={this.state.endDate}
-          taxReturns={this.state.taxReturns}
-          closeModal={(e) => {
-            this.closeFileTaxRetrunModal(e);
-            this.getInitialData();
-          }}
-        />
+
+        {openFileTaxRetrunModal &&
+          <FileTaxReturnModal
+            openModal={openFileTaxRetrunModal}
+            current_report_id={this.state.current_report_id}
+            endDate={this.state.endDate}
+            taxReturns={this.state.taxReturns}
+            closeModal={(e) => {
+              this.closeFileTaxRetrunModal(e);
+              this.getInitialData();
+            }}
+          />
+        }
         <DeleteModal
           openModal={this.state.deleteModal}
           current_report_id={this.state.current_report_id}

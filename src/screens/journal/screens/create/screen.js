@@ -1089,6 +1089,7 @@ class CreateJournal extends React.Component {
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
+																		width={ "400px" }
 																		dataField="transactionCategoryId"
 																		dataFormat={(cell, rows) =>
 																			this.renderAccount(cell, rows, props)

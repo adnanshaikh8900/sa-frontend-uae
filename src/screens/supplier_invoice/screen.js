@@ -105,7 +105,8 @@ class SupplierInvoice extends React.Component {
 				overDueAmountMonthly: '',
 			},
 			language: window['localStorage'].getItem('language'),
-			loadingMsg: "Loading..."
+			loadingMsg: "Loading...",
+			currentPage: 1,
 		};
 
 		this.options = {
@@ -154,9 +155,9 @@ class SupplierInvoice extends React.Component {
 	};
 
 	initializeData = (search) => {
-		let { filterData } = this.state;
+		let { filterData, currentPage} = this.state;
 		const paginationData = {
-			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageNo: currentPage - 1,
 			pageSize: this.options.sizePerPage,
 		};
 		const sortingData = {
@@ -565,7 +566,9 @@ class SupplierInvoice extends React.Component {
 	};
 
 	handleSearch = () => {
-		this.initializeData();
+		this.setState({ currentPage: 1 }, () => {
+   		this.initializeData();
+ 		});
 	};
 
 	postInvoice = (row, markAsSent) => {
@@ -763,6 +766,7 @@ class SupplierInvoice extends React.Component {
 					contactType: 1,
 					contactId: '',
 				},
+				currentPage: 1
 			},
 			() => {
 				this.initializeData();
@@ -1143,22 +1147,25 @@ class SupplierInvoice extends React.Component {
 											<BootstrapTable
 												selectRow={this.selectRowProp}
 												search={false}
-												options={this.options}
 												data={supplier_invoice_data ? supplier_invoice_data : []}
 												version="4"
 												hover
 												keyField="id"
-												pagination={
-													supplier_invoice_data &&
-														supplier_invoice_data.length > 0
-														? true
-														: false
-												}
+												pagination={supplier_invoice_data &&
+															supplier_invoice_data.length > 0
+														}
 												remote
 												fetchInfo={{
-													dataTotalSize: supplier_invoice_list.count
-														? supplier_invoice_list.count
-														: 0,
+													dataTotalSize: supplier_invoice_list.count ? supplier_invoice_list.count : 0,
+												}}
+												options={{
+													...this.options,
+													page: this.state.currentPage,
+													onPageChange: (page) => {
+													this.setState({ currentPage: page }, () => {
+														this.initializeData();
+													});
+													},
 												}}
 												className="supplier-invoice-table"
 												ref={(node) => (this.table = node)}

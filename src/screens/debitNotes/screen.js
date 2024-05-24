@@ -84,6 +84,7 @@ class DebitNotes extends React.Component {
 			},
 			debit_note_list: [],
 			rowId: '',
+			currentPage: 1,
 		};
 
 		this.options = {
@@ -134,9 +135,9 @@ class DebitNotes extends React.Component {
 	};
 
 	initializeData = (search) => {
-		let { filterData } = this.state;
+		let { filterData, currentPage } = this.state;
 		const paginationData = {
-			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageNo: currentPage - 1,
 			pageSize: this.options.sizePerPage,
 		};
 		const sortingData = {
@@ -554,7 +555,9 @@ class DebitNotes extends React.Component {
 	};
 
 	handleSearch = () => {
-		this.initializeData();
+		this.setState({ currentPage: 1 }, () => {
+   		this.initializeData();
+ 		});
 	};
 	closeInvoice = (id, status) => {
 		if (status === 'Paid') {
@@ -636,6 +639,7 @@ class DebitNotes extends React.Component {
 					status: '',
 					contactType: 2,
 				},
+				currentPage: 1
 			},
 			() => {
 				this.initializeData();
@@ -791,7 +795,6 @@ class DebitNotes extends React.Component {
 											<BootstrapTable
 												selectRow={this.selectRowProp}
 												search={false}
-												options={this.options}
 												data={debit_note_list ? debit_note_list.data : []}
 												version="4"
 												hover
@@ -809,6 +812,15 @@ class DebitNotes extends React.Component {
 													dataTotalSize: debit_note_list && debit_note_list.count
 														? debit_note_list.count
 														: 0,
+												}}
+												options={{
+													...this.options,
+													page: this.state.currentPage,
+													onPageChange: (page) => {
+													this.setState({ currentPage: page }, () => {
+														this.initializeData();
+													});
+													},
 												}}
 												className="customer-invoice-table"
 												csvFileName="Customer_Invoice.csv"

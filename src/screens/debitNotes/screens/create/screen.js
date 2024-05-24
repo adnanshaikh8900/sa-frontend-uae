@@ -1938,7 +1938,7 @@ class CreateDebitNote extends React.Component {
 																			? 'Creating...'
 																			: strings.Create}
 																	</Button>
-																	<Button
+																	{!this.props.location?.state?.invoiceID && <Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -1958,7 +1958,7 @@ class CreateDebitNote extends React.Component {
 																		{this.state.disabled1
 																			? 'Creating...'
 																			: strings.CreateandMore}
-																	</Button>
+																	</Button>}
 																	<Button
 																		color="secondary"
 																		className="btn-square"

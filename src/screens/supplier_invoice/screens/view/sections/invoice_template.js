@@ -414,8 +414,9 @@ class InvoiceTemplate extends Component {
 										return (
 											<tr key={index}>
 												<td className="center">{index + 1}</td>
-												<td><b>{item.productName}</b><br /><br />{item.description}</td>
-
+												<td style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+													<b>{item.productName}</b><br /><br />{item.description}
+												</td>
 												<td style={{ textAlign: 'center' }}>{item.quantity}<br /><br />
 
 												</td>

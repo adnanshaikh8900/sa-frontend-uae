@@ -1094,6 +1094,7 @@ class CreateJournal extends React.Component {
 																		dataFormat={(cell, rows) =>
 																			this.renderAccount(cell, rows, props)
 																		}
+
 																	>
 																		{strings.ACCOUNT} 
 																	</TableHeaderColumn>

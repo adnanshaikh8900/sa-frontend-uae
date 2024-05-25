@@ -7,36 +7,28 @@ import {
     CardBody,
     Row,
     Col,
-    Table,
     Dropdown,
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
 } from 'reactstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
- 
 import moment from 'moment';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CSVLink } from 'react-csv';
-import { Loader, Currency } from 'components';
+import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
 import FilterComponent2 from '../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
-import { CommonActions } from 'services/global';
-import {data}  from '../../../Language/index'
+import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { DataGrid, GridColumnMenu } from '@mui/x-data-grid';
 import FilterComponent3 from '../filterComponent3';
- 
+import { ReportTables } from 'screens/financial_report/sections';
+
+
 const mapStateToProps = (state) => {
     return {
-        profile: state.auth.profile,
-        universal_currency_list: state.common.universal_currency_list,
         company_profile: state.reports.company_profile,
         payable_invoice: state.reports.payable_invoice,
     };
@@ -47,7 +39,6 @@ const mapDispatchToProps = (dispatch) => {
             FinancialReportActions,
             dispatch,
         ),
-        commonActions: bindActionCreators(CommonActions, dispatch),
     };
 };
 let strings = new LocalizedStrings(data);
@@ -59,102 +50,21 @@ class PayrollSummaryReport extends React.Component {
             loading: false,
             dropdownOpen: false,
             customPeriod: 'asOn',
-            hideExportOptions:false,
+            hideExportOptions: false,
             view: false,
             initValue: {
                 startDate: moment().startOf('month').format('DD/MM/YYYY'),
                 endDate: moment().format('DD/MM/YYYY'),
-           
+
             },
-            showTable:true,
+            showTable: true,
             csvData: [],
             activePage: 1,
             sizePerPage: 10,
             totalCount: 0,
-            columnConfigs: {
-                id: false,
-                "payrollDate": false,
-                "payrollSubject":  true,
-                "payPeriod":  true,
-                "employeeCount":  true,
-                "generatedBy":  true,
-                "approvedBy":  true,
-                "status":  true,
-                "runDate":  true,
-                "comment":  false,
-                "isActive": true,
-                "payrollApprover":  true,
-                "generatedByName":  true,
-                "payrollApproverName":  true,
-                "totalAmount":  true,
-                "dueAmount":  false
-              },
-            sort: {
-                column: null,
-                direction: 'desc',
-            },
-        data:{payrollSummaryModelList:[
-            {
-                id: 1,
-                "payrollDate": "2024-03-16T17:38",
-                "payrollSubject": "April 2024",
-                "payPeriod": "01/03/2024-31/03/2024",
-                "employeeCount": 1,
-                "generatedBy": "10000",
-                "approvedBy": null,
-                "status": "Paid",
-                "runDate": "2024-03-07T17:39:09.403",
-                "comment": null,
-                "isActive": true,
-                "payrollApprover": 10000,
-                "generatedByName": "Suraj Rahade",
-                "payrollApproverName": "Suraj Rahade",
-                "totalAmount": 7000,
-                "dueAmount": 0
-              },
-              {
-                id: 2,
-                "payrollDate": "2024-05-23T17:38",
-                "payrollSubject": "june 2024",
-                "payPeriod": "01/03/2024-31/03/2024",
-                "employeeCount": 2,
-                "generatedBy": "10000",
-                "approvedBy": null,
-                "status": "Partially Paid",
-                "runDate": "2024-03-07T17:39:09.403",
-                "comment": null,
-                "isActive": true,
-                "payrollApprover": 10000,
-                "generatedByName": "Gayatri Rahade",
-                "payrollApproverName": "Suraj Rahade",
-                "totalAmount": 5000,
-                "dueAmount": 0
-              },
-              {
-                id: 3,
-                "payrollDate": "2024-06-27T17:38",
-                "payrollSubject": "july 2024",
-                "payPeriod": "01/03/2024-31/03/2024",
-                "employeeCount": 3,
-                "generatedBy": "10000",
-                "approvedBy": null,
-                "status": "Approved",
-                "runDate": "2024-03-07T17:39:09.403",
-                "comment": null,
-                "isActive": true,
-                "payrollApprover": 10000,
-                "generatedByName": "Kabir",
-                "payrollApproverName": "Kabir",
-                "totalAmount": 2000,
-                "dueAmount": 0
-              }
-        ]},
- 
- 
         };
-   
     }
- 
+
     generateReport = (value) => {
         this.setState(
             {
@@ -170,86 +80,29 @@ class PayrollSummaryReport extends React.Component {
             },
         );
     };
- 
+
     componentDidMount = () => {
         this.props.financialReportActions.getCompany()
         this.initializeData();
-        this.getColumnConfigs();
-   
-       
     };
-    getColumnConfigs = () => {
-		const postData = {
-			id:1
-		};
-		this.props.financialReportActions
-			.getColumnConfigs(postData)
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState({
-						columnConfigs: res.data,
-						loading: false,
-					});
-				}
-			})
-			.catch((err) => {
-				this.setState({ loading: false });
-			});
-	};
- 
-    updateColumnConfigs = (json) => {
-		const postData = {
-			id:1,
-            reportName:"PayrollSummaryReport",
-            columnNames:json
-		};
-		this.props.financialReportActions
-			.updateColumnConfigs(postData)
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState({
-						columnConfigs: res.data,
-						loading: false,
-					});
-
-                    this.getColumnConfigs()
-				}
-			})
-			.catch((err) => {
-				this.setState({ loading: false });
-			});
-	};
+    
     initializeData = () => {
         const { initValue } = this.state;
         const postData = {
             startDate: initValue.startDate,
             endDate: initValue.endDate,
         };
-        // this.props.financialReportActions
-        //  .getPayableInvoiceSummary(postData)
-        //  .then((res) => {
-        //      if (res.status === 200) {
-        //          this.setState({
-        //              data: res.data,
-        //              loading: false,
-        //          });
-        //      }
-        //  })
-        //  .catch((err) => {
-        //      this.setState({ loading: false });
-        //  });
- 
-            this.props.financialReportActions
+        this.props.financialReportActions
             .getPayrollSummaryReport(postData)
             .then((res) => {
-                let data= res.data
-                data.payrollSummaryModelList=data.payrollSummaryModelList.map((row,i)=>{
-                    row.id=i+1;
-                    return row
-                })
                 if (res.status === 200) {
+                    let payrollSummaryModelList = res.data.payrollSummaryModelList
+                    payrollSummaryModelList = payrollSummaryModelList.map((row, i) => {
+                        row.id = i + 1;
+                        return row
+                    })
                     this.setState({
-                        data: data,
+                        payrollSummaryModelList: payrollSummaryModelList,
                         loading: false,
                     });
                 }
@@ -258,118 +111,47 @@ class PayrollSummaryReport extends React.Component {
                 this.setState({ loading: false });
             });
     };
- 
+
     exportFile = () => {
- 
-   
-        let dl =""
-        let fn =""
-        let type="csv"
-        var elt = document.getElementById('tbl_exporttable_to_xls');                                                
-        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });        
+        let dl = ""
+        let fn = ""
+        let type = "csv"
+        var elt = document.getElementById('tbl_exporttable_to_xls');
+        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
         return dl ?
-          XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-          XLSX.writeFile(wb, fn || ('Payroll Summary Report.'+ (type || 'csv')));
- 
-       }
- 
-       exportExcelFile  = () =>
-       {   let dl =""
-           let fn =""
-           let type="xlsx"
-           var elt = document.getElementById('tbl_exporttable_to_xls');                                            
-           var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });    
-           return dl ?
-             XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-             XLSX.writeFile(wb, fn || ('PayablesInvoice Summary Report.'+ (type || 'xlsx')));
-   
-       }
- 
- 
- 
-    // exportFile = (csvData, fileName, type) => {
-    //  const fileType =
-    //      type === 'xls'
-    //          ? 'application/vnd.ms-excel'
-    //          : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    //  const fileExtension = `.${type}`;
-    //  const ws = XLSX.utils.json_to_sheet(csvData);
-    //  const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-    //  const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-    //  const data = new Blob([excelBuffer], { type: fileType });
-    //  FileSaver.saveAs(data, fileName + fileExtension);
-    // };
-    renderPayperiod = (row) => {
-        let dateArr=row.payPeriod ? row.payPeriod.split("-"):[];
- 
-                let  startDate= dateArr[0].replaceAll('/','-')
-                let  endDate=dateArr[1].replaceAll('/','-')
-       
-        return(
-            // <div>{startDate}<b>&nbsp;to&nbsp;</b>{endDate}</div>
-            <Table className='ml-2'>
-            <Row><b>Start-Date</b>: {startDate}</Row>
-            <Row><b>End-Date</b>: {endDate}</Row>
-             </Table>
-            ) ;
-    };
+            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            XLSX.writeFile(wb, fn || ('Payroll Summary Report.' + (type || 'csv')));
+    }
+
+    exportExcelFile = () => {
+        let dl = ""
+        let fn = ""
+        let type = "xlsx"
+        var elt = document.getElementById('tbl_exporttable_to_xls');
+        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+        return dl ?
+            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            XLSX.writeFile(wb, fn || ('PayablesInvoice Summary Report.' + (type || 'xlsx')));
+    }
+
     toggle = () =>
         this.setState((prevState) => {
             return { dropdownOpen: !prevState.dropdownOpen };
         });
- 
+
     viewFilter = () =>
         this.setState((prevState) => {
             return { view: !prevState.view };
         });
- 
+
     exportPDFWithComponent = () => {
         this.pdfExportComponent.save();
     };
-    renderinvoiceDate = (cell, rows) => {
-        return moment(rows.invoiceDate).format('DD-MM-YYYY');
-    };
-    renderinvoiceDueDate = (cell, rows) => {
-        return moment(rows.invoiceDueDate).format('DD-MM-YYYY');
-    };
-    renderbalance = (cell, row, extraData) => {
-        return row.balance === 0 ? (
-            <Currency
-                value={row.balance}
-                currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-            />
-        ) : (
-            <Currency
-                value={row.balance}
-                currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-            />
-        );
-       
-    };
-    renderPayrolltotalAmount= (row) => {
-       
-        return (
-            <div style={{fontSize:"11px"}}>
-                <div>
-                    <label className="font-weight-bold mr-2 ">{strings.Payroll +" "+strings.Amount}: </label>
-                    <label>
-                        {row.totalAmount === 0 ?  "AED "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): "AED "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-                   
-                    </label>
-                </div>
-               
-                <div style={{ display: row.dueAmount === 0 ? 'none' : '' }}>
-                    <label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
-                    <label>{row.dueAmount === 0 ? row.dueAmount +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : "AED "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
-                </div>
- 
-            </div>);
-    };
+    
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dropdownOpen, csvData, view ,columnConfigs,customPeriod} = this.state;
-        const { profile, universal_currency_list,company_profile,payable_invoice } = this.props;
-       
+        const { loading, initValue, dropdownOpen, payrollSummaryModelList, view, customPeriod } = this.state;
+        const {company_profile } = this.props;
         return (
             <div className="transactions-report-screen">
                 <div className="animated fadeIn">
@@ -382,83 +164,44 @@ class PayrollSummaryReport extends React.Component {
                                             className="h4 mb-0 d-flex align-items-center pull-right"
                                             style={{ justifyContent: 'space-between' }}
                                         >
-                                            {/* <div>
-                                                <p
-                                                    className="mb-0"
-                                                    style={{
-                                                        cursor: 'pointer',
-                                                        fontSize: '1rem',
-                                                        paddingLeft: '15px',
-                                                    }}
-                                                    onClick={this.viewFilter}
-                                                >
-                                                    <i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
-                                                </p>
-                                            </div> */}
-                                       
                                             <div className="d-flex">
                                                 <div>
-                                                <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
-                                                    <DropdownToggle caret>Export As</DropdownToggle>
-                                                    <DropdownMenu>
-                                                       
-                                                    <DropdownItem  onClick={()=>{this.exportFile()}}>
+                                                    <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+                                                        <DropdownToggle caret>Export As</DropdownToggle>
+                                                        <DropdownMenu>
+
+                                                            <DropdownItem onClick={() => { this.exportFile() }}>
                                                                 <span
-                                                            style={{
-                                                                border: 0,
-                                                                padding: 0,
-                                                                backgroundColor:"white !important"
-                                                            }}
+                                                                    style={{
+                                                                        border: 0,
+                                                                        padding: 0,
+                                                                        backgroundColor: "white !important"
+                                                                    }}
                                                                 >CSV (Comma Separated Value)</span>
-                                                        </DropdownItem>
-                                                        <DropdownItem onClick={()=>{this.exportExcelFile()}}>
-                                                            <span
-                                                            style={{
-                                                                border: 0,
-                                                                padding: 0,
-                                                                backgroundColor:"white !important"
-                                                            }}
-                                                             >Excel</span>
-                                                        </DropdownItem>
-                                                        <DropdownItem onClick={this.exportPDFWithComponent}>
-                                                            Pdf
-                                                        </DropdownItem>
-                                                        {/* <DropdownItem
-                                                            onClick={() => {
-                                                                this.exportFile(csvData, 'profitloss', 'xls');
-                                                            }}
-                                                        >
-                                                            XLS (Microsoft Excel 1997-2004 Compatible)
-                                                        </DropdownItem>
-                                                        <DropdownItem
-                                                            onClick={() => {
-                                                                this.exportFile(csvData, 'profitloss', 'xlsx');
-                                                            }}
-                                                        >
-                                                            XLSX (Microsoft Excel)
-                                                        </DropdownItem> */}
-                                                    </DropdownMenu>
-                                                </Dropdown></div> &nbsp;&nbsp;
+                                                            </DropdownItem>
+                                                            <DropdownItem onClick={() => { this.exportExcelFile() }}>
+                                                                <span
+                                                                    style={{
+                                                                        border: 0,
+                                                                        padding: 0,
+                                                                        backgroundColor: "white !important"
+                                                                    }}
+                                                                >Excel</span>
+                                                            </DropdownItem>
+                                                            <DropdownItem onClick={this.exportPDFWithComponent}>
+                                                                Pdf
+                                                            </DropdownItem>
+                                                        </DropdownMenu>
+                                                    </Dropdown></div> &nbsp;&nbsp;
                                                 <div
                                                     className="mr-2 print-btn-cont"
                                                     onClick={() => window.print()}
                                                     style={{
                                                         cursor: 'pointer',
-                                                        }}
+                                                    }}
                                                 >
                                                     <i className="fa fa-print"></i>
                                                 </div>
-                                                {/* <div
-                                                className="mr-2 print-btn-cont"
-                                                onClick={() => {
-                                                    this.exportPDFWithComponent();
-                                                }}
-                                                style={{
-                                                    cursor: 'pointer',
-                                                    }}
-                                                >
-                                                <i className="fa fa-file-pdf-o"></i>
-                                            </div> */}
                                                 <div
                                                     className="mr-2 print-btn-cont"
                                                     onClick={() => {
@@ -466,42 +209,43 @@ class PayrollSummaryReport extends React.Component {
                                                     }}
                                                     style={{
                                                         cursor: 'pointer',
-                                                        }}
+                                                    }}
                                                 >
-                                                <span>X</span>
+                                                    <span>X</span>
                                                 </div>
-                                           
+
                                             </div>
                                         </div>
                                     </Col>
                                 </Row>
-                               
+
                             </CardHeader>
                             <CardHeader>
-							<FilterComponent3
-									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
-									customPeriod={customPeriod}
-									viewFilter={this.viewFilter}
-									generateReport={(value) => {
-										this.generateReport(value);
-									}}
-									setCutomPeriod={(value) => {
-										this.setState({ customPeriod: value })
-									}}
-									handleCancel={() => {
-										if (customPeriod === 'asOn') {
-										const currentDate = moment();
-										this.setState(prevState => ({
-										initValue: {
-										...prevState.initValue,
-										endDate: currentDate,            }
-										 }));
-										this.generateReport({ endDate: currentDate });
-										}
-										this.setState({ customPeriod: 'asOn' });
-										}}
-								/>
-							</CardHeader>	
+                                <FilterComponent3
+                                    hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+                                    customPeriod={customPeriod}
+                                    viewFilter={this.viewFilter}
+                                    generateReport={(value) => {
+                                        this.generateReport(value);
+                                    }}
+                                    setCutomPeriod={(value) => {
+                                        this.setState({ customPeriod: value })
+                                    }}
+                                    handleCancel={() => {
+                                        if (customPeriod === 'asOn') {
+                                            const currentDate = moment();
+                                            this.setState(prevState => ({
+                                                initValue: {
+                                                    ...prevState.initValue,
+                                                    endDate: currentDate,
+                                                }
+                                            }));
+                                            this.generateReport({ endDate: currentDate });
+                                        }
+                                        this.setState({ customPeriod: 'asOn' });
+                                    }}
+                                />
+                            </CardHeader>
                             <div className={`panel ${view ? 'view-panel' : ''}`}>
                                 <FilterComponent2
                                     viewFilter={this.viewFilter}
@@ -510,102 +254,64 @@ class PayrollSummaryReport extends React.Component {
                                     }}
                                 />{' '}
                             </div>
-                                    <CardBody id="section-to-print">
-                                    <PDFExport
+                            <CardBody id="section-to-print">
+                                <PDFExport
                                     ref={(component) => (this.pdfExportComponent = component)}
                                     scale={0.8}
                                     // paperSize="A3"
                                     fileName="Payrolls Summary Report.pdf"
                                 >
-                            <div style={{  
-                                   
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    marginBottom: '1rem'}}>
-                                    <div>
-                                    <img
-                                        src={
-                                            company_profile &&
-                                            company_profile.companyLogoByteArray
-                                                ? 'data:image/jpg;base64,' +
-                                            company_profile.companyLogoByteArray
-                                                : logo
-                                        }
-                                        className=""
-                                        alt=""
-                                        style={{ width: ' 150px' }}></img>
-                               
-                                   
-                                    </div>          
-                                    <div style={{textAlign:'center'}} >
-                               
-                                        <h2>
-                                        {company_profile &&
-                                            company_profile['companyName']
-                                                ? company_profile['companyName']
-                                                : ''}
-                                            </h2>  
+                                    <div style={{
+
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        marginBottom: '1rem'
+                                    }}>
+                                        <div>
+                                            <img
+                                                src={
+                                                    company_profile &&
+                                                        company_profile.companyLogoByteArray
+                                                        ? 'data:image/jpg;base64,' +
+                                                        company_profile.companyLogoByteArray
+                                                        : logo
+                                                }
+                                                className=""
+                                                alt=""
+                                                style={{ width: ' 150px' }}></img>
+
+
+                                        </div>
+                                        <div style={{ textAlign: 'center' }} >
+
+                                            <h2>
+                                                {company_profile &&
+                                                    company_profile['companyName']
+                                                    ? company_profile['companyName']
+                                                    : ''}
+                                            </h2>
                                             <br style={{ marginBottom: '5px' }} />
-                                            <b style ={{ fontSize: '18px'}}>{strings.Payroll+"s  "+strings.Summary}</b>
+                                            <b style={{ fontSize: '18px' }}>{strings.Payroll + "s  " + strings.Summary}</b>
                                             <br style={{ marginBottom: '5px' }} />
-                                            {strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")}
-                                           
+                                            {strings.From} {(initValue.startDate).replaceAll("/", "-")} {strings.To} {initValue.endDate.replaceAll("/", "-")}
+
+                                        </div>
+                                        <div>
+                                        </div>
                                     </div>
-                                    <div>
-                                    </div>                                  
-                            </div>
                                     {loading ? (
                                         <Loader />
                                     ) : (
-                                        <div id="tbl_exporttable_to_xls" className="table-wrapper">                                    
-    {this.state.data &&
-                                    this.state.data.payrollSummaryModelList &&
-                                    <DataGrid
-                                        rows={this.state.data.payrollSummaryModelList}
-                                        columns={[
-                                            { field: 'payrollDate', headerName: 'Payroll Date', headerClassName: "table-header-bg", flex: 1},
-                                            { field: 'payrollSubject', headerName: 'Subject', headerClassName: "table-header-bg", flex: 1,},
-                                            { field: 'payPeriod', headerName: 'Pay Period', headerClassName: "table-header-bg", flex: 1, },
-                                            { field: 'employeeCount', headerName: 'Employee Count', headerClassName: "table-header-bg", flex: 1, },
-                                            { field: 'status', headerName: 'Status', headerClassName: "table-header-bg", flex: 1, },
-                                            { field: 'payrollApproverName', headerName: 'Approver', headerClassName: "table-header-bg", flex: 1, },
-                                            { field: 'approvedBy', headerName: 'Approved BY', headerClassName: "table-header-bg", flex: 1,},
-                                            { field: 'totalAmount', headerName: 'Total Amount', headerClassName: "table-header-bg", flex: 1,},
-                                            { field: 'comment', headerName: 'Comments', headerClassName: "table-header-bg", flex: 1,},
-                                            { field: 'dueAmount', headerName: 'Due Amount', headerClassName: "table-header-bg", flex: 1,},
-                                            { field: 'generatedByName', headerName: 'Generated By', headerClassName: "table-header-bg", flex: 1,},
-                                           
-                                        ]}
-                                        autoHeight  
-                                        pageSize={5}
-                                        rowSelection={false}
-                                        hideFooterPagination={false}
-                                        columnVisibilityModel={columnConfigs}
-                                        onColumnVisibilityModelChange={(newModel) =>{   
-                                                  
-                                      
-                                        //    const serializeModel = (model) => {
-                                        //     let serializedString = '';
-                                        //     for (const key in model) {
-                                        //         if (model.hasOwnProperty(key)) {
-                                        //             serializedString += `"${key}": ${model[key]},`;
-                                        //         }
-                                        //     }
-                                        //     return serializedString;
-                                        // };
-                                            //  const str = serializeModel(newModel);
-
-                                            const str = JSON.stringify(newModel)
-                                           console.log(str);
-debugger
-                                           this.updateColumnConfigs(str);
-                                          this.setState({columnConfigs:newModel})}
-                                        }
-                                    />}
-       
-                                        </div>
+                                        <>
+                                            <ReportTables
+                                                reportDataList={payrollSummaryModelList}
+                                                reportName={'PayrollSummaryReport'}
+                                                id={1}
+                                                rowHeight={100}
+                                            />
+                                        </>
                                     )}
-                                    <div style={{ textAlignLast:'center'}}> {strings.PoweredBy } <b>SimpleAccounts</b></div>
+                                    <div style={{ textAlignLast: 'center' }}> {strings.PoweredBy} <b>SimpleAccounts</b></div>
                                 </PDFExport>
                             </CardBody>
                         </div>
@@ -615,9 +321,8 @@ debugger
         );
     }
 }
- 
+
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
 )(PayrollSummaryReport);
- 

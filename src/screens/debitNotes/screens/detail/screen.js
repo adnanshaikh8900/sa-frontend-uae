@@ -744,6 +744,7 @@ class DetailDebitNote extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
+				<>
 					<Select
 						styles={customStyles}
 						isDisabled
@@ -781,6 +782,32 @@ class DetailDebitNote extends React.Component {
 							: ''
 							}`}
 					/>
+					<div className='mt-1'>
+							<TextField
+								disabled
+								type="textarea"
+								inputProps={{ maxLength: 2000}}
+								multiline
+								minRows={1}
+								maxRows={4}
+								value={row['description'] ? row['description'] : ''}
+								onChange={(e) => {
+									this.selectItem(e.target.value, row, 'description', form, field);
+								}}
+								placeholder={strings.Description}
+								className={`textarea ${props.errors.lineItemsString &&
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)].description &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)].description
+									? 'is-invalid'
+									: ''
+									}`}
+							/>
+						</div>
+				</>
 				)}
 			/>
 		);

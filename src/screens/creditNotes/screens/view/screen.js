@@ -35,6 +35,7 @@ class ViewCreditNote extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			InvoiceDataList: [],
 			applyToInvoiceData: [],
+			isBillingAndShippingAddressSame: false,
 			invoiceData: {},
 			totalNet: 0,
 			currencyData: {},
@@ -177,7 +178,7 @@ class ViewCreditNote extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { invoiceData, currencyData, InvoiceDataList, contactData } = this.state;
+		const { invoiceData, currencyData, InvoiceDataList, isBillingAndShippingAddressSame, contactData } = this.state;
 		const { profile } = this.props;
 		const uniqueInvoiceData = {};
 		const filteredInvoiceData = [];
@@ -246,6 +247,7 @@ class ViewCreditNote extends React.Component {
 										invoiceData={invoiceData}
 										currencyData={currencyData}
 										status={this.props.location.state.status}
+										isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={this.state && this.state.companyData ? this.state.companyData : ''}

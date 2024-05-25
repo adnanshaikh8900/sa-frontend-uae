@@ -471,7 +471,7 @@ class DetailSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
-						maxLength="250"
+						maxLength="2000"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -1239,15 +1239,18 @@ class DetailSupplierInvoice extends React.Component {
 							)}
 						{row['productId'] != '' ?
 							<div className='mt-1'>
-								<Input
-									type="text"
-									maxLength="250"
+								<TextField 
+									type="textarea"
+									inputProps={{ maxLength: 2000}}
+									multiline
+									minRows={1}
+									maxRows={4}
 									value={row['description'] !== '' ? row['description'] : ''}
 									onChange={(e) => {
 										this.selectItem(e.target.value, row, 'description', form, field);
 									}}
 									placeholder={strings.Description}
-									className={`form-control ${props.errors.lineItemsString &&
+									className={`textarea ${props.errors.lineItemsString &&
 										props.errors.lineItemsString[parseInt(idx, 10)] &&
 										props.errors.lineItemsString[parseInt(idx, 10)].description &&
 										Object.keys(props.touched).length > 0 &&
@@ -1984,7 +1987,7 @@ class DetailSupplierInvoice extends React.Component {
 										<Row>
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
-													<i className="fas fa-address-book" />
+												<i className="fas fa-file-invoice" />
 													<span className="ml-2"> {strings.UpdateInvoice}</span>
 												</div>
 											</Col>
@@ -2057,7 +2060,7 @@ class DetailSupplierInvoice extends React.Component {
 																				'Unit Price',
 																				strings.UnitPriceGreaterThan1,
 																				(value) => {
-																					if (value > 1) {
+																					if (value > 0) {
 																						return true;
 																					} else {
 																						return false;
@@ -2795,7 +2798,8 @@ class DetailSupplierInvoice extends React.Component {
 																			}
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
-																					width="12%"
+																					//width="12%"
+																					width={ "250px" }
 																					dataField="vat"
 																					dataFormat={(cell, rows) =>
 																						this.renderVat(cell, rows, props)
@@ -2806,7 +2810,7 @@ class DetailSupplierInvoice extends React.Component {
 																			}
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
-																					width="10%"
+																					//width="10%"
 																					dataField="sub_total"
 																					dataFormat={this.renderVatAmount}
 																					className="text-right"

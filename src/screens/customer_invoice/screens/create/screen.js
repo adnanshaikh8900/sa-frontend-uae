@@ -284,7 +284,7 @@ class CreateCustomerInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
-						maxLength="250"
+						maxLength="2000"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
@@ -2447,11 +2447,7 @@ class CreateCustomerInvoice extends React.Component {
 											<Row>
 												<Col lg={12}>
 													<div className="h4 mb-0 d-flex align-items-center">
-														<img
-															alt="invoiceimage"
-															src={invoiceimage}
-															style={{ width: '40px' }}
-														/>
+													<i className="fas fa-file-invoice" />
 														<span className="ml-2">{strings.CreateInvoice}</span>
 													</div>
 												</Col>
@@ -2610,7 +2606,7 @@ class CreateCustomerInvoice extends React.Component {
 																					'Unit Price',
 																					strings.UnitPriceGreaterThan1,
 																					(value) => {
-																						if (value > 1) {
+																						if (value > 0) {
 																							return true;
 																						} else {
 																							return false;
@@ -3786,6 +3782,7 @@ class CreateCustomerInvoice extends React.Component {
 																				{isRegisteredVat &&
 																					<TableHeaderColumn
 																						//	width="13%"
+																						width={ "250px" }
 																						dataField="vat"
 																						dataFormat={(cell, rows) =>
 																							this.renderVat(cell, rows, props)

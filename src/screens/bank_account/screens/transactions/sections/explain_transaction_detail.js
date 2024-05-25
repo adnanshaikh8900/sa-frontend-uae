@@ -1607,7 +1607,9 @@ class ExplainTrasactionDetail extends React.Component {
                               (a, c) => a + c.explainedAmount,
                               0
                             );
-
+                            if (!values.coaCategoryId) {
+                              errors.coaCategoryId = "Please select Transaction Type"
+                            }
                             if (
                               values.coaCategoryId?.value === 2 ||
                               values.coaCategoryId?.value === 100
@@ -1635,7 +1637,7 @@ class ExplainTrasactionDetail extends React.Component {
                                 });
                                 if (isExplainAmountZero) {
                                   errors.invoiceIdList =
-                                    "Expain Amount Cannot Be Zero";
+                                    "Explained Amount Cannot Be Zero";
                                 }
                               }
 
@@ -1683,7 +1685,7 @@ class ExplainTrasactionDetail extends React.Component {
                             ) {
                               errors.vatId = "Please select Vat";
                             }
-                            console.log(values.payrollListIds,values.coaCategoryId.label , values.expenseCategory.value)
+                            // console.log(values.payrollListIds,values.coaCategoryId.label , values.expenseCategory.value)
                             if (
                               (values.payrollListIds === "" || !values.payrollListIds || values.payrollListIds?.length === 0) &&
                               values.coaCategoryId.label === "Expense" &&
@@ -1698,7 +1700,7 @@ class ExplainTrasactionDetail extends React.Component {
                               values.coaCategoryId.label === "Expense"
                             ) {
                               errors.expenseCategory =
-                                "Please select Expence Category";
+                                "Please select Expense Category";
                             }
 
                             // if (
@@ -4244,7 +4246,16 @@ class ExplainTrasactionDetail extends React.Component {
                                               type="button"
                                               color="primary"
                                               className="btn-square mr-3"
-                                              onClick={props.handleSubmit}
+                                              onClick={() => {
+                                                    //	added validation popup	msg
+                                                    props.handleBlur();
+                                                    if (
+                                                      props.errors &&
+                                                      Object.keys(props.errors).length != 0
+                                                    )
+                                                      this.props.commonActions.fillManDatoryDetails();
+                                                    this.setState(props.handleSubmit())
+                                              }}
                                             >
                                               <i className="fa fa-dot-circle-o"></i>{" "}
                                               {strings.Explain}

@@ -1529,7 +1529,7 @@ try {
 																			name="purchaseUnitPrice"
 																			autoComplete="Off"
 																			placeholder={strings.Enter+strings.PurchasePrice}
-																			disabled={props.values.isInventoryEnabled===true }
+																			//disabled={props.values.isInventoryEnabled===true }
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -1999,6 +1999,7 @@ try {
 																			disabled={this.state.disabled}
 																			onClick={() => {
 																				   //	added validation popup	msg	
+																				   console.log(props.errors,"ERRORS")
 																				   props.handleBlur();
 																				   if(props.errors &&  Object.keys(props.errors).length != 0)
 																				   this.props.commonActions.fillManDatoryDetails();

@@ -54,6 +54,124 @@ class InvoiceTemplate extends Component {
 			</span>
 		);
 	};
+
+	renderShippingDetails = () => {
+		const { invoiceData, companyData, contactData, isBillingAndShippingAddressSame } = this.props;
+		if (isBillingAndShippingAddressSame == false || invoiceData.changeShippingAddress == true)
+			return (<div>
+
+				<br />
+				<h6 className="mb-1 ml-2"><b>{strings.ShipTo},</b></h6><br />
+				{contactData && (<div className="mb-1 ml-2"><b>{contactData.organization ? contactData.organization : (contactData.firstName + " " + contactData.lastName)}</b></div>)}
+				{/* {contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)} */}
+				{invoiceData && contactData && (this.renderShippingAddress())}
+				<div className="mb-1 ml-2">
+					{invoiceData && contactData && (this.renderShippingPostZipCode())}
+					{invoiceData && contactData && (this.rendershippingState())}
+					{invoiceData && contactData && (this.rendershippingCountry())}
+				</div>
+			</div>
+			)
+		else
+			return ""
+
+	}
+
+	renderShippingAddress = () => {
+		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
+		//ischanged at inv level
+
+		let shippingAddress = "";
+		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
+			shippingAddress = invoiceData.shippingAddress ? invoiceData.shippingAddress : "";
+		} else {
+			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true)
+				shippingAddress = contactData.addressLine1 ? contactData.addressLine1 : "";
+			else
+				shippingAddress = contactData.addressLine2 ? contactData.addressLine2 : "";
+		}
+
+
+		return (<div className="mb-1 ml-2"><b>
+		</b>{shippingAddress}</div>);
+	}
+
+	renderShippingPostZipCode = () => {
+		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
+		//ischanged at inv level
+
+		let shippingPostZipCode = "";
+		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
+			shippingPostZipCode = invoiceData.shippingPostZipCode ? invoiceData.shippingPostZipCode : "";
+			if (invoiceData.shippingCountry == 229)
+				shippingPostZipCode = strings.POBox + ": " + shippingPostZipCode
+		} else {
+			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true) {
+				shippingPostZipCode = contactData.postZipCode ? contactData.postZipCode : "";
+				if (contactData.shippingCountryId == 229)
+					shippingPostZipCode = strings.POBox + ": " + shippingPostZipCode
+			}
+			else {
+				shippingPostZipCode = contactData.shippingPostZipCode ? contactData.shippingPostZipCode : "";
+				if (contactData.shippingCountryId == 229)
+					shippingPostZipCode = strings.POBox + ": " + shippingPostZipCode
+			}
+		}
+
+		return shippingPostZipCode + ", ";
+	}
+
+	renderShippingCity = () => {
+		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
+		//ischanged at inv level
+
+		let shippingCity = "";
+		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
+			shippingCity = invoiceData.shippingCity ? invoiceData.shippingCity : "";
+		} else {
+			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true)
+				shippingCity = contactData.city ? contactData.city : "";
+			else
+				shippingCity = contactData.shippingCity ? contactData.shippingCity : "";
+		}
+
+		return (<div className="mb-1 ml-2"><b>{strings.City} : </b>{shippingCity}</div>);
+	}
+
+	rendershippingCountry = () => {
+		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
+		//ischanged at inv level
+
+		let shippingCountry = "";
+		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
+			shippingCountry = invoiceData.shippingCountryName ? invoiceData.shippingCountryName : "";
+		} else {
+			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true)
+				shippingCountry = contactData.billingCountryName ? contactData.billingCountryName : "";
+			else
+				shippingCountry = contactData.shippingCountryName ? contactData.shippingCountryName : "";
+		}
+
+		return shippingCountry;
+	}
+
+	rendershippingState = () => {
+		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
+		//ischanged at inv level
+		let shippingState = "";
+		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
+			shippingState = invoiceData.shippingStateName ? invoiceData.shippingStateName : "";
+		} else {
+			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true)
+				shippingState = contactData.billingStateName ? contactData.billingStateName : "";
+			else
+				shippingState = contactData.shippingStateName ? contactData.shippingStateName : "";
+		}
+
+
+		return shippingState + ", ";
+	}
+
 	companyMobileNumber = (number) => {
 
 		let number1 = number.split(",")
@@ -75,7 +193,7 @@ class InvoiceTemplate extends Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { invoiceData, status, currencyData, totalNet, companyData, contactData, isCNWithoutProduct } = this.props;
+		const { invoiceData, status, currencyData, totalNet, companyData, isBillingAndShippingAddressSame, contactData, isCNWithoutProduct } = this.props;
 		let currencyName = invoiceData.currencyName ? invoiceData.currencyName : 'UAE DIRHAM';
 		return (
 			<div>
@@ -183,6 +301,8 @@ class InvoiceTemplate extends Component {
 									{contactData && contactData.mobileNumber && (<div className="mb-1 ml-2">{strings.MobileNumber}: +{contactData.mobileNumber}</div>)}
 									{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email}: {contactData.billingEmail}</div>)}
 								</div>
+								{this.renderShippingDetails()}
+								<div style={{ width: '15%' }}></div>
 							</div>
 						</div>
 
@@ -301,7 +421,9 @@ class InvoiceTemplate extends Component {
 												return (
 													<tr key={index}>
 														<td className="center">{index + 1}</td>
-														<td><b>{item.productName}</b><br />{item.description}</td>
+														<td style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+															<b>{item.productName}</b><br />{item.description}
+														</td>
 														<td style={{ textAlign: 'center' }}>{item.quantity}</td>
 														<td style={{ textAlign: 'center' }}>{item.unitType}	</td>
 														<td style={{ textAlign: 'right', width: '10%' }}>
@@ -399,7 +521,7 @@ class InvoiceTemplate extends Component {
 
 								}}
 							>
-								<div style={{ width: '100%' }}>
+								<div style={{ width: '250px' ,marginLeft: 'auto' }}>
 									<Table className="table-clear cal-table">
 										<tbody>
 
@@ -547,7 +669,8 @@ class InvoiceTemplate extends Component {
 													</span>
 												</td>
 											</tr>)}
-											<tr >
+											<tr style={{ border: "1px solid rgb(200, 206, 211)"}}>
+											
 												<td style={{ width: '40%' }}>
 													<strong>{strings.Total}</strong>
 												</td>

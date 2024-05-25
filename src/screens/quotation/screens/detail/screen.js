@@ -1991,7 +1991,7 @@ class DetailQuotation extends React.Component {
                     <Row>
                       <Col lg={12}>
                         <div className="h4 mb-0 d-flex align-items-center">
-                          <i className="fas fa-address-book" />
+                        <i className="fas fa-box-open" />
                           <span className="ml-2">
                             {strings.UpdateQuotation}
                           </span>
@@ -2554,7 +2554,7 @@ class DetailQuotation extends React.Component {
                                         {strings.Currency}
                                       </Label>
                                       <Select
-                                        //isDisabled={true}
+                                        isDisabled={true}
                                         placeholder={
                                           strings.Select + strings.Currency
                                         }
@@ -2961,6 +2961,7 @@ class DetailQuotation extends React.Component {
                                       )}
                                       {isRegisteredVat &&
                                         <TableHeaderColumn
+                                          width="250px"
                                           dataField="vat"
                                           dataFormat={(cell, rows) =>
                                             this.renderVat(cell, rows, props)

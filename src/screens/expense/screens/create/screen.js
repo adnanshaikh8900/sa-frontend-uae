@@ -31,7 +31,6 @@ import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
 import { TextareaAutosize } from '@material-ui/core';
-import currency from 'screens/currency';
 import { getCustomerInvoicesCountForDelete } from 'screens/customer_invoice/actions';
 
 const SortExpenseCategory = (list) => {
@@ -91,9 +90,9 @@ class CreateExpense extends React.Component {
 				payee: { label: 'Company Expense', value: 'Company Expense' },
 				placeOfSupplyId: '',
 				expenseDate: new Date(),
-				currency: '',
+				currencyCode: 150,
 				project: '',
-				exchangeRate: '',
+				exchangeRate: 1,
 				expenseCategory: '',
 				expenseAmount: '',
 				expenseDescription: '',
@@ -121,7 +120,6 @@ class CreateExpense extends React.Component {
 			expenseDateForVatValidation: new Date(),
 			isRegisteredVat: false,
 			companyVATRegistrationDate: new Date(),
-			exchangeRate: '',
 			basecurrency: [],
 			// disabled: false,
 			language: window['localStorage'].getItem('language'),
@@ -197,7 +195,7 @@ class CreateExpense extends React.Component {
 								expenseNumber: res.data.expenseNumber,
 								payee: res.data.payee ? res.data.payee : '',
 								expenseDate: res.data.expenseDate ? res.data.expenseDate : '',
-								currency: res.data.currencyCode ? res.data.currencyCode : '',
+								currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 								currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 								currencyName: res.data.currencyName ? res.data.currencyName : '',
 								expenseCategory: res.data.expenseCategory
@@ -278,12 +276,9 @@ class CreateExpense extends React.Component {
 								.find((option) => option.value == res.data.expenseCategory);
 							this.formRef.current.setFieldValue('expenseCategory', expenseCategory, true);
 							this.formRef.current.setFieldValue('expenseDate', new Date(res.data.expenseDate), true);
-							let currency = selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', this.props.currency_convert_list, 'Currency',)
-								.find((option) => option.value == res.data.currencyCode,)
-							this.formRef.current.setFieldValue('currency', currency, true);
-							this.formRef.current.setFieldValue('currencyCode', currency, true);
-							this.setExchange(currency && currency.value);
-							this.setCurrency(currency && currency.value);
+							this.formRef.current.setFieldValue('currencyCode', res.data.currencyCode ?? '', true);
+							this.formRef.current.setFieldValue('exchangeRate', res.data.exchangeRate ?? '', true);
+							this.formRef.current.setFieldValue('currencyName', res.data.currencyName ?? '', true);
 							let payMode = selectOptionsFactory.renderOptions('label', 'value', this.props.pay_mode_list, '',)
 								.find((option) => option.value == res.data.payMode)
 							this.formRef.current.setFieldValue('payMode', payMode, true);
@@ -300,7 +295,7 @@ class CreateExpense extends React.Component {
 								vat.value = "10";
 							}
 							this.formRef.current.setFieldValue('vatCategoryId', vat, true);
-							this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
+							this.formRef.current.setFieldValue('expenseDescription', res.data.expenseDescription, true);
 							this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 							// this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
 							// this.formRef.current.setFieldValue('notes',  res.data.notes, true);
@@ -353,24 +348,7 @@ class CreateExpense extends React.Component {
 					},
 				},
 			});
-			// if(response.data && response.data[0]&& response.data[0].currencyCode && this.formRef.current)
-			// this.formRef.current.setFieldValue(
-			// 	'currency',
-			// 	response.data[0].currencyCode,
-			// 	true,
-			// );
 		});
-		// this.props.expenseCreateActions.checkAuthStatus().then((response) => {
-		// 	this.setState({
-		// 		initValue: {
-		// 			...this.state.initValue,
-		// 			...{
-		// 				payee: response.data ? parseInt(response.data.userId) : '',
-		// 			},
-		// 		},
-		// 	});
-		// 	this.formRef.current.setFieldValue('payee', response.data.userId, true);
-		// });
 		this.props.expenseActions.getBankList();
 		this.props.expenseActions.getPaymentMode();
 		this.props.expenseActions.getUserForDropdown();
@@ -420,7 +398,7 @@ class CreateExpense extends React.Component {
 			payee,
 			placeOfSupplyId,
 			expenseDate,
-			currency,
+			currencyCode,
 			project,
 			expenseCategory,
 			expenseAmount,
@@ -488,9 +466,7 @@ class CreateExpense extends React.Component {
 		if (exchangeRate) {
 			formData.append('exchangeRate', exchangeRate);
 		}
-		if (currency) {
-			formData.append('currencyCode', currency.value);
-		}
+		formData.append('currencyCode', currencyCode ? currencyCode.value ?? currencyCode : '');
 
 		if (bankAccountId && bankAccountId.value && payMode.value === 'BANK') {
 			formData.append('bankAccountId', bankAccountId.value);
@@ -567,7 +543,7 @@ class CreateExpense extends React.Component {
 				return obj.currencyCode === value;
 			});
 			if (result[0] && result[0].currencyName) {
-				this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+				this.formRef.current.setFieldValue('currencyName', result[0].currencyName, true);
 			}
 		}
 	};
@@ -930,12 +906,6 @@ class CreateExpense extends React.Component {
 
 		return array;
 	}
-	handleChangeCurrency = (event) => {
-		var initValue = this.state.initValue;
-		initValue.currency = event;
-		this.setState({ initValue });
-		alert(event);
-	}
 
 	//added by mudassar to unmount the asyn call 
 	componentWillUnmount() {
@@ -1030,9 +1000,6 @@ class CreateExpense extends React.Component {
 																if (values.expenseNumber && exist === true) {
 																	errors.expenseNumber = 'Expense number already exists'
 																}
-																if (this.state.currency === true && values.currency === '') {
-																	errors.currency = 'Currency is required';
-																}
 																if (this.state.isRegisteredVat && !values.vatCategoryId &&
 																	values.expenseCategory && values.expenseCategory.value !== 34) {
 																	errors.vatCategoryId = strings.VATIsRequired;
@@ -1056,7 +1023,7 @@ class CreateExpense extends React.Component {
 																expenseDate: Yup.date().required(
 																	'Expense date is required',
 																),
-																currency: Yup.string().required(
+																currencyCode: Yup.string().required(
 																	strings.CurrencyIsRequired
 																),
 																payee: Yup.string().required(
@@ -1460,20 +1427,6 @@ class CreateExpense extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		{/* <Col>
-																				<Button
-																					color="primary"
-																					className="btn-square pull-left mb-3 mr-3 mt-4"
-																					// style={{ marginBottom: '40px' }}
-																					onClick={() =>
-																						//  this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})
-																						this.props.history.push(`/admin/master/employee/create`,{goto:"Expense"})
-																						}
-																				>
-																					<i className="fas fa-plus mr-1" />
-																					{strings.NewEmployee}
-																				</Button>
-																			</Col> */}
 																	</Row>
 																	<Row>
 																		<Col lg={3}>
@@ -1517,59 +1470,18 @@ class CreateExpense extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		{this.state.isRegisteredVat && props.values.expenseCategory && (props.values?.expenseCategory?.value ? props.values?.expenseCategory?.value !== 34 : props.values?.expenseCategory !== 34) && (this.renderVat(props))}
-
-																		{/* {!props.values.payee && payMode.value === 'BANK' && (
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="bankAccountId">
-																			<span className="text-danger">* </span>Bank
-																		</Label>
-																		<Select
-																			styles={customStyles}
-																			id="bankAccountId"
-																			name="bankAccountId"
-																			options={
-																				bank_list && bank_list.data
-																					? selectOptionsFactory.renderOptions(
-																							'accounName',
-																							'bankAccountId',
-																							bank_list.data,
-																							'Bank',
-																					  )
-																					: []
-																			}
-																			value={props.values.bankAccountId}
-																			onChange={(option) =>
-																				props.handleChange('bankAccountId')(
-																					option,
-																				)
-																			}
-																			className={
-																				props.errors.bankAccountId &&
-																				props.touched.bankAccountId
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.bankAccountId &&
-																			props.touched.bankAccountId && (
-																				<div className="invalid-feedback">
-																					{props.errors.bankAccountId}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-															)} */}
+																		{this.state.isRegisteredVat && props.values.expenseCategory && (props.values?.expenseCategory?.value ? props.values?.expenseCategory?.value !== 34 : props.values?.expenseCategory !== 34) &&
+																			(this.renderVat(props))
+																		}
 																		<Col lg={3}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="currency">
+																				<Label htmlFor="currencyCode">
 																					<span className="text-danger">* </span>
 																					{strings.Currency}
 																				</Label>
 																				<Select
-																					id="currency"
-																					name="currency"
+																					id="currencyCode"
+																					name="currencyCode"
 																					// styles={customStyles}
 																					options={
 																						currency_convert_list
@@ -1582,25 +1494,33 @@ class CreateExpense extends React.Component {
 																							: []
 																					}
 																					placeholder={strings.Select + strings.Currency}
-																					value={props.values.currency}
+																					value={props.values.currencyCode?.value ? props.values.currencyCode :
+																						currency_convert_list
+																						&& selectCurrencyFactory.renderOptions(
+																							'currencyName',
+																							'currencyCode',
+																							currency_convert_list,
+																							'Currency',
+																						).find(obj => obj.value === props.values.currencyCode)
+																					}
 																					onChange={(option) => {
 																						if (option.value != "") {
-																							props.handleChange('currency')(option);
+																							props.handleChange('currencyCode')(option);
 																							this.setExchange(option.value);
 																							this.setCurrency(option.value);
 																						}
 																					}}
 																					className={
-																						props.errors.currency &&
-																							props.touched.currency
+																						props.errors.currencyCode &&
+																							props.touched.currencyCode
 																							? 'is-invalid'
 																							: ''
 																					}
 																				/>
-																				{props.errors.currency &&
-																					props.touched.currency && (
+																				{props.errors.currencyCode &&
+																					props.touched.currencyCode && (
 																						<div className="invalid-feedback">
-																							{props.errors.currency}
+																							{props.errors.currencyCode}
 																						</div>
 																					)}
 																			</FormGroup>
@@ -1648,38 +1568,10 @@ class CreateExpense extends React.Component {
 																			</Col>
 																		}
 																	</Row>
-																	{/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
-														(
-															<Row><Col lg={3}>	<FormGroup check inline className="mb-3">
-																		<Label
-																			className="form-check-label"
-																			check
-																			htmlFor="exclusiveVat"
-																		>
-																			<Input
-																				type="checkbox"
-																				id="exclusiveVat"
-																				name="exclusiveVat"
-																				onChange={(event) => {
-																					
-																						props.handleChange('exclusiveVat')(
-																							event,
-																						);
-																					
-																				}}
-																				checked={props.values.exclusiveVat}
-																				
-																				
-																			/>
-																			Exclusive Vat
-																		</Label>
-																	</FormGroup></Col></Row>
-														)
-														} */}
+															
 																	{props.values.vatCategoryId !== '' && props.values.vatCategoryId.label !== 'Select VAT' && props.values.expenseCategory && (props.values?.expenseCategory?.value ? props.values?.expenseCategory?.value !== 34 : props.values?.expenseCategory !== 34) &&
 																		props.values.vatCategoryId.value === 1 &&
-																		// props.values.vatCategoryId.value !==4 && 
-																		// props.values.vatCategoryId.value !==10 &&
+																		
 																		(
 																			<Row>
 																				<Col></Col>
@@ -1717,15 +1609,7 @@ class CreateExpense extends React.Component {
 																			|| (!this.state.isDesignatedZone && (this.state.taxTreatmentId !== 3 && this.state.taxTreatmentId !== 8))
 																		)) && (
 																				<Col>
-																					{/* <Input
-																					type="checkbox"
-																					id="isReverseChargeEnabled"
-																					checked={this.state.isReverseChargeEnabled}
-																					onChange={(option)=>{
 																					
-																						this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
-																					}}
-																					/> */}
 																					<Checkbox
 																						id="isReverseChargeEnabled"
 																						checked={this.state.isReverseChargeEnabled}
@@ -1741,7 +1625,7 @@ class CreateExpense extends React.Component {
 																	<hr />
 																	<Row style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}>
 																		<Col>
-																			<Label htmlFor="currency">
+																			<Label>
 																				{strings.CurrencyExchangeRate}
 																			</Label>
 																		</Col>
@@ -1766,12 +1650,12 @@ class CreateExpense extends React.Component {
 																					<Input
 																						disabled
 																						className="form-control"
-																						id="curreancyname"
-																						name="curreancyname"
+																						id="currencyName"
+																						name="currencyName"
 
-																						value={props.values.curreancyname}
+																						value={props.values.currencyName}
 																						onChange={(value) => {
-																							props.handleChange('curreancyname')(
+																							props.handleChange('currencyName')(
 																								value,
 																							);
 																						}}

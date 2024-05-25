@@ -2451,6 +2451,7 @@ class CreateCreditNote extends React.Component {
 																				{strings.DisCount}
 																			</TableHeaderColumn> */}
 																					<TableHeaderColumn
+																						width={ "250px" }
 																						dataField="vat"
 																						dataFormat={(cell, rows) =>
 																							this.renderVat(cell, rows, props)
@@ -2919,7 +2920,7 @@ class CreateCreditNote extends React.Component {
 																					: strings.Create}
 																			</Button>
 
-																			<Button
+																			{!this.props.location?.state?.invoiceID && <Button
 																				type="button"
 																				color="primary"
 																				className="btn-square mr-3"
@@ -2943,7 +2944,7 @@ class CreateCreditNote extends React.Component {
 																				{this.state.disabled
 																					? 'Creating...'
 																					: strings.CreateandMore}
-																			</Button>
+																			</Button>}
 																			<Button
 																				color="secondary"
 																				className="btn-square"

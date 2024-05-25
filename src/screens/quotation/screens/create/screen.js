@@ -274,7 +274,7 @@ class CreateQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
-						maxLength="250"
+						maxLength="2000"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -2110,11 +2110,7 @@ class CreateQuotation extends React.Component {
 										<Row>
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
-													<img
-														alt="invoiceimage"
-														src={invoiceimage}
-														style={{ width: '40px' }}
-													/>
+												<i className="fas fa-box-open" />
 													<span className="ml-2">{strings.CreateQuotation}</span>
 												</div>
 											</Col>
@@ -2573,6 +2569,11 @@ class CreateQuotation extends React.Component {
 																					}
 																					this.setState({ quotationDateForVatValidation: value });
 																					props.handleChange('quotationdate')(value);
+																					const minExpirationDate = value ? new Date(value) : null;
+																					props.setFieldValue('quotaionExpiration', null);
+																					props.setFieldTouched('quotaionExpiration', false); 
+																					props.setFieldError('quotaionExpiration', '');
+																					props.setFieldValue('quotaionExpiration', minExpirationDate); 
 																				}}
 																			/>
 																			{props.errors.quotationdate &&
@@ -2605,6 +2606,7 @@ class CreateQuotation extends React.Component {
 																				showYearDropdown
 																				dropdownMode="select"
 																				dateFormat="dd-MM-yyyy"
+																				minDate={props.values.quotationdate ? new Date(props.values.quotationdate) : null}
 																				onChange={(value) => {
 																					props.handleChange('quotaionExpiration')(value);
 																				}}
@@ -2941,7 +2943,7 @@ class CreateQuotation extends React.Component {
 																				</TableHeaderColumn>}
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
-																					//width="13%"
+																					width="250px"
 																					dataField="vat"
 																					dataFormat={(cell, rows) =>
 																						this.renderVat(cell, rows, props)
@@ -2953,6 +2955,7 @@ class CreateQuotation extends React.Component {
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
 																					//width="10%"
+																					width = {"250px"}
 																					dataField="sub_total"
 																					dataFormat={this.renderVatAmount}
 																					className="text-right"

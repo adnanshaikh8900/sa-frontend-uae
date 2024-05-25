@@ -80,7 +80,7 @@ class RecordCustomerPayment extends React.Component {
 			current_customer_id: null,
 			initValue: {
 				receiptNo: '',
-				receiptDate: new Date(),
+				receiptDate:new Date(this.props.location.state.id.invoiceDate.substring(3,5)+" "+this.props.location.state.id.invoiceDate.substring(0,2)+" "+this.props.location.state.id.invoiceDate.substring(6)),
 				contactId: this.props.location.state.id.contactId,
 				amount: this.props.location.state.id.dueAmount,
 				issuedate:this.props.location.state.id.invoiceDate,
@@ -575,7 +575,10 @@ class RecordCustomerPayment extends React.Component {
 																			maxLength="14,2"
 																			id="amount"
 																			name="amount"
-																			value={props.values.amount}
+																			value={props.values.amount.toLocaleString('en-US', {
+																				minimumFractionDigits: 2,
+																				maximumFractionDigits: 2
+																			})}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -621,8 +624,8 @@ class RecordCustomerPayment extends React.Component {
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
-																			minDate={new Date(this.props.location.state.id.invoiceDate.substring(3,5)+" "+this.props.location.state.id.invoiceDate.substring(0,2)+" "+this.props.location.state.id.invoiceDate.substring(6))}
-																			maxDate={new Date()}
+																			minDate={props.values.receiptDate}
+																			maxDate={null}
 																			value={props.values.receiptDate}
 																			selected={props.values.receiptDate}
 																			onChange={(value) => {

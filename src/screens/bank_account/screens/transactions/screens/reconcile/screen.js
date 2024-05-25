@@ -437,7 +437,7 @@ class ReconcileTransaction extends React.Component {
 										<Row>
 											<BootstrapTable
 												data={reconcile_list.data ? reconcile_list.data.map((i)=>{
-													return {...i,closingBalance:`AED ${i.closingBalance}`
+													return {...i,closingBalance:`AED ${i.closingBalance?.toFixed(2)}`
 													}
 												}) : []}
 												// pagination={

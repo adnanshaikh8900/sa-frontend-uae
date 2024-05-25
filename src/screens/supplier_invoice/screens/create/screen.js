@@ -1693,15 +1693,18 @@ class CreateSupplierInvoice extends React.Component {
 							)}
 						{row['productId'] != '' ?
 							<div className='mt-1'>
-								<Input
-									type="text"
-									maxLength="250"
+								<TextField
+									type="textarea"
+									inputProps={{ maxLength: 2000}}
+									multiline
+									minRows={1}
+									maxRows={4}
 									value={row['description'] !== '' && row['description'] !== null ? row['description'] : ''}
 									onChange={(e) => {
 										this.selectItem(e.target.value, row, 'description', form, field);
 									}}
 									placeholder={strings.Description}
-									className={`form-control ${props.errors.lineItemsString &&
+									className={`textarea ${props.errors.lineItemsString &&
 										props.errors.lineItemsString[parseInt(idx, 10)] &&
 										props.errors.lineItemsString[parseInt(idx, 10)].description &&
 										Object.keys(props.touched).length > 0 &&
@@ -2357,11 +2360,7 @@ class CreateSupplierInvoice extends React.Component {
 										<Row>
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
-													<img
-														alt="invoiceimage"
-														src={invoiceimage}
-														style={{ width: '40px' }}
-													/>
+												<i className="fas fa-file-invoice" />
 													<span className="ml-2">{strings.CreateInvoice}</span>
 												</div>
 											</Col>
@@ -2477,7 +2476,7 @@ class CreateSupplierInvoice extends React.Component {
 																				'Unit Price',
 																				strings.UnitPriceGreaterThan1,
 																				(value) => {
-																					if (value > 1) {
+																					if (value > 0) {
 																						return true;
 																					} else {
 																						return false;
@@ -3315,6 +3314,7 @@ class CreateSupplierInvoice extends React.Component {
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
 																					//	width="10%"
+																					width={ "250px" }
 																					dataField="vat"
 																					dataFormat={(cell, rows) =>
 																						this.renderVat(cell, rows, props)

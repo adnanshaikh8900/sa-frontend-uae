@@ -914,6 +914,12 @@ class DetailExpense extends React.Component {
 																	values.expenseCategory && values.expenseCategory.value !== 34) {
 																	errors.taxTreatmentId = strings.TaxTreatmentRequired;
 																}
+																if (
+																	this.state.payee === 'Company Expense' &&
+																	!values.payMode
+																) {
+																	errors.payMode = 'Pay Through is required';
+																}
 																return errors;
 															}}
 															validationSchema={Yup.object().shape({
@@ -932,9 +938,9 @@ class DetailExpense extends React.Component {
 																currency: Yup.string().required(
 																	'Currency is required',
 																),
-																payMode: Yup.string().required(
-																	'Pay through is required',
-																),
+																// payMode: Yup.string().required(
+																	// 'Pay through is required',
+																// ),
 																payee: Yup.string().required(
 																	'Paid by is required',
 																),

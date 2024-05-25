@@ -17,7 +17,9 @@ import LocalizedStrings from 'react-localization';
 import config from 'constants/config';
 
 const mapStateToProps = (state) => {
-	return {};
+	return {
+		companyDetails: state.common.company_details,
+	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {};
@@ -54,6 +56,8 @@ class FinancialReport extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
+		const { isRegisteredVat } = this.props.companyDetails;
+
 		return (
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">
@@ -157,7 +161,7 @@ class FinancialReport extends React.Component {
 										</div>
 										</Col>}
 
-										{config.REPORTS_HEAD_VAT && 
+										{config.REPORTS_HEAD_VAT && isRegisteredVat &&
 										<Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img

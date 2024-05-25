@@ -1286,6 +1286,34 @@ const en = {
       InvoiceSentSuccessfully: 'Invoice Sent Successfully!',
       InvoiceMovedToDraftSuccessfully: 'Invoice Moved To Draft Successfully!',
       InvoicePostedSuccessfully: 'Invoice Posted Successfully!',
+      InvoiceDeletedUnsuccessfully: 'Invoice Deleted Unsuccessfully!',
+      InvoiceMovedToDraftUnsuccessfully: 'Invoice Moved To Draft Unsuccessfully!',
+      CrediNoteMovedToDraftSuccessfully: 'CrediNote Moved To Draft Successfully!',
+      CrediNoteMovedToDraftUnsuccessfully: 'CrediNote Moved To Draft Unsuccessfully!',
+      InvoicePostedUnsuccessfully: 'Invoice Posted Unsuccessfully!',
+      CustomerInvoiceDeletedSuccessfully: 'Customer Invoice Deleted Successfully!',
+      CustomerInvoiceDeletedUnsuccessfully: 'Customer Invoice Deleted Unsuccessfully!',
+      CustomerInvoicePostedUnsuccessfully: "Customer Invoice Posted Unsuccessfully",
+      CustomerInvoiceDeletedSuccessfully: `Customer Invoice Deleted Successfully`,
+      CustomerInvoiceDeletedUnSuccessfully: `Customer Invoice Deleted Unsuccessfully`,
+      PurchaseOrderDeletedSuccessfully: "Purchase Order Deleted Successfully!",
+      PurchaseOrderDeletedUnuccessfully: "Purchase Order Deleted Unsuccessfully!",
+      PurchaseOrderPostedSuccessfully: "Purchase Order Posted Successfully!",
+      PurchaseOrderPostedUnsuccessfully: "Purchase Order Posted Unsuccessfully!",
+      DocumentDeleteMessage: "There is no access to this document. It has been deleted",
+      IncomeReceiptSentSuccessfully: "Income Receipt Sent Successfully!",
+      IncomeReceiptSentUnsuccessfully: "Income Receipt Sent Unsuccessfully!",
+      PurchaseReceiptDeletedSuccessfully: "Purchase Receipt Deleted Successfully!",
+      PurchaseReceiptDeletedUnuccessfully: "Purchase Receipt Deleted Unsuccessfully!",
+      QuotationMovedToDraftSuccessfully:"Quotation Moved To Draft Successfully!",
+      QuotationMovedToDraftUnsuccessfully:"Quotation Moved To Draft Unsuccessfully!",
+      PurchaseOrderToDraftSuccessfully:"Purchase Order Moved To Draft Successfully!",
+      PurchaseOrderToDraftUnsuccessfully:"Purchase Order Moved To Draft Unsuccessfully!",
+      SubscriptionErrorMessage:"Not able to validate subscription, please contact support.ae@simpleaccounts.io",
+      SubscriptionExpiredMessage:"Subscription status is not active.",
+      SubscriptionFailedMessage:"Failed to fetch the subscription status.",
+      QuotationSentSuccessfully:"Quotation Sent Successfully!",
+
 
 
       //Payroll Settings
@@ -1299,7 +1327,7 @@ const en = {
       //ProductIsRequired: "Product is Required",
       Product_Is_Required:" Product is required",
       QuantityGreaterThan0: 'Quantity should be greater than 0',
-      UnitPriceGreaterThan1: 'Unit price should be greater than 1',
+      UnitPriceGreaterThan1: 'Unit price should be greater than 0',
       VATIsRequired: 'VAT is required',
 
       //Salary Component

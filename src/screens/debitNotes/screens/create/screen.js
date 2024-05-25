@@ -729,16 +729,19 @@ class CreateDebitNote extends React.Component {
 								}`}
 						/>
 						<div className='mt-1'>
-							<Input
+							<TextField
 								disabled
-								type="text"
-								maxLength="250"
+								type="textarea"
+								inputProps={{ maxLength: 2000}}
+								multiline
+								minRows={1}
+								maxRows={4}
 								value={row['description'] ? row['description'] : ''}
 								onChange={(e) => {
 									this.selectItem(e.target.value, row, 'description', form, field);
 								}}
 								placeholder={strings.Description}
-								className={`form-control ${props.errors.lineItemsString &&
+								className={`textarea ${props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
 									props.errors.lineItemsString[parseInt(idx, 10)].description &&
 									Object.keys(props.touched).length > 0 &&
@@ -1935,7 +1938,7 @@ class CreateDebitNote extends React.Component {
 																			? 'Creating...'
 																			: strings.Create}
 																	</Button>
-																	<Button
+																	{!this.props.location?.state?.invoiceID && <Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -1955,7 +1958,7 @@ class CreateDebitNote extends React.Component {
 																		{this.state.disabled1
 																			? 'Creating...'
 																			: strings.CreateandMore}
-																	</Button>
+																	</Button>}
 																	<Button
 																		color="secondary"
 																		className="btn-square"

@@ -702,9 +702,8 @@ class CreateCustomerInvoice extends React.Component {
 								changeShippingAddress: res.data.changeShippingAddress ?? '',
 
 								shippingAddress: {
-									email: res.data.billingEmail ?? '',
 									city: res.data.shippingCity ?? '',
-									countryId: res.data.shippingCountryId ?? '',
+									countryId: res.data.shippingCountry ?? '',
 									address: res.data.shippingAddress ?? '',
 									postZipCode: res.data.shippingPostZipCode || res.data.shippingPoBoxNumber,
 									stateId: res.data.shippingState ?? '',

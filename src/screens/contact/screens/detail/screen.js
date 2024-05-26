@@ -137,7 +137,6 @@ class DetailContact extends React.Component {
 									fax: res.data.fax ?? '',
 								},
 								shippingAddress: {
-									email: res.data.billingEmail ?? '',
 									city: res.data.shippingCity ?? '',
 									countryId: res.data.shippingCountryId ?? '',
 									address: res.data.addressLine2 ?? '',

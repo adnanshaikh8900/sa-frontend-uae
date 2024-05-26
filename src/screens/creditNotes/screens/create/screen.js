@@ -2920,7 +2920,7 @@ class CreateCreditNote extends React.Component {
 																					: strings.Create}
 																			</Button>
 
-																			<Button
+																			{!this.props.location?.state?.invoiceID && <Button
 																				type="button"
 																				color="primary"
 																				className="btn-square mr-3"
@@ -2944,7 +2944,7 @@ class CreateCreditNote extends React.Component {
 																				{this.state.disabled
 																					? 'Creating...'
 																					: strings.CreateandMore}
-																			</Button>
+																			</Button>}
 																			<Button
 																				color="secondary"
 																				className="btn-square"

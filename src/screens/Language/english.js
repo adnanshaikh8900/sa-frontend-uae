@@ -1320,6 +1320,7 @@ const en = {
       SubscriptionErrorMessage: "Not able to validate subscription, please contact support.ae@simpleaccounts.io",
       SubscriptionExpiredMessage: "Subscription status is not active.",
       SubscriptionFailedMessage: "Failed to fetch the subscription status.",
+      QuotationSentSuccessfully:"Quotation Sent Successfully!",
 
 
 

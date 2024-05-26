@@ -130,6 +130,7 @@ export const getStateList = (countryCode) => {
 							type: CONTACT.STATE_LIST,
 							payload: res.data,
 						});
+						return res;
 					}
 				})
 				.catch((err) => {

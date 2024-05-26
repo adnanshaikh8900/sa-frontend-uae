@@ -29,3 +29,13 @@ export const getCountryDropdown = (list) => {
     return newList;
 };
 
+export const getStateDropdown = (list, countryId) => {
+    const newList = list ? selectOptionsFactory.renderOptions(
+        'label',
+        'value',
+        list,
+        countryId === 229 ? strings.Emirate : strings.StateRegion,
+    ) : []
+    return newList;
+};
+

@@ -143,7 +143,7 @@ class CreateContact extends React.Component {
 	};
 	getData = (data) => {
 		let temp = {};
-		const { isSame ,isActive} = this.state;
+		const { isSame, isActive } = this.state;
 		for (let item in data) {
 			if (typeof data[`${item}`] !== 'object') {
 				temp[`${item}`] = data[`${item}`];
@@ -158,7 +158,7 @@ class CreateContact extends React.Component {
 		temp[`isBillingAndShippingAddressSame`] = isSame;
 		temp[`addressLine1`] = data[`billingAddress`].address;
 		temp[`countryId`] = billingcountryId;
-		temp[`stateId`] = data[`billingAddress`].stateId.value;
+		temp[`stateId`] = data[`billingAddress`].stateId;
 		temp[`postZipCode`] = data[`billingAddress`].postZipCode;
 		temp[`city`] = data[`billingAddress`].city;
 		temp[`fax`] = data[`billingAddress`].fax;
@@ -173,7 +173,7 @@ class CreateContact extends React.Component {
 			billingFax: data[`billingAddress`].fax,
 			billingPoBoxNumber: billingcountryId === 229 ? data[`billingAddress`].postZipCode : '',
 			billingPostZipCode: billingcountryId !== 229 ? data[`billingAddress`].postZipCode : '',
-			billingStateProvince: data[`billingAddress`].stateId.value,
+			billingStateProvince: data[`billingAddress`].stateId,
 			billingcountryId: data[`billingAddress`].countryId,
 		}
 
@@ -185,7 +185,7 @@ class CreateContact extends React.Component {
 			shippingTelephone: data[`shippingAddress`].telephone,
 			shippingPoBoxNumber: shippingCountryId === 229 ? data[`shippingAddress`].postZipCode : '',
 			shippingPostZipCode: shippingCountryId !== 229 ? data[`shippingAddress`].postZipCode : '',
-			shippingStateId: data[`shippingAddress`].stateId.value,
+			shippingStateId: data[`shippingAddress`].stateId,
 			shippingCountryId: data[`shippingAddress`].countryId,
 		}
 		temp = { ...temp, ...billingAdress, ...shippingAddress }
@@ -1008,7 +1008,6 @@ class CreateContact extends React.Component {
 																			}}
 																			country_list={country_list}
 																			addressType={strings.Billing}
-																			taxTreatmentId={props.values.taxTreatmentId ? props.values.taxTreatmentId.value ?? props.values.taxTreatmentId : ''}
 																			disabled={{ email: false, city: false, countryId: disableCountry, address: false, postZipCode: false, stateId: false, telephone: false, fax: false, }}
 																		/>
 																	</Row>
@@ -1055,7 +1054,6 @@ class CreateContact extends React.Component {
 																			}}
 																			country_list={country_list}
 																			addressType={strings.Shipping}
-																			taxTreatmentId={props.values.taxTreatmentId ? props.values.taxTreatmentId.value ?? props.values.taxTreatmentId : ''}
 																			disabled={{ email: false, city: false, countryId: disableCountry, address: false, postZipCode: false, stateId: false, telephone: false, fax: false, }}
 																		/>
 																	</Row>

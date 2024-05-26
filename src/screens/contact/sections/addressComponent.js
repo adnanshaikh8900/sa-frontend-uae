@@ -19,8 +19,7 @@ import 'react-phone-input-2/lib/style.css'
 
 const mapStateToProps = (state) => {
     return {
-        state_list: state.contact.state_list,
-		country_list: DropdownLists.getCountryDropdown(state.contact.country_list),
+        country_list: DropdownLists.getCountryDropdown(state.contact.country_list),
     };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -36,6 +35,7 @@ class AddressComponent extends React.Component {
         super(props);
         this.state = {
             language: window['localStorage'].getItem('language'),
+            state_list: [],
         };
         this.regEx = /^[0-9\d]+$/;
         this.regExTelephone = /^[0-9-]+$/;
@@ -45,21 +45,24 @@ class AddressComponent extends React.Component {
     }
 
     componentDidMount = () => {
-		this.props.contactActions.getCountryList();
-	};
+        this.props.contactActions.getCountryList();
+    };
 
     componentDidUpdate(prevProps) {
-        const { taxTreatmentId, addressType, values } = this.props;
-        if (prevProps.taxTreatmentId !== taxTreatmentId) {
-            if (addressType === strings.Shipping)
-                this.getStateList(values?.countryId);
-            console.log('someProp has changed');
+        const { values } = this.props;
+        if ((prevProps.values.countryId !== values?.countryId) || (this.state.state_list.length === 0)) {
+            if (values?.countryId) {
+                this.props.contactActions.getStateList(values?.countryId).then((res) => {
+                    if (res.status === 200) {
+                        this.setState({
+                            state_list: DropdownLists.getStateDropdown(res.data, values?.countryId)
+                        })
+                    }
+                });
+            }
         }
     }
 
-    getStateList = (countryCode) => {
-        this.props.contactActions.getStateList(countryCode);
-    };
     render() {
         strings.setLanguage(this.state.language);
         const {
@@ -68,10 +71,10 @@ class AddressComponent extends React.Component {
             errors,
             country_list,
             onChange,
-            state_list,
             addressType,
             disabled,
         } = this.props;
+        const { state_list } = this.state;
         //console.log(this.props, addressType);
         return (
             <>
@@ -125,7 +128,6 @@ class AddressComponent extends React.Component {
                             onChange={(option) => {
                                 if (option && option?.value) {
                                     onChange('countryId', option?.value);
-                                    this.getStateList(option?.value);
                                 } else {
                                     onChange('countryId', '');
                                 }
@@ -155,20 +157,11 @@ class AddressComponent extends React.Component {
                             {values?.countryId === 229 ? strings.Emirate : strings.StateRegion}
                         </Label>
                         <Select
-                            options={
-                                state_list
-                                    ? selectOptionsFactory.renderOptions(
-                                        'label',
-                                        'value',
-                                        state_list,
-                                        values?.countryId === 229 ? strings.Emirate : strings.StateRegion,
-                                    )
-                                    : []
-                            }
+                            options={state_list}
                             value={values?.stateId?.value ? values?.stateId : state_list.find((option) => option?.value === values?.stateId)}
                             onChange={(option) => {
                                 if (option && option?.value) {
-                                    onChange('stateId', option);
+                                    onChange('stateId', option.value);
                                 } else {
                                     onChange('stateId', '');
                                 }

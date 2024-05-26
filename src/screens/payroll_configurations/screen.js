@@ -241,7 +241,7 @@ class PayrollConfigurations extends React.Component {
 									this.props.history.push('/admin/payroll/config/detailSalaryRoles', { id: row.salaryRoleId })
 								}}
 							>
-								<i class="far fa-edit fa-lg"></i>
+								<i className="far fa-edit fa-lg"></i>
 							</Button>
 						)
 					}
@@ -267,7 +267,7 @@ class PayrollConfigurations extends React.Component {
 									this.props.history.push('/admin/payroll/config/detailSalaryStructure', { id: row.salaryStructureId })
 								}}
 							>
-								<i class="far fa-edit fa-lg"></i>
+								<i className="far fa-edit fa-lg"></i>
 							</Button>
 						)
 				}
@@ -288,7 +288,7 @@ class PayrollConfigurations extends React.Component {
 								this.props.history.push('/admin/payroll/config/detailEmployeeDesignation', { id: row.id })
 							}}
 						>
-							<i class="far fa-edit fa-lg"></i>
+							<i className="far fa-edit fa-lg"></i>
 						</Button>)
 					}
 				</div>
@@ -310,7 +310,7 @@ class PayrollConfigurations extends React.Component {
 								this.props.history.push('/admin/payroll/config/detailSalaryComponent', { id: row.id })
 							}}
 						>
-							<i class="far fa-edit fa-lg"></i>
+							<i className="far fa-edit fa-lg"></i>
 						</Button>)
 					}
 				</div>

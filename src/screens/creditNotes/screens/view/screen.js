@@ -232,7 +232,7 @@ class ViewCreditNote extends React.Component {
 
 									}}
 								>
-									<i class="fas fa-times"></i>
+									<i className="fas fa-times"></i>
 								</Button>
 							</div>
 							<div>

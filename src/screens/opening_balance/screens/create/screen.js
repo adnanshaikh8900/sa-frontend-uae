@@ -244,7 +244,7 @@ class CreateOpeningBalance extends React.Component {
 																<span className="text-danger">* </span>
 																{strings.TransactionCategory}
 																<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
-																	<span class="tooltiptext">This list will only include categories for which an opening balance has not been created.</span>
+																	<span className="tooltiptext">This list will only include categories for which an opening balance has not been created.</span>
 																</div>
 																</Label>
 																		<Select

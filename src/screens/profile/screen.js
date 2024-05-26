@@ -2613,7 +2613,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="product_code">
 																							<span className="text-danger">* </span> {strings.TaxRegistrationNumber}
 																							<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
-																								<span class="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
+																								<span className="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
 																						</Label>
 																							<Input
 																								// disabled={!this.state.enableVatRegistrationDate}
@@ -2663,7 +2663,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="expense_date">
 																								<span className="text-danger">* </span> {strings.VatRegisteredOn} 
 																								<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
-																								<span class="tooltiptext">Please note that you cannot update <br></br> this detail once you have created a document.</span></div>
+																								<span className="tooltiptext">Please note that you cannot update <br></br> this detail once you have created a document.</span></div>
 																							</Label>
 																							<DatePicker
 																								// disabled={!this.state.enableVatRegistrationDate}

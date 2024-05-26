@@ -342,7 +342,7 @@ class CorporateTax extends React.Component {
               }}
             >
               {" "}
-              <i class="fas fa-unlink" /> Mark It Unfiled
+              <i className="fas fa-unlink" /> Mark It Unfiled
             </DropdownItem>
           ) : (
             ""
@@ -364,7 +364,7 @@ class CorporateTax extends React.Component {
               }}
             >
               {" "}
-              <i class="fas fa-link" /> File The Report
+              <i className="fas fa-link" /> File The Report
             </DropdownItem>
           ) : (
             ""
@@ -579,7 +579,7 @@ class CorporateTax extends React.Component {
                           this.setState({ fiscalYearOptions: fiscalYearOptions, openCTReportModal: true });
                         }}
                       >
-                        <i class="fas fa-plus"></i> {strings.GenerateCTReport}
+                        <i className="fas fa-plus"></i> {strings.GenerateCTReport}
                       </Button>
 
                       <Button
@@ -591,7 +591,7 @@ class CorporateTax extends React.Component {
                           this.setState({ previousSettings: setting, openCTSettingModal: true });
                         }}
                       >
-                        <i class="fas fa-cog"></i> Corporate Tax Settings
+                        <i className="fas fa-cog"></i> Corporate Tax Settings
                       </Button>
 
                       {/* <Button color="primary" className="btn-square  pull-right"

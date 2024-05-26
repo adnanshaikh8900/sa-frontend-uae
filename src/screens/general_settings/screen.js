@@ -776,7 +776,7 @@ class GeneralSettings extends React.Component {
 																			this.testMail();
 																		}}
 																	>
-																		<i class="fas fa-envelope"></i> {strings.TestMail}
+																		<i className="fas fa-envelope"></i> {strings.TestMail}
 																	</Button>
 
 

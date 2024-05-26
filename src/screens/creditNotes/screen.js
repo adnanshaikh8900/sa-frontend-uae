@@ -458,7 +458,7 @@ class CreditNotes extends React.Component {
 									this.sendMail(row, true, false);
 								}}
 							>
-								<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+								<i className="far fa-arrow-alt-circle-right"></i>Mark As Sent
 							</DropdownItem>
 						)}
 						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid' && (
@@ -501,7 +501,7 @@ class CreditNotes extends React.Component {
 										);
 									}}
 								>
-									<i class="fas fa-file-invoice"></i>{strings.ApplyToInvoice}
+									<i className="fas fa-file-invoice"></i>{strings.ApplyToInvoice}
 								</div>
 							</DropdownItem>
 						)}
@@ -800,7 +800,7 @@ class CreditNotes extends React.Component {
 									<Row>
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
-												<i class="nav-icon fas fa-donate" />
+												<i className="nav-icon fas fa-donate" />
 
 												{/* <img
 											alt="invoiceimage"

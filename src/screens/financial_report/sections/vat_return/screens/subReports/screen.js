@@ -251,7 +251,7 @@ class SubReports extends React.Component {
 												}}
 												style={{ cursor: 'pointer' }}
 											>
-												<span>Back<i class="far fa-arrow-alt-circle-left ml-1"></i></span>
+												<span>Back<i className="far fa-arrow-alt-circle-left ml-1"></i></span>
 											</Button>
 
 										</div>

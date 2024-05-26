@@ -336,7 +336,7 @@ class CreateDebitNote extends React.Component {
 				name={`lineItemsString.${idx}.discountType`}
 				render={({ field, form }) => (
 					<div>
-						<div class="input-group">
+						<div className="input-group">
 							<Input
 								disabled
 								type="text"
@@ -374,7 +374,7 @@ class CreateDebitNote extends React.Component {
 										: ''
 									}`}
 							/>
-							<div class="dropdown open input-group-append">
+							<div className="dropdown open input-group-append">
 
 								<div style={{ width: '100px' }}>
 									<Select
@@ -1144,7 +1144,7 @@ class CreateDebitNote extends React.Component {
 									<Row>
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
-												<i class="fa fa-credit-card" />
+												<i className="fa fa-credit-card" />
 												<span className="ml-2">{strings.CreateDebitNote}</span>
 											</div>
 										</Col>

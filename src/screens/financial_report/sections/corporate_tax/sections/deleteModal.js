@@ -132,7 +132,7 @@ class DeleteModal extends React.Component {
 
 							}}
 						>
-							<i class="fas fa-check-double mr-1"></i>	Yes
+							<i className="fas fa-check-double mr-1"></i>	Yes
 						</Button>
 						<Button
 							color="secondary"

@@ -504,7 +504,7 @@ class CustomerInvoice extends React.Component {
 									this.stockInHandTestForProduct(row, true);
 								}}
 							>
-								<i class="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
+								<i className="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
 							</DropdownItem>
 						)}
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (

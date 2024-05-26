@@ -714,7 +714,7 @@ class Import extends React.Component {
 	renderLocks = (cell, row) => {
 
 		if (row.transactionId) {
-			return (<div className=" text-center"><i class="fas fa-lock"></i> </div>);
+			return (<div className=" text-center"><i className="fas fa-lock"></i> </div>);
 		}
 		else {
 			return (<div className=" text-center" style={{padding:" 0px !important",height: "21px"}}> 	<button className="btn-sm"style={{ color: "white", backgroundColor: "#2266d8",}} onClick={() => {
@@ -760,7 +760,7 @@ class Import extends React.Component {
 								   onClick={() => {
 												this.export(row.fileName);
 													}}>
-													<i class="fas fa-download"></i>
+													<i className="fas fa-download"></i>
 				</Button>
 		)
 	}
@@ -1062,7 +1062,7 @@ class Import extends React.Component {
 																						})
 																						this.productList();
 																					}}>
-																					{strings.nex}	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																					{strings.nex}	<i className="far fa-arrow-alt-circle-right mr-1"></i>
 																				</Button>
 
 																			</FormGroup>
@@ -1238,7 +1238,7 @@ class Import extends React.Component {
 
 																					}}>
 																					<div className="text-center mb-3 mt-4">
-																						<i class="fas fa-upload  fa-5x"></i>
+																						<i className="fas fa-upload  fa-5x"></i>
 
 																					</div>
 																					<div className="text-center mb-3" style={{
@@ -1407,7 +1407,7 @@ class Import extends React.Component {
 																	this.listOfTransactionCategory()
 
 																}}>
-																{strings.nex}	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																{strings.nex}	<i className="far fa-arrow-alt-circle-right mr-1"></i>
 															</Button>
 														</FormGroup>
 													</div>
@@ -1495,7 +1495,7 @@ class Import extends React.Component {
 																						this.toggle(0, '4')
 																						this.listOfTransactionCategory()
 																					}}>
-																					{strings.nex}	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																					{strings.nex}	<i className="far fa-arrow-alt-circle-right mr-1"></i>
 																				</Button>
 																			</FormGroup>
 																		</div>
@@ -1543,7 +1543,7 @@ class Import extends React.Component {
 																			onClick={() => {
 																				this.handleSubmitForOpeningBalances();
 																			}}>
-																			{strings.mig}<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																			{strings.mig}<i className="far fa-arrow-alt-circle-right mr-1"></i>
 																		</Button>
 																	</FormGroup>
 																</div>
@@ -1575,7 +1575,7 @@ class Import extends React.Component {
 																									this.exportAll();
 																								}}>
 																								Download All &nbsp;
-																								<i class="fas fa-download"></i>
+																								<i className="fas fa-download"></i>
 																							</Button>
 												</div>
 										<BootstrapTable

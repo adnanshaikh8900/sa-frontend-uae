@@ -29,14 +29,14 @@ import { LeavePage, Loader } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory, selectCurrencyFactory, selectOptionsFactory, InputValidation, DropdownLists, Lists } from 'utils';
 import Switch from "react-switch";
 import './style.scss';
 import moment from 'moment';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextField } from '@material-ui/core';
-import { formControlClasses } from '@mui/material';
+import { AddressComponent } from 'screens/contact/sections';
 
 const mapStateToProps = (state) => {
 	return {
@@ -77,8 +77,6 @@ const customStyles = {
 		},
 	}),
 };
-
-const invoiceimage = require('assets/images/invoice/invoice.png');
 
 class CreateCustomerInvoice extends React.Component {
 	constructor(props) {
@@ -129,12 +127,8 @@ class CreateCustomerInvoice extends React.Component {
 				project: '',
 				term: '',
 				exchangeRate: '',
-				shippingAddress: '',
-				shippingCountryId: '',
-				shippingStateId: '',
-				shippingCity: '',
-				shippingPostZipCode: '',
-				POBoxNumber: '',
+				changeShippingAddress: false,
+				shippingAddress: Lists.Address,
 				lineItemsString: [
 					{
 						id: 0,
@@ -177,7 +171,6 @@ class CreateCustomerInvoice extends React.Component {
 			exchangeRate: '',
 			basecurrency: [],
 			inventoryList: [],
-			state_list_for_shipping: [],
 			param: false,
 			date: '',
 			contactId: '',
@@ -706,30 +699,18 @@ class CreateCustomerInvoice extends React.Component {
 								notes: res.data.notes
 									? res.data.notes
 									: '',
-								changeShippingAddress: res.data.changeShippingAddress
-									? res.data.changeShippingAddress
-									: '',
-								shippingAddress: res.data.shippingAddress
-									? res.data.shippingAddress
-									: '',
-								shippingCountryId: res.data.shippingCountry
-									? res.data.shippingCountry
-									: '',
-								shippingStateId: res.data.shippingState
-									? res.data.shippingState
-									: '',
-								shippingCity: res.data.shippingCity
-									? res.data.shippingCity
-									: '',
-								shippingPostZipCode: res.data.shippingPostZipCode
-									? res.data.shippingPostZipCode
-									: '',
-								shippingTelephone: res.data.shippingTelephone
-									? res.data.shippingTelephone
-									: '',
-								shippingFax: res.data.shippingFax
-									? res.data.shippingFax
-									: '',
+								changeShippingAddress: res.data.changeShippingAddress ?? '',
+
+								shippingAddress: {
+									email: res.data.billingEmail ?? '',
+									city: res.data.shippingCity ?? '',
+									countryId: res.data.shippingCountryId ?? '',
+									address: res.data.shippingAddress ?? '',
+									postZipCode: res.data.shippingPostZipCode || res.data.shippingPoBoxNumber,
+									stateId: res.data.shippingState ?? '',
+									telephone: res.data.shippingTelephone ?? '',
+									fax: res.data.shippingFax ?? '',
+								},
 								lineItemsString: res.data.invoiceLineItems
 									? res.data.invoiceLineItems
 									: [],
@@ -802,35 +783,10 @@ class CreateCustomerInvoice extends React.Component {
 							loading: false,
 						},
 						() => {
-							if (this.state.initValue && this.state.initValue.changeShippingAddress && this.state.initValue.shippingCountryId) {
-								let state_list_for_shipping = []
-								let state = ""
-								this.props.customerInvoiceActions.getStateListForShippingAddress(this.state.initValue.shippingCountryId).then((res) => {
-									if (res.length > 0) {
-										this.setState({ state_list_for_shipping: res })
-										state_list_for_shipping = res;
-										state = state_list_for_shipping.find((option) => option.value == this.state.initValue.shippingStateId)
-
-										this.formRef.current.setFieldValue('shippingStateId', state, true);
-										if (this.props.country_list && this.props.country_list.length > 0) {
-											let country = selectOptionsFactory.renderOptions(
-												'countryName',
-												'countryCode',
-												this.props.country_list,
-												'Country',
-											).find((option) => option.value == this.state.initValue.shippingCountryId)
-											this.formRef.current.setFieldValue('shippingCountryId', country, true);
-										}
-									}
-								});
-
-								this.formRef.current.setFieldValue('changeShippingAddress', this.state.initValue.changeShippingAddress, true);
-								this.formRef.current.setFieldValue('shippingAddress', this.state.initValue.shippingAddress, true);
-								this.formRef.current.setFieldValue('shippingCity', this.state.initValue.shippingCity, true);
-								this.formRef.current.setFieldValue('shippingPostZipCode', this.state.initValue.shippingPostZipCode, true);
-								this.formRef.current.setFieldValue('shippingFax', this.state.initValue.shippingFax, true);
-								this.formRef.current.setFieldValue('shippingTelephone', this.state.initValue.shippingTelephone, true);
-								this.formRef.current.setFieldValue('shippingFax', this.state.initValue.shippingFax, true);
+							const { initValue } = this.state;
+							if (initValue && initValue.changeShippingAddress) {
+								this.formRef.current.setFieldValue('shippingAddress', initValue.shippingAddress, true);
+								this.formRef.current.setFieldValue('changeShippingAddress', initValue.changeShippingAddress, true);
 
 							}
 							if (this.state.data.length > 0) {
@@ -1686,7 +1642,7 @@ class CreateCustomerInvoice extends React.Component {
 							<div className='mt-1'>
 								<TextField
 									type="textarea"
-									inputProps={{ maxLength: 2000}}
+									inputProps={{ maxLength: 2000 }}
 									multiline
 									minRows={1}
 									maxRows={4}
@@ -1975,18 +1931,8 @@ class CreateCustomerInvoice extends React.Component {
 			project,
 			invoice_number,
 			shippingAddress,
-			shippingCountryId,
-			shippingStateId,
-			shippingCity,
-			shippingPostZipCode,
-			shippingTelephone,
-			shippingFax,
-			discount,
-			discountType,
-			discountPercentage,
 			notes,
 			changeShippingAddress,
-			quotationId,
 			footNote
 		} = data;
 		const { term } = this.state;
@@ -2004,15 +1950,15 @@ class CreateCustomerInvoice extends React.Component {
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('exchangeRate', exchangeRate !== null ? exchangeRate : '');
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '');
-		if (changeShippingAddress && changeShippingAddress == true) {
+		if (changeShippingAddress && changeShippingAddress === true) {
 			formData.append('changeShippingAddress', changeShippingAddress !== null ? changeShippingAddress : '');
-			formData.append('shippingAddress', shippingAddress !== null ? shippingAddress : '');
-			formData.append('shippingCountry', shippingCountryId.value ? shippingCountryId.value : shippingCountryId);
-			formData.append('shippingState', shippingStateId.value !== null ? shippingStateId.value : shippingStateId);
-			formData.append('shippingCity', shippingCity ? shippingCity : '');
-			formData.append('shippingPostZipCode', shippingPostZipCode ? shippingPostZipCode : '');
-			formData.append('shippingTelephone', shippingTelephone ? shippingTelephone : '');
-			formData.append('shippingFax', shippingFax ? shippingFax : '');
+			formData.append('shippingAddress', shippingAddress.address ?? '');
+			formData.append('shippingCountry', shippingAddress.countryId ?? '');
+			formData.append('shippingState', shippingAddress.stateId ?? '');
+			formData.append('shippingCity', shippingAddress.city ?? '');
+			formData.append('shippingPostZipCode', shippingAddress.postZipCode ?? '');
+			formData.append('shippingTelephone', shippingAddress.telephone ?? '');
+			formData.append('shippingFax', shippingAddress.fax ?? '');
 		}
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append('footNote', footNote ? footNote : '')
@@ -2404,19 +2350,10 @@ class CreateCustomerInvoice extends React.Component {
 		return parseFloat(val).toFixed(2)
 	}
 
-	getStateList = (countryCode) => {
-		this.props.customerInvoiceActions.getStateList(countryCode);
-	};
-	getStateListForShippingAddress = (countryCode) => {
-		this.props.customerInvoiceActions.getStateListForShippingAddress(countryCode)
-			.then((res) => {
-				this.setState({ state_list_for_shipping: res })
-			});
-	};
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, loadingMsg, isRegisteredVat } = this.state
-		const { data, discountOptions, initValue, exist, param, prefix, tax_treatment_list, state_list_for_shipping, taxTreatmentList } = this.state;
+		const { data, discountOptions, initValue, exist, param, tax_treatment_list, taxTreatmentList } = this.state;
 		const {
 			customer_list,
 			country_list,
@@ -2429,12 +2366,7 @@ class CreateCustomerInvoice extends React.Component {
 			let obj = { label: item.label.contactName, value: item.value }
 			tmpCustomer_list.push(obj)
 		})
-		this.handleFax = (e) => {
-			var initValue = this.state.initValue;
-			initValue.shippingAddress = e.target.value.replace(/[^0-9]/gi, '');;
-			this.setState({ initValue });
-			//			alert(this.state.initValue.shippingAddress );
-		}
+		
 		return (
 			loading == true ? <Loader loadingMsg={loadingMsg} /> :
 				<div>
@@ -2447,7 +2379,7 @@ class CreateCustomerInvoice extends React.Component {
 											<Row>
 												<Col lg={12}>
 													<div className="h4 mb-0 d-flex align-items-center">
-													<i className="fas fa-file-invoice" />
+														<i className="fas fa-file-invoice" />
 														<span className="ml-2">{strings.CreateInvoice}</span>
 													</div>
 												</Col>
@@ -2493,54 +2425,17 @@ class CreateCustomerInvoice extends React.Component {
 																	)
 																		errors.placeOfSupplyId = 'Place of supply is required';
 																}
-																// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-																// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-																// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-																// 	{
-																// 		if (!values.placeOfSupplyId) 
-																// 	       	errors.placeOfSupplyId ='Place of supply is required';
-																// 		if (values.placeOfSupplyId &&
-																// 			(values.placeOfSupplyId=="" ||
-																// 			(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-																// 			)
-																// 		   ) 
-																// 	         errors.placeOfSupplyId ='Place of supply is required';
-																//  }
-
 																if (values.term && values.term.label && values.term.label === "Select Terms") {
 																	errors.term =
 																		'Term is required';
 																}
 
-																if (values.changeShippingAddress == true) {
-																	if (values.shippingAddress == "")
-																		errors.shippingAddress = 'Shipping address is required';
-																}
-
-																if (values.changeShippingAddress == true) {
-																	if (values.shippingCountryId == "")
-																		errors.shippingCountryId = 'Country is required';
-																}
-
-																if (values.changeShippingAddress == true) {
-																	if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
-																		if (values.shippingPostZipCode == '')
-																			errors.shippingPostZipCode = 'PO box number is required';
-																		else if (values.shippingPostZipCode.length < 3)
-																			errors.shippingPostZipCode = 'Please enter 3 to 6 digit PO box number';
-																		if (values.shippingStateId == "")
-																			errors.shippingStateId = 'Emirate is required';
-
-																	} else {
-																		if (values.shippingPostZipCode == '')
-																			errors.shippingPostZipCode = 'Postal / Zip code is required';
-																		else if (values.shippingPostZipCode.length !== 6)
-																			errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
-																		if (values.shippingStateId == "")
-																			errors.shippingStateId = 'State / Provinces is required';
+																if (values.changeShippingAddress === true) {
+																	const shippingAddressError = InputValidation.addressValidation(values.shippingAddress)
+																	if (shippingAddressError && Object.values(shippingAddressError).length > 0) {
+																		errors.shippingAddress = shippingAddressError;
 																	}
 																}
-
 																let isoutoftock = 0
 
 																values.lineItemsString.map((c, i) => {
@@ -2572,7 +2467,7 @@ class CreateCustomerInvoice extends React.Component {
 																),
 																contactId: Yup.string().required(
 																	strings.Customer_Name_Is_Required
-																	
+
 																),
 																// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 																term: Yup.string().required(strings.TermIsRequired),
@@ -3181,7 +3076,7 @@ class CreateCustomerInvoice extends React.Component {
 																						name="SMTP-auth"
 																						checked={props.values.changeShippingAddress}
 																						onChange={(value) => {
-																							if (value != null) {
+																							if (value !== null) {
 																								props.handleChange('changeShippingAddress')(
 																									value,
 																								);
@@ -3201,309 +3096,18 @@ class CreateCustomerInvoice extends React.Component {
 																	</Row>
 
 																	<Row style={{ display: props.values.changeShippingAddress === true ? '' : 'none' }}>
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="shippingAddress"><span className="text-danger">* </span>
-																					{strings.ShippingAddress}
-																				</Label>
-																				<Input
-																					type="text"
-																					maxLength="100"
-																					id="shippingAddress"
-																					name="shippingAddress"
-																					placeholder={strings.Enter + strings.ShippingAddress}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExAddress.test(
-																								option.target.value,
-																							)
-																						) {
-
-																							props.handleChange('shippingAddress')(
-																								option,
-																							);
-																						}
-																					}}
-																					value={props.values.shippingAddress}
-																					className={
-																						props.errors.shippingAddress &&
-																							props.touched.shippingAddress
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingAddress &&
-																					props.touched.shippingAddress && (
-																						<div className="invalid-feedback">
-																							{props.errors.shippingAddress}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
-																				<Select
-																					options={
-																						country_list
-																							? selectOptionsFactory.renderOptions(
-																								'countryName',
-																								'countryCode',
-																								country_list,
-																								'Country',
-																							)
-																							: []
-																					}
-																					value={country_list &&
-																						selectOptionsFactory
-																							.renderOptions(
-																								'countryName',
-																								'countryCode',
-																								country_list,
-																								'Country',
-																							)
-																							.find(
-																								(option) =>
-																									option.value ===
-																									+(props.values.shippingCountryId && props.values.shippingCountryId.value ? props.values.shippingCountryId.value : ""),
-																							)
-																					}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('shippingCountryId')(option);
-																							this.getStateListForShippingAddress(option.value);
-																						} else {
-																							props.handleChange('shippingCountryId')('');
-																							// this.getStateListForShippingAddress("");
-																						}
-																						props.handleChange('stateId')({
-																							label: 'Select State',
-																							value: '',
-																						});
-																					}}
-																					placeholder={strings.Select + strings.Country}
-																					id="shippingCountryId"
-																					name="shippingCountryId"
-																					className={
-																						props.errors.shippingCountryId &&
-																							props.touched.shippingCountryId
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingCountryId &&
-																					props.touched.shippingCountryId && (
-																						<div className="invalid-feedback">
-																							{props.errors.shippingCountryId}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
-																					{/* {strings.StateRegion} */}
-																					{props.values.shippingCountryId && props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion}
-																				</Label>
-																				<Select
-																					options={
-																						state_list_for_shipping
-																							? selectOptionsFactory.renderOptions(
-																								'label',
-																								'value',
-																								state_list_for_shipping,
-																								props.values.shippingCountryId && props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion,
-																							)
-																							: []
-																					}
-																					value={state_list_for_shipping.find(
-																						(option) =>
-																							option.value == (props.values.shippingStateId && props.values.shippingStateId.value ? props.values.shippingStateId.value : ''),
-																					)
-																					}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('shippingStateId')(option);
-																						} else {
-																							props.handleChange('shippingStateId')('');
-																						}
-																					}}
-																					placeholder={props.values.shippingCountryId && props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.Select + strings.StateRegion}
-																					id="shippingStateId"
-																					name="shippingStateId"
-																					className={
-																						props.errors.shippingStateId &&
-																							props.touched.shippingStateId
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingStateId &&
-																					props.touched.shippingStateId && (
-																						<div className="invalid-feedback">
-																							{props.errors.shippingStateId}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																	</Row>
-																	<Row style={{ display: props.values.changeShippingAddress === true ? '' : 'none' }}>
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
-																				<Input
-																					// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
-																					value={props.values.shippingCity}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExAlpha.test(
-																								option.target.value,
-																							)
-																						) {
-																							props.handleChange('shippingCity')(option);
-																						}
-																					}}
-																					placeholder={strings.Location}
-																					id="shippingCity"
-																					name="shippingCity"
-																					type="text"
-																					maxLength="100"
-																					className={
-																						props.errors.shippingCity && props.touched.shippingCity
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingCity && props.touched.shippingCity && (
-																					<div className="invalid-feedback">
-																						{props.errors.shippingCity}
-																					</div>
-																				)}
-																			</FormGroup>
-																		</Col>
-
-																		<Col md="4" >
-																			<FormGroup>
-																				{props.values.shippingCountryId && (props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229) ?
-																					<Label htmlFor="POBoxNumber">
-																						<span className="text-danger">* </span>{strings.POBoxNumber}
-																					</Label> :
-																					<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
-																				}
-																				<Input
-																					type="text"
-																					maxLength="6"
-																					id="shippingPostZipCode"
-																					name="shippingPostZipCode"
-																					autoComplete="Off"
-																					placeholder={props.values.shippingCountryId && (props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229) ?
-																						strings.Enter + strings.POBoxNumber : strings.Enter + strings.PostZipCode}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regEx.test(option.target.value)
-																						) {
-																							props.handleChange('shippingPostZipCode')(
-																								option,
-																							);
-																						}
-
-																					}}
-																					value={props.values.shippingPostZipCode}
-																					className={
-																						props.errors.shippingPostZipCode &&
-																							props.touched.shippingPostZipCode
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingPostZipCode &&
-																					props.touched.shippingPostZipCode && (
-																						<div className="invalid-feedback">
-																							{props.errors.shippingPostZipCode}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		{/* <Col md="4">
-																<FormGroup>
-																	<Label htmlFor="shippingTelephone">{strings.Telephone}</Label>
-																	<Input
-																		maxLength="15"
-																		type="text"
-																		id="shippingTelephone"
-																		name="shippingTelephone"
-																		placeholder={strings.Enter + strings.TelephoneNumber}
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regExTelephone.test(option.target.value)
-																			) {
-																				props.handleChange('shippingTelephone')(option);
-																			}
-																		}}
-																		value={props.values.shippingTelephone}
-																		className={
-																			props.errors.shippingTelephone &&
-																				props.touched.shippingTelephone
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.shippingTelephone &&
-																		props.touched.shippingTelephone && (
-																			<div className="invalid-feedback">
-																				{props.errors.shippingTelephone}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-														</Row>
-														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
-														<Col md="4">
-																<FormGroup>
-																	<Label htmlFor="shippingFax">
-																		{strings.Fax}
-																	</Label>
-																	<Input
-																		type="text"
-																		maxLength="8"
-																		id="shippingFax"
-																		name="shippingFax"
-																		placeholder={strings.Enter + strings.Fax}
-																		onKeyPress={this.handleKeyPress}
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
-																			) {
-																				if (option.target.value.length != 8 && option.target.value != "")
-																					{this.setState({ showshippingFaxErrorMsg: true })}
-																					
-																				else{
-																					this.setState({ showshippingFaxErrorMsg: false })}
-																			}
-																			this.handleFax(option)
-																		}}
-																		value={this.state.initValue.shippingAddress }
-																		className={
-																			props.errors.shippingFax &&
-																				props.touched.shippingFax
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.shippingFax &&
-																		props.touched.shippingFax && (
-																			<div className="invalid-feedback">
-																				{props.errors.shippingFax}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col> */}
-
+																		<AddressComponent
+																			values={props.values.shippingAddress || {}}
+																			errors={props.errors.shippingAddress || {}}
+																			touched={props.touched.shippingAddress}
+																			onChange={(field, value) => {
+																				props.handleChange(`shippingAddress.${field}`)(value);
+																				this.setState({ isSame: false, });
+																			}}
+																			country_list={country_list}
+																			addressType={strings.Shipping}
+																			disabled={{ email: false, city: false, countryId: false, address: false, postZipCode: false, stateId: false, telephone: false, fax: false, }}
+																		/>
 																	</Row>
 																	<hr />
 																	<Row style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}>
@@ -3690,22 +3294,7 @@ class CreateCustomerInvoice extends React.Component {
 																				>
 																					{strings.PRODUCT}
 																				</TableHeaderColumn>
-																				{/* <TableHeaderColumn
-																		width="55"
-																		dataAlign="center"
-																		dataFormat={(cell, rows) =>
-																			this.renderAddProduct(cell, rows, props)
-																		}
-																	></TableHeaderColumn> */}
-																				{/* <TableHeaderColumn
-																		width="10%"
-																		dataField="description"
-																		dataFormat={(cell, rows) =>
-																			this.renderDescription(cell, rows, props)
-																		}
-																	>
-																	{strings.DESCRIPTION}
-																	</TableHeaderColumn> */}
+
 																				<TableHeaderColumn
 																					//width="13%"
 																					dataField="quantity"
@@ -3715,19 +3304,7 @@ class CreateCustomerInvoice extends React.Component {
 																				>
 																					{strings.QUANTITY}
 																				</TableHeaderColumn>
-																				{/* <TableHeaderColumn
-																			width="5%"
-																			dataField="unitType"
-																     	>{strings.Unit}
-																			 	<i
-																		 id="unitTooltip"
-																		 className="fa fa-question-circle"
-																	 /> <UncontrolledTooltip
-																		 placement="right"
-																		 target="unitTooltip"
-																	 >
-																		Units / Measurements</UncontrolledTooltip>
-																		</TableHeaderColumn> */}
+
 																				<TableHeaderColumn
 																					//width="10%"
 																					dataField="unitPrice"
@@ -3782,7 +3359,7 @@ class CreateCustomerInvoice extends React.Component {
 																				{isRegisteredVat &&
 																					<TableHeaderColumn
 																						//	width="13%"
-																						width={ "250px" }
+																						width={"250px"}
 																						dataField="vat"
 																						dataFormat={(cell, rows) =>
 																							this.renderVat(cell, rows, props)
@@ -4260,7 +3837,6 @@ class CreateCustomerInvoice extends React.Component {
 						// currency_list={this.props.currency_convert_list}
 						// currency={this.state.currency}
 						// country_list={this.props.country_list}
-						// getStateList={this.props.customerInvoiceActions.getStateList}
 						/>
 						<ProductModal
 							openProductModal={this.state.openProductModal}

@@ -3392,7 +3392,7 @@ class CreateEmployeePayroll extends React.Component {
                                               }}
                                             >
                                               {strings.Next}
-                                              <i class="far fa-arrow-alt-circle-right ml-1"></i>
+                                              <i className="far fa-arrow-alt-circle-right ml-1"></i>
                                             </Button>
                                           </Col>
                                         </Row>
@@ -3960,7 +3960,7 @@ class CreateEmployeePayroll extends React.Component {
                                                 this.toggle(0, "1");
                                               }}
                                             >
-                                              <i class="far fa-arrow-alt-circle-left mr-1"></i>{" "}
+                                              <i className="far fa-arrow-alt-circle-left mr-1"></i>{" "}
                                               {strings.back}
                                             </Button>
                                             <Button
@@ -3988,7 +3988,7 @@ class CreateEmployeePayroll extends React.Component {
                                               }}
                                             >
                                               {strings.Next}
-                                              <i class="far fa-arrow-alt-circle-right ml-1"></i>
+                                              <i className="far fa-arrow-alt-circle-right ml-1"></i>
                                             </Button>
                                           </Col>
                                         </Row>
@@ -4482,7 +4482,7 @@ class CreateEmployeePayroll extends React.Component {
                                                 this.toggle(0, "2");
                                               }}
                                             >
-                                              <i class="far fa-arrow-alt-circle-left mr-1"></i>{" "}
+                                              <i className="far fa-arrow-alt-circle-left mr-1"></i>{" "}
                                               {strings.back}
                                             </Button>
                                             <Button
@@ -4507,7 +4507,7 @@ class CreateEmployeePayroll extends React.Component {
                                               }}
                                             >
                                               {strings.Next}{" "}
-                                              <i class="far fa-arrow-alt-circle-right ml-1"></i>
+                                              <i className="far fa-arrow-alt-circle-right ml-1"></i>
                                             </Button>
                                           </Col>
                                         </Row>
@@ -4539,7 +4539,7 @@ class CreateEmployeePayroll extends React.Component {
                                                 onClick={() => {
                                                     this.toggle(0, '4')
                                                 }}>
-                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Next
+                                                <i className="far fa-arrow-alt-circle-left mr-1"></i> Next
                                       </Button>
 
                                         </FormGroup>

@@ -528,10 +528,8 @@ const fr = {
       Emirates:"Emirates",
       Emirate:"Émirat",
       BillingAddressRequired:'Ladresse de facturation est obligatoire',
-      CountryIsRequired:'Le pays est requis',
       StateIsRequired:'Létat est requis',
       PostalCodeRequired:'Le code postal est requis',
-      ShippingAddressRequired:'Ladresse de livraison est obligatoire',
       CountryIsRequired:'Le pays est requis',
       
 

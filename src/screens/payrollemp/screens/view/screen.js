@@ -524,7 +524,7 @@ class ViewEmployee extends React.Component {
 
 																	}
 																>
-																	<i class="far fa-edit"></i>
+																	<i className="far fa-edit"></i>
 																</Button>
 															</Col>
 														</Row>}
@@ -554,21 +554,21 @@ class ViewEmployee extends React.Component {
 															<label > {strings.BasicInformation}</label>
 															<hr style={{ width: '50%' }}></hr>
 															<div style={{ fontSize: '16px' }}>
-																<div className='mt-2 mb-2'><span id="mail"> <i class="far fa-envelope"></i>
+																<div className='mt-2 mb-2'><span id="mail"> <i className="far fa-envelope"></i>
 																	<UncontrolledTooltip
 																		placement="left"
 																		target="mail"
 																	>
 																		E-mail
 																	</UncontrolledTooltip>&nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : '-'}</span></div>
-																<div className='mt-2 mb-2' ><span id="Gender"><i class="far fa-user"></i>
+																<div className='mt-2 mb-2' ><span id="Gender"><i className="far fa-user"></i>
 																	<UncontrolledTooltip
 																		placement="left"
 																		target="Gender"
 																	>
 																		Gender
 																	</UncontrolledTooltip>&nbsp;{this.state.EmployeeDetails.gender ? this.state.EmployeeDetails.gender : '-'}</span></div>
-																<div className='mt-2 mb-2'  ><span id="dojTooltip"><i class="far fa-calendar-minus"></i>
+																<div className='mt-2 mb-2'  ><span id="dojTooltip"><i className="far fa-calendar-minus"></i>
 																	<UncontrolledTooltip
 																		placement="left"
 																		target="dojTooltip"
@@ -583,7 +583,7 @@ class ViewEmployee extends React.Component {
 																		>
 																			Department
 																		</UncontrolledTooltip>
-																		<span id="department"> <i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</span>
+																		<span id="department"> <i className="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</span>
 																	</div>
 																}
 															</div>
@@ -616,7 +616,7 @@ class ViewEmployee extends React.Component {
 																					{ id: this.state.current_employee_id })
 																			}
 																		>
-																			<i class="far fa-edit"></i>
+																			<i className="far fa-edit"></i>
 																		</Button>
 																	</Col>
 																</Row>
@@ -658,7 +658,7 @@ class ViewEmployee extends React.Component {
 																					{ id: this.state.current_employee_id })
 																			}
 																		>
-																			<i class="far fa-edit"></i>
+																			<i className="far fa-edit"></i>
 																		</Button>
 																	</Col>
 																</Row>
@@ -728,7 +728,7 @@ class ViewEmployee extends React.Component {
 																		: ''
 																}
 															>
-																<i class="far fa-edit">{strings.Edit}</i>
+																<i className="far fa-edit">{strings.Edit}</i>
 															</Button>
 														</Col>
 													</Row>

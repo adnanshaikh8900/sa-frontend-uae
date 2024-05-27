@@ -219,7 +219,7 @@ class ViewDebitNote extends React.Component {
 											this.props.history.push('/admin/expense/debit-notes');
 									}}
 								>
-									<i class="fas fa-times"></i>
+									<i className="fas fa-times"></i>
 								</Button>
 							</div>
 							<div>

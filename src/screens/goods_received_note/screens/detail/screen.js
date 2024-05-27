@@ -451,7 +451,7 @@ class DetailGoodsReceivedNote extends React.Component {
 				name={`lineItemsString.${idx}.grnReceivedQuantity`}
 				render={({ field, form }) => (
 					<div>
-							<div class="input-group">
+							<div className="input-group">
 						<Input
 							type="text"
 							maxLength="10"
@@ -518,7 +518,7 @@ class DetailGoodsReceivedNote extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
-						<div class="input-group">
+						<div className="input-group">
 						<Input
 						disabled
 							type="number"

@@ -464,7 +464,7 @@ class GenerateVatReportModal extends React.Component {
                     this.props.monthOption === "" || !this.state.monthlyDate
                   }
                 >
-                  <i class="fas fa-check-double mr-1"></i>
+                  <i className="fas fa-check-double mr-1"></i>
                   Generate
                 </Button>
                 <Button

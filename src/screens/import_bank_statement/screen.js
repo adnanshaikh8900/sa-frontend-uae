@@ -384,7 +384,7 @@ class ImportBankStatement extends React.Component {
 																	
 																	}}>
 																	<div className="text-center mb-3 mt-4">
-																	<i class="fas fa-upload  fa-5x"></i>
+																	<i className="fas fa-upload  fa-5x"></i>
 
 																	</div>
 																	<div className="text-center mb-3"  style={{

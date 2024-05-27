@@ -682,7 +682,7 @@ renderName=(cell,row)=>{
 					this.props.history.push('/admin/master/product/detail/inventoryedit', { id: row.inventoryId });
 				}}
 				>
-				<i class="far fa-edit fa-lg"></i>
+				<i className="far fa-edit fa-lg"></i>
 				</Button>
 			</div> */}
 			<div>
@@ -694,7 +694,7 @@ renderName=(cell,row)=>{
 				
 				}}
 				>
-				<i class="fa fa-history fa-lg"></i>
+				<i className="fa fa-history fa-lg"></i>
 				</Button>
 			</div>
 			</Row>
@@ -737,7 +737,7 @@ renderName=(cell,row)=>{
 				className="btn btn-primary btn-sm pdf-btn  ml-1 mt-1 primary"
 				onClick={(e, ) => {this.updateReorderLevel(row)	}}
 				>
-		         <i class="fas fa-check"></i>
+		         <i className="fas fa-check"></i>
 				</Button>
 			</div>)}</Col> 
 			</Row>			

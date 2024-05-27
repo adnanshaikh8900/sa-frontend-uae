@@ -538,7 +538,7 @@ class DetailRequestForQuotation extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
-							<div class="input-group">
+							<div className="input-group">
 						<Input
 							type="text"
 							min="0"

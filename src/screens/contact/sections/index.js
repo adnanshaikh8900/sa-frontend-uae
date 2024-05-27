@@ -1,5 +1,7 @@
-import Temp from './temp'
+import Temp from './temp';
+import AddressComponent from './addressComponent';
 
 export {
-  Temp
+  Temp,
+  AddressComponent,
 }

@@ -522,7 +522,7 @@ class DetailSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
-						<div class="input-group">
+						<div className="input-group">
 							<Input
 								type="text"
 								maxLength="10"
@@ -657,7 +657,7 @@ class DetailSupplierInvoice extends React.Component {
 				// name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<div>
-						<div class="input-group">
+						<div className="input-group">
 							<Input
 								type="text"
 								min="0"
@@ -694,7 +694,7 @@ class DetailSupplierInvoice extends React.Component {
 										: ''
 									}`}
 							/>
-							<div class="dropdown open input-group-append">
+							<div className="dropdown open input-group-append">
 
 								<div style={{ width: '100px' }}>
 									<Select

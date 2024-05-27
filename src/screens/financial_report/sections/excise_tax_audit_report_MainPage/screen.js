@@ -317,7 +317,7 @@ class ExciseTaxAuditReport extends React.Component {
   // 				// 	);
   // 				// });
   // 			}}
-  // 		>	<i class="fas fa-eye"></i>  </Button>
+  // 		>	<i className="fas fa-eye"></i>  </Button>
 
   // </>
   // 	)

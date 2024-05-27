@@ -240,7 +240,7 @@ class CTSettingModal extends React.Component {
                                     title={this.state.monthlyDate ? "" : "Please Select Month"}
                                     onClick={this.saveCTSettings}
                                 >
-                                    <i class="fas fa-check-double mr-1"></i>
+                                    <i className="fas fa-check-double mr-1"></i>
                                     {strings.Save}
                                 </Button>)}
                                 <Button

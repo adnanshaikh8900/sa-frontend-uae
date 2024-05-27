@@ -1076,7 +1076,7 @@ class CreatePayrollList extends React.Component {
 
 																			
 																		>
-																			<i class="far fa-trash-alt mr-1"></i>
+																			<i className="far fa-trash-alt mr-1"></i>
 																			Remove Employees
 																		</Button> */}
 																			</FormGroup>
@@ -1151,7 +1151,7 @@ class CreatePayrollList extends React.Component {
 
 																				>
 
-																					<i class="fas fa-check-double  mr-1"></i> {strings.create_submit}
+																					<i className="fas fa-check-double  mr-1"></i> {strings.create_submit}
 																				</Button>
 																				<Button type="button" color="primary" className="btn-square pull-right "
 																					onClick={

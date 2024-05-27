@@ -358,7 +358,7 @@ class CreateCreditNoteModal extends React.Component {
 				name={`invoiceLineItems.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
-						<div class="input-group">
+						<div className="input-group">
 						<Input
 							type="number"
 							// disabled
@@ -624,7 +624,7 @@ class CreateCreditNoteModal extends React.Component {
 				name={`lineItemsString.${idx}.discountType`}
 			   render={({ field, form }) => (
 			   <div>
-			   <div  class="input-group">
+			   <div  className="input-group">
 				   <Input
 						disabled
 						type="text"
@@ -664,7 +664,7 @@ class CreateCreditNoteModal extends React.Component {
 					   }`}
 	
 	/>
-	<div class="dropdown open input-group-append">
+	<div className="dropdown open input-group-append">
 	
 		<div 	style={{width:'100px'}}>
 		<Select

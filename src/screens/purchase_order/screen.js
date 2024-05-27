@@ -375,7 +375,7 @@ class PurchaseOrder extends React.Component {
 									this.changeStatus(row.id,"Sent");
 								}}
 							>
-							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							<i className="far fa-arrow-alt-circle-right"></i>Mark As Sent
 							</DropdownItem>)}
 					
 						

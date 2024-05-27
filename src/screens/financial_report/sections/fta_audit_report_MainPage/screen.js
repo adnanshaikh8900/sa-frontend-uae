@@ -322,7 +322,7 @@ class FtaAuditReport extends React.Component {
 // 					// 	);
 // 					// });
 // 				}}
-// 			>	<i class="fas fa-eye"></i>  </Button>
+// 			>	<i className="fas fa-eye"></i>  </Button>
 
 // <Button
 // 				className="Ag-gridActionButtons btn-sm ml-2"
@@ -331,7 +331,7 @@ class FtaAuditReport extends React.Component {
 // 				onClick={() => {	
 // 				this.delete(params.data.id)
 // 				}}
-// 			>	<i class="fas fa-trash"></i>  </Button>
+// 			>	<i className="fas fa-trash"></i>  </Button>
 
 // 	</>
 // 		)

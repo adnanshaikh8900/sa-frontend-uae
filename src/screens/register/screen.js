@@ -1095,7 +1095,7 @@ class Register extends React.Component {
 																							<Label htmlFor="TaxRegistrationNumber"><span className="text-danger">* </span>
 																								{strings.TaxRegistrationNumber}
 																								<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
-																									<span class="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
+																									<span className="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
 																							</Label>
 																							<Input
 																								type="text"
@@ -1140,7 +1140,7 @@ class Register extends React.Component {
 																							<Label htmlFor="date"><span className="text-danger">* </span>
 																								VAT Registered On
 																								<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
-																									<span class="tooltiptext">Please note that you cannot update <br></br> this detail once you have created a document.</span></div>
+																									<span className="tooltiptext">Please note that you cannot update <br></br> this detail once you have created a document.</span></div>
 																							</Label>
 																							<DatePicker
 																								autoComplete="off"

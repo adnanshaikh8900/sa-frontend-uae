@@ -17,9 +17,10 @@ import {
 import Select from 'react-select';
 import { LeavePage, Loader } from 'components';
 import { upperFirst } from 'lodash-es';
-import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
+import { selectOptionsFactory, InputValidation, DropdownLists, Lists } from 'utils';
 import './style.scss';
-import { data } from '../../../Language/index'
+import { data } from '../../../Language/index';
+import { AddressComponent } from 'screens/contact/sections';
 import LocalizedStrings from 'react-localization';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -30,13 +31,12 @@ import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 
 const mapStateToProps = (state) => {
+	const currencyList = state.common.currency_convert_list;
 	return {
 		country_list: state.contact.country_list,
-		state_list: state.contact.state_list,
-		currency_list: state.contact.currency_list,
+		currency_list_dropdown: DropdownLists.getCurrencyDropdown(currencyList),
 		contact_type_list: state.contact.contact_type_list,
 		companyDetails: state.common.company_details,
-
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -46,16 +46,6 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-const customStyles = {
-	control: (base, state) => ({
-		...base,
-		borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-		boxShadow: state.isFocused ? null : null,
-		'&:hover': {
-			borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-		},
-	}),
-};
 
 let strings = new LocalizedStrings(data);
 class CreateContact extends React.Component {
@@ -64,75 +54,47 @@ class CreateContact extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
-
 			initValue: {
-				billingEmail: '',
-				city: '',
+				shippingAddress: Lists.Address,
+				billingAddress: {
+					email: '',
+					city: '',
+					countryId: '',
+					address: '',
+					postZipCode: '',
+					stateId: '',
+					telephone: '',
+					fax: '',
+				},
 				contactType: this.props.contactType ? this.props.contactType : '',
-				countryId: '',
 				currencyCode: 150,
 				email: '',
 				firstName: '',
-				shippingAddress: '',
-				billingAddress: '',
 				addressLine3: '',
-				// language(Language, optional),
 				lastName: '',
 				middleName: '',
 				mobileNumber: '',
 				organization: '',
-				poBoxNumber: '',
-				postZipCode: '',
-				stateId: '',
 				telephone: '',
 				vatRegistrationNumber: '',
 				disabled: false,
-				billingFax: '',
-				billingStateProvince: '',
-				billingcountryId: '',
-				billingCity: '',
-				billingPostZipCode: '',
-				billingPhoneNumber: '',
-				billingPoBoxNumber: '',
-				shippingCountryId: '',
-				shippingStateId: '',
-				shippingTelephone: '',
-				shippingPostZipCode: '',
-				shippingCity: '',
-				shippingFax: '',
-				shippingPoBoxNumber: '',
 				taxTreatmentId: '',
 			},
-			country_list:[],
-			state_list_for_shipping: [],
+			country_list: [],
 			createMore: false,
 			checkmobileNumberParam: false,
 			selectedStatus: true,
 			isActive: true,
 			isRegisteredForVat: false,
 			isSame: false,
-			disableLeavePage:false
-			//loadingMsg:"Loading...",
-			// billingAddress: {
-			// 	billingcountryId: '',
-			// 	billingStateProvince: '',
-			// 	billingCity: '',
-			// 	billingAddress: '',
-			// 	billingPostZipCode: '',
-			// 	billingPhoneNumber: '',
-			// 	billingFax: '',
-			// },
-
-
+			disableLeavePage: false,
 		};
 
 		this.regEx = /^[0-9\d]+$/;
-		// this.regEx = /[a-zA-Z0-9]+$/;
 		this.regExTelephone = /^[0-9-]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/]+$/;
-
 		this.formRef = React.createRef();
 	}
 
@@ -141,7 +103,6 @@ class CreateContact extends React.Component {
 		this.props.createContactActions
 			.getTaxTreatment()
 			.then((res) => {
-
 				if (res.status === 200) {
 					let array = []
 					res.data.map((row) => {
@@ -164,28 +125,25 @@ class CreateContact extends React.Component {
 	initializeData = () => {
 		this.props.contactActions.getContactTypeList();
 		this.props.contactActions.getCountryList();
-		this.props.contactActions.getCurrencyList().then((response) => {
+
+		const { companyDetails } = this.props;
+		if (companyDetails) {
+			const { currencyCode, isRegisteredVat } = companyDetails;
 			this.setState({
 				initValue: {
 					...this.state.initValue,
 					...{
-						currencyCode: 150,
+						currencyCode: currencyCode,
 					},
 				},
-
-
+				isRegisteredVat: isRegisteredVat,
 			});
-			// this.formRef.current.setFieldValue(
-			// 	'currencyCode',
-			// 	response.data[0].currencyCode,
-			// 	true,
-			// );
-		});
+			this.formRef.current.setFieldValue('currencyCode', currencyCode);
+		}
 	};
-
 	getData = (data) => {
 		let temp = {};
-		const { isSame } = this.state;
+		const { isSame, isActive } = this.state;
 		for (let item in data) {
 			if (typeof data[`${item}`] !== 'object') {
 				temp[`${item}`] = data[`${item}`];
@@ -193,33 +151,52 @@ class CreateContact extends React.Component {
 				temp[`${item}`] = data[`${item}`].value;
 			}
 		}
-		// isActive:this.state.isActive
+		const billingcountryId = data[`billingAddress`].countryId;
+		const shippingCountryId = data[`shippingAddress`].countryId;
 
-		temp[`isActive`] = this.state.isActive;
+		temp[`isActive`] = isActive;
 		temp[`isBillingAndShippingAddressSame`] = isSame;
-		temp[`addressLine1`] = data[`billingAddress`];
-		temp[`countryId`] = data[`billingcountryId`].value;
-		temp[`stateId`] = data[`billingStateProvince`].value;
-		temp[`postZipCode`] = data[`billingPostZipCode`];
-		temp[`city`] = data[`billingCity`];
-		temp[`fax`] = data[`billingFax`];
-		temp[`billingTelephone`] = data[`billingPhoneNumber`];
-		temp[`shippingPostZipCode`] = data[`shippingPostZipCode`];
-		temp[`addressLine2`] = data[`shippingAddress`];
-		// temp[`shippingCountryId`] = isSame ? this.state.billingAddress.billingcountryId :  data[`shippingCountryId`].value;
-		// temp[`shippingStateId`] = isSame ? this.state.billingAddress.billingStateProvince :  data[`shippingStateId`].value;
-		// temp[`shippingPostZipCode`] = isSame ? this.state.billingAddress.billingPostZipCode :  data[`shippingPostZipCode`];
-		// temp[`shippingCity`] =isSame ? this.state.billingAddress.billingCity :  data[`shippingCity`];
-		// temp[`shippingFax`] = isSame ? this.state.billingAddress.billingFax :  data[`shippingFax`];
+		temp[`addressLine1`] = data[`billingAddress`].address;
+		temp[`countryId`] = billingcountryId;
+		temp[`stateId`] = data[`billingAddress`].stateId;
+		temp[`postZipCode`] = data[`billingAddress`].postZipCode;
+		temp[`city`] = data[`billingAddress`].city;
+		temp[`fax`] = data[`billingAddress`].fax;
+		temp[`billingTelephone`] = data[`billingAddress`].telephone;
+		temp[`addressLine2`] = data[`shippingAddress`].address;
+		temp[`poBoxNumber`] = data[`billingAddress`].postZipCode;
 
+		const billingAdress = {
+			billingAddress: data[`billingAddress`].address,
+			billingCity: data[`billingAddress`].city,
+			billingEmail: data[`billingAddress`].email,
+			billingFax: data[`billingAddress`].fax,
+			billingPoBoxNumber: billingcountryId === 229 ? data[`billingAddress`].postZipCode : '',
+			billingPostZipCode: billingcountryId !== 229 ? data[`billingAddress`].postZipCode : '',
+			billingStateProvince: data[`billingAddress`].stateId,
+			billingcountryId: data[`billingAddress`].countryId,
+		}
 
+		const shippingAddress = {
+			shippingAddress: data[`shippingAddress`].address,
+			shippingCity: data[`shippingAddress`].city,
+			billingEmail: data[`shippingAddress`].email,
+			shippingFax: data[`shippingAddress`].fax,
+			shippingTelephone: data[`shippingAddress`].telephone,
+			shippingPoBoxNumber: shippingCountryId === 229 ? data[`shippingAddress`].postZipCode : '',
+			shippingPostZipCode: shippingCountryId !== 229 ? data[`shippingAddress`].postZipCode : '',
+			shippingStateId: data[`shippingAddress`].stateId,
+			shippingCountryId: data[`shippingAddress`].countryId,
+		}
+		temp = { ...temp, ...billingAdress, ...shippingAddress }
 		return temp;
 	};
+
 	handleSubmit = (data, resetForm) => {
-		this.setState({ loading: true, disableLeavePage:true, loadingMsg: "Creating Contact..." });
+		this.setState({ loading: true, disableLeavePage: true, loadingMsg: "Creating Contact..." });
 		this.setState({ disabled: true });
 		const postData = this.getData(data);
-
+		console.log(postData)
 		this.props.createContactActions
 			.createContact(postData)
 			.then((res) => {
@@ -230,17 +207,10 @@ class CreateContact extends React.Component {
 						'success',
 						"Contact Created Successfully"
 					);
-					// this.gotoParentUrl() this.props.history.push(this.props.location.state.goto)
 					if (this.state.createMore) {
 						resetForm(this.state.initValue);
 						this.setState({ createMore: false, disableLeavePage: false });
 					} else {
-
-						// if(this.props.location
-						// 	&& this.props.location.state
-						// 	&& this.props.location.state.gotoParentURL
-						// )
-						//     this.props.history.push(this.props.location.state.gotoParentURL,{contactData:res.data})
 						if (this.props.isParentComponentPresent && this.props.isParentComponentPresent == true) {
 							this.props.getCurrentContactData(res.data);
 							this.props.closeModal(true);
@@ -261,56 +231,42 @@ class CreateContact extends React.Component {
 				);
 			});
 	};
-	resetCountryList= (taxtid ,props) =>{
-		const{country_list}=this.props;
-		let list=[];
-		if(taxtid === 7 || taxtid === 5 || taxtid === 6){
-			country_list.map( (obj) => {
-				if((taxtid === 6 || taxtid === 5) && (obj.countryCode === 229 || obj.countryCode === 191 || obj.countryCode === 178 ||
-					obj.countryCode === 165 || obj.countryCode === 117 || obj.countryCode === 17)){
+	resetCountryList = (taxtid, props) => {
+		const { country_list } = this.props;
+		let list = [];
+		if (taxtid === 7 || taxtid === 5 || taxtid === 6) {
+			country_list.map((obj) => {
+				if ((taxtid === 6 || taxtid === 5) && (obj.countryCode === 229 || obj.countryCode === 191 || obj.countryCode === 178 ||
+					obj.countryCode === 165 || obj.countryCode === 117 || obj.countryCode === 17)) {
 					list.push(obj);
 				}
-				if((taxtid === 7) && (obj.countryCode !== 229 && obj.countryCode !== 191 && obj.countryCode !== 178 &&
-					obj.countryCode !== 165 && obj.countryCode !== 117 && obj.countryCode !== 17)){
+				if ((taxtid === 7) && (obj.countryCode !== 229 && obj.countryCode !== 191 && obj.countryCode !== 178 &&
+					obj.countryCode !== 165 && obj.countryCode !== 117 && obj.countryCode !== 17)) {
 					list.push(obj);
 				}
 			});
-			props.handleChange('billingcountryId')('');
-			props.handleChange('shippingCountryId')('');
-			this.getStateList('');
-			props.handleChange('stateId')({
-				label: 'Select State',
-				value: '',
-			});
-			props.handleChange('billingStateProvince')('');
-			props.handleChange('shippingStateId')('');
+			props.handleChange(`shippingAddress.countryId`)('');
+			props.handleChange(`billingAddress.countryId`)('');
+			props.handleChange(`shippingAddress.stateId`)('');
+			props.handleChange(`billingAddress.stateId`)('');
 			this.setState({ isSame: false, });
 		}
-		else{
-			list = country_list;	
-			props.handleChange('billingcountryId')(country_list && selectOptionsFactory.renderOptions(
-				'countryName',
-				'countryCode',
-				country_list,
-				'Country',
-			).find((option) => option.value === 229));
-			props.handleChange('shippingCountryId')(country_list && selectOptionsFactory.renderOptions(
-				'countryName',
-				'countryCode',
-				country_list,
-				'Country',
-			).find((option) => option.value === 229));
-			this.getStateListForShippingAddress(229);
-			this.getStateList(229);
-			props.handleChange('stateId')({
-				label: 'Select State',
-				value: '',
-			});
-			props.handleChange('billingStateProvince')('');
-			props.handleChange('shippingStateId')('');
+		else {
+			list = country_list;
+			const country = country_list.find((option) => option.countryCode === 229);
+			props.handleChange(`shippingAddress.countryId`)(country.countryCode);
+			props.handleChange(`billingAddress.countryId`)(country.countryCode);
+			props.handleChange(`shippingAddress.stateId`)('');
+			props.handleChange(`billingAddress.stateId`)('');
 			this.setState({ isSame: false, });
 		}
-		this.setState({country_list : list });
+		list = list ? selectOptionsFactory.renderOptions(
+			'countryName',
+			'countryCode',
+			list,
+			'Country',
+		) : []
+		this.setState({ country_list: list });
 	};
 	validationCheck = (value) => {
 		const data = {
@@ -346,26 +302,15 @@ class CreateContact extends React.Component {
 			}
 		});
 	};
-	getStateList = (countryCode) => {
-		this.props.contactActions.getStateList(countryCode);
-	};
-	getStateListForShippingAddress = (countryCode) => {
-		this.props.contactActions.getStateListForShippingAddress(countryCode)
-			.then((res) => {
-				this.setState({ state_list_for_shipping: res })
-			});
-	};
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			currency_list,
+			currency_list_dropdown,
 			contact_type_list,
-			state_list,
 		} = this.props;
-		const {country_list} = this.state.country_list;
-		const { initValue, checkmobileNumberParam, taxTreatmentList, isSame, state_list_for_shipping } = this.state;
-		const { loading, loadingMsg } = this.state;
-		const { isRegisteredVat } = this.props.companyDetails;
+		const { initValue, checkmobileNumberParam, taxTreatmentList, isSame, disableCountry } = this.state;
+		const { loading, loadingMsg, country_list } = this.state;
 
 		return (
 			loading == true ? <Loader loadingMsg={loadingMsg} /> :
@@ -403,14 +348,11 @@ class CreateContact extends React.Component {
 															}}
 															validate={(values) => {
 																let errors = {};
-																if(!(this.props.isParentComponentPresent && this.props.isParentComponentPresent == true)){
+																if (!(this.props.isParentComponentPresent && this.props.isParentComponentPresent == true)) {
 																	if (checkmobileNumberParam === true) {
 																		errors.mobileNumber =
 																			'Invalid mobile number';
 																	}
-																}
-																if (values.stateId === '') {
-																	errors.stateId = 'State is required';
 																}
 																if (this.state.isRegisteredForVat == true) {
 																	if (values.vatRegistrationNumber == "")
@@ -418,58 +360,18 @@ class CreateContact extends React.Component {
 																	if (values.vatRegistrationNumber.length != 15) {
 																		errors.vatRegistrationNumber = "Please enter 15 digit Tax registration number"
 																	}
-																	// if (this.state.trnExist == true) {
-																	// 	errors.vatRegistrationNumber = 'Tax registration number already exists';
-																	// }
 																}
 																if (this.state.emailExist == true) {
 																	errors.email = 'Email already exists';
 																}
-																if (values.billingcountryId == 229 || values.billingcountryId.value == 229) {
-																	if (values.billingPoBoxNumber === '')
-																		errors.poBoxNumber = 'PO box number is required';
-																	else if (this.state.showpoBoxNumberErrorMsg == true)
-																		errors.poBoxNumber = "Please enter 3 To 6 digit po box number"
-
-																	if(values.billingStateProvince =="")  
-																		errors.billingStateProvince ='Emirate is required';
-																} else {
-																	if (values.billingPostZipCode == '')
-																		errors.billingPostZipCode = "Postal / Zip code is required"
-																	else
-																		if (values.billingPostZipCode.length != 6)
-																			errors.billingPostZipCode = "Please enter 6 digit postal zip code"
-																	if(values.billingStateProvince =="")  
-																		errors.billingStateProvince = "State / Provinces is required";
-
+																const shippingAddressError = InputValidation.addressValidation(values.shippingAddress)
+																if (shippingAddressError && Object.values(shippingAddressError).length > 0) {
+																	errors.shippingAddress = shippingAddressError;
 																}
-																if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
-																	if (values.shippingPoBoxNumber === '')
-																		errors.shippingPoBoxNumber = 'PO box number is required';
-																	else if (this.state.showshippingpoBoxNumberErrorMsg == true)
-																		errors.shippingPoBoxNumber = "Please enter 3 To 6 digit po box number"
-
-																	if(values.shippingStateId =="")  
-																		errors.shippingStateId ='Emirate is required';
-																} else {
-																		if (values.shippingPostZipCode == '')
-																			errors.shippingPostZipCode = "Postal / Zip code is required"
-																	else
-																		if (values.shippingPostZipCode.length != 6)
-																			errors.shippingPostZipCode = "Please enter 6 digit Postal Zip Code"
-																	if(values.shippingStateId =="")  
-																		errors.shippingStateId = "State / Provinces is required";
-
+																const billingAddressError = InputValidation.addressValidation(values.billingAddress)
+																if (billingAddressError && Object.values(billingAddressError).length > 0) {
+																	errors.billingAddress = billingAddressError;
 																}
-																if (this.state.showbillingFaxErrorMsg == true)
-																	errors.billingFax = "Please enter 15 digit Fax"
-
-																if (this.state.showshippingFaxErrorMsg == true)
-																	errors.shippingFax = "Please enter 15 digit Fax"
-
-																
-																
-
 																return errors;
 
 															}}
@@ -491,37 +393,14 @@ class CreateContact extends React.Component {
 																),
 																email: Yup.string()
 																	.required(strings.EmailIsRequired)
-																	.email('Invalid Email')
-																,
-																// mobileNumber: Yup.string()
-																// 	.required('Mobile number is required')
-																// ,
-																billingAddress: Yup.string().required(
-																	strings.BillingAddressRequired
-																),
-																billingcountryId: Yup.string().required(
-																	strings.CountryIsRequired
-																),
-																billingStateProvince: Yup.string().required(
-																	'State is required',
-																),
-																shippingAddress: Yup.string().required(
-																	strings.ShippingAddressRequired
-																),
-																shippingCountryId: Yup.string().required(
-																	strings.CountryIsRequired
-																),
-																shippingStateId: Yup.string().required(
-																	'State is required',
-																),
-																
+																	.email('Invalid Email'),
 															})}
 														>
 															{(props) => (
 																<Form onSubmit={props.handleSubmit}>
 																	<Row>
 																		<Col >
-																		{this.props.isParentComponentPresent && this.props.isParentComponentPresent == true ? "" : (<FormGroup className="mb-3">
+																			{this.props.isParentComponentPresent && this.props.isParentComponentPresent == true ? "" : (<FormGroup className="mb-3">
 																				<Label htmlFor="active"><span className="text-danger">* </span>{strings.Status}</Label>
 																				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																				<FormGroup check inline>
@@ -554,7 +433,7 @@ class CreateContact extends React.Component {
 																						</label>
 																					</div>
 																				</FormGroup>
-																			<FormGroup check inline>
+																				<FormGroup check inline>
 																					<div className="custom-radio custom-control">
 																						<input
 																							className="custom-control-input"
@@ -721,15 +600,15 @@ class CreateContact extends React.Component {
 																					<span className="text-danger">* </span>
 																					{strings.ContactType}
 																					<i
-																				id="Contacttyprtip"
-																				className="fa fa-question-circle ml-1"
-																			></i>
-																			<UncontrolledTooltip
-																				placement="right"
-																				target="Contacttyprtip"
-																			>
-																				The contact type cannot be changed once a document has been created for this contact.
-																			</UncontrolledTooltip>
+																						id="Contacttyprtip"
+																						className="fa fa-question-circle ml-1"
+																					></i>
+																					<UncontrolledTooltip
+																						placement="right"
+																						target="Contacttyprtip"
+																					>
+																						The contact type cannot be changed once a document has been created for this contact.
+																					</UncontrolledTooltip>
 																				</Label>
 																				<Select
 																					options={
@@ -826,7 +705,7 @@ class CreateContact extends React.Component {
 																					placeholder={strings.Enter + strings.EmailAddres}
 																					onChange={(option) => {
 																						props.handleChange('email')(option);
-																						 this.emailvalidationCheck(option.target.value)
+																						this.emailvalidationCheck(option.target.value)
 																					}}
 																					value={props.values.email}
 																					className={
@@ -853,42 +732,19 @@ class CreateContact extends React.Component {
 																					<span className="text-danger">* </span>
 																					{strings.Currency}
 																					<i
-																				id="Currencytip"
-																				className="fa fa-question-circle ml-1"
-																			></i>
-																			<UncontrolledTooltip
-																				placement="right"
-																				target="Currencytip"
-																			>
-																				You cannot change the currency once a document is created for this contact.
-																			</UncontrolledTooltip>
+																						id="Currencytip"
+																						className="fa fa-question-circle ml-1"
+																					></i>
+																					<UncontrolledTooltip
+																						placement="right"
+																						target="Currencytip"
+																					>
+																						You cannot change the currency once a document is created for this contact.
+																					</UncontrolledTooltip>
 																				</Label>
 																				<Select
-																					options={
-																						currency_list
-																							? selectCurrencyFactory.renderOptions(
-																								'currencyName',
-																								'currencyCode',
-																								currency_list,
-																								'Currency',
-																							)
-																							: []
-																					}
-																					value={
-																						currency_list &&
-																						selectCurrencyFactory
-																							.renderOptions(
-																								'currencyName',
-																								'currencyCode',
-																								currency_list,
-																								'Currency',
-																							)
-																							.find(
-																								(option) =>
-																									option.value ===
-																									+props.values.currencyCode,
-																							)
-																					}
+																					options={currency_list_dropdown}
+																					value={props.values.currencyCode?.value ? props.values.currencyCode : currency_list_dropdown.find((option) => option.value === props.values.currencyCode,)}
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('currencyCode')(
@@ -978,13 +834,8 @@ class CreateContact extends React.Component {
 																							option.length !== 12 ? this.setState({ checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
 																						}}
 																						isValid
-																					// className={
-																					// 	props.errors.mobileNumber &&
-																					// 	props.touched.mobileNumber
-																					// 		? 'is-invalid'
-																					// 		: ''
-																					// }
-																					/></div>
+																					/>
+																				</div>
 																				{props.errors.mobileNumber &&
 																					props.touched.mobileNumber && (
 																						<div className="invalid-feedback">
@@ -1034,15 +885,15 @@ class CreateContact extends React.Component {
 																				<Label htmlFor="taxTreatmentId">
 																					<span className="text-danger">* </span>{strings.TaxTreatment}
 																					<i
-																				id="TaxTreatmenttip"
-																				className="fa fa-question-circle ml-1"
-																			></i>
-																			<UncontrolledTooltip
-																				placement="right"
-																				target="TaxTreatmenttip"
-																			>
-																				Once any document has been created for this contact, you cannot change the Tax treatment.
-																			</UncontrolledTooltip>
+																						id="TaxTreatmenttip"
+																						className="fa fa-question-circle ml-1"
+																					></i>
+																					<UncontrolledTooltip
+																						placement="right"
+																						target="TaxTreatmenttip"
+																					>
+																						Once any document has been created for this contact, you cannot change the Tax treatment.
+																					</UncontrolledTooltip>
 																				</Label>
 																				<Select
 																					options={
@@ -1066,22 +917,20 @@ class CreateContact extends React.Component {
 																						// })
 																						this.resetCountryList(option.value, props);
 																						if (option && option.value) {
-
-																							props.handleChange('taxTreatmentId')(
-																								option,
-																							);
+																							props.handleChange('taxTreatmentId')(option,);
 																							if (option.value === 1 || option.value === 3 || option.value === 5)
 																								this.setState({ isRegisteredForVat: true })
 																							else
 																								this.setState({ isRegisteredForVat: false })
+																							if (option.value === 1 || option.value === 2 || option.value === 3 || option.value === 4)
+																								this.setState({ disableCountry: true })
+																							else
+																								this.setState({ disableCountry: false })
 																						} else {
-																							props.handleChange('taxTreatmentId')(
-																								'',
-																							);
+																							props.handleChange('taxTreatmentId')(false,);
+																							this.setState({ disableCountry: false })
 																						}
-																						props.handleChange('vatRegistrationNumber')(
-																							'',
-																						);
+																						props.handleChange('vatRegistrationNumber')(false,);
 
 																					}}
 																					className={
@@ -1100,475 +949,92 @@ class CreateContact extends React.Component {
 																			</FormGroup>
 																		</Col>
 																		{props.values.taxTreatmentId && props.values.taxTreatmentId.value && (
-																		<Col md="4" style={{ display: props.values.taxTreatmentId.value === 1 || props.values.taxTreatmentId.value === 3 || props.values.taxTreatmentId.value === 5 ? '' : 'none' }}>
-																			<FormGroup>
-																				<Label htmlFor="vatRegistrationNumber"><span className="text-danger">* </span>
-																					{strings.TaxRegistrationNumber}
-																				</Label>
-																				<Input
-																					type="text"
-																					minLength="15"
-																					maxLength="15"
-																					id="vatRegistrationNumber"
-																					name="vatRegistrationNumber"
-																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.TaxRegistrationNumber}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regEx.test(option.target.value)
-																						) {
-																							props.handleChange(
-																								'vatRegistrationNumber',
-																							)(option);
-																							//this.validationCheck(option.target.value)
-																						}
-																					}}
-																					value={props.values.vatRegistrationNumber}
-																					className={
-																						props.errors.vatRegistrationNumber &&
-																							props.touched.vatRegistrationNumber
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.vatRegistrationNumber &&
-																					props.touched.vatRegistrationNumber && (
-																						<div className="invalid-feedback">
-																							{props.errors.vatRegistrationNumber}
-																						</div>
-																					)}
-																				<div className="VerifyTRN">
-																					<br />
-																					<b>	<a target="_blank" rel="noopener noreferrer" href="https://tax.gov.ae/en/default.aspx" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
-																				</div>
-																			</FormGroup>
-																		</Col>)}
-																	</Row>
-																	<hr />
-																	<h2 className="mb-3 mt-3">{strings.ContactAddressDetails}</h2>
-																	<h5 className="mb-3 mt-3">{strings.BillingDetails}</h5>
-																	<Row className="row-wrapper">
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="billingAddress"><span className="text-danger">* </span>
-																					{strings.BillingAddress}
-																				</Label>
-																				<Input
-																					type="text"
-																					maxLength="100"
-																					id="billingAddress"
-																					name="billingAddress"
-																					placeholder={strings.Enter + strings.BillingAddress}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExAddress.test(
-																								option.target.value,
-																							)
-																						) {
-																							props.handleChange('billingAddress')(option.target.value);
-																						}
-																					}}
-																					value={props.values.billingAddress}
-																					className={
-																						props.errors.billingAddress &&
-																							props.touched.billingAddress
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.billingAddress &&
-																					props.touched.billingAddress && (
-																						<div className="invalid-feedback">
-																							{props.errors.billingAddress}
-																						</div>
-																					)}
-																			</FormGroup>
-
-																		</Col>
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="billingcountryId"><span className="text-danger">* </span>{strings.Country}</Label>
-																				<Select
-																					options={
-																						this.state.country_list
-																							? selectOptionsFactory.renderOptions(
-																								'countryName',
-																								'countryCode',
-																								this.state.country_list,
-																								'Country',
-																							)
-																							: []
-																					}
-																					isDisabled = {props.values.taxTreatmentId.value === 1 || props.values.taxTreatmentId.value === 2 || props.values.taxTreatmentId.value === 3 || props.values.taxTreatmentId.value === 4}
-																					value={props.values.billingcountryId}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('billingcountryId')(option);
-																							this.getStateList(option.value);
-
-																						} else {
-																							props.handleChange('billingcountryId')('');
-																							this.getStateList('');
-																						}
-																						props.handleChange('stateId')({
-																							label: 'Select State',
-																							value: '',
-																						});
-																						props.handleChange('billingStateProvince')('');
-																					}}
-																					placeholder={strings.Select + strings.Country}
-																					id="billingcountryId"
-																					name="billingcountryId"
-																					className={
-																						props.errors.billingcountryId &&
-																							props.touched.billingcountryId
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.billingcountryId &&
-																					props.touched.billingcountryId && (
-																						<div className="invalid-feedback">
-																							{props.errors.billingcountryId}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="stateId"><span className="text-danger">* </span>
-																					{/* {strings.StateRegion} */}
-																					{props.values.billingcountryId.value === 229 ? strings.Emirate : strings.StateRegion}
-																				</Label>
-																				<Select
-																					options={
-																						state_list
-																							? selectOptionsFactory.renderOptions(
-																								'label',
-																								'value',
-																								state_list,
-																								props.values.billingcountryId.value === 229 ? strings.Emirate : strings.StateRegion,
-																							)
-																							: []
-																					}
-																					// value={props.values.billingStateProvince}
-																					value={props.values.billingStateProvince}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('billingStateProvince')(option);
-																						} else {
-																							props.handleChange('billingStateProvince')('');
-																						}
-																					}}
-																					placeholder={props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? strings.Select +strings.Emirate : strings.Select +strings.StateRegion}
-																					id="stateId"
-																					name="stateId"
-																					className={
-																						props.errors.billingStateProvince &&
-																							props.touched.billingStateProvince
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.billingStateProvince &&
-																					props.touched.billingStateProvince && (
-																						<div className="invalid-feedback">
-																							{props.errors.billingStateProvince}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="billingEmail">
-																					{strings.BillingEmail}
-																				</Label>
-																				<Input
-																					type="text"
-																					maxLength="80"
-																					id="billingEmail"
-																					name="billingEmail"
-																					placeholder={strings.Enter + strings.BillingEmail + " " + strings.Address}
-																					onChange={(value) => {
-																						props.handleChange('billingEmail')(value);
-
-																					}}
-																					value={props.values.billingEmail}
-																					className={
-																						props.errors.billingEmail &&
-																							props.touched.billingEmail
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.billingEmail &&
-																					props.touched.billingEmail && (
-																						<div className="invalid-feedback">
-																							{props.errors.billingEmail}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="city"><span className="text-danger"></span>{strings.City}</Label>
-																				<Input
-																					id="billingCity"
-																					name="billingCity"
-																					type="text"
-																					maxLength="100"
-																					value={props.values.billingCity}
-																					autoComplete="Off"
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExAlpha.test(
-																								option.target.value,
-																							)
-																						) {
-																							option = upperFirst(option.target.value)
-																							props.handleChange('billingCity')(option);
-
-																						}
-
-																					}}
-																					placeholder={strings.Location}
-																					className={
-																						props.errors.billingCity && props.touched.billingCity
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.billingCity &&
-																					props.touched.billingCity && (
-																						<div className="invalid-feedback">
-																							{props.errors.billingCity}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		{props.values.billingcountryId == 229 || props.values.billingcountryId.value == 229 ?
-																			<Col md="4" >
+																			<Col md="4" style={{ display: props.values.taxTreatmentId.value === 1 || props.values.taxTreatmentId.value === 3 || props.values.taxTreatmentId.value === 5 ? '' : 'none' }}>
 																				<FormGroup>
-																					{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
-																					<Label htmlFor="POBoxNumber">
-																						<span className="text-danger">* </span>{strings.POBoxNumber}
+																					<Label htmlFor="vatRegistrationNumber"><span className="text-danger">* </span>
+																						{strings.TaxRegistrationNumber}
 																					</Label>
 																					<Input
 																						type="text"
-																						minLength="3"
-																						maxLength="6"
-																						id="poBoxNumber"
-																						name="poBoxNumber"
+																						minLength="15"
+																						maxLength="15"
+																						id="vatRegistrationNumber"
+																						name="vatRegistrationNumber"
 																						autoComplete="Off"
-																						placeholder={strings.Enter + strings.POBoxNumber}
+																						placeholder={strings.Enter + strings.TaxRegistrationNumber}
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
 																								this.regEx.test(option.target.value)
 																							) {
-																								if (option.target.value.length < 3)
-																									this.setState({ showpoBoxNumberErrorMsg: true })
-																								else
-																									this.setState({ showpoBoxNumberErrorMsg: false })
-																								props.handleChange('billingPoBoxNumber')(
-																									option,
-																								);
+																								props.handleChange(
+																									'vatRegistrationNumber',
+																								)(option);
+																								//this.validationCheck(option.target.value)
 																							}
 																						}}
-																						value={props.values.billingPoBoxNumber}
+																						value={props.values.vatRegistrationNumber}
 																						className={
-																							props.errors.poBoxNumber &&
-																								props.touched.poBoxNumber
+																							props.errors.vatRegistrationNumber &&
+																								props.touched.vatRegistrationNumber
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																					{props.errors.poBoxNumber &&
-																						props.touched.poBoxNumber && (
+																					{props.errors.vatRegistrationNumber &&
+																						props.touched.vatRegistrationNumber && (
 																							<div className="invalid-feedback">
-																								{props.errors.poBoxNumber}
+																								{props.errors.vatRegistrationNumber}
 																							</div>
 																						)}
+																					<div className="VerifyTRN">
+																						<br />
+																						<b>	<a target="_blank" rel="noopener noreferrer" href="https://tax.gov.ae/en/default.aspx" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
+																					</div>
 																				</FormGroup>
-																			</Col>
-
-																			:
-																			<Col md="4" ><FormGroup>
-																				<Label htmlFor="postZipCode"><span className="text-danger">* </span>
-																					{strings.PostZipCode}
-																				</Label>
-																				<Input
-																					type="text"
-																					maxLength="6"
-																					id="billingPostZipCode"
-																					name="billingPostZipCode"
-																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.PostZipCode}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regEx.test(option.target.value)
-																						) {
-																							props.handleChange('billingPostZipCode')(
-																								option,
-																							);
-																						}
-
-																					}}
-																					value={props.values.billingPostZipCode}
-																					className={
-																						props.errors.billingPostZipCode &&
-																							props.touched.billingPostZipCode
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.billingPostZipCode &&
-																					props.touched.billingPostZipCode && (
-																						<div className="invalid-feedback">
-																							{props.errors.billingPostZipCode}
-																						</div>
-																					)}
-																			</FormGroup>
-																			</Col>}
-
-
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="billingPhoneNumber">{strings.Telephone}</Label>
-																				<Input
-																					maxLength="15"
-																					type="text"
-																					id="billingPhoneNumber"
-																					name="billingPhoneNumber"
-																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.TelephoneNumber}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExTelephone.test(option.target.value)
-																						) {
-																							props.handleChange('billingPhoneNumber')(option);
-																						}
-																					}}
-																					value={props.values.billingPhoneNumber}
-																					className={
-																						props.errors.billingPhoneNumber &&
-																							props.touched.billingPhoneNumber
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.billingPhoneNumber &&
-																					props.touched.billingPhoneNumber && (
-																						<div className="invalid-feedback">
-																							{props.errors.billingPhoneNumber}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="billingFax">
-																					{strings.Fax}
-																				</Label>
-																				<Input
-																					type="text"
-																					maxLength="15"
-																					id="billingFax"
-																					name="billingFax"
-																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.Fax}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regEx.test(option.target.value)
-																						) {
-																							if (option.target.value.length != 15 && option.target.value != "")
-																								this.setState({ showbillingFaxErrorMsg: true })
-																							else
-																								this.setState({ showbillingFaxErrorMsg: false })
-																							props.handleChange('billingFax')(
-																								option,
-																							);
-																						}
-
-
-																					}}
-																					value={props.values.billingFax}
-																					className={
-																						props.errors.billingFax &&
-																							props.touched.billingFax
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.billingFax &&
-																					props.touched.billingFax && (
-																						<div className="invalid-feedback">
-																							{props.errors.billingFax}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
+																			</Col>)}
 																	</Row>
-
+																	<hr />
+																	<h2 className="mb-3 mt-3">{strings.ContactAddressDetails}</h2>
+																	<h5 className="mb-3 mt-3">{strings.BillingDetails}</h5>
+																	<Row className="row-wrapper">
+																		<AddressComponent
+																			values={props.values.billingAddress}
+																			errors={props.errors.billingAddress}
+																			touched={props.touched.billingAddress}
+																			onChange={(field, value) => {
+																				props.handleChange(`billingAddress.${field}`)(value);
+																				this.setState({ isSame: false, });
+																			}}
+																			country_list={country_list}
+																			addressType={strings.Billing}
+																			disabled={{ email: false, city: false, countryId: disableCountry, address: false, postZipCode: false, stateId: false, telephone: false, fax: false, }}
+																		/>
+																	</Row>
 																	<hr />
 																	<h5 className="mb-3 mt-3">{strings.ShippingDetails}</h5>
-
 																	<Row>
 																		<Col lg={12}>
 																			<FormGroup check inline className="mb-3">
 																				<div>
 																					<Input
 																						// className="custom-control-input"
-																						onChange={(option) => {
-
-
-																							if (this.state.isSame == false) {
-																								this.setState({ isSame: !this.state.isSame, });
-																								if (props.values.billingcountryId)
-																									this.getStateListForShippingAddress(props.values.billingcountryId.value ? props.values.billingcountryId.value : props.values.billingcountryId);
-																								props.handleChange('shippingAddress')(props.values.billingAddress);
-																								props.handleChange('shippingCity')(props.values.billingCity);
-																								props.handleChange('shippingCountryId')(props.values.billingcountryId);
-																								props.handleChange('shippingStateId')(props.values.billingStateProvince);
-																								props.handleChange('shippingTelephone')(props.values.billingPhoneNumber);
-																								props.handleChange('shippingPostZipCode')(props.values.billingPostZipCode);
-																								props.handleChange('shippingPoBoxNumber')(props.values.billingPostZipCode);
-																								props.handleChange('shippingPoBoxNumber')(props.values.billingPoBoxNumber);
-																								props.handleChange('shippingFax')(props.values.billingFax);
-																								if (props.values.billingFax.length != 15 && props.values.billingFax != "")
-																									this.setState({ showshippingFaxErrorMsg: true })
-																								else
-																									this.setState({ showshippingFaxErrorMsg: false })
+																						onChange={() => {
+																							if (isSame == false) {
+																								props.handleChange(`shippingAddress`)(props.values.billingAddress);
 																							} else {
-																								this.setState({ isSame: !this.state.isSame, });
-
-																								props.handleChange('shippingAddress')("");
-																								props.handleChange('shippingCity')("");
-																								props.handleChange('shippingCountryId')("");
-																								props.handleChange('shippingStateId')("");
-																								props.handleChange('shippingTelephone')("");
-																								props.handleChange('shippingPoBoxNumber')("");
-																								props.handleChange('shippingPostZipCode')("");
-																								props.handleChange('shippingFax')("");
+																								props.handleChange(`shippingAddress`)(Lists.Address);
+																								if (disableCountry) {
+																									props.handleChange(`shippingAddress.countryId`)(229);
+																								}
 																							}
-
+																							this.setState({ isSame: !isSame, });
 																						}}
 																						type="checkbox"
 																						id="inline-radio1"
 																						name="SMTP-auth"
-																						checked={this.state.isSame}
-																					// onChange={(e) => {
-																					// 	this.setState({
-																					// 		isSame: !this.state.isSame,
-																					// 	});
-																					// }}
+																						checked={isSame}
+
 																					/>
 																					<label >
 																						{strings.ShippingAddressIsSameAsBillingAddress}
@@ -1578,338 +1044,18 @@ class CreateContact extends React.Component {
 																		</Col>
 																	</Row>
 																	<Row className="row-wrapper">
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="shippingAddress"><span className="text-danger">* </span>
-																					{strings.ShippingAddress}
-																				</Label>
-																				<Input
-																					type="text"
-																					maxLength="100"
-																					id="shippingAddress"
-																					name="shippingAddress"
-																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.ShippingAddress}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExAddress.test(
-																								option.target.value,
-																							)
-																						) {
-																							option = upperFirst(option.target.value)
-																							props.handleChange('shippingAddress')(
-																								option,
-																							);
-																							this.setState({ isSame: false, });
-																						}
-																					}}
-																					value={props.values.shippingAddress}
-																					className={
-																						props.errors.shippingAddress &&
-																							props.touched.shippingAddress
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingAddress &&
-																					props.touched.shippingAddress && (
-																						<div className="invalid-feedback">
-																							{props.errors.shippingAddress}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
-																				<Select
-																					options={
-																						this.state.country_list
-																							? selectOptionsFactory.renderOptions(
-																								'countryName',
-																								'countryCode',
-																								this.state.country_list,
-																								'Country',
-																							)
-																							: []
-																					}
-																					value={props.values.shippingCountryId}
-																					isDisabled = {props.values.taxTreatmentId.value === 1 || props.values.taxTreatmentId.value === 2 || props.values.taxTreatmentId.value === 3 || props.values.taxTreatmentId.value === 4}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('shippingCountryId')(option);
-																							this.getStateListForShippingAddress(option.value);
-																							this.setState({ isSame: false, });
-																						} else {
-																							props.handleChange('shippingCountryId')('');
-																							// this.getStateListForShippingAddress('');
-																						}
-																						props.handleChange('shippingStateId')('');
-																					}}
-																					placeholder={strings.Select + strings.Country}
-																					id="shippingCountryId"
-																					name="shippingCountryId"
-																					className={
-																						props.errors.shippingCountryId &&
-																							props.touched.shippingCountryId
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingCountryId &&
-																					props.touched.shippingCountryId && (
-																						<div className="invalid-feedback">
-																							{props.errors.shippingCountryId}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
-																					{/* {strings.StateRegion} */}
-																					{props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion}
-																				</Label>
-																				<Select
-																					options={
-																						state_list_for_shipping
-																							? selectOptionsFactory.renderOptions(
-																								'label',
-																								'value',
-																								state_list_for_shipping,
-																								props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion,
-																							)
-																							: []
-																					}
-																					value={props.values.shippingStateId}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('shippingStateId')(option);
-																							this.setState({ isSame: false, });
-																						} else {
-																							props.handleChange('shippingStateId')('');
-																						}
-																					}}
-																					placeholder={props.values.shippingCountryId.value === 229 ? strings.Select +strings.Emirate : strings.Select +strings.StateRegion}
-																					id="shippingStateId"
-																					name="shippingStateId"
-																					className={
-																						props.errors.shippingStateId &&
-																							props.touched.shippingStateId
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingStateId &&
-																					props.touched.shippingStateId && (
-																						<div className="invalid-feedback">
-																							{props.errors.shippingStateId}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
-																				<Input
-																					autoComplete="Off"
-																					// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
-																					value={props.values.shippingCity}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExAlpha.test(
-																								option.target.value,
-																							)
-																						) {
-																							option = upperFirst(option.target.value)
-																							props.handleChange('shippingCity')(option);
-																							this.setState({ isSame: false, });
-																						}
-																					}}
-																					placeholder={strings.Location}
-																					id="shippingCity"
-																					name="shippingCity"
-																					type="text"
-																					maxLength="100"
-																					className={
-																						props.errors.shippingCity && props.touched.shippingCity
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingCity && props.touched.shippingCity && (
-																					<div className="invalid-feedback">
-																						{props.errors.shippingCity}
-																					</div>
-																				)}
-																			</FormGroup>
-																		</Col>
-
-																		{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?
-																			<Col md="4" >
-																				<FormGroup>
-																					{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
-																					<Label htmlFor="POBoxNumber">
-																						<span className="text-danger">* </span>{strings.POBoxNumber}
-																					</Label>
-																					<Input
-																						type="text"
-																						minLength="3"
-																						maxLength="6"
-																						id="shippingPoBoxNumber"
-																						name="shippingPoBoxNumber"
-																						autoComplete="Off"
-																						placeholder={strings.Enter + strings.POBoxNumber}
-																						onChange={(option) => {
-																							if (
-																								option.target.value === '' ||
-																								this.regEx.test(option.target.value)
-																							) {
-																								if (option.target.value.length < 3)
-																									this.setState({ showshippingpoBoxNumberErrorMsg: true })
-																								else
-																									this.setState({ showshippingpoBoxNumberErrorMsg: false })
-																								props.handleChange('shippingPoBoxNumber')(
-																									option,
-																								);
-																							}
-																						}}
-																						value={props.values.shippingPoBoxNumber}
-																						className={
-																							props.errors.shippingPoBoxNumber &&
-																								props.touched.shippingPoBoxNumber
-																								? 'is-invalid'
-																								: ''
-																						}
-																					/>
-																					{props.errors.shippingPoBoxNumber &&
-																						props.touched.shippingPoBoxNumber && (
-																							<div className="invalid-feedback">
-																								{props.errors.shippingPoBoxNumber}
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
-
-																			:
-																			<Col md="4" ><FormGroup>
-																				<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
-																				<Input
-																					type="text"
-																					maxLength="6"
-																					id="shippingPostZipCode"
-																					name="shippingPostZipCode"
-																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.PostZipCode}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regEx.test(option.target.value)
-																						) {
-																							props.handleChange('shippingPostZipCode')(
-																								option,
-																							);
-																						}
-
-																					}}
-																					value={props.values.shippingPostZipCode}
-																					className={
-																						props.errors.shippingPostZipCode &&
-																							props.touched.shippingPostZipCode
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingPostZipCode &&
-																					props.touched.shippingPostZipCode && (
-																						<div className="invalid-feedback">
-																							{props.errors.shippingPostZipCode}
-																						</div>
-																					)}
-																			</FormGroup>
-																			</Col>}
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="shippingTelephone">{strings.Telephone}</Label>
-																				<Input
-																					maxLength="15"
-																					type="text"
-																					id="shippingTelephone"
-																					name="shippingTelephone"
-																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.TelephoneNumber}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExTelephone.test(option.target.value)
-																						) {
-																							props.handleChange('shippingTelephone')(option);
-																						}
-																					}}
-																					value={props.values.shippingTelephone}
-																					className={
-																						props.errors.shippingTelephone &&
-																							props.touched.shippingTelephone
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingTelephone &&
-																					props.touched.shippingTelephone && (
-																						<div className="invalid-feedback">
-																							{props.errors.shippingTelephone}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-
-																		<Col md="4">
-																			<FormGroup>
-																				<Label htmlFor="shippingFax">
-																					{strings.Fax}
-																				</Label>
-																				<Input
-																					type="text"
-																					maxLength="15"
-																					id="shippingFax"
-																					name="shippingFax"
-																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.Fax}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regEx.test(option.target.value)
-																						) {
-																							if (option.target.value.length != 15 && option.target.value != "")
-																								this.setState({ showshippingFaxErrorMsg: true })
-																							else
-																								this.setState({ showshippingFaxErrorMsg: false })
-																							props.handleChange('shippingFax')(
-																								option,
-																							);
-																						}
-
-
-																					}}
-																					value={props.values.shippingFax}
-																					className={
-																						props.errors.shippingFax &&
-																							props.touched.shippingFax
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.shippingFax &&
-																					props.touched.shippingFax && (
-																						<div className="invalid-feedback">
-																							{props.errors.shippingFax}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
+																		<AddressComponent
+																			values={props.values.shippingAddress || {}}
+																			errors={props.errors.shippingAddress || {}}
+																			touched={props.touched.shippingAddress}
+																			onChange={(field, value) => {
+																				props.handleChange(`shippingAddress.${field}`)(value);
+																				this.setState({ isSame: false, });
+																			}}
+																			country_list={country_list}
+																			addressType={strings.Shipping}
+																			disabled={{ email: false, city: false, countryId: disableCountry, address: false, postZipCode: false, stateId: false, telephone: false, fax: false, }}
+																		/>
 																	</Row>
 
 																	<Row>
@@ -1921,7 +1067,7 @@ class CreateContact extends React.Component {
 																					className="btn-square mr-3"
 																					disabled={this.state.disabled}
 																					onClick={() => {
-																						console.log(props.errors,"ERROR");
+																						console.log(props.errors, "ERROR");
 																						//  added validation popup  msg                                                                
 																						props.handleBlur();
 																						if (props.errors && Object.keys(props.errors).length != 0)
@@ -1994,7 +1140,7 @@ class CreateContact extends React.Component {
 							</Row>
 						</div>
 					</div>
-			{this.state.disableLeavePage ?"":<LeavePage/>}
+					{this.state.disableLeavePage ? "" : <LeavePage />}
 				</div>
 		);
 	}

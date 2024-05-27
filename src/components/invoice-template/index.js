@@ -88,10 +88,10 @@ class TemplateComponent extends React.Component {
 
         </Checkbox>
         <b>{templateTitle}</b></p>
-        <img class="template-gallery" src={templateImg} onClick={this.openDialog}></img>
+        <img className="template-gallery" src={templateImg} onClick={this.openDialog}></img>
         <p>
-          <a class="dialog show_preview Button" id="caption_2_link" onClick={this.openDialog}>Preview</a>
-          <p class="use_theme Button" onClick={
+          <a className="dialog show_preview Button" id="caption_2_link" onClick={this.openDialog}>Preview</a>
+          <p className="use_theme Button" onClick={
 
             updateMailTheme(templateId, templateTitle)
 
@@ -106,7 +106,7 @@ class TemplateComponent extends React.Component {
             ></i>
           </ModalHeader>
           <ModalBody>
-            <img class="preview-gallery" src={templateImg}></img>
+            <img className="preview-gallery" src={templateImg}></img>
 
           </ModalBody>
         </Modal>

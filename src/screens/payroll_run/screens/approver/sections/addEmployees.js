@@ -456,7 +456,7 @@ class AddEmployeesModal extends React.Component {
 									onClick={this.generateSalary}
 									// disabled={selectedRows.length === 0}
 								>
-									<i class="fas fa-check-double mr-1"></i>
+									<i className="fas fa-check-double mr-1"></i>
 
 									Add employees
 								</Button>

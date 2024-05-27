@@ -492,7 +492,7 @@ class AddEmployeesModal extends React.Component {
 									// disabled={selectedRows.length === 0}
 
 								>
-									<i class="fas fa-check-double mr-1"></i>
+									<i className="fas fa-check-double mr-1"></i>
 
 									Add employees
 								</Button>

@@ -333,7 +333,7 @@ class SupplierInvoice extends React.Component {
 									this.postInvoice(row, true);
 								}}
 							>
-								<i class="far fa-arrow-alt-circle-right"></i>{strings.Post}
+								<i className="far fa-arrow-alt-circle-right"></i>{strings.Post}
 							</DropdownItem>
 						)}
 						{/* {row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (

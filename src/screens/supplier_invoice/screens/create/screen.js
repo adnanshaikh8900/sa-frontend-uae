@@ -323,7 +323,7 @@ class CreateSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
-						<div class="input-group">
+						<div className="input-group">
 							<Input
 								type="text"
 								min="0"
@@ -1101,7 +1101,7 @@ class CreateSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.discountType`}
 				render={({ field, form }) => (
 					<div>
-						<div class="input-group">
+						<div className="input-group">
 							<Input
 								type="text"
 								min="0"
@@ -1139,7 +1139,7 @@ class CreateSupplierInvoice extends React.Component {
 									}`}
 
 							/>
-							<div class="dropdown open input-group-append">
+							<div className="dropdown open input-group-append">
 
 								<div style={{ width: '100px' }}>
 									<Select
@@ -3206,7 +3206,7 @@ class CreateSupplierInvoice extends React.Component {
 																			hover
 																			keyField="id"
 																			className="invoice-create-table"
-																			class="container-fluid"
+																			className="container-fluid"
 																		>
 																			<TableHeaderColumn
 																				width="3%"

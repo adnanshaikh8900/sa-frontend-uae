@@ -235,7 +235,7 @@ class MigarteHistory extends React.Component {
 													this.finishMigration()
 													this.props.history.push('/admin/settings/migrateHistory');
 												}}>
-												Finish Migration	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+												Finish Migration	<i className="far fa-arrow-alt-circle-right mr-1"></i>
 											</Button>
 										</FormGroup>
 									</div>

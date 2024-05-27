@@ -4067,9 +4067,9 @@ class ExplainTrasactionDetail extends React.Component {
 																			this.setState({showMore:!this.state.showMore})
 																		}} >
 																		{this.state.showMore==true ?
-																		 (<><i class="fas fa-angle-double-up mr-1"/> Show Less</>)
+																		 (<><i className="fas fa-angle-double-up mr-1"/> Show Less</>)
 																		 :
-																		(<><i class="fas fa-angle-double-down mr-1"/> Show More</>)}
+																		(<><i className="fas fa-angle-double-down mr-1"/> Show More</>)}
 																		</Button> */}
                                   <IconButton
                                     style={{

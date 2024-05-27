@@ -357,16 +357,16 @@ class ExplainTransactionModal extends React.Component {
 							) : null}
 							<Row>
 								<Col lg={3}>
-									<label class="value">{strings.Transaction+" "+strings.Amount}</label>
-									<label class="value">{transactionAmount}</label>
+									<label className="value">{strings.Transaction+" "+strings.Amount}</label>
+									<label className="value">{transactionAmount}</label>
 								</Col>
 								<Col lg={3}>
-									<label class="value">{strings.CurrentBankBalance}</label>
-									<label class="value">{currentBalance}</label>
+									<label className="value">{strings.CurrentBankBalance}</label>
+									<label className="value">{currentBalance}</label>
 								</Col>
 								<Col lg={3} className="p-0">
-									<label class="value">{strings.TransactionDate}</label>
-									<label class="value">{selectedData.transactionDate}</label>
+									<label className="value">{strings.TransactionDate}</label>
+									<label className="value">{selectedData.transactionDate}</label>
 								</Col>
 								<Col lg={3}>
 									<div className="text-right">
@@ -386,7 +386,7 @@ class ExplainTransactionModal extends React.Component {
 									{explainList &&
 										explainList.map((item, index) => (
 											<div className="d-flex detail-row">
-												<div class="sub-container">
+												<div className="sub-container">
 													<div className="mb-3 mr-2" style={{ width: '30%' }}>
 														<Label className="label">
 															{strings.ChartOfAccountCategory}
@@ -541,8 +541,8 @@ class ExplainTransactionModal extends React.Component {
 									{transactionAmount > currentBalance && showChartOfAccount && (
 										<Row className="m-0">
 											<Col lg={5} className="pl-0">
-												<label class="value">{strings.RemainingBalance}</label>
-												<label class="value">{currentBalance}</label>
+												<label className="value">{strings.RemainingBalance}</label>
+												<label className="value">{currentBalance}</label>
 											</Col>
 											<Col lg={5} className="p-0">
 												<Label className="label">{strings.TransactionCategory}</Label>

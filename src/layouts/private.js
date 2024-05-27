@@ -13,7 +13,7 @@ const PrivateRoute = ({ component: Component, name, node, ...rest }) => {
 						<Component {...props} />
 					) : (
 						<center>
-						<div ><i class="fas fa-exclamation-triangle fa-8x" >
+						<div ><i className="fas fa-exclamation-triangle fa-8x" >
 						</i>
 						<br></br><br></br>
 							<b>You Are Not Allowed to view this page</b>

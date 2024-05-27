@@ -292,13 +292,16 @@ class RFQTemplate extends Component {
 										</th>
 
 									{/* <th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th> */}
-									{/* <th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th> */}
-									<>
-										<th style={{ padding: '0.5rem', textAlign: 'right',width:"10%" }}>
-										{QuotationData.totalExciseAmount && QuotationData.totalExciseAmount > 0 ?
-											strings.ExciseAmount : '' }
+									{QuotationData.totalExciseAmount && QuotationData.totalExciseAmount > 0 ? (
+										<th style={{ padding: '0.5rem', textAlign: 'right', width: "5%" }}>
+											{strings.Excise}
 										</th>
-									</>
+									) : null}
+									{QuotationData.totalExciseAmount && QuotationData.totalExciseAmount > 0 ? (
+										<th style={{ padding: '0.5rem', textAlign: 'right',width:"10%" }}>
+											{strings.ExciseAmount}
+										</th>
+									) : null}
 
 									{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VAT}</th> */}
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
@@ -338,12 +341,18 @@ class RFQTemplate extends Component {
 														)
 														: null }
 												</td>
-											
+
+												{QuotationData && QuotationData.totalExciseAmount > 0  &&
 												<td style={{ textAlign: 'right' }}>
-											  	{item.exciseAmount && item.exciseAmount > 0 ?  <>
-												{QuotationData.currencyIsoCode + " " +item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
-												</> : null }
-												</td>
+													{item?.exciseTaxId ? this.renderExcise(item) : "--"}
+												</td>}
+
+												{QuotationData.totalExciseAmount && QuotationData.totalExciseAmount > 0 ? (
+												<td style={{ textAlign: 'right' }}>
+													{QuotationData.currencyIsoCode + " " +
+													item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+													</td>
+												) : null }
 
 												{/* <td
 													style={{ textAlign: 'right' }}

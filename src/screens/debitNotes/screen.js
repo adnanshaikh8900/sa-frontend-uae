@@ -376,7 +376,7 @@ class DebitNotes extends React.Component {
 									this.debitNoteposting(row, true);
 								}}
 							>
-								<i class="far fa-arrow-alt-circle-right"></i>{strings.MarkAsOpen}
+								<i className="far fa-arrow-alt-circle-right"></i>{strings.MarkAsOpen}
 							</DropdownItem>
 						)}
 
@@ -410,7 +410,7 @@ class DebitNotes extends React.Component {
 										);
 									}}
 								>
-									<i class="fas fa-file-invoice"></i>{strings.ApplyToInvoice}
+									<i className="fas fa-file-invoice"></i>{strings.ApplyToInvoice}
 								</div>
 							</DropdownItem>
 						)}
@@ -687,7 +687,7 @@ class DebitNotes extends React.Component {
 									<Row>
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
-												<i class="fa fa-credit-card" />
+												<i className="fa fa-credit-card" />
 												<span className="ml-2"> Debit Notes</span>
 											</div>
 										</Col>

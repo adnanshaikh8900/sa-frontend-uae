@@ -14,10 +14,10 @@ import InvoiceTemplate from './invoice-template';
 import * as CustomStyles from './react-select';
 import ConfirmLeavePageModal from './confirm_leave_page'
 import LeavePage from './navigationPromtForLeavePage'
-import {CommonList} from './comman_list_data'
+import { CommonList } from './comman_list_data'
 import * as ProductTableCalculation from './product_table_calculatoin'
 import SentInvoice from './sent_document';
-
+import { ZipCodeInput } from './form_control';
 export {
 	Loading,
 	Loader,
@@ -38,4 +38,5 @@ export {
 	CommonList,
 	ProductTableCalculation,
 	SentInvoice,
+	ZipCodeInput,
 };

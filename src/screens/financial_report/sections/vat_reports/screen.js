@@ -388,7 +388,7 @@ class VatReports extends React.Component {
               }}
             >
               {" "}
-              <i class="fas fa-unlink" /> Mark It Unfiled
+              <i className="fas fa-unlink" /> Mark It Unfiled
             </DropdownItem>
           ) : (
             ""
@@ -407,7 +407,7 @@ class VatReports extends React.Component {
               }}
             >
               {" "}
-              <i class="fas fa-link" /> File The Report
+              <i className="fas fa-link" /> File The Report
             </DropdownItem>
           ) : (
             ""
@@ -475,7 +475,7 @@ class VatReports extends React.Component {
       // 				this.setState({current_report_id:params.data.id})
       // 				this.markItUnfiled(params.data)
       // 			}}
-      // 		>	<i class="fas fa-unlink" /> </Button>) : ""}
+      // 		>	<i className="fas fa-unlink" /> </Button>) : ""}
       // 		{params.data.status === "Filed" ? (<>&nbsp;&nbsp;</>) : ''}
 
       // 		File The Report
@@ -493,7 +493,7 @@ class VatReports extends React.Component {
       // 								taxReturns:params.data.taxReturns,
       // 							});
       // 			}}
-      // 		>	<i class="fas fa-link" /></Button>) : ""}
+      // 		>	<i className="fas fa-link" /></Button>) : ""}
       // </>
     );
   };
@@ -732,7 +732,7 @@ class VatReports extends React.Component {
                           this.setState({ openModal: true });
                         }}
                       >
-                        <i class="fas fa-plus"></i> Generate VAT Report
+                        <i className="fas fa-plus"></i> Generate VAT Report
                       </Button>
 
                       {/* <Button color="primary" className="btn-square  pull-right"

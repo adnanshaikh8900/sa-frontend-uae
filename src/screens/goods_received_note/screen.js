@@ -307,7 +307,7 @@ class GoodsReceivedNote extends React.Component {
 									this.changeStatus(row.id,"Sent");
 								}}
 							>
-			<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+			<i className="far fa-arrow-alt-circle-right"></i>Mark As Sent
 							</DropdownItem>)}
 							{/* {row.status === 'Sent' && (
 							<DropdownItem
@@ -335,7 +335,7 @@ class GoodsReceivedNote extends React.Component {
 								this.close(row.id);
 							}}
 						>
-								<i class="fas fa-times-circle"></i> Close
+								<i className="fas fa-times-circle"></i> Close
 						</DropdownItem>
 						)} */}
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (

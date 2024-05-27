@@ -648,8 +648,8 @@ min="0"
 										{transactionAmount > currentBalance && showChartOfAccount && (
 											<Row className="m-0">
 												<Col lg={5} className="pl-0">
-													<label class="value">Remaining Balance</label>
-													<label class="value">{currentBalance}</label>
+													<label className="value">Remaining Balance</label>
+													<label className="value">{currentBalance}</label>
 												</Col>
 												<Col lg={5} className="p-0">
 													<Label className="label">Transaction Category</Label>

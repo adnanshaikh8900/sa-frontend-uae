@@ -450,7 +450,7 @@ class SalaryComponent extends React.Component {
             <Field
                 render={({ field, form }) => (
                     <div>
-                        <div class="input-group">
+                        <div className="input-group">
                             {(item.formula || item.formula === null) ?
                                 <Input
                                     type="number"
@@ -488,7 +488,7 @@ class SalaryComponent extends React.Component {
                                     id=''
                                 />
                             }
-                            <div class="dropdown open input-group-append">
+                            <div className="dropdown open input-group-append">
                                 <div style={{ width: '130px' }}>
                                     <Select
                                         options={
@@ -583,7 +583,7 @@ class SalaryComponent extends React.Component {
                                                 this.removeComponent(item.salaryComponentId)
                                             }}
                                         >
-                                            <i class="far fa-times-circle"></i>
+                                            <i className="far fa-times-circle"></i>
                                         </Button>)
                                         : ''}
                                 </td>
@@ -904,7 +904,7 @@ class SalaryComponent extends React.Component {
                                                             }
                                                         }}
                                                     >
-                                                        <i class="far fa-arrow-alt-circle-left mr-1"></i>{" "}
+                                                        <i className="far fa-arrow-alt-circle-left mr-1"></i>{" "}
                                                         {strings.back}
                                                     </Button>
 

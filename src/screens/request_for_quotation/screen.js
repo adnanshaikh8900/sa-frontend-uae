@@ -471,7 +471,7 @@ class RequestForQuotation extends React.Component {
 									this.changeStatus(row.id,"Sent");
 								}}
 							>
-							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							<i className="far fa-arrow-alt-circle-right"></i>Mark As Sent
 							</DropdownItem>)}
                           {row.status != 'Draft' && 
 							row.status != 'Approved' && 

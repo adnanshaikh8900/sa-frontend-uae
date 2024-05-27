@@ -1118,7 +1118,7 @@ class UpdatePayroll extends React.Component {
 																					{strings.pay_period}
 																				</Label>
 																				<div style={{ display: "flex" }}>
-																					{/* <FormGroup className="mt-2"><i class="far fa-calendar-alt mt-1"></i>&nbsp;</FormGroup> */}
+																					{/* <FormGroup className="mt-2"><i className="far fa-calendar-alt mt-1"></i>&nbsp;</FormGroup> */}
 																					<FormGroup >
 																						<DateRangePicker
 																							displayFormat="DD-MM-YYYY"
@@ -1259,7 +1259,7 @@ class UpdatePayroll extends React.Component {
 
 																			disabled={this.state.selectedRows.length === 0}
 																		>
-																			<i class="far fa-trash-alt mr-1"></i>
+																			<i className="far fa-trash-alt mr-1"></i>
 																			Remove Employees
 																		</Button> */}
 																			</FormGroup>
@@ -1360,7 +1360,7 @@ class UpdatePayroll extends React.Component {
 
 																						>
 
-																							<i class="fas fa-check-double  mr-1"></i>Update and Submit
+																							<i className="fas fa-check-double  mr-1"></i>Update and Submit
 
 
 																						</Button>

@@ -629,8 +629,8 @@ class EmailPopUpModal extends React.Component {
 
     };
     DisplayFilesComponent = (props, Files) => {
-        return <div class=" react-multi-email  ">
-            <div class="data-labels" style={{ opacity: 1, display: "contents", flexWrap: "inherit" }}>
+        return <div className=" react-multi-email  ">
+            <div className="data-labels" style={{ opacity: 1, display: "contents", flexWrap: "inherit" }}>
                 {Files.map((data, index) => {
                     return <div data-tag="true">
                         <div data-tag-item="true">{data.name}</div>

@@ -251,7 +251,7 @@ class InventorySummary extends React.Component {
 	// 										onClick={() =>
 	// 								this.props.history.push('/admin/master/product/detail/inventoryedit'),{ id: row.inventoryId }}
 	// 							>
-	// 								<i class="far fa-edit fa-lg"></i>
+	// 								<i className="far fa-edit fa-lg"></i>
 	// 							</a>
 				
 	// 			</Button>
@@ -268,7 +268,7 @@ class InventorySummary extends React.Component {
 										
 	// 									}}
 	// 							>
-	// 								<i class="fa fa-history fa-lg"></i>
+	// 								<i className="fa fa-history fa-lg"></i>
 	// 							</a>
 			
 	// 			</Button>
@@ -319,7 +319,7 @@ class InventorySummary extends React.Component {
 
 					}
 				>
-						<i class="fa fa-history fa-lg"></i> 
+						<i className="fa fa-history fa-lg"></i> 
 						</Button>
 
 			</div>
@@ -364,7 +364,7 @@ class InventorySummary extends React.Component {
 
 					}
 				>
-						<i class="fa fa-history fa-lg"></i> 
+						<i className="fa fa-history fa-lg"></i> 
 						</Button>
 
 			</div>

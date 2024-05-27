@@ -105,7 +105,7 @@ class Header extends Component {
 					<UncontrolledDropdown nav direction="down">
 						<DropdownToggle nav>
 						{strings.Hey}	<i>{profile && profile.firstName +" "+ profile.lastName}</i>
-							<i class="fas fa-angle-down ml-2 mr-3"></i>
+							<i className="fas fa-angle-down ml-2 mr-3"></i>
 						</DropdownToggle>
 						<DropdownMenu right>
 							<DropdownItem
@@ -147,7 +147,7 @@ class Header extends Component {
                                     this.props.history.push('/admin/settings/template')
                                 }
                             >
-                             <i class="fas fa-palette"></i> {strings.MailThemes}
+                             <i className="fas fa-palette"></i> {strings.MailThemes}
                             </DropdownItem>}
 							<DropdownItem
 								onClick={() => this.props.history.push('/admin/settings/notesSettings')}
@@ -159,7 +159,7 @@ class Header extends Component {
                                     this.props.history.push('/admin/settings/import')
                                 }
                             >
-                             <i class="fas fa-palette"></i>{strings.Import}
+                             <i className="fas fa-palette"></i>{strings.Import}
                             </DropdownItem>}
 							{/* <DropdownItem
 								onClick={() =>

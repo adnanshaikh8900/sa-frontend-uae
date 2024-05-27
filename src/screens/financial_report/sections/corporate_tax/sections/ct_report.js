@@ -330,7 +330,7 @@ class CTReport extends React.Component {
                                         this.state.ctReprtFor === "" || !this.state.ctReprtFor
                                     }
                                 >
-                                    <i class="fas fa-check-double mr-1"></i>
+                                    <i className="fas fa-check-double mr-1"></i>
                                     Generate
                                 </Button>
                                 <Button

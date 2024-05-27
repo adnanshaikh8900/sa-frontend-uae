@@ -753,6 +753,7 @@ const en = {
       CreditNoteAmountUsedSummary: "Credit note amount used summary:",
       CreditNoteNumber2: "Credit Note No",
       CreditNoteDate2: "Credit Note Date",
+      CreditNotePostedSuccessfully:"Credit Note Sent Successfully",
 
       //ImportStatement
       ImportStatement: "Import Statement",
@@ -1313,6 +1314,7 @@ const en = {
       SubscriptionExpiredMessage:"Subscription status is not active.",
       SubscriptionFailedMessage:"Failed to fetch the subscription status.",
       QuotationSentSuccessfully:"Quotation Sent Successfully!",
+     
 
 
 

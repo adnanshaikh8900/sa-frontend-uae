@@ -128,13 +128,10 @@ class RecordVatPayment extends React.Component {
 					const data = res.data?.data || []
 					const reportInfoById = data.find((obj) => obj.id === this.props.location.state.id)
 					if (reportInfoById) {
+						console.log('reportInfoById', moment(reportInfoById.filedOn))
 						this.setState({
-							reportfilledOn: new Date(reportInfoById.filedOn),
-							initValue: {
-								vatPaymentDate: new Date(reportInfoById.filedOn),
-							},
+							reportfilledOn: new Date(reportInfoById.filedOn),							
 						})
-						this.formRef.current.setFieldValue('vatPaymentDate', new Date(reportInfoById.filedOn), true);
 					}
 				}
 			})
@@ -177,7 +174,6 @@ class RecordVatPayment extends React.Component {
 
 		let formData = new FormData();
 		formData.append('vatPaymentDate', vatPaymentDate ?? '');
-
 		formData.append('amount', amount !== null ? amount : '');
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append(

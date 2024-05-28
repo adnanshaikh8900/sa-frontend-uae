@@ -107,6 +107,7 @@ class Quatation extends React.Component {
 				overDueAmountMonthly: '',
 			},
 			language: window['localStorage'].getItem('language'),
+			currentPage: 1,
 		};
 
 		this.options = {
@@ -139,9 +140,9 @@ class Quatation extends React.Component {
 
 
 	initializeData = (search) => {
-		let { filterData } = this.state;
+		let { filterData, currentPage } = this.state;
 		const paginationData = {
-			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageNo: currentPage - 1,
 			pageSize: this.options.sizePerPage,
 		};
 		const sortingData = {
@@ -590,7 +591,9 @@ class Quatation extends React.Component {
 	};
 
 	handleSearch = () => {
-		this.initializeData();
+		this.setState({ currentPage: 1 }, () => {
+   		this.initializeData();
+ 		});
 	};
 
 	postInvoice = (row) => {
@@ -778,6 +781,7 @@ class Quatation extends React.Component {
 					contactType: 2,
 					contactId: '',
 				},
+				currentPage: 1
 			},
 			() => {
 				this.initializeData();
@@ -1021,19 +1025,26 @@ class Quatation extends React.Component {
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
-											options={this.options}
 											data={quotation_data ? quotation_data : []}
 											version="4"
 											hover
 											keyField="id"
 											pagination
 											remote
-
 											fetchInfo={{
 												dataTotalSize: quotation_list && quotation_list && quotation_list.data && quotation_list.data.count
 													? quotation_list.data.count
 													: 0,
 											}}
+											options={{
+													...this.options,
+													page: this.state.currentPage,
+													onPageChange: (page) => {
+													this.setState({ currentPage: page }, () => {
+														this.initializeData();
+													});
+													},
+												}}
 											className="customer-invoice-table"
 											ref={(node) => (this.table = node)}
 										>

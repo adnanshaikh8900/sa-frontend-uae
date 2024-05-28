@@ -94,7 +94,8 @@ class CreditNotes extends React.Component {
 				overDueAmountMonthly: '',
 			},
 			rowId: '',
-			loadingMsg: "Loading..."
+			loadingMsg: "Loading...",
+			currentPage: 1,
 		};
 
 		this.options = {
@@ -176,9 +177,9 @@ class CreditNotes extends React.Component {
 
 	}
 	initializeData = (search) => {
-		let { filterData } = this.state;
+		let { filterData, currentPage} = this.state;
 		const paginationData = {
-			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageNo: currentPage - 1,
 			pageSize: this.options.sizePerPage,
 		};
 		const sortingData = {
@@ -627,7 +628,9 @@ class CreditNotes extends React.Component {
 	};
 
 	handleSearch = () => {
-		this.initializeData();
+		this.setState({ currentPage: 1 }, () => {
+   		this.initializeData();
+ 		});
 	};
 
 	openInvoicePreviewModal = (id) => {
@@ -735,6 +738,7 @@ class CreditNotes extends React.Component {
 					status: '',
 					contactType: 2,
 				},
+				currentPage: 1
 			},
 			() => {
 				this.initializeData();
@@ -1095,7 +1099,6 @@ class CreditNotes extends React.Component {
 											<BootstrapTable
 												selectRow={this.selectRowProp}
 												search={false}
-												options={this.options}
 												data={customer_invoice_data ? customer_invoice_data.sort((a, b) => new Date(a.creditNoteDate) - new Date(b.creditNoteDate)) : []}
 												version="4"
 												hover
@@ -1103,16 +1106,22 @@ class CreditNotes extends React.Component {
 												currencyList
 												keyField="id"
 												remote
-												pagination={
-													customer_invoice_data &&
-														customer_invoice_data.length > 0
-														? true
-														: false
-												}
+												pagination={customer_invoice_data &&
+															customer_invoice_data.length > 0
+														}
 												fetchInfo={{
 													dataTotalSize: customer_invoice_list.count
 														? customer_invoice_list.count
 														: 0,
+												}}
+												options={{
+													...this.options,
+													page: this.state.currentPage,
+													onPageChange: (page) => {
+													this.setState({ currentPage: page }, () => {
+														this.initializeData();
+													});
+													},
 												}}
 												className="customer-invoice-table"
 												csvFileName="Customer_Invoice.csv"

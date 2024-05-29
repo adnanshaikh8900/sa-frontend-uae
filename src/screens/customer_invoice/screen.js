@@ -1102,6 +1102,8 @@ class CustomerInvoice extends React.Component {
 														name="invoiceDueDate"
 														placeholderText={strings.InvoiceDueDate}
 														showMonthDropdown
+														minDate={this.state.filterData.invoiceDate}
+														maxDate={null}
 														showYearDropdown
 														dropdownMode="select"
 														dateFormat="dd-MM-yyyy"

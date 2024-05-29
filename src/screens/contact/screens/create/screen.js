@@ -28,10 +28,11 @@ import { CommonActions } from 'services/global';
 import * as ContactActions from '../../actions';
 import * as CreateContactActions from './actions';
 import PhoneInput from "react-phone-input-2";
-import 'react-phone-input-2/lib/style.css'
+import 'react-phone-input-2/lib/style.css';
+import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
 const mapStateToProps = (state) => {
-	const currencyList = state.common.currency_convert_list;
+	const currencyList = state.currencyConvert.currency_convert_list;
 	return {
 		country_list: state.contact.country_list,
 		currency_list_dropdown: DropdownLists.getCurrencyDropdown(currencyList),
@@ -44,6 +45,7 @@ const mapDispatchToProps = (dispatch) => {
 		contactActions: bindActionCreators(ContactActions, dispatch),
 		createContactActions: bindActionCreators(CreateContactActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
 	};
 };
 
@@ -125,7 +127,18 @@ class CreateContact extends React.Component {
 	initializeData = () => {
 		this.props.contactActions.getContactTypeList();
 		this.props.contactActions.getCountryList();
-
+		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currency: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+		});
 		const { companyDetails } = this.props;
 		if (companyDetails) {
 			const { currencyCode, isRegisteredVat } = companyDetails;

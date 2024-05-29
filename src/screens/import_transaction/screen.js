@@ -1503,6 +1503,7 @@ class ImportTransaction extends React.Component {
 																					id=""
 																					rows="6"
 																					placeholder={strings.DateFormat}
+																					className={this.state.error && this.state.error.dateFormatId ? 'is-invalid' : ''}
 																				/>
 
 																				{this.state.error &&

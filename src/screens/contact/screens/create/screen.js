@@ -930,7 +930,7 @@ class CreateContact extends React.Component {
 																							props.handleChange('taxTreatmentId')(false,);
 																							this.setState({ disableCountry: false })
 																						}
-																						props.handleChange('vatRegistrationNumber')(false,);
+																						props.handleChange('vatRegistrationNumber');
 
 																					}}
 																					className={
@@ -961,7 +961,7 @@ class CreateContact extends React.Component {
 																						id="vatRegistrationNumber"
 																						name="vatRegistrationNumber"
 																						autoComplete="Off"
-																						placeholder={strings.Enter + strings.TaxRegistrationNumber}
+																						
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
@@ -973,6 +973,7 @@ class CreateContact extends React.Component {
 																								//this.validationCheck(option.target.value)
 																							}
 																						}}
+																						placeholder={strings.Enter + strings.TaxRegistrationNumber}
 																						value={props.values.vatRegistrationNumber}
 																						className={
 																							props.errors.vatRegistrationNumber &&

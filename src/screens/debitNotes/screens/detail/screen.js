@@ -33,7 +33,7 @@ import { LeavePage, Loader, ConfirmDeleteModal, ProductTableCalculation } from '
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { selectCurrencyFactory, selectOptionsFactory, renderList } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
@@ -165,19 +165,6 @@ class DetailDebitNote extends React.Component {
 	initializeData = () => {
 		this.props.commonActions.getTaxTreatmentList();
 		if (this.props.location.state && this.props.location.state.id) {
-			// //INV number
-			// this.props.debitNotesActions
-			// 	.getInvoicesForCNById(this.props.location.state.id)
-			// 	.then((res) => {
-			// 		if (res.status === 200) {
-			// 			if (res.data.length && res.data.length != 0)
-			// 				this.setState({
-			// 					invoiceNumber: res.data[0].invoiceNumber,
-			// 					showInvoiceNumber: true
-			// 				});
-			// 		}
-			// 	})
-			//CN details
 			this.props.debitNotesActions
 				.getDebitNoteById(this.props.location.state.id,
 					this.props.location.state.isCNWithoutProduct ? this.props.location.state.isCNWithoutProduct : false)
@@ -300,6 +287,7 @@ class DetailDebitNote extends React.Component {
 					this.setState(
 						{
 							purchaseCategory: res.data,
+							purchaseCategoryOptions: renderList.getTransactionCategoryList(res.data),
 						},
 						() => {
 							console.log(this.state.purchaseCategory);
@@ -744,49 +732,49 @@ class DetailDebitNote extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
-				<>
-					<Select
-						styles={customStyles}
-						isDisabled
-						options={
-							product_list
-								? selectOptionsFactory.renderOptions(
-									'name',
-									'id',
-									product_list,
-									'Product',
-								)
-								: []
-						}
-						value={
-							product_list &&
-							selectOptionsFactory
-								.renderOptions('name', 'id', product_list, 'Product')
-								.find((option) => option.value === +row.productId)
-						}
-						id="productId"
-						onChange={(e) => {
-							if (e && e.label !== 'Select Product') {
-								this.selectItem(e.value, row, 'productId', form, field, props);
-								this.prductValue(e.value, row, 'productId', form, field, props);
+					<>
+						<Select
+							styles={customStyles}
+							isDisabled
+							options={
+								product_list
+									? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										product_list,
+										'Product',
+									)
+									: []
 							}
-						}}
-						className={`${props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].productId
-							? 'is-invalid'
-							: ''
-							}`}
-					/>
-					<div className='mt-1'>
+							value={
+								product_list &&
+								selectOptionsFactory
+									.renderOptions('name', 'id', product_list, 'Product')
+									.find((option) => option.value === +row.productId)
+							}
+							id="productId"
+							onChange={(e) => {
+								if (e && e.label !== 'Select Product') {
+									this.selectItem(e.value, row, 'productId', form, field, props);
+									this.prductValue(e.value, row, 'productId', form, field, props);
+								}
+							}}
+							className={`${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].productId
+								? 'is-invalid'
+								: ''
+								}`}
+						/>
+						<div className='mt-1'>
 							<TextField
 								disabled
 								type="textarea"
-								inputProps={{ maxLength: 2000}}
+								inputProps={{ maxLength: 2000 }}
 								multiline
 								minRows={1}
 								maxRows={4}
@@ -807,14 +795,14 @@ class DetailDebitNote extends React.Component {
 									}`}
 							/>
 						</div>
-				</>
+					</>
 				)}
 			/>
 		);
 	};
 
 	renderAccount = (cell, row, props) => {
-		const { purchaseCategory } = this.state;
+		const { purchaseCategory, purchaseCategoryOptions } = this.state;
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -844,15 +832,7 @@ class DetailDebitNote extends React.Component {
 							);
 						}}
 						isDisabled={true}
-						value={
-							purchaseCategory.length > 0 && row.transactionCategoryLabel
-								? purchaseCategory
-									.find((item) => item.label === row.transactionCategoryLabel)
-									.options.find(
-										(item) => item.value === +row.transactionCategoryId,
-									)
-								: row.transactionCategoryId
-						}
+						value={purchaseCategoryOptions ? purchaseCategoryOptions.find((obj) => obj.value === row.transactionCategoryId) : ''}
 						placeholder={strings.Select + strings.Account}
 						className={`${props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1735,7 +1715,7 @@ class DetailDebitNote extends React.Component {
 																</Row>)}
 																{this.state.isDNWIWithoutProduct === false && data && data.length > 0 && isRegisteredVat && <Row>
 																	<Col className="ml-4">
-																		{this.state.isReverseChargeEnabled === true 
+																		{this.state.isReverseChargeEnabled === true
 																			// && (isDesignatedZone && props.values.taxTreatmentId !== 'UAE NON-VAT REGISTERED' && props.values.taxTreatmentId !== 'UAE NON-VAT REGISTERED FREEZONE' && props.values.taxTreatmentId !== 'UAE VAT REGISTERED' && props.values.taxTreatmentId !== 'UAE VAT REGISTERED FREEZONE')
 																			// || (!isDesignatedZone && props.values.taxTreatmentId !== 'UAE VAT REGISTERED FREEZONE')
 																			? <FormGroup className="mb-3">

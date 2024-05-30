@@ -20,7 +20,6 @@ import * as Yup from 'yup';
 import * as SupplierRecordPaymentActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import { TextField } from '@material-ui/core';
-import { SupplierModal } from '../../sections';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -98,7 +97,6 @@ class RecordSupplierPayment extends React.Component {
 			},
 			invoiceId: this.props.location.state.id.id,
 			contactType: 1,
-			openSupplierModal: false,
 			selectedContact: '',
 			term: '',
 			selectedType: '',
@@ -299,11 +297,6 @@ class RecordSupplierPayment extends React.Component {
 			});
 	};
 
-	openSupplierModal = (e) => {
-		e.preventDefault();
-		this.setState({ openSupplierModal: true });
-	};
-
 	getCurrentUser = (data) => {
 		let option;
 		if (data.label || data.value) {
@@ -319,14 +312,6 @@ class RecordSupplierPayment extends React.Component {
 		// })
 		this.formRef.current.setFieldValue('contactId', option.value, true);
 	};
-
-	closeSupplierModal = (res) => {
-		if (res) {
-			this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
-		}
-		this.setState({ openSupplierModal: false });
-	};
-
 	deleteInvoice = () => {
 		const message1 =
 			<text>
@@ -898,17 +883,7 @@ class RecordSupplierPayment extends React.Component {
 								</Col>
 							</Row>
 						</div>
-						<SupplierModal
-							openSupplierModal={this.state.openSupplierModal}
-							closeSupplierModal={(e) => {
-								this.closeSupplierModal(e);
-							}}
-							getCurrentUser={(e) => this.getCurrentUser(e)}
-							createSupplier={this.props.SupplierInvoiceActions.createSupplier}
-							currency_list={this.props.currency_list}
-							country_list={this.props.country_list}
-							getStateList={this.props.SupplierInvoiceActions.getStateList}
-						/>
+						
 					</div>
 					{this.state.disableLeavePage ? "" : <LeavePage />}
 				</div>

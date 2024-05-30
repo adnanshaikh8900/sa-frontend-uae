@@ -22,14 +22,13 @@ import * as Yup from 'yup';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
-import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 import { Loader, ConfirmDeleteModal, LeavePage, } from 'components';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory, selectCurrencyFactory, selectOptionsFactory, renderList } from 'utils';
 import { TextField } from '@material-ui/core';
 import './style.scss';
 import moment from 'moment';
@@ -50,7 +49,7 @@ const mapStateToProps = (state) => {
 		country_list: state.supplier_invoice.country_list,
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -100,7 +99,6 @@ class DetailSupplierInvoice extends React.Component {
 				invoiceDate: new Date(),
 			},
 			contactType: 1,
-			openSupplierModal: false,
 			openProductModal: false,
 			selectedContact: '',
 			current_supplier_id: null,
@@ -200,7 +198,6 @@ class DetailSupplierInvoice extends React.Component {
 						this.props.supplierInvoiceActions.getSupplierList(
 							this.state.contactType,
 						);
-						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.supplierInvoiceActions.getCountryList();
 						this.props.supplierInvoiceActions.getExciseList();
 						this.purchaseCategory();
@@ -344,6 +341,8 @@ class DetailSupplierInvoice extends React.Component {
 					this.setState(
 						{
 							purchaseCategory: res.data,
+							purchaseCategoryOptions: renderList.getTransactionCategoryList(res.data),
+
 						},
 						() => {
 							console.log(this.state.purchaseCategory);
@@ -1239,9 +1238,9 @@ class DetailSupplierInvoice extends React.Component {
 							)}
 						{row['productId'] != '' ?
 							<div className='mt-1'>
-								<TextField 
+								<TextField
 									type="textarea"
-									inputProps={{ maxLength: 2000}}
+									inputProps={{ maxLength: 2000 }}
 									multiline
 									minRows={1}
 									maxRows={4}
@@ -1269,7 +1268,7 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	renderAccount = (cell, row, props) => {
-		const { purchaseCategory } = this.state;
+		const { purchaseCategory, purchaseCategoryOptions } = this.state;
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1299,15 +1298,7 @@ class DetailSupplierInvoice extends React.Component {
 							);
 						}}
 						isDisabled={row.transactionCategoryId === 150}
-						value={
-							purchaseCategory.length > 0 && row.transactionCategoryLabel
-								? purchaseCategory
-									.find((item) => item.label === row.transactionCategoryLabel)
-									.options.find(
-										(item) => item.value === +row.transactionCategoryId,
-									)
-								: row.transactionCategoryId
-						}
+						value={purchaseCategoryOptions ? purchaseCategoryOptions.find((obj) => obj.value === row.transactionCategoryId) : ''}
 						placeholder={strings.Select + strings.Account}
 						className={`${props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1720,10 +1711,6 @@ class DetailSupplierInvoice extends React.Component {
 		});
 	};
 
-	openSupplierModal = (e) => {
-		e.preventDefault();
-		this.setState({ openSupplierModal: true });
-	};
 	closeProductModal = (res) => {
 		this.setState({ openProductModal: false });
 	};
@@ -1886,14 +1873,6 @@ class DetailSupplierInvoice extends React.Component {
 		}
 		this.formRef.current.setFieldValue('contactId', option.value, true);
 	};
-
-	closeSupplierModal = (res) => {
-		if (res) {
-			this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
-		}
-		this.setState({ openSupplierModal: false });
-	};
-
 	handleFileChange = (e, props) => {
 		e.preventDefault();
 		let reader = new FileReader();
@@ -1987,7 +1966,7 @@ class DetailSupplierInvoice extends React.Component {
 										<Row>
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
-												<i className="fas fa-file-invoice" />
+													<i className="fas fa-file-invoice" />
 													<span className="ml-2"> {strings.UpdateInvoice}</span>
 												</div>
 											</Col>
@@ -2799,7 +2778,7 @@ class DetailSupplierInvoice extends React.Component {
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
 																					//width="12%"
-																					width={ "250px" }
+																					width={"250px"}
 																					dataField="vat"
 																					dataFormat={(cell, rows) =>
 																						this.renderVat(cell, rows, props)
@@ -3176,17 +3155,7 @@ class DetailSupplierInvoice extends React.Component {
 							</Col>
 						</Row>
 					</div>
-					<SupplierModal
-						openSupplierModal={this.state.openSupplierModal}
-						closeSupplierModal={(e) => {
-							this.closeSupplierModal(e);
-						}}
-						getCurrentUser={(e) => this.getCurrentUser(e)}
-						createSupplier={this.props.supplierInvoiceActions.createSupplier}
-						currency_list={this.props.currency_list}
-						country_list={this.props.country_list}
-						getStateList={this.props.supplierInvoiceActions.getStateList}
-					/>
+
 					<ProductModal
 						openProductModal={this.state.openProductModal}
 						closeProductModal={(e) => {

@@ -12,6 +12,7 @@ import * as ActionMessagesList from './action_messages';
 import * as InputValidation from './input_validation';
 import * as DropdownLists from './dropdown_lists';
 import * as Lists from './lists';
+import * as renderList from './render_lists';
 
 export {
   api,
@@ -28,4 +29,5 @@ export {
   InputValidation,
   DropdownLists,
   Lists,
+  renderList,
 };

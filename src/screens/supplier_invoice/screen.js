@@ -1058,6 +1058,8 @@ class SupplierInvoice extends React.Component {
 															placeholderText={strings.InvoiceDueDate}
 															showMonthDropdown
 															showYearDropdown
+															minDate={this.state.filterData.invoiceDate}
+															maxDate={null}
 															autoComplete="off"
 															dropdownMode="select"
 															dateFormat="dd-MM-yyyy"

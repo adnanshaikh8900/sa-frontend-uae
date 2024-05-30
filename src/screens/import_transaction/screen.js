@@ -254,7 +254,7 @@ class ImportTransaction extends React.Component {
 		let temp = {};
 		for (let val in initValue) {
 			if (initValue.hasOwnProperty(val)) {
-				if (val === 'name' && !initValue['name']) {
+				if (val === 'name' && !initValue['name'] && !this.state.selectedConfiguration) {
 					temp['name'] = '*Template name is required or Select existing template';
 				}
 				if (val === 'dateFormatId' && !initValue['dateFormatId']) {
@@ -833,6 +833,7 @@ class ImportTransaction extends React.Component {
 			this.props.commonActions.tostifyAlert('error', 'please select maping column')
 		}
 
+		this.validateForm();
 		//this.Import()
 		// this.props.importTransactionActions
 		// 	.parseCsvFile(postData)

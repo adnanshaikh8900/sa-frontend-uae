@@ -23,7 +23,7 @@ import * as CustomerInvoiceCreateActions from './actions';
 import * as CustomerInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { CustomerModal, ProductModal } from '../../sections';
+import { CustomerModal, ProductModal } from 'screens/customer_invoice/sections';
 import { MultiSupplierProductModal } from '../../sections';
 import { LeavePage, Loader } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -48,7 +48,8 @@ const mapStateToProps = (state) => {
 		country_list: state.customer_invoice.country_list,
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
+		companyDetails: state.common.company_details,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -119,7 +120,7 @@ class CreateCustomerInvoice extends React.Component {
 				receiptAttachmentDescription: '',
 				receiptNumber: '',
 				contact_po_number: '',
-				currency: '',
+				currencyCode: '',
 				invoiceDueDate: '',
 				invoiceDate: new Date(),
 				contactId: '',
@@ -625,7 +626,7 @@ class CreateCustomerInvoice extends React.Component {
 								);
 								this.formRef.current.setFieldValue('contactId', res.data.customerId, true);
 								this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
-								this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.customerId), true);
+								this.formRef.current.setFieldValue('currencyCode', this.getCurrency(res.data.customerId), true);
 								this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.customerId), true);
 								this.formRef.current.setFieldValue('receiptNumber', res.data.quotationNumber, true);
 								this.setExchange(this.getCurrency(res.data.customerId));
@@ -810,7 +811,7 @@ class CreateCustomerInvoice extends React.Component {
 								});
 								this.formRef.current.setFieldValue('contactId', res.data.contactId, true);
 								this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
-								this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.contactId), true);
+								this.formRef.current.setFieldValue('currencyCode', this.getCurrency(res.data.contactId), true);
 								this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.contactId), true);
 								this.formRef.current.setFieldValue('term', term, true);
 								this.formRef.current.setFieldValue('exchangeRate', res.data.exchangeRate, true);
@@ -857,7 +858,6 @@ class CreateCustomerInvoice extends React.Component {
 				}
 			})
 			.catch((err) => {
-
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
@@ -895,23 +895,6 @@ class CreateCustomerInvoice extends React.Component {
 		this.props.customerInvoiceActions.getExciseList();
 		this.props.commonActions.getProductList();
 		this.props.productActions.getProductCategoryList();
-		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
-			this.setState({
-				initValue: {
-					...this.state.initValue,
-					...{
-						currency: response.data
-							? parseInt(response.data[0].currencyCode)
-							: '',
-					},
-				},
-			});
-			// this.formRef.current.setFieldValue(
-			// 	'currency',
-			// 	response.data[0].currencyCode,
-			// 	true,
-			// );
-		});
 		this.props.customerInvoiceActions.getInvoicePrefix().then((response) => {
 			this.setState({
 				prefixData: response.data
@@ -921,6 +904,20 @@ class CreateCustomerInvoice extends React.Component {
 		this.getCompanyCurrency();
 		this.salesCategory();
 		this.purchaseCategory();
+		const { companyDetails } = this.props;
+		if (companyDetails) {
+			const { currencyCode, isRegisteredVat } = companyDetails;
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currencyCode: currencyCode,
+					},
+				},
+				isRegisteredVat: isRegisteredVat,
+			});
+			this.formRef.current.setFieldValue('currencyCode', currencyCode);
+		}
 	};
 
 	getCompanyCurrency = (basecurrency) => {
@@ -1583,8 +1580,6 @@ class CreateCustomerInvoice extends React.Component {
 										this.setState({
 											inventoryList: response.data
 										});
-										// if(response.data.length !== 0 && response.data.length !== 1){
-										// this.openMultiSupplierProductModal(response);}
 									});
 									if (this.checkedRow())
 										this.addRow();
@@ -1921,7 +1916,7 @@ class CreateCustomerInvoice extends React.Component {
 			receiptAttachmentDescription,
 			receiptNumber,
 			contact_po_number,
-			currency,
+			currencyCode,
 			exchangeRate,
 			invoiceDueDate,
 			invoiceDate,
@@ -1983,7 +1978,7 @@ class CreateCustomerInvoice extends React.Component {
 		if (placeOfSupplyId) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);
 		}
-		if (currency !== null && currency) {
+		if (currencyCode !== null && currencyCode) {
 			formData.append('currencyCode', this.state.customer_currency);
 		}
 		if (project !== null && project.value) {
@@ -2047,7 +2042,7 @@ class CreateCustomerInvoice extends React.Component {
 								placeOfSupplyId: '',
 								customer_currency: null,
 								customer_currency_des: '',
-								currency: '',
+								currencyCode: '',
 								initValue: {
 									...this.state.initValue,
 									...{
@@ -2069,7 +2064,7 @@ class CreateCustomerInvoice extends React.Component {
 							);
 							this.formRef.current.setFieldValue('contactId', '', true);
 							this.formRef.current.setFieldValue('placeOfSupplyId', '', true);
-							this.formRef.current.setFieldValue('currency', null, true);
+							this.formRef.current.setFieldValue('currencyCode', null, true);
 							this.formRef.current.setFieldValue('taxTreatmentid', '', true);
 							this.formRef.current.setFieldValue('term', '', true);
 						},
@@ -2121,20 +2116,6 @@ class CreateCustomerInvoice extends React.Component {
 		}
 
 	}
-	// getCurrentUser = (data) => {
-	// 	let option;
-	// 	console.log('data', data)
-	// 	if (data.label || data.value) {
-	// 		option = data;
-	// 	} else {
-	// 		option = {
-	// 			label: `${data.fullName}`,
-	// 			value: data.id,
-	// 		};
-	// 	}
-	// 	this.formRef.current.setFieldValue('contactId', option, true);
-	// };
-
 	getCurrentUser = (data) => {
 
 		let option;
@@ -2162,7 +2143,7 @@ class CreateCustomerInvoice extends React.Component {
 			contactId: option.value
 		})
 		if (result[0] && result[0].currencyCode)
-			this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
+			this.formRef.current.setFieldValue('currencyCode', result[0].currencyCode, true);
 
 		this.formRef.current.setFieldValue('taxTreatmentid', data.taxTreatmentId, true);
 
@@ -2365,7 +2346,7 @@ class CreateCustomerInvoice extends React.Component {
 			let obj = { label: item.label.contactName, value: item.value }
 			tmpCustomer_list.push(obj)
 		})
-		
+
 		return (
 			loading == true ? <Loader loadingMsg={loadingMsg} /> :
 				<div>
@@ -2470,7 +2451,7 @@ class CreateCustomerInvoice extends React.Component {
 																),
 																// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 																term: Yup.string().required(strings.TermIsRequired),
-																currency: Yup.string().required(
+																currencyCode: Yup.string().required(
 																	strings.CurrencyIsRequired
 																),
 																invoiceDate: Yup.string().required(
@@ -2661,7 +2642,7 @@ class CreateCustomerInvoice extends React.Component {
 
 																					onChange={(option) => {
 																						if (option && option.value) {
-																							this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																							this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
 																							this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																							this.setExchange(this.getCurrency(option.value));
 																							props.handleChange('contactId')(option);
@@ -3003,7 +2984,7 @@ class CreateCustomerInvoice extends React.Component {
 																		</Col>
 																		<Col lg={3}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="currency">
+																				<Label htmlFor="currencyCode">
 																					<span className="text-danger">* </span>
 																					{strings.Currency}
 																				</Label>
@@ -3020,8 +3001,8 @@ class CreateCustomerInvoice extends React.Component {
 																							)
 																							: []
 																					}
-																					id="currency"
-																					name="currency"
+																					id="currencyCode"
+																					name="currencyCode"
 																					value={
 																						(this.state.customer_currency != null ?
 																							currency_convert_list &&
@@ -3041,23 +3022,23 @@ class CreateCustomerInvoice extends React.Component {
 
 																					}
 																					className={
-																						props.errors.currency &&
-																							props.touched.currency
+																						props.errors.currencyCode &&
+																							props.touched.currencyCode
 																							? 'is-invalid'
 																							: ''
 																					}
 																					onChange={(option) => {
-																						props.handleChange('currency')(option);
+																						props.handleChange('currencyCode')(option);
 																						this.setExchange(option.value);
 																						this.setCurrency(option.value)
 																						this.setState({ customer_currency: option.value })
 																					}}
 
 																				/>
-																				{props.errors.currency &&
-																					props.touched.currency && (
+																				{props.errors.currencyCode &&
+																					props.touched.currencyCode && (
 																						<div className="invalid-feedback">
-																							{props.errors.currency}
+																							{props.errors.currencyCode}
 																						</div>
 																					)}
 																			</FormGroup>
@@ -3832,10 +3813,7 @@ class CreateCustomerInvoice extends React.Component {
 								this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 								this.getCurrentUser(e);
 							}}
-						// createCustomer={this.props.customerInvoiceActions.createCustomer}
-						// currency_list={this.props.currency_convert_list}
-						// currency={this.state.currency}
-						// country_list={this.props.country_list}
+							contactType={{ label: "Customer", value: 2 }}
 						/>
 						<ProductModal
 							openProductModal={this.state.openProductModal}

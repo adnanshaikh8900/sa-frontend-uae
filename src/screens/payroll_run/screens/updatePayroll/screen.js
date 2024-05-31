@@ -110,7 +110,8 @@ class UpdatePayroll extends React.Component {
 			disableLeavePage: false,
 			payrollApproverRequired: false,
 			isPayrollSubjectNameExist: false,
-			payrollSubjectRequired:false,
+			//payrollSubjectRequired:false,
+			subjectRequired:false,
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -1017,9 +1018,12 @@ class UpdatePayroll extends React.Component {
 																	if (this.state.payrollApproverRequired && !this.state.payrollApprover) {
 																		errors.payrollApprover = 'Payroll Approver is required';
 																	}
-																	if (this.state.payrollSubjectRequired && !values.payrollSubject) {
-																		errors.payrollSubject = "Payroll subject is required";
+																	if (this.state.subjectRequired && !this.state.payrollSubject) {
+																		errors.payrollSubject = 'Payroll subject is required';
 																	}
+																	// if (this.state.payrollSubjectRequired && !values.payrollSubject) {
+																	// 	errors.payrollSubject = "Payroll subject is required";
+																	// }
 																	if (!values.payrollDate) {
 																		errors.payrollDate = 'Payroll date is required';
 																	}
@@ -1339,7 +1343,7 @@ class UpdatePayroll extends React.Component {
 																							className="btn-square pull-right"
 																							// onClick={}
 																							onClick={() => {
-																								this.setState({ payrollApproverRequired: true,payrollSubjectRequired:true  }, () => {
+																								this.setState({ payrollApproverRequired: true,subjectRequired:true  }, () => {
 																									// if (this.state.submitButton)
 																									// 	toast.error(`Please select approver for payroll submission!`)
 																									// else
@@ -1367,7 +1371,7 @@ class UpdatePayroll extends React.Component {
 																						<Button type="button" color="primary" className="btn-square pull-right "
 
 																							onClick={() => {
-																								this.setState({ payrollApproverRequired: false,payrollSubjectRequired:true  }, () => {
+																								this.setState({ payrollApproverRequired: false,subjectRequired:true }, () => {
 																									if (this.state.selectedRows && this.state.selectedRows.length != 0) {
 																										this.setState({ apiSelector: "createPayroll" })
 																										props.handleSubmit()

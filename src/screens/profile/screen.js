@@ -592,7 +592,7 @@ class Profile extends React.Component {
 											.then((res) => {
 												if (res.status === 200) {
 													console.log(res,"getCreditNoteList");
-													if(res.data && res.data.length !== 0){
+													if(res.data && res.data.count !== 0){
 														console.log("getCreditNoteList EXITS");
 														this.setState({enableVatRegistrationDate:false});
 														return ;
@@ -2586,6 +2586,7 @@ class Profile extends React.Component {
 																							id="inline-radio1"
 																							name="SMTP-auth"
 																							checked={props.values.isRegisteredVat}
+																							disabled={this.state.initCompanyData.isRegisteredVat}
 																							onChange={(value) => {
 																								console.log(value,value.target.value,"Value")
 																								if(value != null){
@@ -2598,6 +2599,7 @@ class Profile extends React.Component {
 																									);
 																								}
 																							}}
+																							style={{ display: 'inline-block' }}
 																						/>
 																						<label htmlFor="inline-radio1">
 																						{strings.CompanyVatRegistered}
@@ -2616,7 +2618,7 @@ class Profile extends React.Component {
 																								<span className="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
 																						</Label>
 																							<Input
-																								// disabled={!this.state.enableVatRegistrationDate}
+																								disabled={this.state.initCompanyData.isRegisteredVat && !this.state.enableVatRegistrationDate}
 																								type="text"
 																								id="vatRegistrationNumber"
 																								minLength="15"
@@ -2666,7 +2668,7 @@ class Profile extends React.Component {
 																								<span className="tooltiptext">Please note that you cannot update <br></br> this detail once you have created a document.</span></div>
 																							</Label>
 																							<DatePicker
-																								// disabled={!this.state.enableVatRegistrationDate}
+																								disabled={this.state.initCompanyData.isRegisteredVat && !this.state.enableVatRegistrationDate}
 																								autoComplete='off'
 																								id="vatRegistrationDate"
 																								name="vatRegistrationDate"

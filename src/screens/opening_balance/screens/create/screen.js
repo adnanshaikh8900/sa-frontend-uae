@@ -112,6 +112,24 @@ class CreateOpeningBalance extends React.Component {
 	}
 	initializeData = () => {
 		this.props.openingBalanceActions.getTransactionCategoryList();
+		this.props.commonActions.getCompanyDetails().then((res) => {
+			if (res.status === 200) {
+			  const isRegisteredVat = res.data.isRegisteredVat;
+	  
+			  this.props.history.replace({
+				pathname: this.props.location.pathname,
+				state: {
+				  ...this.props.location.state,
+				  isRegisteredVat: isRegisteredVat,
+				},
+			  });
+	  
+			  this.setState({
+				companyDetails: res.data,
+				isRegisteredVat: isRegisteredVat,
+			  });
+			}
+		  });
 	}
 
 	// Create  Currency conversion
@@ -256,10 +274,19 @@ class CreateOpeningBalance extends React.Component {
 																				? selectOptionsFactory.renderOptions(
 																								'transactionCategoryName',
 																								'transactionCategoryId',
-																								transaction_category_list,
-																									'Transaction Category',
-																											  )
-																									: []
+																								transaction_category_list.filter(category =>
+																									this.state.isRegisteredVat ||
+																									![
+																										'VAT Penalty',
+																										'Output VAT Adjustment',
+																										'Input VAT Adjustment',
+																										'VAT Payable',
+																										
+																									].includes(category.transactionCategoryName.trim()) // Trim whitespace
+																								),
+																								'Transaction Category'
+																							)
+																						  : []
 																						}
 																		value={props.values.transactionCategoryId}
 																		className={

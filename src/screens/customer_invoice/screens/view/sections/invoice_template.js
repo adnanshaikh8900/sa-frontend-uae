@@ -688,6 +688,7 @@ class InvoiceTemplate extends Component {
 								className="textarea viewFootNote"
 								maxLength="250"
 								style={{width: "1100px"}}
+								multiline
 								// rows="5"
 								value={invoiceData.footNote}
 							/>

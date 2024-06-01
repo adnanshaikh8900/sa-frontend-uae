@@ -783,7 +783,7 @@ class Profile extends React.Component {
 		formData.append('companyCountryCode', isSame ? companyAddress.companyCountryCode : '',);
 		// formData.append("isSame", isSame);
 
-		if (this.state.companyLogoFile.length > 0) {
+		if (this.state.companyLogo.length > 0) {
 			formData.append('companyLogo', this.state.companyLogoFile[0]);
 		}
 		{this.setState({ loading:true, loadingMsg:"Updating Company"})} 

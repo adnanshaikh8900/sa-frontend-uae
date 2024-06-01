@@ -5,6 +5,7 @@ import { QUOTATION } from 'constants/types';
 import { EXPENSE } from 'constants/types';
 import { PURCHASE_ORDER } from 'constants/types';
 import { REQUEST_FOR_QUOTATION } from 'constants/types';
+import { COMMON} from 'constants/types';
 
 
 import {
@@ -394,4 +395,50 @@ export const getRFQList = () => {
 			});
 	};
 };
+export const getCustomerList = (nameCode) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/contact/getContactList`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: COMMON.CUSTOMER_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+					return res;
+				}
 
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getProductList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `rest/product/getList`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: COMMON.PRODUCT_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

@@ -619,6 +619,37 @@ class Profile extends React.Component {
 																				this.setState({enableVatRegistrationDate:false});
 																				return ;
 																			}
+																			else {
+																				this.props.profileActions
+																				.getCustomerList()
+																				.then((res) =>{
+																					if(res.status === 200){
+																						console.log(res,"getContactlist");
+																						if(res.data && res.data.data && res.data.data.length !== 0){
+																							console.log("getContactList EXISTS");
+																							this.setState({enableVatRegistrationDate:false});
+																							return ;
+																						} else {
+																							this.props.profileActions
+																							.getProductList()
+																							.then((res) =>{
+																								if(res.status === 200){
+																									console.log(res,"getProductlist");
+																									if(res.data && res.data.data && res.data.data.length !== 0){
+																										console.log("getProductList EXISTS");
+																										this.setState({enableVatRegistrationDate:false});
+																										return ;
+																									}
+																								}
+																							}).catch((err) => {
+																								console.log(err,"GetProductList Error");
+																							});
+																						}
+																					}
+																				}).catch((err) => {
+																					console.log(err,"GetContactList Error");
+																				});
+																			}
 																		}
 																	})
 																	.catch((err) => {
@@ -2586,7 +2617,7 @@ class Profile extends React.Component {
 																							id="inline-radio1"
 																							name="SMTP-auth"
 																							checked={props.values.isRegisteredVat}
-																							disabled={this.state.initCompanyData.isRegisteredVat}
+																							disabled={this.state.initCompanyData.isRegisteredVat && !this.state.enableVatRegistrationDate}
 																							onChange={(value) => {
 																								console.log(value,value.target.value,"Value")
 																								if(value != null){

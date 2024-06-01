@@ -70,6 +70,7 @@ class FilterComponent2 extends Component {
 													showMonthDropdown
 													showYearDropdown
 													autoComplete="off"
+													maxDate={props.values.endDate ? moment(props.values.endDate).toDate() : null}
 													//maxDate={new Date()}
 													value={moment(props.values.startDate).format(
 														'DD-MM-YYYY',
@@ -87,9 +88,8 @@ class FilterComponent2 extends Component {
 													// }}
 
 													onChange={(value) => {
-														props.handleChange('startDate')(value);
-													}}
-												/>
+                                                        props.setFieldValue('startDate', moment(value).format('YYYY-MM-DD hh:mm'));
+                                                    }}/>
 											</FormGroup>
 										</Col>
 										<Col lg={4}>
@@ -100,6 +100,7 @@ class FilterComponent2 extends Component {
 													name="endDate"
 													className={`form-control`}
 													autoComplete="off"
+													minDate={props.values.startDate ? moment(props.values.startDate).toDate() : null}
 													//maxDate={new Date()}
 													placeholderText="From"
 													showMonthDropdown
@@ -120,9 +121,9 @@ class FilterComponent2 extends Component {
 													// 	}
 													// }}
 													onChange={(value) => {
-														props.handleChange('endDate')(value);
-													}}
-												/>
+                                                        props.setFieldValue('endDate', moment(value).format('YYYY-MM-DD hh:mm'));
+                                                    }}
+													/>
 											</FormGroup>
 										</Col>
 									</Row>

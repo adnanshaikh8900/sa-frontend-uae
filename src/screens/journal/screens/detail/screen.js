@@ -75,12 +75,7 @@ class DetailJournal extends React.Component {
 			disableLeavePage:false,
 			companyName: '',		  
 		};
-		this.props.commonActions.getCompanyDetails().then((res) => {
-			if (res.status === 200) {
-			this.setState({ companyName: res.data.companyName });
-			}
-			  
-		})
+		
 
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
@@ -100,6 +95,12 @@ class DetailJournal extends React.Component {
 					if (res.status === 200) {
 						this.props.journalActions.getCurrencyList();
 						this.props.journalActions.getTransactionCategoryList();
+						this.props.commonActions.getCompanyDetails().then((res) => {
+							if (res.status === 200) {
+							this.setState({ companyName: res.data.companyName });
+							}
+							  
+						})
 						this.props.journalActions.getContactList();
 						this.setState(
 							{

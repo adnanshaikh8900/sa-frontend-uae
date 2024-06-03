@@ -1720,6 +1720,7 @@ class CreateDebitNote extends React.Component {
 																	}
 																	{isRegisteredVat &&
 																		<TableHeaderColumn
+																		    width={ "250px" }
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
 																				this.renderVat(cell, rows, props)

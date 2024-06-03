@@ -32,6 +32,7 @@ import 'react-phone-input-2/lib/style.css'
 
 const mapStateToProps = (state) => {
 	const currencyList = state.common.currency_convert_list;
+	console.log(state.common.currency_convert_list, "currencyList")
 	return {
 		country_list: state.contact.country_list,
 		currency_list_dropdown: DropdownLists.getCurrencyDropdown(currencyList),
@@ -125,7 +126,6 @@ class CreateContact extends React.Component {
 	initializeData = () => {
 		this.props.contactActions.getContactTypeList();
 		this.props.contactActions.getCountryList();
-
 		const { companyDetails } = this.props;
 		if (companyDetails) {
 			const { currencyCode, isRegisteredVat } = companyDetails;
@@ -211,7 +211,7 @@ class CreateContact extends React.Component {
 						resetForm(this.state.initValue);
 						this.setState({ createMore: false, disableLeavePage: false });
 					} else {
-						if (this.props.isParentComponentPresent && this.props.isParentComponentPresent == true) {
+						if (this.props.isParentComponentPresent && this.props.isParentComponentPresent === true) {
 							this.props.getCurrentContactData(res.data);
 							this.props.closeModal(true);
 						}
@@ -360,6 +360,9 @@ class CreateContact extends React.Component {
 																	if (values.vatRegistrationNumber.length != 15) {
 																		errors.vatRegistrationNumber = "Please enter 15 digit Tax registration number"
 																	}
+																}
+																if (this.state.trnExist == true) {
+																	errors.vatRegistrationNumber = 'Tax registration number already exists';
 																}
 																if (this.state.emailExist == true) {
 																	errors.email = 'Email already exists';
@@ -930,7 +933,7 @@ class CreateContact extends React.Component {
 																							props.handleChange('taxTreatmentId')(false,);
 																							this.setState({ disableCountry: false })
 																						}
-																						props.handleChange('vatRegistrationNumber')(false,);
+																						props.handleChange('vatRegistrationNumber');
 
 																					}}
 																					className={
@@ -961,7 +964,7 @@ class CreateContact extends React.Component {
 																						id="vatRegistrationNumber"
 																						name="vatRegistrationNumber"
 																						autoComplete="Off"
-																						placeholder={strings.Enter + strings.TaxRegistrationNumber}
+																						
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
@@ -970,9 +973,10 @@ class CreateContact extends React.Component {
 																								props.handleChange(
 																									'vatRegistrationNumber',
 																								)(option);
-																								//this.validationCheck(option.target.value)
+																								this.validationCheck(option.target.value)
 																							}
 																						}}
+																						placeholder={strings.Enter + strings.TaxRegistrationNumber}
 																						value={props.values.vatRegistrationNumber}
 																						className={
 																							props.errors.vatRegistrationNumber &&

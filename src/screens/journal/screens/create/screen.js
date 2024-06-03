@@ -154,6 +154,24 @@ class CreateJournal extends React.Component {
 			);
 		});
 		this.props.journalActions.getTransactionCategoryList();
+		this.props.commonActions.getCompanyDetails().then((res) => {
+            if (res.status === 200) {
+              const isRegisteredVat = res.data.isRegisteredVat;
+     
+              this.props.history.replace({
+                pathname: this.props.location.pathname,
+                state: {
+                  ...this.props.location.state,
+                  isRegisteredVat: isRegisteredVat,
+                },
+              });
+     
+              this.setState({
+                companyDetails: res.data,
+                isRegisteredVat: isRegisteredVat,
+              });
+            }
+        });
 	};
 
 	// getjournalReferenceNo = () => {
@@ -233,13 +251,40 @@ class CreateJournal extends React.Component {
 		let transactionCategoryList =
 			transaction_category_list && transaction_category_list.length
 				? [
-						{
-							transactionCategoryId: '',
-							transactionCategoryName: 'Select Account',
-						},
-						...transaction_category_list,
-				  ]
+               		{
+						label: 'Select Account',
+						options: [
+							{
+								transactionCategoryId: '',
+								transactionCategoryName: 'Select Account',
+							},
+						]
+					},
+					...transaction_category_list
+					]
 				: transaction_category_list;
+
+		if (!this.state.isRegisteredVat) {
+			const vatCategories = [
+				'VAT Penalty',
+				'Output VAT Adjustment',
+				'Input VAT Adjustment',
+				'VAT Payable',
+				'Input VAT',
+				'GCC VAT Payable',
+				'Output VAT'
+			];
+
+			transactionCategoryList = transactionCategoryList.map(group => {
+				return {
+					...group,
+					options: group.options.filter(
+						option => !vatCategories.includes(option.label)
+					)
+				};
+			});
+    	}
+
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -299,7 +344,7 @@ class CreateJournal extends React.Component {
 						styles={{
 							menu: (provided) => ({ ...provided, zIndex: 9999 }),
 						}}
-						options={transactionCategoryList ? transactionCategoryList : []}
+						options={transactionCategoryList || []}
 						id="transactionCategoryId"
 						onChange={(e) => {
 							this.selectItem(e.value,row,'transactionCategoryId',form,field);
@@ -1089,10 +1134,12 @@ class CreateJournal extends React.Component {
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
+																		width={ "400px" }
 																		dataField="transactionCategoryId"
 																		dataFormat={(cell, rows) =>
 																			this.renderAccount(cell, rows, props)
 																		}
+
 																	>
 																		{strings.ACCOUNT} 
 																	</TableHeaderColumn>

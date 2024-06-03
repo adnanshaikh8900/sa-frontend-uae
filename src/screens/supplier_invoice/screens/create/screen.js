@@ -26,7 +26,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 import { TextField } from '@material-ui/core';
-import { SupplierModal } from '../../sections';
+import { CustomerModal } from 'screens/customer_invoice/sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -39,6 +39,7 @@ import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
 
 const mapStateToProps = (state) => {
+	const currencyList = state.common.currency_convert_list;
 	return {
 		contact_list: state.supplier_invoice.contact_list,
 		currency_list: state.supplier_invoice.currency_list,
@@ -50,7 +51,7 @@ const mapStateToProps = (state) => {
 		country_list: state.supplier_invoice.country_list,
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -83,7 +84,6 @@ const customStyles = {
 	}),
 };
 
-const invoiceimage = require('assets/images/invoice/invoice.png');
 
 let strings = new LocalizedStrings(data);
 class CreateSupplierInvoice extends React.Component {
@@ -933,23 +933,7 @@ class CreateSupplierInvoice extends React.Component {
 				this.setState({ vat_list: res.data })
 		});
 		this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
-		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
-			this.setState({
-				initValue: {
-					...this.state.initValue,
-					...{
-						currencyCode: response.data
-							? parseInt(response.data[0].currencyCode)
-							: '',
-					},
-				},
-			});
-			// this.formRef.current.setFieldValue(
-			// 	'currency',
-			// 	response.data[0].currencyCode,
-			// 	true,
-			// );
-		});
+		
 		this.props.supplierInvoiceActions.getInvoicePrefix().then((response) => {
 			this.setState({
 				prefixData: response.data
@@ -1695,7 +1679,7 @@ class CreateSupplierInvoice extends React.Component {
 							<div className='mt-1'>
 								<TextField
 									type="textarea"
-									inputProps={{ maxLength: 2000}}
+									inputProps={{ maxLength: 2000 }}
 									multiline
 									minRows={1}
 									maxRows={4}
@@ -1861,9 +1845,10 @@ class CreateSupplierInvoice extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-		if (result && result[0] && result[0].exchangeRate)
+		if (result && result[0] && result[0].exchangeRate) {
 			this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		this.exchangeRaterevalidate(result[0].exchangeRate)
+			this.exchangeRaterevalidate(result[0].exchangeRate)
+		}
 	};
 
 	setCurrency = (value) => {
@@ -2333,7 +2318,7 @@ class CreateSupplierInvoice extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, initValue, isRegisteredVat, param, loading, loadingMsg } = this.state;
+		const { data, initValue, isRegisteredVat, param, loading, loadingMsg, contactType } = this.state;
 
 		const {
 			product_list,
@@ -2360,7 +2345,7 @@ class CreateSupplierInvoice extends React.Component {
 										<Row>
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
-												<i className="fas fa-file-invoice" />
+													<i className="fas fa-file-invoice" />
 													<span className="ml-2">{strings.CreateInvoice}</span>
 												</div>
 											</Col>
@@ -3206,7 +3191,6 @@ class CreateSupplierInvoice extends React.Component {
 																			hover
 																			keyField="id"
 																			className="invoice-create-table"
-																			className="container-fluid"
 																		>
 																			<TableHeaderColumn
 																				width="3%"
@@ -3314,7 +3298,7 @@ class CreateSupplierInvoice extends React.Component {
 																			{isRegisteredVat &&
 																				<TableHeaderColumn
 																					//	width="10%"
-																					width={ "250px" }
+																					width={"250px"}
 																					dataField="vat"
 																					dataFormat={(cell, rows) =>
 																						this.renderVat(cell, rows, props)
@@ -3768,20 +3752,16 @@ class CreateSupplierInvoice extends React.Component {
 							</Col>
 						</Row>
 					</div>
-					<SupplierModal
-						openSupplierModal={this.state.openSupplierModal}
-						closeSupplierModal={(e) => {
+					<CustomerModal
+						openCustomerModal={this.state.openSupplierModal}
+						closeCustomerModal={(e) => {
 							this.closeSupplierModal(e);
 						}}
 						getCurrentUser={(e) => {
-							this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
+							this.props.customerInvoiceActions.getCustomerList(contactType);
 							this.getCurrentUser(e);
-						}
-						}
-						createSupplier={this.props.supplierInvoiceActions.createSupplier}
-						getStateList={this.props.supplierInvoiceActions.getStateList}
-						currency_list={this.props.currency_convert_list}
-						country_list={this.props.country_list}
+						}}
+						contactType={{ value: 1, label: "Supplier" }}
 					/>
 					<ProductModal
 						openProductModal={this.state.openProductModal}

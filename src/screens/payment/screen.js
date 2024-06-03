@@ -68,6 +68,7 @@ class Payment extends React.Component {
 			csvData: [],
 			view: false,
 			language: window['localStorage'].getItem('language'),
+			currentPage: 1,
 		};
 
 		this.options = {
@@ -98,9 +99,9 @@ class Payment extends React.Component {
 	};
 
 	initializeData = (search) => {
-		const { filterData } = this.state;
+		let { filterData, currentPage} = this.state;
 		const paginationData = {
-			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageNo: currentPage - 1,
 			pageSize: this.options.sizePerPage,
 		};
 		const sortingData = {
@@ -250,7 +251,9 @@ class Payment extends React.Component {
 		}
 	};
 	handleSearch = () => {
-		this.initializeData();
+		this.setState({ currentPage: 1 }, () => {
+   		this.initializeData();
+ 		});
 	};
 
 	onSizePerPageList = (sizePerPage) => {
@@ -300,6 +303,7 @@ class Payment extends React.Component {
 					paymentDate: '',
 					invoiceAmount: '',
 				},
+				currentPage: 1
 			},
 			() => {
 				this.initializeData();
@@ -485,7 +489,6 @@ class Payment extends React.Component {
 											<BootstrapTable
 												selectRow={this.selectRowProp}
 												search={false}
-												options={this.options}
 												data={
 													payment_list && payment_list.data
 														? payment_list.data
@@ -506,6 +509,15 @@ class Payment extends React.Component {
 													dataTotalSize: payment_list.count
 														? payment_list.count
 														: 0,
+												}}
+												options={{
+													...this.options,
+													page: this.state.currentPage,
+													onPageChange: (page) => {
+													this.setState({ currentPage: page }, () => {
+														this.initializeData();
+													});
+													},
 												}}
 												className="payment-table"
 												trClassName="cursor-pointer"

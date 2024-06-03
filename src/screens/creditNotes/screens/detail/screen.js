@@ -2183,7 +2183,7 @@ class DetailCreditNote extends React.Component {
 																						</TableHeaderColumn>
 																						: null
 																					}
-																					{props.values.lineItemsString.map(i => (i.exciseAmount != 0 ? (
+																					{initValue.total_excise != 0 ? (
 																						<TableHeaderColumn
 																							width="10%"
 																							dataField="exciseTaxId"
@@ -2203,7 +2203,7 @@ class DetailCreditNote extends React.Component {
 																								Excise dropdown will be enabled only for the excise products
 																							</UncontrolledTooltip>
 																						</TableHeaderColumn>
-																					) : null))
+																					) : null
 																					}
 																					<TableHeaderColumn
 																						width={ "250px" }

@@ -68,6 +68,7 @@ class Receipt extends React.Component {
 			csvData: [],
 			view: false,
 			language: window['localStorage'].getItem('language'),
+			currentPage: 1,
 		};
 
 		this.options = {
@@ -100,9 +101,9 @@ class Receipt extends React.Component {
 	};
 
 	initializeData = (search) => {
-		let { filterData } = this.state;
+		let { filterData, currentPage} = this.state;
 		const paginationData = {
-			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageNo: currentPage - 1,
 			pageSize: this.options.sizePerPage,
 		};
 		const sortingData = {
@@ -286,7 +287,9 @@ class Receipt extends React.Component {
 	};
 
 	handleSearch = () => {
-		this.initializeData();
+		this.setState({ currentPage: 1 }, () => {
+   		this.initializeData();
+ 		});
 	};
 
 	getCsvData = () => {
@@ -318,6 +321,7 @@ class Receipt extends React.Component {
 					receiptReferenceCode: '',
 					receiptDate: '',
 				},
+				currentPage: 1
 			},
 			() => {
 				this.initializeData();
@@ -524,7 +528,6 @@ class Receipt extends React.Component {
 											<BootstrapTable
 												selectRow={this.selectRowProp}
 												search={false}
-												options={this.options}
 												data={
 													receipt_list && receipt_list.data
 														? receipt_list.data
@@ -545,6 +548,15 @@ class Receipt extends React.Component {
 													dataTotalSize: receipt_list.count
 														? receipt_list.count
 														: 0,
+												}}
+												options={{
+													...this.options,
+													page: this.state.currentPage,
+													onPageChange: (page) => {
+													this.setState({ currentPage: page }, () => {
+														this.initializeData();
+													});
+													},
 												}}
 												className="receipt-table"
 												trClassName="cursor-pointer"

@@ -73,7 +73,14 @@ class DetailJournal extends React.Component {
 		    disabled1:false,
 			disabled2: false,
 			disableLeavePage:false,
+			companyName: '',		  
 		};
+		this.props.commonActions.getCompanyDetails().then((res) => {
+			if (res.status === 200) {
+			this.setState({ companyName: res.data.companyName });
+			}
+			  
+		})
 
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
@@ -223,9 +230,10 @@ class DetailJournal extends React.Component {
 			}
 			return obj;
 		});
-		
+			
 if(row && row.journalTransactionCategoryLabel==='Bank')
 {
+	
 	return (
 		<Field
 			name={`journalLineItems.${idx}.transactionCategoryId`}
@@ -253,9 +261,7 @@ if(row && row.journalTransactionCategoryLabel==='Bank')
 					<Input 
 					id="transactionCategoryId"
 					disabled={true} 
-					value={row.transactionCategoryName ?
-						row.transactionCategoryName 
-						:''}
+					value={row.transactionCategoryName + (this.state.companyName ? ' - ' + this.state.companyName : '') ? row.transactionCategoryName + (this.state.companyName ? ' - ' + this.state.companyName : '') :''}
 					placeholder={strings.Select+strings.Account}
 						>						
 					</Input>

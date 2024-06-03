@@ -109,6 +109,7 @@ class DetailCreditNote extends React.Component {
 			showInvoiceNumber: false,
 			disableLeavePage: false,
 			invoiceSelected: false,
+			isupdateCN: true,
 		};
 
 		// this.options = {
@@ -325,6 +326,8 @@ class DetailCreditNote extends React.Component {
 									}
 									this.setState(
 										{
+											creditnoteID: this.props.location?.state?.creditnoteID,
+											isupdateCN: false,
 											option: {
 												label: response.data.contactName === '' ? response.data.organisationName : response.data.contactName,
 												value: response.data.contactId,
@@ -970,31 +973,14 @@ class DetailCreditNote extends React.Component {
 								: ''
 								}`}
 						/>
-						<div className='mt-1'>
-							<TextField
-								disabled
-								type="textarea"
-								inputProps={{ maxLength: 2000 }}
-								multiline
-								minRows={1}
-								maxRows={4}
-								value={row['description'] !== '' ? row['description'] : ''}
-								onChange={(e) => {
-									this.selectItem(e.target.value, row, 'description', form, field);
-								}}
-								placeholder={strings.Description}
-								className={`textarea  ${props.errors.lineItemsString &&
-									props.errors.lineItemsString[parseInt(idx, 10)] &&
-									props.errors.lineItemsString[parseInt(idx, 10)].description &&
-									Object.keys(props.touched).length > 0 &&
-									props.touched.lineItemsString &&
-									props.touched.lineItemsString[parseInt(idx, 10)] &&
-									props.touched.lineItemsString[parseInt(idx, 10)].description
-									? 'is-invalid'
-									: ''
-									}`}
-							/>
-						</div>
+							{(this.state.creditnoteID && row['description'] || row['description'] )
+						?
+						 this.showDescription(row, form, field, props, idx)
+						:this.state.isupdateCN ?
+						this.showDescription(row, form, field, props, idx)
+								:null
+
+						}
 					</>
 				)}
 			/>
@@ -1421,6 +1407,31 @@ class DetailCreditNote extends React.Component {
 				</FormGroup>
 			</Col>)
 		)
+	}
+	showDescription(row, form, field, props, idx) {
+		return <div className='mt-1'>
+			<TextField
+				disabled
+				type="textarea"
+				inputProps={{ maxLength: 2000 }}
+				multiline
+				minRows={1}
+				maxRows={4}
+				value={row['description'] !== '' ? row['description'] : ''}
+				onChange={(e) => {
+					this.selectItem(e.target.value, row, 'description', form, field);
+				} }
+				placeholder={strings.Description}
+				className={`textarea ${props.errors.lineItemsString &&
+					props.errors.lineItemsString[parseInt(idx, 10)] &&
+					props.errors.lineItemsString[parseInt(idx, 10)].description &&
+					Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+					props.touched.lineItemsString[parseInt(idx, 10)] &&
+					props.touched.lineItemsString[parseInt(idx, 10)].description
+					? 'is-invalid'
+					: ''}`} />
+		</div>;
 	}
 	render() {
 		strings.setLanguage(this.state.language);

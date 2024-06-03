@@ -234,11 +234,11 @@ class HorizontalBalanceSheet extends React.Component {
 					<Card>
 						<div>
 						{!this.state.hideExportOptions &&
-								<Row style={{ marginTop: '10px' }}>
+								
 									<Col lg={12}>
 										<div
 											className="h4 mb-0 d-flex align-items-center pull-right"
-											style={{ justifyContent: 'space-between',marginRight: '10px' }}
+											style={{ justifyContent: 'space-between',marginRight: '10px', marginTop:'15px' }}
 										>
 											{/* <div>
 												<p
@@ -255,7 +255,7 @@ class HorizontalBalanceSheet extends React.Component {
 											</div> */}
 											<div className="d-flex">
 
-												<Dropdown isOpen={dropdownOpen} toggle={this.toggle} style={{marginTop:'10px'}}>
+												<Dropdown isOpen={dropdownOpen} toggle={this.toggle} style={{marginTop:'15px'}}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 
@@ -307,7 +307,7 @@ class HorizontalBalanceSheet extends React.Component {
 													className="mr-2 print-btn-cont"
 													onClick={() => window.print()}
 													style={{
-														cursor: 'pointer',
+														cursor: 'pointer', marginTop : '15px'
 													}}
 												>
 													<i className="fa fa-print"></i>
@@ -329,7 +329,7 @@ class HorizontalBalanceSheet extends React.Component {
 														this.props.history.push('/admin/report/reports-page');
 													}}
 													style={{
-														cursor: 'pointer',
+														cursor: 'pointer', marginTop: '15px'
 													}}
 												>
 													<span>X</span>
@@ -338,7 +338,7 @@ class HorizontalBalanceSheet extends React.Component {
 											</div>
 										</div>
 									</Col>
-								</Row>
+								
 							}
 							<CardHeader>
 							<FilterComponent3

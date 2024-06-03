@@ -1195,7 +1195,7 @@ class BalanceSheet extends React.Component {
 													<tr>
 													<td className='wid'
 														// rowSpan={7}
-														rowSpan={6
+														rowSpan={7
 															+ Object.keys(this.state.data['equities']).length
 															- (Object.keys(this.state.data['equities']).map((item) => (
 																this.state.data['equities'][`${item}`] === 0 )) ? 1 : 0)

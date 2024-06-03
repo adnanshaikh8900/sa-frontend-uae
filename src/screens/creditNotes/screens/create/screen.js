@@ -184,6 +184,7 @@ class CreateCreditNote extends React.Component {
 			disableLeavePage: false,
 			lockInvoiceDetail: false,
 			receiptDate: '',
+			isfreshCN:true,
 		};
 
 		this.formRef = React.createRef();
@@ -1043,31 +1044,14 @@ class CreateCreditNote extends React.Component {
 								}`}
 
 						/>
-						<div className='mt-1'>
-							<TextField
-								disabled
-								type="textarea"
-								inputProps={{ maxLength: 2000 }}
-								multiline
-								minRows={1}
-								maxRows={4}
-								value={row['description'] !== '' ? row['description'] : ''}
-								onChange={(e) => {
-									this.selectItem(e.target.value, row, 'description', form, field);
-								}}
-								placeholder={strings.Description}
-								className={`textarea ${props.errors.lineItemsString &&
-									props.errors.lineItemsString[parseInt(idx, 10)] &&
-									props.errors.lineItemsString[parseInt(idx, 10)].description &&
-									Object.keys(props.touched).length > 0 &&
-									props.touched.lineItemsString &&
-									props.touched.lineItemsString[parseInt(idx, 10)] &&
-									props.touched.lineItemsString[parseInt(idx, 10)].description
-									? 'is-invalid'
-									: ''
-									}`}
-							/>
-						</div>
+						{(this.state.invoiceId && row['description'] || row['description'] )
+						?
+						 this.showDescription(row, form, field, props, idx)
+						:this.state.isfreshCN ?
+						this.showDescription(row, form, field, props, idx)
+								:null
+
+						}
 
 					</>
 				)}
@@ -1435,6 +1419,8 @@ class CreateCreditNote extends React.Component {
 						}
 
 						this.setState({
+							invoiceID:this.props.location?.state?.invoiceID,
+							isfreshCN:false,
 							receiptDate: response.data.receiptDate,
 							taxType: response.data.taxType,
 							placeOfSupplyId: response.data.placeOfSupplyId,
@@ -1470,6 +1456,31 @@ class CreateCreditNote extends React.Component {
 					}
 				});
 		}
+	}
+	showDescription(row, form, field, props, idx) {
+		return <div className='mt-1'>
+			<TextField
+				disabled
+				type="textarea"
+				inputProps={{ maxLength: 2000 }}
+				multiline
+				minRows={1}
+				maxRows={4}
+				value={row['description'] !== '' ? row['description'] : ''}
+				onChange={(e) => {
+					this.selectItem(e.target.value, row, 'description', form, field);
+				} }
+				placeholder={strings.Description}
+				className={`textarea ${props.errors.lineItemsString &&
+					props.errors.lineItemsString[parseInt(idx, 10)] &&
+					props.errors.lineItemsString[parseInt(idx, 10)].description &&
+					Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+					props.touched.lineItemsString[parseInt(idx, 10)] &&
+					props.touched.lineItemsString[parseInt(idx, 10)].description
+					? 'is-invalid'
+					: ''}`} />
+		</div>;
 	}
 
 

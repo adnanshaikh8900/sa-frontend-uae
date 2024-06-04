@@ -127,7 +127,7 @@ class Profile extends React.Component {
 			},
 			// companyId: '',
 			//transaction_first_date:new Date(),
-			enableVatRegistrationDate:true,
+			isVatEditable: true,
 			imageState: true,
 			flag: true,
 			selectedStatus: false,
@@ -443,6 +443,7 @@ class Profile extends React.Component {
 									? res.data.vatRegistrationDate
 									: '',
 								},
+								isVatEditable: res.data.isVatEditable,
 								email: res.data.email
 										? res.data.email
 										: '',
@@ -523,8 +524,6 @@ class Profile extends React.Component {
 					loading: false,
 				});
 			});
-			//this.getTransactionList();
-			this.getDocumentList();
 	};
 	// getTransactionList = () => {
 	// 	this.props.profileActions
@@ -554,138 +553,6 @@ class Profile extends React.Component {
 	// 			console.log(err,"Transaction Error");
 	// 		});
 	// };
-	getDocumentList = () => {
-		this.props.profileActions
-		.getRFQList()
-		.then((res) => {
-			if (res.status === 200) {
-				console.log(res,"getRFQList");
-				if(res.data && res.data.data && res.data.data.length !== 0){
-					console.log("getRFQList EXITS");
-					this.setState({enableVatRegistrationDate:false});
-					return ;
-				}
-				else{
-					this.props.profileActions
-					.getInvoiceList()
-					.then((res) => {
-						if (res.status === 200) {
-							console.log(res,"Invoices");
-							if(res.data && res.data.data && res.data.data.length !== 0){
-								console.log("Invoices EXITS");
-								this.setState({enableVatRegistrationDate:false});
-								return ;
-							}
-							else{
-								this.props.profileActions
-								.getQuotationList()
-								.then((res) => {
-									if (res.status === 200) {
-										console.log(res,"getQuotationList");
-										if(res.data && res.data.data && res.data.data.length !== 0){
-											console.log("getQuotationList EXITS");
-											this.setState({enableVatRegistrationDate:false});
-											return ;
-										}else{
-											this.props.profileActions
-											.getCreditNoteList()
-											.then((res) => {
-												if (res.status === 200) {
-													console.log(res,"getCreditNoteList");
-													if(res.data && res.data.count !== 0){
-														console.log("getCreditNoteList EXITS");
-														this.setState({enableVatRegistrationDate:false});
-														return ;
-													}
-													else{
-														this.props.profileActions
-														.getpoList()
-														.then((res) => {
-															if (res.status === 200) {
-																console.log(res,"getpoList");
-																if(res.data && res.data.data && res.data.data.length !== 0){
-																	console.log("getpoList EXITS");
-																	this.setState({enableVatRegistrationDate:false});
-																	return ;
-																}
-																else{
-																	this.props.profileActions
-																	.getExpenseList()
-																	.then((res) => {
-																		if (res.status === 200) {
-																			console.log(res,"getExpenseList");
-																			if(res.data && res.data.data && res.data.data.length !== 0){
-																				console.log("getExpenseList EXITS");
-																				this.setState({enableVatRegistrationDate:false});
-																				return ;
-																			}
-																			else {
-																				this.props.profileActions
-																				.getCustomerList()
-																				.then((res) =>{
-																					if(res.status === 200){
-																						console.log(res,"getContactlist");
-																						if(res.data && res.data.data && res.data.data.length !== 0){
-																							console.log("getContactList EXISTS");
-																							this.setState({enableVatRegistrationDate:false});
-																							return ;
-																						} else {
-																							this.props.profileActions
-																							.getProductList()
-																							.then((res) =>{
-																								if(res.status === 200){
-																									console.log(res,"getProductlist");
-																									if(res.data && res.data.data && res.data.data.length !== 0){
-																										console.log("getProductList EXISTS");
-																										this.setState({enableVatRegistrationDate:false});
-																										return ;
-																									}
-																								}
-																							}).catch((err) => {
-																								console.log(err,"GetProductList Error");
-																							});
-																						}
-																					}
-																				}).catch((err) => {
-																					console.log(err,"GetContactList Error");
-																				});
-																			}
-																		}
-																	})
-																	.catch((err) => {
-																		console.log(err,"Get Expense List Error");
-																	});
-																}
-															}
-														})
-														.catch((err) => {
-															console.log(err,"Get Purchase Order List Error");
-														});
-													}
-												}
-											})
-											.catch((err) => {
-												console.log(err,"Get CreditNote List Error");
-											});
-										}
-									}
-								})
-								.catch((err) => {
-									console.log(err,"Get Quotation List Error");
-								});
-							}
-						}
-					})
-					.catch((err) => {
-						console.log(err,"Get Invoices List Error");
-					});
-				}
-			}
-		})
-		.catch((err) => {
-			console.log(err,"Get Request For Quotation List Error");
-		});
-	};
 	resetPassword = (email) => {
 
 			let data = {
@@ -882,7 +749,7 @@ class Profile extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue,loading, isSame, timezone ,companyTypeList ,isPasswordShown,checkmobileNumberParam,loadingMsg} = this.state;
+		const { initValue,loading, isSame, timezone ,companyTypeList ,isPasswordShown,checkmobileNumberParam,loadingMsg, isVatEditable} = this.state;
 		const {
 			currency_list,
 			country_list,
@@ -2617,7 +2484,7 @@ class Profile extends React.Component {
 																							id="inline-radio1"
 																							name="SMTP-auth"
 																							checked={props.values.isRegisteredVat}
-																							disabled={this.state.initCompanyData.isRegisteredVat && !this.state.enableVatRegistrationDate}
+																							disabled={this.state.initCompanyData.isRegisteredVat && !isVatEditable}
 																							onChange={(value) => {
 																								console.log(value,value.target.value,"Value")
 																								if(value != null){
@@ -2649,7 +2516,7 @@ class Profile extends React.Component {
 																								<span className="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
 																						</Label>
 																							<Input
-																								disabled={this.state.initCompanyData.isRegisteredVat && !this.state.enableVatRegistrationDate}
+																								disabled={this.state.initCompanyData.isRegisteredVat && !isVatEditable}
 																								type="text"
 																								id="vatRegistrationNumber"
 																								minLength="15"
@@ -2699,7 +2566,7 @@ class Profile extends React.Component {
 																								<span className="tooltiptext">Please note that you cannot update <br></br> this detail once you have created a document.</span></div>
 																							</Label>
 																							<DatePicker
-																								disabled={this.state.initCompanyData.isRegisteredVat && !this.state.enableVatRegistrationDate}
+																								disabled={this.state.initCompanyData.isRegisteredVat && !isVatEditable}
 																								autoComplete='off'
 																								id="vatRegistrationDate"
 																								name="vatRegistrationDate"

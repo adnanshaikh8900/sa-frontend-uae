@@ -241,6 +241,7 @@ class CreateBankTransaction extends React.Component {
   setCTValues = (value) => {
     const { corporateTaxList } = this.state
     const report = corporateTaxList ? corporateTaxList.find((obj, index) => index === value) : '';
+    this.formRef.current.setFieldValue("transactionAmount", report.balanceDue, true);
     this.formRef.current.setFieldValue("balanceDue", report.balanceDue, true);
     this.formRef.current.setFieldValue("totalAmount", report.taxAmount, true);
     this.formRef.current.setFieldValue("transactionDate", new Date(report.taxFiledOn), true);

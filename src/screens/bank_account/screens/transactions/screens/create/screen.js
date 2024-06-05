@@ -1384,6 +1384,16 @@ class CreateBankTransaction extends React.Component {
                             ) {
                               errors.transactionAmount = `Enter Amount`;
                             }
+                            values.invoiceIdList.map((i1) => {
+                              const transactionDate = moment(values.transactionDate);
+                              const invoiceDate = moment(i1.invoiceDate);
+
+                              console.log(transactionDate.format("MM/DD/YYYY") + '-' + invoiceDate.format("MM/DD/YYYY"));
+                              
+                              if (transactionDate.diff(invoiceDate) < 0) {
+                                  errors.transactionDate = 'Transaction date cannot be before Invoice date';
+                              }
+                            });
                           }
                           if (values.coaCategoryId?.label === "Corporate Tax Payment") {
                             if (!values.transactionAmount)

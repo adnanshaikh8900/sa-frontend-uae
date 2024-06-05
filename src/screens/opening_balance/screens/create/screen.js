@@ -281,8 +281,11 @@ class CreateOpeningBalance extends React.Component {
 																										'Output VAT Adjustment',
 																										'Input VAT Adjustment',
 																										'VAT Payable',
+																										'GCC VAT Payable',
+																										'Output VAT',
+																										'Input VAT'
 																										
-																									].includes(category.transactionCategoryName.trim()) // Trim whitespace
+																									].includes(category.transactionCategoryName.trim()) 
 																								),
 																								'Transaction Category'
 																							)

@@ -1550,7 +1550,7 @@ class ExplainTrasactionDetail extends React.Component {
               {loading ? (
                 <Loader />
               ) : (
-                <Card style={{height:"500px"}}>
+                <Card style={{height:"620px"}}>
                   <CardHeader>
                     <Row>
                       <Col lg={12}>

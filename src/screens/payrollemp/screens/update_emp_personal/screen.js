@@ -534,12 +534,17 @@ class UpdateEmployeePersonal extends React.Component {
                     formData1.append("employeeCode", employeeCode != null ? employeeCode : "");
                     formData1.append('dateOfJoining', dateOfJoining ? moment(dateOfJoining).format('DD-MM-YYYY') : '');
                     this.props.detailEmployeePersonalAction
-                    .updateEmployment(formData1)
+                    .updateEmployment(formData1).then(() => {
+                        this.props.history.push('/admin/master/employee/viewEmployee',
+                        { id: this.props.location.state.id })
+                        this.setState({ loading: false, });
+                    })
+                } else {
+                    // this.props.history.push('/admin/payroll/employee')
+                    this.props.history.push('/admin/master/employee/viewEmployee',
+                    { id: this.props.location.state.id })
+                    this.setState({ loading: false, });
                 }
-                // this.props.history.push('/admin/payroll/employee')
-                this.props.history.push('/admin/master/employee/viewEmployee',
-                { id: this.props.location.state.id })
-                this.setState({ loading: false, });
             }
         }).catch((err) => {
             this.props.commonActions.tostifyAlert(

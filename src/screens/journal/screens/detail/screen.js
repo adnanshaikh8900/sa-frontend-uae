@@ -30,6 +30,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { JOURNAL } from 'constants/types';
 
 const mapStateToProps = (state) => {
 	return {
@@ -242,8 +243,8 @@ if(row && row.journalTransactionCategoryLabel==='Bank')
 				<Input 
 				id="transactionCategoryId"
 				disabled={true} 
-				value={row.journalTransactionCategoryLabel ?
-					row.journalTransactionCategoryLabel 
+				value={row.journalTransactionCategoryLabel ? row.transactionCategoryName == JOURNAL.AMOUNT_IN_TRANSIT ?
+					row.journalTransactionCategoryLabel:  row.transactionCategoryName
 					:''}
 				placeholder={strings.Select+strings.Account}
 					>						

@@ -3029,9 +3029,11 @@ class ExplainTrasactionDetail extends React.Component {
                                           id="transactionCategoryId"
                                           name="transactionCategoryId"
                                           className={
-                                            !transactionCategoryValue.label
-                                              ? "is-invalid"
-                                              : ""
+                                            // !transactionCategoryValue.label
+                                            //   ? "is-invalid"
+                                            //   : ""
+
+                                              !transactionCategoryValue.value ? 'is-invalid' : ''|| !transactionCategoryValue.value === "Select Category" ? 'is-invalid' : ''
                                           }
                                         />
                                         {!transactionCategoryValue.label ? (

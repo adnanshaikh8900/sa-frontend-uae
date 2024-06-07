@@ -169,6 +169,12 @@ class ExciseTaxAuditReport extends React.Component {
       });
   };
 
+  sortColumn = (sortName, sortOrder) => {
+		this.options.sortName = sortName;
+		this.options.sortOrder = sortOrder;
+		this.getInitialData();
+	};
+
   export = (filename) => {
     this.props.ftaReport
       .downloadcsv(filename)
@@ -662,18 +668,18 @@ class ExciseTaxAuditReport extends React.Component {
                     tdStyle={{ whiteSpace: "normal" }}
                     width="23%"
                     isKey
-                    dataField="taxReturns"
+                    dataField="startDate"
                     dataSort
-                    dataFormat={this.renderStartDate}
+                    // dataFormat={this.renderStartDate}
                     className="table-header-bg"
                   >
                     Audit Start Date
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     width="23%"
-                    dataField="taxReturns"
+                    dataField="endDate"
                     dataSort
-                    dataFormat={this.renderEnd}
+                    // dataFormat={this.renderEnd}
                     className="table-header-bg"
                   >
                     Audit End Date

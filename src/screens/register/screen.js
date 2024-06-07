@@ -353,6 +353,9 @@ class Register extends React.Component {
 					userName: email,
 					password: password,
 				});
+				toast.success('Password created successfully', {
+					position: toast.POSITION.TOP_RIGHT,
+				});
 				// setTimeout(() => {
 				// 	this.props.history.push('/login');
 				// }, 3000);

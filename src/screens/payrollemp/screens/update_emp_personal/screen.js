@@ -211,10 +211,10 @@ class UpdateEmployeePersonal extends React.Component {
                             //     res.data.bloodGroup && res.data.bloodGroup !== null
                             //         ? res.data.bloodGroup
                             //         : '',
-                            employeeDesignationId:
-                                res.data.employeeDesignationId && res.data.employeeDesignationId !== null
+                            employeeDesignationId:{
+                              value : res.data.employeeDesignationId && res.data.employeeDesignationId !== null
                                     ? res.data.employeeDesignationId
-                                    : '',
+                                    : ''    },
                             parentId:
                                 res.data.parentId && res.data.parentId !== null
                                     ? res.data.parentId
@@ -380,7 +380,7 @@ class UpdateEmployeePersonal extends React.Component {
                     },
                     newDesig: true,
                 });
-                this.formRefPersonal.current.setFieldValue('employeeDesignationId', this.state.initValue.employeeDesignationId)
+                this.formRef.current.setFieldValue('employeeDesignationId', this.state.initValue.employeeDesignationId)
             }
         });
     };
@@ -1206,7 +1206,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                                 ).find(
                                                                                                                     (option) =>
                                                                                                                         option.value ===
-                                                                                                                        +props.values.employeeDesignationId,
+                                                                                                                        +props.values.employeeDesignationId.value,
                                                                                                                 )}
                                                                                                             // onChange={(value) => {
                                                                                                             //     props.handleChange('employeeDesignationId')(value);

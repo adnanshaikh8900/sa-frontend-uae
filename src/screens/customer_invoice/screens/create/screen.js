@@ -149,6 +149,7 @@ class CreateCustomerInvoice extends React.Component {
 				discountPercentage: '',
 				discountType: "FIXED",
 				total_excise: 0,
+				currencyName:'',
 			},
 			taxType: false,
 			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
@@ -477,8 +478,7 @@ class CreateCustomerInvoice extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
-		this.setState({ customer_currency_des: result[0].currencyName })
+		this.formRef.current.setFieldValue('currencyName', result[0].currencyName, true);
 		this.setState({ customer_currency_symbol: result[0].currencyIsoCode })
 	};
 
@@ -2041,7 +2041,6 @@ class CreateCustomerInvoice extends React.Component {
 								customer_taxTreatment_des: '',
 								placeOfSupplyId: '',
 								customer_currency: null,
-								customer_currency_des: '',
 								currencyCode: '',
 								initValue: {
 									...this.state.initValue,
@@ -2134,11 +2133,11 @@ class CreateCustomerInvoice extends React.Component {
 
 		this.setState({
 			customer_currency: data.currencyCode,
-			customer_currency_des: result[0] && result[0].currencyName ? result[0].currencyName : "AED",
 			customer_currency_symbol: data.currencyIso ? data.currencyIso : "AED",
 			customer_taxTreatment_des: data.taxTreatment ? data.taxTreatment : ""
 		});
 		this.formRef.current.setFieldValue('contactId', option, true);
+		this.formRef.current.setFieldValue('currencyName', result[0] && result[0].currencyName ? result[0].currencyName : "AED", true);
 		this.setState({
 			contactId: option.value
 		})
@@ -2293,10 +2292,9 @@ class CreateCustomerInvoice extends React.Component {
 			if (item.label.contactId == opt) {
 				this.setState({
 					customer_currency: item.label.currency.currencyCode,
-					customer_currency_des: item.label.currency.currencyName,
 					customer_currency_symbol: item.label.currency.currencyIsoCode,
 				});
-
+				this.formRef.current.setFieldValue('currencyName', item.label.currency.currencyName, true);
 				customer_currencyCode = item.label.currency.currencyCode;
 				customer_item_currency = item.label.currency
 			}
@@ -3099,103 +3097,9 @@ class CreateCustomerInvoice extends React.Component {
 																			props.handleChange('exchangeRate')(value,);
 																		}}
 																	/>
-																	<Row style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}>
-																		<Col>
-																			<Label >
-																				{strings.CurrencyExchangeRate}
-																			</Label>
-																		</Col>
-																	</Row>
-
-																	<Row style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}>
-																		<Col md={1}>
-																			<Input
-																				disabled
-																				id="1"
-																				name="1"
-																				value={
-																					1}
-
-																			/>
-																		</Col>
-																		<Col md={2}>
-																			<FormGroup className="mb-3">
-																				{/* <Label htmlFor="exchangeRate">
-																		Exchange rate
-																	</Label> */}
-																				<div>
-																					<Input
-																						disabled
-																						className="form-control"
-																						id="curreancyname"
-																						name="curreancyname"
-																						value={this.state.customer_currency_des}
-																						onChange={(value) => {
-																							props.handleChange('curreancyname')(
-																								value,
-																							);
-																						}}
-																					/>
-																				</div>
-																			</FormGroup>
-																		</Col>
-																		<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-																		<Col lg={2}>
-																			<FormGroup className="mb-3">
-																				{/* <Label htmlFor="exchangeRate">
-																		Exchange rate
-																	</Label> */}
-																				<div>
-																					<Input
-																						type="number"
-																						className="form-control"
-																						id="exchangeRate"
-
-																						name="exchangeRate"
-																						value={props.values.exchangeRate}
-																						onChange={(value) => {
-																							props.handleChange('exchangeRate')(
-																								value,
-																							);
-																							this.exchangeRaterevalidate(parseFloat(value.target.value))
-																						}}
-																					/>
-																				</div>
-																			</FormGroup>
-																		</Col>
-																		<Col lg={2}>
-																			<Input
-																				type="text"
-																				min="0"
-																				disabled
-																				id="currencyName"
-																				name="currencyName"
-																				value={
-																					this.state.basecurrency.currencyName}
-
-																			/>
-																		</Col>
-
-
-																	</Row>
-
-																	<hr style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }} />
 																	<Row className="mb-3">
 																		<Col lg={8} className="mb-3">
-																			{/* <Button
-																				color="primary"
-																				className={`btn-square mr-3 ${this.checkedRow() ? `disabled-cursor` : ``
-																					} `}
-																				onClick={this.addRow}
-																				title={
-																					this.checkedRow()
-																						? `Please add detail to add more`
-																						: ''
-																				}
-																				disabled={this.checkedRow() ? true : false}
-																			>
-																				<i className="fa fa-plus"></i> {strings.Addmore}
-																			</Button> */}
+																			
 																			{this.props.location.state && this.props.location.state.quotationId ? "" : <Button
 																				color="primary"
 																				className="btn-square mr-3"

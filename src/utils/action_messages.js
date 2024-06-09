@@ -12,6 +12,7 @@ export const QuotationMessagesList = [
     { action: 'Sent', list: ['QuotationSentSuccessfully', 'QuotationSentUnsuccessfully', 'QuotationSentSuccessfully'] },
     { action: 'Delete', list: ['QuotationDeletedSuccessfully', 'QuotationDeletedUnsuccessfully',] },
     { action: 'Status Change', list: ['StatusChangedSuccessfully', 'StatusChangedUnsuccessfully',] },
+    { action: 'Draft', list: ['QuotationMovedToDraftSuccessfully', 'QuotationMovedToDraftUnsuccessfully',] },
 ]
 export const ExpenseMessagesList = [
     { action: 'Sent', list: ['ExpensePostedSuccessfully', 'ExpensePostedUnsuccessfully', 'ExpensePostedSuccessfully'] },

@@ -189,6 +189,7 @@ const en = {
       POBoxNumber: "PO Box Number",
       BillingPOBoxNumber: "Billing PO Box Number",
       Billing: "Billing",
+      Closed:"Closed",
       ShippingPOBoxNumber: "Shipping PO Box Number",
       POBox: "P.O. Box",
       Telephone: "Telephone",

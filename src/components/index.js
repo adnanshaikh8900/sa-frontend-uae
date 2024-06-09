@@ -17,6 +17,7 @@ import LeavePage from './navigationPromtForLeavePage'
 import { CommonList } from './comman_list_data'
 import * as ProductTableCalculation from './product_table_calculatoin'
 import SentInvoice from './sent_document';
+import CurrencyExchangeRate from './currency_exchangeRate';
 import { ZipCodeInput } from './form_control';
 export {
 	Loading,
@@ -39,4 +40,5 @@ export {
 	ProductTableCalculation,
 	SentInvoice,
 	ZipCodeInput,
+	CurrencyExchangeRate,
 };

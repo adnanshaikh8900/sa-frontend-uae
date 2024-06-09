@@ -63,7 +63,7 @@ const mapStateToProps = (state) => {
 		pay_mode_list: state.expense.pay_mode_list,
 		user_list: state.expense.user_list,
 		profile: state.auth.profile,
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
 		pay_to_list: state.expense.pay_to_list,
 	};
 };
@@ -337,7 +337,7 @@ class CreateExpense extends React.Component {
 		this.props.expenseCreateActions.getPaytoList();
 		this.props.expenseActions.getVatList();
 		this.props.expenseActions.getExpenseCategoriesList();
-		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
+		this.props.commonActions.getCurrencyConversionList().then((response) => {
 			this.setState({
 				initValue: {
 					...this.state.initValue,

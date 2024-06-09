@@ -47,7 +47,7 @@ const mapStateToProps = (state) => {
 		excise_list: state.common.excise_list,
 		country_list: state.debit_notes.country_list,
 		universal_currency_list: state.common.universal_currency_list,
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
 		product_list: state.common.product_list,
 		company_details: state.common.company_details,
 	};
@@ -450,7 +450,6 @@ class CreateDebitNote extends React.Component {
 		this.props.commonActions.getVatList();
 		this.props.commonActions.getProductList();
 		this.props.commonActions.getExciseList();
-		this.props.currencyConvertActions.getCurrencyConversionList();
 		if (this.props.location?.state?.invoiceID) {
 			this.getInvoiceDetails(this.props.location?.state?.invoiceID)
 			this.formRef.current.setFieldValue('invoiceNumber', this.props.location?.state?.invoiceID, true);

@@ -48,7 +48,7 @@ const mapStateToProps = (state) => {
 		country_list: state.customer_invoice.country_list,
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -606,7 +606,7 @@ class CreateCreditNote extends React.Component {
 					err.data ? err.data.message : 'ERROR',
 				);
 			});
-		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
+		this.props.commonActions.getCurrencyConversionList().then((response) => {
 			this.setState({
 				initValue: {
 					...this.state.initValue,

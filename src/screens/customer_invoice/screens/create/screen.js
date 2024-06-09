@@ -25,7 +25,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { CustomerModal, ProductModal } from 'screens/customer_invoice/sections';
 import { MultiSupplierProductModal } from '../../sections';
-import { LeavePage, Loader } from 'components';
+import { LeavePage, Loader ,CurrencyExchangeRate} from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -3090,6 +3090,15 @@ class CreateCustomerInvoice extends React.Component {
 																		/>
 																	</Row>
 																	<hr />
+																	<CurrencyExchangeRate
+																		strings={strings}
+																		currencyName={props.values.currencyName}
+																		exchangeRate={props.values.exchangeRate}
+																		onChange={(value) => {
+																			this.resetProductTableValues(value, props.values.exchangeRate)
+																			props.handleChange('exchangeRate')(value,);
+																		}}
+																	/>
 																	<Row style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}>
 																		<Col>
 																			<Label >

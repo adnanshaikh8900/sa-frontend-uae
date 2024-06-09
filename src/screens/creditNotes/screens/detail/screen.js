@@ -48,7 +48,7 @@ const mapStateToProps = (state) => {
 		customer_list: state.customer_invoice.customer_list,
 		country_list: state.customer_invoice.country_list,
 		universal_currency_list: state.common.universal_currency_list,
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -214,7 +214,6 @@ class DetailCreditNote extends React.Component {
 								this.getCurrency(res.data.contactId)
 						});
 						this.props.creditNotesActions.getExciseList();
-						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.creditNotesActions.getCountryList();
 						this.props.creditNotesActions.getProductList();
 

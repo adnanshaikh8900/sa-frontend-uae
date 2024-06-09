@@ -28,7 +28,7 @@ import config from 'constants/config';
 const mapStateToProps = (state) => {
 	return {
 		
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
 		currency_converstion_list: state.currencyConvert.currency_converstion_list
 	};
 };

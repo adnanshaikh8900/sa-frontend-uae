@@ -41,7 +41,7 @@ const mapStateToProps = (state) => {
     currency_list: state.bank_account.currency_list,
     vendor_list: state.bank_account.vendor_list,
     vat_list: state.bank_account.vat_list,
-    currency_convert_list: state.currencyConvert.currency_convert_list,
+    currency_convert_list: state.common.currency_convert_list,
     UnPaidPayrolls_List: state.bank_account.UnPaidPayrolls_List,
   };
 };
@@ -134,7 +134,7 @@ class ExplainTrasactionDetail extends React.Component {
 
     this.setState({ loading: true, id: selectedData.id });
     this.getCompanyCurrency();
-    this.props.currencyConvertActions
+    this.props.commonActions
       .getCurrencyConversionList()
       .then((response) => {
         this.setState({

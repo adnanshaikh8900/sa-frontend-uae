@@ -30,6 +30,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { JOURNAL } from 'constants/types';
 
 const mapStateToProps = (state) => {
 	return {
@@ -73,7 +74,9 @@ class DetailJournal extends React.Component {
 		    disabled1:false,
 			disabled2: false,
 			disableLeavePage:false,
+			companyName: '',		  
 		};
+		
 
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
@@ -93,6 +96,12 @@ class DetailJournal extends React.Component {
 					if (res.status === 200) {
 						this.props.journalActions.getCurrencyList();
 						this.props.journalActions.getTransactionCategoryList();
+						this.props.commonActions.getCompanyDetails().then((res) => {
+							if (res.status === 200) {
+							this.setState({ companyName: res.data.companyName });
+							}
+							  
+						})
 						this.props.journalActions.getContactList();
 						this.setState(
 							{
@@ -223,9 +232,10 @@ class DetailJournal extends React.Component {
 			}
 			return obj;
 		});
-		
+			
 if(row && row.journalTransactionCategoryLabel==='Bank')
 {
+	
 	return (
 		<Field
 			name={`journalLineItems.${idx}.transactionCategoryId`}
@@ -233,8 +243,8 @@ if(row && row.journalTransactionCategoryLabel==='Bank')
 				<Input 
 				id="transactionCategoryId"
 				disabled={true} 
-				value={row.journalTransactionCategoryLabel ?
-					row.journalTransactionCategoryLabel 
+				value={row.journalTransactionCategoryLabel ? row.transactionCategoryName == JOURNAL.AMOUNT_IN_TRANSIT ?
+					row.journalTransactionCategoryLabel:  row.transactionCategoryName
 					:''}
 				placeholder={strings.Select+strings.Account}
 					>						
@@ -253,9 +263,7 @@ if(row && row.journalTransactionCategoryLabel==='Bank')
 					<Input 
 					id="transactionCategoryId"
 					disabled={true} 
-					value={row.transactionCategoryName ?
-						row.transactionCategoryName 
-						:''}
+					value={row.transactionCategoryName + (this.state.companyName ? ' - ' + this.state.companyName : '') ? row.transactionCategoryName + (this.state.companyName ? ' - ' + this.state.companyName : '') :''}
 					placeholder={strings.Select+strings.Account}
 						>						
 					</Input>

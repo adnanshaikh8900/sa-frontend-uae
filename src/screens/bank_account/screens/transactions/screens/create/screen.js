@@ -241,6 +241,7 @@ class CreateBankTransaction extends React.Component {
   setCTValues = (value) => {
     const { corporateTaxList } = this.state
     const report = corporateTaxList ? corporateTaxList.find((obj, index) => index === value) : '';
+    this.formRef.current.setFieldValue("transactionAmount", report.balanceDue, true);
     this.formRef.current.setFieldValue("balanceDue", report.balanceDue, true);
     this.formRef.current.setFieldValue("totalAmount", report.taxAmount, true);
     this.formRef.current.setFieldValue("transactionDate", new Date(report.taxFiledOn), true);
@@ -1384,6 +1385,16 @@ class CreateBankTransaction extends React.Component {
                             ) {
                               errors.transactionAmount = `Enter Amount`;
                             }
+                            values.invoiceIdList.map((i1) => {
+                              const transactionDate = moment(values.transactionDate);
+                              const invoiceDate = moment(i1.invoiceDate);
+
+                              console.log(transactionDate.format("MM/DD/YYYY") + '-' + invoiceDate.format("MM/DD/YYYY"));
+                              
+                              if (transactionDate.diff(invoiceDate) < 0) {
+                                  errors.transactionDate = 'Transaction date cannot be before Invoice date';
+                              }
+                            });
                           }
                           if (values.coaCategoryId?.label === "Corporate Tax Payment") {
                             if (!values.transactionAmount)

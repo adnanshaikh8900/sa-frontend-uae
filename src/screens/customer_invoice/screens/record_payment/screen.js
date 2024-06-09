@@ -624,9 +624,9 @@ class RecordCustomerPayment extends React.Component {
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
-																			minDate={props.values.receiptDate}
-																			maxDate={null}
-																			value={props.values.receiptDate}
+																			minDate={new Date(this.props.location.state.id.invoiceDate.substring(3,5)+" "+this.props.location.state.id.invoiceDate.substring(0,2)+" "+this.props.location.state.id.invoiceDate.substring(6))}
+																			//maxDate={null}
+																			//value={props.values.receiptDate}
 																			selected={props.values.receiptDate}
 																			onChange={(value) => {
 																				props.handleChange('receiptDate')(

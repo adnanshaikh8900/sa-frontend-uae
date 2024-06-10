@@ -13,6 +13,8 @@ import * as InputValidation from './input_validation';
 import * as DropdownLists from './dropdown_lists';
 import * as Lists from './lists';
 import * as renderList from './render_lists';
+import * as StatusActionList from './status_action_list';
+//import * as InvoiceList from './invoice_list';
 
 export {
   api,
@@ -30,4 +32,5 @@ export {
   DropdownLists,
   Lists,
   renderList,
+  StatusActionList,
 };

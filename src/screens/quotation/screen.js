@@ -18,14 +18,14 @@ import Select from 'react-select';
 // import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import EmailModal from '../customer_invoice/sections/email_template';
-import { Loader, ConfirmDeleteModal,SentInvoice } from 'components';
+import { Loader, ConfirmDeleteModal,SentInvoice,ActionDropdownButtons } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import * as QuotationAction from './actions';
 import * as CustomerInvoiceActions from './../customer_invoice/actions'
 import { CommonActions } from 'services/global';
-import { selectOptionsFactory } from 'utils';
+import { selectOptionsFactory ,StatusActionList,} from 'utils';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -301,148 +301,24 @@ class Quatation extends React.Component {
 			actionButtons: temp,
 		});
 	};
-
 	renderActions = (cell, row) => {
-		 
+		console.log(row);
+		const statuslist = StatusActionList.QuotationStatusActionList.find(obj => obj.status === row.status);
+		const actionList = statuslist ? statuslist.list : [];
 		return (
 			<div>
-				<ButtonDropdown
-					isOpen={this.state.actionButtons[row.id]}
-					toggle={() => this.toggleActionButton(row.id)}
-				>
-					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
-						{this.state.actionButtons[row.id] === true ? (
-							<i className="fas fa-chevron-up" />
-						) : (
-							<i className="fas fa-chevron-down" />
-						)}
-					</DropdownToggle>
-					<DropdownMenu right>
-					{row.status == "Draft" && (
-							<DropdownItem
-								onClick={() =>
-									this.props.history.push(
-										'/admin/income/quotation/detail',
-										{ id: row.id },
-									)
-								}
-							>
-								<i className="fas fa-edit" />  {strings.Edit} </DropdownItem>
-					)}
-							{row.status === 'Draft' && (
-							<DropdownItem
-								onClick={() => {
-									this.sendMail(row, false, false);
-								}}
-							>
-								<i className="fas fa-send" />  {strings.Send}
-							</DropdownItem>)}
-
-							{row.status === 'Approved' && (
-							<DropdownItem
-							onClick={() =>
-								this.props.history.push(
-									'/admin/income/customer-invoice/create',
-									{ quotationId: row.id },
-								)
-							}>
-								<i className="fas fa-plus" />{strings.CreateCustomerInvoice}
-							</DropdownItem>
-							)}
-							{row.status === 'Draft' && (
-                            <DropdownItem
-								onClick={() => {
-									this.sendMail(row, true, false);
-								}}
-							>
-							<i className="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
-							</DropdownItem>)}
-							{row.status === 'Sent' && (
-							<DropdownItem
-							onClick={() => {
-								this.sendMail(row, false, true);
-							}}
-							>
-								<i className="fas fa-send" />{strings.SendAgain}
-							</DropdownItem>
-							)}
-
-							{row.status != 'Draft' && row.status != 'Approved' && row.status != 'Closed' && row.status != "Invoiced" && (
-							<DropdownItem
-							onClick={() => {
-								this.changeStatus(row.id,"Approved");
-							}}
-							>
-								<i className="fa fa-check-circle-o" />{strings.MarkAsApproved}
-							</DropdownItem>
-							)}
-
-							{row.status != 'Draft' && row.status != 'Rejected' && row.status != 'Closed' && row.status != 'Invoiced' &&(
-							<DropdownItem
-							onClick={() => {
-								this.changeStatus(row.id,"Rejected");
-							}}
-							>
-								<i className="fa fa-ban" />{strings.MarkAsRejected}
-							</DropdownItem>
-							)}
-							{row.status != 'Draft' && row.status != 'Closed'&&(
-							<DropdownItem
-							onClick={() => {
-							this.changeStatus(row.id,"Closed");
-							}}
-							>
-								<i className="far fa-times-circle" />  {strings.Close}
-							</DropdownItem>
-							)}
-							<DropdownItem
-					
-							onClick={() =>
-								this.props.history.push('/admin/income/quotation/create', {parentId: row.id})
-							}
-						>
-							<i className="fas fa-copy" /> {strings.CreateADuplicate}
-						</DropdownItem>
-						<DropdownItem
-							onClick={() =>
-								this.props.history.push(
-									'/admin/income/quotation/view',
-									{ id: row.id },
-								)
-							}
-						>
-							<i className="fas fa-eye" />  {strings.View}
-						</DropdownItem>
-						{/* {row.status === 'Sent' && (
-							<DropdownItem
-							onClick={() => {
-								this.changeStatus(row.id);
-							}}
-							>
-								<i className="fas fa-send" /> Approve & Create GRN
-							</DropdownItem>
-							)} */}
-				
-						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
-							<DropdownItem
-								onClick={() => {
-									this.closeInvoice(row.id, row.status);
-								}}
-							>
-								<i className="fa fa-trash-o" /> Delete
-							</DropdownItem>
-						)} */}
-						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
-							<DropdownItem
-								onClick={() => {
-									this.sendCustomEmail(row.id);
-								}}
-							>
-								<i className="fa fa-send" /> Send Custom Email
-							</DropdownItem>
-						)} */}
-					</DropdownMenu>
-				</ButtonDropdown>
+				<ActionDropdownButtons
+					history={this.props.history}
+					URL={'/admin/income/quotation'}
+					invoiceData={row}
+					postingRefType={'QUOTATION'}
+					initializeData={() => {
+						this.initializeData();
+					}}
+					actionList={actionList}
+					invoiceStatus={row.status}
+					documentTitle={strings.Quotation}
+				/>
 			</div>
 		);
 	};

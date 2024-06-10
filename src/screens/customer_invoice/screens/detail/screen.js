@@ -48,7 +48,7 @@ const mapStateToProps = (state) => {
 		customer_list: state.customer_invoice.customer_list,
 		country_list: state.customer_invoice.country_list,
 		universal_currency_list: state.common.universal_currency_list,
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
 		product_category_list: state.product.product_category_list,
 	};
 };
@@ -238,7 +238,6 @@ class DetailCustomerInvoice extends React.Component {
 							this.state.contactType,
 						);
 						this.props.customerInvoiceActions.getExciseList();
-						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.customerInvoiceActions.getCountryList();
 						this.props.productActions.getProductCategoryList();
 						this.setState(

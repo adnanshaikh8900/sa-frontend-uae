@@ -17,7 +17,13 @@ import LeavePage from './navigationPromtForLeavePage'
 import { CommonList } from './comman_list_data'
 import * as ProductTableCalculation from './product_table_calculatoin'
 import SentInvoice from './sent_document';
+import CurrencyExchangeRate from './currency_exchangeRate';
 import { ZipCodeInput } from './form_control';
+import ActionDropdownButtons from './action_dropdown_button'
+import ChangeInvoiceStatus from './change_invoice_status';
+import DeleteDocument from './delete_record';
+
+
 export {
 	Loading,
 	Loader,
@@ -39,4 +45,8 @@ export {
 	ProductTableCalculation,
 	SentInvoice,
 	ZipCodeInput,
+	CurrencyExchangeRate,
+	ActionDropdownButtons,
+	ChangeInvoiceStatus,
+	DeleteDocument
 };

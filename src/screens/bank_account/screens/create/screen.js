@@ -32,7 +32,7 @@ const mapStateToProps = (state) => {
 		account_type_list: state.bank_account.account_type_list,
 		currency_list: state.bank_account.currency_list,
 		country_list: state.bank_account.country_list,
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
 	};
 };
 const customStyles = {
@@ -143,7 +143,7 @@ class CreateBankAccount extends React.Component {
 
 	initializeData = () => {
 		this.props.createBankAccountActions.getAccountTypeList();
-		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
+		this.props.commonActions.getCurrencyConversionList().then((response) => {
 			this.setState({
 				initValue: {
 					...this.state.initValue,

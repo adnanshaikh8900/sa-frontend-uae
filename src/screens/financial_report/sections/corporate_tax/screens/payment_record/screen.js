@@ -18,7 +18,7 @@ import DatePicker from 'react-datepicker';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import * as CTReportActions from '../../actions';
-import { Loader } from 'components';
+import { Loader, LeavePage } from 'components';
 import { CommonActions } from 'services/global';
 import moment from 'moment';
 import { data } from '../../../../../Language/index'
@@ -72,7 +72,8 @@ class CorporateTaxPaymentRecord extends React.Component {
 			fileName: '',
 			disabled: false,
 			reportfilledOn: this.props.location.state && this.props.location.state.taxFiledOn ? new Date(this.props.location.state.taxFiledOn) : '',
-			loadingMsg: "Loading..."
+			loadingMsg: "Loading...",
+			disableLeavePage: false,
 		};
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\b]+$/;
@@ -145,7 +146,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 		// 	formData.append('vatFiledNumber', reportId);
 		// }
 
-		this.setState({ loading: true, loadingMsg: "Tax Claim Recording..." });
+		this.setState({ loading: true, disableLeavePage: true, loadingMsg: "Tax Claim Recording..." });
 		this.props.ctReportActions.recordCTPayment(postData)
 			.then((res) => {
 				if (res.status === 200) {
@@ -668,6 +669,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 						</div>
 
 					</div>
+					{this.state.disableLeavePage ? "" : <LeavePage />}
 				</div>
 		);
 	}

@@ -2580,7 +2580,7 @@ class Profile extends React.Component {
 																								// value={props.values.vatRegistrationDate ?moment(
 																								// 	props.values.vatRegistrationDate,
 																								// ).format('DD-MM-YYYY'):""}
-																								selected={props.values.vatRegistrationDate ? new Date (moment(props.values.vatRegistrationDate).format('MM DD YYYY')) : new Date()}
+																								selected={props.values.vatRegistrationDate ? new Date (moment(props.values.vatRegistrationDate).format('MM DD YYYY')) : ""}
 																								onChange={(value) => {
 																									props.handleChange('vatRegistrationDate')(value);
 																								}}

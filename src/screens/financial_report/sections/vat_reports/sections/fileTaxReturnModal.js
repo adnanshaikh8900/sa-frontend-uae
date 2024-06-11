@@ -152,10 +152,13 @@ class FileTaxReturnModal extends React.Component {
 
 		if (taxReturns) {
 			var datearray = taxReturns.split("-")[0].split("/");
-
-			const value = new Date(parseInt(datearray[2]), parseInt(datearray[1]) - 1, parseInt(datearray[0]) + 1)
-
-			return value
+			const day = parseInt(datearray[0]);
+			const month = parseInt(datearray[1]) - 1;
+			const year = parseInt(datearray[2]);
+			const selectedDate = new Date(year, month, day);
+			const nextMonth = new Date(year, month + 1, 1);
+ 
+			return nextMonth;
 		}
 	}
 	render() {
@@ -245,7 +248,7 @@ class FileTaxReturnModal extends React.Component {
 														dateFormat="dd-MM-yyyy"
 														dropdownMode="select"
 														minDate={this.dateLimit()}
-														maxDate={new Date()}
+														//maxDate={new Date()}
 														value={props.values.taxFiledOn}
 														selected={props.values.taxFiledOn}
 														onChange={(value) => {

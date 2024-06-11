@@ -64,7 +64,7 @@ const mapStateToProps = (state) => {
 		bank_list: state.expense.bank_list,
 		pay_mode_list: state.expense.pay_mode_list,
 		user_list: state.expense.user_list,
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
 		pay_to_list: state.expense.pay_to_list,
 	};
 };
@@ -190,7 +190,6 @@ class DetailExpense extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
-						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.expenseActions.getExpenseCategoriesList();
 						this.props.expenseActions.getBankList();
 						this.props.expenseActions.getPaymentMode();

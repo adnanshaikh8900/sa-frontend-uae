@@ -44,7 +44,7 @@ const mapStateToProps = (state) => {
 		country_list: state.request_for_quotation.country_list,
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
 		rfqReceiveDate: state.rfqReceiveDate,
 		excise_list: state.customer_invoice.excise_list,
 	};

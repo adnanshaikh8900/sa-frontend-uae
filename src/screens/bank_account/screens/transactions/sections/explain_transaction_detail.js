@@ -188,7 +188,7 @@ class ExplainTrasactionDetail extends React.Component {
             contactName: res.data.contactName ? res.data.contactName : "",
             amount: res.data.amount ? res.data.amount : 0,
             dueAmount: res.data.dueAmount ? res.data.dueAmount : "",
-            date: res.data.date1 ? res.data.date1 : "",
+            transactionDate: res.data.date1 ? res.data.date1 : "",
             description: res.data.description ? res.data.description : "",
             transactionCategoryId: res.data.transactionCategoryId
               ? parseInt(res.data.transactionCategoryId)
@@ -334,7 +334,7 @@ class ExplainTrasactionDetail extends React.Component {
         res.data.dueAmount ? res.data.dueAmount : 0,
         true
       );
-      this.formRef.current.setFieldValue("date", res.data.date1, true);
+      this.formRef.current.setFieldValue("transactionDate", res.data.date1, true);
       this.formRef.current.setFieldValue(
         "coaCategoryId",
         res.data.coaCategoryId ? res.data.coaCategoryId : "",
@@ -765,7 +765,7 @@ class ExplainTrasactionDetail extends React.Component {
   handleSubmit = (data, resetForm) => {
     let {
       bankId,
-      date,
+      transactionDate,
       reference,
       description,
       amount,
@@ -825,7 +825,7 @@ class ExplainTrasactionDetail extends React.Component {
       this.state.explanationId ? this.state.explanationId : ""
     );
     formData.append("bankId ", this.props.bankId ? this.props.bankId : "");
-    formData.append("date", this.state.date ? moment(this.state.date) : date);
+    formData.append("date", moment(transactionDate));
     formData.append("exchangeRate", exchangeRate ? exchangeRate : 1);
 
     if (
@@ -1550,7 +1550,7 @@ class ExplainTrasactionDetail extends React.Component {
               {loading ? (
                 <Loader />
               ) : (
-                <Card>
+                <Card style={{height:"620px"}}>
                   <CardHeader>
                     <Row>
                       <Col lg={12}>
@@ -1734,7 +1734,7 @@ class ExplainTrasactionDetail extends React.Component {
                             return errors;
                           }}
                           validationSchema={Yup.object().shape({
-                            date: Yup.string().required(
+                            transactionDate: Yup.string().required(
                               "Transaction Date is Required"
                             ),
                             amount: Yup.string()
@@ -1921,13 +1921,13 @@ class ExplainTrasactionDetail extends React.Component {
                                 </Col>
                                 <Col lg={3}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="date">
+                                    <Label htmlFor="transactionDate">
                                       <span className="text-danger">* </span>
                                       {strings.TransactionDate}
                                     </Label>
                                     <DatePicker
-                                      id="date"
-                                      name="date"
+                                      id="transactionDate"
+                                      name="transactionDate"
                                       readOnly={
                                         this.state.creationMode === "MANUAL"
                                           ? false
@@ -1938,23 +1938,21 @@ class ExplainTrasactionDetail extends React.Component {
                                       showYearDropdown
                                       dateFormat="DD-MM-YYYY"
                                       dropdownMode="select"
-                                      value={moment(props.values.date).format(
-                                        "DD-MM-YYYY"
-                                      )}
-                                      onChange={(value) =>
-                                        props.handleChange("date")(value)
-                                      }
-                                      className={`form-control ${props.errors.date && props.touched.date
+                                      value={moment(props.values.transactionDate).format("DD-MM-YYYY")}
+                                        onChange={(value) =>
+                                          props.handleChange("transactionDate")(value)
+                                        }
+                                        className={`form-control ${props.errors.transactionDate && props.touched.transactionDate
                                           ? "is-invalid"
                                           : ""
-                                        }`}
-                                    />
-                                    {props.errors.date &&
-                                      props.touched.date && (
-                                        <div className="invalid-feedback">
-                                          {props.errors.date}
-                                        </div>
-                                      )}
+                                          }`}
+                                      />
+                                      {props.errors.transactionDate &&
+                                        props.touched.transactionDate && (
+                                          <div className="invalid-feedback">
+                                            {props.errors.transactionDate}
+                                          </div>
+                                        )}
                                   </FormGroup>
                                 </Col>
                                 <Col lg={3}>
@@ -3029,9 +3027,11 @@ class ExplainTrasactionDetail extends React.Component {
                                           id="transactionCategoryId"
                                           name="transactionCategoryId"
                                           className={
-                                            !transactionCategoryValue.label
-                                              ? "is-invalid"
-                                              : ""
+                                            // !transactionCategoryValue.label
+                                            //   ? "is-invalid"
+                                            //   : ""
+
+                                              !transactionCategoryValue.value ? 'is-invalid' : ''|| !transactionCategoryValue.value === "Select Category" ? 'is-invalid' : ''
                                           }
                                         />
                                         {!transactionCategoryValue.label ? (

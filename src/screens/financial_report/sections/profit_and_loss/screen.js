@@ -28,6 +28,7 @@ import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import FilterComponent3 from '../filterComponent3';
 
 const mapStateToProps = (state) => {
 	return {
@@ -60,7 +61,9 @@ class ProfitAndLossReport extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: true,
+			customPeriod: 'asOn',
 			dropdownOpen: false,
+			hideExportOptions: false,
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
@@ -195,24 +198,27 @@ class ProfitAndLossReport extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
+	hideExportOptionsFunctionality = (val) => {
+		this.setState({ hideExportOptions: val });
+	}
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
-		const { profile, universal_currency_list,company_profile } = this.props;
+		const { loading, initValue, dropdownOpen, csvData, view, customPeriod } = this.state;
+		const { profile, universal_currency_list, company_profile } = this.props;
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
 					<Card>
 						<div>
-							<CardHeader>
-								<Row>
-									<Col lg={12}>
-										<div
-											className="h4 mb-0 d-flex align-items-center"
-											style={{ justifyContent: 'space-between' }}
-										>
-											<div>
+							{!this.state.hideExportOptions &&
+
+								<Col lg={12}>
+									<div
+										className="h4 mb-0 d-flex align-items-center pull-right"
+										style={{ justifyContent: 'space-between', marginRight: '10px', marginTop: '15px' }}
+									>
+										{/* <div>
 												<p
 													className="mb-0"
 													style={{
@@ -224,41 +230,34 @@ class ProfitAndLossReport extends React.Component {
 												>
 													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
-											</div>
-											<div className="d-flex">
-												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
-													<DropdownToggle caret>Export As</DropdownToggle>
-													<DropdownMenu>
-													
-														<DropdownItem onClick={()=>{this.exportFile()}}>
-															{/* <CSVLink
-																data={this.exportFile()}
-																className="csv-btn"
-																filename={'Profit & Loss Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink> */}
-															<span
+											</div> */}
+										<div className="d-flex">
+											<Dropdown isOpen={dropdownOpen} toggle={this.toggle} style={{ marginTop: '15px' }}>
+												<DropdownToggle caret>Export As</DropdownToggle>
+												<DropdownMenu>
+
+													<DropdownItem onClick={() => { this.exportFile() }}>
+														<span
 															style={{
 																border: 0,
-    															padding: 0,
-																backgroundColor:"white !important"
+																padding: 0,
+																backgroundColor: "white !important"
 															}}
-														     	>CSV (Comma Separated Value)</span>
-														</DropdownItem>
-														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
-																<span
+														>CSV (Comma Separated Value)</span>
+													</DropdownItem>
+													<DropdownItem onClick={() => { this.exportExcelFile() }}>
+														<span
 															style={{
 																border: 0,
-    															padding: 0,
-																backgroundColor:"white !important"
+																padding: 0,
+																backgroundColor: "white !important"
 															}}
-														    >Excel</span>
-														</DropdownItem>
-															<DropdownItem onClick={this.exportPDFWithComponent}>
-															Pdf
-														</DropdownItem>
-														<DropdownItem
+														>Excel</span>
+													</DropdownItem>
+													<DropdownItem onClick={this.exportPDFWithComponent}>
+														Pdf
+													</DropdownItem>
+													{/* <DropdownItem
 															onClick={() => {
 																this.exportFile(csvData, 'profitloss', 'xls');
 															}}
@@ -271,20 +270,20 @@ class ProfitAndLossReport extends React.Component {
 															}}
 														>
 															XLSX (Microsoft Excel)
-														</DropdownItem>
-													</DropdownMenu>
-												</Dropdown>
-													&nbsp;&nbsp;
-												<div
-													className="mr-2 print-btn-cont"
-													onClick={() => window.print()}
-													style={{
-														cursor: 'pointer',
-														}}
-												>
-													<i className="fa fa-print"></i>
-												</div>
-												{/* <div
+														</DropdownItem> */}
+												</DropdownMenu>
+											</Dropdown>
+											&nbsp;&nbsp;
+											<div
+												className="mr-2 print-btn-cont"
+												onClick={() => window.print()}
+												style={{
+													cursor: 'pointer', marginTop: '15px'
+												}}
+											>
+												<i className="fa fa-print"></i>
+											</div>
+											{/* <div
 												className="mr-2 print-btn-cont"
 												onClick={() => {
 													this.exportPDFWithComponent();
@@ -295,42 +294,70 @@ class ProfitAndLossReport extends React.Component {
 												>
 												<i className="fa fa-file-pdf-o"></i>
 											</div> */}
-												<div
-													className="mr-2 print-btn-cont"
-                                                    onClick={() => {
-                                                        this.props.history.push('/admin/report/reports-page');
-                                                    }}
-													style={{
-														cursor: 'pointer',
-														}}
-												>
+											<div
+												className="mr-2 print-btn-cont"
+												onClick={() => {
+													this.props.history.push('/admin/report/reports-page');
+												}}
+												style={{
+													cursor: 'pointer', marginTop: '15px'
+												}}
+											>
 												<span>X</span>
 												</div>
 												
 											</div>
 										</div>
 									</Col>
-								</Row>
-							</CardHeader>
-							<div className={`panel ${view ? 'view-panel' : ''}`}>
+							}
+
+							{/* <div className={`panel ${view ? 'view-panel' : ''}`}>
 								<FilterComponent2
 									viewFilter={this.viewFilter}
 									generateReport={(value) => {
 										this.generateReport(value);
 									}}
 								/>{' '}
-							</div>
-									<CardBody id="section-to-print">
-									<PDFExport
+							</div> */}
+
+							<CardHeader>
+								<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+									viewFilter={this.viewFilter}
+									generateReport={(value) => {
+										this.generateReport(value);
+									}}
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+										if (customPeriod === 'asOn') {
+											const currentDate = moment();
+											this.setState(prevState => ({
+												initValue: {
+													...prevState.initValue,
+													endDate: currentDate,
+												}
+											}));
+											this.generateReport({ endDate: currentDate });
+										}
+										this.setState({ customPeriod: 'asOn' });
+									}}
+								/>
+							</CardHeader>
+
+							<CardBody id="section-to-print">
+								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
 									fileName="Profit & Loss.pdf"
 								>
-							<div style={{	
-									
-									display: 'flex',
-									justifyContent: 'space-between',
+									<div style={{
+
+										display: 'flex',
+										justifyContent: 'space-between',
 									marginBottom: '1rem'}}>
 									<div>
 									<img
@@ -357,8 +384,10 @@ class ProfitAndLossReport extends React.Component {
 											</h2>	
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.ProfitandLoss}</b>
-											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
+											<br style={{ marginBottom: '5px' }} />{customPeriod === 'asOn' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+												: `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
+
+											{/* {strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")}  */}
 											
 									</div>
 									<div>

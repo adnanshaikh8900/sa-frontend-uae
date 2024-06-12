@@ -106,6 +106,8 @@ class ExpenseByCategory extends React.Component {
 						expensesAmountWithoutTaxSum: res.data.totalAmountWithoutTax,
 						expensesAmountSum: res.data.totalAmount,
 						expensesVatAmountSum: res.data.totalVatAmount,
+						transactionCategoryName:strings.Total,
+						isTotalRow: true,
 					})
 					expenseByCategoryList = expenseByCategoryList.map((row, i) => {
 						row.id = i + 1;

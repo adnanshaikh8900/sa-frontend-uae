@@ -121,6 +121,8 @@ class DebitNoteDetailsReport extends React.Component {
 						creditNoteNumber: strings.Total,
 						creditNoteTotalAmount: creditNoteTotalAmount,
 						balance: totalBalance,
+						debitNoteNumber: strings.Total,
+						isTotalRow: true,
 						id: id + 2,
 					})
 					console.log(debitNoteSummaryModelList)

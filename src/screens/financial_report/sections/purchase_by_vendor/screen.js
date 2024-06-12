@@ -104,6 +104,7 @@ class PurchaseByVendor extends React.Component {
 						vendorName: strings.Total,
 						salesExcludingvat: res.data.totalExcludingVat,
 						getSalesWithvat: res.data.totalAmount,
+						isTotalRow: true,
 					})
 					purchaseByVendorList = purchaseByVendorList.map((row, i) => {
 						row.id = i + 1;

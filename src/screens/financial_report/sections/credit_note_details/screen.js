@@ -116,6 +116,7 @@ class CreditNoteDetailsReport extends React.Component {
 						creditNoteNumber: strings.Total,
 						creditNoteTotalAmount: creditNoteTotalAmount,
 						balance: totalBalance,
+						isTotalRow: true,
 						id: id + 2,
 					})
 					this.setState({

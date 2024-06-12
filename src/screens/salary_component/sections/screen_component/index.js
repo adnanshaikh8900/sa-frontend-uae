@@ -400,7 +400,7 @@ class SalaryComponentScreen extends React.Component {
                                       <FormGroup check inline>
                                         <div className="custom-radio custom-control">
                                           <input
-                                            disabled={ComponentType || !enableDelete}
+                                            disabled={!enableDelete}
                                             className="custom-control-input"
                                             type="radio"
                                             id="componentType-inline-radio2"

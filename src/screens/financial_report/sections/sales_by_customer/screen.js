@@ -103,6 +103,7 @@ class SalesByCustomer extends React.Component {
 						invoiceCount: null,
 						invoiceId: null,
 						salesExcludingvat: res.data.totalExcludingVat,
+						isTotalRow: true,
 					})
 					sbcustomerList = sbcustomerList.map((row, i) => {
 						row.id = i + 1;

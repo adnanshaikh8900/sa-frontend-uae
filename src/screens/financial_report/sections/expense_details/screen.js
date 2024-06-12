@@ -85,6 +85,8 @@ class ExpenseDetailsReport extends React.Component {
 						amountWithoutTax: res.data.totalAmountWithoutTax,
 						expenseAmount: res.data.totalAmount,
 						expenseVatAmount: res.data.totalVatAmount,
+						transactionCategoryName: strings.Total,
+						isTotalRow: true,
 					})
 					expenseSummaryModelModelList = expenseSummaryModelModelList.map((row, i) => {
 						row.id = i + 1;

@@ -412,8 +412,7 @@ class ViewFtaAuditReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : '' }
-																	className="table-header-bg"
+																	className={column.align ? 'text-right table-header-bg' : 'table-header-bg' }
 																>
 																	{column.label}
 																</th>
@@ -505,8 +504,7 @@ class ViewFtaAuditReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : '' }
-																	className="table-header-bg"
+																	className={column.align ? 'text-right table-header-bg' : 'table-header-bg' }
 																>
 																	{column.label}
 																</th>
@@ -584,8 +582,7 @@ class ViewFtaAuditReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : '' }
-																	className="table-header-bg"
+																	className={column.align ? 'text-right table-header-bg' : 'table-header-bg' }
 																>
 																	{column.label}
 																</th>
@@ -662,8 +659,7 @@ class ViewFtaAuditReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : '' }
-																	className="table-header-bg"
+																	className={column.align ? 'text-right table-header-bg' : 'table-header-bg' }
 																>
 																	{column.label}
 																</th>
@@ -763,8 +759,7 @@ class ViewFtaAuditReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : '' }
-																	className="table-header-bg"
+																	className={column.align ? 'text-right table-header-bg' : 'table-header-bg' }
 																>
 																	{column.label}
 																</th>
@@ -821,8 +816,7 @@ class ViewFtaAuditReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : '' }
-																	className="table-header-bg"
+																	className={column.align ? 'text-right table-header-bg' : 'table-header-bg' }
 																>
 																	{column.label}
 																</th>
@@ -923,8 +917,7 @@ class ViewFtaAuditReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : '' }
-																	className="table-header-bg"
+																	className={column.align ? 'text-right table-header-bg' : 'table-header-bg' }
 																>
 																	{column.label}
 																</th>
@@ -980,8 +973,7 @@ class ViewFtaAuditReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : '' }
-																	className="table-header-bg"
+																	className={column.align ? 'text-right table-header-bg' : 'table-header-bg' }
 																>
 																	{column.label}
 																</th>
@@ -1065,8 +1057,7 @@ class ViewFtaAuditReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : '' }
-																	className="table-header-bg"
+																	className={column.align ? 'text-right table-header-bg' : 'table-header-bg' }
 																>
 																	{column.label}
 																</th>

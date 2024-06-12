@@ -133,17 +133,21 @@ const ReceivableInvoiceSummary = [
         field: 'invoiceNumber', headerName: strings.InvoiceNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',
         renderCell: (params) => {
             return (
-                <Link
-                    to={{
-                        pathname: '/admin/income/customer-invoice/view',
-                        state: {
-                            id: params.row.invoiceId,
-                            gotoReports: '/admin/report/receivable-invoice-summary'
-                        }
-                    }}
+                params.row.invoiceNumber !== strings.Total ? (
+                    <Link
+                        to={{
+                            pathname: '/admin/income/customer-invoice/view',
+                            state: {
+                                id: params.row.invoiceId,
+                                gotoReports: '/admin/report/receivable-invoice-summary'
+                            }
+                        }}
                     style={{ textAlign: 'left', color: "#2046DB", cursor: 'pointer', }} >
-                    {params.row.invoiceNumber}
-                </Link>
+                        {params.row.invoiceNumber}
+                    </Link>
+                ) : (
+                    <span>{params.row.invoiceNumber}</span>
+                )
             );
         }
     },
@@ -294,17 +298,21 @@ const PayableInvoiceSummary = [
         field: 'invoiceNumber', headerName: strings.InvoiceNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',
         renderCell: (params) => {
             return (
-                <Link
-                    to={{
-                        pathname: '/admin/expense/supplier-invoice/view',
-                        state: {
-                            id: params.row.invoiceId,
-                            gotoReports: '/admin/report/payable-invoice-summary'
-                        }
-                    }}
-                    style={{ textAlign: 'left', color: "#2046DB", cursor: 'pointer', }} >
-                    {params.row.invoiceNumber}
-                </Link>
+                params.row.invoiceNumber !== strings.Total ? (
+                    <Link
+                        to={{
+                            pathname: '/admin/expense/supplier-invoice/view',
+                            state: {
+                                id: params.row.invoiceId,
+                                gotoReports: '/admin/report/payable-invoice-summary'
+                            }
+                        }}
+                        style={{ textAlign: 'left', color: "#2046DB", cursor: 'pointer', }} >
+                        {params.row.invoiceNumber}
+                    </Link>
+                ) : (
+                    <span>{params.row.invoiceNumber}</span>
+                )
             );
         }
     },

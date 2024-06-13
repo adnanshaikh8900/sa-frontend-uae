@@ -26,6 +26,8 @@ import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import FilterComponent3 from './sections/FilterComponent3';
+
 
 
 const mapStateToProps = (state) => {
@@ -61,7 +63,9 @@ class DetailedGeneralLedgerReport extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
+			customPeriod: 'currentMonth',
 			detailedGeneralLedgerList: [],
+			hideExportOptions: false,
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
@@ -205,6 +209,9 @@ class DetailedGeneralLedgerReport extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
+	hideExportOptionsFunctionality = (val) => {
+		this.setState({ hideExportOptions: val });
+	}
 
 	generateReport = (value) => {
 		this.setState(
@@ -212,8 +219,8 @@ class DetailedGeneralLedgerReport extends React.Component {
 				initValue: {
 					startDate: moment(value.startDate).format('DD/MM/YYYY'),
 					endDate: moment(value.endDate).format('DD/MM/YYYY'),
-					reportBasis: value.reportBasis.value,
-					chartOfAccountId: value.chartOfAccountId.value,
+					// reportBasis: value.reportBasis.value,
+					// chartOfAccountId: value.chartOfAccountId.value,
 				},
 				loading: true,
 				view: !this.state.view,
@@ -301,32 +308,53 @@ class DetailedGeneralLedgerReport extends React.Component {
 	};
 
 	getInvoice = (postingType, type, id,) => {
-		switch (postingType) {
-			case 'INVOICE':
-				if (type === 1) {
-					this.props.history.push('/admin/expense/supplier-invoice/view', {
-						id,
-						gotoDGLReport: true,
-					}
-					);
-					
-				} else {
-					this.props.history.push('/admin/income/customer-invoice/view', {
-						id,
-						gotoDGLReport: true,
-					});
-				}
-				break;
-			case 'EXPENSE':
-				this.props.history.push('/admin/expense/expense/view', {
-					expenseId: id,
+		if (postingType === "REVERSE_EXPENSE" || postingType === "EXPENSE") {
+			this.props.history.push('/admin/expense/expense/view', {
+				id: id,
+				gotoDGLReport: true,
+			});
+			return '';
+		} else if (postingType === "INVOICE") {
+			if (type === 1) {
+				this.props.history.push('/admin/expense/supplier-invoice/view', {
+					id,
 					gotoDGLReport: true,
 				});
-				break;
-			case 'MANUAL':
-				this.props.history.push('/admin/accountant/journal/detail', { id });
-				break;
-			default:
+
+			} else {
+				this.props.history.push('/admin/income/customer-invoice/view', {
+					id,
+					gotoDGLReport: true,
+				});
+			}
+			return '';
+		} else if (postingType === "DEBIT_NOTE") {
+			this.props.history.push('/admin/expense/debit-notes/view', {
+				id: id,
+				gotoReports: '/admin/report/detailed-general-ledger',
+			});
+			return '';
+		} else if (postingType === "CREDIT_NOTE") {
+			this.props.history.push('/admin/income/credit-notes/view', {
+				id: id,
+				gotoReports: '/admin/report/detailed-general-ledger',
+			});
+			return '';
+		} else if (postingType === "RECEIPT" || postingType === "BANK_RECEIPT") {
+			this.props.history.push('/admin/income/receipt/view', {
+				id: id,
+				gotoReports: '/admin/report/detailed-general-ledger',
+			});
+			return '';
+		} else if (postingType === "PAYMENT" || postingType === "BANK_PAYMENT") {
+			this.props.history.push('/admin/expense/purchase-receipt/view', {
+				id: id,
+				gotoReports: '/admin/report/detailed-general-ledger',
+			});
+			return '';
+		} else if (postingType === "MANUAL") {
+			this.props.history.push('/admin/accountant/journal/detail', { id });
+			return '';
 		}
 	};
 
@@ -336,6 +364,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 			loading,
 			initValue,
 			dropdownOpen,
+			customPeriod,
 			detailedGeneralLedgerReportList,
 			view,
 			chart_of_account_list,
@@ -346,14 +375,13 @@ class DetailedGeneralLedgerReport extends React.Component {
 				<div className="animated fadeIn">
 					<Card>
 						<div>
-							<CardHeader>
-								<Row>
+						{!this.state.hideExportOptions &&
 									<Col lg={12}>
 										<div
-											className="h4 mb-0 d-flex align-items-center"
-											style={{ justifyContent: 'space-between' }}
+											className="h4 mb-0 d-flex align-items-center pull-right"
+											style={{ justifyContent: 'space-between',marginRight:'10px', marginTop:'20px' }}
 										>
-											<div>
+											{/* <div>
 												<p
 													className="mb-0"
 													style={{
@@ -365,29 +393,29 @@ class DetailedGeneralLedgerReport extends React.Component {
 												>
 													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
-											</div>
+											</div> */}
 											<div className="d-flex">
-											<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+											<Dropdown isOpen={dropdownOpen} toggle={this.toggle} style={{marginTop:'0px'}}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														
-													<DropdownItem onClick={()=>{this.exportFile()}}>
+													<DropdownItem onClick={() => { this.exportFile() }}>
 															<span
-															style={{
-																border: 0,
-    															padding: 0,
-																backgroundColor:"white !important"
-															}}
-														    >CSV (Comma Separated Value)</span>
+																style={{
+																	border: 0,
+																	padding: 0,
+																	backgroundColor: "white !important"
+																}}
+															>CSV (Comma Separated Value)</span>
 														</DropdownItem>
-														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
+														<DropdownItem onClick={() => { this.exportExcelFile() }}>
 															<span
-															style={{
-																border: 0,
-    															padding: 0,
-																backgroundColor:"white !important"
-															}}
-														    >Excel</span>
+																style={{
+																	border: 0,
+																	padding: 0,
+																	backgroundColor: "white !important"
+																}}
+															>Excel</span>
 														</DropdownItem>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
@@ -419,9 +447,36 @@ class DetailedGeneralLedgerReport extends React.Component {
 												</div>
 										</div>
 									</Col>
-								</Row>
+						}
+								
+							
+							<CardHeader>
+								<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+									viewFilter={this.viewFilter}
+									chart_of_account_list={chart_of_account_list}
+									generateReport={(value) => {
+										this.generateReport(value);
+									}}
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+                                    if (customPeriod === 'asOn') {
+                                    const currentDate = moment();
+                                    this.setState(prevState => ({
+                                    initValue: {
+                                    ...prevState.initValue,
+                                    endDate: currentDate,            }
+                                     }));
+                                    this.generateReport({ endDate: currentDate });
+                                    }
+                                    this.setState({ customPeriod: 'asOn' });
+                                    }}
+								/>
 							</CardHeader>
-							<div className={`panel ${view ? 'view-panel' : ''}`}>
+							{/* <div className={`panel ${view ? 'view-panel' : ''}`}>
 								<FilterComponent
 									viewFilter={this.viewFilter}
 									chart_of_account_list={chart_of_account_list}
@@ -429,7 +484,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 										this.generateReport(value);
 									}}
 								/>
-							</div>
+							</div> */}
 							<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
@@ -467,8 +522,10 @@ class DetailedGeneralLedgerReport extends React.Component {
 											<div className="ml-4" >
 												<b style ={{ fontSize: '18px'}}>{strings.DetailedGeneralLedger}</b>
 												<br/>
+												{customPeriod === 'asOn' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
 												
-												{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
+												{/* {strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")}  */}
 											</div>	
 									</div>
 									<div className='mr-3'>

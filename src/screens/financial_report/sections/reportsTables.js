@@ -108,7 +108,7 @@ class ReportTables extends React.Component {
         strings.setLanguage(this.state.language);
         const { columnConfigs, sortedRows } = this.state;
         const { reportDataList, reportName, rowHeight } = this.props;
-
+        console.log(sortedRows, reportDataList)
         return (
             <div id="tbl_exporttable_to_xls" className="table-wrapper">
                 {reportDataList &&
@@ -119,7 +119,7 @@ class ReportTables extends React.Component {
                         getRowHeight={() => {
                             return rowHeight;
                         }}
-                        pageSize={5}
+                        pageSize={sortedRows.length && sortedRows.length > 0 ? sortedRows.length : reportDataList.length}
                         rowSelection={false}
                         hideFooterPagination={true}
                         columnVisibilityModel={columnConfigs}

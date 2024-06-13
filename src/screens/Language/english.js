@@ -1220,6 +1220,10 @@ const en = {
       ChartOfAccountCategory: "Chart Of Account Category",
       RemainingBalance: "Remaining Balance",
 
+      //Email 
+      InValidEmailAddress: "Invalid Email Address",
+      ValidEmailAddressIsRequired: "Email Address is required",
+
       //View
       InvoiceAmountIn: "Invoice Amount ",
       BalanceDue: "Balance Due",

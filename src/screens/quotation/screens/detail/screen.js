@@ -54,7 +54,7 @@ const mapStateToProps = (state) => {
     country_list: state.request_for_quotation.country_list,
     product_category_list: state.product.product_category_list,
     universal_currency_list: state.common.universal_currency_list,
-    currency_convert_list: state.currencyConvert.currency_convert_list,
+    currency_convert_list: state.common.currency_convert_list,
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -211,7 +211,6 @@ class DetailQuotation extends React.Component {
               this.state.contactType
             );
             this.props.requestForQuotationAction.getExciseList();
-            this.props.currencyConvertActions.getCurrencyConversionList();
             this.props.requestForQuotationAction.getCountryList();
             this.props.requestForQuotationAction.getProductList();
             this.purchaseCategory();

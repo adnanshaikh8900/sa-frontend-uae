@@ -52,7 +52,7 @@ const mapStateToProps = (state) => {
 		country_list: state.quotation.country_list,
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
-		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_convert_list: state.common.currency_convert_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -131,7 +131,7 @@ class CreateQuotation extends React.Component {
 				total_excise: 0,
 				contact_po_number: '',
 				receiptNumber: '',
-				currencyCode: '',
+				currencyCode: 150,
 				poApproveDate: new Date(),
 				//quotaionExpiration: new Date(new Date().setMonth(new Date().getMonth() + 1)),
 				quotaionExpiration: new Date(),
@@ -702,23 +702,6 @@ class CreateQuotation extends React.Component {
 				this.setState({ vat_list: res.data })
 		});
 		this.props.requestForQuotationAction.getSupplierList(this.state.contactType);
-		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
-			this.setState({
-				initValue: {
-					...this.state.initValue,
-					...{
-						currencyCode: response.data
-							? parseInt(response.data[0].currencyCode)
-							: '',
-					},
-				},
-			});
-			// this.formRef.current.setFieldValue(
-			// 	'currency',
-			// 	response.data[0].currencyCode,
-			// 	true,
-			// );
-		});
 		this.props.requestForQuotationAction.getPoPrefix().then((response) => {
 			this.setState({
 				prefixData: response.data

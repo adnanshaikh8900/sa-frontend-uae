@@ -538,8 +538,7 @@ class GenerateAuditFile extends React.Component {
 											color="primary"
 											type="submit"
 											className="btn-square"
-											disabled={this.state.disabled}
-											disabled={isSubmitting}
+											disabled={isSubmitting ||this.state.disabled}
 										>
 											<i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
 																			? 'Saving...'

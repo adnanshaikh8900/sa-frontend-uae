@@ -65,7 +65,7 @@ export default {
   ADD_CURRENCY: true,
 
   SETTING_THEME: false,
-  SETTING_IMPORT: false,
+  SETTING_IMPORT: true,
 
   REPORTS_HEAD_FI: true,
   REPORTS_PAL: true,

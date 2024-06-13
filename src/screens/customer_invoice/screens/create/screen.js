@@ -25,7 +25,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { CustomerModal, ProductModal } from 'screens/customer_invoice/sections';
 import { MultiSupplierProductModal } from '../../sections';
-import { LeavePage, Loader ,CurrencyExchangeRate} from 'components';
+import { LeavePage, Loader, CurrencyExchangeRate } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -149,7 +149,7 @@ class CreateCustomerInvoice extends React.Component {
 				discountPercentage: '',
 				discountType: "FIXED",
 				total_excise: 0,
-				currencyName:'',
+				currencyName: '',
 			},
 			taxType: false,
 			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
@@ -469,9 +469,10 @@ class CreateCustomerInvoice extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-		if (result && result[0] && result[0].exchangeRate)
+		if (result && result[0] && result[0].exchangeRate) {
 			this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		this.exchangeRaterevalidate(result[0].exchangeRate)
+			this.exchangeRaterevalidate(result[0].exchangeRate)
+		}
 	};
 
 	setCurrency = (value) => {
@@ -3099,7 +3100,7 @@ class CreateCustomerInvoice extends React.Component {
 																	/>
 																	<Row className="mb-3">
 																		<Col lg={8} className="mb-3">
-																			
+
 																			{this.props.location.state && this.props.location.state.quotationId ? "" : <Button
 																				color="primary"
 																				className="btn-square mr-3"

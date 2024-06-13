@@ -159,15 +159,26 @@ class EmailPopUpModal extends React.Component {
     };
     handleFileChange = (e, props) => {
         e.preventDefault();
+        const maxFileSizeBytes = 120 * 1024 * 1024; // Convert to bytes
+    
         let filecheck = e.target.files[0];
         let pdfFiles = this.state.pdfFiles;
         const alreadyExistingFiles = this.state.attachmentFile ?? [];
+        let totalSize = alreadyExistingFiles.reduce((acc, file) => acc + file.size, 0);
+    
         if (filecheck) {
             let files = e.target.files;
             let promises = [];
-
+    
             if (files && files.length > 0) {
                 for (let i = 0; i < files.length; i++) {
+                    totalSize += files[i].size;
+    
+                    if (totalSize > maxFileSizeBytes) {
+                        alert('The total file size exceeds the 120MB limit. Please select smaller files.');
+                        return;
+                    }
+    
                     let reader = new FileReader();
                     let promise = new Promise((resolve, reject) => {
                         reader.onload = (evt) => {
@@ -182,6 +193,7 @@ class EmailPopUpModal extends React.Component {
                     });
                     promises.push(promise);
                 }
+    
                 Promise.all(promises)
                     .then((results) => {
                         for (let i = 0; i < results.length; i++) {
@@ -201,6 +213,7 @@ class EmailPopUpModal extends React.Component {
             }
         }
     };
+    
 
 
     render() {
@@ -227,7 +240,7 @@ class EmailPopUpModal extends React.Component {
                                 errors.cc_emails = strings.InValidEmailAddress;
                             if (this.BCCEmailError > 0)
                                 errors.bcc_emails = strings.InValidEmailAddress;
-
+console.log(errors);
                             return errors
                         }}
                     >

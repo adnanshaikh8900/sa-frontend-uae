@@ -26,6 +26,7 @@ class ReportTables extends React.Component {
             language: window['localStorage'].getItem('language'),
             loading: true,
             columnConfigs: [],
+            sortedRows: [],
         };
 
     }
@@ -71,22 +72,54 @@ class ReportTables extends React.Component {
         });
     };
 
+    customSort = (rows, sortModel) => {
+        if (sortModel.length === 0) {
+            return rows;
+        }
+
+        const sortedRows = [...rows];
+        const { field, sort } = sortModel[0];
+
+        const totalRow = sortedRows.find(row => row.isTotalRow);
+        const otherRows = sortedRows.filter(row => !row.isTotalRow);
+
+        otherRows.sort((a, b) => {
+            if (a[field] < b[field]) {
+                return sort === 'asc' ? -1 : 1;
+            }
+            if (a[field] > b[field]) {
+                return sort === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+
+        if (totalRow) {
+            otherRows.push(totalRow);
+        }
+        return otherRows;
+    };
+
+    handleSortModelChange = (model) => {
+        const sortedRows = this.customSort(this.props.reportDataList, model);
+        this.setState({ sortedRows });
+    };
+
     render() {
         strings.setLanguage(this.state.language);
-        const { columnConfigs } = this.state;
-        const { reportDataList, reportName ,rowHeight} = this.props;
-
+        const { columnConfigs, sortedRows } = this.state;
+        const { reportDataList, reportName, rowHeight } = this.props;
+        console.log(sortedRows, reportDataList)
         return (
             <div id="tbl_exporttable_to_xls" className="table-wrapper">
                 {reportDataList &&
                     <DataGrid
-                        rows={reportDataList}
+                        rows={sortedRows.length ? sortedRows : reportDataList}
                         columns={ReportsColumnList.List[reportName]}
                         // autoHeight
                         getRowHeight={() => {
                             return rowHeight;
                         }}
-                        pageSize={5}
+                        pageSize={sortedRows.length && sortedRows.length > 0 ? sortedRows.length : reportDataList.length}
                         rowSelection={false}
                         hideFooterPagination={true}
                         columnVisibilityModel={columnConfigs}
@@ -97,6 +130,12 @@ class ReportTables extends React.Component {
                             this.updateColumnConfigs(str);
                             this.setState({ columnConfigs: newModel })
                         }}
+                        getRowClassName={(params) =>
+                            params.row.isTotalRow ? 'total-row' : ''
+                        }
+                        sortingOrder={['asc', 'desc']}
+                        sortingMode="server"
+                        onSortModelChange={this.handleSortModelChange}
                     />
                 }
 

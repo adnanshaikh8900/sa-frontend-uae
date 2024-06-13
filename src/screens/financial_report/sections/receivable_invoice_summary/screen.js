@@ -103,6 +103,8 @@ class ReceivableInvoiceSummary extends React.Component {
 					receivableInvoiceSummaryModelList.push({
 						balance: res.data.totalBalance,
 						invoiceTotalAmount: res.data.totalAmount,
+						invoiceNumber: strings.Total,
+						isTotalRow: true,
 					})
 					receivableInvoiceSummaryModelList = receivableInvoiceSummaryModelList.map((row, i) => {
 						row.id = i + 1;

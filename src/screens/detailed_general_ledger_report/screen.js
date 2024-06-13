@@ -111,7 +111,6 @@ class DetailedGeneralLedgerReport extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					const detailedGeneralLedgerList = this.getList(res.data)
-					console.log('res.data', detailedGeneralLedgerList);
 					this.setState(
 						{ detailedGeneralLedgerReportList: detailedGeneralLedgerList, loading: false},
 					);

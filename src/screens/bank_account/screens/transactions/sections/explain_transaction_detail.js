@@ -1703,16 +1703,29 @@ class ExplainTrasactionDetail extends React.Component {
                                 "Please select Expense Category";
                             }
 
-                            // if (
-                            // 	values.coaCategoryId.label !==
-                            // 	'Supplier Invoice' &&
-                            // 	values.coaCategoryId.label !== 'Sales' &&
-                            // 	values.coaCategoryId.label !== 'Expense' &&
-                            // 	!values.transactionCategoryId
-                            // ) {
-                            // 	errors.transactionCategoryId =
-                            // 		'Transaction Category is Required';
-                            // }
+                            if (
+                              values.coaCategoryId.label !== "Expense" &&
+                              values.coaCategoryId.label !== "Supplier Invoice" &&
+                              values.coaCategoryId.label !== "Sales" &&
+                              values.coaCategoryId.label !== "VAT Payment" &&
+                              values.coaCategoryId.label !== "VAT Claim" &&
+                              values.coaCategoryId.label !== "Corporate Tax Payment"
+                            ) {
+                              if (
+                                !values.transactionCategoryId ||
+                                values.transactionCategoryId === ""
+                              ) {
+                                errors.transactionCategoryId =
+                                  "Category is required";
+                              }
+                              if (
+                                (values.coaCategoryId.value === 12 ||
+                                  values.coaCategoryId.value === 6) &&
+                                !values.employeeId
+                              ) {
+                                errors.employeeId = "User is Required";
+                              }
+                            }
                             if (
                               (values.coaCategoryId.value === 12 ||
                                 values.coaCategoryId.value === 6) &&
@@ -2146,7 +2159,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           {strings.ExpenseCategory}
                                         </Label>
                                         <Select
-                                          styles={customStyles}
+                                          // styles={customStyles}
                                           isDisabled={explainedstatus}
                                           options={this.expense_categories_list_generate()}
                                           value={
@@ -2893,7 +2906,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           {strings.Category}
                                         </Label>
                                         <Select
-                                          styles={customStyles}
+                                          // styles={customStyles}
                                           // isDisabled={
                                           //   props.values.coaCategoryId
                                           //     ?.label === "Transfered From" ||
@@ -2910,6 +2923,9 @@ class ExplainTrasactionDetail extends React.Component {
                                             transactionCategoryValue
                                           )}
                                           onChange={(option) => {
+                                            props.handleChange(
+                                              "transactionCategoryId"
+                                            )(option.value);
                                             this.setState({
                                               transactionCategoryId:
                                                 option.value,

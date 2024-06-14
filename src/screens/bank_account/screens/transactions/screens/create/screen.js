@@ -1209,8 +1209,8 @@ class CreateBankTransaction extends React.Component {
                           );
 
                           if (
-                            values.coaCategoryId.label === "VAT Payment" &&
-                            values.coaCategoryId.label === "VAT Claim"
+                            values.coaCategoryId === "VAT Payment" ||
+                            values.coaCategoryId === "VAT Claim"
                           ) {
                             if (
                               values?.transactionAmount > values?.vatDueAmount

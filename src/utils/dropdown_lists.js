@@ -39,3 +39,21 @@ export const getStateDropdown = (list, countryId) => {
     return newList;
 };
 
+export const getContactDropDownList = (contact_list) => {
+    const tmpContact_list = []
+    if (contact_list) {
+        contact_list && contact_list.map(item => {
+            if (item.label) {
+                const obj = { label: item?.label?.contactName, value: item?.value }
+                tmpContact_list.push(obj)
+            }
+        })
+    }
+    const newList = tmpContact_list ? selectOptionsFactory.renderOptions(
+        'label',
+        'value',
+        tmpContact_list,
+        strings.Customer,
+    ) : []
+    return newList;
+}

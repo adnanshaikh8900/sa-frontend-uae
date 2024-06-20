@@ -1,8 +1,8 @@
 export const updateAmount = (data, vat_list, taxType) => {
-    let total_net = 0;
-    let total_excise = 0;
+    let totalNet = 0;
+    let totalExciseAmount = 0;
     let total = 0;
-    let total_vat = 0;
+    let totalVatAmount = 0;
     let net_value = 0;
     let discount_total = 0;
 
@@ -143,20 +143,20 @@ export const updateAmount = (data, vat_list, taxType) => {
             obj.subTotal =
                 net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
             discount_total = +discount_total + discount
-            total_net = +(total_net + parseFloat(net_value));
-            total_vat = +(total_vat + vat_amount);
-            total_excise = +(total_excise + obj.exciseAmount)
-            total = total_vat + total_net;
+            totalNet = +(totalNet + parseFloat(net_value));
+            totalVatAmount = +(totalVatAmount + vat_amount);
+            totalExciseAmount = +(totalExciseAmount + obj.exciseAmount)
+            total = totalVatAmount + totalNet;
         }
         return obj;
     });
 
     const list = {
         data: data,
-        total_net: total_net ? parseFloat(parseFloat(total_net).toFixed(2)) - parseFloat(parseFloat(total_excise).toFixed(2)) : 0,
-        totalVatAmount: total_vat ? parseFloat(parseFloat(total_vat).toFixed(2)) : 0,
-        totalAmount: total ? parseFloat(parseFloat(total).toFixed(2)) : 0,
-        total_excise: total_excise ? parseFloat(parseFloat(total_excise).toFixed(2)) : 0,
+        totalNet: totalNet ? parseFloat(parseFloat(totalNet).toFixed(2)) - parseFloat(parseFloat(totalExciseAmount).toFixed(2)) : 0,
+        totalVatAmount: totalVatAmount ? parseFloat(parseFloat(totalVatAmount).toFixed(2)) : 0,
+        totalAmount: total ? parseFloat(parseFloat(total).toFixed(3)) : 0,
+        totalExciseAmount: totalExciseAmount ? parseFloat(parseFloat(totalExciseAmount).toFixed(2)) : 0,
         discount: discount_total ? parseFloat(parseFloat(discount_total).toFixed(2)) : 0,
     }
     return list;

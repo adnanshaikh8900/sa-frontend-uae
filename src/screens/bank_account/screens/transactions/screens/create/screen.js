@@ -1209,8 +1209,8 @@ class CreateBankTransaction extends React.Component {
                           );
 
                           if (
-                            values.coaCategoryId.label === "VAT Payment" ||
-                            values.coaCategoryId.label === "VAT Claim"
+                            values.coaCategoryId === "VAT Payment" ||
+                            values.coaCategoryId === "VAT Claim"
                           ) {
                             if (
                               values?.transactionAmount > values?.vatDueAmount
@@ -1248,7 +1248,7 @@ class CreateBankTransaction extends React.Component {
                               !values.VATReportId ||
                               values.VATReportId === ""
                             ) {
-                              errors.VATReportId = "Please Select Vat Report";
+                              errors.VATReportId = "Please Select Vat Report Number";
                             }
                           }
 
@@ -3059,10 +3059,10 @@ class CreateBankTransaction extends React.Component {
                                           );
                                         }}
                                       />
-                                      {props.errors.currencyCode &&
-                                        props.touched.currencyCode && (
+                                      {props.errors.VATReportId &&
+                                        props.touched.VATReportId && (
                                           <div className="invalid-feedback">
-                                            {props.errors.currencyCode}
+                                            {props.errors.VATReportId}
                                           </div>
                                         )}
                                     </FormGroup>

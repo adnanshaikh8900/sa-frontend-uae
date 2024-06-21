@@ -39,8 +39,8 @@ class FilterComponent extends Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			initValue: {
-				startDate: moment().startOf('month').format('YYYY-MM-DD hh:mm'),
-				endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
+				startDate: new Date(moment().startOf('month').format('YYYY-MM-DD hh:mm')),
+				endDate: new Date(moment().endOf('month').format('YYYY-MM-DD hh:mm')),
 			}
 		}
 
@@ -56,7 +56,7 @@ class FilterComponent extends Component {
 		const { initValue } = this.state;
 		return (
 			<div>
-				<Card>
+				<Card style={{zIndex:'1',backgroundColor:'white'}}>
 					<CardHeader
 						className="d-flex"
 						style={{ justifyContent: 'space-between' }}
@@ -88,21 +88,11 @@ class FilterComponent extends Component {
 													showMonthDropdown
 													showYearDropdown
 													autoComplete="off"
-													maxDate={new Date()}
-													value={moment(props.values.startDate).format(
-														'DD-MM-YYYY',
-													)}
+													maxDate={props.values.endDate}
+													value={props.values.startDate}
+													selected={props.values.startDate}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
-													// onChange={(value) => {
-													// 	props.handleChange('startDate')(value);
-													// 	if (moment(value).isBefore(props.values.startDate)) {
-													// 		props.setFieldValue(
-													// 			'startDate',
-													// 			moment(value).add(1, 'M'),
-													// 		);
-													// 	}
-													// }}
 													onChange={(value) => {
 														props.handleChange('startDate')(value);
 													}}
@@ -117,24 +107,14 @@ class FilterComponent extends Component {
 													name="endDate"
 													className={`form-control`}
 													autoComplete="off"
-													maxDate={new Date()}
+													minDate={props.values.startDate}
 													placeholderText="From"
 													showMonthDropdown
 													showYearDropdown
-													value={moment(props.values.endDate).format(
-														'DD-MM-YYYY',
-													)}
+													value={props.values.endDate}
+													selected={props.values.endDate}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
-													// onChange={(value) => {
-													// 	props.handleChange('endDate')(value);
-													// 	if (moment(value).isBefore(props.values.endDate)) {
-													// 		props.setFieldValue(
-													// 			'endDate',
-													// 			moment(value).subtract(1, 'M'),
-													// 		);
-													// 	}
-													// }}
 													onChange={(value) => {
 														props.handleChange('endDate')(value);
 													}}

@@ -38,7 +38,7 @@ class FilterComponent2 extends Component {
 		const { initValue } = this.state;
 		return (
 			<div>
-				<Card>
+				<Card style={{zIndex:'1',backgroundColor:'white'}}>
 					<CardHeader
 						className="d-flex"
 						style={{ justifyContent: 'space-between' }}

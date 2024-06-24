@@ -69,7 +69,7 @@ class AdminLayout extends React.Component {
 					await this.props.commonActions.getCompanyDetails().then((res) => {
 						this.setState({ registeredVat: res.data.isRegisteredVat })
 					});
-					this.props.commonActions.getRoleList(response.data.role.roleCode);
+					await this.props.commonActions.getRoleList(response.data.role.roleCode);
 					await this.props.commonActions.getCompanyCurrency();
 					await this.props.commonActions.getCurrencyConversionList();
 					await this.props.commonActions.getVatList();

@@ -85,7 +85,7 @@ class PayrollSummaryReport extends React.Component {
         this.props.financialReportActions.getCompany()
         this.initializeData();
     };
-    
+
     initializeData = () => {
         const { initValue } = this.state;
         const postData = {
@@ -147,11 +147,11 @@ class PayrollSummaryReport extends React.Component {
     exportPDFWithComponent = () => {
         this.pdfExportComponent.save();
     };
-    
+
     render() {
         strings.setLanguage(this.state.language);
         const { loading, initValue, dropdownOpen, payrollSummaryModelList, view, customPeriod } = this.state;
-        const {company_profile } = this.props;
+        const { company_profile } = this.props;
         return (
             <div className="transactions-report-screen">
                 <div className="animated fadeIn">
@@ -161,9 +161,22 @@ class PayrollSummaryReport extends React.Component {
                                 <Row>
                                     <Col lg={12}>
                                         <div
-                                            className="h4 mb-0 d-flex align-items-center pull-right"
+                                            className="h4 mb-0 d-flex align-items-center"
                                             style={{ justifyContent: 'space-between' }}
                                         >
+                                            <div>
+                                                <p
+                                                    className="mb-0"
+                                                    style={{
+                                                        cursor: 'pointer',
+                                                        fontSize: '1rem',
+                                                        paddingLeft: '15px',
+                                                    }}
+                                                    onClick={this.viewFilter}
+                                                >
+                                                    <i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
+                                                </p>
+                                            </div>
                                             <div className="d-flex">
                                                 <div>
                                                     <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
@@ -219,32 +232,6 @@ class PayrollSummaryReport extends React.Component {
                                     </Col>
                                 </Row>
 
-                            </CardHeader>
-                            <CardHeader>
-                                <FilterComponent3
-                                    hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
-                                    customPeriod={customPeriod}
-                                    viewFilter={this.viewFilter}
-                                    generateReport={(value) => {
-                                        this.generateReport(value);
-                                    }}
-                                    setCutomPeriod={(value) => {
-                                        this.setState({ customPeriod: value })
-                                    }}
-                                    handleCancel={() => {
-                                        if (customPeriod === 'asOn') {
-                                            const currentDate = moment();
-                                            this.setState(prevState => ({
-                                                initValue: {
-                                                    ...prevState.initValue,
-                                                    endDate: currentDate,
-                                                }
-                                            }));
-                                            this.generateReport({ endDate: currentDate });
-                                        }
-                                        this.setState({ customPeriod: 'asOn' });
-                                    }}
-                                />
                             </CardHeader>
                             <div className={`panel ${view ? 'view-panel' : ''}`}>
                                 <FilterComponent2

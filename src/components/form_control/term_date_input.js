@@ -138,6 +138,7 @@ function TermDateInput(props) {
                         dropdownMode="select"
                         value={invoiceDate.values}
                         selected={invoiceDate.values}
+                        minDate={invoiceDate.minDate}
                         onChange={(value) => {
                             const invoiceDueDate = setDate(term.values, value)
                             onChange('invoiceDate', value);

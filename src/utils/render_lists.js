@@ -55,6 +55,7 @@ export const mapInvoiceListFromQuotation = (data) => {
     state.quotationId = data.id;
     state.discountEnabled = data.discount > 0 ? true : false;
     state.data = lineItems;
+    state.quotationDate= new Date(data.quotationdate);
     state.idCount = getMaxID(lineItems) + 1;
 
     return { initValue, state }

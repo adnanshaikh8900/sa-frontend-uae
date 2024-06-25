@@ -22,7 +22,7 @@ else {
 
 const PayrollSummary = [
     {
-        field: 'payrollDate', headerName: 'Payroll Date', headerClassName: "table-header-bg", flex: 1, renderCell: (params) => {
+        field: 'payrollDate', headerName: 'Payroll Date', headerClassName: "table-header-bg", flex: 1,hideable: false, renderCell: (params) => {
             return renderDate(params.row.payrollDate);
         }
     },
@@ -66,7 +66,7 @@ const PayrollSummary = [
 
 
 const SalesByCustomer = [
-    { field: 'customerName', headerName: strings.CustomerName, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', },
+    { field: 'customerName', headerName: strings.CustomerName, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', hideable: false,},
     { field: 'invoiceCount', headerName: strings.InvoiceCount, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', },
     { field: 'invoiceId', headerName: strings.InvoiceId, headerClassName: "table-header-bg", flex: 1, },
     {
@@ -83,7 +83,7 @@ const SalesByCustomer = [
 
 const ExpenseDetails = [
     {
-        field: 'expenseDate', headerName: strings.ExpenseDate, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', renderCell: (params) => {
+        field: 'expenseDate', headerName: strings.ExpenseDate, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', hideable: false,renderCell: (params) => {
             return renderDate(params.row.expenseDate);
         }
     },
@@ -110,7 +110,7 @@ const ExpenseDetails = [
 ]
 
 const ExpenseByCategoryDetails = [
-    { field: 'transactionCategoryName', headerName: strings.TransactionCategory, headerAlign: 'left', headerClassName: "table-header-bg", flex: 1, align: 'left', },
+    { field: 'transactionCategoryName', headerName: strings.TransactionCategory, headerAlign: 'left', headerClassName: "table-header-bg", flex: 1, align: 'left', hideable: false,},
     {
         field: 'expensesVatAmountSum', headerName: strings.VatAmount, headerClassName: "table-header-bg", flex: 1, headerAlign: 'right', align: 'right', renderCell: (params) => {
             return renderAmount(params.row.expensesVatAmountSum);
@@ -130,7 +130,7 @@ const ExpenseByCategoryDetails = [
 
 const ReceivableInvoiceSummary = [
     {
-        field: 'invoiceNumber', headerName: strings.InvoiceNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',
+        field: 'invoiceNumber', headerName: strings.InvoiceNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',hideable: false,
         renderCell: (params) => {
             return (
                 params.row.invoiceNumber !== strings.Total ? (
@@ -205,7 +205,7 @@ const ReceivableInvoiceDetails = [
 
 
 const PurchaseByVendor = [
-    { field: 'vendorName', headerName: strings.Vendor + " " + strings.Name, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', },
+    { field: 'vendorName', headerName: strings.Vendor + " " + strings.Name, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',hideable: false, },
     { field: 'invoiceCount', headerName: strings.InvoiceCount, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center', },
     {
         field: 'salesExcludingvat', headerName: strings.Purchase + " " + strings.ExcludingTax, headerAlign: 'right', align: 'right', headerClassName: "table-header-bg", flex: 1, renderCell: (params) => {
@@ -221,7 +221,7 @@ const PurchaseByVendor = [
 
 const TaxCreditNoteDetails = [
     {
-        field: 'creditNoteNumber', headerName: strings.CreditNoteNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',
+        field: 'creditNoteNumber', headerName: strings.CreditNoteNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',hideable: false,
         renderCell: (params) => {
             if (params.row.creditNoteNumber === strings.Total) {
                 return params.row.creditNoteNumber;
@@ -258,7 +258,7 @@ const TaxCreditNoteDetails = [
 
 const TaxDebitNoteDetails = [
     {
-        field: 'creditNoteNumber', headerName: strings.DebitNoteNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',
+        field: 'creditNoteNumber', headerName: strings.DebitNoteNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',hideable: false,
         renderCell: (params) => {
             if (params.row.creditNoteNumber === strings.Total) {
                 return params.row.creditNoteNumber;
@@ -295,7 +295,7 @@ const TaxDebitNoteDetails = [
 
 const PayableInvoiceSummary = [
     {
-        field: 'invoiceNumber', headerName: strings.InvoiceNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',
+        field: 'invoiceNumber', headerName: strings.InvoiceNumber, headerAlign: 'center', headerClassName: "table-header-bg", flex: 1, align: 'center',hideable: false,
         renderCell: (params) => {
             return (
                 params.row.invoiceNumber !== strings.Total ? (

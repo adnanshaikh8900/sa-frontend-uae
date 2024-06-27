@@ -384,7 +384,7 @@ class CreateCustomerInvoice extends React.Component {
 	}
 	getContactShippingAddress = (cutomerID, taxID, props) => {
 		const { enablePlaceOfSupply } = this.state;
-		const {placeList}=Lists;
+		const { placeList } = Lists;
 		if (enablePlaceOfSupply) {
 			this.props.customerInvoiceCreateActions.getCustomerShippingAddressbyID(cutomerID).then((res) => {
 				if (res.status === 200) {
@@ -816,7 +816,7 @@ class CreateCustomerInvoice extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, loadingMsg, isRegisteredVat, idCount, discountEnabled, quotationId, parentInvoiceId, } = this.state
+		const { loading, loadingMsg, isRegisteredVat, idCount, discountEnabled, quotationId, quotationDate, parentInvoiceId, } = this.state
 		const { data, enablePlaceOfSupply, initValue, exist, param, companyVATRegistrationDate, taxTreatmentList, term, invoiceBeforeVatRegistration } = this.state;
 		const {
 			country_list,
@@ -1208,7 +1208,7 @@ class CreateCustomerInvoice extends React.Component {
 																		<TermDateInput
 																			fields={{
 																				'term': { values: term ?? '', errors: props.errors.term, touched: props.touched.term, label: strings.Terms, required: true, disabled: false, name: 'term', placeholder: strings.Terms },
-																				'invoiceDate': { values: props.values.invoiceDate, errors: props.errors.invoiceDate, touched: props.touched.invoiceDate, label: strings.InvoiceDate, required: true, disabled: false, name: 'invoiceDate', placeholder: strings.Select + strings.InvoiceDate },
+																				'invoiceDate': { values: props.values.invoiceDate, errors: props.errors.invoiceDate, touched: props.touched.invoiceDate, label: strings.InvoiceDate, required: true, disabled: false, name: 'invoiceDate', placeholder: strings.Select + strings.InvoiceDate, minDate: quotationDate },
 																				'invoiceDueDate': { values: props.values.invoiceDueDate, errors: props.errors.invoiceDueDate, touched: props.touched.invoiceDueDate, label: strings.InvoiceDueDate, required: true, disabled: true, name: 'invoiceDueDate', placeholder: strings.InvoiceDueDate },
 																			}}
 																			onChange={(field, value) => {
@@ -1216,9 +1216,9 @@ class CreateCustomerInvoice extends React.Component {
 																					this.setState({ term: value, });
 																				else if (field === 'invoiceDate') {
 																					if (moment(value).isBefore(moment(companyVATRegistrationDate))) {
-																						this.setState({ invoiceBeforeVatRegistration: true },()=>{this.resetProductTableValues();});
-																					}else{
-																						this.setState({ invoiceBeforeVatRegistration: false },()=>{this.resetProductTableValues();});
+																						this.setState({ invoiceBeforeVatRegistration: true }, () => { this.resetProductTableValues(); });
+																					} else {
+																						this.setState({ invoiceBeforeVatRegistration: false }, () => { this.resetProductTableValues(); });
 																					}
 																				}
 																				props.handleChange(field)(value);

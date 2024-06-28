@@ -50,7 +50,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
-			receivbaleInvoiceDetailsList: {},
+			receivbaleInvoiceDetailsList: '',
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
@@ -82,11 +82,13 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 		this.props.receivbaleInvoiceDetailsActions
 			.getReceivableInvoiceDetail(postData)
 			.then((res) => {
+			 if (res.status === 200) {
 				const receivbaleInvoiceDetailsList = this.getList(res.data.resultObject)
 				this.setState({
 					receivbaleInvoiceDetailsList: receivbaleInvoiceDetailsList,
 					loading: false,
 				});
+			 }
 			})		.catch((err) => {
 				this.setState({ loading: false });
 			});
@@ -191,6 +193,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 		} = this.state;
 		const { company_profile } = this.props;
 
+		console.log(this.state.receivbaleInvoiceDetailsList.resultObject);
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -273,7 +276,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 								</Row>
 							</CardHeader>
 							<div className={`panel ${view ? 'view-panel' : ''}`}>
-								<FilterComponent
+							<FilterComponent
 									viewFilter={this.viewFilter}
 									chart_of_account_list={chart_of_account_list}
 									generateReport={(value) => {

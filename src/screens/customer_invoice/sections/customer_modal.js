@@ -6,7 +6,7 @@ import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';
 import  CreateContact from '../../contact/screens/create/screen';
 
-let strings = new LocalizedStrings(data);
+let  strings = new LocalizedStrings(data);
 class CustomerModal extends React.Component {
 	constructor(props) {
 		super(props);

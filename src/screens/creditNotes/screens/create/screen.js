@@ -2828,7 +2828,7 @@ class CreateCreditNote extends React.Component {
 																							/>
 																							)} */}
 																								{this.state.customer_currency_symbol} &nbsp;
-																								{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																								{(initValue.totalAmount - initValue.totalVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 
 																							</label>
 																						</Col>

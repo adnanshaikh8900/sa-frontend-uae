@@ -2467,7 +2467,7 @@ class DetailCreditNote extends React.Component {
 																								<label className="mb-0">
 
 																									{this.state.customer_currency_symbol} &nbsp;
-																									{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																									{(initValue.totalAmount - initValue.invoiceVATAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																								</label>
 																							</Col>
 																						</Row>

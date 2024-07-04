@@ -234,11 +234,11 @@ class DetailProduct extends React.Component {
 								salesTransactionCategoryLabel: res.data
 									.salesTransactionCategoryLabel
 									? res.data.salesTransactionCategoryLabel
-									: 'Sales',
+									: '',
 								purchaseTransactionCategoryLabel: res.data
 									.purchaseTransactionCategoryLabel
 									? res.data.purchaseTransactionCategoryLabel
-									: 'Cost of Goods Sold',
+									: '',
 								isActive:
 									res.data.isActive && res.data.isActive !== null ?  res.data.isActive :'',
 								inventoryQty:res.data.inventoryQty ? res.data.inventoryQty : '',

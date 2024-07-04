@@ -458,6 +458,8 @@ const en = {
       BANKNAME: "BANK NAME",
       AccountNumber: "Account Number",
       Accountisfor: "Account is for",
+      AddNewBank:"Add New Bank",
+      New: "New ",
 
       //View Transaction
       BankTransactions: "Bank Transactions",

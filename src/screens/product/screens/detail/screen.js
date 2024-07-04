@@ -213,7 +213,7 @@ class DetailProduct extends React.Component {
 									: '',
 								salesTransactionCategoryId: res.data.salesTransactionCategoryId
 									? res.data.salesTransactionCategoryId
-									: '',
+									: 84,
 								salesDescription: res.data.salesDescription
 									? res.data.salesDescription
 									: '',
@@ -223,7 +223,7 @@ class DetailProduct extends React.Component {
 								purchaseTransactionCategoryId: res.data
 									.purchaseTransactionCategoryId
 									? res.data.purchaseTransactionCategoryId
-									: '',
+									: 49,
 								purchaseDescription: res.data.purchaseDescription
 									? res.data.purchaseDescription
 									: '',
@@ -234,7 +234,7 @@ class DetailProduct extends React.Component {
 								salesTransactionCategoryLabel: res.data
 									.salesTransactionCategoryLabel
 									? res.data.salesTransactionCategoryLabel
-									: '',
+									: 'Sales',
 								purchaseTransactionCategoryLabel: res.data
 									.purchaseTransactionCategoryLabel
 									? res.data.purchaseTransactionCategoryLabel

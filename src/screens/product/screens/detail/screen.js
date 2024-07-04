@@ -502,6 +502,24 @@ renderName=(cell,row)=>{
 			});
 	};
 
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 1,
+			name: value,
+		};
+		this.props.productActions.checkValidation(data).then((response) => {
+			if (response.data === 'Product Name Already Exists') {
+				this.setState({
+					productNameExist: true,
+				});
+			} else {
+				this.setState({
+					productNameExist: false,
+				});
+			}
+		});
+	};
+
 	ProductvalidationCheck = (value) => {
 		const data = {
 			moduleType: 7,
@@ -931,6 +949,9 @@ renderName=(cell,row)=>{
 															errors.productCode =
 																'Product code already exist';
 														}
+														if (this.state.productNameExist){
+																		errors.productName = 'Product Name Already Exists'
+																	}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
@@ -1157,6 +1178,9 @@ renderName=(cell,row)=>{
 																						option,
 																					);
 																				}
+																				this.validationCheck(
+																								option.target.value,
+																							);
 																			}}
 																			value={props.values.productName || ''}
 																			placeholder={strings.Enter+strings.ProductName}

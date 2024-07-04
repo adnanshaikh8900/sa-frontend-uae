@@ -111,7 +111,8 @@ class CreateBankAccount extends React.Component {
 				countrycode: 229,
 				openingDate: new Date(),
 				account_is_for: '',
-				bankId:''
+				bankId:'',
+				newBankName:''
 			},
 			BankList: [],
 			currentData: {},
@@ -219,7 +220,8 @@ class CreateBankAccount extends React.Component {
 			countrycode,
 			account_is_for,
 			openingDate,
-			bankId
+			bankId,
+			newBankName
 		} = data;
 		let obj = {
 			bankAccountName: account_name,
@@ -233,6 +235,7 @@ class CreateBankAccount extends React.Component {
 			swiftCode: swift_code,
 			bankCountry: countrycode ? countrycode : '',
 			personalCorporateAccountInd: account_is_for ? account_is_for : '',
+			newBankName: newBankName,
 			// bankId:bankId ? bankId : "",
 		};
 		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating New Bank Account..."});
@@ -315,6 +318,9 @@ class CreateBankAccount extends React.Component {
 													}
 													if(!values.openingDate){
 														errors.openingDate='Opening date is required';
+													}
+													if(values.bankId.value === 999 && (values.newBankName === null || values.newBankName === '')){
+														errors.newBankName = 'Bank Name is Required';
 													}
 													return errors;
 												}}
@@ -881,6 +887,33 @@ class CreateBankAccount extends React.Component {
 															</Col> */}
 														</Row>
 														<Row>
+															{props.values.bankId.value === 999 && (
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																	<Label>
+																		<span className="text-danger">* </span>
+																		{strings.AddNewBank}
+																	</Label>
+																	<Input
+																		type="text"
+																		maxLength="25"
+																		id="newBankName"
+																		name="newBankName"
+																		placeholder={`${strings.Enter} ${strings.New} ${strings.BankName}`}
+																		value={props.values.AddNewBank}
+																		onChange={props.handleChange('newBankName')}
+																		className={
+																		props.errors.newBankName && props.touched.newBankName ? 'is-invalid' : ''
+																		}
+																	/>
+																	{props.errors.newBankName && props.touched.newBankName && (
+																		<div className="invalid-feedback">
+																		{props.errors.newBankName}
+																		</div>
+																	)}
+																	</FormGroup>
+																</Col>
+															)}
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_is_for">

@@ -822,7 +822,11 @@ class ProductTable extends React.Component {
             discountEnabled,
             disableVat
         } = this.props;
-        console.log(data);
+        let hasExciseTax = false;
+
+        if (initValue) {
+            hasExciseTax = data.some(row => (row.exciseTaxId !== null && row.exciseTaxId !== '' && row.exciseTaxId !== 0));
+        }
         return (
             <Row>
                 <Col lg={12} className='product-table'>
@@ -892,7 +896,7 @@ class ProductTable extends React.Component {
                             >
                                 {strings.DisCount}
                             </TableHeaderColumn>}
-                        {initValue.totalExciseAmount != 0 &&
+                        {hasExciseTax &&
                             <TableHeaderColumn
                                 dataField="exciseTaxId"
                                 width='12%'

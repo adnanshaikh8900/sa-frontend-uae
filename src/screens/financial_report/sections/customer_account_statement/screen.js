@@ -24,6 +24,7 @@ import "./style.scss";
 import logo from "assets/images/brand/logo.png";
 import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
+import FilterComponent3 from '../filterComponent3';
 
 const mapStateToProps = (state) => {
   return {
@@ -46,6 +47,7 @@ class CustomerAccountStatement extends React.Component {
     this.state = {
       language: window["localStorage"].getItem("language"),
       loading: true,
+			customPeriod: 'asOn',
       dropdownOpen: false,
       view: false,
       initValue: {
@@ -174,6 +176,9 @@ class CustomerAccountStatement extends React.Component {
   exportPDFWithComponent = () => {
     this.pdfExportComponent.save();
   };
+  hideExportOptionsFunctionality = (val) => {
+		this.setState({ hideExportOptions: val });
+	}
 
   render() {
     strings.setLanguage(this.state.language);
@@ -184,6 +189,7 @@ class CustomerAccountStatement extends React.Component {
       customerAccountStatement,
       data,
       view,
+      customPeriod,
     } = this.state;
     const { company_profile } = this.props;
     return (
@@ -199,18 +205,6 @@ class CustomerAccountStatement extends React.Component {
                       style={{ justifyContent: "space-between" }}
                     >
                       <div>
-                        <p
-                          className="mb-0"
-                          style={{
-                            cursor: "pointer",
-                            fontSize: "1rem",
-                            paddingLeft: "15px",
-                          }}
-                          onClick={this.viewFilter}
-                        >
-                          <i className="fa fa-cog mr-2"></i>
-                          {strings.CustomizeReport}
-                        </p>
                       </div>
                       <div className="d-flex">
                         <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
@@ -279,14 +273,31 @@ class CustomerAccountStatement extends React.Component {
                   </Col>
                 </Row>
               </CardHeader>
-              <div className={`panel ${view ? "view-panel" : ""}`}>
-                <FilterComponent2
-                  viewFilter={this.viewFilter}
-                  generateReport={(value) => {
-                    this.generateReport(value);
-                  }}
-                />{" "}
-              </div>
+              <CardHeader>
+							<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+									viewFilter={this.viewFilter}
+									generateReport={(value) => {
+										this.generateReport(value);
+									}}
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+										if (customPeriod === 'asOn') {
+										const currentDate = moment();
+										this.setState(prevState => ({
+										initValue: {
+										...prevState.initValue,
+										endDate: currentDate,            }
+										 }));
+										this.generateReport({ endDate: currentDate });
+										}
+										this.setState({ customPeriod: 'asOn' });
+										}}
+								/>
+							</CardHeader>
               <CardBody id="section-to-print">
                 <PDFExport
                   ref={(component) => (this.pdfExportComponent = component)}
@@ -323,11 +334,11 @@ class CustomerAccountStatement extends React.Component {
                       </h2>
                       <br style={{ marginBottom: "5px" }} />
                       <b style={{ fontSize: "18px" }}>
-                        {strings.SalesByCustomer}
+                        Statement Of Account
                       </b>
                       <br style={{ marginBottom: "5px" }} />
-                      {strings.From} {initValue.startDate.replaceAll("/", "-")}{" "}
-                      {strings.To} {initValue.endDate.replaceAll("/", "-")}
+                     {customPeriod === 'asOn' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
                     </div>
                     <div></div>
                   </div>

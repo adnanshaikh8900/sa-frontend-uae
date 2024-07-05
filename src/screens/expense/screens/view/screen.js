@@ -137,8 +137,9 @@ class ViewExpense extends React.Component {
 												endDate:this.props.location.state.endDate,
 												placeOfSupplyId:this.props.location.state.placeOfSupplyId
 											});
-										}
-										else if (this.props.location && this.props.location.state && this.props.location.state.gotoDGLReport)
+										} else if (this.props.location && this.props.location.state && this.props.location.state.gotoReports) {
+											this.props.history.push(this.props.location.state.gotoReports)
+										}else if (this.props.location && this.props.location.state && this.props.location.state.gotoDGLReport)
 											this.props.history.push('/admin/report/detailed-general-ledger');
 										else{
 											this.props.history.push('/admin/expense');

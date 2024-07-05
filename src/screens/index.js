@@ -89,6 +89,7 @@ import ProfitAndLossReport from './financial_report/sections/profit_and_loss';
 import BalanceSheet from './financial_report/sections/balance_sheet';
 import HorizontalBalanceSheet from './financial_report/sections/horizontal_balance_sheet';
 import TrailBalances from './financial_report/sections/trail_Balances';
+import CustomerAccountStatement from './financial_report/sections/customer_account_statement';
 import Cashflow from './financial_report/sections/cashflow';
 import VatReturnsReport from './financial_report/sections/vat_return';
 import DetailedGeneralLedgerReport from './detailed_general_ledger_report';
@@ -281,6 +282,7 @@ export {
 	BalanceSheet,
 	HorizontalBalanceSheet,
 	TrailBalances,
+	CustomerAccountStatement,
 	Cashflow,
 	VatReturnsReport,
 	SalesByCustomer,

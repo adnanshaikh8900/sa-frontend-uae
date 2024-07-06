@@ -247,7 +247,7 @@ const CustomerAccountStatement = [
   },
   {
     field: "balanceAmount",
-    headerName: strings.SalesWithTax,
+    headerName: strings.Balance,
     headerAlign: "right",
     align: "right",
     headerClassName: "table-header-bg",

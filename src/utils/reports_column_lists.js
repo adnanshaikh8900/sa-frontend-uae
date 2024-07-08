@@ -172,10 +172,15 @@ const CustomerAccountStatement = [
     renderCell: (params) => {
       if (params.row.id === 0) {
         return (
-          <div className="position-absolute pl-2" style={{ left:'0px', fontWeight:'600' }}>
+          <div
+            className="position-absolute pl-2"
+            style={{ left: "0px", fontWeight: "600" }}
+          >
             {params.value}
           </div>
         );
+      } else if (params.row.id === 1) {
+        return <div style={{ fontWeight: "600" }}>{params.value}</div>;
       } else {
         return params.value;
       }
@@ -236,7 +241,20 @@ const CustomerAccountStatement = [
     headerClassName: "table-header-bg",
     flex: 1,
     renderCell: (params) => {
-      return params.row.totalAmount ? renderAmount(params.row.totalAmount) : "";
+      return params.row.totalAmount ? (
+        <div
+          style={
+            params.row.id === 1 || params.row.id === 0
+              ? { fontWeight: "600" }
+              : {}
+          }
+        >
+          {" "}
+          {renderAmount(params.row.totalAmount)}{" "}
+        </div>
+      ) : (
+        ""
+      );
     },
   },
   {
@@ -247,7 +265,19 @@ const CustomerAccountStatement = [
     headerClassName: "table-header-bg",
     flex: 1,
     renderCell: (params) => {
-      return params.row.amountPaid ? renderAmount(params.row.amountPaid) : "";
+      return params.row.amountPaid ? (
+        <div
+          style={
+            params.row.id === 1 || params.row.id === 0
+              ? { fontWeight: "600" }
+              : {}
+          }
+        >
+          {renderAmount(params.row.amountPaid)}
+        </div>
+      ) : (
+        ""
+      );
     },
   },
   {
@@ -258,9 +288,19 @@ const CustomerAccountStatement = [
     headerClassName: "table-header-bg",
     flex: 1,
     renderCell: (params) => {
-      return params.row.balanceAmount
-        ? renderAmount(params.row.balanceAmount)
-        : "";
+      return params.row.balanceAmount || params.row.id === 0 ? (
+        <div
+          style={
+            params.row.id === 1 || params.row.id === 0
+              ? { fontWeight: "600" }
+              : {}
+          }
+        >
+          {renderAmount(params.row.balanceAmount)}
+        </div>
+      ) : (
+        ""
+      );
     },
   },
 ];
@@ -1118,10 +1158,7 @@ function renderDate(date) {
 function renderAmount(amount) {
   return (
     <div>
-      {/* <label className="font-weight-bold mr-2 ">{strings.Payroll + " " + strings.Amount}: </label> */}
-      <label>
-        <Currency value={amount} />
-      </label>
+      <Currency value={amount} />
     </div>
   );
 }

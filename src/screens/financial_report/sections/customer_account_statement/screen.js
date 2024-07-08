@@ -54,6 +54,7 @@ class CustomerAccountStatement extends React.Component {
       initValue: {
         startDate: moment().startOf("month").format("DD/MM/YYYY"),
         endDate: moment().endOf("month").format("DD/MM/YYYY"),
+        contactId: "",
       },
       csvData: [],
       activePage: 1,
@@ -73,6 +74,7 @@ class CustomerAccountStatement extends React.Component {
         initValue: {
           startDate: moment(value.startDate).format("DD/MM/YYYY"),
           endDate: moment(value.endDate).format("DD/MM/YYYY"),
+          contactId: value.contactId,
         },
         loading: true,
         view: !this.state.view,
@@ -94,6 +96,9 @@ class CustomerAccountStatement extends React.Component {
       startDate: initValue.startDate,
       endDate: initValue.endDate,
     };
+    if (initValue.contactId) {
+      postData.contactId = initValue.contactId;
+    }
     this.props.financialReportActions
       .getCustomerAccountStatement(postData)
       .then(async (res) => {
@@ -102,6 +107,13 @@ class CustomerAccountStatement extends React.Component {
             new Date()
           ).format("DD-MM-YYYY")}`;
           let customerAccountStatement = res.data.statementOfAccountsModels;
+
+          customerAccountStatement = await customerAccountStatement.map(
+            (row, i) => {
+              row.id = i + 2;
+              return row;
+            }
+          );
           customerAccountStatement.push({
             contactName: strings.Total,
 						isTotalRow: true,
@@ -111,14 +123,9 @@ class CustomerAccountStatement extends React.Component {
             amountPaid: res.data.amountPaidTotal,
             balanceAmount: res.data.balanceAmountTotal,
             type: null,
+            id: 1,
           });
-          customerAccountStatement = await customerAccountStatement.map(
-            (row, i) => {
-              row.id = i + 1;
-              return row;
-            }
-          );
-          customerAccountStatement.push({    
+          customerAccountStatement.push({
             contactName: message,
             totalAmount: null,
             invoiceDate: null,
@@ -127,7 +134,7 @@ class CustomerAccountStatement extends React.Component {
             balanceAmount: res.data.balanceAmountTotal,
 						isTotalRow2: true,
             type: null,
-            id: 0,   // define a unique id for the last row to customize the css
+            id: 0, // define a unique id for the last row to customize the css
           });
           this.setState({
             customerAccountStatement: customerAccountStatement,
@@ -281,6 +288,7 @@ class CustomerAccountStatement extends React.Component {
 									generateReport={(value) => {
 										this.generateReport(value);
 									}}
+                  enableContact={true}
 									setCutomPeriod={(value) => {
 										this.setState({ customPeriod: value })
 									}}

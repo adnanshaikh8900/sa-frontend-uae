@@ -873,7 +873,6 @@ class FinancialReport extends React.Component {
                     </div>
                   </Col>
                 )}
-                <Col className="report-section ml-4"></Col>
               </Row>
             </CardBody>
           </Card>

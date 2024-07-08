@@ -213,8 +213,9 @@ const CustomerAccountStatement = [
     flex: 1,
     align: "center",
     renderCell: (params) => {
-      return renderDate(params.row.invoiceDate);
-    },
+    const dateToRender = params.row.invoiceDate || params.row.creditNoteDate;
+    return renderDate(dateToRender);
+},
   },
   {
     field: "type",
@@ -224,9 +225,32 @@ const CustomerAccountStatement = [
   },
   {
     field: "invoiceNumber",
-    headerName: strings.InvoiceNo,
+    headerName: strings.ReferenceN,
     headerClassName: "table-header-bg",
     flex: 1,
+    renderCell: (params) => {
+      const pathname = params.row.invoiceDate 
+        ? "/admin/income/customer-invoice/view" 
+        : "/admin/income/credit-notes/view";
+
+      return params.row.invoiceNumber !== strings.Total ? (
+        <Link
+          to={{
+            pathname: pathname,
+            state: {
+              id: params.row.invoiceId,
+              gotoReports: "/admin/report/customer-account-statement",
+              isCNWithoutProduct: params.row.isCNWithoutProduct
+            },
+          }}
+          style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
+        >
+          {params.row.invoiceNumber}
+        </Link>
+      ) : (
+        <span>{params.row.invoiceNumber}</span>
+      );
+    },
   },
   {
     field: "totalAmount",
@@ -246,52 +270,6 @@ const CustomerAccountStatement = [
         >
           {" "}
           {renderAmount(params.row.totalAmount)}{" "}
-        </div>
-      ) : (
-        ""
-      );
-    },
-  },
-  {
-    field: "amountPaid",
-    headerName: strings.AmountPaid,
-    headerAlign: "right",
-    align: "right",
-    headerClassName: "table-header-bg",
-    flex: 1,
-    renderCell: (params) => {
-      return params.row.amountPaid ? (
-        <div
-          style={
-            params.row.id === 1 || params.row.id === 0
-              ? { fontWeight: "600" }
-              : {}
-          }
-        >
-          {renderAmount(params.row.amountPaid)}
-        </div>
-      ) : (
-        ""
-      );
-    },
-  },
-  {
-    field: "balanceAmount",
-    headerName: strings.Balance,
-    headerAlign: "right",
-    align: "right",
-    headerClassName: "table-header-bg",
-    flex: 1,
-    renderCell: (params) => {
-      return params.row.balanceAmount || params.row.id === 0 ? (
-        <div
-          style={
-            params.row.id === 1 || params.row.id === 0
-              ? { fontWeight: "600" }
-              : {}
-          }
-        >
-          {renderAmount(params.row.balanceAmount)}
         </div>
       ) : (
         ""

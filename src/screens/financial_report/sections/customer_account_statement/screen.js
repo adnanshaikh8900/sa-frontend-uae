@@ -107,7 +107,6 @@ class CustomerAccountStatement extends React.Component {
             new Date()
           ).format("DD-MM-YYYY")}`;
           let customerAccountStatement = res.data.statementOfAccountsModels;
-
           customerAccountStatement = await customerAccountStatement.map(
             (row, i) => {
               row.id = i + 2;

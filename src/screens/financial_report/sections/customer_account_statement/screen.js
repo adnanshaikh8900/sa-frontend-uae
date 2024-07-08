@@ -103,9 +103,7 @@ class CustomerAccountStatement extends React.Component {
       .getCustomerAccountStatement(postData)
       .then(async (res) => {
         if (res.status === 200) {
-          const message = `Balance Outstanding Amount As On ${moment(
-            new Date()
-          ).format("DD-MM-YYYY")}`;
+          const message = `Balance Outstanding Amount As On ${initValue.endDate.replaceAll("/", "-")}`;
           let customerAccountStatement = res.data.statementOfAccountsModels;
           customerAccountStatement = await customerAccountStatement.map(
             (row, i) => {

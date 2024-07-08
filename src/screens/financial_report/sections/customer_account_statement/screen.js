@@ -48,6 +48,7 @@ class CustomerAccountStatement extends React.Component {
       language: window["localStorage"].getItem("language"),
       loading: true,
 			customPeriod: 'asOn',
+      hideCustomPeriod: true,
       dropdownOpen: false,
       view: false,
       initValue: {
@@ -115,6 +116,7 @@ class CustomerAccountStatement extends React.Component {
           );
           customerAccountStatement.push({
             contactName: strings.Total,
+						isTotalRow: true,
             totalAmount: res.data.totalAmountTotal,
             invoiceDate: null,
             invoiceNumber: null,
@@ -130,6 +132,7 @@ class CustomerAccountStatement extends React.Component {
             invoiceNumber: null,
             amountPaid: null,
             balanceAmount: res.data.balanceAmountTotal,
+						isTotalRow2: true,
             type: null,
             id: 0, // define a unique id for the last row to customize the css
           });
@@ -197,6 +200,7 @@ class CustomerAccountStatement extends React.Component {
       data,
       view,
       customPeriod,
+      hideCustomPeriod,
     } = this.state;
     const { company_profile } = this.props;
     return (
@@ -204,15 +208,12 @@ class CustomerAccountStatement extends React.Component {
         <div className="animated fadeIn">
           <Card>
             <div>
-              <CardHeader>
-                <Row>
+                {!this.state.hideExportOptions &&
                   <Col lg={12}>
                     <div
-                      className="h4 mb-0 d-flex align-items-center"
-                      style={{ justifyContent: "space-between" }}
+                      className="h4 mb-0 d-flex align-items-center pull-right"
+                      style={{ justifyContent: 'space-between',marginRight: '10px', marginTop:'15px' }}
                     >
-                      <div>
-                      </div>
                       <div className="d-flex">
                         <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
                           <DropdownToggle caret>Export As</DropdownToggle>
@@ -277,13 +278,12 @@ class CustomerAccountStatement extends React.Component {
                         </div>
                       </div>
                     </div>
-                  </Col>
-                </Row>
-              </CardHeader>
+                  </Col>}
               <CardHeader>
 							<FilterComponent3
 									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
 									customPeriod={customPeriod}
+                  hideCustomPeriod={hideCustomPeriod}
 									viewFilter={this.viewFilter}
 									generateReport={(value) => {
 										this.generateReport(value);
@@ -303,7 +303,7 @@ class CustomerAccountStatement extends React.Component {
 										this.generateReport({ endDate: currentDate });
 										}
 										this.setState({ customPeriod: 'asOn' });
-										}}
+                  }}
 								/>
 							</CardHeader>
               <CardBody id="section-to-print">

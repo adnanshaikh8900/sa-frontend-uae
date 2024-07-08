@@ -1135,6 +1135,7 @@ const en = {
       CreateIncomeReceipt: "Create Income Receipt",
       AmountDue: "Amount Due",
       Payment: "Payment",
+      TotalAmount:"Total Amount",
       UnusedAmount: "UnusedAmount",
       UpdateReceipt: "UpdateReceipt",
       Invoice: "Invoice",

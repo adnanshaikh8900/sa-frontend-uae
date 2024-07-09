@@ -30,6 +30,25 @@ const PayrollSummary = [
     headerName: "Subject",
     headerClassName: "table-header-bg",
     flex: 1,
+    hideable: false,
+    renderCell: (params) => {
+      return params.row.payrollSubject !== strings.Total ? (
+        <Link
+          to={{
+            pathname: "/admin/payroll/payrollApproverScreen",
+            state: {
+              id: params.row.payrollId,
+              gotoReports: "/admin/report/payroll-summary",
+            },
+          }}
+          style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
+        >
+          {params.row.payrollSubject}
+        </Link>
+      ) : (
+        <span>{params.row.payrollSubject}</span>
+      );
+    },
   },
   {
     field: "payPeriod",
@@ -194,8 +213,9 @@ const CustomerAccountStatement = [
     flex: 1,
     align: "center",
     renderCell: (params) => {
-      return renderDate(params.row.invoiceDate);
-    },
+    const dateToRender = params.row.invoiceDate || params.row.creditNoteDate;
+    return renderDate(dateToRender);
+},
   },
   {
     field: "type",
@@ -205,9 +225,32 @@ const CustomerAccountStatement = [
   },
   {
     field: "invoiceNumber",
-    headerName: strings.InvoiceNo,
+    headerName: strings.ReferenceN,
     headerClassName: "table-header-bg",
     flex: 1,
+    renderCell: (params) => {
+      const pathname = params.row.invoiceDate 
+        ? "/admin/income/customer-invoice/view" 
+        : "/admin/income/credit-notes/view";
+
+      return params.row.invoiceNumber !== strings.Total ? (
+        <Link
+          to={{
+            pathname: pathname,
+            state: {
+              id: params.row.invoiceId,
+              gotoReports: "/admin/report/customer-account-statement",
+              isCNWithoutProduct: params.row.isCNWithoutProduct
+            },
+          }}
+          style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
+        >
+          {params.row.invoiceNumber}
+        </Link>
+      ) : (
+        <span>{params.row.invoiceNumber}</span>
+      );
+    },
   },
   {
     field: "totalAmount",
@@ -227,52 +270,6 @@ const CustomerAccountStatement = [
         >
           {" "}
           {renderAmount(params.row.totalAmount)}{" "}
-        </div>
-      ) : (
-        ""
-      );
-    },
-  },
-  {
-    field: "amountPaid",
-    headerName: strings.AmountPaid,
-    headerAlign: "right",
-    align: "right",
-    headerClassName: "table-header-bg",
-    flex: 1,
-    renderCell: (params) => {
-      return params.row.amountPaid ? (
-        <div
-          style={
-            params.row.id === 1 || params.row.id === 0
-              ? { fontWeight: "600" }
-              : {}
-          }
-        >
-          {renderAmount(params.row.amountPaid)}
-        </div>
-      ) : (
-        ""
-      );
-    },
-  },
-  {
-    field: "balanceAmount",
-    headerName: strings.Balance,
-    headerAlign: "right",
-    align: "right",
-    headerClassName: "table-header-bg",
-    flex: 1,
-    renderCell: (params) => {
-      return params.row.balanceAmount || params.row.id === 0 ? (
-        <div
-          style={
-            params.row.id === 1 || params.row.id === 0
-              ? { fontWeight: "600" }
-              : {}
-          }
-        >
-          {renderAmount(params.row.balanceAmount)}
         </div>
       ) : (
         ""
@@ -317,6 +314,25 @@ const ExpenseDetails = [
     flex: 1,
     headerAlign: "center",
     align: "center",
+    hideable: false,
+    renderCell: (params) => {
+      return params.row.expenseNumber !== strings.Total ? (
+        <Link
+          to={{
+            pathname: "/admin/expense/expense/view",
+            state: {
+              expenseId: params.row.expenseId,
+              gotoReports: "/admin/report/expense-details",
+            },
+          }}
+          style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
+        >
+          {params.row.expenseNumber}
+        </Link>
+      ) : (
+        <span>{params.row.expenseNumber}</span>
+      );
+    },
   },
   {
     field: "payMode",
@@ -522,7 +538,7 @@ const ReceivableInvoiceDetails = [
             pathname: "/admin/income/customer-invoice/view",
             state: {
               id: params.row.invoiceId,
-              gotoReports: "/admin/report/receivable-invoice-summary",
+              gotoReports: "/admin/report/receivable-invoice-details",
             },
           }}
           style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
@@ -644,21 +660,22 @@ const TaxCreditNoteDetails = [
     align: "center",
     hideable: false,
     renderCell: (params) => {
-      if (params.row.creditNoteNumber === strings.Total) {
-        return params.row.creditNoteNumber;
-      }
-      return (
-        <p
-          style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
-          onClick={() => {
-            this.props.history.push("/admin/income/customer-invoice/view", {
-              id: params.row.id,
-              gotoReports: "/admin/report/receivable-invoice-summary",
-            });
+      return params.row.creditNoteNumber !== strings.Total ? (
+        <Link
+          to={{
+            pathname: "/admin/income/credit-notes/view",
+            state: {
+              id: params.row.creditNoteId,
+              isCNWithoutProduct: params.row.isCNWithoutProduct,
+              gotoReports: "/admin/report/credit-note-details",
+            },
           }}
+          style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
         >
           {params.row.creditNoteNumber}
-        </p>
+        </Link>
+      ) : (
+        <span>{params.row.creditNoteNumber}</span>
       );
     },
   },
@@ -677,6 +694,25 @@ const TaxCreditNoteDetails = [
     headerClassName: "table-header-bg",
     flex: 1,
     align: "center",
+    hideable: false,
+    renderCell: (params) => {
+      return params.row.invoiceNumber !== strings.Total ? (
+        <Link
+          to={{
+            pathname: "/admin/income/customer-invoice/view",
+            state: {
+              id: params.row.invoiceId,
+              gotoReports: "/admin/report/credit-note-details",
+            },
+          }}
+          style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
+        >
+          {params.row.invoiceNumber}
+        </Link>
+      ) : (
+        <span>{params.row.invoiceNumber}</span>
+      );
+    },
   },
   {
     field: "creditNoteDate",
@@ -728,21 +764,22 @@ const TaxDebitNoteDetails = [
     align: "center",
     hideable: false,
     renderCell: (params) => {
-      if (params.row.creditNoteNumber === strings.Total) {
-        return params.row.creditNoteNumber;
-      }
-      return (
-        <p
-          style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
-          onClick={() => {
-            this.props.history.push("/admin/income/customer-invoice/view", {
-              id: params.row.id,
-              gotoReports: "/admin/report/receivable-invoice-summary",
-            });
+      return params.row.creditNoteNumber !== strings.Total ? (
+        <Link
+          to={{
+            pathname: "/admin/expense/debit-notes/view",
+            state: {
+              id: params.row.creditNoteId,
+              isCNWithoutProduct: params.row.isCNWithoutProduct,
+              gotoReports: "/admin/report/debit-note-details",
+            },
           }}
+          style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
         >
           {params.row.creditNoteNumber}
-        </p>
+        </Link>
+      ) : (
+        <span>{params.row.creditNoteNumber}</span>
       );
     },
   },
@@ -761,6 +798,25 @@ const TaxDebitNoteDetails = [
     headerClassName: "table-header-bg",
     flex: 1,
     align: "center",
+    hideable: false,
+    renderCell: (params) => {
+      return params.row.invoiceNumber !== strings.Total ? (
+        <Link
+          to={{
+            pathname: "/admin/expense/supplier-invoice/view",
+            state: {
+              id: params.row.invoiceId,
+              gotoReports: "/admin/report/debit-note-details",
+            },
+          }}
+          style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
+        >
+          {params.row.invoiceNumber}
+        </Link>
+      ) : (
+        <span>{params.row.invoiceNumber}</span>
+      );
+    },
   },
   {
     field: "creditNoteDate",
@@ -903,19 +959,23 @@ const PayableInvoiceDetails = [
     headerClassName: "table-header-bg",
     flex: 1,
     align: "center",
+    hideable:false,
     renderCell: (params) => {
-      return (
-        <p
-          style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
-          onClick={() => {
-            this.props.history.push("/admin/income/customer-invoice/view", {
+      return params.row.invoiceNumber !== strings.Total ? (
+        <Link
+          to={{
+            pathname: "/admin/expense/supplier-invoice/view",
+            state: {
               id: params.row.invoiceId,
-              gotoReports: "/admin/report/Payable-invoice-summary",
-            });
+              gotoReports: "/admin/report/payable-invoice-details",
+            },
           }}
+          style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
         >
           {params.row.invoiceNumber}
-        </p>
+        </Link>
+      ) : (
+        <span>{params.row.invoiceNumber}</span>
       );
     },
   },

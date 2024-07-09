@@ -81,7 +81,8 @@ class ReportTables extends React.Component {
         const { field, sort } = sortModel[0];
 
         const totalRow = sortedRows.find(row => row.isTotalRow);
-        const otherRows = sortedRows.filter(row => !row.isTotalRow);
+        const totalRow2 = sortedRows.find(row => row.isTotalRow2);
+        const otherRows = sortedRows.filter(row => !row.isTotalRow && !row.isTotalRow2);
 
         otherRows.sort((a, b) => {
             if (a[field] < b[field]) {
@@ -95,6 +96,9 @@ class ReportTables extends React.Component {
 
         if (totalRow) {
             otherRows.push(totalRow);
+        }
+        if (totalRow2){
+            otherRows.push(totalRow2)
         }
         return otherRows;
     };

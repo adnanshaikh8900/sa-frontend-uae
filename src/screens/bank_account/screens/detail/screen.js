@@ -148,6 +148,7 @@ class DetailBankAccount extends React.Component {
 						.then((res) => {
 							this.setState({
 								current_bank_account: res,
+								newBankName: '',
 								initialVals: {
 									account_name: res.bankAccountName,
 									currency: res.bankAccountCurrency
@@ -220,6 +221,7 @@ class DetailBankAccount extends React.Component {
 			//openingDate: data.openingDate,
 			bankCountry: data.countryId,
 			bankAccountType: data.account_type,
+			newBankName: data.newBankName,
 		};
 		this.setState({ loading:true, disableLeavePage:true,loadingMsg:"Updating Bank Account Details..."});
 		this.props.detailBankAccountActions
@@ -388,6 +390,9 @@ class DetailBankAccount extends React.Component {
 												if (this.state.exist === true) {
 													errors.account_number =
 														'Account number already exists';
+												}
+												if(values.bank_name === 'Others' && (values.newBankName === null || values.newBankName === '')){
+													errors.newBankName = 'Bank Name is Required';
 												}
 												return errors;
 											}}
@@ -930,6 +935,33 @@ class DetailBankAccount extends React.Component {
 														</Col> */}
 													</Row>
 													<Row>
+														{props.values.bank_name.value === 999 && (
+															<Col lg={4}>
+																<FormGroup className="mb-3">
+																<Label>
+																	<span className="text-danger">* </span>
+																	{strings.AddNewBank}
+																</Label>
+																<Input
+																	type="text"
+																	maxLength="25"
+																	id="newBankName"
+																	name="newBankName"
+																	placeholder={`${strings.Enter} ${strings.New} ${strings.BankName}`}
+																	value={props.values.AddNewBank}
+																	onChange={props.handleChange('newBankName')}
+																	className={
+																	props.errors.newBankName && props.touched.newBankName ? 'is-invalid' : ''
+																	}
+																/>
+																{props.errors.newBankName && props.touched.newBankName && (
+																	<div className="invalid-feedback">
+																	{props.errors.newBankName}
+																	</div>
+																)}
+																</FormGroup>
+															</Col>
+														)}
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="account_is_for">

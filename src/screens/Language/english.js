@@ -458,6 +458,8 @@ const en = {
       BANKNAME: "BANK NAME",
       AccountNumber: "Account Number",
       Accountisfor: "Account is for",
+      AddNewBank:"Add New Bank",
+      New: "New ",
 
       //View Transaction
       BankTransactions: "Bank Transactions",
@@ -1133,6 +1135,7 @@ const en = {
       CreateIncomeReceipt: "Create Income Receipt",
       AmountDue: "Amount Due",
       Payment: "Payment",
+      TotalAmount:"Total Amount",
       UnusedAmount: "UnusedAmount",
       UpdateReceipt: "UpdateReceipt",
       Invoice: "Invoice",

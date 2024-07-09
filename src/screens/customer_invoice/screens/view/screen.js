@@ -215,7 +215,7 @@ class ViewCustomerInvoice extends React.Component {
 									onClick={() => {
 										// console.log(this.props.location.state);
 										if (this.props.location && this.props.location.state && this.props.location.state.gotoReports) {
-												this.props.history.push('/admin/report/credit-note-details')
+												this.props.history.push(this.props.location.state.gotoReports)
 										} else if (this.props.location.state.TCN_Id) {
 											this.props.history.push('/admin/income/credit-notes/view', {
 												id: this.props.location.state.TCN_Id,

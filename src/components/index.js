@@ -24,6 +24,7 @@ import ChangeInvoiceStatus from './change_invoice_status';
 import DeleteDocument from './delete_record';
 import ProductTable from './product_table';
 import TotalCalculation from './total_calculation';
+import InvoiceViewJournalEntries from './invoice_view_journal_entries';
 
 export {
 	Loading,
@@ -54,4 +55,5 @@ export {
 	TotalCalculation,
 	InvoiceAdditionaNotesInformation,
 	TermDateInput,
+	InvoiceViewJournalEntries,
 };

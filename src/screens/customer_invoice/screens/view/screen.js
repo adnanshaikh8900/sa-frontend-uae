@@ -13,7 +13,7 @@ import './style.scss';
 import { InvoiceTemplate } from './sections';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { Currency } from 'components';
+import { Currency, InvoiceViewJournalEntries } from 'components';
 import moment from 'moment';
 const mapStateToProps = (state) => {
 	return {
@@ -44,7 +44,7 @@ class ViewCustomerInvoice extends React.Component {
 			isBillingAndShippingAddressSame: false,
 			totalNet: 0,
 			currencyData: {},
-			id: '',
+			id: this.props.location.state.id,
 			creditNoteDataList: [],
 		};
 
@@ -302,6 +302,14 @@ class ViewCustomerInvoice extends React.Component {
 							</Table>
 						</div>
 					</Card>
+					{this.props.location.state.status && this.props.location.state.status !== 'Draft' &&
+							<InvoiceViewJournalEntries
+								history={this.props.history}
+								invoiceURL={'/admin/income/customer-invoice/view'}
+								invoiceId={id}
+								invoiceType={2}
+							/>
+						}
 				</div>
 			</div>
 		);

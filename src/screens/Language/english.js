@@ -105,6 +105,8 @@ const en = {
       SelectPlaceOfSupply: "Select Place of Supply",
       ApplyLineItemDiscount: "  Apply Line Item Discount",
       DeleteCustomerInvoice: "Delete Customer Invoice?",
+      CustomerInvoice: "CUSTOMER INVOICE",
+      TaxInvoice: "TAX INVOICE",
       Credit_Note_Created: "(Credit Note Created)",
       CustomerInvoices: "Customer Invoices",
       Overdue: "Overdue",

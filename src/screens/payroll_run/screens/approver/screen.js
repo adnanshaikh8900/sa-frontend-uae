@@ -771,8 +771,11 @@ class PayrollApproverScreen extends React.Component {
 																						color="secondary"
 																						className="btn-square  pull-right   mt-5"
 																						onClick={() => {
-																							this.props.history.push('/admin/payroll/payrollrun')
-																						}}
+																							if (this.props.location && this.props.location.state && this.props.location.state.gotoReports) {
+																								this.props.history.push(this.props.location.state.gotoReports)
+																							}else{
+																								this.props.history.push('/admin/payroll/payrollrun')
+																						}}}
 																					>
 																						<i className="fa fa-ban"></i> {strings.Cancel}
 																					</Button>

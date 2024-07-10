@@ -58,6 +58,7 @@ class FilterComponent3 extends Component {
       showEndDate: false,
       showRunReport: false,
       hideCustomPeriod: this.props.hideCustomPeriod ? this.props.hideCustomPeriod : false,
+      hideAsOn : this.props.hideAsOn ? this.props.hideAsOn : false,
       options: [
         { value: "today", label: "Today" },
         { value: "yesterday", label: "Yesterday" },
@@ -248,9 +249,15 @@ class FilterComponent3 extends Component {
       showEndDate,
       showRunReport,
     } = this.state;
-    const optionsToShow = this.props.hideCustomPeriod
-        ? this.state.options.filter(option => option.value === 'asOn')
-        : this.state.options;
+    const optionsToShow = this.state.options.filter(option => {
+      if (this.props.hideCustomPeriod) {
+        return option.value === 'asOn';
+      }
+      if (this.props.hideAsOn) {
+        return option.value !== 'asOn';
+      }
+      return true;
+    });
 
     return (
       <Formik initialValues={initValue}>

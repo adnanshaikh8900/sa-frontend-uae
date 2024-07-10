@@ -229,9 +229,20 @@ const CustomerAccountStatement = [
     headerClassName: "table-header-bg",
     flex: 1,
     renderCell: (params) => {
-      const pathname = params.row.invoiceDate 
-        ? "/admin/income/customer-invoice/view" 
-        : "/admin/income/credit-notes/view";
+      let pathname = "";
+
+      switch (params.row.type) {
+        case "Customer Invoice":
+          pathname = "/admin/income/customer-invoice/view";
+          break;
+        case "Credit Note":
+          pathname = "/admin/income/credit-notes/view";
+          break;
+        case "Customer Payment":
+          return <span>{params.row.invoiceNumber}</span>;
+        default:
+          pathname = "";
+      }
 
       return params.row.invoiceNumber !== strings.Total ? (
         <Link

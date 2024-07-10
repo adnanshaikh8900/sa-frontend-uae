@@ -83,9 +83,17 @@ class ViewCustomerInvoice extends React.Component {
 				.getInvoiceById(this.props.location.state.id)
 				.then((res) => {
 					let val = 0;
-					if (!this.props.location.state.contactId) {
-						this.props.supplierInvoiceDetailActions.someAction(); 
-					}
+					if (!this.props.location.state.contactId)
+						this.props.supplierInvoiceDetailActions
+							.getContactById(res.data.contactId)
+							.then((res) => {
+								if (res.status === 200) {
+									this.setState({
+										contactData: res.data,
+										isBillingAndShippingAddressSame: res.data.isBillingAndShippingAddressSame
+									});
+								}
+							});
 					const invoiceStatus = res.data.status ? (res.data.status.includes('Due') ? 'Due' : res.data.status) : '';
 					var actionList = StatusActionList.InvoiceStatusActionList;
 					if (invoiceStatus && actionList && actionList.length > 0) {

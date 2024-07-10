@@ -14,6 +14,8 @@ import { InvoiceTemplate } from './sections';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Currency } from 'components';
+import ActionButtons from 'components/view_actions_buttons';
+import { StatusActionList } from 'utils';
 import moment from 'moment';
 const mapStateToProps = (state) => {
 	return {
@@ -44,8 +46,10 @@ class ViewCustomerInvoice extends React.Component {
 			isBillingAndShippingAddressSame: false,
 			totalNet: 0,
 			currencyData: {},
+			invoiceStatus: '',
 			id: '',
 			creditNoteDataList: [],
+			actionList: [],
 		};
 
 		this.formRef = React.createRef();
@@ -66,70 +70,80 @@ class ViewCustomerInvoice extends React.Component {
 		this.props.supplierInvoiceDetailActions
 			.getCompanyDetails()
 			.then((res) => {
-
 				if (res.status === 200) {
-
-					this.setState(
-						{
-							companyData: res.data,
-						},
-
-					);
+					this.setState({
+						companyData: res.data,
+					});
 				}
 			});
+	
 		if (this.props.location.state && this.props.location.state.id) {
-
 			this.props.supplierInvoiceDetailActions
 				.getInvoiceById(this.props.location.state.id)
 				.then((res) => {
 					let val = 0;
-					if (!this.props.location.state.contactId)
-						this.props.supplierInvoiceDetailActions
-							.getContactById(res.data.contactId)
-							.then((res) => {
-								if (res.status === 200) {
-									this.setState({
-										contactData: res.data,
-										isBillingAndShippingAddressSame: res.data.isBillingAndShippingAddressSame
-									});
-								}
-							});
+					if (!this.props.location.state.contactId) {
+						this.props.supplierInvoiceDetailActions.someAction(); 
+					}
+					const invoiceStatus = res.data.status ? (res.data.status.includes('Due') ? 'Due' : res.data.status) : '';
+					var actionList = StatusActionList.InvoiceStatusActionList;
+					if (invoiceStatus && actionList && actionList.length > 0) {
+						const statuslist = actionList.find(obj => obj.status === invoiceStatus);
+						actionList = statuslist ? statuslist.list : [];
+					}
+	
+					this.setState({
+						invoiceData: res.data,
+						invoiceStatus: invoiceStatus,
+						actionList: actionList,
+					}, () => {
+						if (this.state.invoiceData.contactId) {
+							this.props.supplierInvoiceDetailActions
+								.getContactById(res.data.contactId)
+								.then((res) => {
+									if (res.status === 200) {
+										this.setState({
+											contactData: res.data,
+											isBillingAndShippingAddressSame: res.data.isBillingAndShippingAddressSame
+										});
+									}
+								});
+						}
+					});
+	
 					if (res.status === 200) {
 						res.data.invoiceLineItems &&
 							res.data.invoiceLineItems.map((item) => {
 								val = val + item.subTotal;
 								return item;
 							});
-						this.setState(
-							{
-								invoiceData: res.data,
-								totalNet: val,
-								id: this.props.location.state.id,
-							},
-							() => {
-								if (this.state.invoiceData.currencyCode) {
-									this.props.supplierInvoiceActions
-										.getCurrencyList()
-										.then((res) => {
-											if (res.status === 200) {
-												const temp = res.data.filter(
-													(item) =>
-														item.currencyCode ===
-														this.state.invoiceData.currencyCode,
-												);
-												this.setState({
-													currencyData: temp,
-												});
-											}
-										});
-								}
-								if (this.state.invoiceData.contactId) {
-
-								}
-							},
-						);
+	
+						this.setState({
+							invoiceData: res.data,
+							totalNet: val,
+							id: this.props.location.state.id,
+						}, () => {
+							if (this.state.invoiceData.currencyCode) {
+								this.props.supplierInvoiceActions
+									.getCurrencyList()
+									.then((res) => {
+										if (res.status === 200) {
+											const temp = res.data.filter(
+												(item) =>
+													item.currencyCode ===
+													this.state.invoiceData.currencyCode,
+											);
+											this.setState({
+												currencyData: temp,
+											});
+										}
+									});
+							}
+							
+						});
 					}
 				});
+	
 			if (this.props.location.state.contactId)
 				this.props.supplierInvoiceDetailActions
 					.getContactById(this.props.location.state.contactId)
@@ -141,17 +155,19 @@ class ViewCustomerInvoice extends React.Component {
 							});
 						}
 					});
+	
 			this.props.commonActions
 				.getByNoteListByInvoiceId(this.props.location.state.id)
 				.then((res) => {
 					if (res.status === 200) {
 						this.setState({
 							creditNoteDataList: res.data,
-						},);
+						});
 					}
-				})
+				});
 		}
 	};
+	
 
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
@@ -172,7 +188,7 @@ class ViewCustomerInvoice extends React.Component {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { invoiceData, currencyData, id, contactData, isBillingAndShippingAddressSame, creditNoteDataList } = this.state;
+		const { invoiceData, currencyData, id, contactData, isBillingAndShippingAddressSame, creditNoteDataList,actionList ,invoiceStatus} = this.state;
 		const { profile } = this.props;
 
 		return (
@@ -180,6 +196,23 @@ class ViewCustomerInvoice extends React.Component {
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
+						<div className='pull-left'>
+                        
+								<ActionButtons
+									id={id}
+									history={this.props.history}
+									URL={'/admin/income/customer-invoice'}
+									invoiceData={invoiceData}
+									postingRefType={'INVOICE'}
+									initializeData={() => {
+										this.initializeData();
+									}}
+									actionList={actionList}
+									invoiceStatus={invoiceStatus}
+									documentTitle={strings.CustomerInvoice}
+									documentCreated={creditNoteDataList && creditNoteDataList.creditNoteId} // Any Further document against this document is created(e.g.  CN,DN,CI,...)
+								/>
+							</div>
 							<div className="pull-right">
 								{/* <Button
 									className="btn btn-sm edit-btn"

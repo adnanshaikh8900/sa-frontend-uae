@@ -105,6 +105,8 @@ const en = {
       SelectPlaceOfSupply: "Select Place of Supply",
       ApplyLineItemDiscount: "  Apply Line Item Discount",
       DeleteCustomerInvoice: "Delete Customer Invoice?",
+      CustomerInvoice: "CUSTOMER INVOICE",
+      TaxInvoice: "TAX INVOICE",
       Credit_Note_Created: "(Credit Note Created)",
       CustomerInvoices: "Customer Invoices",
       Overdue: "Overdue",
@@ -458,6 +460,8 @@ const en = {
       BANKNAME: "BANK NAME",
       AccountNumber: "Account Number",
       Accountisfor: "Account is for",
+      AddNewBank:"Add New Bank",
+      New: "New ",
 
       //View Transaction
       BankTransactions: "Bank Transactions",
@@ -1133,6 +1137,7 @@ const en = {
       CreateIncomeReceipt: "Create Income Receipt",
       AmountDue: "Amount Due",
       Payment: "Payment",
+      TotalAmount:"Total Amount",
       UnusedAmount: "UnusedAmount",
       UpdateReceipt: "UpdateReceipt",
       Invoice: "Invoice",

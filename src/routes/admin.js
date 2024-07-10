@@ -90,6 +90,7 @@ import {
 
 	// Report Screens
 	TransactionsReport,
+	CustomerAccountStatement,
 	FinancialReport,
 	ProfitAndLossReport,
 	BalanceSheet,
@@ -754,6 +755,11 @@ const adminRoutes = [
 		path: '/admin/report/vat-transactions',
 		name: 'Vat Transactions',
 		component: VatTransactions.screen,
+	},
+	Config.REPORTS_MODULE && {
+		path: '/admin/report/customer-account-statement',
+		name: 'Statement of Accounts for Customer',
+		component: CustomerAccountStatement.screen,
 	},
 	Config.REPORTS_MODULE && {
 		path: '/admin/report/transactions',

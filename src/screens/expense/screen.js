@@ -787,7 +787,7 @@ class Expense extends React.Component {
 													className="form-control"
 													id="date"
 													name="expenseDate"
-													placeholderText={strings.ExpenseDate}
+													placeholderText={strings.Select + strings.ExpenseDate}
 													selected={filterData.expenseDate}
 													showMonthDropdown
 													showYearDropdown
@@ -828,7 +828,7 @@ class Expense extends React.Component {
 																this.handleChange('', 'transactionCategoryId');
 															}
 														}}
-														placeholder={strings.ExpenseCategory}
+														placeholder={strings.Select + strings.ExpenseCategory}
 													/>
 												</FormGroup>
 											</Col>

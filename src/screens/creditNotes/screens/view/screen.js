@@ -14,6 +14,8 @@ import './style.scss';
 import { CreditNoteTemplate } from './sections';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import ActionButtons from 'components/view_actions_buttons';
+import { StatusActionList } from 'utils';
 
 const mapStateToProps = (state) => {
 	return {
@@ -39,7 +41,8 @@ class ViewCreditNote extends React.Component {
 			invoiceData: {},
 			totalNet: 0,
 			currencyData: {},
-			id: '',
+			id: this.props.location.state.id,
+
 		};
 
 		this.formRef = React.createRef();
@@ -78,17 +81,18 @@ class ViewCreditNote extends React.Component {
 				.then((res) => {
 					let val = 0;
 					if (res.status === 200) {
-						res.data.invoiceLineItems &&
-							res.data.invoiceLineItems.map((item) => {
-								val = val + item.subTotal;
-								return item;
-							});
-						this.setState(
-							{
-								invoiceData: res.data,
-								totalNet: val,
-								id: this.props.location.state.id,
-							},
+						const invoiceData = res.data;
+						const invoiceStatus = invoiceData.status ? invoiceData.status === 'Partially Paid' ? 'Partially Credited' : invoiceData.status : '';
+						var actionList = StatusActionList.CreditNoteStatusActionList;
+						if (invoiceStatus && actionList && actionList.length > 0) {
+							const statuslist = actionList.find(obj => obj.status === invoiceStatus);
+							actionList = statuslist ? statuslist?.list : [];
+						}
+						this.setState({
+							invoiceData: data,
+							invoiceStatus: invoiceStatus,
+							actionList: actionList,
+						},
 							() => {
 								if (this.state.invoiceData.currencyCode) {
 									this.props.supplierInvoiceActions
@@ -178,7 +182,7 @@ class ViewCreditNote extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { invoiceData, currencyData, InvoiceDataList, isBillingAndShippingAddressSame, contactData } = this.state;
+		const { invoiceData, currencyData, InvoiceDataList, isBillingAndShippingAddressSame, contactData ,id,actionList,invoiceStatus} = this.state;
 		const { profile } = this.props;
 		const uniqueInvoiceData = {};
 		const filteredInvoiceData = [];
@@ -187,6 +191,23 @@ class ViewCreditNote extends React.Component {
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
+						<div className='pull-left'>
+                        
+						<ActionButtons
+									id={this.props.location.state.id}
+									history={this.props.history}
+									URL={'/admin/income/credit-notes'}
+									invoiceData={invoiceData}
+									postingRefType={'CREDIT_NOTE'}
+									initializeData={() => {
+										this.initializeData();
+									}}
+									actionList={actionList}
+									invoiceStatus={invoiceStatus}
+									documentTitle={strings.TaxCreditNote}
+									documentCreated={false} // Any Further document against this document is created(e.g. CN,DN,CI,...)
+								/>
+							</div>
 							<div className="pull-right">
 								{/* <Button
 									className="btn btn-sm edit-btn"

@@ -114,20 +114,16 @@ class CustomerAccountStatement extends React.Component {
           customerAccountStatement.push({
             contactName: strings.Total,
 						isTotalRow: true,
-            totalAmount: res.data.totalAmountTotal,
             invoiceDate: null,
             invoiceNumber: null,
-            amountPaid: res.data.amountPaidTotal,
             balanceAmount: res.data.balanceAmountTotal,
             type: null,
             id: 1,
           });
           customerAccountStatement.push({
             contactName: message,
-            totalAmount: null,
             invoiceDate: null,
             invoiceNumber: null,
-            amountPaid: null,
             balanceAmount: res.data.balanceAmountTotal,
 						isTotalRow2: true,
             type: null,

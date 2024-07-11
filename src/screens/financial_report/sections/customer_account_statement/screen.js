@@ -52,8 +52,7 @@ class CustomerAccountStatement extends React.Component {
       dropdownOpen: false,
       view: false,
       initValue: {
-        startDate: moment().startOf("month").format("DD/MM/YYYY"),
-        endDate: moment().endOf("month").format("DD/MM/YYYY"),
+        endDate: moment().format("DD/MM/YYYY"),
         contactId: "",
       },
       csvData: [],
@@ -338,8 +337,7 @@ class CustomerAccountStatement extends React.Component {
                         Statement Of Account
                       </b>
                       <br style={{ marginBottom: "5px" }} />
-                     {customPeriod === 'asOn' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
-											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
+                     {`${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`}
                     </div>
                     <div></div>
                   </div>
@@ -351,7 +349,6 @@ class CustomerAccountStatement extends React.Component {
                         reportDataList={customerAccountStatement}
                         reportName={"Customer Account Statement"}
                         id={13}
-                        rowHeight={50}
                       />
                     </>
                   )}

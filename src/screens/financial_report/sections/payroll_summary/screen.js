@@ -49,7 +49,8 @@ class PayrollSummaryReport extends React.Component {
             language: window['localStorage'].getItem('language'),
             loading: false,
             dropdownOpen: false,
-            customPeriod: 'asOn',
+            customPeriod: 'customRange',
+			hideAsOn: true,
             hideExportOptions: false,
             view: false,
             initValue: {
@@ -147,10 +148,12 @@ class PayrollSummaryReport extends React.Component {
     exportPDFWithComponent = () => {
         this.pdfExportComponent.save();
     };
-
+    hideExportOptionsFunctionality = (val) => {
+		this.setState({ hideExportOptions: val });
+	}
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dropdownOpen, payrollSummaryModelList, view, customPeriod } = this.state;
+        const { loading, initValue, dropdownOpen, payrollSummaryModelList, view, customPeriod,hideAsOn } = this.state;
         const { company_profile } = this.props;
         return (
             <div className="transactions-report-screen">
@@ -165,17 +168,7 @@ class PayrollSummaryReport extends React.Component {
                                             style={{ justifyContent: 'space-between' }}
                                         >
                                             <div>
-                                                <p
-                                                    className="mb-0"
-                                                    style={{
-                                                        cursor: 'pointer',
-                                                        fontSize: '1rem',
-                                                        paddingLeft: '15px',
-                                                    }}
-                                                    onClick={this.viewFilter}
-                                                >
-                                                    <i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
-                                                </p>
+                                               
                                             </div>
                                             <div className="d-flex">
                                                 <div>
@@ -233,14 +226,32 @@ class PayrollSummaryReport extends React.Component {
                                 </Row>
 
                             </CardHeader>
-                            <div className={`panel ${view ? 'view-panel' : ''}`}>
-                                <FilterComponent2
-                                    viewFilter={this.viewFilter}
-                                    generateReport={(value) => {
-                                        this.generateReport(value);
-                                    }}
-                                />{' '}
-                            </div>
+                            <CardHeader>
+							<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+									hideAsOn={hideAsOn}
+									viewFilter={this.viewFilter}
+									generateReport={(value) => {
+										this.generateReport(value);
+									}}
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+										if (customPeriod === 'customRange') {
+										const currentDate = moment();
+										this.setState(prevState => ({
+										initValue: {
+										...prevState.initValue,
+										endDate: currentDate,            }
+										 }));
+										this.generateReport({ endDate: currentDate });
+										}
+										this.setState({ customPeriod: 'customRange' });
+										}}
+										/>
+									</CardHeader>
                             <CardBody id="section-to-print">
                                 <PDFExport
                                     ref={(component) => (this.pdfExportComponent = component)}
@@ -280,8 +291,9 @@ class PayrollSummaryReport extends React.Component {
                                             <br style={{ marginBottom: '5px' }} />
                                             <b style={{ fontSize: '18px' }}>{strings.Payroll + "s  " + strings.Summary}</b>
                                             <br style={{ marginBottom: '5px' }} />
-                                            {strings.From} {(initValue.startDate).replaceAll("/", "-")} {strings.To} {initValue.endDate.replaceAll("/", "-")}
-
+                                            {customPeriod === 'customRange' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
+										
                                         </div>
                                         <div>
                                         </div>

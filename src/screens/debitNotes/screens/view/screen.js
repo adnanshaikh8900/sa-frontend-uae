@@ -7,13 +7,15 @@ import * as DebitNoteActions from '../../actions';
 import ReactToPrint from 'react-to-print';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { Currency } from 'components';
+import { Currency, InvoiceViewJournalEntries } from 'components';
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { DebitNoteTemplate } from './sections';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import ActionButtons from 'components/view_actions_buttons';
+import { StatusActionList } from 'utils';
 
 const mapStateToProps = (state) => {
 	return {
@@ -37,8 +39,9 @@ class ViewDebitNote extends React.Component {
 			applyToInvoiceData: [],
 			debitNoteData: {},
 			totalNet: 0,
+			invoiceStatus: '',
 			currencyData: {},
-			id: '',
+			id: this.props.location?.state?.id,
 		};
 		this.formRef = React.createRef();
 	}
@@ -65,11 +68,21 @@ class ViewDebitNote extends React.Component {
 								val = val + item.subTotal;
 								return item;
 							});
+							const invoiceData = res.data;
+							const invoiceStatus = invoiceData.status === 'Partially Paid' ? 'Partially Debited' : invoiceData.status;
+							var actionList = StatusActionList.DebitNoteStatusActionList;
+							if (invoiceStatus && actionList && actionList.length > 0) {
+								const statuslist = actionList.find(obj => obj.status === invoiceStatus);
+								actionList = statuslist ? statuslist.list : [];
+							}
 						this.setState(
 							{
 								debitNoteData: res.data,
 								totalNet: val,
 								id: this.props.location.state.id,
+								invoiceData: data,
+						invoiceStatus: invoiceStatus,
+						actionList: actionList,
 							},
 							() => {
 								if (this.state.debitNoteData.currencyCode) {
@@ -161,7 +174,7 @@ class ViewDebitNote extends React.Component {
 	};
 	render() {
 		strings.setLanguage(this.state.language);
-		const { debitNoteData, currencyData, debitNoteDataList, contactData } = this.state;
+		const { debitNoteData, currencyData,   invoiceData, debitNoteDataList, contactData, invoiceStatus, id, actionList} = this.state;
 		const { profile } = this.props;
 		const uniquedebitNoteData = {};
 		const filtereddebitNoteData = [];
@@ -170,6 +183,22 @@ class ViewDebitNote extends React.Component {
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
+						<div className="pull-left">
+								<ActionButtons
+									id={this.props.location.state.id}
+									history={this.props.history}
+									URL={'/admin/expense/debit-notes'}
+									invoiceData={invoiceData}
+									postingRefType={'DEBIT_NOTE'}
+									initializeData={() => {
+										this.initializeData();
+									}}
+									actionList={actionList}
+									invoiceStatus={invoiceStatus}
+									documentTitle={strings.DebitNote}
+									documentCreated={false} // Any Further document against this document is created(e.g.  CN,DN,CI,...)
+								/>
+							</div>
 							<div className="pull-right">
 								{/* <Button
 									className="btn btn-sm edit-btn"
@@ -354,6 +383,14 @@ class ViewDebitNote extends React.Component {
 							</Table>
 						</div>
 					</Card>
+					{this.props.location.state.status && this.props.location.state.status !== 'Draft' &&
+						<InvoiceViewJournalEntries
+							history={this.props.history}
+							invoiceURL={'/admin/expense/debit-notes/view'}
+							invoiceId={id}
+							invoiceType={5}
+						/>
+					}
 				</div>
 			</div>
 		);

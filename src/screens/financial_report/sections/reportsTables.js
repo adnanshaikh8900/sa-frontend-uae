@@ -116,55 +116,44 @@ class ReportTables extends React.Component {
     this.setState({ sortedRows });
   };
 
-  render() {
-    strings.setLanguage(this.state.language);
-    const { columnConfigs, sortedRows } = this.state;
-    const { reportDataList, reportName, rowHeight } = this.props;
-    console.log(
-      sortedRows,
-      reportDataList,
-      sortedRows.length && sortedRows.length > 0
-        ? sortedRows.length
-        : reportDataList.length
-    );
-    const processedRows = (sortedRows.length ? sortedRows : reportDataList).map(
-      (row, index) => ({
-        ...row,
-        id: row.id || index, // Ensure each row has a unique id
-      })
-    );
+    render() {
+        strings.setLanguage(this.state.language);
+        const { columnConfigs, sortedRows } = this.state;
+        const { reportDataList, reportName, rowHeight } = this.props;
+        console.log(sortedRows, reportDataList)
+        return (
+            <div id="tbl_exporttable_to_xls" className="table-wrapper">
+                {reportDataList &&
+                    <DataGrid
+                        rows={sortedRows.length ? sortedRows : reportDataList}
+                        columns={ReportsColumnList.List[reportName]}
+                        autoHeight
+                        getRowHeight={() => {
+                            return rowHeight;
+                        }}
+                        pageSize={sortedRows.length && sortedRows.length > 0 ? sortedRows.length : reportDataList.length}
+                        rowSelection={false}
+                        hideFooterPagination={true}
+                        columnVisibilityModel={columnConfigs}
+                        onColumnVisibilityModelChange={(newModel) => {
+                            debugger
+                            const str = JSON.stringify(newModel)
+                            console.log(str);
+                            this.updateColumnConfigs(str);
+                            this.setState({ columnConfigs: newModel })
+                        }}
+                        getRowClassName={(params) =>
+                            params.row.isTotalRow ? 'total-row' : ''
+                        }
+                        sortingOrder={['asc', 'desc']}
+                        sortingMode="server"
+                        onSortModelChange={this.handleSortModelChange}
+                    />
+                }
 
-    return (
-      <div id="tbl_exporttable_to_xls" className="table-wrapper">
-        {reportDataList && (
-          <DataGrid
-            rows={processedRows}
-            columns={ReportsColumnList.List[reportName]}
-            getRowHeight={() => rowHeight}
-            pageSize={processedRows.length}
-            pagination={false}
-         //   autoPageSize
-            disableColumnFilter
-            disableColumnMenu
-            rowSelection={false}
-            columnVisibilityModel={columnConfigs}
-            onColumnVisibilityModelChange={(newModel) => {
-              const str = JSON.stringify(newModel);
-              console.log(str);
-              this.updateColumnConfigs(str);
-              this.setState({ columnConfigs: newModel });
-            }}
-            getRowClassName={(params) =>
-              params.row.isTotalRow ? "total-row" : ""
-            }
-            sortingOrder={["asc", "desc"]}
-            sortingMode="server"
-            onSortModelChange={this.handleSortModelChange}
-          />
-        )}
-      </div>
-    );
-  }
+            </div>
+        );
+    }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReportTables);

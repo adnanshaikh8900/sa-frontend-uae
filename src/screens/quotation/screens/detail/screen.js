@@ -297,6 +297,7 @@ class DetailQuotation extends React.Component {
                   : 0,
                 loading: false,
                 discountEnabled: res.data.discount > 0 ? true : false,
+                supplier_currency_symbol: res.data.currencyIsoCode ? res.data.currencyIsoCode : "AED",
               },
               () => {
                 if (this.state.data.length > 0) {

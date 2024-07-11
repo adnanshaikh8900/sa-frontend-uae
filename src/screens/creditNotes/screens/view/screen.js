@@ -7,7 +7,7 @@ import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { Currency } from 'components';
+import { Currency, InvoiceViewJournalEntries } from 'components';
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
@@ -39,7 +39,7 @@ class ViewCreditNote extends React.Component {
 			invoiceData: {},
 			totalNet: 0,
 			currencyData: {},
-			id: '',
+			id: this.props.location?.state?.id,
 		};
 
 		this.formRef = React.createRef();
@@ -178,7 +178,7 @@ class ViewCreditNote extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { invoiceData, currencyData, InvoiceDataList, isBillingAndShippingAddressSame, contactData } = this.state;
+		const { invoiceData, currencyData, InvoiceDataList, isBillingAndShippingAddressSame, contactData, id } = this.state;
 		const { profile } = this.props;
 		const uniqueInvoiceData = {};
 		const filteredInvoiceData = [];
@@ -220,7 +220,7 @@ class ViewCreditNote extends React.Component {
 									className="close-btn mb-1 btn-lg print-btn-cont"
 									onClick={() => {
 										if (this.props.location && this.props.location.state && this.props.location.state.gotoReports)
-											this.props.history.push('/admin/report/credit-note-details');
+											this.props.history.push(this.props.location.state.gotoReports);
 										else if (this.props.location.state.CI_id)
 											this.props.history.push('/admin/income/customer-invoice/view', {
 												id: this.props.location.state.CI_id,
@@ -363,6 +363,14 @@ class ViewCreditNote extends React.Component {
 							</Table>
 						</div>
 					</Card>
+					{this.props.location.state.status && this.props.location.state.status !== 'Draft' &&
+						<InvoiceViewJournalEntries
+							history={this.props.history}
+							invoiceURL={'/admin/income/credit-notes/view'}
+							invoiceId={id}
+							invoiceType={4}
+						/>
+					}
 
 				</div>
 			</div>

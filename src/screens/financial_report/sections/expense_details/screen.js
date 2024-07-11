@@ -24,6 +24,8 @@ import * as ExpenseDetailsActions from './actions';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
+import FilterComponent3 from '../filterComponent3';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -46,6 +48,8 @@ class ExpenseDetailsReport extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
+			customPeriod: 'customRange',
+			hideAsOn: true,
 			expenseDetailsList: {},
 			view: false,
 			initValue: {
@@ -157,6 +161,9 @@ class ExpenseDetailsReport extends React.Component {
 			},
 		);
 	};
+	hideExportOptionsFunctionality = (val) => {
+		this.setState({ hideExportOptions: val });
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -165,6 +172,8 @@ class ExpenseDetailsReport extends React.Component {
 			dropdownOpen,
 			expenseSummaryModelModelList,
 			view,
+			hideAsOn,
+			customPeriod,
 			chart_of_account_list,
 		} = this.state;
 		const { company_profile } = this.props;
@@ -183,17 +192,7 @@ class ExpenseDetailsReport extends React.Component {
 											style={{ justifyContent: 'space-between' }}
 										>
 											<div>
-												<p
-													className="mb-0"
-													style={{
-														cursor: 'pointer',
-														fontSize: '1rem',
-														paddingLeft: '15px',
-													}}
-													onClick={this.viewFilter}
-												>
-													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
-												</p>
+												
 											</div>
 											<div className="d-flex">
 
@@ -250,15 +249,32 @@ class ExpenseDetailsReport extends React.Component {
 									</Col>
 								</Row>
 							</CardHeader>
-							<div className={`panel ${view ? 'view-panel' : ''}`}>
-								<FilterComponent
+							<CardHeader>
+							<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+									hideAsOn={hideAsOn}
 									viewFilter={this.viewFilter}
-									chart_of_account_list={chart_of_account_list}
 									generateReport={(value) => {
 										this.generateReport(value);
 									}}
-								/>
-							</div>
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+										if (customPeriod === 'customRange') {
+										const currentDate = moment();
+										this.setState(prevState => ({
+										initValue: {
+										...prevState.initValue,
+										endDate: currentDate,            }
+										 }));
+										this.generateReport({ endDate: currentDate });
+										}
+										this.setState({ customPeriod: 'customRange' });
+										}}
+										/>
+									</CardHeader>
 							<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
@@ -300,7 +316,9 @@ class ExpenseDetailsReport extends React.Component {
 												<b style={{ fontSize: '18px' }}>{strings.Expense + " " + strings.Details}</b>
 												<br style={{ marginBottom: '5px' }} />
 
-												{strings.From} {(initValue.startDate).replaceAll("/", "-")} {strings.To} {initValue.endDate.replaceAll("/", "-")}
+												{customPeriod === 'customReport' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
+										
 											</div>
 										</div>
 										<div className='mr-3'>

@@ -50,6 +50,7 @@ import {
 	DebitNotes
 } from 'screens';
 
+import InvoiceViewJournalReducer from 'components/invoice_view_journal_entries/reducer';
 
 const reducer = combineReducers({
 	common: CommonReducer,
@@ -100,7 +101,8 @@ const reducer = combineReducers({
 	creditNote:CreditNotes.reducer,
 	payrollRun:PayrollRun.reducer,
 	import:Import.reducer,
-
+	invoice_view_journal: InvoiceViewJournalReducer,
+	
 });
 
 export default reducer;

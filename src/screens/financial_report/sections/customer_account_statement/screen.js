@@ -52,8 +52,7 @@ class CustomerAccountStatement extends React.Component {
       dropdownOpen: false,
       view: false,
       initValue: {
-        startDate: moment().startOf("month").format("DD/MM/YYYY"),
-        endDate: moment().endOf("month").format("DD/MM/YYYY"),
+        endDate: moment().format("DD/MM/YYYY"),
         contactId: "",
       },
       csvData: [],
@@ -111,20 +110,20 @@ class CustomerAccountStatement extends React.Component {
               return row;
             }
           );
-          customerAccountStatement.push({
-            contactName: strings.Total,
-						isTotalRow: true,
-            totalAmount: res.data.totalAmountTotal,
-            invoiceDate: null,
-            invoiceNumber: null,
-            amountPaid: res.data.amountPaidTotal,
-            balanceAmount: res.data.balanceAmountTotal,
-            type: null,
-            id: 1,
-          });
+          // customerAccountStatement.push({
+          //   contactName: strings.Total,
+					// 	isTotalRow: true,
+          //   totalAmount: res.data.balanceAmountTotal,
+          //   invoiceDate: null,
+          //   invoiceNumber: null,
+          //   amountPaid: res.data.amountPaidTotal,
+          //   balanceAmount: res.data.balanceAmountTotal,
+          //   type: null,
+          //   id: 1,
+          // });
           customerAccountStatement.push({
             contactName: message,
-            totalAmount: null,
+            totalAmount: res.data.balanceAmountTotal,
             invoiceDate: null,
             invoiceNumber: null,
             amountPaid: null,
@@ -342,8 +341,7 @@ class CustomerAccountStatement extends React.Component {
                         Statement Of Account
                       </b>
                       <br style={{ marginBottom: "5px" }} />
-                     {customPeriod === 'asOn' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
-											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
+                     {`${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`}
                     </div>
                     <div></div>
                   </div>
@@ -355,7 +353,6 @@ class CustomerAccountStatement extends React.Component {
                         reportDataList={customerAccountStatement}
                         reportName={"Customer Account Statement"}
                         id={13}
-                        rowHeight={50}
                       />
                     </>
                   )}

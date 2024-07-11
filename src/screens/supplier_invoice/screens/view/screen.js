@@ -14,7 +14,7 @@ import { InvoiceTemplate } from './sections';
 import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { Currency } from 'components';
+import { Currency, InvoiceViewJournalEntries } from 'components';
 import moment from 'moment';
 import ActionButtons from 'components/view_actions_buttons';
 import { StatusActionList } from 'utils';
@@ -46,7 +46,7 @@ class ViewInvoice extends React.Component {
 			invoiceData: {},
 			totalNet: 0,
 			currencyData: {},
-			id: '',
+			id: this.props.location?.state?.id,
 			debitNoteDataList: [],
 		};
 
@@ -313,6 +313,14 @@ class ViewInvoice extends React.Component {
 							</Table>
 						</div>
 					</Card>
+					{this.props.location.state.status && this.props.location.state.status !== 'Draft' &&
+						<InvoiceViewJournalEntries
+							history={this.props.history}
+							invoiceURL={'/admin/income/credit-notes/view'}
+							invoiceId={id}
+							invoiceType={4}
+						/>
+					}
 				</div>
 			</div>
 		);

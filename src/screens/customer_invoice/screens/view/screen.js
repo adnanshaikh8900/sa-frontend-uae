@@ -13,7 +13,7 @@ import './style.scss';
 import { InvoiceTemplate } from './sections';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { Currency } from 'components';
+import { Currency, InvoiceViewJournalEntries } from 'components';
 import ActionButtons from 'components/view_actions_buttons';
 import { StatusActionList } from 'utils';
 import moment from 'moment';
@@ -47,7 +47,8 @@ class ViewCustomerInvoice extends React.Component {
 			totalNet: 0,
 			currencyData: {},
 			invoiceStatus: '',
-			id: '',
+			id: this.props.location.state.id,
+
 			creditNoteDataList: [],
 			actionList: [],
 		};
@@ -82,9 +83,17 @@ class ViewCustomerInvoice extends React.Component {
 				.getInvoiceById(this.props.location.state.id)
 				.then((res) => {
 					let val = 0;
-					if (!this.props.location.state.contactId) {
-						this.props.supplierInvoiceDetailActions.someAction(); 
-					}
+					if (!this.props.location.state.contactId)
+						this.props.supplierInvoiceDetailActions
+							.getContactById(res.data.contactId)
+							.then((res) => {
+								if (res.status === 200) {
+									this.setState({
+										contactData: res.data,
+										isBillingAndShippingAddressSame: res.data.isBillingAndShippingAddressSame
+									});
+								}
+							});
 					const invoiceStatus = res.data.status ? (res.data.status.includes('Due') ? 'Due' : res.data.status) : '';
 					var actionList = StatusActionList.InvoiceStatusActionList;
 					if (invoiceStatus && actionList && actionList.length > 0) {
@@ -335,6 +344,14 @@ class ViewCustomerInvoice extends React.Component {
 							</Table>
 						</div>
 					</Card>
+					{this.props.location.state.status && this.props.location.state.status !== 'Draft' &&
+							<InvoiceViewJournalEntries
+								history={this.props.history}
+								invoiceURL={'/admin/income/customer-invoice/view'}
+								invoiceId={id}
+								invoiceType={2}
+							/>
+						}
 				</div>
 			</div>
 		);

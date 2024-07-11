@@ -7,7 +7,7 @@ import * as DebitNoteActions from '../../actions';
 import ReactToPrint from 'react-to-print';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { Currency } from 'components';
+import { Currency, InvoiceViewJournalEntries } from 'components';
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
@@ -41,7 +41,7 @@ class ViewDebitNote extends React.Component {
 			totalNet: 0,
 			invoiceStatus: '',
 			currencyData: {},
-			id: '',
+			id: this.props.location?.state?.id,
 		};
 		this.formRef = React.createRef();
 	}
@@ -383,6 +383,14 @@ class ViewDebitNote extends React.Component {
 							</Table>
 						</div>
 					</Card>
+					{this.props.location.state.status && this.props.location.state.status !== 'Draft' &&
+						<InvoiceViewJournalEntries
+							history={this.props.history}
+							invoiceURL={'/admin/expense/debit-notes/view'}
+							invoiceId={id}
+							invoiceType={5}
+						/>
+					}
 				</div>
 			</div>
 		);

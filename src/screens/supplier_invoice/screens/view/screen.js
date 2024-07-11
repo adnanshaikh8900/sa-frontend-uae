@@ -16,6 +16,8 @@ import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Currency, InvoiceViewJournalEntries } from 'components';
 import moment from 'moment';
+import ActionButtons from 'components/view_actions_buttons';
+import { StatusActionList } from 'utils';
 
 const mapStateToProps = (state) => {
 	return {
@@ -87,11 +89,20 @@ class ViewInvoice extends React.Component {
 								val = val + debitNoteDataList.subTotal;
 								return debitNoteDataList;
 							});
+							const invoiceData = res.data;
+							const invoiceStatus = invoiceData.status ? invoiceData.status.includes('Due') ? 'Due' : invoiceData.status : '';
+							
+							var actionList = StatusActionList.SupplierInvoiceStatusActionList;
+							if (invoiceStatus && actionList && actionList.length > 0) {
+								const statuslist = actionList.find(obj => obj.status === invoiceStatus);
+								actionList = statuslist ? statuslist.list : [];
+							}
 						this.setState(
 							{
 								invoiceData: res.data,
 								totalNet: val,
 								id: this.props.location.state.id,
+								actionList:actionList
 							},
 							() => {
 								if (this.state.invoiceData.currencyCode) {
@@ -159,13 +170,29 @@ class ViewInvoice extends React.Component {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { invoiceData, currencyData, id, contactData, debitNoteDataList } = this.state;
+		const { invoiceData, currencyData, id, contactData, debitNoteDataList,invoiceStatus,actionList } = this.state;
 
 		return (
 			<div className="view-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
+						<div className="pull-left">
+								<ActionButtons
+									id={this.props.location.state.id}
+									history={this.props.history}
+									URL={'/admin/expense/supplier-invoice'}
+									invoiceData={invoiceData}
+									postingRefType={'INVOICE'}
+									initializeData={() => {
+										this.initializeData();
+									}}
+									actionList={actionList}
+									invoiceStatus={invoiceStatus}
+									documentTitle={strings.SupplierInvoice}
+									documentCreated={debitNoteDataList && debitNoteDataList.creditNoteId} // Any Further document against this document is created(e.g.  CN,DN,CI,...)
+								/>
+							</div>
 							<div className="pull-right">
 								{/* <Button
 									className="btn btn-sm edit-btn"

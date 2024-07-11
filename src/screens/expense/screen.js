@@ -828,7 +828,7 @@ class Expense extends React.Component {
 																this.handleChange('', 'transactionCategoryId');
 															}
 														}}
-														placeholder={strings.Select + strings.ExpenseCategory}
+														placeholder={strings.ExpenseCategory}
 													/>
 												</FormGroup>
 											</Col>

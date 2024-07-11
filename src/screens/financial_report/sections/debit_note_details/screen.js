@@ -24,6 +24,8 @@ import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import FilterComponent3 from '../filterComponent3';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -49,6 +51,8 @@ class DebitNoteDetailsReport extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: true,
+			customPeriod: 'customRange',
+			hideAsOn: true,
 			dropdownOpen: false,
 			view: false,
 			initValue: {
@@ -176,10 +180,13 @@ class DebitNoteDetailsReport extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
+	hideExportOptionsFunctionality = (val) => {
+		this.setState({ hideExportOptions: val });
+	}
 			
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue, dropdownOpen, debitNoteSummaryModelList, view } = this.state;
+		const { loading, initValue, dropdownOpen, debitNoteSummaryModelList, view,hideAsOn,customPeriod, } = this.state;
 		const {  company_profile } = this.props;
 
 		return (
@@ -195,17 +202,7 @@ class DebitNoteDetailsReport extends React.Component {
 											style={{ justifyContent: 'space-between' }}
 										>
 											<div>
-												<p
-													className="mb-0"
-													style={{
-														cursor: 'pointer',
-														fontSize: '1rem',
-														paddingLeft: '15px',
-													}}
-													onClick={this.viewFilter}
-												>
-													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
-												</p>
+												
 											</div>
 											<div className="d-flex">
 												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
@@ -266,14 +263,32 @@ class DebitNoteDetailsReport extends React.Component {
 									</Col>
 								</Row>
 							</CardHeader>
-							<div className={`panel ${view ? 'view-panel' : ''}`}>
-								<FilterComponent2
+							<CardHeader>
+							<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+									hideAsOn={hideAsOn}
 									viewFilter={this.viewFilter}
 									generateReport={(value) => {
 										this.generateReport(value);
 									}}
-								/>{' '}
-							</div>
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+										if (customPeriod === 'customRange') {
+										const currentDate = moment();
+										this.setState(prevState => ({
+										initValue: {
+										...prevState.initValue,
+										endDate: currentDate,            }
+										 }));
+										this.generateReport({ endDate: currentDate });
+										}
+										this.setState({ customPeriod: 'customRange' });
+										}}
+										/>
+									</CardHeader>
 							<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
@@ -311,8 +326,9 @@ class DebitNoteDetailsReport extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style={{ fontSize: '18px' }}>{strings.DebitNoteDetails}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {(initValue.startDate).replaceAll("/", "-")} {strings.To} {initValue.endDate.replaceAll("/", "-")}
-
+											{customPeriod === 'customReport' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
+										
 										</div>
 										<div>										</div>
 									</div>

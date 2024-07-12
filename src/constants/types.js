@@ -394,3 +394,6 @@ export const PROFILE = {
 export const IMPORT_TRANSACTION = {
 	DATE_FORMAT_LIST: 'DATE_FORMAT_LIST',
 };
+export const INVOICE_VIEW_JOURNAL = {
+	JOURNAL_LIST: 'JOURNAL_LIST',
+};

@@ -119,7 +119,7 @@ class ReportTables extends React.Component {
                     <DataGrid
                         rows={sortedRows.length ? sortedRows : reportDataList}
                         columns={ReportsColumnList.List[reportName]}
-                        // autoHeight
+                        autoHeight
                         getRowHeight={() => {
                             return rowHeight;
                         }}

@@ -477,7 +477,7 @@ class Receipt extends React.Component {
 														className="form-control"
 														id="date"
 														name="receiptDate"
-														placeholderText={strings.ReceiptDate}
+														placeholderText={strings.Select + strings.ReceiptDate}
 														selected={filterData.receiptDate}
 														autoComplete="off"
 														showMonthDropdown

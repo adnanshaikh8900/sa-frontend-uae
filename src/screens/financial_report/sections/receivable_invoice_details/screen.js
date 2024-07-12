@@ -275,11 +275,11 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 								</Row>
 							</CardHeader>
 							<CardHeader>
-							<FilterComponent3
+						
 									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
 									customPeriod={customPeriod}
 									hideAsOn={hideAsOn}
-							<div className={`panel ${view ? 'view-panel' : ''}`}>
+							        className={`panel ${view ? 'view-panel' : ''}`}
 									viewFilter={this.viewFilter}
 									generateReport={(value) => {
 										this.generateReport(value);
@@ -299,7 +299,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 										}
 										this.setState({ customPeriod: 'customRange' });
 										}}
-										/>
+									
 									</CardHeader>
 									<CardBody id="section-to-print">
 									<PDFExport

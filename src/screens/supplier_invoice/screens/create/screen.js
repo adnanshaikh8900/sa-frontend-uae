@@ -3574,7 +3574,7 @@ class CreateSupplierInvoice extends React.Component {
 																							/>
 																						)} */}
 																								{this.state.supplier_currency_symbol} &nbsp;
-																								{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+																								{(initValue.totalAmount - initValue.invoiceVATAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																							</label>
 																						</Col>
 																					</Row>

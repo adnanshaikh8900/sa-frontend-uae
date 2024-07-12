@@ -24,6 +24,7 @@ import "./style.scss";
 import logo from "assets/images/brand/logo.png";
 import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
+import FilterComponent3 from '../filterComponent3';
 
 const mapStateToProps = (state) => {
   return {
@@ -46,11 +47,13 @@ class CustomerAccountStatement extends React.Component {
     this.state = {
       language: window["localStorage"].getItem("language"),
       loading: true,
+			customPeriod: 'asOn',
+      hideCustomPeriod: true,
       dropdownOpen: false,
       view: false,
       initValue: {
-        startDate: moment().startOf("month").format("DD/MM/YYYY"),
-        endDate: moment().endOf("month").format("DD/MM/YYYY"),
+        endDate: moment().format("DD/MM/YYYY"),
+        contactId: "",
       },
       csvData: [],
       activePage: 1,
@@ -70,6 +73,7 @@ class CustomerAccountStatement extends React.Component {
         initValue: {
           startDate: moment(value.startDate).format("DD/MM/YYYY"),
           endDate: moment(value.endDate).format("DD/MM/YYYY"),
+          contactId: value.contactId,
         },
         loading: true,
         view: !this.state.view,
@@ -91,38 +95,38 @@ class CustomerAccountStatement extends React.Component {
       startDate: initValue.startDate,
       endDate: initValue.endDate,
     };
+    if (initValue.contactId) {
+      postData.contactId = initValue.contactId;
+    }
     this.props.financialReportActions
       .getCustomerAccountStatement(postData)
       .then(async (res) => {
         if (res.status === 200) {
-          const message = `Balance Outstanding Amount As On ${moment(
-            new Date()
-          ).format("DD-MM-YYYY")}`;
+          const message = `Balance Outstanding Amount As On ${initValue.endDate.replaceAll("/", "-")}`;
           let customerAccountStatement = res.data.statementOfAccountsModels;
-          customerAccountStatement.push({
-            contactName: strings.Total,
-            totalAmount: res.data.totalAmountTotal,
-            invoiceDate: null,
-            invoiceNumber: null,
-            amountPaid: res.data.amountPaidTotal,
-            balanceAmount: res.data.balanceAmountTotal,
-            type: null,
-          });
           customerAccountStatement = await customerAccountStatement.map(
             (row, i) => {
-              row.id = i + 1;
+              row.id = i + 2;
               return row;
             }
           );
-          customerAccountStatement.push({    
-            contactName: message,
-            totalAmount: null,
+          customerAccountStatement.push({
+            contactName: strings.Total,
+						isTotalRow: true,
             invoiceDate: null,
             invoiceNumber: null,
-            amountPaid: null,
             balanceAmount: res.data.balanceAmountTotal,
             type: null,
-            id: 0,   // define a unique id for the last row to customize the css
+            id: 1,
+          });
+          customerAccountStatement.push({
+            contactName: message,
+            invoiceDate: null,
+            invoiceNumber: null,
+            balanceAmount: res.data.balanceAmountTotal,
+						isTotalRow2: true,
+            type: null,
+            id: 0, // define a unique id for the last row to customize the css
           });
           this.setState({
             customerAccountStatement: customerAccountStatement,
@@ -174,6 +178,9 @@ class CustomerAccountStatement extends React.Component {
   exportPDFWithComponent = () => {
     this.pdfExportComponent.save();
   };
+  hideExportOptionsFunctionality = (val) => {
+		this.setState({ hideExportOptions: val });
+	}
 
   render() {
     strings.setLanguage(this.state.language);
@@ -184,6 +191,8 @@ class CustomerAccountStatement extends React.Component {
       customerAccountStatement,
       data,
       view,
+      customPeriod,
+      hideCustomPeriod,
     } = this.state;
     const { company_profile } = this.props;
     return (
@@ -191,27 +200,12 @@ class CustomerAccountStatement extends React.Component {
         <div className="animated fadeIn">
           <Card>
             <div>
-              <CardHeader>
-                <Row>
+                {!this.state.hideExportOptions &&
                   <Col lg={12}>
                     <div
-                      className="h4 mb-0 d-flex align-items-center"
-                      style={{ justifyContent: "space-between" }}
+                      className="h4 mb-0 d-flex align-items-center pull-right"
+                      style={{ justifyContent: 'space-between',marginRight: '10px', marginTop:'15px' }}
                     >
-                      <div>
-                        <p
-                          className="mb-0"
-                          style={{
-                            cursor: "pointer",
-                            fontSize: "1rem",
-                            paddingLeft: "15px",
-                          }}
-                          onClick={this.viewFilter}
-                        >
-                          <i className="fa fa-cog mr-2"></i>
-                          {strings.CustomizeReport}
-                        </p>
-                      </div>
                       <div className="d-flex">
                         <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
                           <DropdownToggle caret>Export As</DropdownToggle>
@@ -276,17 +270,34 @@ class CustomerAccountStatement extends React.Component {
                         </div>
                       </div>
                     </div>
-                  </Col>
-                </Row>
-              </CardHeader>
-              <div className={`panel ${view ? "view-panel" : ""}`}>
-                <FilterComponent2
-                  viewFilter={this.viewFilter}
-                  generateReport={(value) => {
-                    this.generateReport(value);
+                  </Col>}
+              <CardHeader>
+							<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+                  hideCustomPeriod={hideCustomPeriod}
+									viewFilter={this.viewFilter}
+									generateReport={(value) => {
+										this.generateReport(value);
+									}}
+                  enableContact={true}
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+										if (customPeriod === 'asOn') {
+										const currentDate = moment();
+										this.setState(prevState => ({
+										initValue: {
+										...prevState.initValue,
+										endDate: currentDate,            }
+										 }));
+										this.generateReport({ endDate: currentDate });
+										}
+										this.setState({ customPeriod: 'asOn' });
                   }}
-                />{" "}
-              </div>
+								/>
+							</CardHeader>
               <CardBody id="section-to-print">
                 <PDFExport
                   ref={(component) => (this.pdfExportComponent = component)}
@@ -323,11 +334,10 @@ class CustomerAccountStatement extends React.Component {
                       </h2>
                       <br style={{ marginBottom: "5px" }} />
                       <b style={{ fontSize: "18px" }}>
-                        {strings.SalesByCustomer}
+                        Statement Of Account
                       </b>
                       <br style={{ marginBottom: "5px" }} />
-                      {strings.From} {initValue.startDate.replaceAll("/", "-")}{" "}
-                      {strings.To} {initValue.endDate.replaceAll("/", "-")}
+                     {`${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`}
                     </div>
                     <div></div>
                   </div>
@@ -339,7 +349,6 @@ class CustomerAccountStatement extends React.Component {
                         reportDataList={customerAccountStatement}
                         reportName={"Customer Account Statement"}
                         id={13}
-                        rowHeight={50}
                       />
                     </>
                   )}

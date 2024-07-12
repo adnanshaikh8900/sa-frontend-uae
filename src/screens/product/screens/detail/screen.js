@@ -213,7 +213,7 @@ class DetailProduct extends React.Component {
 									: '',
 								salesTransactionCategoryId: res.data.salesTransactionCategoryId
 									? res.data.salesTransactionCategoryId
-									: '',
+									: 84,
 								salesDescription: res.data.salesDescription
 									? res.data.salesDescription
 									: '',
@@ -223,7 +223,7 @@ class DetailProduct extends React.Component {
 								purchaseTransactionCategoryId: res.data
 									.purchaseTransactionCategoryId
 									? res.data.purchaseTransactionCategoryId
-									: '',
+									: 49,
 								purchaseDescription: res.data.purchaseDescription
 									? res.data.purchaseDescription
 									: '',
@@ -500,6 +500,24 @@ renderName=(cell,row)=>{
 					err.data ? err.data.message : 'Product Updated Unsuccessfully',
 				);
 			});
+	};
+
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 1,
+			name: value,
+		};
+		this.props.productActions.checkValidation(data).then((response) => {
+			if (response.data === 'Product Name Already Exists') {
+				this.setState({
+					productNameExist: true,
+				});
+			} else {
+				this.setState({
+					productNameExist: false,
+				});
+			}
+		});
 	};
 
 	ProductvalidationCheck = (value) => {
@@ -931,6 +949,9 @@ renderName=(cell,row)=>{
 															errors.productCode =
 																'Product code already exist';
 														}
+														if (this.state.productNameExist){
+																		errors.productName = 'Product Name Already Exists'
+																	}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
@@ -1157,6 +1178,9 @@ renderName=(cell,row)=>{
 																						option,
 																					);
 																				}
+																				this.validationCheck(
+																								option.target.value,
+																							);
 																			}}
 																			value={props.values.productName || ''}
 																			placeholder={strings.Enter+strings.ProductName}

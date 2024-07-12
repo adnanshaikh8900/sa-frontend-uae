@@ -24,6 +24,8 @@ import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import FilterComponent3 from '../filterComponent3';
+
 
 
 const mapStateToProps = (state) => {
@@ -50,7 +52,9 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
-			receivbaleInvoiceDetailsList: '',
+			customPeriod: 'customRange',
+			hideAsOn: true,
+			receivbaleInvoiceDetailsList: {},
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
@@ -180,6 +184,9 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			},
 		);
 	};
+	hideExportOptionsFunctionality = (val) => {
+		this.setState({ hideExportOptions: val });
+	}
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -190,6 +197,8 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			receivbaleInvoiceDetailsList,
 			view,
 			chart_of_account_list,
+			hideAsOn,
+			 customPeriod,
 		} = this.state;
 		const { company_profile } = this.props;
 
@@ -207,17 +216,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 											style={{ justifyContent: 'space-between' }}
 										>
 											<div>
-												<p
-													className="mb-0"
-													style={{
-														cursor: 'pointer',
-														fontSize: '1rem',
-														paddingLeft: '15px',
-													}}
-													onClick={this.viewFilter}
-												>
-													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
-												</p>
+											
 											</div>
 											<div className="d-flex">
 											<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
@@ -275,24 +274,42 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 									</Col>
 								</Row>
 							</CardHeader>
+							<CardHeader>
+							<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+									hideAsOn={hideAsOn}
 							<div className={`panel ${view ? 'view-panel' : ''}`}>
-							<FilterComponent
 									viewFilter={this.viewFilter}
-									chart_of_account_list={chart_of_account_list}
 									generateReport={(value) => {
 										this.generateReport(value);
 									}}
-								/>
-							</div>
-							<CardBody id="section-to-print">
-							<PDFExport
-									ref={(component) => (this.pdfExportComponent = component)}
-									scale={0.8}
-									paperSize="A3"
-									fileName="Receivable Invoice Details.pdf"
-								>
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+										if (customPeriod === 'customRange') {
+										const currentDate = moment();
+										this.setState(prevState => ({
+										initValue: {
+										...prevState.initValue,
+										endDate: currentDate,            }
+										 }));
+										this.generateReport({ endDate: currentDate });
+										}
+										this.setState({ customPeriod: 'customRange' });
+										}}
+										/>
+									</CardHeader>
+									<CardBody id="section-to-print">
+									<PDFExport
+											ref={(component) => (this.pdfExportComponent = component)}
+											scale={0.8}
+											paperSize="A3"
+											fileName="Receivable Invoice Details.pdf"
+										>
 
-<div style={{										
+                                <div style={{										
 									display: 'flex',
 									justifyContent: 'space-between',
 									marginBottom: '1rem'}}>
@@ -323,8 +340,9 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 												<b style ={{ fontSize: '18px'}}>{strings.Receivable+" "+strings.Invoice+" "+strings.Details}</b>
 												<br style={{ marginBottom: '5px' }} />
 												
-												{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
-
+												{customPeriod === 'customRange' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
+										
 											</div>	
 									</div>
 									<div className='mr-3'>

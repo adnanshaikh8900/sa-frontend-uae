@@ -29,6 +29,7 @@ import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { Link } from "react-router-dom";
 
 const mapStateToProps = (state) => {
 	return {
@@ -388,7 +389,20 @@ class InvoiceDetails extends React.Component {
 																<tr key={index}>
 
 
-																	<td style={{ textAlign: 'center pull-left'}}>{item.invoiceNumber}</td>
+																	<td style={{ textAlign: 'center pull-left'}}>
+																	<Link
+																		to={{
+																			pathname: "/admin/income/customer-invoice/view",
+																			state: {
+																			id: item.invoiceId,
+																			gotoReports: "/admin/report/invoice-details",
+																			},
+																		}}
+																		style={{ textAlign: "left", color: "#2046DB", cursor: "pointer" }}
+																		>
+																		{item.invoiceNumber}
+																	</Link>
+																	</td>
 																	<td style={{ textAlign: 'center pull-left'}}>{item.customerName}</td>
 																	<td style={{ textAlign: 'center'}}>{item.invoiceDate ? (
 																		moment(item.invoiceDate).format('DD-MM-YYYY')

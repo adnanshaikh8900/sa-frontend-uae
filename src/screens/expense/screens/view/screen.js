@@ -12,6 +12,8 @@ import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { ExpenseTemplate } from './sections/';
+import ActionButtons from 'components/view_actions_buttons';
+import { StatusActionList } from 'utils';
 
 const mapStateToProps = (state) => {
 	return {
@@ -78,12 +80,20 @@ class ViewExpense extends React.Component {
 				.then((res) => {
 		
 					if (res.status === 200) {
+						const invoiceData = res.data;
+                        const invoiceStatus = invoiceData.expenseStatus ?? '';
+                        var actionList = StatusActionList.ExpenseStatusActionList;
+                        if (invoiceStatus && actionList && actionList.length > 0) {
+                            const statuslist = actionList.find(obj => obj.status === invoiceStatus);
+                            actionList = statuslist ? statuslist.list : [];
+                        }
 						
 						
 						this.setState(
 							{
-								expenseData: res.data,								
-								expenseId: this.props.location.state.expenseId,
+								expenseData: {id:this.props.location.state.expenseId,...res.data},                              
+                                expenseId: this.props.location.state.expenseId,
+                                actionList:actionList
 							},
 						);
 					}
@@ -96,13 +106,29 @@ class ViewExpense extends React.Component {
 	};
 
 	render() {
-		const { expenseData,  } = this.state;
+		const { expenseData, invoiceData ,actionList,invoiceStatus } = this.state;
 		const { profile } = this.props;
 		return (
 			<div className="view-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
+						<div>
+						<ActionButtons
+                                    id={this.props.location.state.expenseId}
+                                    history={this.props.history}
+                                    URL={'/admin/expense/expense'}
+                                    invoiceData={expenseData}
+                                    postingRefType={'EXPENSE'}
+                                    initializeData={() => {
+                                        this.initializeData();
+                                    }}
+                                    actionList={actionList}
+                                    invoiceStatus={invoiceStatus}
+                                    documentTitle={"Expense"}
+                                    documentCreated={false} // Any Further document against this document is created(e.g.  CN,DN,CI,...)
+                                />
+                                </div>
 							<div className="pull-right">
 						
 								<Button
@@ -137,8 +163,9 @@ class ViewExpense extends React.Component {
 												endDate:this.props.location.state.endDate,
 												placeOfSupplyId:this.props.location.state.placeOfSupplyId
 											});
-										}
-										else if (this.props.location && this.props.location.state && this.props.location.state.gotoDGLReport)
+										} else if (this.props.location && this.props.location.state && this.props.location.state.gotoReports) {
+											this.props.history.push(this.props.location.state.gotoReports)
+										}else if (this.props.location && this.props.location.state && this.props.location.state.gotoDGLReport)
 											this.props.history.push('/admin/report/detailed-general-ledger');
 										else{
 											this.props.history.push('/admin/expense');

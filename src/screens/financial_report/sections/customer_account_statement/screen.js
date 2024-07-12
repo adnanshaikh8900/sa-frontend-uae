@@ -110,23 +110,19 @@ class CustomerAccountStatement extends React.Component {
               return row;
             }
           );
-          // customerAccountStatement.push({
-          //   contactName: strings.Total,
-					// 	isTotalRow: true,
-          //   totalAmount: res.data.balanceAmountTotal,
-          //   invoiceDate: null,
-          //   invoiceNumber: null,
-          //   amountPaid: res.data.amountPaidTotal,
-          //   balanceAmount: res.data.balanceAmountTotal,
-          //   type: null,
-          //   id: 1,
-          // });
           customerAccountStatement.push({
-            contactName: message,
-            totalAmount: res.data.balanceAmountTotal,
+            contactName: strings.Total,
+						isTotalRow: true,
             invoiceDate: null,
             invoiceNumber: null,
-            amountPaid: null,
+            balanceAmount: res.data.balanceAmountTotal,
+            type: null,
+            id: 1,
+          });
+          customerAccountStatement.push({
+            contactName: message,
+            invoiceDate: null,
+            invoiceNumber: null,
             balanceAmount: res.data.balanceAmountTotal,
 						isTotalRow2: true,
             type: null,

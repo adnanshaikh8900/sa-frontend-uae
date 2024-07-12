@@ -86,11 +86,13 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 		this.props.receivbaleInvoiceDetailsActions
 			.getReceivableInvoiceDetail(postData)
 			.then((res) => {
+			 if (res.status === 200) {
 				const receivbaleInvoiceDetailsList = this.getList(res.data.resultObject)
 				this.setState({
 					receivbaleInvoiceDetailsList: receivbaleInvoiceDetailsList,
 					loading: false,
 				});
+			 }
 			})		.catch((err) => {
 				this.setState({ loading: false });
 			});
@@ -200,6 +202,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 		} = this.state;
 		const { company_profile } = this.props;
 
+		console.log(this.state.receivbaleInvoiceDetailsList.resultObject);
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -276,6 +279,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
 									customPeriod={customPeriod}
 									hideAsOn={hideAsOn}
+							<div className={`panel ${view ? 'view-panel' : ''}`}>
 									viewFilter={this.viewFilter}
 									generateReport={(value) => {
 										this.generateReport(value);

@@ -15,11 +15,11 @@ import DatePicker from "react-datepicker"
 import { Formik } from "formik"
 import Select from "react-select"
 import moment from 'moment'
+import { selectOptionsFactory } from "utils";
+import './style.scss'
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
-import { selectOptionsFactory } from "utils";
-import './style.scss'
 const customStyles = {
 	control: (base, state) => ({
 		...base,
@@ -61,7 +61,7 @@ class FilterComponent extends Component {
 						style={{ justifyContent: 'space-between' }}
 					>
 						<div style={{ fontSize: '1.3rem', paddingLeft: '15px' }}>
-							{strings.CustomizeReport}
+						{strings.CustomizeReport }
 						</div>
 						<div>
 							<i
@@ -88,7 +88,6 @@ class FilterComponent extends Component {
 													showYearDropdown
 													autoComplete="off"
 													maxDate={props.values.endDate ? moment(props.values.endDate).toDate() : null}
-													// maxDate={new Date()}
 													value={moment(props.values.startDate).format(
 														'DD-MM-YYYY',
 													)}
@@ -104,8 +103,8 @@ class FilterComponent extends Component {
 													// 	}
 													// }}
 													onChange={(value) => {
-														props.setFieldValue('startDate', moment(value).format('YYYY-MM-DD hh:mm'));
-													}}
+                                                        props.setFieldValue('startDate', moment(value).format('YYYY-MM-DD hh:mm'));
+                                                    }}
 												/>
 											</FormGroup>
 										</Col>
@@ -117,8 +116,7 @@ class FilterComponent extends Component {
 													name="endDate"
 													className={`form-control`}
 													autoComplete="off"
-													maxDate={props.values.endDate ? moment(props.values.endDate).toDate() : null}
-													// maxDate={new Date()}
+													minDate={props.values.startDate ? moment(props.values.startDate).toDate() : null}
 													placeholderText="From"
 													showMonthDropdown
 													showYearDropdown
@@ -137,7 +135,7 @@ class FilterComponent extends Component {
 													// 	}
 													// }}
 													onChange={(value) => {
-														props.setFieldValue('endDate', moment(value).format('YYYY-MM-DD hh:mm'));
+                                                        props.setFieldValue('endDate', moment(value).format('YYYY-MM-DD hh:mm'));
                                                     }}
 												/>
 											</FormGroup>

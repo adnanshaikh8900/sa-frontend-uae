@@ -13,6 +13,10 @@ import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { RFQTemplate } from './sections';
+import { data } from '../../../Language/index'
+
+import ActionButtons from 'components/view_actions_buttons';
+import { StatusActionList } from 'utils';
 
 const mapStateToProps = (state) => {
 	return {
@@ -48,6 +52,7 @@ class ViewQuotation extends React.Component {
 			QuotationData: {},
 			totalNet: 0,
 			currencyData: {},
+			invoiceData: {},
 			id: '',
 		};
 
@@ -64,80 +69,58 @@ class ViewQuotation extends React.Component {
 		this.initializeData();
 	};
 
-	initializeData = () => {
-		this.props.supplierInvoiceDetailActions
-		.getCompanyDetails()
-		.then((res) => {
-			
-			if (res.status === 200) {
-				
-				this.setState(
-					{
-						companyData: res.data,							
-					},
-				
-				);
-			}
-		});
-		if (this.props.location.state && this.props.location.state.id) {
-			this.props.quotationDetailsAction
-				.getQuotationById(this.props.location.state.id)
-				.then((res) => {
-					let val = 0;
-					if (res.status === 200) {
-						res.data.poQuatationLineItemRequestModelList.map((item) => {
-							val = val + item.subTotal;
-							return item;
-						});
-						this.setState(
-							{
-								QuotationData: res.data,
-								totalNet: val,
-								id: this.props.location.state.id,
-							},
-							() => {
-								// if (this.state.RFQData.currencyCode) {
-								// 	this.props.supplierInvoiceActions
-								// 		.getCurrencyList()
-								// 		.then((res) => {
-								// 			if (res.status === 200) {
-								// 				const temp = res.data.filter(
-								// 					(item) =>
-								// 						item.currencyCode ===
-								// 						this.state.invoiceData.currencyCode,
-								// 				);
-								// 				this.setState({
-								// 					currencyData: temp,
-								// 				});
-								// 			}
-								// 		});
-								// }
-								if(this.state.QuotationData.customerId)
-								{	
-							   this.props.supplierInvoiceDetailActions
-							   .getContactById(this.state.QuotationData.customerId)
-							   .then((res) => {
-								   if (res.status === 200) {									
-									   this.setState({
-										   contactData: res.data,
-									   });
-								   }
-							   });
-							   }
-							},
-						);
-					}
-				});
-				
-		}
-	};
+initializeData = () => {
+    this.props.supplierInvoiceDetailActions
+        .getCompanyDetails()
+        .then((res) => {
+            if (res.status === 200) {
+                this.setState({
+                    companyData: res.data,
+                });
+            }
+        });
+
+    if (this.props.location.state && this.props.location.state.id) {
+        this.props.quotationDetailsAction
+            .getQuotationById(this.props.location.state.id)
+            .then((res) => {
+                if (res.status === 200) {
+                    const invoiceData = res.data;
+                    const invoiceStatus = invoiceData.status ?? '';
+                    var actionList = StatusActionList.QuotationStatusActionList;
+                    if (invoiceStatus && actionList && actionList.length > 0) {
+                        const statuslist = actionList.find(obj => obj.status === invoiceStatus);
+                        actionList = statuslist ? statuslist.list : [];
+                    }
+
+                    this.setState({
+                        invoiceData: invoiceData,
+                        invoiceStatus: invoiceStatus,
+                        actionList: actionList,
+                    }, () => {
+                        if (this.state.QuotationData.customerId) {
+                            this.props.supplierInvoiceDetailActions
+                                .getContactById(this.state.QuotationData.customerId)
+                                .then((res) => {
+                                    if (res.status === 200) {
+                                        this.setState({
+                                            contactData: res.data,
+                                        });
+                                    }
+                                });
+                        }
+                    });
+                }
+            });
+    }
+};
 
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
 
 	render() {
-		const { QuotationData, currencyData, id, contactData } = this.state;
+		const { QuotationData, currencyData, id, contactData,actionList,invoiceStatus,invoiceData } = this.state;
 
 		const { profile } = this.props;
 		return (
@@ -145,6 +128,22 @@ class ViewQuotation extends React.Component {
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
+						<div className='pull-left'>
+								<ActionButtons
+									id={this.props.location.state.id}
+									history={this.props.history}
+									URL={'/admin/income/quotation'}
+									invoiceData={invoiceData}
+									postingRefType={'QUOTATION'}
+									initializeData={() => {
+										this.initializeData();
+									}}
+									actionList={actionList}
+									invoiceStatus={invoiceStatus}
+									documentTitle={"Quotation"}
+									documentCreated={false} // Any Further document against this document is created(e.g.  CN,DN,CI,...)
+								/>
+							</div>
 						<div className="pull-right">
 								{/* <Button
 									className="btn btn-sm edit-btn"

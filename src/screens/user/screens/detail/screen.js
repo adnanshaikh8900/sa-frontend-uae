@@ -78,6 +78,7 @@ class DetailUser extends React.Component {
 			current_user_id: null,
 			disabled: false,
 			disabled1: false,
+			userPhotoChange:false,
 			timezone: [],
 			exist: false,
 			loadingMsg: "Loading...",
@@ -160,6 +161,7 @@ class DetailUser extends React.Component {
 		this.setState({
 			userPhoto: picture,
 			userPhotoFile: file,
+			userPhotoChange:true,
 		});
 	};
 	// togglePasswordVisiblity = () => {
@@ -256,6 +258,7 @@ class DetailUser extends React.Component {
 		formData.append('lastName', lastName ? lastName : '');
 		formData.append('email', email ? email : '');
 		formData.append('timeZone', timeZone ? timeZone : '');
+		formData.append('userPhotoChange', this.state.userPhotoChange);
 		formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
 		formData.append(
 			'roleId',

@@ -998,7 +998,7 @@ class Profile extends React.Component {
 																								showYearDropdown
 																								dateFormat="dd-MM-yyyy"
 																								dropdownMode="select"
-																								placeholderText={strings.Enter+strings.DateOfBirth}
+																								placeholderText={strings.Select+strings.DateOfBirth}
 																								maxDate={moment().subtract(18, "years").toDate()}
 																								autoComplete="off"
 																								// selected={props.values.dob}

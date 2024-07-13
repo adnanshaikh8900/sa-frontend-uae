@@ -1037,7 +1037,7 @@ class SupplierInvoice extends React.Component {
 															className="form-control"
 															id="date"
 															name="invoiceDate"
-															placeholderText={strings.InvoiceDate}
+															placeholderText={strings.Select + strings.InvoiceDate}
 															showMonthDropdown
 															showYearDropdown
 															autoComplete="off"
@@ -1055,7 +1055,7 @@ class SupplierInvoice extends React.Component {
 															className="form-control"
 															id="date"
 															name="invoiceDueDate"
-															placeholderText={strings.InvoiceDueDate}
+															placeholderText={strings.Select + strings.InvoiceDueDate}
 															showMonthDropdown
 															showYearDropdown
 															minDate={this.state.filterData.invoiceDate}
@@ -1075,7 +1075,7 @@ class SupplierInvoice extends React.Component {
 															maxLength="14,2"
 															min="0"
 															value={filterData.amount}
-															placeholder={strings.Amount}
+															placeholder={strings.Enter + strings.Amount}
 															onChange={(e) => {
 																this.handleChange(e.target.value, 'amount');
 															}}

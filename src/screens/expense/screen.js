@@ -787,7 +787,7 @@ class Expense extends React.Component {
 													className="form-control"
 													id="date"
 													name="expenseDate"
-													placeholderText={strings.ExpenseDate}
+													placeholderText={strings.Select + strings.ExpenseDate}
 													selected={filterData.expenseDate}
 													showMonthDropdown
 													showYearDropdown

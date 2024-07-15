@@ -749,7 +749,7 @@ class DebitNotes extends React.Component {
 															type="number"
 															min="0"
 															value={filterData.amount}
-															placeholder={strings.Amount}
+															placeholder={strings.Enter + strings.Amount}
 															onChange={(e) => {
 																this.handleChange(e.target.value, 'amount');
 															}}

@@ -194,75 +194,68 @@ class DebitNoteDetailsReport extends React.Component {
 				<div className="animated fadeIn">
 					<Card>
 						<div>
-							<CardHeader>
-								<Row>
-									<Col lg={12}>
+						{!this.state.hideExportOptions &&
+								<div
+									className="h4 mb-0 d-flex align-items-center pull-right"
+									style={{ justifyContent: 'space-between', marginRight: '20px', marginTop:'55px' }}
+								>
+									<div className="d-flex">
+										<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+											<DropdownToggle caret>Export As</DropdownToggle>
+											<DropdownMenu>
+
+												<DropdownItem
+													onClick={() => { this.exportFile() }}>
+													<span
+														style={{
+															border: 0,
+															padding: 0,
+															backgroundColor: "white !important"
+														}}
+
+													>CSV (Comma Separated Value)</span>
+												</DropdownItem>
+												<DropdownItem
+													onClick={() => { this.exportExcelFile() }}>
+													<span
+														style={{
+															border: 0,
+															padding: 0,
+															backgroundColor: "white !important"
+														}}
+													>Excel</span>
+												</DropdownItem>
+												<DropdownItem onClick={this.exportPDFWithComponent}>
+													Pdf
+												</DropdownItem>
+
+											</DropdownMenu>
+										</Dropdown>&nbsp;&nbsp;
 										<div
-											className="h4 mb-0 d-flex align-items-center"
-											style={{ justifyContent: 'space-between' }}
+											className="mr-2 print-btn-cont"
+											onClick={() => window.print()}
+											style={{
+												cursor: 'pointer',
+											}}
 										>
-											<div>
-												
-											</div>
-											<div className="d-flex">
-												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
-													<DropdownToggle caret>Export As</DropdownToggle>
-													<DropdownMenu>
-
-														<DropdownItem
-															onClick={() => { this.exportFile() }}>
-															<span
-																style={{
-																	border: 0,
-																	padding: 0,
-																	backgroundColor: "white !important"
-																}}
-
-															>CSV (Comma Separated Value)</span>
-														</DropdownItem>
-														<DropdownItem
-															onClick={() => { this.exportExcelFile() }}>
-															<span
-																style={{
-																	border: 0,
-																	padding: 0,
-																	backgroundColor: "white !important"
-																}}
-															>Excel</span>
-														</DropdownItem>
-														<DropdownItem onClick={this.exportPDFWithComponent}>
-															Pdf
-														</DropdownItem>
-
-													</DropdownMenu>
-												</Dropdown>&nbsp;&nbsp;
-												<div
-													className="mr-2 print-btn-cont"
-													onClick={() => window.print()}
-													style={{
-														cursor: 'pointer',
-													}}
-												>
-													<i className="fa fa-print"></i>
-												</div>
-
-												<div
-													className="mr-2 print-btn-cont"
-													onClick={() => {
-														this.props.history.push('/admin/report/reports-page');
-													}}
-													style={{
-														cursor: 'pointer',
-													}}
-												>
-													<span>X</span>
-												</div>
-
-											</div>
+											<i className="fa fa-print"></i>
 										</div>
-									</Col>
-								</Row>
-							</CardHeader>
+
+										<div
+											className="mr-2 print-btn-cont"
+											onClick={() => {
+												this.props.history.push('/admin/report/reports-page');
+											}}
+											style={{
+												cursor: 'pointer',
+											}}
+										>
+											<span>X</span>
+										</div>
+
+									</div>
+								</div>
+							}
 							<CardHeader>
 							<FilterComponent3
 									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
@@ -326,7 +319,7 @@ class DebitNoteDetailsReport extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style={{ fontSize: '18px' }}>{strings.DebitNoteDetails}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{customPeriod === 'customReport' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+											{customPeriod === 'asOn' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
 											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
 										
 										</div>

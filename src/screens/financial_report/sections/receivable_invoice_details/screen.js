@@ -86,11 +86,13 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 		this.props.receivbaleInvoiceDetailsActions
 			.getReceivableInvoiceDetail(postData)
 			.then((res) => {
+			 if (res.status === 200) {
 				const receivbaleInvoiceDetailsList = this.getList(res.data.resultObject)
 				this.setState({
 					receivbaleInvoiceDetailsList: receivbaleInvoiceDetailsList,
 					loading: false,
 				});
+			 }
 			})		.catch((err) => {
 				this.setState({ loading: false });
 			});
@@ -200,22 +202,18 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 		} = this.state;
 		const { company_profile } = this.props;
 
+		console.log(this.state.receivbaleInvoiceDetailsList.resultObject);
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
 					<Card>
 						<div>
-							<CardHeader>
-								<Row>
-									<Col lg={12}>
+						{!this.state.hideExportOptions &&
 										<div
-											className="h4 mb-0 d-flex align-items-center"
-											style={{ justifyContent: 'space-between' }}
+											className="h4 mb-0 d-flex align-items-center pull-right"
+											style={{ justifyContent: 'space-between',marginRight: '20px', marginTop: '55px' }}
 										>
-											<div>
-											
-											</div>
-											<div className="d-flex">
+										<div className="d-flex">
 											<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
@@ -264,13 +262,9 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 												>
 												<span>X</span>
 												</div>
-                                             
-												
 											</div>
 										</div>
-									</Col>
-								</Row>
-							</CardHeader>
+	                                   }
 							<CardHeader>
 							<FilterComponent3
 									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
@@ -295,7 +289,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 										}
 										this.setState({ customPeriod: 'customRange' });
 										}}
-										/>
+									/>
 									</CardHeader>
 									<CardBody id="section-to-print">
 									<PDFExport
@@ -336,7 +330,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 												<b style ={{ fontSize: '18px'}}>{strings.Receivable+" "+strings.Invoice+" "+strings.Details}</b>
 												<br style={{ marginBottom: '5px' }} />
 												
-												{customPeriod === 'customRange' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+												{customPeriod === 'asOn' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
 											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
 										
 											</div>	

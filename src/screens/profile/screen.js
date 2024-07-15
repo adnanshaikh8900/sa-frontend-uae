@@ -447,6 +447,7 @@ class Profile extends React.Component {
 									vatRegistrationDate: res.data.vatRegistrationDate
 									? res.data.vatRegistrationDate
 									: '',
+									telephoneNumber: res.data.telephoneNumber ? res.data.telephoneNumber : '',
 								},
 								isVatEditable: res.data.isVatEditable,
 								email: res.data.email
@@ -673,7 +674,7 @@ class Profile extends React.Component {
 		if(vatRegistrationDate && vatRegistrationDate!="Invalid date")
 		formData.append('vatRegistrationDate',vatRegistrationDate !== null ? moment(vatRegistrationDate) : '',);
 		formData.append('fax', fax ? fax : '');
-		formData.append('phoneNumber', telephoneNumber ? telephoneNumber : '');
+		formData.append('telephoneNumber', telephoneNumber ? telephoneNumber : '');
 		formData.append('currencyCode', currencyCode ? currencyCode : '');
 		formData.append('dateFormat', dateFormat ? dateFormat : '');
 		formData.append('companyAddressLine1', isSame ? companyAddress.companyAddressLine1 : companyAddressLine1);

@@ -179,6 +179,88 @@ const SalesByCustomer = [
     },
   },
 ];
+const PurchaseByProduct = [
+  {
+    field: "productName",
+    headerName: strings.ProductName,
+    headerAlign: "center",
+    headerClassName: "table-header-bg",
+    flex: 1,
+    align: "center",
+    hideable: false,
+  },
+  {
+    field: "quantityPurchased",
+    headerName: strings.QuantityPurchased,
+    headerAlign: "center",
+    headerClassName: "table-header-bg",
+    flex: 1,
+    align: "center",
+  },
+  {
+    field: "totalAmountForAProduct",
+    headerName: strings.TotalAmount,
+    headerAlign: "right",
+    align: "right",
+    headerClassName: "table-header-bg",
+    flex: 1,
+    renderCell: (params) => {
+      return renderAmount(params.row.totalAmountForAProduct);
+    },
+  },
+  {
+    field: "averageAmount",
+    headerName: strings.AverageAmount,
+    headerAlign: "right",
+    align: "right",
+    headerClassName: "table-header-bg",
+    flex: 1,
+    renderCell: (params) => {
+      return renderAmount(params.row.averageAmount);
+    },
+  },
+];
+const SalesByProduct = [
+  {
+    field: "productName",
+    headerName: strings.ProductName,
+    headerAlign: "center",
+    headerClassName: "table-header-bg",
+    flex: 1,
+    align: "center",
+    hideable: false,
+  },
+  {
+    field: "quantitySold",
+    headerName: strings.QuantitySold,
+    headerAlign: "center",
+    headerClassName: "table-header-bg",
+    flex: 1,
+    align: "center",
+  },
+  {
+    field: "totalAmountForAProduct",
+    headerName: strings.TotalAmount,
+    headerAlign: "right",
+    align: "right",
+    headerClassName: "table-header-bg",
+    flex: 1,
+    renderCell: (params) => {
+      return renderAmount(params.row.totalAmountForAProduct);
+    },
+  },
+  {
+    field: "averageAmount",
+    headerName: strings.AverageAmount,
+    headerAlign: "right",
+    align: "right",
+    headerClassName: "table-header-bg",
+    flex: 1,
+    renderCell: (params) => {
+      return renderAmount(params.row.averageAmount);
+    },
+  },
+];
 const CustomerAccountStatement = [
   {
     field: "contactName",
@@ -1185,6 +1267,8 @@ const DetailedGeneralLedger = [
 export const List = {
   PayrollSummaryReport: PayrollSummary,
   "Sales By Customer": SalesByCustomer,
+  "Sales By Product": SalesByProduct,
+  "Purchase By Product": PurchaseByProduct,
   "Customer Account Statement": CustomerAccountStatement,
   "Expense Details": ExpenseDetails,
   "Expense By Category Details": ExpenseByCategoryDetails,

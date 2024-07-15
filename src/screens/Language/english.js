@@ -1167,6 +1167,7 @@ const en = {
       PayableInvoiceDetails: "Payable Invoice Details",
       QuantityPurchased: "Quantity Purchased",
       Average: "Average",
+      AverageAmount: "Average Amount",
       InvoiceCount: "Invoice Count",
       SalesWithVat: "Sales With VAT",
       Reference: "Reference",

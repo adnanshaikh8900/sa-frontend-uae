@@ -169,6 +169,7 @@ const en = {
       AddASupplier: "Add A Supplier",
       Addmore: "Add Item",
       Addproduct: "Add New Product",
+      AddEmployee: "Add New Employee",
       upload: "Upload",
       UpdateInvoice: "Update Invoice",
       Delete: "Delete",

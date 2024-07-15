@@ -80,8 +80,10 @@ class Profile extends React.Component {
 			activeTab: new Array(2).fill('1'),
 			userPhotoFile: [],
 			userPhoto: [],
+			userPhotoChange: false,
 			companyLogo: [],
 			companyLogoFile: [],
+			companyLogoChange: false,
 			initUserData: {},
 			displayRules:false,
 			isPasswordShown: false,
@@ -201,6 +203,7 @@ class Profile extends React.Component {
 			userPhoto: picture,
 			userPhotoFile: file,
 			imageState: false,
+			userPhotoChange: true,
 		});
 	};
 
@@ -209,6 +212,7 @@ class Profile extends React.Component {
 			companyLogo: picture,
 			companyLogoFile: file,
 			imageState: false,
+			companyLogoChange: true,
 		});
 	};
 
@@ -309,6 +313,7 @@ class Profile extends React.Component {
 		formData.append('active', this.state.selectedStatus);
 		formData.append('timeZone', timezone ? timezone : '');
 		formData.append('roleId', roleId ? roleId : '');
+		formData.append('userPhotoChange', this.state.userPhotoChange);
 
 		if (password.length > 0) {
 			formData.append('password ', password);
@@ -679,9 +684,10 @@ class Profile extends React.Component {
 		formData.append('companyPostZipCode', isSame ? companyAddress.companyPostZipCode : companyPostZipCode);
 		formData.append('companyPoBoxNumber', isSame ? companyAddress.companyPoBoxNumber : companyPoBoxNumber);
 		formData.append('companyCountryCode', isSame ? companyAddress.companyCountryCode : '',);
+		formData.append('companyLogoChange', this.state.companyLogoChange);
 		// formData.append("isSame", isSame);
 
-		if (this.state.companyLogo.length > 0) {
+		if (this.state.companyLogoFile.length > 0) {
 			formData.append('companyLogo', this.state.companyLogoFile[0]);
 		}
 		{this.setState({ loading:true, loadingMsg:"Updating Company"})} 
@@ -704,7 +710,6 @@ class Profile extends React.Component {
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
 			});
-		window.location.reload();
 	};
 
 	handlePasswordSubmit = (data,resetForm) => {

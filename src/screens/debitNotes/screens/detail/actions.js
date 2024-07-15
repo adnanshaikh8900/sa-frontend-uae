@@ -36,7 +36,7 @@ export const updateDebitNote = (obj) => {
 export const deleteDebitNote = (id) => {
   return (dispatch) => {
     let data = {
-      method: 'DELETE',
+      method: 'post',
       url: `/rest/creditNote/delete?id=${id}`
     }
 

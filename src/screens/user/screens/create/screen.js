@@ -87,6 +87,7 @@ class CreateUser extends React.Component {
 			},
 
 			userPhoto: [],
+			userPhotoChange:false,
 			userPhotoFile: [],
 			showIcon: false,
 			exist: false,
@@ -130,6 +131,7 @@ class CreateUser extends React.Component {
 		this.setState({
 			userPhoto: picture,
 			userPhotoFile: file,
+			userPhotoChange:true,
 		});
 	};
 
@@ -169,6 +171,7 @@ class CreateUser extends React.Component {
 		formData.append('firstName', firstName ? firstName : '');
 		formData.append('lastName', lastName ? lastName : '');
 		formData.append('email', email ? email : '');
+		formData.append('userPhotoChange', this.state.userPhotoChange);
 		formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
 		// formData.append(
 		// 	'dob',

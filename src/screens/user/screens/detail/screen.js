@@ -106,34 +106,30 @@ class DetailUser extends React.Component {
 					this.setState({ enableDelete: res.data && res.data > 0 ? false : true })
 				}
 			});
-			this.props.userDetailActions
-				.getUserById(this.props.location.state.id)
-				.then((res) => {
-					this.props.userActions.getRoleList();
-					if (res.status === 200) {
-						this.setState({
-							initValue: {
-								firstName: res.data.firstName ? res.data.firstName : '',
-								lastName: res.data.lastName ? res.data.lastName : '',
-								email: res.data.email ? res.data.email : '',
-								password: '',
-								dob: res.data.dob
-									? moment(res.data.dob, 'DD-MM-YYYY').toDate()
-									: '',
-								active: res.data.active ? res.data.active : '',
-								confirmPassword: '',
-								roleId: res.data.roleId ? res.data.roleId : '',
-								companyId: res.data.companyId ? res.data.companyId : '',
-								timeZone: res.data.timeZone ? res.data.timeZone : '',
-								roleName: res.data.roleName ? res.data.roleName : '',
-								employeeId: res.data.employeeId ? res.data.employeeId : '',
-							},
-							loading: false,
-							selectedStatus: res.data.active ? true : false,
-							userPhoto: res.data.profilePicByteArray
-								? this.state.userPhoto.concat(res.data.profilePicByteArray)
-								: [],
-							current_user_id: this.props.location.state.id,
+			this.props.userDetailActions.getUserById(this.props.location.state.id).then((res) => {
+				this.props.userActions.getRoleList();
+				if (res.status === 200) {
+					const employeeId = res.data.employeeId ? { value: res.data.employeeId, label: `${res.data.empFirstName} ${res.data.empLastName}` } : null;
+					this.setState({
+						initValue: {
+							firstName: res.data.firstName ? res.data.firstName : '',
+							lastName: res.data.lastName ? res.data.lastName : '',
+							email: res.data.email ? res.data.email : '',
+							password: '',
+							dob: res.data.dob ? moment(res.data.dob, 'DD-MM-YYYY').toDate() : '',
+							active: res.data.active ? res.data.active : '',
+							confirmPassword: '',
+							roleId: res.data.roleId ? res.data.roleId : '',
+							companyId: res.data.companyId ? res.data.companyId : '',
+							timeZone: res.data.timeZone ? res.data.timeZone : '',
+							roleName: res.data.roleName ? res.data.roleName : '',
+							employeeId: employeeId,
+						},
+						loading: false,
+						selectedStatus: res.data.active ? true : false,
+						userPhoto: res.data.profilePicByteArray ? this.state.userPhoto.concat(res.data.profilePicByteArray) : [],
+						current_user_id: this.props.location.state.id,
+						isEmployeeIdDisabled: !!employeeId,
 						});
 					}
 				})
@@ -726,6 +722,7 @@ class DetailUser extends React.Component {
 																							{strings.Employee}
 																						</Label>
 																						<Select
+																						isDisabled={this.state.isEmployeeIdDisabled}
 																							styles={customStyles}
 																							id="employeeId"
 																							name="employeeId"

@@ -207,16 +207,11 @@ class PayablesInvoiceDetailsReport extends React.Component {
 				<div className="animated fadeIn">
 					<Card>
 						<div>
-							<CardHeader>
-								<Row>
-									<Col lg={12}>
+						{!this.state.hideExportOptions &&
 										<div
-											className="h4 mb-0 d-flex align-items-center"
-											style={{ justifyContent: 'space-between' }}
+											className="h4 mb-0 d-flex align-items-center pull-right"
+											style={{ justifyContent: 'space-between',marginRight: '20px', marginTop: '55px' }}
 										>
-											<div>
-										
-											</div>
 											<div className="d-flex">
 												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
@@ -270,9 +265,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 												</div>
 											</div>
 										</div>
-									</Col>
-								</Row>
-							</CardHeader>
+										}
 							<CardHeader>
 							<FilterComponent3
 									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
@@ -341,7 +334,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 												<br style={{ marginBottom: '5px' }} />
 
 											
-												{customPeriod === 'customRange' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+												{customPeriod === 'asOn' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
 											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
 										
 											</div>

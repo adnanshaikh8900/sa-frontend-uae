@@ -482,7 +482,7 @@ class FilterComponent3 extends Component {
                         this.props.handleCancel();
                         this.setState({
                           selectedPeriod: "asOn",
-                          showEndDate: true,
+                          showEndDate: false,
                           showRunReport: false,
                           showStartDate: false,
                         });

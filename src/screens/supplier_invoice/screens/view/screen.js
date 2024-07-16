@@ -318,7 +318,7 @@ class ViewInvoice extends React.Component {
 							history={this.props.history}
 							invoiceURL={'/admin/income/credit-notes/view'}
 							invoiceId={id}
-							invoiceType={4}
+							invoiceType={1}
 						/>
 					}
 				</div>

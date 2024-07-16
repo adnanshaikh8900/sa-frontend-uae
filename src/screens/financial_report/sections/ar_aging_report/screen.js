@@ -29,6 +29,7 @@ import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization'
+import { ReportTables } from "screens/financial_report/sections";
 
 const mapStateToProps = (state) => {
 	return {
@@ -122,8 +123,14 @@ class ArAgingReport extends React.Component {
 			.getAgingReport(postData)
 			.then((res) => {
 				if (res.status === 200) {
+					let agingResponseModelList = res.data.agingResponseModelList
+                    agingResponseModelList = agingResponseModelList.map((row, i) => {
+                        row.id = i + 1;
+                        return row
+                    })
+
 					this.setState({
-						data: res.data.agingResponseModelList,
+						agingResponseModelList: agingResponseModelList,
 						loading: false,
 					});
 				}
@@ -202,7 +209,7 @@ class ArAgingReport extends React.Component {
 	};
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
+		const { loading, initValue, dropdownOpen, csvData, view,agingResponseModelList } = this.state;
 		const { profile, universal_currency_list, company_profile, ar_aging_report } = this.props;
 		console.log(this.state.data)
 		return (
@@ -365,207 +372,14 @@ class ArAgingReport extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
+										<>
+										 <ReportTables
+										reportDataList={agingResponseModelList}
+										reportName={"AR Aging Report"}
+										id={17}
+									  />
+										</>
 										
-										<div id="tbl_exporttable_to_xls" className="table-wrapper">
-											<Table className="table-bordered">
-											<thead className="table-header-bg">
-
-													<tr className="header-row">
-														{this.columnHeaderCompany.map((column, index) => {
-															return (
-																<th
-																key={index}
-																style={{ fontWeight: '600' ,textAlign:'center', color:'black'}}
-																className={column.align ? 'text-center' : ''}
-																className="table-header-bg"																>
-																	<span>{column.label}</span>
-																</th>
-															);
-														})}
-													</tr>
-												</thead>
-												<tbody className="data-column">
-												{this.state.data && 
-													this.state.data.length > 0 ? (
-														this.state.data.map(
-															(item, index) => {
-																return (
-																	<>	
-																				<tr key={index}>
-																					<td style={{ width: '10%', textAlign:'center'}}>
-																					{item["organizationName"] ? item["organizationName"] : item["contactName"]}																						
-																					</td>
-																					
-																					{/* <td style={{ width: '12%', textAlign:'center' }}>
-																							{item.currentAmount && (
-																									<Currency
-																										value={item.currentAmount }
-																										currencySymbol={
-																											universal_currency_list[0]
-																												? universal_currency_list[0]
-																														.currencyIsoCode
-																												: 'INR'
-																										}
-																									/>
-																							)}
-																						</td> */}
-																						<td style={{ width: '12%', textAlign:'center' }}>
-																						
-																									<Currency
-																										value={item.lessthen15 }
-																										currencySymbol={
-																											universal_currency_list[0]
-																												? universal_currency_list[0]
-																														.currencyIsoCode
-																												: 'INR'
-																										}
-																									/>
-																						
-																						</td>
-																						<td style={{ width: '12%', textAlign:'center' }}>
-																							
-																									<Currency
-																										value={item.between15to30 }
-																										currencySymbol={
-																											universal_currency_list[0]
-																												? universal_currency_list[0]
-																														.currencyIsoCode
-																												: 'INR'
-																										}
-																									/>
-																						
-																						</td>
-																						<td style={{ width: '12%', textAlign:'center' }}>
-																					
-																									<Currency
-																										value={ item.morethan30}
-																										currencySymbol={
-																											universal_currency_list[0]
-																												? universal_currency_list[0]
-																														.currencyIsoCode
-																												: 'INR'
-																										}
-																									/>
-																							
-																						</td>
-																						<td style={{ width: '12%', textAlign:'center' }}>
-																						
-																									<Currency
-																										value={item.totalAmount }
-																										currencySymbol={
-																											universal_currency_list[0]
-																												? universal_currency_list[0]
-																														.currencyIsoCode
-																												: 'INR'
-																										}
-																									/>
-																							
-																						</td>
-																					</tr>
-																		
-																	</>
-																);
-															},
-														)
-													) : (
-														<tr style={{ borderBottom: '2px solid lightgray' }}>
-															<td style={{ textAlign: 'center' }} colSpan="9">
-															{strings.Thereisnodatatodisplay}
-															</td>
-														</tr>
-													)}			
-																		
-														
-												</tbody>
-												</Table>
-											{/* <Table  >
-											
-												<thead className="header-row" >
-													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerId}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.SalesPersonId}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.SalesPersonName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CurrencyId}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CurrencyCode}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Current}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Days1-15}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Days16-20}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Days31_45}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.DaysAbov45}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Total}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.FCYTotal}</th>
-
-													</tr>
-												</thead>
-												<tbody className=" table-bordered table-hover">
-													{this.state.data.sbcustomerList &&
-														this.state.data.sbcustomerList.map((item, index) => {
-															return (
-																<tr key={index}>
-
-
-																	<td style={{ textAlign: 'center', width: '20%' }}>{item.customerName}</td>
-																	<td style={{ textAlign: 'center', width: '20%' }}>{item.invoiceCount}</td>
-																	<td style={{ textAlign: 'right', width: '20%' }}>
-																		<Currency
-																			value={item.salesExcludingvat}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0].currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	</td>
-
-																	<td style={{ textAlign: 'right', width: '20%' }}>
-																		<Currency
-																			value={item.getSalesWithvat}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0].currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	</td>
-																</tr>
-															);
-														})}
-
-												</tbody>
-												<tfoot>
-													<tr style={{ border: "3px solid #dfe9f7" }}>
-													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
-													<td></td>
-													<td style={{ textAlign: 'right', width: '20%' }}>
-													
-														<b><Currency
-															value={this.state.data.totalExcludingVat}
-															currencySymbol={
-																universal_currency_list[0]
-																	? universal_currency_list[0].currencyIsoCode
-																	: 'USD'
-															}
-														/></b>
-														
-													</td>
-
-													<td style={{ textAlign: 'right', width: '20%' }}>
-													<b>
-													<Currency
-															value={this.state.data.totalAmount}
-															currencySymbol={
-																universal_currency_list[0]
-																	? universal_currency_list[0].currencyIsoCode
-																	: 'USD'
-															}
-														/></b>
-														
-													</td>
-												</tr>
-												</tfoot>
-											</Table> */}
-										</div>
 									)}
 									<div style={{ textAlignLast: 'center' }}>{strings.PoweredBy} <b>SimpleAccounts</b></div>
 								</PDFExport>

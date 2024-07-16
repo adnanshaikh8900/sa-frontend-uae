@@ -371,6 +371,67 @@ const CustomerAccountStatement = [
   },
 ];
 
+const ARAgingReport = [
+  
+  {field: "contactName",
+    headerName: "Customer Name",
+    headerAlign: "center",
+    headerClassName: "table-header-bg",
+    flex: 1,
+    align: "center",
+    hideable: false,
+  },
+  {
+    field: "lessthen15",
+    headerName: "Days 1 To 15",
+    headerAlign: "center",
+    headerClassName: "table-header-bg",
+    flex: 1,
+    align: "center",
+    renderCell: (params) => {
+      return renderAmount(params.row.lessthen15);
+     
+    },
+  },
+  {
+    field: "between15to30",
+    headerName: "Days 16 To 30",
+    headerAlign: "center",
+    align: "center",
+    headerClassName: "table-header-bg",
+    flex: 1,
+    renderCell: (params) => {
+      return renderAmount(params.row.between15to30);
+   
+    },
+  },
+  {
+    field: "morethan30",
+    headerName: "Days 31 And Above",
+    headerAlign: "center",
+    align: "center",
+    headerClassName: "table-header-bg",
+    flex: 1,
+    renderCell: (params) => {
+      return renderAmount(params.row.morethan30);
+      
+    },
+  },
+  {
+    field: "totalAmount",
+    headerName: "Total Amount",
+    headerAlign: "right",
+    align: "right",
+     headerClassName: "table-header-bg",
+    flex: 1,
+    renderCell: (params) => {
+      return renderAmount(params.row.totalAmount);
+      // return params.row.totalAmount;
+    },
+  },
+];
+
+
 const ExpenseDetails = [
   {
     field: "expenseDate",
@@ -1280,6 +1341,7 @@ export const List = {
   "Debit Note Detail Report": TaxDebitNoteDetails,
   "Payable Invoice Summary": PayableInvoiceSummary,
   "Payable Invoice Details": PayableInvoiceDetails,
+  "AR Aging Report": ARAgingReport,
 };
 
 function renderDate(date) {

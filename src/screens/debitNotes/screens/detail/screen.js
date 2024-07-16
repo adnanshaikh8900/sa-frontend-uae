@@ -107,7 +107,7 @@ class DetailDebitNote extends React.Component {
 			debitNoteId: '',
 			initValue: {
 				total_excise: 0,
-				total_net: 0,
+				totalNet: 0,
 				totalVatAmount: 0,
 				totalAmount: 0,
 				totalDiscount: 0,
@@ -886,7 +886,7 @@ class DetailDebitNote extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: list.total_net ? list.total_net : 0,
+						totalNet: list.totalNet ? list.totalNet : 0,
 						totalVatAmount: list.totalVatAmount ? list.totalVatAmount : 0,
 						totalAmount: list.totalAmount ? list.totalAmount : 0,
 						total_excise: list.total_excise ? list.total_excise : 0,
@@ -1826,7 +1826,7 @@ class DetailDebitNote extends React.Component {
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
 																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_net ? initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
+																							{initValue.totalNet ? initValue.totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '0.00'}
 
 																						</label>
 																					</Col>

@@ -207,7 +207,6 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
 					<Card>
-						<div>
 							<CardHeader>
 								<Row>
 									<Col lg={12}>
@@ -274,12 +273,8 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 									</Col>
 								</Row>
 							</CardHeader>
-							<CardHeader>
-						
-									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
-									customPeriod={customPeriod}
-									hideAsOn={hideAsOn}
-							        className={`panel ${view ? 'view-panel' : ''}`}
+							<div className={`panel ${view ? 'view-panel' : ''}`}>
+							<FilterComponent
 									viewFilter={this.viewFilter}
 									generateReport={(value) => {
 										this.generateReport(value);
@@ -299,8 +294,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 										}
 										this.setState({ customPeriod: 'customRange' });
 										}}
-									
-									</CardHeader>
+										/>
 									<CardBody id="section-to-print">
 									<PDFExport
 											ref={(component) => (this.pdfExportComponent = component)}

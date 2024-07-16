@@ -325,7 +325,7 @@ class ViewCustomerInvoice extends React.Component {
 										this.redirectToCreditNote(creditNoteDataList);
 									}}>
 										<td className="center">{1}</td>
-										<td>{creditNoteDataList.creditNoteNumber}</td>
+										<td style={{color:'blue'}}>{creditNoteDataList.creditNoteNumber}</td>
 										<td>{creditNoteDataList.creditNoteDate ? moment(creditNoteDataList.creditNoteDate).format('DD-MM-YYYY') : ''}</td>
 										<td align="right">{creditNoteDataList?.status}</td>
 										<td align="right">
@@ -344,6 +344,7 @@ class ViewCustomerInvoice extends React.Component {
 							</Table>
 						</div>
 					</Card>
+					<div>
 					{this.props.location.state.status && this.props.location.state.status !== 'Draft' &&
 							<InvoiceViewJournalEntries
 								history={this.props.history}
@@ -352,6 +353,7 @@ class ViewCustomerInvoice extends React.Component {
 								invoiceType={2}
 							/>
 						}
+					</div>
 				</div>
 			</div>
 		);

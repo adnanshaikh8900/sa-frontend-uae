@@ -83,14 +83,20 @@ class ViewCreditNote extends React.Component {
 						const invoiceData = res.data;
 						const invoiceStatus = invoiceData.status ? invoiceData.status === 'Partially Paid' ? 'Partially Credited' : invoiceData.status : '';
 						var actionList = StatusActionList.CreditNoteStatusActionList;
+						res.data.invoiceLineItems &&
+						res.data.invoiceLineItems.map((item) => {
+							val = val + item.subTotal;
+							return item;
+						});
 						if (invoiceStatus && actionList && actionList.length > 0) {
 							const statuslist = actionList.find(obj => obj.status === invoiceStatus);
 							actionList = statuslist ? statuslist?.list : [];
 						}
 						this.setState({
-							invoiceData: data,
+							invoiceData: res.data,
 							invoiceStatus: invoiceStatus,
 							actionList: actionList,
+							totalNet: val,
 						},
 							() => {
 								if (this.state.invoiceData.currencyCode) {

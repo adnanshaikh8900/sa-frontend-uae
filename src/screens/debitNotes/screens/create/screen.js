@@ -138,7 +138,7 @@ class CreateDebitNote extends React.Component {
 				],
 				taxType: false,
 				debitNoteNumber: '',
-				total_net: 0,
+				totalNet: 0,
 				invoiceVATAmount: 0,
 				totalVatAmount: 0,
 				totalAmount: 0,
@@ -868,7 +868,7 @@ class CreateDebitNote extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: list.total_net ? list.total_net : 0,
+						totalNet: list.totalNet ? list.totalNet : 0,
 						totalVatAmount: list.totalVatAmount ? list.totalVatAmount : 0,
 						totalAmount: list.totalAmount ? list.totalAmount : 0,
 						total_excise: list.total_excise ? list.total_excise : 0,
@@ -990,7 +990,7 @@ class CreateDebitNote extends React.Component {
 							initValue: {
 								...this.state.initValue,
 								...{
-									total_net: 0,
+									totalNet: 0,
 									totalAmount: 0,
 									discountType: '',
 									discount: 0,
@@ -1866,7 +1866,7 @@ class CreateDebitNote extends React.Component {
 																			<Col lg={6} className="text-right">
 																				<label className="mb-0">
 																					{this.state.customer_currency_symbol} &nbsp;
-																					{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					{initValue.totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 
 																				</label>
 																			</Col>

@@ -318,7 +318,7 @@ class ViewDebitNote extends React.Component {
 														this.redirectToSupplierIncoive(item);
 													}}>
 														<td className="center">{index + 1}</td>
-														<td>{item.invoiceNumber}</td>
+														<td style={{color:'blue'}}>{item.invoiceNumber}</td>
 														<td>{item.contactName}</td>
 
 														<td align="right">{item.totalAmount ? <Currency

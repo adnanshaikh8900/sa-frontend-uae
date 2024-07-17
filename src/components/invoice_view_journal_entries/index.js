@@ -182,6 +182,7 @@ class InvoiceViewJournalEntries extends React.Component {
                                         <TableHeaderColumn
                                             dataField="journalReferenceNo"
                                             width="18%"
+                                            tdStyle={{ color: 'blue' }}
                                             className="table-header-bg"
                                         >
                                             {strings.JOURNALREFERENCENO}

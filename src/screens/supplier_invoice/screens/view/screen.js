@@ -294,7 +294,7 @@ class ViewInvoice extends React.Component {
 										this.redirectToDebitNote(debitNoteDataList);
 									}}>
 										<td className="center">{1}</td>
-										<td>{debitNoteDataList.creditNoteNumber}</td>
+										<td style={{color:'blue'}}>{debitNoteDataList.creditNoteNumber}</td>
 										<td>{debitNoteDataList.creditNoteDate ? moment(debitNoteDataList.creditNoteDate).format('DD-MM-YYYY') : ''}</td>
 										<td align="right">{debitNoteDataList?.status}</td>
 										<td align="right">

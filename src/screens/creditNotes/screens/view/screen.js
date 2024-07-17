@@ -327,7 +327,7 @@ class ViewCreditNote extends React.Component {
 														this.redirectToCustmerIncoive(item);
 													}}>
 														<td className="center">{index + 1}</td>
-														<td>{item.invoiceNumber}</td>
+														<td style={{color:'blue'}}>{item.invoiceNumber}</td>
 														<td>{item.contactName}</td>
 														<td align="right">{item.totalAmount ? <Currency
 															value={item.totalAmount}

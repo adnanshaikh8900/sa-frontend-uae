@@ -4,7 +4,7 @@ export const postInvoice = (obj, documentTitle, strings) => {
     var URL = '';
     if (documentTitle === strings.CustomerInvoice) {
         URL = '/rest/invoice/posting';
-    } else if (documentTitle === strings.CreditNote) {
+    } else if (documentTitle === strings.TaxCreditNote) {
         URL = '/rest/creditNote/creditNotePosting';
     } else if (documentTitle === strings.Quotation) {
         URL = `/rest/poquatation/sendQuotation`;

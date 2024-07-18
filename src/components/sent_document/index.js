@@ -78,7 +78,7 @@ class SentInvoice extends React.Component {
 			type = 6;
 		} else if (documentTitle === strings.PurchaseOrder) {
 			type = 4;
-		} else if (documentTitle === strings.CreditNote) {
+		} else if (documentTitle === strings.TaxCreditNote) {
 			type = 7;
 		}
 		let payload = {
@@ -113,7 +113,7 @@ class SentInvoice extends React.Component {
 		var actionMessageList = [];
 		if (documentTitle === strings.CustomerInvoice) {
 			actionMessageList = ActionMessagesList.InvoiceMessagesList;
-		} else if (documentTitle === strings.CreditNote) {
+		} else if (documentTitle === strings.TaxCreditNote) {
 			actionMessageList = ActionMessagesList.CreditNoteMessagesList;
 		} else if (documentTitle === strings.Quotation) {
 			actionMessageList = ActionMessagesList.QuotationMessagesList;
@@ -146,7 +146,7 @@ class SentInvoice extends React.Component {
 			markAsSent: markAsSent,
 			sendAgain: sendAgain,
 		};
-		if (documentTitle === strings.CreditNote || documentTitle === strings.DebitNote) {
+		if (documentTitle === strings.TaxCreditNote || documentTitle === strings.DebitNote) {
 			postingRequestModel.isCNWithoutProduct = isCNWithoutProduct == true ? true : false;
 		}
 		if (documentTitle === strings.Expense) {

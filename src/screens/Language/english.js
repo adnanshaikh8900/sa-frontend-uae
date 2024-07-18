@@ -1233,12 +1233,15 @@ const en = {
 
       //View
       InvoiceAmountIn: "Invoice Amount ",
+      This: "This",
+      deleteMsg: "will be deleted permanently and cannot be recovered.",
       BalanceDue: "Balance Due",
       BillTo: "Bill To",
       CreditTo: "Credit To",
       ReceivedFrom: "Received From",
       PurchaseFrom: "Purchase From",
       TaxCreditDate: "Tax Credit Date",
+      TaxCreditNote: "Tax Credit Note",
       Company: "Company",
       AmountInWords: "Amount In Words",
       Details: "Details",

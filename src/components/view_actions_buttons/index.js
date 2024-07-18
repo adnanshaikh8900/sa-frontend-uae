@@ -58,7 +58,7 @@ class ActionButtons extends React.Component {
 											if (editFlag === false)
 												this.props.commonActions.tostifyAlert('error', strings.YouCannotEditTransactionsForWhichVATIsRecorded);
 											else
-												history.push(`${URL}/detail`, { id: id, renderURL: viewURL, renderID: id },);
+												history.push(`${URL}/detail`, { id: id,expenseId:id, renderURL: viewURL, renderID: id },);
 										}}
 									>
 										<i className="fas fa-edit"></i>
@@ -247,7 +247,7 @@ class ActionButtons extends React.Component {
 										title={strings.CreateADuplicate}
 										className="btn-lg mb-1 print-btn-cont mr-1"
 										onClick={() => {
-											history.push(`${URL}/create`, { parentId: id, renderURL: viewURL, renderID: id },);
+											history.push(`${URL}/create`, { parentInvoiceId: id, parentId:id,renderURL: viewURL, renderID: id },);
 										}}
 									>
 										<i className="fas fa-copy"></i>

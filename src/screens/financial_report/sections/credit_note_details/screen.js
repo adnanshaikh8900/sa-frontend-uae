@@ -1,6 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import FilterComponent3 from '../filterComponent3';
 import {
 	Card,
 	CardHeader,
@@ -45,6 +46,8 @@ class CreditNoteDetailsReport extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: true,
+			customPeriod: 'customRange',
+			hideAsOn: true,
 			dropdownOpen: false,
 			view: false,
 			initValue: {
@@ -167,10 +170,13 @@ class CreditNoteDetailsReport extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
+	hideExportOptionsFunctionality = (val) => {
+		this.setState({ hideExportOptions: val });
+	}
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue, dropdownOpen, creditNoteSummaryModelList, view } = this.state;
+		const { loading, initValue, dropdownOpen, creditNoteSummaryModelList, view, customPeriod, hideAsOn } = this.state;
 		const { company_profile } = this.props;
 
 		return (
@@ -195,7 +201,6 @@ class CreditNoteDetailsReport extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
 											</div>
 											<div className="d-flex">
@@ -252,14 +257,32 @@ class CreditNoteDetailsReport extends React.Component {
 									</Col>
 								</Row>
 							</CardHeader>
-							<div className={`panel ${view ? 'view-panel' : ''}`}>
-								<FilterComponent2
+							<CardHeader>
+							<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+									hideAsOn={hideAsOn}
 									viewFilter={this.viewFilter}
 									generateReport={(value) => {
 										this.generateReport(value);
 									}}
-								/>{' '}
-							</div>
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+										if (customPeriod === 'customRange') {
+										const currentDate = moment();
+										this.setState(prevState => ({
+										initValue: {
+										...prevState.initValue,
+										endDate: currentDate,            }
+										 }));
+										this.generateReport({ endDate: currentDate });
+										}
+										this.setState({ customPeriod: 'customRange' });
+										}}
+										/>
+							</CardHeader>
 							<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}

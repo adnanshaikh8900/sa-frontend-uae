@@ -1910,7 +1910,7 @@ class CreateBankTransaction extends React.Component {
                                     "Expense" &&
                                     props.values.expenseCategory &&
                                     props.values.expenseCategory.value !==
-                                    34 && (
+                                    34 && this.state.isRegisteredVat && (
                                       <Col lg={3}>
                                         <FormGroup className="mb-3">
                                           <span className="text-danger">

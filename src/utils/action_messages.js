@@ -6,6 +6,7 @@ export const InvoiceMessagesList = [
 export const CreditNoteMessagesList = [
     { action: 'Sent', list: ['CreditNotePostedSuccessfully', 'CreditNotePostedUnsuccessfully', 'CreditNotePostedSuccessfully'] },
     { action: 'Delete', list: ['TaxCreditNoteDeletedSuccessfully', 'TaxCreditNoteDeletedUnsuccessfully',] },
+      { action: 'UnPost', list: ['CrediNoteMovedToDraftSuccessfully', 'CrediNoteMovedToDraftUnsuccessfully',] },
 ]
 
 export const QuotationMessagesList = [

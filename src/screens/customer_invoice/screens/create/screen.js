@@ -397,6 +397,27 @@ class CreateCustomerInvoice extends React.Component {
 			});
 		}
 	};
+	
+	getTaxTreatment = (e) => {
+
+		let taxTreatmentId = "";
+		taxTreatmentId = e.taxTreatment;
+		this.setState({
+			initValue: {
+				...this.state.initValue,
+				...{
+					taxTreatmentId: taxTreatmentId,
+				},
+			},
+			taxTreatmentId: taxTreatmentId,
+			
+			enablePlaceOfSupply: !!(taxTreatmentId !== 'GCC VAT REGISTERED' && taxTreatmentId !== 'GCC NON-VAT REGISTERED' && taxTreatmentId !== 'NON GCC'),
+		})
+		this.formRef.current.setFieldValue('taxTreatmentId', taxTreatmentId, true);
+		
+		this.getContactShippingAddress(e.id, taxTreatmentId)
+		return taxTreatmentId;
+	}
 
 	getProductType = (id) => {
 		const { taxTreatmentId, isRegisteredVat, isDesignatedZone, invoiceBeforeVatRegistration } = this.state;
@@ -1567,6 +1588,7 @@ class CreateCustomerInvoice extends React.Component {
 							getCurrentUser={(e) => {
 								this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 								this.setContactDetails(e.value ?? e.id);
+								this.getTaxTreatment(e);
 							}}
 							contactType={{ label: "Customer", value: 2 }}
 						/>

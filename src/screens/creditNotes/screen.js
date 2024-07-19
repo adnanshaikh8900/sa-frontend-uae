@@ -164,7 +164,7 @@ class CreditNotes extends React.Component {
 					initializeData={() => {
 						this.initializeData();
 					}}
-					documentTitle={strings.CreditNote}
+					documentTitle={strings.TaxCreditNote}
 					unSent={false}
 					sendAgain={sendAgain}
 					mailPopupCard={!markAsSent || sendAgain}

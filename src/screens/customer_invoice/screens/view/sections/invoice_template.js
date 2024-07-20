@@ -301,7 +301,7 @@ class InvoiceTemplate extends Component {
 									textAlign: 'right',
 								}}>
 									<div style={{ marginTop: '0.5rem' }}>
-									    {companyData.isRegisteredVat ? (<h1 className="mb-1 ml-2">{strings.CustomerInvoice}</h1> ) : ( <h1 className="mb-1 ml-2">{strings.TaxInvoice}</h1>)}
+									    {companyData.isRegisteredVat ? ( <h1 className="mb-1 ml-2">{strings.TaxInvoice}</h1>) : (<h1 className="mb-1 ml-2">{strings.CustomerInvoice}</h1> )}
 										<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>

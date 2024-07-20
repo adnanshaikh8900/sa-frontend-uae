@@ -903,6 +903,7 @@ min="0"
 		strings.setLanguage(this.state.language);
 		const { data, initValue, dialog, loading,loadingMsg } = this.state;
 		const { currency_list,universal_currency_list } = this.props;
+		const { state } = this.props.location;
 
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
@@ -1417,6 +1418,11 @@ min="0"
 																				this.props.history.push(
 																					'/admin/accountant/journal',
 																				);
+																				if (state.renderURL) {
+																					this.props.history.push(state.renderURL, {
+																						id: state.renderId,
+																					})
+																				}
 																			}}
 																		>
 																			<i className="fa fa-ban"></i> {this.state.disabled1

@@ -1079,7 +1079,7 @@ class DetailContact extends React.Component {
 																								)
 																								: []
 																						}
-																						isDisabled={this.state.childRecordsPresent}
+																						isDisabled={props.values.taxTreatmentId === 1 || props.values.taxTreatmentId === 3 || props.values.taxTreatmentId === 5}
 																						id="taxTreatmentId"
 																						name="taxTreatmentId"
 																						placeholder={strings.Select + strings.TaxTreatment}

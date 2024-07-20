@@ -124,6 +124,7 @@ class CreateContact extends React.Component {
 	};
 
 	initializeData = () => {
+		this.props.commonActions.getCurrencyConversionList();
 		this.props.contactActions.getContactTypeList();
 		this.props.contactActions.getCountryList();
 		const { companyDetails } = this.props;

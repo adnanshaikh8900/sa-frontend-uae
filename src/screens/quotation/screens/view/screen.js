@@ -94,6 +94,7 @@ initializeData = () => {
                     }
 
                     this.setState({
+						QuotationData:res.data,
                         invoiceData: invoiceData,
                         invoiceStatus: invoiceStatus,
                         actionList: actionList,

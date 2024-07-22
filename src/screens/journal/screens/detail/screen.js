@@ -902,7 +902,7 @@ min="0"
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, initValue, dialog, loading,loadingMsg } = this.state;
-		const { currency_list,universal_currency_list } = this.props;
+		const { currency_list,universal_currency_list, } = this.props;
 		const { state } = this.props.location;
 
 		return (
@@ -1421,6 +1421,7 @@ min="0"
 																				if (state.renderURL) {
 																					this.props.history.push(state.renderURL, {
 																						id: state.renderId,
+																						isCNWithoutProduct: state.renderCN,
 																					})
 																				}
 																			}}

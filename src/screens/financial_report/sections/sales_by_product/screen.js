@@ -102,15 +102,15 @@ class SalesByProduct extends React.Component {
       .then(async (res) => {
         if (res.status === 200) {
           const sbproductList = res.data.salesByProductModelList;
-		//   const totalAmount = await sbproductList.reduce((sum, product) => sum + product.totalAmountForAProduct, 0);
-		//   const averageAmount = await sbproductList.reduce((sum, product) => sum + product.averageAmount, 0);
-        //   sbproductList.push({
-        //     productName: strings.Total,
-        //     totalAmountForAProduct: totalAmount,
-        //     quantitySold: null,
-        //     averageAmount: averageAmount,
-        //     isTotalRow: true,
-        //   });
+		  const totalAmount = await sbproductList.reduce((sum, product) => sum + product.totalAmountForAProduct, 0);
+		  const averageAmount = await sbproductList.reduce((sum, product) => sum + product.averageAmount, 0);
+          sbproductList.push({
+            productName: strings.Total,
+            totalAmountForAProduct: totalAmount,
+            quantitySold: null,
+            averageAmount: averageAmount,
+            isTotalRow: true,
+          });
          const salesByProductList = sbproductList.map((row, i) => {
             row.id = i + 1;
             return row;

@@ -316,7 +316,7 @@ class ViewInvoice extends React.Component {
 					{this.props.location.state.status && this.props.location.state.status !== 'Draft' &&
 						<InvoiceViewJournalEntries
 							history={this.props.history}
-							invoiceURL={'/admin/income/credit-notes/view'}
+							invoiceURL={'/admin/expense/supplier-invoice/view'}
 							invoiceId={id}
 							invoiceType={1}
 						/>

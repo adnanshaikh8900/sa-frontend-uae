@@ -229,7 +229,7 @@ class FinancialReport extends React.Component {
                   </Col>
                 )}
 
-                {config.REPORTS_HEAD_VAT && isRegisteredVat && (
+                {config.REPORTS_HEAD_VAT && (
                   <Col className="report-section ml-4">
                     <div
                       className="d-flex"
@@ -247,7 +247,7 @@ class FinancialReport extends React.Component {
                       <h5 className="mb-3 mt-2">{strings.VatReports}</h5>
                     </div>
                     <div className="mt-2 ml-4">
-                      {config.REPORTS_VAT_REPORTS && (
+                      {config.REPORTS_VAT_REPORTS && isRegisteredVat && (
                         <h6>
                           <a
                             style={{ fontWeight: "400" }}
@@ -262,7 +262,7 @@ class FinancialReport extends React.Component {
                           </a>
                         </h6>
                       )}
-                      {config.REPORTS_FTA_AUDIT && (
+                      {config.REPORTS_FTA_AUDIT && isRegisteredVat && (
                         <h6>
                           <a
                             style={{ fontWeight: "400" }}

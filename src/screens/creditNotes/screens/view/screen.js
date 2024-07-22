@@ -42,6 +42,7 @@ class ViewCreditNote extends React.Component {
 			totalNet: 0,
 			currencyData: {},
 			id: this.props.location?.state?.id,
+			isCNWithoutProduct: this.props?.location?.state?.isCNWithoutProduct
 		};
 
 		this.formRef = React.createRef();
@@ -187,7 +188,7 @@ class ViewCreditNote extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { invoiceData, currencyData, InvoiceDataList, isBillingAndShippingAddressSame, contactData, id, actionList, invoiceStatus} = this.state;
+		const { invoiceData, currencyData, InvoiceDataList, isBillingAndShippingAddressSame, contactData, id, actionList, invoiceStatus, isCNWithoutProduct} = this.state;
 		const { profile } = this.props;
 		const uniqueInvoiceData = {};
 		const filteredInvoiceData = [];
@@ -395,6 +396,7 @@ class ViewCreditNote extends React.Component {
 							invoiceURL={'/admin/income/credit-notes/view'}
 							invoiceId={id}
 							invoiceType={4}
+							isCNWithoutProduct={isCNWithoutProduct}
 						/>
 					}
 

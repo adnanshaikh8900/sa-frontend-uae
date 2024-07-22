@@ -42,6 +42,7 @@ class ViewDebitNote extends React.Component {
 			invoiceStatus: '',
 			currencyData: {},
 			id: this.props.location?.state?.id,
+			isCNWithoutProduct: this.props?.location?.state?.isCNWithoutProduct
 		};
 		this.formRef = React.createRef();
 	}
@@ -174,7 +175,7 @@ class ViewDebitNote extends React.Component {
 	};
 	render() {
 		strings.setLanguage(this.state.language);
-		const { debitNoteData, currencyData,   invoiceData, debitNoteDataList, contactData, invoiceStatus, id, actionList} = this.state;
+		const { debitNoteData, currencyData,   invoiceData, debitNoteDataList, contactData, invoiceStatus, id, actionList, isCNWithoutProduct} = this.state;
 		const { profile } = this.props;
 		const uniquedebitNoteData = {};
 		const filtereddebitNoteData = [];
@@ -389,6 +390,7 @@ class ViewDebitNote extends React.Component {
 							invoiceURL={'/admin/expense/debit-notes/view'}
 							invoiceId={id}
 							invoiceType={5}
+							isCNWithoutProduct={isCNWithoutProduct}
 						/>
 					}
 				</div>

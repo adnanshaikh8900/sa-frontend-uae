@@ -83,11 +83,12 @@ class InvoiceViewJournalEntries extends React.Component {
         });
     };
     goToDetail = (row) => {
-        const { history, invoiceId, id, invoiceURL } = this.props
+        const { history, invoiceId, id, invoiceURL, isCNWithoutProduct } = this.props
         history.push('/admin/accountant/journal/view', {
             id: row['journalId'],
             renderId: id ? id : invoiceId,
             renderURL: invoiceURL,
+            renderCN: isCNWithoutProduct
         });
     };
 

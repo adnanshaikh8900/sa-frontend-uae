@@ -1006,7 +1006,7 @@ class CreateContact extends React.Component {
 																		<AddressComponent
 																			values={props.values.billingAddress}
 																			errors={props.errors.billingAddress}
-																			touched={props.touched.billingAddress}
+																			touched={props.touched.billingAddress || props.touched.shippingAddress}
 																			onChange={(field, value) => {
 																				props.handleChange(`billingAddress.${field}`)(value);
 																				this.setState({ isSame: false, });

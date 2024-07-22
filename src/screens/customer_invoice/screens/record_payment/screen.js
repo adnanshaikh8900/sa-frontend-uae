@@ -81,6 +81,7 @@ class RecordCustomerPayment extends React.Component {
 			initValue: {
 				receiptNo: '',
 				receiptDate:new Date(this.props.location.state.id.invoiceDate.substring(3,5)+" "+this.props.location.state.id.invoiceDate.substring(0,2)+" "+this.props.location.state.id.invoiceDate.substring(6)),
+				// receiptDate: getDate(this.props.location.state.id.invoiceDate),
 				contactId: this.props.location.state.id.contactId,
 				amount: this.props.location.state.id.dueAmount,
 				issuedate:this.props.location.state.id.invoiceDate,
@@ -375,6 +376,8 @@ class RecordCustomerPayment extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { initValue, loading, dialog ,loadingMsg} = this.state;
 		const { pay_mode, customer_list, deposit_list } = this.props;
+		const { dueAmount, date } = initValue.paidInvoiceListStr;
+
 
 		let tmpcustomer_list = []
 
@@ -439,20 +442,20 @@ class RecordCustomerPayment extends React.Component {
 															'Payment mode is required',
 														),
 														amount: Yup.mixed()
-														.test(
-															'amount',
-															'Amount cannot be greater than invoice amount',
-															(value) => {
-																if (
-																	!value ||
+																	.test(
+																		'amount',
+																		'Amount cannot be greater than invoice amount',
+																		(value) => {
+																			if (
+																				!value ||
 																	(value  <= this.props.location.state.id.dueAmount)
-																) {
-																	return true;
-																} else {
-																	return false;
-																}
-															},
-														),
+																			) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	),
 														attachmentFile: Yup.mixed()
 															.test(
 																'fileType',
@@ -892,9 +895,12 @@ class RecordCustomerPayment extends React.Component {
 																			color="secondary"
 																			className="btn-square"
 																			onClick={() => {
-																				this.props.history.push(
-																					'/admin/income/customer-invoice',
-																				);
+																				if (this.props?.location?.state?.renderURL) {
+																					this.props.history.push(`${this.props?.location?.state?.id?.renderURL}`, { id: this.props?.location?.state?.renderID },);
+																				} else
+																					this.props.history.push(
+																						'/admin/income/customer-invoice',
+																					);
 																			}}
 																		>
 																			<i className="fa fa-ban"></i> {strings.Cancel}
@@ -929,6 +935,26 @@ class RecordCustomerPayment extends React.Component {
 			</div>
 		);
 	}
+}
+
+const getDate = (date) => {
+	if (date) {
+		if (typeof date === 'string') {
+			date = date.replaceAll('/', '-')
+			date = date.split('-');
+			const month = date[1]
+			const day = date[0]
+			const year = date[2]
+			date = new Date();
+			date.setFullYear(year)
+			date.setMonth(month - 1);
+			date.setDate(day);
+			return date;
+		} else {
+			return date;
+		}
+	}
+	return '';
 }
 
 export default connect(

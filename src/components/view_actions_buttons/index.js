@@ -41,7 +41,7 @@ class ActionButtons extends React.Component {
 		const { id, history, URL, initializeData, invoiceData, postingRefType, actionList, invoiceStatus, documentTitle, documentCreated } = this.props;
 		if (invoiceData) {
 			const { totalAmount, currencyIsoCode, totalVatAmount, date, dueDate, dueAmount, number, contactId, editFlag, isCreatedWIWP,
-				invoiceNumber, chartOfAccountId
+				invoiceNumber, chartOfAccountId,referenceNumber ,invoiceDate,invoiceDueDate
 			} = invoiceData
 			const viewURL = URL + '/view';
 			return (
@@ -154,7 +154,7 @@ class ActionButtons extends React.Component {
 										<i className="fas fa-plus"></i>
 									</Button>
 								);
-							} else if (status === 'Record Payment' && currencyIsoCode === 'SAR') {
+							} else if (status === 'Record Payment' && currencyIsoCode === 'AED') {
 								return (
 									<Button
 										key={index}
@@ -162,7 +162,10 @@ class ActionButtons extends React.Component {
 										className="btn-lg mb-1 print-btn-cont mr-1"
 										onClick={() => {
 											this.props.history.push(`${URL}/record-payment`,
-												{
+												URL.includes('invoice') ?
+												{id: { id: id, invoiceDate: moment(invoiceDate).format('DD-MM-YYYY'), invoiceDueDate: moment(invoiceDueDate).format('DD-MM-YYYY'), invoiceAmount: totalAmount, dueAmount: dueAmount, invoiceNumber: referenceNumber, contactId: contactId, renderURL: viewURL, renderID: id }
+											} :
+											{
 													id: id,
 													invoiceDate: moment(date).format('DD-MM-YYYY'),
 													invoiceDueDate: moment(dueDate).format('DD-MM-YYYY'),

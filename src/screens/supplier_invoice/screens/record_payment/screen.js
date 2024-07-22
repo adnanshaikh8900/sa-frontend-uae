@@ -866,9 +866,12 @@ class RecordSupplierPayment extends React.Component {
 																					color="secondary"
 																					className="btn-square"
 																					onClick={() => {
-																						this.props.history.push(
-																							'/admin/expense/supplier-invoice',
-																						);
+																						if (this.props?.location?.state?.renderURL) {
+																							this.props.history.push(`${this.props?.location?.state?.id?.renderURL}`, { id: this.props?.location?.state?.renderID },);
+																						} else
+																							this.props.history.push(
+																								'/admin/expense/supplier-invoice',
+																							);
 																					}}
 																				>
 																					<i className="fa fa-ban"></i> {strings.Cancel}

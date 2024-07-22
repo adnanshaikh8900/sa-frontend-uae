@@ -2960,13 +2960,13 @@ class CreateCreditNote extends React.Component {
 																				color="secondary"
 																				className="btn-square"
 																				onClick={() => {
-																					if (this.props.location?.state?.invoiceID)
-																						this.props.history.push(
-																							'/admin/income/customer-invoice',
-																						);
+																					if (this.props?.location?.state?.renderURL) {
+																						this.props.history.push(`${this.props?.location?.state?.renderURL}`, { id: this.props?.location?.state?.renderID },);
+																					} else if (this.props.location?.state?.invoiceID)
+																						this.props.history.push('/admin/income/customer-invoice',);
 																					else
 																						this.props.history.push(
-																							'/admin/income/credit-notes',
+																							'/admin/income/credit-notes/view',
 																						);
 																				}}
 																			>

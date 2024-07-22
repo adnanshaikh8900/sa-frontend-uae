@@ -1012,8 +1012,8 @@ try {
 																	</FormGroup>
 																</Col>
 															</Row>
-															<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
-																{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Col lg={4}>
+															<Row style={{display: props.values.productType !== 'SERVICE' ? '' : 'none'}}		>
+																<Col lg={4}>
 																<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -1052,7 +1052,7 @@ try {
 																			</UncontrolledTooltip>
 																		</Label>										
 																	</FormGroup>
-																</Col>)}
+																</Col>
 																</Row>
 																<Row>
 																{this.state.exciseTaxCheck===true&&(	

@@ -1438,9 +1438,9 @@ renderName=(cell,row)=>{
 																</Col>
 															</Row> */}
 															
-															<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
-																{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Col lg={4}>
-																<FormGroup check inline className="mb-3" hidden={this.state.childRecordsPresent}>
+															<Row style={{display: props.values.productType !== 'SERVICE' ? '' : 'none'}}>
+																<Col lg={4}>
+																<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
 																			check
@@ -1448,24 +1448,20 @@ renderName=(cell,row)=>{
 																		>
 																			
 																			<Input
-																				// disabled={this.state.childRecordsPresent}
+																				disabled={this.state.childRecordsPresent}
 																				type="checkbox"
 																				id="exciseTaxCheck"
 																				name="exciseTaxCheck"
 																				onChange={(event) => {
-																					if (
-																						this.state.exciseTaxCheck===true
-																						)
-																					 {
+																					if (this.state.exciseTaxCheck===true) {
 																						this.setState({exciseTaxCheck:false,exciseType:false})
-																						props.handleChange('exciseTaxId')(
-																							'',
-																						);
+																						props.handleChange('exciseTaxId')('',);
 																					} else {
 																						this.setState({exciseTaxCheck:true})
 																					}
 																				}}
 																				checked={this.state.exciseTaxCheck}
+																				style={{ display: 'inline-block' }}
 																				
 																			/>
 																			{strings.excise_product}
@@ -1481,12 +1477,12 @@ renderName=(cell,row)=>{
 																			</UncontrolledTooltip>
 																		</Label>
 																	</FormGroup>
-																</Col>)}
+																</Col>
 																</Row>
 																<Row>
 																{this.state.exciseTaxCheck===true&&(	
 															
-																<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}} lg={4}>
+																<Col  style={{display: props.values.productType !== 'SERVICE' ? '' : 'none'}} lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="exciseTaxId">
 																			<span className="text-danger">* </span>

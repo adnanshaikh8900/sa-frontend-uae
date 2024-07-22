@@ -1878,6 +1878,24 @@ class CreateQuotation extends React.Component {
 
 		if (result[0] && result[0].exchangeRate)
 			this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		
+		if (data.taxTreatmentId !== 5 && data.taxTreatmentId !== 6 && data.taxTreatmentId !== 7) {
+			this.props.quotationCreateAction.getCustomerShippingAddressbyID(data.id).then((res) => {
+				if (res.status === 200) {
+					var PlaceofSupply = this.placelist &&
+						selectOptionsFactory.renderOptions(
+							'label',
+							'value',
+							this.placelist,
+							'Place of Supply',).
+							find((option) => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase())
+					if (PlaceofSupply) {
+						this.setState({ placeOfSupplyId: PlaceofSupply });
+						this.formRef.current.setFieldValue('placeOfSupplyId', PlaceofSupply.value, true);
+					}
+				}
+			});
+		}
 	};
 	getCurrency = (opt) => {
 		let supplier_currencyCode = 0;

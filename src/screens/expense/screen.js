@@ -75,7 +75,8 @@ class Expense extends React.Component {
 			csvData: [],
 			view: false,
 			language: window['localStorage'].getItem('language'),
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			currentPage: 1,
 		};
 
 		this.options = {
@@ -107,9 +108,9 @@ class Expense extends React.Component {
 	};
 
 	initializeData = (search) => {
-		const { filterData } = this.state;
+		let { filterData, currentPage} = this.state;
 		const paginationData = {
-			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageNo: currentPage - 1,
 			pageSize: this.options.sizePerPage,
 		};
 		const sortingData = {
@@ -424,7 +425,9 @@ class Expense extends React.Component {
 	};
 
 	handleSearch = () => {
-		this.initializeData();
+		this.setState({ currentPage: 1 }, () => {
+   		this.initializeData();
+ 		});
 	};
 
 	onSizePerPageList = (sizePerPage) => {
@@ -662,6 +665,7 @@ class Expense extends React.Component {
 					transactionCategoryId: '',
 					payee: '',
 				},
+				currentPage: 1
 			},
 			() => {
 				this.initializeData();
@@ -870,7 +874,6 @@ class Expense extends React.Component {
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
-											options={this.options}
 											data={
 												expense_list && expense_list.data
 													? expense_list.data
@@ -891,6 +894,15 @@ class Expense extends React.Component {
 												dataTotalSize: expense_list.count
 													? expense_list.count
 													: 0,
+											}}
+											options={{
+												...this.options,
+												page: this.state.currentPage,
+												onPageChange: (page) => {
+												this.setState({ currentPage: page }, () => {
+													this.initializeData();
+												});
+												},
 											}}
 											multiColumnSort
 											className="expense-table"

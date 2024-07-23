@@ -2004,9 +2004,14 @@ class DetailExpense extends React.Component {
 																					color="secondary"
 																					className="btn-square"
 																					onClick={() => {
-																						this.props.history.push(
-																							'/admin/expense/expense',
-																						);
+																						if (this.props?.location?.state?.renderURL) {
+																							this.props.history.push(
+																								`${this.props?.location?.state?.renderURL}`, 
+																								{ expenseId: this.props?.location?.state?.expenseId },);
+																						} else
+																							this.props.history.push(
+																								'/admin/expense/expense',
+																							);
 																					}}
 																				>
 																					<i className="fa fa-ban"></i> {this.state.disabled1

@@ -42,13 +42,7 @@ export const postInvoice = (obj, documentTitle, strings) => {
 
 export const unPostInvoice = (obj, documentTitle, strings) => {
     var URL = '';
-    if (documentTitle === strings.Expense) {
-        URL = `/rest/invoice/undoPosting`;
-    } else if (documentTitle === strings.SupplierInvoice) {
-        URL = `/rest/invoice/undoPosting`;
-    } else if (documentTitle === strings.DebitNote) {
-        URL = `/rest/invoice/undoPosting`;
-    }
+    URL = `/rest/invoice/undoPosting`;
 
 
     return sendInvoice(URL);

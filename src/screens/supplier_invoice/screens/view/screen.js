@@ -46,6 +46,7 @@ class ViewInvoice extends React.Component {
 			invoiceData: {},
 			totalNet: 0,
 			currencyData: {},
+			invoiceStatus: '',
 			id: this.props.location?.state?.id,
 			debitNoteDataList: [],
 		};
@@ -101,6 +102,7 @@ class ViewInvoice extends React.Component {
 							{
 								invoiceData: res.data,
 								totalNet: val,
+								invoiceStatus: invoiceStatus,
 								id: this.props.location.state.id,
 								actionList:actionList
 							},
@@ -313,7 +315,7 @@ class ViewInvoice extends React.Component {
 							</Table>
 						</div>
 					</Card>
-					{this.props.location.state.status && this.props.location.state.status !== 'Draft' &&
+					{invoiceStatus && invoiceStatus !== 'Draft' &&
 						<InvoiceViewJournalEntries
 							history={this.props.history}
 							invoiceURL={'/admin/expense/supplier-invoice/view'}

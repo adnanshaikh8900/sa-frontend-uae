@@ -684,7 +684,14 @@ class DebitNoteRefund extends React.Component {
 																			color="secondary"
 																			className="btn-square"
 																			onClick={() => {
-																				this.props.history.push(
+																				if (this.props?.location?.state?.id.renderURL) {
+																					this.props.history.push(
+																						`${this.props?.location?.state?.id.renderURL}`, 
+																						{ id: this.props?.location?.state?.id.renderID, 
+																						isCNWithoutProduct: this.props.location.state.id.isCNWithoutProduct }
+																						);
+																				} else
+																					this.props.history.push(
 																					'/admin/expense/debit-notes',
 																				);
 																			}}

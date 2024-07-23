@@ -1,12 +1,13 @@
 export const InvoiceMessagesList = [
     { action: 'Sent', list: ['InvoiceSentSuccessfully', 'CustomerInvoicePostedUnsuccessfully', 'InvoiceStatusChangedSuccessfully'] },
     { action: 'Delete', list: ['InvoiceDeletedSuccessfully', 'InvoiceDeletedUnsuccessfully'] },
+    { action: 'UnPost', list: ['InvoiceMovedToDraftSuccessfully', 'InvoiceMovedToDraftUnsuccessfully',] },
 ]
 
 export const CreditNoteMessagesList = [
     { action: 'Sent', list: ['CreditNotePostedSuccessfully', 'CreditNotePostedUnsuccessfully', 'CreditNotePostedSuccessfully'] },
     { action: 'Delete', list: ['TaxCreditNoteDeletedSuccessfully', 'TaxCreditNoteDeletedUnsuccessfully',] },
-      { action: 'UnPost', list: ['CrediNoteMovedToDraftSuccessfully', 'CrediNoteMovedToDraftUnsuccessfully',] },
+    { action: 'UnPost', list: ['CrediNoteMovedToDraftSuccessfully', 'CrediNoteMovedToDraftUnsuccessfully',] },
 ]
 
 export const QuotationMessagesList = [

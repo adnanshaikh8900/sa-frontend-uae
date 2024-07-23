@@ -211,6 +211,7 @@ class ViewCreditNote extends React.Component {
 									actionList={actionList}
 									invoiceStatus={invoiceStatus}
 									documentTitle={strings.TaxCreditNote}
+									isCNWithoutProduct={isCNWithoutProduct}
 									documentCreated={false} // Any Further document against this document is created(e.g. CN,DN,CI,...)
 								/>
 							</div>
@@ -390,7 +391,7 @@ class ViewCreditNote extends React.Component {
 							</Table>
 						</div>
 					</Card>
-					{this.props.location.state.status && this.props.location.state.status !== 'Draft' &&
+					{invoiceStatus && invoiceStatus !== 'Draft' &&
 						<InvoiceViewJournalEntries
 							history={this.props.history}
 							invoiceURL={'/admin/income/credit-notes/view'}

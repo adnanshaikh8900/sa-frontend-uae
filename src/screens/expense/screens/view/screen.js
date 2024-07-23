@@ -113,7 +113,7 @@ class ViewExpense extends React.Component {
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
-						<div>
+						<div className="pull-left">
 						<ActionButtons
                                     id={this.props.location.state.expenseId}
                                     history={this.props.history}

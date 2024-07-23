@@ -895,8 +895,10 @@ class RecordCustomerPayment extends React.Component {
 																			color="secondary"
 																			className="btn-square"
 																			onClick={() => {
-																				if (this.props?.location?.state?.renderURL) {
-																					this.props.history.push(`${this.props?.location?.state?.id?.renderURL}`, { id: this.props?.location?.state?.renderID },);
+																				if (this.props?.location?.state?.id?.renderURL) {
+																					this.props.history.push(
+																						`${this.props?.location?.state?.id?.renderURL}`, 
+																						{ id: this.props?.location?.state?.id.renderID },);
 																				} else
 																					this.props.history.push(
 																						'/admin/income/customer-invoice',

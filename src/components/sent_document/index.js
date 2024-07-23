@@ -136,7 +136,7 @@ class SentInvoice extends React.Component {
 
 	getPostingRequestModel = () => {
 		const { invoiceAmount, id, currencyName, vatAmount, markAsSent, postingRefType, setState, initializeData, documentTitle,
-			isCNWithoutProduct, chartOfAccountId, sendAgain } = this.props;
+			isCNWithoutProduct, chartOfAccountId, sendAgain, expenseAmount } = this.props;
 		const postingRequestModel = {
 			amount: invoiceAmount,
 			postingRefId: id,
@@ -150,7 +150,10 @@ class SentInvoice extends React.Component {
 			postingRequestModel.isCNWithoutProduct = isCNWithoutProduct == true ? true : false;
 		}
 		if (documentTitle === strings.Expense) {
-			postingRequestModel.postingChartOfAccountId = chartOfAccountId
+			postingRequestModel.postingChartOfAccountId = chartOfAccountId;
+			postingRequestModel.amount = expenseAmount;
+			postingRequestModel.postingRefId = id;
+			postingRequestModel.postingRefType = postingRefType;
 		}
 		return postingRequestModel;
 

@@ -693,16 +693,16 @@ class CreateUser extends React.Component {
 																			</Label>
 																			<Select
 																				// styles={customStyles}
-																				options={
-																					active_roles_list
-																						? selectOptionsFactory.renderOptions(
-																							'roleName',
-																							'roleCode',
-																							active_roles_list,
-																							'Role',
-																						)
-																						: []
-																						}
+																				options = {
+																				active_roles_list
+																					? selectOptionsFactory.renderOptions(
+																						'roleName',
+																						'roleCode',
+																						active_roles_list.sort((a, b) => a.roleName.localeCompare(b.roleName)),
+																						'Role',
+																					)
+																					: []
+																			}
 																				// value={props.values.roleId}
 																				value={
 																					active_roles_list &&

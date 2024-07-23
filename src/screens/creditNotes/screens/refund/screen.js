@@ -942,9 +942,16 @@ class Refund extends React.Component {
 																			color="secondary"
 																			className="btn-square"
 																			onClick={() => {
-																				this.props.history.push(
-																					'/admin/income/credit-notes',
-																				);
+																				if (this.props?.location?.state?.id?.renderURL) {
+																					this.props.history.push(
+																						`${this.props?.location?.state?.id?.renderURL}`, 
+																						{ id: this.props?.location?.state?.id?.renderID, 
+																						isCNWithoutProduct: this.props?.location?.state?.id?.isCNWithoutProduct }
+																						);
+																				} else
+																					this.props.history.push(
+																						'/admin/income/credit-notes',
+																					);
 																			}}
 																		>
 																			<i className="fa fa-ban"></i>  {strings.Cancel}

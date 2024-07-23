@@ -81,7 +81,7 @@ class ViewDebitNote extends React.Component {
 								debitNoteData: res.data,
 								totalNet: val,
 								id: this.props.location.state.id,
-								invoiceData: data,
+								invoiceData: res.data,
 						invoiceStatus: invoiceStatus,
 						actionList: actionList,
 							},
@@ -196,6 +196,7 @@ class ViewDebitNote extends React.Component {
 									}}
 									actionList={actionList}
 									invoiceStatus={invoiceStatus}
+									isCNWithoutProduct={isCNWithoutProduct}
 									documentTitle={strings.DebitNote}
 									documentCreated={false} // Any Further document against this document is created(e.g.  CN,DN,CI,...)
 								/>
@@ -384,7 +385,7 @@ class ViewDebitNote extends React.Component {
 							</Table>
 						</div>
 					</Card>
-					{this.props.location.state.status && this.props.location.state.status !== 'Draft' &&
+					{invoiceStatus && invoiceStatus !== 'Draft' &&
 						<InvoiceViewJournalEntries
 							history={this.props.history}
 							invoiceURL={'/admin/expense/debit-notes/view'}

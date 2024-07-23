@@ -3250,9 +3250,14 @@ class DetailCustomerInvoice extends React.Component {
 																				color="secondary"
 																				className="btn-square"
 																				onClick={() => {
-																					this.props.history.push(
-																						'/admin/income/customer-invoice',
-																					);
+																					if (this.props?.location?.state?.renderURL) {
+																						this.props.history.push(
+																							`${this.props?.location?.state?.renderURL}`, 
+																							{ id: this.props?.location?.state?.renderID },);
+																					} else
+																						this.props.history.push(
+																							'/admin/income/customer-invoice',
+																						);
 																				}}
 																			>
 																				<i className="fa fa-ban"></i> {this.state.disabled1

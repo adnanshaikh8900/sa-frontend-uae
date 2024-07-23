@@ -38,10 +38,10 @@ class ActionButtons extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { sentInvoice, markAsSent, deleteInvoice, statusToChange, statusChange, unSent, sendAgain } = this.state;
-		const { id, history, URL, initializeData, invoiceData, postingRefType, actionList, invoiceStatus, documentTitle, documentCreated } = this.props;
+		const { id, history, URL, initializeData, invoiceData, postingRefType, actionList, invoiceStatus, documentTitle, documentCreated, isCNWithoutProduct } = this.props;
 		if (invoiceData) {
 			const { totalAmount, currencyIsoCode, totalVatAmount, date, dueDate, dueAmount, number, contactId, editFlag, isCreatedWIWP,
-				invoiceNumber, chartOfAccountId,referenceNumber ,invoiceDate,invoiceDueDate
+				invoiceNumber, expenseCategory, referenceNumber, invoiceDate, invoiceDueDate, expenseAmount
 			} = invoiceData
 			const viewURL = URL + '/view';
 			return (
@@ -55,11 +55,23 @@ class ActionButtons extends React.Component {
 										title={strings.Edit}
 										className="btn-lg mb-1 print-btn-cont mr-1"
 										onClick={() => {
-											if (editFlag === false)
+											if (editFlag === false) {
 												this.props.commonActions.tostifyAlert('error', strings.YouCannotEditTransactionsForWhichVATIsRecorded);
-											else
-												history.push(`${URL}/detail`, { id: id,expenseId:id, renderURL: viewURL, renderID: id },);
-										}}
+											} else if (documentTitle === strings.DebitNote) {
+												history.push(`${URL}/update`, { 
+													id: id,expenseId:id, 
+													renderURL: viewURL, 
+													renderID: id, 
+													isCNWithoutProduct: isCNWithoutProduct 
+												},);
+											} else {
+												history.push(`${URL}/detail`, { 
+													id: id,
+													expenseId:id, 
+													renderURL: viewURL, 
+													renderID: id, 
+													isCNWithoutProduct },);
+										}}}
 									>
 										<i className="fas fa-edit"></i>
 									</Button>
@@ -163,7 +175,15 @@ class ActionButtons extends React.Component {
 										onClick={() => {
 											this.props.history.push(`${URL}/record-payment`,
 												URL.includes('invoice') ?
-												{id: { id: id, invoiceDate: moment(invoiceDate).format('DD-MM-YYYY'), invoiceDueDate: moment(invoiceDueDate).format('DD-MM-YYYY'), invoiceAmount: totalAmount, dueAmount: dueAmount, invoiceNumber: referenceNumber, contactId: contactId, renderURL: viewURL, renderID: id }
+												{id: { id: id, 
+													invoiceDate: moment(invoiceDate).format('DD-MM-YYYY'), 
+													invoiceDueDate: moment(invoiceDueDate).format('DD-MM-YYYY'), 
+													invoiceAmount: totalAmount, 
+													dueAmount: dueAmount, 
+													invoiceNumber: referenceNumber, 
+													contactId: contactId, 
+													renderURL: viewURL, 
+													renderID: id }
 											} :
 											{
 													id: id,
@@ -189,7 +209,32 @@ class ActionButtons extends React.Component {
 										title={strings.RefundPayment}
 										className="btn-lg mb-1 print-btn-cont mr-1"
 										onClick={() => {
-											history.push(`${URL}/refund`, { id: id, renderURL: viewURL, renderID: id },);
+											this.props.history.push(`${URL}/refund`,
+												URL.includes('credit') ?
+												{id: { id: id, 
+													invoiceDate: moment(invoiceDate).format('DD-MM-YYYY'), 
+													invoiceDueDate: moment(invoiceDueDate).format('DD-MM-YYYY'), 
+													invoiceAmount: totalAmount, 
+													dueAmount: dueAmount, 
+													invoiceNumber: referenceNumber, 
+													contactId: contactId, 
+													renderURL: viewURL, 
+													isCNWithoutProduct: isCNWithoutProduct,
+													renderID: id }
+												} :
+												{id: {id: id,
+													creditNoteDate: invoiceData.creditNoteDate,
+													invoiceDueDate: dueDate,
+													invoiceAmount: totalAmount,
+													dueAmount: dueAmount,
+													invNumber: referenceNumber,
+													contactId: contactId,
+													renderURL: viewURL,
+													renderID: id,
+													isCNWithoutProduct: isCNWithoutProduct,
+													creditNoteNumber: number}
+												}
+											)
 										}}
 									>
 										<i className="fas fa-university"></i>
@@ -208,9 +253,10 @@ class ActionButtons extends React.Component {
 												noteNumber: number,
 												referenceNumber: invoiceNumber,
 												totalAmount: dueAmount,
-												currency: currencyIsoCode || 'SAR',
+												currency: currencyIsoCode || 'AED',
 												renderURL: viewURL,
-												renderID: id
+												renderID: id,
+												isCNWithoutProduct: isCNWithoutProduct,
 											},);
 										}}
 									>
@@ -250,7 +296,11 @@ class ActionButtons extends React.Component {
 										title={strings.CreateADuplicate}
 										className="btn-lg mb-1 print-btn-cont mr-1"
 										onClick={() => {
-											history.push(`${URL}/create`, { parentInvoiceId: id, parentId:id,renderURL: viewURL, renderID: id },);
+											history.push(`${URL}/create`, { 
+												parentInvoiceId: id, 
+												parentId:id,
+												renderURL: viewURL, 
+												renderID: id },);
 										}}
 									>
 										<i className="fas fa-copy"></i>
@@ -289,7 +339,7 @@ class ActionButtons extends React.Component {
 								return (
 									<Button
 										key={index}
-										title={strings.CreateTaxCreditNote}
+										title={strings.CreateCreditNote}
 										className="btn-lg mb-1 print-btn-cont mr-1"
 										onClick={() => {
 											history.push('/admin/income/credit-notes/create', {
@@ -315,30 +365,42 @@ class ActionButtons extends React.Component {
 										<i className="fas fa-plus"></i>
 									</Button>
 								);
+							} else if (status === 'Close') {
+								return (
+									<Button
+										key={index}
+										title={strings.Close}
+										className="btn-lg mb-1 print-btn-cont mr-1"
+										onClick={() => {
+											this.setState({ statusChange: true, statusToChange: "Closed" })
+										}}
+									>
+										<i className="far fa-times-circle"/>
+									</Button>
+								);
 							}
 						})}
 					</div>
 					{sentInvoice &&
 						<SentInvoice
 							invoiceAmount={totalAmount || 0}
+							expenseAmount = {expenseAmount}
 							id={id}
-							currencyName={currencyIsoCode || 'SAR'}
+							currencyName={currencyIsoCode || 'AED'}
 							vatAmount={totalVatAmount || 0}
 							markAsSent={markAsSent}
 							postingRefType={postingRefType}
 							setState={(value) => {
 								this.setState({ sentInvoice: value, unSent: false, sendAgain: false })
-
 							}}
 							initializeData={() => {
 								initializeData();
 							}}
-							chartOfAccountId={chartOfAccountId}
+							chartOfAccountId={expenseCategory}
 							documentTitle={documentTitle}
 							isCNWithoutProduct={isCreatedWIWP}
 							unSent={unSent}
 							sendAgain={sendAgain}
-							zatcaConfirmation={(documentTitle === strings.CustomerInvoice || documentTitle === strings.TaxCreditNote) && (!sendAgain || !markAsSent)}
 							mailPopupCard={(documentTitle === strings.Quotation || documentTitle === strings.CustomerInvoice || documentTitle === strings.PurchaseOrder || documentTitle === strings.TaxCreditNote || documentTitle === strings.IncomeReceipt) && (sendAgain || !markAsSent)}
 						/>
 					}

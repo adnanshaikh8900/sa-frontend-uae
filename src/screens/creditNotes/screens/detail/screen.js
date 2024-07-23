@@ -2575,9 +2575,16 @@ class DetailCreditNote extends React.Component {
 																				color="secondary"
 																				className="btn-square"
 																				onClick={() => {
-																					this.props.history.push(
-																						'/admin/income/credit-notes',
-																					);
+																					if (this.props?.location?.state?.renderURL) {
+																						this.props.history.push(
+																							`${this.props?.location?.state?.renderURL}`, 
+																							{ id: this.props?.location?.state?.renderID,
+																							isCNWithoutProduct: this.props.location.state.isCNWithoutProduct }
+																							);
+																					} else
+																						this.props.history.push(
+																							'/admin/income/credit-notes',
+																						);
 																				}}
 																			>
 																				<i className="fa fa-ban"></i> {strings.Cancel}

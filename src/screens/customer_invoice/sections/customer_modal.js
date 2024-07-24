@@ -47,22 +47,26 @@ class CustomerModal extends React.Component {
 					isOpen={openCustomerModal}
 					className="modal-success contact-modal"
 				>
-				<CreateContact
-					getCurrentContactData={(contactData) =>{
-						this.props.getCurrentUser(contactData);
-					}}
-					closeModal={(e) => {
-						this.openConfirmation();
-					}}
-				contactType={{label: "Customer",value: 2}} 	
-				isParentComponentPresent={true}
-				/>
+					<CreateContact
+						getCurrentContactData={(contactData) =>{
+								this.props.getCurrentUser(contactData);
+							}}
+						closeModal={(e) => {
+							closeCustomerModal(e);
+                        }}
+                        confirmCancel={() => {
+                            this.openConfirmation();
+                        }}
+						contactType={{label: "Customer",value: 2}} 	
+						isParentComponentPresent={true}
+					/>
 				</Modal>
 				<Modal isOpen={this.state.showConfirmation} toggle={this.closeConfirmation} centered>
-                    <ModalHeader toggle={this.closeConfirmation}style={{ color: 'white' }}><h4>Do you want to switch to another page?
-                    </h4></ModalHeader>
+                    <ModalHeader toggle={this.closeConfirmation}style={{ color: 'white' }}>
+						<h4> Do you want to switch to another page? </h4>
+					</ModalHeader>
                     <ModalBody>
-                   <h5>By doing so your current changes will get discarded. </h5>
+                		<h5>By doing so your current changes will get discarded. </h5>
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" onClick={this.confirmCancel}>Confirm</Button>

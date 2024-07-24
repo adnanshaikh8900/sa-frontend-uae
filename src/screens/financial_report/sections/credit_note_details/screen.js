@@ -135,27 +135,20 @@ class CreditNoteDetailsReport extends React.Component {
 	};
 
 	exportFile = () => {
-		let dl = ""
-		let fn = ""
-		let type = "csv"
-		var elt = document.getElementById('tbl_exporttable_to_xls');
-		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-		return dl ?
-			XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-			XLSX.writeFile(wb, fn || ('Tax Credit Note Details Report.' + (type || 'csv')));
-
-	}
+		const { creditNoteSummaryModelList } = this.state;
+		const worksheet = XLSX.utils.json_to_sheet(creditNoteSummaryModelList);
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'Tax Credit Note Details');
+		XLSX.writeFile(workbook, 'Tax Credit Note Details.csv');
+	};
 
 	exportExcelFile = () => {
-		let dl = ""
-		let fn = ""
-		let type = "xlsx"
-		var elt = document.getElementById('tbl_exporttable_to_xls');
-		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-		return dl ?
-			XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-			XLSX.writeFile(wb, fn || ('Tax Credit Note Details Report.' + (type || 'xlsx')));
-	}
+		const { creditNoteSummaryModelList } = this.state;
+		const worksheet = XLSX.utils.json_to_sheet(creditNoteSummaryModelList);
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'Tax Credit Note Details');
+		XLSX.writeFile(workbook, 'Tax Credit Note Details.xlsx');
+	  };
 
 	toggle = () =>
 		this.setState((prevState) => {

@@ -378,6 +378,7 @@ class HorizontalBalanceSheet extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
+									fileName="Horizontal Balance Sheet.pdf"
 									margin={{top:0 , bottom:0 , left: 30 , right: 31 }}
 									
 								>

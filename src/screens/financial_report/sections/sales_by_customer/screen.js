@@ -125,28 +125,20 @@ class SalesByCustomer extends React.Component {
 	};
 
 	exportFile = () => {
-		let dl = ""
-		let fn = ""
-		let type = "csv"
-		var elt = document.getElementById('tbl_exporttable_to_xls');
-		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-		return dl ?
-			XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-			XLSX.writeFile(wb, fn || ('Sales By Customer Report.' + (type || 'csv')));
-
-	}
-
-	exportExcelFile = () => {
-		let dl = ""
-		let fn = ""
-		let type = "xlsx"
-		var elt = document.getElementById('tbl_exporttable_to_xls');
-		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-		return dl ?
-			XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-			XLSX.writeFile(wb, fn || ('Sales By Customer Report.' + (type || 'xlsx')));
-
-	}
+        const { salesByCustomerList } = this.state;
+        const worksheet = XLSX.utils.json_to_sheet(salesByCustomerList);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sales By Customer');
+        XLSX.writeFile(workbook, 'Sales By Customer.csv');
+    };
+ 
+    exportExcelFile = () => {
+        const { salesByCustomerList } = this.state;
+        const worksheet = XLSX.utils.json_to_sheet(salesByCustomerList);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sales By Customer');
+        XLSX.writeFile(workbook, 'Sales By Customer.xlsx');
+    };
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -265,15 +257,17 @@ class SalesByCustomer extends React.Component {
 							<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
-									scale={0.8}
+									scale={0.546}
 									paperSize="A3"
 									fileName="Sales By Customer.pdf"
+									margin={{ top: 0, left: 80, right: 80, bottom: 0 }}
 								>
 									<div style={{
 
 										display: 'flex',
 										justifyContent: 'space-between',
-										marginBottom: '1rem'
+										marginBottom: '1rem',
+										marginTop:'5rem',
 									}}>
 										<div>
 											<img

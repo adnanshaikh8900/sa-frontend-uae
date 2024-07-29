@@ -142,29 +142,20 @@ class CustomerAccountStatement extends React.Component {
   };
 
   exportFile = () => {
-    let dl = "";
-    let fn = "";
-    let type = "csv";
-    var elt = document.getElementById("tbl_exporttable_to_xls");
-    var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-    return dl
-      ? XLSX.write(wb, { bookType: type, bookSST: true, type: "base64" })
-      : XLSX.writeFile(wb, fn || "Sales By Customer Report." + (type || "csv"));
-  };
+		const { customerAccountStatement } = this.state; 
+		const worksheet = XLSX.utils.json_to_sheet(customerAccountStatement); 
+		const workbook = XLSX.utils.book_new(); 
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'Customer Account Statement'); 
+		XLSX.writeFile(workbook, 'Customer Account Statement.csv'); 
+	};
 
   exportExcelFile = () => {
-    let dl = "";
-    let fn = "";
-    let type = "xlsx";
-    var elt = document.getElementById("tbl_exporttable_to_xls");
-    var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-    return dl
-      ? XLSX.write(wb, { bookType: type, bookSST: true, type: "base64" })
-      : XLSX.writeFile(
-          wb,
-          fn || "Sales By Customer Report." + (type || "xlsx")
-        );
-  };
+		const { customerAccountStatement } = this.state; 
+		const worksheet = XLSX.utils.json_to_sheet(customerAccountStatement); 
+		const workbook = XLSX.utils.book_new(); 
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'Customer Account Statement'); 
+		XLSX.writeFile(workbook, 'Customer Account Statement.xlsx'); 
+	};
 
   toggle = () =>
     this.setState((prevState) => {
@@ -303,8 +294,9 @@ class CustomerAccountStatement extends React.Component {
                 <PDFExport
                   ref={(component) => (this.pdfExportComponent = component)}
                   scale={0.8}
-                  paperSize="A3"
-                  fileName="Sales By Customer.pdf"
+                  // paperSize="A3"
+                  margin={{ top: 0, left: 80, right: 80, bottom: 0 }}
+                  fileName="Statement Of Account.pdf"
                 >
                   <div
                     style={{

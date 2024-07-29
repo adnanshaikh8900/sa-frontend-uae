@@ -24,6 +24,7 @@ import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { ReportTables } from 'screens/financial_report/sections'
+import FilterComponent3 from '../filterComponent3';
 
 
 const mapStateToProps = (state) => {
@@ -48,6 +49,8 @@ class PurchaseByVendor extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: true,
+			customPeriod: 'customRange',
+			hideAsOn: true,
 			dropdownOpen: false,
 			view: false,
 			initValue: {
@@ -122,30 +125,21 @@ class PurchaseByVendor extends React.Component {
 			});
 	};
 
-
 	exportFile = () => {
-		let dl = ""
-		let fn = ""
-		let type = "csv"
-		var elt = document.getElementById('tbl_exporttable_to_xls');
-		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-		return dl ?
-			XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-			XLSX.writeFile(wb, fn || ('Purchase By Vendor Report.' + (type || 'csv')));
-
-	}
-
-	exportExcelFile = () => {
-		let dl = ""
-		let fn = ""
-		let type = "xlsx"
-		var elt = document.getElementById('tbl_exporttable_to_xls');
-		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-		return dl ?
-			XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-			XLSX.writeFile(wb, fn || ('Purchase By Vendor Report.' + (type || 'xlsx')));
-
-	}
+        const { purchaseByVendorList } = this.state;
+        const worksheet = XLSX.utils.json_to_sheet(purchaseByVendorList);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Purchase By Vendor');
+        XLSX.writeFile(workbook, 'Purchase By Vendor.csv');
+    };
+ 
+    exportExcelFile = () => {
+        const { purchaseByVendorList } = this.state;
+        const worksheet = XLSX.utils.json_to_sheet(purchaseByVendorList);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Purchase By Vendor');
+        XLSX.writeFile(workbook, 'Purchase By Vendor.xlsx');
+    };
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -160,10 +154,13 @@ class PurchaseByVendor extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
+	hideExportOptionsFunctionality = (val) => {
+		this.setState({ hideExportOptions: val });
+	}
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue, dropdownOpen, purchaseByVendorList, view } = this.state;
+		const { loading, initValue, dropdownOpen, purchaseByVendorList, view,hideAsOn,customPeriod, } = this.state;
 		const { company_profile } = this.props;
 		console.log(this.state.data)
 		return (
@@ -171,26 +168,11 @@ class PurchaseByVendor extends React.Component {
 				<div className="animated fadeIn">
 					<Card>
 						<div>
-							<CardHeader>
-								<Row>
-									<Col lg={12}>
+						{!this.state.hideExportOptions &&
 										<div
-											className="h4 mb-0 d-flex align-items-center"
-											style={{ justifyContent: 'space-between' }}
+											className="h4 mb-0 d-flex align-items-center pull-right"
+											style={{ justifyContent: 'space-between',marginRight: '20px', marginTop: '55px' }}
 										>
-											<div>
-												<p
-													className="mb-0"
-													style={{
-														cursor: 'pointer',
-														fontSize: '1rem',
-														paddingLeft: '15px',
-													}}
-													onClick={this.viewFilter}
-												>
-													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
-												</p>
-											</div>
 											<div className="d-flex">
 												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
@@ -243,29 +225,47 @@ class PurchaseByVendor extends React.Component {
 
 											</div>
 										</div>
-									</Col>
-								</Row>
-							</CardHeader>
-							<div className={`panel ${view ? 'view-panel' : ''}`}>
-								<FilterComponent2
+								}
+							<CardHeader>
+							<FilterComponent3
+									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}
+									customPeriod={customPeriod}
+									hideAsOn={hideAsOn}
 									viewFilter={this.viewFilter}
 									generateReport={(value) => {
 										this.generateReport(value);
 									}}
-								/>{' '}
-							</div>
+									setCutomPeriod={(value) => {
+										this.setState({ customPeriod: value })
+									}}
+									handleCancel={() => {
+										if (customPeriod === 'customRange') {
+										const currentDate = moment();
+										this.setState(prevState => ({
+										initValue: {
+										...prevState.initValue,
+										endDate: currentDate,            }
+										 }));
+										this.generateReport({ endDate: currentDate });
+										}
+										this.setState({ customPeriod: 'customRange' });
+										}}
+										/>
+									</CardHeader>
 							<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
-									scale={0.8}
+									scale={0.546}
 									paperSize="A3"
 									fileName="Purchase By Vendor.pdf"
+									margin={{ top: 0, left: 80, right: 80, bottom: 0 }}
 								>
 									<div style={{
 
 										display: 'flex',
 										justifyContent: 'space-between',
-										marginBottom: '1rem'
+										marginBottom: '1rem',
+										marginTop:'5rem',
 									}}>
 										<div>
 											<img
@@ -293,8 +293,8 @@ class PurchaseByVendor extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style={{ fontSize: '18px' }}>{strings.PurhaseByVendor}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {(initValue.startDate).replaceAll("/", "-")} {strings.To} {initValue.endDate.replaceAll("/", "-")}
-
+											{customPeriod === 'asOn' ? `${strings.Ason} ${initValue.endDate.replaceAll("/", "-")}`
+											 : `${strings.From} ${initValue.startDate.replaceAll("/", "-")} to ${initValue.endDate.replaceAll("/", "-")}`}
 
 										</div>
 										<div>

@@ -1341,6 +1341,8 @@ const en = {
       SubscriptionExpiredMessage: "Subscription status is not active.",
       SubscriptionFailedMessage: "Failed to fetch the subscription status.",
       QuotationSentSuccessfully:"Quotation Sent Successfully!",
+      QuotationApprovedSuccessfully: "Quotation Approved Successfully",
+      QuotationRejectedSuccessfully: "Quotation Rejected Successfully",
      
 
 

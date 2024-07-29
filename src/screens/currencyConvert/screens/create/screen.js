@@ -56,7 +56,6 @@ class CreateCurrencyConvert extends React.Component {
 			createDisabled: false,
 			data: '',
 			basecurrency:[],
-			loading: false,
 			createMore: false,
 			currency_list : [],
 			selectedStatus: true,
@@ -192,275 +191,255 @@ class CreateCurrencyConvert extends React.Component {
 		
 		const{currencyList} =this.props;
 		return (
-			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			loading === true ? <Loader loadingMsg={loadingMsg}/> :
 			<div>
-			<div className="vat-code-create-screen">
-				<div className="animated fadeIn">
-					<Row>
-						<Col lg={12}>
-							<Card>
-								<CardHeader>
-									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon nav-icon fas fa-money" />
-										<span className="ml-2"> {strings.NewCurrencyConversion}</span>
-									</div>
-								</CardHeader>
-								<CardBody>
-								{loading ? (
+				<div className="vat-code-create-screen">
+					<div className="animated fadeIn">
+						<Row>
+							<Col lg={12}>
+								<Card>
+									<CardHeader>
+										<div className="h4 mb-0 d-flex align-items-center">
+											<i className="nav-icon nav-icon fas fa-money" />
+											<span className="ml-2"> {strings.NewCurrencyConversion}</span>
+										</div>
+									</CardHeader>
+									<CardBody>
+									{loading ? (
 										<Row>
 											<Col lg={12}>
 												<Loader />
 											</Col>
 										</Row>
 									) : (
-									<Row>
-										<Col lg={10}>
-											<Formik
-												initialValues={initValue}
-												ref={this.formRef}
-												onSubmit={(values, { resetForm }) => {
-													this.handleSubmit(values, resetForm);
-												}}
-												validate={(values) => {
-													let errors = {};
-													if (this.state.exist === true) {
-														errors.currencyCode =
-															'Currency already exists';
-													}
-													return errors;
-												}}
-												validationSchema={Yup.object().shape({
-													currencyCode: Yup.string().required(
-														strings.ExchangeCurrencyRequired
-													),
-													exchangeRate: Yup.string()
-														.required(
-															strings.ExchangeRateRequired)
-														.test(
-														'exchangeRate',
-															'Exchange rate should be greater than 0',
-														(value) => {
-															if (value > 0) {
-																return true;
-															} else {
-																return false;
-																}
-															},
+										<Row>
+											<Col lg={10}>
+												<Formik
+													initialValues={initValue}
+													ref={this.formRef}
+													onSubmit={(values, { resetForm }) => {
+														this.handleSubmit(values, resetForm);
+													}}
+													validate={(values) => {
+														let errors = {};
+														if (this.state.exist === true) {
+															errors.currencyCode =
+																'Currency already exists';
+														}
+														return errors;
+													}}
+													validationSchema={Yup.object().shape({
+														currencyCode: Yup.string().required(
+															strings.ExchangeCurrencyRequired
 														),
-												
-												
-												})}
-											>
+														exchangeRate: Yup.string().required(
+																strings.ExchangeRateRequired
+															).test('exchangeRate', 'Exchange rate should be greater than 0',
+																(value) => {
+																	if (value > 0) {
+																		return true;
+																	} else {
+																		return false;
+																	}},),
+													})}
+												>
 												{(props) => {
-													const {
-														values,
-														touched,
-														errors,
-														handleChange,
-														handleSubmit,
-														handleBlur,
-													} = props;
+													const {values, touched, errors, handleSubmit,} = props;
 													return (
 														<form onSubmit={handleSubmit}>
 															<Row>
-																	<Col >
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="active"><span className="text-danger">* </span>{strings.Status}</Label>
-																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-																				<FormGroup check inline>
-																					<div className="custom-radio custom-control">
-																						<input
-																							className="custom-control-input"
-																							type="radio"
-																							id="inline-radio1"
-																							name="active"
-																							checked={
-																								this.state.selectedStatus
+																<Col >
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="active">
+																			<span className="text-danger">* </span>{strings.Status}
+																		</Label>
+																		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																		<FormGroup check inline>
+																			<div className="custom-radio custom-control">
+																				<input
+																					className="custom-control-input"
+																					type="radio"
+																					id="inline-radio1"
+																					name="active"
+																					checked={
+																						this.state.selectedStatus
+																					}
+																					value={true}
+																					onChange={(e) => {
+																						if (e.target.value === 'true') {
+																							this.setState({
+																								selectedStatus: true,
+																								isActive: true
+																							});
+																						}
+																					}}
+																				/>
+																				<label
+																					className="custom-control-label"
+																					htmlFor="inline-radio1"
+																				>
+																					{strings.Active}
+																				</label>
+																			</div>
+																			</FormGroup>
+																			<FormGroup check inline>
+																				<div className="custom-radio custom-control">
+																					<input
+																						className="custom-control-input"
+																						type="radio"
+																						id="inline-radio2"
+																						name="active"
+																						value={false}
+																						checked={
+																							!this.state.selectedStatus
+																						}
+																						onChange={(e) => {
+																							if (e.target.value === 'false') {
+																								this.setState({
+																									selectedStatus: false,
+																									isActive: false
+																								});
 																							}
-																							value={true}
-																							onChange={(e) => {
-																								if (
-																									e.target.value === 'true'
-																								) {
-																									this.setState({
-																										selectedStatus: true,
-																										isActive: true
-																									});
-																								}
-																							}}
-																						/>
-																						<label
-																							className="custom-control-label"
-																							htmlFor="inline-radio1"
-																						>
-																							{strings.Active}
-																							</label>
-																					</div>
-																				</FormGroup>
-																				<FormGroup check inline>
-																					<div className="custom-radio custom-control">
-																						<input
-																							className="custom-control-input"
-																							type="radio"
-																							id="inline-radio2"
-																							name="active"
-																							value={false}
-																							checked={
-																								!this.state.selectedStatus
-																							}
-																							onChange={(e) => {
-																								if (
-																									e.target.value === 'false'
-																								) {
-																									this.setState({
-																										selectedStatus: false,
-																										isActive: false
-																									});
-																								}
-																							}}
-																						/>
-																						<label
-																							className="custom-control-label"
-																							htmlFor="inline-radio2"
-																						>
-																							{strings.Inactive}
-																							</label>
-																					</div>
-																				</FormGroup>
-																			
+																						}}
+																					/>
+																					<label
+																						className="custom-control-label"
+																						htmlFor="inline-radio2"
+																					>
+																						{strings.Inactive}
+																					</label>
+																				</div>
+																			</FormGroup>
 																		</FormGroup>
-																	</Col></Row>
+																	</Col>
+																</Row>
 																<Row>
 																	<Col lg={1}>
-																	<FormGroup className="mt-2">
-																	<Label>
-																						{strings.Value}
-																						</Label>
-																	<Input
-																			disabled
+																		<FormGroup className="mt-2">
+																			<Label>
+																				{strings.Value}
+																			</Label>
+																			<Input
+																				disabled
 																				id="1"
 																				name="1"
-																				value=	{
-																					1 }
-																				
-																	/>
-																	</FormGroup>
+																				value={1 +" "+ (props.values.currencyIsoCode 
+																						? props.values.currencyIsoCode : "")}
+																			/>
+																		</FormGroup>
 																	</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mt-2">
-																						<Label htmlFor="currencyCode">
-																							{strings.ExchangeCurrency}
-																						</Label>
-																						<Select
-																							options={
-																								currency_list
-																									? selectCurrencyFactory.renderOptions(
-																											'currencyName',
-																											'currencyCode',
-																											currency_list,
-																											'Currency',
-																									  )
-																									: []
-																							}
-																							value={
-																								currency_list &&
-																								selectCurrencyFactory
-																									.renderOptions(
-																										'currencyName',
-																										'currencyCode',
-																										currency_list,
-																										'Currency',
-																									)
-																									.find(
-																										(option) =>
-																											option.value ===
-																											+props.values
-																												.currencyCode,
-																									)
-																							}
-																							onChange={(options) => {
-																								if (options && options.value) {
-																									props.handleChange(
-																										'currencyCode',
-																									)(options.value);
-																								} else {
-																									props.handleChange(
-																										'currencyCode',
-																									)('');
-																								}
-																								this.validationCheck(
-																									options.value,
-																								);
-																							}}
-																							placeholder={strings.Select+strings.Currency}
-																							id="currencyCode"
-																							name="currencyCode"
-																							className={
-																								props.errors.currencyCode &&
-																								props.touched.currencyCode
-																									? 'is-invalid'
-																									: ''
-																							}
-																						/>
-																						{props.errors.currencyCode &&
-																							props.touched.currencyCode && (
-																								<div className="invalid-feedback">
-																									{props.errors.currencyCode}
-																								</div>
-																							)}
-																			</FormGroup>
-																				</Col>
-																				<FormGroup className="mt-5"><label><b>=</b></label>	</FormGroup>
-																				<Col lg={3}>
-																	<FormGroup className="mt-2">
-																	<Label htmlFor="exchangeRate">
-																	{strings.Exchangerate}
-																	</Label>
-																	<Input
-																			type="text"
-																			maxLength="20"
-																			id="exchangeRate"
-																			name="exchangeRate"
-																			placeholder={strings.Enter+strings.Exchangerate}
-																		
-																			onChange={(option) => {
-																				if (
-																					option.target.value === '' ||
-																					this.regDecimal.test(
-																						option.target.value,
-																					)
-																				) {
-																					props.handleChange('exchangeRate')(
-																						option,
-																					);
+																	<Col lg={4}>
+																		<FormGroup className="mt-2">
+																			<Label htmlFor="currencyCode">
+																				{strings.ExchangeCurrency}
+																			</Label>
+																			<Select
+																				options={
+																					currency_list
+																						? selectCurrencyFactory.renderOptions(
+																								'currencyName',
+																								'currencyCode',
+																								currency_list,
+																								'Currency',
+																							)
+																						: []
 																				}
-																			}}
-																			value={values.exchangeRate}
-																			className={
-																				errors.exchangeRate &&
-																				touched.exchangeRate
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																			{errors.exchangeRate &&
-																	touched.exchangeRate && (
-																		<div className="invalid-feedback">
-																			{errors.exchangeRate}
-																		</div>
-																	)}
-																	</FormGroup>
-																		</Col>	
-																	
-
-																
+																				value={
+																					currency_list &&
+																					selectCurrencyFactory
+																						.renderOptions(
+																							'currencyName',
+																							'currencyCode',
+																							currency_list,
+																							'Currency',
+																						)
+																						.find(
+																							(option) =>
+																								option.value ===
+																								+props.values
+																									.currencyCode,
+																						)
+																				}
+																				onChange={(options) => {
+																					if (options && options.value) {
+																						props.handleChange(
+																							'currencyCode',
+																						)(options.value);
+																						props.handleChange('currencyIsoCode',)(options.iso);
+																					} else {
+																						props.handleChange(
+																							'currencyCode',
+																						)('');
+																					}
+																					this.validationCheck(
+																						options.value,
+																					);
+																				}}
+																				placeholder={strings.Select+strings.Currency}
+																				id="currencyCode"
+																				name="currencyCode"
+																				className={
+																					props.errors.currencyCode &&
+																					props.touched.currencyCode
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.currencyCode &&
+																				props.touched.currencyCode && (
+																					<div className="invalid-feedback">
+																						{props.errors.currencyCode}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<FormGroup className="mt-5"><label><b>=</b></label>	</FormGroup>
 																	<Col lg={3}>
 																		<FormGroup className="mt-2">
-																		<Label htmlFor="currencyName">
-																		 {strings.BaseCurrency}
-																		</Label>
-																		<Input
-																		disabled
+																			<Label htmlFor="exchangeRate">
+																				{strings.Exchangerate}
+																			</Label>
+																			<Input
+																				type="text"
+																				maxLength="20"
+																				id="exchangeRate"
+																				name="exchangeRate"
+																				placeholder={strings.Enter+strings.Exchangerate}
+																				onChange={(option) => {
+																					if (
+																						option.target.value === '' ||
+																						this.regDecimal.test(
+																							option.target.value,
+																						)
+																					) {
+																						props.handleChange('exchangeRate')(
+																							option,
+																						);
+																					}
+																				}}
+																				value={values.exchangeRate}
+																				className={
+																					errors.exchangeRate &&
+																					touched.exchangeRate
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{errors.exchangeRate &&
+																			touched.exchangeRate && (
+																				<div className="invalid-feedback">
+																					{errors.exchangeRate}
+																				</div>
+																			)}
+																		</FormGroup>
+																	</Col>	
+																	<Col lg={3}>
+																		<FormGroup className="mt-2">
+																			<Label htmlFor="currencyName">
+																				{strings.BaseCurrency}
+																			</Label>
+																			<Input
+																				disabled
 																				type="text"
 																				id="currencyName"
 																				name="currencyName"
@@ -468,9 +447,11 @@ class CreateCurrencyConvert extends React.Component {
 																					this.state.basecurrency.currencyName }
 																			/>
 																		</FormGroup>
-																			</Col>
-															</Row>
-															<span style={{fontWeight:'bold'}}>Note: If a currency is associated with any bank, contact or document, it cannot be deleted.</span>
+																	</Col>
+																</Row>
+																<span style={{fontWeight:'bold'}}>
+																	Note: If a currency is associated with any bank, contact or document, it cannot be deleted.
+																</span>
 																<FormGroup className="text-right mt-5">
 																<Button
 																	type="submit"
@@ -478,10 +459,9 @@ class CreateCurrencyConvert extends React.Component {
 																	color="primary"
 																	className="btn-square mr-3"
 																	disabled={this.state.createDisabled}
-																	onClick={() => {
-																		//  added validation popup  msg                                                                
+																	onClick={() => {                                                              
 																		props.handleBlur();
-																		if(props.errors &&  Object.keys(props.errors).length != 0)
+																		if(props.errors &&  Object.keys(props.errors).length !== 0)
 																		this.props.commonActions.fillManDatoryDetails();
 																		}}
 																>
@@ -522,8 +502,8 @@ class CreateCurrencyConvert extends React.Component {
 																>
 																	<i className="fa fa-ban"></i> {strings.Cancel}
 																</Button>
-																</FormGroup>
-																</form>
+															</FormGroup>
+														</form>
 													);
 												}}
 											</Formik>

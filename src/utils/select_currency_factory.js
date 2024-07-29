@@ -13,6 +13,7 @@ export const renderOptions = (
       result.push({
         label: item[`${label_key}`],
         value: item[`${value_key}`],
+        iso: item.currencyIsoCode,
         ...a,
       });
       return item;
@@ -22,6 +23,7 @@ export const renderOptions = (
       return result.push({
         label: item[`${label_key}`] + ' - ' + item.currencyIsoCode,
         value: item[`${value_key}`],
+        iso: item.currencyIsoCode,
         ...a,
       });
     });

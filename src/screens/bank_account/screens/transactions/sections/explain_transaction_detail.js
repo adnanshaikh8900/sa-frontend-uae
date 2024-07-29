@@ -539,6 +539,7 @@ class ExplainTrasactionDetail extends React.Component {
       result[0].exchangeRate,
       true
     );
+    this.setState({exchangeRate: result[0].exchangeRate,})
   };
 
   setCurrency = (value) => {
@@ -891,9 +892,6 @@ class ExplainTrasactionDetail extends React.Component {
         this.state.isReverseChargeEnabled
       );
       formData.append("exclusiveVat", this.state.exclusiveVat);
-      let result = this.props.currency_convert_list.filter((obj) => {
-        return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;
-      });
       formData.append("bankGenerated", true);
       formData.append("convertedAmount", this.expenceconvert(amount));
     }
@@ -1003,11 +1001,7 @@ class ExplainTrasactionDetail extends React.Component {
   };
 
   expenceconvert = (amount) => {
-    let result = this.props.currency_convert_list.filter((obj) => {
-      return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;
-    });
-    const exchange = result[0].exchangeRate;
-    return (amount = amount * exchange);
+    return (amount = amount * this.state.exchangeRate);
   };
 
   expense_categories_list_generate = () => {

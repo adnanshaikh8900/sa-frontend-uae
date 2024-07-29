@@ -1120,8 +1120,9 @@ class CreateContact extends React.Component {
 																						// 	&& this.props.location.state.gotoParentURL
 																						// )
 																						// 	this.props.history.push(this.props.location.state.gotoParentURL)																		
-																						if (this.props.isParentComponentPresent && this.props.isParentComponentPresent == true)
-																							this.props.closeModal(true);
+																						if (this.props.isParentComponentPresent && this.props.isParentComponentPresent == true){
+																							this.props.confirmCancel(true);
+																						}
 																						else
 																							this.props.history.push('/admin/master/contact');
 

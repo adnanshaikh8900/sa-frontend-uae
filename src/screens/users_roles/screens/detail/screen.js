@@ -126,6 +126,13 @@ class UpdateRole extends React.Component {
 					var o = Object.assign({}, el);
 					o.value = el.moduleId;
 					o.label = el.moduleName;
+					if (el.moduleName === "Customer Receipts") {
+						o.label = "Invoice Receipts";
+					} else if(el.moduleName === "Supplier Receipts"){
+						o.label = "Purchase Receipts";
+					} else {
+						o.label = el.moduleName;
+					}
 					return o;
 				});
 				this.list_to_tree(result);

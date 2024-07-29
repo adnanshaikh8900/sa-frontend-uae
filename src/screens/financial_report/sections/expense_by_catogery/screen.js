@@ -129,28 +129,20 @@ class ExpenseByCategory extends React.Component {
 	};
 
 	exportFile = () => {
-		let dl =""
-		let fn =""
-		let type="csv"
-		var elt = document.getElementById('tbl_exporttable_to_xls');												
-		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
-		return dl ?
-		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-		  XLSX.writeFile(wb, fn || ('Expense By Category Report.'+ (type || 'csv')));
+		const { expenseByCategoryList } = this.state;
+		const worksheet = XLSX.utils.json_to_sheet(expenseByCategoryList);
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'Expense By Category Details');
+		XLSX.writeFile(workbook, 'Expense By Category Details.csv');
+	};
 
-	   }
-
-	   exportExcelFile  = () => 
-	   {   let dl =""
-		   let fn =""
-		   let type="xlsx"
-		   var elt = document.getElementById('tbl_exporttable_to_xls');												
-		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
-		   return dl ?
-			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-			 XLSX.writeFile(wb, fn || ('Expense By Category Report.'+ (type || 'xlsx')));
-   
-	   }
+	exportExcelFile = () => {
+		const { expenseByCategoryList } = this.state;
+		const worksheet = XLSX.utils.json_to_sheet(expenseByCategoryList);
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'Expense By Category Details');
+		XLSX.writeFile(workbook, 'Expense By Category Details.xlsx');
+	  };
 
 	toggle = () =>
 		this.setState((prevState) => {

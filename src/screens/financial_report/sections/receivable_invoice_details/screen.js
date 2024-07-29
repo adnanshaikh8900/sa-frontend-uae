@@ -133,28 +133,21 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 	
 	
 	exportFile = () => {
-		let dl =""
-		let fn =""
-		let type="csv"
-		var elt = document.getElementById('tbl_exporttable_to_xls');												
-		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
-		return dl ?
-		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-		  XLSX.writeFile(wb, fn || ('Receivable Invoice Details Report.'+ (type || 'csv')));
+        const { receivbaleInvoiceDetailsList } = this.state;
+        const worksheet = XLSX.utils.json_to_sheet(receivbaleInvoiceDetailsList);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Receivable Invoice Details');
+        XLSX.writeFile(workbook, 'Receivable Invoice Details.csv');
+    };
 
-	   }
+	exportExcelFile = () => {
+        const { receivbaleInvoiceDetailsList } = this.state;
+        const worksheet = XLSX.utils.json_to_sheet(receivbaleInvoiceDetailsList);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Receivable Invoice Details');
+        XLSX.writeFile(workbook, 'Receivable Invoice Details.xlsx');
+    };
 
-	   exportExcelFile  = () => 
-	   {   let dl =""
-		   let fn =""
-		   let type="xlsx"
-		   var elt = document.getElementById('tbl_exporttable_to_xls');												
-		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
-		   return dl ?
-			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-			 XLSX.writeFile(wb, fn || ('Receivable Invoice Details Report.'+ (type || 'xlsx')));
-   
-	   }
 	toggle = () =>
 		this.setState((prevState) => {
 			return { dropdownOpen: !prevState.dropdownOpen };
@@ -294,15 +287,18 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 									<CardBody id="section-to-print">
 									<PDFExport
 											ref={(component) => (this.pdfExportComponent = component)}
-											scale={0.8}
+											scale={0.454}
 											paperSize="A3"
 											fileName="Receivable Invoice Details.pdf"
+											margin={{top:0 , bottom:0 , left: 30 , right: 31 }}
 										>
 
                                 <div style={{										
 									display: 'flex',
 									justifyContent: 'space-between',
-									marginBottom: '1rem'}}>
+									marginBottom: '1rem',
+									marginTop: "5rem",
+									}}>
 									<div className="logo-container" style={{	
 									width:'150px',}}>
 												<img

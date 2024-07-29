@@ -271,26 +271,27 @@ class CreateOpeningBalance extends React.Component {
 																		placeholder={strings.Select+strings.TransactionCategory}
 																		options={
 																			transaction_category_list
-																				? selectOptionsFactory.renderOptions(
-																								'transactionCategoryName',
-																								'transactionCategoryId',
-																								transaction_category_list.filter(category =>
-																									this.state.isRegisteredVat ||
-																									![
-																										'VAT Penalty',
-																										'Output VAT Adjustment',
-																										'Input VAT Adjustment',
-																										'VAT Payable',
-																										'GCC VAT Payable',
-																										'Output VAT',
-																										'Input VAT'
-																										
-																									].includes(category.transactionCategoryName.trim()) 
-																								),
-																								'Transaction Category'
-																							)
-																						  : []
-																						}
+																			  ? selectOptionsFactory.renderOptions(
+																				  'transactionCategoryName',
+																				  'transactionCategoryId',
+																				  transaction_category_list.filter(category =>
+																					  this.state.isRegisteredVat ||
+																					  ![
+																						'VAT Penalty',
+																						'Output VAT Adjustment',
+																						'Input VAT Adjustment',
+																						'VAT Payable',
+																						'GCC VAT Payable',
+																						'Output VAT',
+																						'Input VAT'
+																						
+																					  ].includes(category.transactionCategoryName.trim()) 
+																					)
+																					.sort((a, b) => a.transactionCategoryName.localeCompare(b.transactionCategoryName)), 
+																				  'Transaction Category'
+																				)
+																			  : []
+																		  }
 																		value={props.values.transactionCategoryId}
 																		className={
 																			props.errors.transactionCategoryId &&

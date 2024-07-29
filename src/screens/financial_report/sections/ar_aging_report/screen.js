@@ -141,30 +141,20 @@ class ArAgingReport extends React.Component {
 	};
 
 	exportFile = () => {
+		const { agingResponseModelList } = this.state;
+		const worksheet = XLSX.utils.json_to_sheet(agingResponseModelList);
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'AR Aging Report');
+		XLSX.writeFile(workbook, 'AR Aging Report.csv');
+	};
 
-	
-		let dl =""
-		let fn =""
-		let type="csv"
-		var elt = document.getElementById('tbl_exporttable_to_xls');												
-		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
-		return dl ?
-		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-		  XLSX.writeFile(wb, fn || ('AR Aging Report.'+ (type || 'csv')));
-
-	   }
-
-	   exportExcelFile  = () => 
-	   {   let dl =""
-		   let fn =""
-		   let type="xlsx"
-		   var elt = document.getElementById('tbl_exporttable_to_xls');												
-		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
-		   return dl ?
-			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-			 XLSX.writeFile(wb, fn || ('AR Aging Report.'+ (type || 'xlsx')));
-   
-	   }
+	exportExcelFile = () => {
+		const { agingResponseModelList } = this.state;
+		const worksheet = XLSX.utils.json_to_sheet(agingResponseModelList);
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'AR Aging Report');
+		XLSX.writeFile(workbook, 'AR Aging Report.xlsx');
+	  };
 
 	toggle = () =>
 		this.setState((prevState) => {

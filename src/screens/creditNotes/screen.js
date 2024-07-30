@@ -153,7 +153,7 @@ class CreditNotes extends React.Component {
 				<SentInvoice
 					invoiceAmount={invoiceAmount || 0}
 					id={id}
-					currencyName={currencyName || 'SAR'}
+					currencyName={currencyName || 'UAE'}
 					vatAmount={totalVatAmount || 0}
 					markAsSent={markAsSent}
 					postingRefType={"CREDIT_NOTE"}

@@ -177,79 +177,62 @@ class CreditNoteDetailsReport extends React.Component {
 				<div className="animated fadeIn">
 					<Card>
 						<div>
-							<CardHeader>
-								<Row>
-									<Col lg={12}>
+							{!this.state.hideExportOptions && 
 										<div
-											className="h4 mb-0 d-flex align-items-center"
-											style={{ justifyContent: 'space-between' }}
+											className="h4 mb-0 d-flex align-items-center pull-right"
+											style={{ justifyContent: 'space-between', 
+												marginRight:'10px', marginTop: '30px'}}
 										>
-											<div>
-												<p
-													className="mb-0"
-													style={{
-														cursor: 'pointer',
-														fontSize: '1rem',
-														paddingLeft: '15px',
-													}}
-													onClick={this.viewFilter}
-												>
-												</p>
-											</div>
 											<div className="d-flex">
-												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+												<Dropdown isOpen={dropdownOpen} toggle={this.toggle} 
+													style={{marginTop:'5px'}}>
 													<DropdownToggle caret>Export As</DropdownToggle>
-													<DropdownMenu>
-														<DropdownItem
-															onClick={() => { this.exportFile() }}>
+													<DropdownMenu> 
+														<DropdownItem onClick={()=>{this.exportFile()}}>
 															<span
 																style={{
 																	border: 0,
 																	padding: 0,
-																	backgroundColor: "white !important"
+																	backgroundColor:"white !important"
 																}}
-															>CSV (Comma Separated Value)</span>
+															>CSV (Comma Separated Value)
+															</span>
 														</DropdownItem>
-														<DropdownItem
-															onClick={() => { this.exportExcelFile() }}>
-															<span
+														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
+								                        	<span
 																style={{
 																	border: 0,
 																	padding: 0,
-																	backgroundColor: "white !important"
+																	backgroundColor:"white !important"
 																}}
-															>Excel</span>
+															>Excel
+															</span>
 														</DropdownItem>
-														<DropdownItem
-															onClick={this.exportPDFWithComponent}
-														>Pdf
+														<DropdownItem onClick={this.exportPDFWithComponent}>
+															Pdf
 														</DropdownItem>
-													
 													</DropdownMenu>
-												</Dropdown>&nbsp;&nbsp;
+												</Dropdown> 
+												&nbsp;&nbsp;
 												<div
 													className="mr-2 print-btn-cont"
 													onClick={() => window.print()}
-													style={{ cursor: 'pointer' }}
+													style={{cursor: 'pointer'}}
 												>
 													<i className="fa fa-print"></i>
 												</div>
-												
 												<div
 													className="mr-2 print-btn-cont"
-													onClick={() => {
-														this.props.history.push('/admin/report/reports-page');
-													}}
-													style={{ cursor: 'pointer' }}
+                                                    onClick={() => {
+                                                        this.props.history.push('/admin/report/reports-page');
+                                                    }}
+													style={{cursor: 'pointer'}}
 												>
 													<span>X</span>
-												</div>
-
+												</div>				
 											</div>
 										</div>
-									</Col>
-								</Row>
-							</CardHeader>
+							}
 							<CardHeader>
 							<FilterComponent3
 									hideExportOptionsFunctionality={(val) => this.hideExportOptionsFunctionality(val)}

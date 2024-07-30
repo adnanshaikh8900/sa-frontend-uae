@@ -40,8 +40,15 @@ class ChangeInvoiceStatus extends React.Component {
 
 	changeStatus = () => {
 		const { id, status, documentTitle, initializeData, setState } = this.props;
-		const messageList = this.getMessageList(documentTitle, strings, status === 'Draft' ? 'Draft' : 'Status Change');
-		this.props.actions.changeStatus(id, status, documentTitle, strings).then((res) => {
+		let messageList;
+	
+		if (status === 'Draft') {
+			messageList = this.getMessageList(documentTitle, strings, 'Draft');
+		} else if (status === 'Approved' || status === 'Rejected') {
+			messageList = this.getMessageList(documentTitle, strings, status);
+		} else {
+			messageList = this.getMessageList(documentTitle, strings, 'Status Change');
+		}		this.props.actions.changeStatus(id, status, documentTitle, strings).then((res) => {
 			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert('success', strings[messageList[0]]);
 				setState(false);

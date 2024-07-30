@@ -15,6 +15,8 @@ export const QuotationMessagesList = [
     { action: 'Delete', list: ['QuotationDeletedSuccessfully', 'QuotationDeletedUnsuccessfully',] },
     { action: 'Status Change', list: ['StatusChangedSuccessfully', 'StatusChangedUnsuccessfully',] },
     { action: 'Draft', list: ['QuotationMovedToDraftSuccessfully', 'QuotationMovedToDraftUnsuccessfully',] },
+    { action: 'Approved', list:['QuotationApprovedSuccessfully','QuotationApprovedUnsuccessfully']},
+    { action: 'Rejected', list:['QuotationRejectedSuccessfully','QuotationRejectedUnsuccessfully']},
 ]
 export const ExpenseMessagesList = [
     { action: 'Sent', list: ['ExpensePostedSuccessfully', 'ExpensePostedUnsuccessfully', 'ExpensePostedSuccessfully'] },

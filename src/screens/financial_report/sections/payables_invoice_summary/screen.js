@@ -252,10 +252,10 @@ class PayablesInvoiceSummary extends React.Component {
 									<CardBody id="section-to-print">
 									<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
-									scale={0.454}
-									paperSize="A3"
+									scale={1}
+									paperSize="auto"
 									fileName="Payables Invoice Summary.pdf"
-									margin={{top:0 , bottom:0 , left: 30 , right: 31 }}
+									margin={{top:0 , bottom:0 , left: 80 , right: 80 }}
 								>
 							<div style={{	
 									

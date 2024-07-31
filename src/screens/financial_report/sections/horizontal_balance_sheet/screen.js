@@ -780,7 +780,7 @@ class HorizontalBalanceSheet extends React.Component {
 																			<tr>
 																				<td className="pt-0 pb-0">{item}</td>
 
-																				<td className="pt-0 pb-0 text-right" >
+																				<td className="pt-0 pb-0 text-right" colSpan={2} >
 																					{this.state.data['otherCurrentAssets'] ? (
 																						<Currency
 																							value={this.state.data['otherCurrentAssets'][

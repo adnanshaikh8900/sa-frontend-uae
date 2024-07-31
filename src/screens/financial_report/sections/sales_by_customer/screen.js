@@ -257,10 +257,10 @@ class SalesByCustomer extends React.Component {
 							<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
-									scale={0.546}
-									paperSize="A3"
+									scale={1}
+									paperSize="auto"
 									fileName="Sales By Customer.pdf"
-									margin={{ top: 0, left: 80, right: 80, bottom: 0 }}
+									margin={{ top: 50, left: 80, right: 80, bottom: 0 }}
 								>
 									<div style={{
 

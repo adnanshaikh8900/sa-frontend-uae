@@ -250,9 +250,11 @@ class ActionButtons extends React.Component {
 											history.push(`${URL}/applyToInvoice`, {
 												contactId: contactId,
 												creditNoteId: id,
-												noteNumber: number,
 												referenceNumber: invoiceNumber,
-												totalAmount: dueAmount,
+												debitAmount: dueAmount,
+												creditAmount: dueAmount,
+												creditNoteNumber: number,
+												debitNoteNumber: number,
 												currency: currencyIsoCode || 'AED',
 												renderURL: viewURL,
 												renderID: id,

@@ -141,12 +141,8 @@ class GeneralSettings extends React.Component {
 							message: res.data.invoiceMailingBody
 								? res.data.invoiceMailingBody
 								: '',
-							selected_smtp_auth: res.data.mailingSmtpAuthorization
-								? res.data.mailingSmtpAuthorization
-								: '',
-							selected_smtp_enable: res.data.mailingSmtpStarttlsEnable
-								? res.data.mailingSmtpStarttlsEnable
-								: '',
+							selected_smtp_auth: res.data.mailingSmtpAuthorization === 'true',
+							selected_smtp_enable: res.data.mailingSmtpStarttlsEnable === 'true',
 							emailUsed: res.data.loggedInUserEmailFlag ? 'loginUser' :
 								!res.data.fromEmailAddress || res.data.fromEmailAddress === "" ? 'defaultEmail' :
 									res.data.fromEmailAddress ? 'anotherEmail' : '',
@@ -485,7 +481,7 @@ class GeneralSettings extends React.Component {
 																						checked={
 																							this.state.selected_smtp_auth
 																						}
-																						value={true}
+																						value={this.state.selected_smtp_auth}
 																						onChange={(e) => {
 																							if (e.target.value) {
 																								this.setState({

@@ -253,8 +253,8 @@ class ReceivableInvoiceSummary extends React.Component {
 							<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
-									scale={0.454}
-									paperSize="A3"
+									scale={1}
+									paperSize="auto"
 									fileName="Receivable Invoice Summary.pdf"
 									margin={{top:0 , bottom:0 , left: 30 , right: 31 }}
 								>

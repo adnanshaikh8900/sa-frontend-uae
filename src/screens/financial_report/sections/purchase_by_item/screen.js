@@ -321,10 +321,10 @@ exportExcelFile = () => {
               <CardBody id="section-to-print">
                 <PDFExport
                   ref={(component) => (this.pdfExportComponent = component)}
-                  scale={0.546}
-                  paperSize="A3"
-                  fileName="Purchase By Item.pdf"
-                  margin={{ top: 0, left: 80, right: 80, bottom: 0 }}
+                  scale={1}
+                  paperSize="auto"
+                  fileName="Purchase By Product.pdf"
+                  margin={{ top: 50, left: 80, right: 80, bottom: 0 }}
                 >
                   <div
                     style={{

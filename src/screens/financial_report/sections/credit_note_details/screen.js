@@ -262,8 +262,9 @@ class CreditNoteDetailsReport extends React.Component {
 							<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
-									scale={0.8}
-									paperSize="A3"
+									scale={1}
+									paperSize="auto"
+									margin={{ top: 50, left: 80, right: 80, bottom: 0 }}
 									fileName="Credit Note Details.pdf"
 								>
 									<div style={{

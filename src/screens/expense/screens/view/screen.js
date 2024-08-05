@@ -13,6 +13,7 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { ExpenseTemplate } from './sections/';
 import ActionButtons from 'components/view_actions_buttons';
+import { InvoiceViewJournalEntries, } from 'components';
 import { StatusActionList } from 'utils';
 
 const mapStateToProps = (state) => {
@@ -41,7 +42,9 @@ class ViewExpense extends React.Component {
 		super(props);
 		this.state = {
 			expenseData: {},
-			id: '',
+			id: this.props.location?.state?.expenseId,
+			expenseId: this.props?.location?.state?.id,
+			expenseStatus: '',
 		};
 
 		this.formRef = React.createRef();
@@ -93,7 +96,8 @@ class ViewExpense extends React.Component {
 							{
 								expenseData: {id:this.props.location.state.expenseId,...res.data},                              
                                 expenseId: this.props.location.state.expenseId,
-                                actionList:actionList
+                                actionList: actionList,
+								expenseStatus: res.data.expenseStatus
 							},
 						);
 					}
@@ -106,7 +110,7 @@ class ViewExpense extends React.Component {
 	};
 
 	render() {
-		const { expenseData, invoiceData ,actionList,invoiceStatus } = this.state;
+		const { expenseData, invoiceData, actionList, invoiceStatus, expenseStatus, id } = this.state;
 		const { profile } = this.props;
 		return (
 			<div className="view-invoice-screen">
@@ -188,6 +192,16 @@ class ViewExpense extends React.Component {
 										ref={(el) => (this.componentRef = el)}								
 									/>
 								</PDFExport>
+							</div>
+							<div>
+								{expenseStatus && expenseStatus !== 'Draft' &&
+									<InvoiceViewJournalEntries
+										history={this.props.history}
+										invoiceURL={'/admin/expense/expense/view'}
+										invoiceId={id}
+										invoiceType={3}
+									/>
+								}
 							</div>
 						</Col>
 					</Row>

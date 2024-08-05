@@ -1422,6 +1422,7 @@ min="0"
 																					this.props.history.push(state.renderURL, {
 																						id: state.renderId,
 																						isCNWithoutProduct: state.renderCN,
+																						expenseId: state.renderId,
 																					})
 																				}
 																			}}

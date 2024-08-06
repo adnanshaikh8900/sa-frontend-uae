@@ -348,7 +348,7 @@ class BalanceSheet extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-								<div id="tbl_exporttable_to_xls" className="table-wrapper wid">
+								<div id="tbl_exporttable_to_xls" className="table-wrapper " style={{ width: "1000px", margin: "0 auto" }}>
 									<Row>
 									<Col>
 									<Table  responsive className="hbs-table-bordered">

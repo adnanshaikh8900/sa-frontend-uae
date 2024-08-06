@@ -756,7 +756,7 @@ class TrailBalances extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div className="table-wrapper wid">
+										<div className="table-wrapper" style={{ width: "1000px", margin: "0 auto" }}>
 											<Table id="tbl_exporttable_to_xls" responsive className="tb-table-bordered table">
 												<thead>
 													<tr className="header-row">

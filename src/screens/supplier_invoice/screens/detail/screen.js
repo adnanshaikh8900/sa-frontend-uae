@@ -1955,6 +1955,12 @@ class DetailSupplierInvoice extends React.Component {
 			tmpSupplier_list.push(obj)
 		})
 
+		let hasExciseTax = false;
+
+		if (initValue) {
+			hasExciseTax = data.some(row => (row.exciseTaxId !== null && row.exciseTaxId !== '' && row.exciseTaxId !== 0));
+		}
+
 		return (
 			loading == true ? <Loader loadingMsg={loadingMsg} /> : <div>
 				<div className="detail-supplier-invoice-screen">
@@ -2754,7 +2760,7 @@ class DetailSupplierInvoice extends React.Component {
 																				>
 																					{strings.Discount}
 																				</TableHeaderColumn>}
-																			{initValue.total_excise != 0 &&
+																			{hasExciseTax &&
 																				<TableHeaderColumn
 																					width="10%"
 																					dataField="exciseTaxId"
@@ -2987,7 +2993,7 @@ class DetailSupplierInvoice extends React.Component {
 																		</Col>
 																		<Col lg={4}>
 																			<div className="">
-																				{initValue.total_excise > 0 ?
+																				{hasExciseTax ?
 																					<div className="total-item p-2">
 																						<Row>
 																							<Col lg={6}>

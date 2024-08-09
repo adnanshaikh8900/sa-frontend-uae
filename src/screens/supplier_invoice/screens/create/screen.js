@@ -1405,6 +1405,7 @@ class CreateSupplierInvoice extends React.Component {
 
 		);
 	};
+
 	renderExcise = (cell, row, props) => {
 		const { excise_list } = this.props;
 		let idx;
@@ -1433,7 +1434,6 @@ class CreateSupplierInvoice extends React.Component {
 								: []
 						}
 						value={
-
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
@@ -2333,6 +2333,12 @@ class CreateSupplierInvoice extends React.Component {
 			let obj = { label: item.label.contactName, value: item.value }
 			tmpSupplier_list.push(obj)
 		})
+
+		let hasExciseTax = false;
+
+		if (initValue) {
+			hasExciseTax = data.some(row => (row.exciseTaxId !== null && row.exciseTaxId !== '' && row.exciseTaxId !== 0));
+		}
 
 		return (
 			loading == true ? <Loader loadingMsg={loadingMsg} /> : <div>
@@ -3275,7 +3281,7 @@ class CreateSupplierInvoice extends React.Component {
 																				>
 																					{strings.DisCount}
 																				</TableHeaderColumn>}
-																			{initValue.total_excise != 0 &&
+																			{hasExciseTax &&
 																				<TableHeaderColumn
 																					//	width="10%"
 																					dataField="exciseTaxId"
@@ -3505,7 +3511,7 @@ class CreateSupplierInvoice extends React.Component {
 
 																		<Col lg={4}>
 																			<div className="">
-																				{initValue.total_excise > 0 ?
+																				{hasExciseTax ?
 																					<div className="total-item p-2" >
 																						<Row>
 																							<Col lg={6}>

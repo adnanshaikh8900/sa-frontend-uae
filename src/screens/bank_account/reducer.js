@@ -3,7 +3,6 @@ import { BANK_ACCOUNT } from 'constants/types';
 const initState = {
 	bank_account_list: [],
 	bank_transaction_list: [],
-
 	account_type_list: [],
 	currency_list: [],
 	country_list: [],
@@ -18,6 +17,7 @@ const initState = {
 	vat_list: [],
 	reconcile_list: [],
 	UnPaidPayrolls_List:[],
+	bank_list:[],
 };
 
 const BankAccountReducer = (state = initState, action) => {
@@ -70,6 +70,11 @@ const BankAccountReducer = (state = initState, action) => {
 			return {
 				...state,
 				project_list: Object.assign([], payload),
+			};
+		case BANK_ACCOUNT.BANK_LIST:
+			return {
+				...state,
+				bank_list: Object.assign([], payload),
 			};
 
 		case BANK_ACCOUNT.CUSTOMER_INVOICE_LIST:

@@ -81,6 +81,7 @@ const en = {
       CURRENCY: "CURRENCY",
       NewOpeningBalance: "New Opening Balance",
       TransactionCategory: "Transaction Category",
+      TransactionDetails: "Transaction Details",
       OpeningDate: "Opening Date",
       Amount: "Amount",
       Create: "Create",

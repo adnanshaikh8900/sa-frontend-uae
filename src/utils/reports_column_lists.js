@@ -275,7 +275,7 @@ const CustomerAccountStatement = [
         return (
           <div
             className="position-absolute pl-2"
-            style={{ left: "0px", fontWeight: "600" }}
+            style={{ fontWeight: "600" }}
           >
             {params.value}
           </div>
@@ -306,7 +306,7 @@ const CustomerAccountStatement = [
     flex: 1,
   },
   {
-    field: "invoiceNumber",
+    field: "balanceAmount",
     headerName: strings.ReferenceN,
     headerClassName: "table-header-bg",
     flex: 1,
@@ -346,7 +346,7 @@ const CustomerAccountStatement = [
     },
   },
   {
-    field: "totalAmount",
+    field: "amountPaid",
     headerName: strings.TotalAmount,
     headerAlign: "right",
     align: "right",
@@ -361,7 +361,6 @@ const CustomerAccountStatement = [
               : {}
           }
         >
-          {" "}
           {renderAmount(params.row.totalAmount)}{" "}
         </div>
       ) : (

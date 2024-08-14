@@ -300,7 +300,7 @@ const en = {
       CurrencyIsRequired: 'Currency is required',
       PayThroughIsRequired: 'Pay through is required',
       ExpenseDateRequired: "Expense date is required",
-
+      BaseCurrencyExpenseAmount: "Base Currency Expense Amount",
 
       //Add expense		
       CreateExpense: "Create Expense",

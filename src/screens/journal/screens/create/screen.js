@@ -883,6 +883,10 @@ class CreateJournal extends React.Component {
 														errors.journalReferenceNo =
 															'Journal reference number already exists';
 													}
+													if (this.state.initValue.totalCreditAmount === 0
+														&& this.state.initValue.totalDebitAmount === 0) {
+														errors.submitJournal = "*Total Amount Must Be Greater Than Zero";
+													}
 													return errors;
 												}
 											}
@@ -1112,6 +1116,29 @@ class CreateJournal extends React.Component {
 																		>
 																			*Total Credit Amount and Total Debit
 																			Amount Should be Equal
+																		</Badge>
+																	</div>
+																</div>
+															)}
+														{this.state.submitJournal &&
+														props.errors.submitJournal && (
+																<div
+																	className={
+																		this.state.initValue.totalCreditAmount === 0
+																		&& this.state.initValue.totalDebitAmount === 0
+																			? 'is-invalid'
+																			: ''
+																	}
+																>
+																	<div className="invalid-feedback">
+																		<Badge
+																			color="danger"
+																			style={{
+																				padding: '10px',
+																				marginBottom: '5px',
+																			}}
+																		>
+																			*Total Amount Must Be Greater Than Zero
 																		</Badge>
 																	</div>
 																</div>

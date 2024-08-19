@@ -358,44 +358,57 @@ class Expense extends React.Component {
 	};
 
 	renderAmount = (cell, row, extraData) => {
-		
-		// return row.expenseAmount ? (
-		// 	<Currency
-		// 		value={row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-		// 	/>
-		// ) : (
-		// 	''
-		// );
-		// return row.expenseAmount ? row.currencyName+" " + row.expenseAmount : row.currencyName+" " + row.expenseAmount;
 		return(
-		<div>
 			<div>
-					<label className="font-weight-bold mr-2 ">{strings.ActualExpenseAmount}: </label>
-					<label>
-						
-						{!row.exclusiveVat  ? row.currencyName +" "+ (row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): row.currencyName +" "+ (row.expenseAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-					
+				<div>
+					<label className="font-weight-bold mr-2 ">
+						{strings.ActualExpenseAmount}:
 					</label>
-			</div>
-		{row.expenseVatAmount !=null &&(
-			<div style={{ display: row.expenseVatAmount === 0 ? 'none' : '' }}>
-			    <label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
-				<label>{row.expenseVatAmount === 0 ?
-				 row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}) 
-				 :
-				 row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2})}</label>
-			</div>
-		)}
-			<div style={{ display: row.expenseAmount === 0 ? 'none' : '' }}>
-					<label className="font-weight-bold mr-2">{strings.ExpenseAmount}: </label>
-					<label>
-						
-						{!row.exclusiveVat  ? row.currencyName +" "+ (row.expenseAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): row.currencyName +" "+ (row.expenseAmount+row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+						<label>		
+							{!row.exclusiveVat ? 
+								row.currencyName +" "+ (row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2})
+								: 
+								row.currencyName +" "+ (row.expenseAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+							</label>
+				</div>
+				{row.expenseVatAmount !=null && (
+					<div style={{ display: row.expenseVatAmount === 0 ? 'none' : '' }}>
+						<label className="font-weight-bold mr-2">
+							{strings.VatAmount}:
 						</label>
+						<label>
+							{row.expenseVatAmount === 0 ?
+								row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}) 
+								:
+								row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2})}
+						</label>
+					</div>
+				)}
+				<div style={{ display: row.expenseAmount === 0 ? 'none' : '' }}>
+					<label className="font-weight-bold mr-2">
+						{strings.ExpenseAmount}: 
+					</label>
+					<label>
+						{!row.exclusiveVat ? 
+							row.currencyName +" "+ (row.expenseAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2})
+							: 
+							row.currencyName +" "+ (row.expenseAmount+row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+					</label>
+				</div>
+				{row.baseCurrencyAmount != null && (
+					<div style={{ display: row.baseCurrencyAmount === 0 ? 'none' : '' }}>
+						<label className="font-weight-bold mr-2">
+							{strings.BaseCurrencyExpenseAmount}: 
+						</label>
+						<label>
+							{row.baseCurrencyAmount === 0 ?
+								"AED" + " " + row.baseCurrencyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+								:
+								"AED" + " " + row.baseCurrencyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+						</label>
+					</div>
+				)}
 			</div>
-		</div>
-		
 		);
 	};
 

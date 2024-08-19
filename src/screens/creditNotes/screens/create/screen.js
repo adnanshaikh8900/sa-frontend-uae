@@ -2233,7 +2233,7 @@ class CreateCreditNote extends React.Component {
                                             );
                                           else
                                             this.props.history.push(
-                                              "/admin/income/credit-notes/view"
+                                              "/admin/income/credit-notes"
                                             );
                                         }}
                                       >

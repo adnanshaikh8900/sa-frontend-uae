@@ -54,7 +54,6 @@ class PayrollApproverScreen extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
 			createMore: false,
-			loading: false,
 			dialog: false,
 			initValue: {},
 			payrollId: this.props.location.state.id,
@@ -208,7 +207,7 @@ class PayrollApproverScreen extends React.Component {
 			})
 	}
 	voidPayrollApi = () => {
-		this.setState({ disableLeavePage: true });
+		this.setState({ disableLeavePage: true, loading: true, loadingMsg: "Voiding..." });
 		let formData = {
 			postingRefId: this.state.payrollId,
 			postingRefType: "PAYROLL",
@@ -218,6 +217,7 @@ class PayrollApproverScreen extends React.Component {
 			if (res.status === 200) {
 				toast.success("Payroll Voided Successfully");
 				this.props.history.push('/admin/payroll/payrollrun')
+				this.setState({ loading:false, })
 			}
 		}).catch((err) => {
 			toast.error("Payroll Voided UnSuccessfully")

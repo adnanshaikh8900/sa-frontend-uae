@@ -151,12 +151,6 @@ const SalesByCustomer = [
     align: "center",
   },
   {
-    field: "invoiceId",
-    headerName: strings.InvoiceId,
-    headerClassName: "table-header-bg",
-    flex: 1,
-  },
-  {
     field: "salesExcludingvat",
     headerName: strings.SalesExcludingTax,
     headerAlign: "right",

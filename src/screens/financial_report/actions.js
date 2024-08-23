@@ -44,8 +44,8 @@ export const getCashFlowReport = (postData) => {
 };
 
 export const getAgingReport = (postData) => {
-  const { endDate } = postData;
-  let url = `/rest/simpleaccountReports/getAgingReport?endDate=${endDate}`;
+  const { startDate, endDate } = postData;
+  let url = `/rest/simpleaccountReports/getAgingReport?startDate=${startDate}&endDate=${endDate}`;
 
   return (dispatch) => {
     let data = {
@@ -306,7 +306,7 @@ export const getInvoiceDetails = (postData) => {
 
 export const getTrialBalanceReport = (postData) => {
   const { startDate, endDate } = postData;
-  let url = `/rest/financialReport/trialBalanceReport?endDate=${endDate}`;
+  let url = `/rest/financialReport/trialBalanceReport?startDate=${startDate}&endDate=${endDate}`;
 
   return (dispatch) => {
     let data = {
@@ -327,7 +327,7 @@ export const getTrialBalanceReport = (postData) => {
 
 export const getBalanceReport = (postData) => {
   const { startDate, endDate } = postData;
-  let url = `/rest/financialReport/balanceSheet?endDate=${endDate}`;
+  let url = `/rest/financialReport/balanceSheet?startDate=${startDate}&endDate=${endDate}`;
 
   return (dispatch) => {
     let data = {

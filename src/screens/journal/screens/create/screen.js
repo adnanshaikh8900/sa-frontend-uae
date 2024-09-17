@@ -264,26 +264,36 @@ class CreateJournal extends React.Component {
 					]
 				: transaction_category_list;
 
-		if (!this.state.isRegisteredVat) {
-			const vatCategories = [
-				'VAT Penalty',
-				'Output VAT Adjustment',
-				'Input VAT Adjustment',
-				'VAT Payable',
-				'Input VAT',
-				'GCC VAT Payable',
-				'Output VAT'
-			];
-
-			transactionCategoryList = transactionCategoryList.map(group => {
-				return {
-					...group,
-					options: group.options.filter(
-						option => !vatCategories.includes(option.label)
-					)
-				};
-			});
-    	}
+				if (!this.state.isRegisteredVat) {
+					const vatCategories = [
+						'VAT Penalty',
+						'Output VAT Adjustment',
+						'Input VAT Adjustment',
+						'VAT Payable',
+						'Input VAT',
+						'GCC VAT Payable',
+						'Output VAT'
+					];
+				
+					// Ensure transactionCategoryList is defined and an array before checking
+					if (Array.isArray(transactionCategoryList)) {
+						// Check if there are any VAT categories present in the transactionCategoryList
+						const hasVatCategories = transactionCategoryList.some(group =>
+							group.options && group.options.some(option => vatCategories.includes(option.label))
+						);
+				
+						if (hasVatCategories) {
+							transactionCategoryList = transactionCategoryList.map(group => {
+								return {
+									...group,
+									options: group.options ? group.options.filter(
+										option => !vatCategories.includes(option.label)
+									) : []
+								};
+							});
+						}
+					}
+				}
 
 		let idx;
 		this.state.data.map((obj, index) => {
